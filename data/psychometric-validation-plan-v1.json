@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "planId": "mouldmaster-psychometric-validation-v1",
+  "status": "preregistered-no-real-response-evidence",
+  "purpose": "Define fail-closed conditions before MouldMaster item statistics, cut scores or credentials are interpreted as psychometrically validated.",
+  "currentAuthority": {
+    "regionalLearningCheck": "formative-and-learning-completion-only",
+    "technicalItemsPerRegionalForm": 7,
+    "currentPassPolicy": "at least 80% overall and zero wrong safety-critical regional items",
+    "cutScoreValidity": "not-established",
+    "professionalCompetenceAuthority": false
+  },
+  "exploratoryPilotBoundary": {
+    "targetCompletedParticipants": "8-15",
+    "mayInform": [
+      "usability",
+      "comprehension signals",
+      "diagnostic transfer signals",
+      "retention signals",
+      "confusion themes"
+    ],
+    "mustNotEstablish": [
+      "stable item discrimination",
+      "test reliability",
+      "professional competence cut score",
+      "credential validity",
+      "population efficacy"
+    ]
+  },
+  "itemAnalysisGate": {
+    "firstAttemptOnlyForPrimaryCalibration": true,
+    "stableItemIdAndRevisionRequired": true,
+    "planningFloorIndependentResponsesPerItem": 100,
+    "precisionRules": [
+      "Report item difficulty with an uncertainty interval; target 95% interval half-width no greater than 0.10 before calling the estimate stable enough for operational calibration.",
+      "Report discrimination with an uncertainty interval or bootstrap interval; do not call the estimate stable if the interval is too wide to support the intended keep/revise/retire decision.",
+      "Retain distractor frequencies, omission rate, response-time distribution, repeat-exposure status and safety-critical error patterns by item revision."
+    ],
+    "boundary": "The numeric response floor is a conservative planning minimum, not a universal psychometric theorem. Higher samples may be required for extreme item difficulty, subgroup/fairness analysis, adaptive use or high-stakes decisions."
+  },
+  "testLevelGate": {
+    "planningFloorCompleteFirstAttemptForms": 200,
+    "requirements": [
+      "Use a separately governed summative blueprint with adequate sampling in every claimed competency domain.",
+      "Estimate score reliability/precision and uncertainty using methods appropriate to the form and intended decision.",
+      "Evaluate dimensionality/construct representation before interpreting one total score as a single competence scale.",
+      "Check score consequences, misclassification risk and safety-critical mastery separately from overall score."
+    ],
+    "boundary": "No reliability coefficient or total-score precision estimate from synthetic traffic, developer accounts or the 8-15 exploratory pilot can satisfy this gate."
+  },
+  "cutScoreGate": {
+    "status": "not-established",
+    "requirements": [
+      "Define the competence claim and target population before standard setting.",
+      "Use a documented standard-setting method with qualified independent subject-matter and assessment reviewers.",
+      "Report uncertainty/sensitivity around the proposed cut score.",
+      "Confirm that the final assessment samples the claimed content domain adequately.",
+      "Do not treat the current 80% learning-completion policy as empirical evidence for a professional competence standard."
+    ]
+  },
+  "fairnessAndAccessibilityGate": {
+    "requirements": [
+      "Review item functioning and outcomes for relevant groups only where ethically collected real data and adequate sample sizes permit defensible inference.",
+      "Complete real assistive-technology validation for the assessment interaction itself.",
+      "Investigate material accessibility or language barriers before attributing score differences to learner competence."
+    ]
+  },
+  "externalReview": {
+    "required": true,
+    "status": "hold",
+    "reviewerTypes": [
+      "assessment/psychometrics reviewer",
+      "injection-moulding SME",
+      "safety reviewer for jurisdiction-specific critical content"
+    ],
+    "automationMayNotApprove": true
+  },
+  "evidence": null,
+  "evidenceBasis": [
+    "certification/QUALITY_AND_ASSESSMENT_MANUAL.md",
+    "sources/ASSESSMENT_SEMANTIC_REVIEW_CONTRACT.md",
+    "sources/LEARNING_AND_ENGINEERING_REVIEW_BASIS.md"
+  ]
+}

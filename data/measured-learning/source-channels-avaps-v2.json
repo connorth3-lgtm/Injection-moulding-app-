@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "registryId": "measured-learning-source-channels-avaps-v2",
+  "datasetId": "scatimdata-avaps",
+  "evidenceRefs": [
+    "data/public-benchmark-results/scatimdata-avaps-v1.json",
+    "measured-source-proof:avaps-dataset1-source-proof.json",
+    "doi:10.3390/polym15040978",
+    "doi:10.3390/polym16010054"
+  ],
+  "policy": {
+    "onlyPromotionReadyChannelsMayBind": true,
+    "unresolvedDistanceChannelRemainsBlocked": true,
+    "deliveredTimeCoordinateMustBePreserved": true
+  },
+  "channels": [
+    {
+      "sourceChannel": "dataset1/ds1_timeseries_injectionpressure.csv:value",
+      "sourceMember": "dataset1/ds1_timeseries_injectionpressure.csv",
+      "semantic": "machine-injection-pressure",
+      "unit": "bar",
+      "role": "measured-process-waveform",
+      "coordinateChannel": "time",
+      "coordinateSemantic": "time",
+      "coordinateUnit": "s",
+      "promotionReady": true,
+      "limitation": "High-resolution value exported directly from the standard Allrounder 520E machine control. Same-cycle waveform maxima remain on the near-1:1 scale of maximaler_spritzdruck; exact peak identity is not asserted."
+    },
+    {
+      "sourceChannel": "dataset1/ds1_timeseries_injectionflow.csv:value",
+      "sourceMember": "dataset1/ds1_timeseries_injectionflow.csv",
+      "semantic": "machine-injection-flow-rate",
+      "unit": "cm3/s",
+      "role": "measured-process-waveform",
+      "coordinateChannel": "time",
+      "coordinateSemantic": "time",
+      "coordinateUnit": "s",
+      "promotionReady": true,
+      "limitation": "High-resolution injection-flow quantity exported from the standard machine control. The paper's -10/+10/+20% experiment reconstructs an approximately 59.83 baseline on the delivered source scale; unit is governed from the Allrounder 520E engineering quantity convention and source context."
+    },
+    {
+      "sourceChannel": "dataset1/ds1_scalar_and_quality.csv:weight",
+      "sourceMember": "dataset1/ds1_scalar_and_quality.csv",
+      "semantic": "measured-part-weight",
+      "unit": "g",
+      "role": "quality-outcome",
+      "coordinateChannel": "cycle_counter",
+      "coordinateSemantic": "machine-cycle-counter",
+      "coordinateUnit": "cycle",
+      "promotionReady": true,
+      "limitation": "Part weight is a robot-linked quality measurement assigned to the machine cycle. The exact 1167-row source mean is 58.920575 g versus the paper's 58.92 g."
+    },
+    {
+      "sourceChannel": "dataset1/ds1_scalar_and_quality.csv:distanceA",
+      "sourceMember": "dataset1/ds1_scalar_and_quality.csv",
+      "semantic": "measured-distance-a-source-value",
+      "unit": "unresolved-source-scale",
+      "role": "quality-outcome",
+      "coordinateChannel": "cycle_counter",
+      "coordinateSemantic": "machine-cycle-counter",
+      "coordinateUnit": "cycle",
+      "promotionReady": false,
+      "limitation": "Do not expose as millimetres yet. All 1167 source values average 85963.9889; a simple divide-by-1000 gives 85.96399 mm, which does not reproduce the paper's 84.9372 mm mean. The required source transform remains unresolved."
+    }
+  ]
+}

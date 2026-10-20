@@ -1,0 +1,104 @@
+name: Deep Audit Governance
+
+on:
+  pull_request:
+    branches: [ main, preview ]
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deep-audit-governance-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  governance-and-book-integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22'
+
+      - name: Python syntax
+        run: |
+          python -m py_compile \
+            qa_recovery_immutability.py \
+            qa_governance_state_model.py \
+            qa_governance_orphan_detection.py \
+            qa_runtime_script_versioning.py \
+            qa_book_curriculum_crosswalk.py \
+            qa_book_worked_cases_next_release.py \
+            qa_book_worked_case_calculations.py \
+            tools/sync_book_runtime_data.py \
+            tools/render_governance_status.py \
+            tools/render_book_governance_status.py
+
+      - name: Frozen recovery immutability
+        run: python qa_recovery_immutability.py
+
+      - name: Canonical governance states
+        run: python qa_governance_state_model.py
+
+      - name: Rebind pending release HOLD packets — positive and fail-closed regression
+        run: python -m unittest discover -s tests -p 'test_rebind_external_hold_candidate.py' -v
+
+      - name: Lifecycle orphan and stuck-state detection
+        run: python qa_governance_orphan_detection.py
+
+      - name: Human governance status derives from canonical model
+        run: python tools/render_governance_status.py --check
+
+      - name: Current Book governance status
+        run: python tools/render_book_governance_status.py --check
+
+      - name: Explicit runtime script release versioning
+        run: python qa_runtime_script_versioning.py
+
+      - name: Book to Academy crosswalk
+        run: python qa_book_curriculum_crosswalk.py
+
+      - name: Authoritative Book runtime mirror
+        run: python tools/sync_book_runtime_data.py --check
+
+      - name: Governed Book worked-case integration
+        run: python qa_book_worked_cases_next_release.py
+
+      - name: Book worked-case calculations
+        run: python qa_book_worked_case_calculations.py
+
+      - name: Pure process statistics domain
+        run: node qa_process_statistics_domain.mjs
+
+      - name: Generated engineering browser adapter
+        run: python tools/generate_engineering_browser_adapter.py --check
+
+      - name: Pure injection-moulding engineering domain
+        run: |
+          node qa_engineering_domain.mjs
+          node qa_engineer_simulator_units.cjs
+          node qa_virtual_apprenticeship.cjs
+          node qa_spatial_twin.cjs
+          node qa_mission_control.cjs
+          node qa_mission_control.cjs
+
+      - name: Boundary
+        if: always()
+        run: |
+          echo "These checks enforce repository-controlled integrity only."
+          echo "They do not manufacture physical-device, assistive-technology, human SME, learner-outcome, accreditation, signing, Store, or production-site evidence."

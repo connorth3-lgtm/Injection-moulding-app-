@@ -1,0 +1,5 @@
+Date_Recorded,Machine,Shift,Product_Name,Product_Weight,Required_Production,Rejected_Products,Total_Production,Avg_Gross_Weight,PP_Consumption,Pigment_Consumption,Flash_kg,Defective_kg,%Flash,%Defective,%Reprocess,Mold_Cavities,Injection_Pressure,Retention_Pressure,Melt_Temp,Mold_Temp,Cycle_Time,Cooling_Time_Injection,Ejection_Time_Injection,Retention_Time_Injection,Injection_Speed
+2099-01-01,SIM-M01,1,SIM-PART-A,12.5,1000,0,990,12.6,13.0,0.2,0.1,0.0,0.8,0.0,1.0,4,820,410,225,42,18.5,8.0,1.2,4.0,65
+2099-01-02,SIM-M01,1,SIM-PART-A,12.5,1000,12,982,12.7,13.1,0.2,0.3,0.2,2.3,1.5,2.0,4,845,420,226,43,18.9,8.2,1.2,4.1,66
+2099-01-03,SIM-M02,2,SIM-PART-B,18.0,800,24,770,18.3,14.2,0.3,0.5,0.4,3.5,2.8,3.0,2,,430,232,46,21.0,9.5,1.4,4.4,70
+2099-01-04,SIM-M02,2,SIM-PART-B,18.0,800,4,792,18.1,14.0,0.3,0.2,0.1,1.4,0.7,1.2,2,835,415,230,45,20.4,9.1,1.3,4.2,68

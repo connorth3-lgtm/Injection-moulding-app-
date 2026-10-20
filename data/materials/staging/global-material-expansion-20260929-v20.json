@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-expansion-20260929-v20",
+  "status": "korea-source-reviewed-hanwha-pp-expansion",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Twentieth expansion wave adding a current Hanwha TotalEnergies Petrochemical exact PP injection-moulding grade while retaining missing-condition boundaries.",
+  "summary": {
+    "validatedGrades": 0,
+    "sourceReviewedStagingGrades": 1,
+    "manufacturers": 1,
+    "countryFocus": "South Korea",
+    "stagingFamilies": [
+      "PP"
+    ]
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-hanwha-totalenergies",
+      "name": "Hanwha TotalEnergies Petrochemical",
+      "country": "South Korea",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-hanwha-totalenergies-pp-bi800",
+          "manufacturer": {
+            "id": "mfr-hanwha-totalenergies",
+            "name": "Hanwha TotalEnergies Petrochemical",
+            "country": "South Korea",
+            "website": "https://www.htpchem.com/"
+          },
+          "brand": "Hanwha TotalEnergies PP",
+          "grade": "BI800",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Hanwha TotalEnergies Petrochemical leaflet identifies BI800 as block PP for injection molding, with applications in home-appliance and automotive interior parts and high-flow positioning."
+          },
+          "properties": [
+            {
+              "id": "obs-hanwha-bi800-mi",
+              "property": "Melt Index",
+              "value": 43,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "direction": "not-applicable",
+              "sourceId": "src-hanwha-bi800-current",
+              "sourcePage": "physical properties",
+              "comparisonReady": false,
+              "limitations": "Manufacturer typical value; reviewed leaflet does not state the D1238 temperature/load, so this is context-only."
+            },
+            {
+              "id": "obs-hanwha-bi800-density",
+              "property": "Density",
+              "value": 0.91,
+              "unit": "g/cm³",
+              "testMethod": "ASTM D1505",
+              "direction": "not-applicable",
+              "sourceId": "src-hanwha-bi800-current",
+              "sourcePage": "physical properties",
+              "comparisonReady": false,
+              "limitations": "Representative manufacturer value for reference, not a specification."
+            },
+            {
+              "id": "obs-hanwha-bi800-hdt",
+              "property": "Heat Deflection Temperature",
+              "value": 115,
+              "unit": "°C",
+              "testMethod": "ASTM D648",
+              "direction": "not-applicable",
+              "sourceId": "src-hanwha-bi800-current",
+              "sourcePage": "physical properties",
+              "comparisonReady": false,
+              "limitations": "Representative manufacturer value; exact loading condition is not exposed on the surfaced leaflet extract, so this remains context-only."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-hanwha-bi800-current",
+              "publisher": "Hanwha TotalEnergies Petrochemical",
+              "title": "BI800 Block PP for injection molding",
+              "url": "https://www.htpchem.com/Dext/file_down?dir=product&fileName=70c0dc8ef3214118914a34b4fed98e5d&oriFileName=Leaflet_BI800_EN.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer leaflet confirms exact BI800 identity, injection-moulding application and representative ASTM values. MI is not comparison-ready because temperature/load are absent from the reviewed sheet extract; no missing test condition is inferred."
+          }
+        }
+      ]
+    }
+  ],
+  "governance": {
+    "runtimePromotionBlocked": true,
+    "reason": "Manufacturer leaflet does not expose full D1238 temperature/load on the reviewed surface.",
+    "comparisonReadyNumericClaims": 0,
+    "productionRecipes": 0
+  }
+}

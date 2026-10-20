@@ -1,0 +1,44 @@
+{
+  "schema": 1,
+  "datasetId": "impure-pascoe-2022",
+  "status": "pending-source-clarification",
+  "authority": {
+    "sourceType": null,
+    "sourceReference": null,
+    "sourceIdentity": null
+  },
+  "deliveredCycleFiles": 307,
+  "channels": {
+    "HydPressure[IRT/Pascoe]": {
+      "meaning": "measured hydraulic pressure",
+      "engineeringUnit": null,
+      "scaling": null,
+      "sourceEvidence": null
+    },
+    "ScrewPosition[IRT/Pascoe]": {
+      "meaning": "measured screw position",
+      "engineeringUnit": null,
+      "referenceOrigin": null,
+      "scaling": null,
+      "sourceEvidence": null
+    },
+    "Analog Input[1]": {
+      "mappingType": null,
+      "segments": []
+    },
+    "Analog Input[2]": {
+      "mappingType": "stage-dependent",
+      "segments": []
+    }
+  },
+  "coverage": {
+    "cycleFilesMapped": 0,
+    "cycleFilesExplicitlyExcluded": 307
+  },
+  "promotionBoundary": {
+    "manufacturerNominalUnitsAloneInsufficient": true,
+    "aggregateSimilarityAloneInsufficient": true,
+    "analogInput2GlobalMeaningForbidden": true,
+    "unknownCoverageRemainsNonCounting": true
+  }
+}

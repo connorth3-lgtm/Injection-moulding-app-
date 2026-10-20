@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "bookId": "mouldmaster-book",
+  "version": "2026.09.14.5-audit",
+  "policy": "accuracy-overkill",
+  "auditedAt": "2026-09-14",
+  "scope": {
+    "parts": 8,
+    "chapters": 46,
+    "claims": 137,
+    "claimCoverage": "46/46 chapters and 137/137 stable claim IDs",
+    "claimResolutionOverlay": "book-claim-resolution-all-v1.json",
+    "qualificationResolutionOverlay": "book-qualification-resolution-all-v1.json"
+  },
+  "effectiveClaimDisposition": {
+    "supported": 116,
+    "qualified": 21,
+    "hold": 0,
+    "conflicting": 0,
+    "rule": "Qualified claims are deliberate scope boundaries after publication-readiness review; they remain non-universal and do not authorize machine, mould, material, site or product-specific values/procedures."
+  },
+  "qualityFindings": [
+    {
+      "severity": "governance-data-integrity",
+      "finding": "Two historical review-ledger summary objects did not match their individual claim records.",
+      "affectedLedgers": [
+        "book-claim-review-foundations-materials-machine-v1.json",
+        "book-claim-review-troubleshooting-v1.json"
+      ],
+      "disposition": "Individual claim records were treated as authoritative. Corrected recounts are recorded in book-claim-resolution-all-v1.json; historical ledgers are left immutable for audit traceability."
+    },
+    {
+      "severity": "qualification-integrity",
+      "finding": "Qualified claims included both evidence gaps and deliberate scope boundaries.",
+      "disposition": "Forty-two evidence-gap qualifications were re-reviewed with stronger current evidence and promoted to supported. Twenty-one claims remain qualified intentionally because machine, mould, site, product-disposition or non-unique diagnostic boundaries are intrinsic to their wording. None of those 21 scope qualifications blocks generic Book publication review."
+    },
+    {
+      "severity": "publication-boundary",
+      "finding": "Clearing claim evidence gaps and conflicts does not itself authorize chapter publication.",
+      "disposition": "All chapters remain technical-review. No manifest/authored chapter is changed to verified by this audit; explicit publication authorization remains a separate governed event."
+    },
+    {
+      "severity": "runtime-parity",
+      "finding": "The original Book runtime enabled a verified listening control without a Book-specific handler, so read/listen parity was not technically enforceable.",
+      "disposition": "The Book runtime now renders verified Read and Listen surfaces through one governed verifiedChapterHtml renderer and delegates visible text to the existing device Read Aloud engine. qa_book_release_integration.py enforces that shared renderer/handler contract."
+    }
+  ],
+  "parts": [
+    {
+      "id": "foundations",
+      "chapters": ["what-injection-moulding-is","cycle","machine-anatomy","mould-anatomy","safety-foundations"]
+    },
+    {
+      "id": "materials",
+      "chapters": ["polymer-structure","rheology","moisture-drying","thermal-history","material-families","fillers-additives"]
+    },
+    {
+      "id": "machine",
+      "chapters": ["plasticising-unit","shot-utilisation","velocity-pressure","vp-transfer","clamp"]
+    },
+    {
+      "id": "mould",
+      "chapters": ["feed-system","venting","cooling","ejection-draft","hot-runners"]
+    },
+    {
+      "id": "process-development",
+      "chapters": ["process-baseline","fill-study","pressure-loss","gate-seal","process-window","documentation"]
+    },
+    {
+      "id": "troubleshooting",
+      "chapters": ["diagnostic-method","short-shot","flash","sink-voids","splay","burns","weld-lines","warpage","black-specks"]
+    },
+    {
+      "id": "process-engineering",
+      "chapters": ["cavity-pressure","doe","capability","process-monitoring","dimensional-stability"]
+    },
+    {
+      "id": "advanced",
+      "chapters": ["fibre-orientation","thin-wall","multi-cavity","high-performance-polymers","complex-diagnostics"]
+    }
+  ],
+  "chapterDispositionRule": {
+    "allListedChapters": "claim-evidence-and-scope-review-cleared",
+    "publicationState": "technical-review",
+    "verified": false,
+    "whyNotVerified": [
+      "The accuracy gate forbids self-promotion from evidence review alone.",
+      "Explicit chapter-level publication authorization is not yet recorded by this audit.",
+      "Source currency must be re-confirmed at the promotion event for any source whose status could have changed.",
+      "Verified read/listen parity is implemented and enforced by release QA, but promotion still requires the current release head to pass that gate."
+    ]
+  },
+  "gateChecks": [
+    {"id":"chapter-inventory","result":"pass","detail":"46 unique manifest chapters are covered exactly once across the five base claim-review ledgers."},
+    {"id":"claim-inventory","result":"pass","detail":"137 globally unique claim IDs are present with section, class, applicability, exclusions, evidence, conclusion and basis."},
+    {"id":"evidence-namespace","result":"pass-by-qa-contract","detail":"All resolution evidence must resolve to a traceable HTTPS source record; qa_book_claim_coverage.py enforces this."},
+    {"id":"hold-conflict-clearance","result":"pass","detail":"Ordered high-risk, all-book and qualification-review overlays produce 0 hold and 0 conflicting effective claims."},
+    {"id":"qualification-review","result":"pass","detail":"42 evidence-gap qualifications were upgraded with stronger evidence; the remaining 21 qualifications are explicit non-universal scope boundaries and none blocks generic publication review."},
+    {"id":"universal-numeric-setpoints","result":"pass-no-new-values","detail":"This audit adds no production setpoint, drying recipe, pressure threshold, vent dimension, cooling target, fill percentage or machine sizing factor to Book teaching text."},
+    {"id":"diagnostic-contract","result":"pass","detail":"Troubleshooting conclusions remain hypotheses/evidence/tests rather than symptom-to-guaranteed-cause or guaranteed-fix rules."},
+    {"id":"read-listen-parity","result":"implemented-and-gated","detail":"Verified Read and Listen surfaces use the same governed verifiedChapterHtml renderer and Listen delegates that visible governed surface to the existing device Read Aloud engine; release QA asserts the contract."},
+    {"id":"publication-self-promotion","result":"pass","detail":"0 chapters are promoted to verified by evidence-review or qualification-review overlays; fail-closed state is preserved."}
+  ],
+  "publicationDecision": {
+    "evidenceReviewComplete": true,
+    "claimLevelEvidenceBlockersRemaining": 0,
+    "claimLevelConflictsRemaining": 0,
+    "scopeQualifiedClaimsRemaining": 21,
+    "scopeQualifiedClaimsBlockingPublication": 0,
+    "chaptersReadyForExplicitPromotionReview": 46,
+    "chaptersAutomaticallyVerified": 0,
+    "currentBookDisposition": "technical-review-only"
+  }
+}

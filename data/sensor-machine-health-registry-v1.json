@@ -1,0 +1,325 @@
+{
+  "schema": 1,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "status": "accepted-evidence-reviewed-registry",
+  "scope": "Conservative first accepted MouldMaster registry of injection-moulding sensor, signal-integrity and machine-health concepts. Every concept has source-supported measurement semantics or bounded diagnostic meaning, explicit confounders and traceable measured evidence. Numerical values remain source-specific and no signal is treated as automatic root-cause proof.",
+  "policy": {
+    "signalIsEvidenceNotRootCause": true,
+    "sourceUnitsAndScaleMustBePreserved": true,
+    "sensorLocationMustBePreservedWhereKnown": true,
+    "derivedFeaturesMustRemainDistinctFromDirectMeasurements": true,
+    "universalThresholdsAllowed": false,
+    "crossMachineTransferRequiresValidation": true
+  },
+  "summary": {
+    "acceptedConcepts": 26,
+    "directMeasurementConcepts": 20,
+    "derivedFeatureConcepts": 3,
+    "diagnosticInterpretationConcepts": 2,
+    "measurementIntegrityConcepts": 1
+  },
+  "concepts": [
+    {
+      "id": "sig-cavity-pressure-direct-measurement",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "cavity-pressure",
+      "measurementLocationOrDomain": "Pressure sensor mounted in the mould cavity in direct contact with polymer flow; exact position in the flow path must remain attached to the measurement.",
+      "unitsOrFeatureSemantics": "Pressure in bar where documented by OpenMMS; other sources retain their source engineering units and field metadata.",
+      "failureAndConfounders": ["sensor-location dependence", "thermal-zero drift", "installation preload", "sampling/filtering differences", "different cavity/gate geometry"],
+      "diagnosticUseBoundary": "Cavity pressure is a direct local process measurement and can support filling/packing/quality reasoning, but a pressure value or curve alone is not proof of one physical root cause.",
+      "evidence": [
+        {"type":"dataset-profile","id":"openmms-t4g","path":"data/public-benchmark-results/openmms-t4g-v1.json","role":"direct measured cavity-pressure source"},
+        {"type":"dataset-profile","id":"scatimdata-avaps","path":"data/public-benchmark-results/scatimdata-v1.json","role":"cycle-linked high-resolution cavity-pressure source"}
+      ]
+    },
+    {
+      "id": "sig-cavity-pressure-curve-shape",
+      "status": "accepted-evidence-reviewed",
+      "kind": "derived-feature",
+      "modality": "cavity-pressure",
+      "measurementLocationOrDomain": "Features derived from a cavity-pressure time history while retaining sensor position, cycle linkage and time basis.",
+      "unitsOrFeatureSemantics": "Peak, timing, area/integral and curve-shape descriptors inherit pressure/time units from the source trace; feature definitions must be stored explicitly.",
+      "failureAndConfounders": ["different sensor positions", "time-base changes", "filtering", "cycle segmentation", "feature-window definition"],
+      "diagnosticUseBoundary": "Pressure-curve features can discriminate process states or correlate with quality, but feature importance and prediction accuracy do not establish physical causation.",
+      "evidence": [
+        {"type":"primary-measured-study","id":"10.3390/polym13162755","role":"cavity-pressure quality characterization"},
+        {"type":"primary-measured-study","id":"10.1002/pen.27078","role":"pressure-time feature linked to measured part weight"}
+      ]
+    },
+    {
+      "id": "sig-cavity-pressure-location-interpretation",
+      "status": "accepted-evidence-reviewed",
+      "kind": "diagnostic-interpretation",
+      "modality": "cavity-pressure",
+      "measurementLocationOrDomain": "Comparison of cavity-pressure traces at different physical locations within one mould/cavity system.",
+      "unitsOrFeatureSemantics": "Relative timing, filling-phase shape and local pressure response must be interpreted with the physical sensor map, not as interchangeable scalar channels.",
+      "failureAndConfounders": ["gate distance", "flow-front path", "local venting", "insert position", "tool wear/warpage", "sensor sensitivity differences"],
+      "diagnosticUseBoundary": "Spatial pressure differences can indicate local filling or tool-condition effects, but similar curve asymmetry in another mould does not prove the same venting, wear or alignment cause.",
+      "evidence": [
+        {"type":"primary-measured-study","id":"10.1007/s00170-023-11100-1","role":"multi-location cavity-pressure fault diagnosis"},
+        {"type":"primary-measured-study","id":"10.3390/s23031735","role":"multiple in-mould sensor cavity-specific response"}
+      ]
+    },
+    {
+      "id": "sig-nozzle-front-pressure-direct",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "nozzle-pressure",
+      "measurementLocationOrDomain": "Dynisco viscometer front pressure sensor mounted at the injection nozzle in the SKZ LoKI experiment.",
+      "unitsOrFeatureSemantics": "Direct pressure in bar; exact checksum-matched field MEAS_pressure_frontsensor_bar sampled at approximately 10 kHz.",
+      "failureAndConfounders": ["baseline offset", "sensor thermal state", "nozzle mounting", "sample alignment", "material rheology"],
+      "diagnosticUseBoundary": "Use as a local measured nozzle-side pressure trace; do not convert source-specific pressure magnitudes into universal machine-pressure limits.",
+      "evidence": [{"type":"dataset-profile","id":"skz-loki-v1","path":"data/public-benchmark-results/skz-loki-v1.json","role":"direct high-frequency pressure source"}]
+    },
+    {
+      "id": "sig-nozzle-back-pressure-direct",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "nozzle-pressure",
+      "measurementLocationOrDomain": "Dynisco viscometer back pressure sensor in the nozzle-mounted SKZ LoKI measurement arrangement.",
+      "unitsOrFeatureSemantics": "Direct pressure in bar; exact checksum-matched field MEAS_pressure_backsensor_bar sampled at approximately 10 kHz.",
+      "failureAndConfounders": ["baseline offset", "sensor thermal state", "relative sensor position", "sample alignment", "material rheology"],
+      "diagnosticUseBoundary": "Use as the second local physical pressure channel and preserve its position relative to the front sensor; it is not interchangeable with machine hydraulic pressure.",
+      "evidence": [{"type":"dataset-profile","id":"skz-loki-v1","path":"data/public-benchmark-results/skz-loki-v1.json","role":"direct high-frequency pressure source"}]
+    },
+    {
+      "id": "sig-nozzle-pressure-difference-derived",
+      "status": "accepted-evidence-reviewed",
+      "kind": "derived-feature",
+      "modality": "nozzle-pressure",
+      "measurementLocationOrDomain": "Difference feature derived from the two physical SKZ nozzle/viscometer pressure channels.",
+      "unitsOrFeatureSemantics": "bar; source field MEAS_pressure_difference_bar. It remains classified as derived and is not counted as an additional direct measured scalar channel.",
+      "failureAndConfounders": ["front/back sensor zero mismatch", "source sign convention", "time alignment", "sensor calibration mismatch"],
+      "diagnosticUseBoundary": "Useful as a source-defined differential feature only when the two underlying pressure sensors and sign convention are preserved.",
+      "evidence": [{"type":"dataset-profile","id":"skz-loki-v1","path":"data/public-benchmark-results/skz-loki-v1.json","role":"source-defined derived pressure difference"}]
+    },
+    {
+      "id": "sig-mould-plate-temperature-thermocouple",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "mould-surface-temperature",
+      "measurementLocationOrDomain": "Thermocouple measurement in the mould plate; exact sensor position and distinction from melt temperature must be retained.",
+      "unitsOrFeatureSemantics": "°C in the OpenMMS source UI/CSV semantics.",
+      "failureAndConfounders": ["sensor depth", "contact quality", "thermal lag", "local cooling circuit", "distance from cavity surface"],
+      "diagnosticUseBoundary": "A mould-plate thermocouple measures a local thermal response and must not be treated as the polymer melt temperature or as a universal cavity-surface value.",
+      "evidence": [{"type":"dataset-profile","id":"openmms-t4g","path":"data/public-benchmark-results/openmms-t4g-v1.json","role":"direct mould temperature source"}]
+    },
+    {
+      "id": "sig-extraction-force-ejector-pin",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "extraction-force",
+      "measurementLocationOrDomain": "Force sensor installed in one extraction/ejector pin of the mould.",
+      "unitsOrFeatureSemantics": "N in OpenMMS; measured extraction force is local to the instrumented pin and extraction mechanism.",
+      "failureAndConfounders": ["ejector alignment", "pin friction", "part shrink-on-core", "surface condition", "sensor preload", "other ejector pins sharing load"],
+      "diagnosticUseBoundary": "The measured force can expose release-system changes but one pin does not necessarily measure total ejection load for the full mould.",
+      "evidence": [
+        {"type":"dataset-profile","id":"openmms-t4g","path":"data/public-benchmark-results/openmms-t4g-v1.json","role":"direct extraction-force source"},
+        {"type":"primary-measured-study","id":"10.1016/S0141-6359(99)00039-2","role":"independent quantitative ejection-force experiment"}
+      ]
+    },
+    {
+      "id": "sig-extraction-force-fault-load",
+      "status": "accepted-evidence-reviewed",
+      "kind": "diagnostic-interpretation",
+      "modality": "extraction-force",
+      "measurementLocationOrDomain": "Extraction-force response during a controlled extraction-system fault introduced at the instrumented pin.",
+      "unitsOrFeatureSemantics": "Change in N-valued extraction-force waveform/peak relative to the same mould's normal operating sequence.",
+      "failureAndConfounders": ["normal part-release variation", "mould temperature", "part cooling", "surface contamination", "fault introduction method"],
+      "diagnosticUseBoundary": "A load increase under the controlled OpenMMS fault supports extraction-system health monitoring, but the same force change elsewhere may arise from cooling, shrinkage, surface or alignment causes.",
+      "evidence": [{"type":"dataset-profile","id":"openmms-t4g","path":"data/public-benchmark-results/openmms-t4g-v1.json","role":"normal/fault extraction-system case-study context"}]
+    },
+    {
+      "id": "sig-extraction-plate-acceleration",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "vibration-accelerometer",
+      "measurementLocationOrDomain": "Three-axis accelerometer mounted on the mould extraction plate.",
+      "unitsOrFeatureSemantics": "Source software labels the axes as g, but raw stationary values indicate an embedded scale factor; MouldMaster preserves raw values and the source label without undocumented rescaling.",
+      "failureAndConfounders": ["mounting stiffness", "sensor orientation", "raw scale factor", "machine vibration", "impact events", "separate acquisition clock"],
+      "diagnosticUseBoundary": "Use the raw axes as source-scaled inertial measurements unless a validated calibration/scale conversion is available.",
+      "evidence": [{"type":"dataset-profile","id":"openmms-t4g","path":"data/public-benchmark-results/openmms-t4g-v1.json","role":"direct three-axis inertial source"}]
+    },
+    {
+      "id": "sig-extraction-plate-angular-velocity",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "angular-velocity",
+      "measurementLocationOrDomain": "Three-axis gyroscope on the extraction-plate inertial module.",
+      "unitsOrFeatureSemantics": "Source software label dps/1000 is retained verbatim; raw values are not silently rescaled.",
+      "failureAndConfounders": ["sensor orientation", "scale convention", "mounting stiffness", "machine vibration", "separate acquisition clock"],
+      "diagnosticUseBoundary": "Angular-velocity axes are useful for extraction-motion signatures only with the original orientation/scale semantics or a validated recalibration.",
+      "evidence": [{"type":"dataset-profile","id":"openmms-t4g","path":"data/public-benchmark-results/openmms-t4g-v1.json","role":"direct three-axis gyroscope source"}]
+    },
+    {
+      "id": "sig-multimodule-clock-separation",
+      "status": "accepted-evidence-reviewed",
+      "kind": "measurement-integrity",
+      "modality": "timebase-synchronisation",
+      "measurementLocationOrDomain": "Multisensor acquisition where temperature/pressure/force and inertial modules carry separate clocks.",
+      "unitsOrFeatureSemantics": "Seconds on separate t and t2 axes; do not force an undocumented one-to-one timestamp mapping.",
+      "failureAndConfounders": ["clock drift", "different sample rates", "module buffering", "timestamp jitter", "implicit resampling"],
+      "diagnosticUseBoundary": "Cross-sensor timing comparisons require explicit synchronisation evidence; convenience interpolation must be marked as derived rather than treated as original timing.",
+      "evidence": [{"type":"dataset-profile","id":"openmms-t4g","path":"data/public-benchmark-results/openmms-t4g-v1.json","role":"two-clock raw acquisition evidence"}]
+    },
+    {
+      "id": "sig-injection-pressure-waveform",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "injection-pressure",
+      "measurementLocationOrDomain": "Machine/process injection-pressure time series captured through the Arburg/AVAPS data path; exact machine signal location remains attached to the dataset.",
+      "unitsOrFeatureSemantics": "Cycle-linked numeric pressure curve sampled every 6 ms in the published scatimdata experiments; engineering unit must remain the source field's unit metadata.",
+      "failureAndConfounders": ["machine signal definition", "sampling interval", "filtering", "hydraulic-vs-plastic-pressure interpretation", "machine transfer"],
+      "diagnosticUseBoundary": "Injection-pressure waveform shape can support process/quality monitoring, but it is not automatically equivalent to local cavity pressure.",
+      "evidence": [{"type":"dataset-profile","id":"scatimdata-avaps","path":"data/public-benchmark-results/scatimdata-v1.json","role":"high-resolution injection-pressure source"}]
+    },
+    {
+      "id": "sig-injection-flow-waveform",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "injection-flow-rate",
+      "measurementLocationOrDomain": "Machine-reported injection-flow time series from the Arburg/AVAPS experimental data path.",
+      "unitsOrFeatureSemantics": "Cycle-linked numeric injection-flow curve sampled every 6 ms in scatimdata; preserve source signal naming and engineering units.",
+      "failureAndConfounders": ["machine calculation method", "screw diameter", "sampling interval", "filtering", "machine-specific scaling"],
+      "diagnosticUseBoundary": "Machine-reported flow is useful for within-system comparisons; cross-machine volumetric equivalence requires validated signal semantics and screw geometry.",
+      "evidence": [{"type":"dataset-profile","id":"scatimdata-avaps","path":"data/public-benchmark-results/scatimdata-v1.json","role":"high-resolution injection-flow source"}]
+    },
+    {
+      "id": "sig-screw-position-end-hold",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "screw-position",
+      "measurementLocationOrDomain": "Machine/MES screw position at the end of hold pressure on an Engel E-MAC production press.",
+      "unitsOrFeatureSemantics": "cm for iGuzzini field CPn - Screw position at the end of hold pressure.",
+      "failureAndConfounders": ["machine zero/reference", "screw geometry", "cushion definition", "sensor calibration", "material compressibility"],
+      "diagnosticUseBoundary": "Use as a machine-specific end-of-hold position/cushion-related indicator; numerical values do not transfer directly across screw units or machines.",
+      "evidence": [{"type":"dataset-profile","id":"iguzzini-road-lenses","path":"data/public-benchmark-results/iguzzini-road-lenses-v1.json","role":"real-production screw-position field"}]
+    },
+    {
+      "id": "sig-screw-torque-peak",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "motor-torque",
+      "measurementLocationOrDomain": "Machine/MES torque peak for the current plasticising/moulding cycle on an Engel E-MAC production press.",
+      "unitsOrFeatureSemantics": "N*m for iGuzzini field Ms - Torque peak value current cycle.",
+      "failureAndConfounders": ["screw design", "material viscosity", "back pressure", "rotation speed", "drive calibration", "barrel temperature"],
+      "diagnosticUseBoundary": "Torque changes can indicate altered plasticising load or material/process state, but they do not uniquely diagnose wear, contamination or viscosity without corroborating evidence.",
+      "evidence": [{"type":"dataset-profile","id":"iguzzini-road-lenses","path":"data/public-benchmark-results/iguzzini-road-lenses-v1.json","role":"real-production torque field"}]
+    },
+    {
+      "id": "sig-clamp-force-peak",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "clamp-force",
+      "measurementLocationOrDomain": "Machine/MES clamping-force peak value for a production moulding cycle.",
+      "unitsOrFeatureSemantics": "N for iGuzzini field SKs - Clamping force peak value.",
+      "failureAndConfounders": ["machine calibration", "tie-bar load distribution", "tool projected area", "process pressure", "mechanical friction"],
+      "diagnosticUseBoundary": "Machine clamp-force values support within-machine load monitoring; they are not a universal flash threshold or proof of mould protection condition.",
+      "evidence": [{"type":"dataset-profile","id":"iguzzini-road-lenses","path":"data/public-benchmark-results/iguzzini-road-lenses-v1.json","role":"real-production clamp-force field"}]
+    },
+    {
+      "id": "sig-specific-back-pressure-peak",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "barrel-melt-pressure",
+      "measurementLocationOrDomain": "Machine/MES specific back-pressure peak during plasticising on the Engel E-MAC production press.",
+      "unitsOrFeatureSemantics": "bar for iGuzzini field APSs - Specific back pressure peak value.",
+      "failureAndConfounders": ["machine definition of specific pressure", "screw geometry", "material viscosity", "rotation speed", "temperature"],
+      "diagnosticUseBoundary": "Treat as a machine-specific plasticising load indicator; it must not be equated automatically with nozzle or cavity pressure.",
+      "evidence": [{"type":"dataset-profile","id":"iguzzini-road-lenses","path":"data/public-benchmark-results/iguzzini-road-lenses-v1.json","role":"real-production back-pressure field"}]
+    },
+    {
+      "id": "sig-tie-bar-strain-clamp-proxy",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "tie-bar-strain",
+      "measurementLocationOrDomain": "External strain measurement on an injection-moulding machine tie bar, used as a clamping-force/load proxy in production validation.",
+      "unitsOrFeatureSemantics": "Strain-derived clamping/load signal; exact scaling/calibration remains study- and installation-specific.",
+      "failureAndConfounders": ["sensor placement", "tie-bar geometry", "temperature", "preload", "machine structure", "calibration to total clamp force"],
+      "diagnosticUseBoundary": "External tie-bar strain can support repeatable load monitoring after local calibration, but it is not inherently equal to total clamp force across machines.",
+      "evidence": [{"type":"primary-measured-study","id":"10.3390/technologies13030097","role":"two-site external-sensor production validation"}]
+    },
+    {
+      "id": "sig-part-weight-cycle-quality",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "part-weight",
+      "measurementLocationOrDomain": "Physical post-moulding part-weight measurement linked back to an individual moulding cycle or experimental run.",
+      "unitsOrFeatureSemantics": "Mass/weight value using the source dataset's scale; the cycle linkage is part of the measurement semantics.",
+      "failureAndConfounders": ["scale calibration", "part conditioning", "runner/gate inclusion", "multi-cavity attribution", "cycle-to-part join errors"],
+      "diagnosticUseBoundary": "Part weight is a useful physical quality outcome and process-consistency proxy, but it does not by itself identify the mechanism causing a change.",
+      "evidence": [
+        {"type":"dataset-profile","id":"scatimdata-avaps","path":"data/public-benchmark-results/scatimdata-v1.json","role":"cycle-linked physical weight outcome"},
+        {"type":"primary-measured-study","id":"10.1002/pen.27078","role":"pressure-linked measured part weight"}
+      ]
+    },
+    {
+      "id": "sig-ultrasound-rms-feature",
+      "status": "accepted-evidence-reviewed",
+      "kind": "derived-feature",
+      "modality": "ultrasound-amplitude",
+      "measurementLocationOrDomain": "RMS feature generated from in-mould ultrasound channels in the FORinFPRO hybrid injection-moulding sensor package.",
+      "unitsOrFeatureSemantics": "Ultrasound RMS amplitude feature; physical source headers do not yet provide a normalized engineering unit, so the feature remains source-scaled.",
+      "failureAndConfounders": ["sensor coupling", "temperature", "material acoustic impedance", "channel position", "source scaling", "RMS window definition"],
+      "diagnosticUseBoundary": "Use as a source-scaled ultrasound feature within the instrumented mould context unless independent calibration establishes transferable physical units.",
+      "evidence": [{"type":"dataset-profile","id":"forinfpro-himd-v1","path":"data/public-benchmark-results/forinfpro-himd-v1.json","role":"measured ultrasound RMS source"}]
+    },
+    {
+      "id": "sig-three-phase-active-power",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "electrical-power",
+      "measurementLocationOrDomain": "Per-phase active electrical power from Shelly Pro 3EM meters on a real injection-moulding plant energy-monitoring installation.",
+      "unitsOrFeatureSemantics": "W for phases A, B and C; total/aggregate fields remain separate from the direct per-phase measurements.",
+      "failureAndConfounders": ["meter placement", "other loads on circuit", "phase assignment", "sampling interval", "production-state alignment"],
+      "diagnosticUseBoundary": "Per-phase active power supports machine/auxiliary state and energy-loss analysis only when the measured electrical boundary and production-state context are known.",
+      "evidence": [{"type":"dataset-profile","id":"zenodo-energy-20338544","path":"data/public-benchmark-results/zenodo-energy-20338544-v1.json","role":"direct per-phase active-power source"}]
+    },
+    {
+      "id": "sig-three-phase-apparent-power",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "electrical-power",
+      "measurementLocationOrDomain": "Per-phase apparent electrical power from Shelly Pro 3EM meters on the monitored injection-moulding plant equipment.",
+      "unitsOrFeatureSemantics": "VA for phases A, B and C.",
+      "failureAndConfounders": ["meter placement", "phase assignment", "nonlinear loads", "production-state alignment", "sampling interval"],
+      "diagnosticUseBoundary": "Apparent power is not interchangeable with active energy consumption; interpret it with the electrical boundary and load context.",
+      "evidence": [{"type":"dataset-profile","id":"zenodo-energy-20338544","path":"data/public-benchmark-results/zenodo-energy-20338544-v1.json","role":"direct per-phase apparent-power source"}]
+    },
+    {
+      "id": "sig-three-phase-current",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "electrical-current",
+      "measurementLocationOrDomain": "Per-phase electrical current measured by Shelly Pro 3EM devices on the plant energy-monitoring boundary.",
+      "unitsOrFeatureSemantics": "A for phases A, B and C; empty neutral-current field is explicitly excluded.",
+      "failureAndConfounders": ["meter placement", "phase assignment", "other circuit loads", "production state", "device sampling"],
+      "diagnosticUseBoundary": "Current changes can support state/load monitoring but cannot be assigned to a specific motor or mechanism unless the electrical measurement boundary isolates that load.",
+      "evidence": [{"type":"dataset-profile","id":"zenodo-energy-20338544","path":"data/public-benchmark-results/zenodo-energy-20338544-v1.json","role":"direct per-phase current source"}]
+    },
+    {
+      "id": "sig-three-phase-voltage",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "electrical-voltage",
+      "measurementLocationOrDomain": "Per-phase supply voltage measured by Shelly Pro 3EM devices at the monitored plant electrical boundary.",
+      "unitsOrFeatureSemantics": "V for phases A, B and C.",
+      "failureAndConfounders": ["measurement boundary", "supply variation", "phase assignment", "device accuracy", "sampling interval"],
+      "diagnosticUseBoundary": "Voltage is a supply-condition signal; deviations should not be interpreted as machine faults without electrical-system context.",
+      "evidence": [{"type":"dataset-profile","id":"zenodo-energy-20338544","path":"data/public-benchmark-results/zenodo-energy-20338544-v1.json","role":"direct per-phase voltage source"}]
+    },
+    {
+      "id": "sig-three-phase-frequency",
+      "status": "accepted-evidence-reviewed",
+      "kind": "direct-measurement",
+      "modality": "electrical-frequency",
+      "measurementLocationOrDomain": "Per-phase mains frequency measured by Shelly Pro 3EM devices at the injection-plant electrical boundary.",
+      "unitsOrFeatureSemantics": "Hz for phases A, B and C.",
+      "failureAndConfounders": ["measurement boundary", "grid/supply condition", "device sampling", "phase assignment"],
+      "diagnosticUseBoundary": "Frequency is primarily an electrical-supply integrity signal and should not be treated as an injection-process fault indicator without corroborating evidence.",
+      "evidence": [{"type":"dataset-profile","id":"zenodo-energy-20338544","path":"data/public-benchmark-results/zenodo-energy-20338544-v1.json","role":"direct per-phase frequency source"}]
+    }
+  ]
+}

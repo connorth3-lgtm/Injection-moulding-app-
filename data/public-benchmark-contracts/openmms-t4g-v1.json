@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "datasetId": "openmms-t4g",
+  "status": "candidate-until-executed-profile-passes",
+  "source": {
+    "title": "OpenMMS-T4G real mould-monitoring case data",
+    "repository": "https://github.com/TEPGomes/OpenMMS-T4G",
+    "repositoryCommit": "cfa6e23c7fc02a645e31e06d299021cb0a3ce3e7",
+    "license": "BSD-3-Clause",
+    "licenseBlobSha1": "c3dbb9b585cb7578a84bb171f11c9d33a5e8b72b",
+    "peerReviewedCompanion": "10.3390/s23073569",
+    "articleDataAvailabilityPinsSameCommit": true
+  },
+  "file": {
+    "path": "Real_World_Test/Case_Study_Raw_Data.csv",
+    "gitBlobSha1": "d035660bce92f21954818a6379326d2897eebae8",
+    "sizeBytes": 2872573
+  },
+  "measurementContext": {
+    "domain": "in-mould and mould-mounted monitoring during injection moulding",
+    "paperReportedSensorFamilies": [
+      "cavity pressure",
+      "thermocouples",
+      "force",
+      "3-axis accelerometer",
+      "gyroscope"
+    ],
+    "paperReportedConversionSemantics": "Temperature is registered directly; pressure and force are calculated from ADC voltage and sensor/charge-amplifier calibration relationships described by the companion paper.",
+    "qualityOutcomeStatus": "case-study monitoring evidence; no universal quality label or root-cause claim is assumed"
+  },
+  "acceptance": {
+    "requirePinnedCommitFileRetrieval": true,
+    "requireFileSha256": true,
+    "requireBlobSizeMatch": true,
+    "requireHeaderSchema": true,
+    "requireTimeOrderingOrSequenceBasis": true,
+    "requireSignalUnitSemanticsWhereAvailable": true,
+    "requireNoRawRowsInProfile": true,
+    "rawPublisherFileCommitted": false,
+    "rawRowsUploadedAsArtifact": false
+  },
+  "evidenceBoundary": "This source is a real case-study monitoring file explicitly named by the peer-reviewed article. Profiling may establish sensor identities, row/sample ordering and aggregate file structure, but must not turn one case study into a universal process recipe, defect mechanism proof or production-change authority."
+}

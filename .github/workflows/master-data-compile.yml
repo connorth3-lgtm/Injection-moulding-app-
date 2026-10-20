@@ -1,0 +1,147 @@
+name: MouldMaster Master Data Compilation
+# Effective measured-source view includes fresh-main Wave-2 batches through batch 5. Zenodo 20338544 adds direct production-energy waveforms; AD-STGN remains metadata-only until publisher payload delivery.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/compile_master_data.py'
+      - 'tools/compile_master_data_wave2_batch4.py'
+      - 'tools/compile_master_data_wave2_xrd_xps.py'
+      - 'tools/compile_master_data_base.py'
+      - 'tools/harvest_openalex_injection_moulding.py'
+      - 'qa_master_data_compile.py'
+      - 'qa_content_scale_targets.py'
+      - 'qa_content_scale_targets_impl.py'
+      - 'data/content-scale-targets.json'
+      - 'data/measured-dataset-inventory-v1.json'
+      - 'data/measured-dataset-execution-ledger-v1.json'
+      - 'data/measured-dataset-wave2-extension-v1.json'
+      - 'data/measured-dataset-wave2-batch4-extension-v1.json'
+      - 'data/measured-dataset-wave2-batch5-extension-v1.json'
+      - 'data/measured-dataset-rights-review-*.json'
+      - 'data/public-benchmark-contracts/**'
+      - 'data/public-benchmark-results/**'
+      - 'data/primary-measured-evidence-registry-v1.json'
+      - 'data/primary-measured-evidence/**'
+      - 'data/deep-dive-v2-*.json'
+      - '.github/workflows/master-data-compile.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/compile_master_data.py'
+      - 'tools/compile_master_data_wave2_batch4.py'
+      - 'tools/compile_master_data_wave2_xrd_xps.py'
+      - 'tools/compile_master_data_base.py'
+      - 'tools/harvest_openalex_injection_moulding.py'
+      - 'qa_master_data_compile.py'
+      - 'qa_content_scale_targets.py'
+      - 'qa_content_scale_targets_impl.py'
+      - 'data/content-scale-targets.json'
+      - 'data/measured-dataset-inventory-v1.json'
+      - 'data/measured-dataset-execution-ledger-v1.json'
+      - 'data/measured-dataset-wave2-extension-v1.json'
+      - 'data/measured-dataset-wave2-batch4-extension-v1.json'
+      - 'data/measured-dataset-wave2-batch5-extension-v1.json'
+      - 'data/measured-dataset-rights-review-*.json'
+      - 'data/public-benchmark-contracts/**'
+      - 'data/public-benchmark-results/**'
+      - 'data/primary-measured-evidence-registry-v1.json'
+      - 'data/primary-measured-evidence/**'
+      - 'data/deep-dive-v2-*.json'
+      - '.github/workflows/master-data-compile.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: mouldmaster-master-data-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Validate landed base content checkpoint
+        run: python qa_content_scale_targets.py
+      - name: Validate effective Wave-2 master compilation
+        run: python qa_master_data_compile.py
+      - name: Restore approved 2,000-candidate discovery snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SNAPSHOT_ARTIFACT_ID: '10944828709'
+          SNAPSHOT_SHA256: '5fa3490c3e124290c6d760d7c584366cef62dafa80264984ad25406f02af548b'
+        run: |
+          mkdir -p compiled-input
+          curl -fL --retry 3 --retry-all-errors \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/artifacts/$SNAPSHOT_ARTIFACT_ID/zip" \
+            -o /tmp/research-master-candidates.zip
+          echo "$SNAPSHOT_SHA256  /tmp/research-master-candidates.zip" | sha256sum -c -
+          unzip -q /tmp/research-master-candidates.zip -d compiled-input
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('compiled-input/research-master-candidates.json')
+          x=json.loads(p.read_text(encoding='utf-8'))
+          assert x['status']=='candidate-registry-not-counted-as-verified'
+          assert x['candidateCount']==2000==len(x['records'])
+          assert x['primaryMeasuredCandidateCount']==1329
+          assert all(not r['verification']['primaryMeasuredReviewed'] for r in x['records'])
+          assert all(not r['verification']['peerReviewedConfirmed'] for r in x['records'])
+          ids=[(r.get('doi') or r.get('id') or r.get('title')) for r in x['records']]
+          assert len(ids)==len(set(ids))
+          print({'approvedCandidates':x['candidateCount'],'heuristicMeasuredCandidates':x['primaryMeasuredCandidateCount']})
+          PY
+      - name: Compile complete master data package
+        run: |
+          python tools/compile_master_data.py \
+            --output-dir compiled-data \
+            --research-candidates compiled-input/research-master-candidates.json
+      - name: Validate complete effective compilation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('compiled-data/manifest.json').read_text(encoding='utf-8'))
+          c=x['counts']
+          assert x['candidateRegistryEmbedded'] is True
+          assert c['measuredDatasetInventory']==34
+          assert c['automatedIngestionAllowedDatasets']==21
+          assert c['fullyProfiledMeasuredDatasets']==17
+          assert c['measuredTimeSeriesSamplesAccepted']==85569824
+          assert c['publisherVerifiedPrimaryMeasuredStudies']==60
+          assert c['verifiedPeerReviewedResearchRecords']==60
+          assert c['measuredEvidencePasses']==50
+          assert c['deepDiveEvidencePasses']==600
+          assert c['researchCandidates']==2000
+          assert c['syntheticProcessCases']==264
+          assert c['syntheticGeneratedCycles']==19008
+          assert c['approvedAssessmentItems']==157
+          assert c['coreLessons']==120
+          assert c['specialistLessons']==20
+          assert c['draftMaterialProfiles']==260
+          assert c['draftDefectMechanisms']==320
+          assert c['draftSensorMachineHealthConcepts']==220
+          assert c['draftAssessmentItems']==1200
+          print(json.dumps(c, indent=2, sort_keys=True))
+          PY
+      - name: Upload complete master data package
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: mouldmaster-master-data
+          path: compiled-data/
+          if-no-files-found: error
+          retention-days: 90

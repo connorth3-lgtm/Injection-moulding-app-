@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "scope": "Author/team metadata for DOI-resolved formal mechanism-promotion dossiers. Entries are limited to qualifying publisher-verified primary measured studies already present in the canonical primary measured evidence registry; this file does not create new evidence counts by itself.",
+  "entries": [
+    {"doi":"10.1002/pc.27232","authors":["Jon Haitz Badiola","Diego Pineda","Blanca Maria Lekube"]},
+    {"doi":"10.1002/app.70427","authors":["Qiang Gong","Mingsheng Wu","Tianshuo Zheng","Yajun Zhang","Zhiming Jin"]},
+    {"doi":"10.3390/polym16202874","authors":["Minyuan Chien","Yaotsung Lin","Chaotsai Huang","Shyhshin Hwang"]},
+    {"doi":"10.3390/s23031735","authors":["Richárd Dominik Párizs","Dániel Török","Tatyana Ageyeva","József Gábor Kovács"]},
+    {"doi":"10.1002/app.22371","authors":["Shia-Chung Chen","Rean-Der Chien","Hsien-Hsun Tseng","Jeng-Sheng Huang"]},
+    {"doi":"10.1016/j.jmapro.2024.07.095","authors":["Bongju Kim","Jinsu Gim","Lih-Sheng Turng","Byungohk Rhee"]},
+    {"doi":"10.1002/app.53381","authors":["Dennis F. Weißer","Dennis Mayer","Johannes Schmid","Matthias H. Deckert"]},
+    {"doi":"10.7735/ksmte.2014.23.2.206","authors":["Hyung Pil Park","Baeg-Soon Cha","Jeong-Won Lee","Young-Bae Ko","Sang Gweon Kim","Tae Sung Jung","Dong Han Kim","Byung Ohk Rhee"]},
+    {"doi":"10.1155/2015/161938","authors":["Hyungpil Park","Baeg-Soon Cha","Byungohk Rhee"]},
+    {"doi":"10.1002/pen.20832","authors":["Elaine Brown","L. Mulvaney-Johnson","Phil Coates"]},
+    {"doi":"10.3390/app12031410","authors":["Shia-Chung Chen","Han Su","Jibin Jose Mathew","Hariyanto Gunawan","Chun-Wei Huang","Ching-Te Feng"]},
+    {"doi":"10.37358/MP.20.1.5311","authors":["Daniel V. Stan"]},
+    {"doi":"10.1016/j.jprocont.2026.103725","authors":["Jens Ahlers","Robert Göllinger","Moritz Mascher","Christopher Schulte","Philipp Schubert","Christian Hopmann","Heike Vallery","Sebastian Stemmler"]},
+    {"doi":"10.1002/pen.26689","authors":["Nicholas Bowen","Cameron Guyer","Terence Rippon","Michael Daly","Peng Gao","Vito Galati","Sal Lograsso","Stephen Johnston","Davide Masato"]},
+    {"doi":"10.1016/j.jmapro.2019.04.010","authors":["Pablo Gamonal-Repiso","Miguel Sánchez-Soto","Soledad Santos-Pinto","Maria Lluïsa Maspoch"]},
+    {"doi":"10.1002/pen.24772","authors":["P. G. Wlodarski","J. F. T. Pittman"]},
+    {"doi":"10.1002/pat.6166","authors":["Chao-Ming Lin","Yuan-Qing Lin"]},
+    {"doi":"10.1002/pen.23429","authors":["Nam Hyung Kim","Avraam I. Isayev"]}
+  ]
+}

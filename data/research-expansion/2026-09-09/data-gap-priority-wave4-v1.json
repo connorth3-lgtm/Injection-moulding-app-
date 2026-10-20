@@ -1,0 +1,106 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "reviewed": "2026-09-09",
+  "purpose": "Latest acquisition priority after OpenMMS, cooling-circuit, part-traceability and wave-7 review.",
+  "priorityQueue": [
+    {
+      "rank": 1,
+      "priority": "P0",
+      "gap": "Authorised real-site shot-linked validation with intervention and verified recovery",
+      "why": "Public research now covers many mechanisms, but MouldMaster still lacks its own authorised plant evidence linking a shot to machine, mould, cavity, exact material, actual signals, defect, diagnosis, intervention and recovery.",
+      "minimumFields": ["shot ID", "timestamp/order", "machine", "mould", "cavity", "exact material grade/lot", "commands", "actual signals", "physical quality", "fault/defect", "intervention", "post-intervention verification"]
+    },
+    {
+      "rank": 2,
+      "priority": "P0",
+      "gap": "Real MouldMaster learner telemetry",
+      "currentState": "0 real MouldMaster learner rows",
+      "why": "True item difficulty, discrimination, confidence calibration and learning gain remain impossible to estimate from external proxy datasets."
+    },
+    {
+      "rank": 3,
+      "priority": "P0",
+      "gap": "Independent blinded engineer review",
+      "currentState": "20 blinded case packets; 0 completed independent MouldMaster engineer labels",
+      "why": "This remains the key human-comparison validation requirement."
+    },
+    {
+      "rank": 4,
+      "priority": "P0",
+      "gap": "Rights-clear multi-machine / multi-mould industrial anomaly and quality data",
+      "targets": ["MM-DATA-084", "MM-DATA-085", "MM-DATA-094", "MM-DATA-096", "ProBayes exact licence clarification", "SKZ LoKI exact licence clarification"],
+      "why": "Independent-machine transfer and rare-fault generalisation remain weak despite strong single-family public datasets."
+    },
+    {
+      "rank": 5,
+      "priority": "P0",
+      "gap": "Finish admission review of the OpenMMS raw fault-transition family",
+      "targets": ["MM-DATA-092", "openmms-raw-profile-v1.json"],
+      "why": "This is the strongest new directly accessible raw family: pinned 2.87 MB CSV, 110 reported cycles, 54 initial normal cycles, pressure/temperature/ejection-force/inertial sensing and a controlled extraction fault.",
+      "remaining": ["dataset-specific redistribution decision", "exact full-file row/missingness profile", "authoritative unit mapping", "cycle segmentation", "leakage-safe chronological split"]
+    },
+    {
+      "rank": 6,
+      "priority": "P0",
+      "gap": "Extract and profile the LEGO six-machine-family energy appendix",
+      "targets": ["MM-DATA-087"],
+      "why": "275 industrial steady-state measurements across six machine families offer unusually valuable independent energy calibration."
+    },
+    {
+      "rank": 7,
+      "priority": "P0",
+      "gap": "Recover and profile the RWTH PCR archive",
+      "targets": ["rwth-pcr-2025 / ExperimentalData.zip"],
+      "why": "The authoritative record exposes the raw archive and the experiment contains cavity pressure, screw-antechamber pressure, control output, screw motion and part mass across virgin/recycled material transitions, but binary retrieval remains blocked in the current runtime."
+    },
+    {
+      "rank": 8,
+      "priority": "P1",
+      "gap": "Natural machine/mould component wear and maintenance lifecycle",
+      "why": "OpenMMS now gives controlled normal→fault ejection evidence, but it is a deliberately simulated fault. MouldMaster still needs naturally accumulated wear/fouling/failure, repair/replacement and verified post-maintenance recovery.",
+      "minimumFields": ["component", "cycle/time age", "condition signals", "failure/fault code", "maintenance action", "downtime", "post-maintenance condition", "post-maintenance quality"]
+    },
+    {
+      "rank": 9,
+      "priority": "P1",
+      "gap": "Rights-clear cooling-circuit raw histories with fouling/cleaning intervention",
+      "targets": ["MM-DATA-095", "MM-DATA-097", "MM-DATA-098", "MM-DATA-101"],
+      "why": "Independent measured evidence now covers coolant actuals, 86-mould plant energy/quality and contamination pressure-drop physics; what remains missing is raw longitudinal deterioration and verified cleaning/recovery."
+    },
+    {
+      "rank": 10,
+      "priority": "P1",
+      "gap": "Hot-runner actual-state raw data",
+      "why": "Displayed zone/setpoint information remains better represented than actual manifold/nozzle/valve state tied to cavity-specific quality.",
+      "minimumFields": ["zone actual temperature", "heater output/current", "valve-pin actual", "nozzle/cavity pressure", "cavity ID", "part quality"]
+    },
+    {
+      "rank": 11,
+      "priority": "P1",
+      "gap": "Complete exact-grade manufacturer provenance",
+      "targets": ["MAT-SRC-001..MAT-SRC-009"],
+      "why": "Nine exact-grade manufacturer source candidates now exist, but validated material-grade-v2 promotion still requires immutable source revision/retrieval/fingerprint and test-context mapping."
+    },
+    {
+      "rank": 12,
+      "priority": "P2",
+      "gap": "Raw pressure-to-quality and specialist-process cycles",
+      "targets": ["MM-DATA-086", "MM-DATA-089", "MM-DATA-099", "MM-DATA-103", "gas/projectile-assisted measured studies"],
+      "why": "Article evidence is now strong across gate freeze, micro moulding, dimensional quality, traceability and assisted moulding; raw repeated-cycle releases would mainly improve trace-based assessment and benchmark breadth."
+    }
+  ],
+  "gapsPartiallyClosedByLatestWave": [
+    {"gap": "tool/ejection monitoring", "status": "partially-closed", "evidence": "OpenMMS author-published raw normal-to-simulated-fault data"},
+    {"gap": "cooling-circuit mechanism evidence", "status": "stronger", "evidence": "ENGEL per-cycle quality, 86-mould industrial audit and contamination pressure/flow study"},
+    {"gap": "part-level process/defect traceability", "status": "stronger", "evidence": "Fraunhofer/SENAI smart-tool demonstrator"},
+    {"gap": "command-versus-measured semantics", "status": "stronger", "evidence": "KHW EUROMAP-77 and SINTEF/NTNU synchronization studies"}
+  ],
+  "deprioritized": [
+    "generic sensor volume without new machines/materials/outcomes",
+    "simulation-only volume",
+    "duplicate mirrors/versions",
+    "more out-of-domain learner proxy datasets",
+    "generic polymer compilations when exact manufacturer-grade sources are available"
+  ]
+}

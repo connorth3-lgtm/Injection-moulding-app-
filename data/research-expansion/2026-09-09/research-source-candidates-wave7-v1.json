@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "reviewed": "2026-09-09",
+  "boundary": "Additional net-new operations/tool-traceability candidates. Open article or repository status does not by itself promote data to canonical evidence.",
+  "sources": [
+    {
+      "id": "MM-DATA-102",
+      "name": "Injection-moulding 5S/TPM/SMED equipment-effectiveness dataset",
+      "priority": "P1",
+      "sourceType": "open-operations-management-dataset",
+      "independenceFamily": "UPC_TPM_SMED_plastics_2024",
+      "source": "https://doi.org/10.17632/g6rz752g3f.1",
+      "repository": "Mendeley Data",
+      "license": "CC BY 4.0",
+      "processContext": "Plastics company with injection-moulding equipment",
+      "reportedBaseline": {"machineEffectiveness_percent": 53.1},
+      "reportedTopics": ["equipment availability", "setup/changeover time", "frequent interruptions", "5S", "TPM", "SMED", "standardization", "OEE"],
+      "value": "Open operations/maintenance evidence complementary to sensor-level fault data; useful for downtime/changeover/maintenance learning and production-outcome case construction.",
+      "retrievalStatus": "Dataset record and CC BY licence verified; current web listing does not expose file names/content, so exact payload profiling remains pending.",
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "exactFilesAndMeasurementSemanticsMustBeProfiled": true}
+    },
+    {
+      "id": "MM-DATA-103",
+      "name": "Smart injection-mould tool sensor and individual-part traceability demonstrator",
+      "priority": "P1-EVIDENCE",
+      "sourceType": "publisher-verified-measured-tool-monitoring-study",
+      "independenceFamily": "Fraunhofer_SENAI_SmarTool_2026",
+      "source": "https://doi.org/10.1016/j.procs.2026.02.037",
+      "license": "CC BY-NC-ND 4.0 article",
+      "machine": "Sumitomo (SHI) Demag IntElect2 S75/420-65",
+      "measuredSignals": ["cavity-specific pressure", "cavity temperature", "clamping force", "mould acceleration", "ambient temperature", "ambient humidity", "tool location", "cycle count"],
+      "traceability": "Individual produced parts are uniquely marked and linked to their production signature and measured process conditions in a database.",
+      "defectEvidence": ["stimulated process defects", "burn marks / Diesel-effect condition", "startup low-cavity-temperature defect observations", "dashboard defect rates"],
+      "value": "Strong measured example of shot/part traceability connecting actual tool/process signals to individual defects—the same architecture MouldMaster should seek from real sites.",
+      "dataAvailability": "No public raw dataset/source table confirmed in this review.",
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "articleEvidenceOnlyUntilDatasetReleaseFound": true}
+    }
+  ]
+}

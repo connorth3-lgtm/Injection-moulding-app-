@@ -1,0 +1,7 @@
+shot_index,cavity_alias,phase,fill_time_s,cushion_mm,part_mass_g,quality_result,intervention_code
+1,CAV-01,baseline,0.80,4.6,18.10,PASS,NONE
+2,CAV-01,baseline,0.81,4.6,18.12,PASS,NONE
+3,CAV-01,fault,0.89,5.2,17.62,FAIL,TEST-01
+4,CAV-01,fault,0.90,5.3,17.58,FAIL,TEST-01
+5,CAV-01,recovery,0.81,4.7,18.08,PASS,TEST-02
+6,CAV-01,recovery,0.80,4.6,18.11,PASS,TEST-02

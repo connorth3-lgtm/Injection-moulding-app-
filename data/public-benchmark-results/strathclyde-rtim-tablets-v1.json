@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "status": "retrieval-blocked-http",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetId": "strathclyde-rtim-tablets-v1",
+    "datasetDoi": "10.15129/e1a516b3-41ad-4b38-81e1-6ebec17b8e7d",
+    "license": "CC BY 4.0",
+    "publisherFileName": "doi.org_10.1016_j.ijpharm.2022.121956_AllData.xlsx",
+    "discoveredDownloadUrl": "https://pureportal.strath.ac.uk/files/137421753/doi.org_10.1016_j.ijpharm.2022.121956_AllData.xlsx",
+    "candidateDownloadLinksFound": 1
+  },
+  "retrieval": {
+    "attempts": [
+      {"variant":"canonical","httpStatus":403,"contentType":"text/html; charset=UTF-8","zipStructureValid":false,"responseBodyEmitted":false},
+      {"variant":"download=1","httpStatus":403,"contentType":"text/html; charset=UTF-8","zipStructureValid":false,"responseBodyEmitted":false},
+      {"variant":"download=true","httpStatus":403,"contentType":"text/html; charset=UTF-8","zipStructureValid":false,"responseBodyEmitted":false}
+    ],
+    "rawPublisherFileCommitted": false,
+    "rawNumericValuesUploadedAsArtifact": false,
+    "rawResponseBodiesEmitted": false
+  },
+  "profile": null,
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "acceptedRecordLevelOrCharacterizationValues": 0,
+    "reason": "The authoritative publisher exposes the exact CC BY 4.0 XLSX asset, but automated retrieval receives HTTP 403 before workbook bytes are delivered. No values can be accepted from article prose or metadata alone."
+  },
+  "nextAction": "Recheck publisher asset access or obtain an authoritative publisher-supported download endpoint; do not count gravimetric, dimensional, OCT or dissolution measurements until the workbook is delivered and semantically profiled."
+}

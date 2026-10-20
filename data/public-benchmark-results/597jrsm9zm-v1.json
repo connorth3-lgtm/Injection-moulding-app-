@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "status": "profiled-process-documentation-only-noncounting",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetId": "mendeley-597jrsm9zm-v1",
+    "datasetDoi": "10.17632/597jrsm9zm.1",
+    "license": "CC BY-NC 3.0",
+    "version": 1,
+    "publisherFileName": "supplementary_material.pdf",
+    "sha256": "0ed9c86b6b56e4fe62c9c4658445afe299b8ce0146c0131b41f5ccdee3f25a3b",
+    "publisherSha256Matched": true,
+    "retrievedSizeBytes": 957303
+  },
+  "profile": {
+    "pageCount": 2,
+    "evidenceClass": "injection-moulding-process-documentation",
+    "processContextObserved": [
+      "polyamide-6 reinforced with short carbon fibres",
+      "injection-moulding specimen preparation",
+      "material drying/preconditioning",
+      "barrel/nozzle thermal settings",
+      "mould-temperature context",
+      "cooling-time context",
+      "fatigue/mechanical specimen manufacturing context"
+    ],
+    "deliveredSpecimenLevelFatigueRowsOrArrays": false,
+    "deliveredMachineTimeSeriesArrays": false,
+    "deliveredDirectMeasuredOutcomeTable": false,
+    "rawPdfOrNumericValuesCommitted": false
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "acceptedRecordLevelMeasuredOutcomeValues": 0,
+    "reason": "The exact publisher supplement is a two-page injection-moulding process/manufacturing document. It provides useful educational process context but does not deliver specimen-level fatigue/mechanical result arrays or machine time-series data that can be source-profiled as a measured dataset."
+  },
+  "rightsBoundary": {
+    "useScope": "noncommercial-education-research-only",
+    "commercialReuseAllowed": false,
+    "rawRedistributionAllowedUnderProjectPolicy": false
+  },
+  "retrieval": {
+    "rawPublisherFileCommitted": false,
+    "rawNumericValuesUploadedAsArtifact": false
+  }
+}

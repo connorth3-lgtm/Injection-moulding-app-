@@ -1,0 +1,1 @@
+event_id,event_type,relative_shot_index,relative_time_s,machine_alias,mould_alias,cavity_alias,material_alias,lot_alias,maintenance_event_code,process_change_code,intervention_code,reason_code,hypothesis_code,expected_response_code,verification_window_shots,outcome_code,notes_alias

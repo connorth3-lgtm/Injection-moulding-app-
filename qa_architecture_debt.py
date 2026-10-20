@@ -1,0 +1,370 @@
+from __future__ import annotations
+
+from pathlib import Path
+import qa_codeql_generated_security  # guarded generated-runtime mitigations
+from tools.externalize_core_scripts import (
+    runtime_transform as core_runtime_transform,
+    core_shadowed_retirement_enabled,
+    CORE_SHADOWED_RETIRE_NAMES,
+)
+import hashlib
+import json
+import re
+
+ROOT = Path(__file__).resolve().parent
+BASELINE_PATH = ROOT / "qa/architecture-debt-baseline.json"
+CORE_RUNTIME_DIR = ROOT / "src/core-runtime"
+HANDLER_BRIDGE_PATH = CORE_RUNTIME_DIR / "inline-handler-bridge.js"
+STYLE_BRIDGE_PATH = CORE_RUNTIME_DIR / "inline-style-bridge.js"
+HANDLER_ATTR_RE = re.compile(r"(?P<prefix>[\s<])on(?P<event>click|change|input|keydown)\s*=", re.I)
+
+
+def need(ok: bool, message: str) -> None:
+    if not ok:
+        raise AssertionError(message)
+
+
+def read(path: Path | str) -> str:
+    return (ROOT / path if isinstance(path, str) else path).read_text(encoding="utf-8")
+
+
+def parse_csp(raw: str) -> dict[str, list[str]]:
+    directives: dict[str, list[str]] = {}
+    for chunk in raw.split(";"):
+        parts = chunk.strip().split()
+        if not parts:
+            continue
+        directives[parts[0]] = parts[1:]
+    return directives
+
+
+def local_script_token(token: str) -> bool:
+    return token in {"'self'", "'unsafe-hashes'", "'strict-dynamic'"} or token.startswith("'nonce-") or token.startswith("'sha256-") or token.startswith("'sha384-") or token.startswith("'sha512-")
+
+
+def local_style_token(token: str) -> bool:
+    return token == "'self'" or token.startswith("'sha256-") or token.startswith("'sha384-") or token.startswith("'sha512-")
+
+
+def retire_handler_attrs(source: str) -> str:
+    return HANDLER_ATTR_RE.sub(
+        lambda match: f"{match.group('prefix')}data-mm-on{match.group('event').lower()}=",
+        source,
+    )
+
+
+baseline = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+need(baseline.get("schemaVersion") == 1, "architecture debt baseline schema drift")
+
+index = read("index.html")
+core = read("MouldMaster_Core_App.html")
+
+body_scripts = re.findall(r"\['(\./[^']+\.js)'\s*,\s*'<script", index)
+need(body_scripts, "runtime BODY_SCRIPTS could not be extracted")
+need(len(body_scripts) == len(set(body_scripts)), "runtime BODY_SCRIPTS contains duplicate entries")
+need(
+    len(body_scripts) <= int(baseline["runtimeBodyScriptCeiling"]),
+    f"runtime bootstrap debt grew: {len(body_scripts)} scripts > ceiling {baseline['runtimeBodyScriptCeiling']}",
+)
+
+root_runtime_scripts = [src for src in body_scripts if "/" not in src.removeprefix("./")]
+active_root = set(root_runtime_scripts)
+grandfathered_root_entries = baseline["grandfatheredRootRuntimeScripts"]
+need(
+    len(grandfathered_root_entries) == len(set(grandfathered_root_entries)),
+    "grandfatheredRootRuntimeScripts contains duplicate entries",
+)
+grandfathered_root = set(grandfathered_root_entries)
+unknown_root = sorted(active_root - grandfathered_root)
+need(not unknown_root, f"new root-level runtime scripts are forbidden; use src/domains/<domain>/: {unknown_root}")
+stale_grandfathered_root = sorted(grandfathered_root - active_root)
+need(
+    not stale_grandfathered_root,
+    "retired root runtime scripts must be removed from grandfatheredRootRuntimeScripts so they cannot silently return: "
+    f"{stale_grandfathered_root}",
+)
+need(
+    len(root_runtime_scripts) <= int(baseline["rootRuntimeScriptCeiling"]),
+    f"root runtime-script debt grew: {len(root_runtime_scripts)} > ceiling {baseline['rootRuntimeScriptCeiling']}",
+)
+
+compat_pattern = re.compile(r"-(?:fix|hardening|finalize|extension)\.js$")
+actual_compat = {path.name for path in ROOT.glob("*.js") if compat_pattern.search(path.name)}
+grandfathered_compat_entries = baseline["grandfatheredCompatibilityLayers"]
+need(
+    len(grandfathered_compat_entries) == len(set(grandfathered_compat_entries)),
+    "grandfatheredCompatibilityLayers contains duplicate entries",
+)
+grandfathered_compat = set(grandfathered_compat_entries)
+need(
+    len(actual_compat) <= int(baseline["compatibilityLayerCeiling"]),
+    f"compatibility-layer debt grew: {len(actual_compat)} > ceiling {baseline['compatibilityLayerCeiling']}",
+)
+need(int(baseline.get("targetRootRuntimeScripts", -1)) == 0, "root runtime debt target must remain zero")
+need(int(baseline.get("targetCompatibilityLayers", -1)) == 0, "compatibility-layer debt target must remain zero")
+unknown_compat = sorted(actual_compat - grandfathered_compat)
+need(not unknown_compat, f"new root compatibility layers are frozen; consolidate under src/domains/: {unknown_compat}")
+stale_grandfathered_compat = sorted(grandfathered_compat - actual_compat)
+need(
+    not stale_grandfathered_compat,
+    "retired root compatibility layers must be removed from grandfatheredCompatibilityLayers so they cannot silently return: "
+    f"{stale_grandfathered_compat}",
+)
+
+# document.write has been retired. The zero ceiling prevents it from returning.
+# The remaining core-document reconstruction is a single bounded compatibility bridge.
+# It may be retired or simplified, but must not grow additional parse/replace or
+# synthetic lifecycle stages while the legacy core is being converged.
+need(index.count("new DOMParser()") == 1, "core-document parser stage must remain singular until retired")
+need(index.count("document.replaceChild(prepared.root,document.documentElement)") == 1, "whole-document replacement stage must remain singular until retired")
+need(index.count('document.dispatchEvent(new Event("DOMContentLoaded"') == 1, "synthetic DOMContentLoaded redispatch stage must remain singular until retired")
+need(index.count('window.dispatchEvent(new Event("load"') == 1, "synthetic load redispatch stage must remain singular until retired")
+for marker in ("function prepareDocument(", "async function executePreparedScripts(", "async function installDocument("):
+    need(index.count(marker) == 1, f"bootstrap compatibility stage grew or drifted: {marker}")
+write_count = index.count("document.write(")
+need(write_count <= int(baseline["documentWriteCeiling"]), f"document.write bootstrap debt grew: {write_count}")
+need("document.writeln(" not in index, "document.writeln is not permitted in the runtime bootstrap")
+
+# The frozen recovery core keeps its historical bytes. Active browser/PWA/Desktop
+# runtime uses deterministic generated copies with handler attributes rewritten to
+# inert data attributes. The final generated slot also embeds the strict delegated
+# bridge, avoiding a 40th BODY_SCRIPTS entry.
+inline_core_script_re = re.compile(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>(.*?)</script\b[^>]*>", re.I | re.S)
+inline_core_scripts = inline_core_script_re.findall(core)
+core_runtime_scripts = sorted(CORE_RUNTIME_DIR.glob("core-inline-*.js"))
+need(inline_core_scripts, "frozen recovery core unexpectedly has no inline scripts")
+need(len(inline_core_scripts) == len(core_runtime_scripts), f"core runtime externalization count drifted: {len(inline_core_scripts)} source / {len(core_runtime_scripts)} generated")
+need(HANDLER_BRIDGE_PATH.is_file(), "strict delegated handler bridge source is missing")
+need(STYLE_BRIDGE_PATH.is_file(), "strict inline-style bridge source is missing")
+for number, (source, path) in enumerate(zip(inline_core_scripts, core_runtime_scripts), start=1):
+    need(path.name == f"core-inline-{number:03d}.js", f"core runtime ordering drifted at slot {number}: {path.name}")
+    generated = path.read_text(encoding="utf-8")
+    expected_handler_free = core_runtime_transform(path.name, source, retire_shadowed=core_shadowed_retirement_enabled())
+    need(HANDLER_ATTR_RE.search(generated) is None, f"active generated core runtime still emits inline handler attributes: {path.name}")
+    if path.name == "core-inline-004.js":
+        need(source.count("document.write(") == 1, "frozen certificate print debt drifted; review runtime transform")
+        need("document.write(" not in generated and "document.writeln(" not in generated, "active certificate print runtime still uses document.write")
+        for marker in ("w.opener=null", 'd.createElement("style")', "d.body.appendChild(box)", "w.print()"):
+            need(marker in generated, f"certificate print runtime hardening marker missing: {marker}")
+    elif number == len(core_runtime_scripts):
+        need(generated.startswith(expected_handler_free.rstrip()), f"final generated core slot is stale before bridge concatenation: {path.name}")
+        for marker in ("strict delegated handler bridge", "MM_INLINE_HANDLER_BRIDGE", "ALLOWED_CALLS", "executeHandler"):
+            need(marker in generated, f"handler bridge marker missing from final generated core slot: {marker}")
+    else:
+        need(generated == expected_handler_free, f"handler-free externalized core runtime is stale at slot {number}: {path.name}")
+domain_bootstrap=read('src/domains/domain-bootstrap.js')
+need("function preloadScript(src)" in domain_bootstrap and "link.rel='preload'" in domain_bootstrap and "link.as='script'" in domain_bootstrap,'domain bootstrap must overlap same-origin asset transfers before ordered execution')
+need("assets.forEach(preloadScript)" in domain_bootstrap,'domain bootstrap must schedule all validated domain assets for preload before execution')
+need("for(const src of assets){await loadScript(src);loaded.push(src)}" in domain_bootstrap,'domain bootstrap must preserve deterministic sequential script execution')
+need(domain_bootstrap.index("assets.forEach(preloadScript)") < domain_bootstrap.index("for(const src of assets){await loadScript(src);loaded.push(src)}"),'domain preloading must occur before ordered execution begins')
+need("Promise.all(assets.map(loadScript" not in domain_bootstrap,'domain scripts must not execute concurrently; only network transfer may overlap')
+
+# Runtime modules loaded by the domain manifest must not hot-poll for shell availability.
+# Product Areas now exposes routing only; canonical Home composition belongs solely
+# to the app-shell registry, so it must not defer or register a dashboard surface.
+product_areas=read('src/domains/shell/product-areas.js')
+need('setInterval(' not in product_areas and 'setTimeout(installWhenReady,50)' not in product_areas,'product-areas reintroduced startup polling')
+need('dashboard.register' not in product_areas and 'product-areas-v1' not in product_areas,'retired Product Areas router reintroduced competing Home ownership')
+standards_readiness=read('src/domains/governance/standards-readiness.js')
+need('setInterval(' not in standards_readiness and 'setTimeout(installWhenReady,50)' not in standards_readiness,'standards-readiness reintroduced startup polling')
+need("mm:domains-ready" in standards_readiness,'standards-readiness must bind deferred installation to domain readiness')
+
+reading_patch=read('reading-patch.js')
+need('new MutationObserver' not in reading_patch,'reading patch reintroduced a whole-document mutation observer')
+need('window.switchView=wrapped' not in reading_patch,'reading patch reintroduced a global switchView wrapper')
+need("R.before('switchView'" in reading_patch and "R.after('switchView'" in reading_patch,'stable view entry must use Runtime V2 switchView hooks')
+need("onRender?.('lesson',refresh)" in reading_patch,'reading patch must use lesson render lifecycle')
+lesson_evidence=read('lesson-evidence-depth.js')
+need('new MutationObserver' not in lesson_evidence,'lesson evidence depth reintroduced a whole-document mutation observer')
+need("onRender?.('lesson',schedule)" in lesson_evidence,'lesson evidence depth must use lesson render lifecycle')
+
+book_runtime=read('src/domains/learning/book-runtime.js')
+book_trace=read('src/domains/learning/book-claim-trace.js')
+need("mm:book-render" in book_runtime,'Book runtime must emit explicit render lifecycle events')
+need('new MutationObserver' not in book_trace,'Book claim trace reintroduced a whole-document mutation observer')
+need("addEventListener('mm:book-render'" in book_trace,'Book claim trace must consume explicit Book render lifecycle')
+
+analytics_runtime=read('learning-analytics.js')
+need('new MutationObserver' not in analytics_runtime,'learning analytics reintroduced a whole-document mutation observer')
+need("addEventListener?.('mm:domains-ready',schedule)" in analytics_runtime,'learning analytics must use explicit readiness lifecycle')
+process_integrity=read('src/domains/process/process-data-integrity.js')
+need('new MutationObserver' not in process_integrity,'process-data integrity reintroduced a whole-document mutation observer')
+need('setInterval(' not in process_integrity and 'setTimeout(installWhenReady,50)' not in process_integrity,'process-data integrity reintroduced startup polling')
+need("addEventListener?.('mm:domains-ready'" in process_integrity,'process-data integrity must use domain readiness')
+
+backup_notice=read('src/domains/learning/backup-authority-notice.js')
+need('new MutationObserver' not in backup_notice,'backup authority notice reintroduced a whole-document mutation observer')
+need("addEventListener?.('mm:domains-ready'" in backup_notice,'backup authority notice must use domain readiness')
+
+connected_data=read('data-integration-runtime.js')
+need('new MutationObserver' not in connected_data,'connected process-data runtime reintroduced a whole-document mutation observer')
+need("addEventListener?.('mm:domains-ready',scheduleInstall)" in connected_data,'connected process-data runtime must use domain readiness')
+
+learner_repair=read('learner-ux-repair.js')
+need('new MutationObserver' not in learner_repair,'learner UX repair reintroduced a whole-body mutation observer')
+need('window.getExamQuestions=function' not in learner_repair and 'window.gradeExam=function' not in learner_repair,'learner UX repair reintroduced assessment global wrappers')
+need("R.transform('getExamQuestions'" in learner_repair and "R.after('gradeExam'" in learner_repair,'assessment rotation/result metadata must use Runtime V2 hooks')
+need("after?.('startExam'" in learner_repair,'learner UX repair must use assessment lifecycle for disclosure synchronization')
+need("addEventListener?.('mm:domains-ready'" in learner_repair,'learner UX repair must use domain readiness')
+
+book_loader=read('book-runtime.js')
+need('new MutationObserver' not in book_loader,'Book compatibility loader reintroduced a whole-document mutation observer')
+need("addEventListener?.('mm:book-render'" in book_loader,'Book evidence-link canonicalization must use Book render lifecycle')
+
+ui_polish=read('src/domains/shell/learner-ui-polish.js')
+need('new MutationObserver' not in ui_polish,'learner UI polish reintroduced a whole-body mutation observer')
+need("onRender?.('dashboard',schedule)" in ui_polish and 'onViewChange?.(schedule)' in ui_polish,'learner UI polish must use shell lifecycle events')
+
+prepared_core=read('src/core-runtime/core-source.txt')
+need("function versionPreparedCore(out)" in index and "out=versionPreparedCore(out)" in index, "runtime bootstrap must version the build-prepared core script refs")
+need("function externalizeCoreScripts(out)" not in index, "runtime bootstrap must not externalize frozen core scripts after build-time preparation")
+need("retireInlineHandlerAttrs" not in index and "retireInlineStyleAttrs" not in index, "runtime bootstrap must not repeat build-time static attribute hardening")
+need(re.search(r"<script\b(?![^>]*\bsrc\s*=)[^>]*>",prepared_core,flags=re.I) is None,"prepared core payload still contains inline scripts")
+need(HANDLER_ATTR_RE.search(prepared_core) is None,"prepared core payload still contains executable static handler attributes")
+need(re.search(r"<[^>]*\sstyle\s*=",prepared_core,flags=re.I|re.S) is None,"prepared core payload still contains inline style attributes")
+need(len(re.findall(r'src=["\']\./src/core-runtime/core-inline-\d{3}\.js["\']',prepared_core))==len(core_runtime_scripts),"prepared core payload must reference every generated core runtime slot exactly once")
+need("./src/core-runtime/inline-style-bridge.js" in index, "strict inline-style bridge is not loaded before core replay")
+for path in core_runtime_scripts:
+    need(f'src="./src/core-runtime/{path.name}"' in prepared_core, f"prepared core payload missing generated runtime slot: {path.name}")
+
+need("const CORE_RUNTIME_PRELOADS=Object.freeze(Array.from({length:10}" in index,'bootstrap must declare the ten governed generated core script preloads')
+need("function preloadStartupScript(src)" in index and "link.rel='preload'" in index and "link.as='script'" in index,'bootstrap must overlap startup script transfers using non-executing preload links')
+need("function preloadStartupScripts()" in index and "...BODY_SCRIPTS.map(row=>row[0])" in index,'startup preloading must include governed body scripts without introducing a second execution registry')
+need(index.index("preloadStartupScripts();") < index.index("assemble(await getCore())"),'startup preloads must begin before the prepared core payload is fetched and assembled')
+need("preloadStartupScript(src)" in index and "document.head.appendChild(link)" in index,'startup preload links must be attached to the document head')
+need("link.dataset.mmStartupPreload='1'" in index,'startup preloads must be identifiable for browser QA and duplicate suppression')
+
+# CSP may become stricter, but it may not add unsafe-eval, remote script origins,
+# inline script attributes, or external runtime connections.
+csp_match = re.search(r'const\s+CSP="([^"]+)"', index)
+need(csp_match is not None, "runtime CSP constant missing from index bootstrap")
+csp_raw = csp_match.group(1)
+csp = parse_csp(csp_raw)
+need("'unsafe-eval'" not in csp_raw, "CSP must never permit unsafe-eval")
+need("'unsafe-inline'" not in csp_raw, "CSP must not permit unsafe-inline scripts or styles")
+need(csp.get("base-uri") == ["'none'"], "CSP base-uri must remain none")
+need(csp.get("object-src") == ["'none'"], "CSP object-src must remain none")
+need(csp.get("frame-src") == ["'none'"], "CSP frame-src must remain none")
+script_src = csp.get("script-src") or []
+script_src_attr = csp.get("script-src-attr") or []
+style_src = csp.get("style-src") or []
+style_src_attr = csp.get("style-src-attr") or []
+connect_src = csp.get("connect-src") or []
+need(script_src == ["'self'"], f"CSP executable script-src must remain self-only: {script_src}")
+need("'unsafe-inline'" not in script_src, "CSP script-src must not restore unsafe-inline executable blocks")
+need(script_src_attr == ["'none'"], f"CSP inline handler execution must remain disabled: {script_src_attr}")
+need(all(local_script_token(token) for token in script_src), f"CSP script-src added a non-local source: {script_src}")
+need(style_src and style_src[0] == "'self'" and all(local_style_token(token) for token in style_src), f"CSP style-src added a non-local source: {style_src}")
+need(any(token.startswith("'sha256-") for token in style_src), "CSP style-src must include exact hashes for deterministic runtime style blocks")
+need(style_src_attr == ["'none'"], f"CSP inline style attributes must remain disabled: {style_src_attr}")
+need(set(connect_src).issubset({"'self'", "'none'"}) and connect_src, f"CSP connect-src added an external source: {connect_src}")
+
+remote_script_tag = re.compile(r"<script\b[^>]*\bsrc\s*=\s*['\"]\s*(?:https?:)?//", re.I)
+need(remote_script_tag.search(index) is None, "index.html contains a remote runtime script tag")
+need(remote_script_tag.search(core) is None, "MouldMaster_Core_App.html contains a remote runtime script tag")
+
+# Active application JavaScript must not gain string-to-code execution or inline
+# event attributes. The frozen recovery HTML itself is excluded from the latter
+# because it remains immutable; assembly strips its static handler attributes.
+scan_paths: set[Path] = set(core_runtime_scripts)
+scan_paths.add(HANDLER_BRIDGE_PATH)
+for src in body_scripts:
+    path = ROOT / src.removeprefix("./")
+    need(path.is_file(), f"runtime script missing while checking architecture debt: {src}")
+    scan_paths.add(path)
+scan_paths.update((ROOT / "src/domains").rglob("*.js"))
+for path in sorted(scan_paths):
+    source = path.read_text(encoding="utf-8")
+    need(re.search(r"\beval\s*\(", source) is None, f"eval() is forbidden in active runtime code: {path.relative_to(ROOT)}")
+    need(re.search(r"\bnew\s+Function\s*\(", source) is None, f"new Function() is forbidden in active runtime code: {path.relative_to(ROOT)}")
+    need("document.write(" not in source and "document.writeln(" not in source, f"document.write is forbidden in active runtime code: {path.relative_to(ROOT)}")
+    need(HANDLER_ATTR_RE.search(source) is None, f"inline handler attribute is forbidden in active runtime source: {path.relative_to(ROOT)}")
+    need(re.search(r"\.style\.cssText\s*=", source) is None, f"style.cssText is forbidden under strict style CSP: {path.relative_to(ROOT)}")
+    need(re.search(r"\.setAttribute\(\s*['\"]style['\"]", source) is None, f"setAttribute(style) is forbidden under strict style CSP: {path.relative_to(ROOT)}")
+
+need(re.search(r"\beval\s*\(", core) is None, "eval() is forbidden in the frozen core HTML")
+need(re.search(r"\bnew\s+Function\s*\(", core) is None, "new Function() is forbidden in the frozen core HTML")
+
+# Remaining duplicate declaration ceiling for issue #519. The immutable
+# recovery core must not be edited or rewritten in place: all future reduction
+# goes through the deterministic externalizer, with a governed runtime release.
+# Keep this ratchet monotonic (allow one, forbid three) so future cleanup may
+# remove any of the ten shadowed declarations without weakening CI.
+legacy_dupe_names = {
+    "updateGlobalProgress", "renderDashboard", "renderPath", "renderLesson",
+    "renderExams", "startExam", "gradeExam", "renderCertificates",
+    "certificateCard", "renderProfile",
+}
+active_core_slot = read("src/core-runtime/core-inline-004.js")
+core_declarations = re.findall(r"(?m)^function\s+([A-Za-z_$][A-Za-z0-9_$]*)\s*\(", active_core_slot)
+declaration_counts: dict[str, int] = {}
+for declaration in core_declarations:
+    declaration_counts[declaration] = declaration_counts.get(declaration, 0) + 1
+shadowed_declarations = {name: count for name, count in declaration_counts.items() if count > 1}
+need(not (set(shadowed_declarations) - legacy_dupe_names),
+     f"new duplicate top-level core function declaration(s): {sorted(set(shadowed_declarations) - legacy_dupe_names)}")
+need(all(declaration_counts.get(name, 0) in (1, 2) for name in legacy_dupe_names),
+     "known core declaration was removed entirely or duplicated more than twice")
+need(len(shadowed_declarations) <= 10,
+     "core duplicate declaration debt increased above its 10-function ceiling")
+polish = read("src/domains/shell/learner-ui-polish.js")
+need("syncCertificateCounter" not in polish and "user.certificates" not in polish,
+     "issue #517 legacy certificate shim was reintroduced")
+polish_tests = read("qa/learner-ui-polish.spec.js")
+for regression in (
+    "late More callback never edits a replacement dialog",
+    "delayed first-run onboarding is polished on initial appearance",
+    "polish never rewrites retired certificate statline from legacy user.certificates",
+):
+    need(regression in polish_tests, f"issue #517 regression case missing: {regression}")
+# Prove that old hoisted bodies can be safely isolated for a later governed
+# release. This is a syntax-only dry run, not a learner-runtime modification or
+# completion of #519's downstream browser/physical validation.
+from tools.verify_shadowed_core_retirement import preview_retirement
+retirement_proof = preview_retirement(active_core_slot)
+need(retirement_proof["javascript_syntax"] == "pass",
+     "shadowed core retirement proof must compile as JavaScript")
+need(retirement_proof["candidate_not_published"] is True,
+     "retirement proof must remain an offline preview")
+# The future release path is already exercised and proven to produce exactly
+# the expected, syntax-checked candidate. The current held .5 runtime must
+# remain byte-for-byte original; only a governed >=.6 release activates this.
+preview_source = core_runtime_transform("core-inline-004.js", inline_core_scripts[3],
+                                        retire_shadowed=True)
+preview_sha = hashlib.sha256(preview_source.encode("utf-8")).hexdigest()
+need(preview_sha == retirement_proof["candidate_sha256"],
+     "future generated retirement differs from independently verified dry run")
+for retired_name in CORE_SHADOWED_RETIRE_NAMES:
+    count = len(re.findall(r"(?m)^function\s+"+retired_name+r"\s*\(", preview_source))
+    need(count == 1, f"future generated runtime did not retire {retired_name} exactly")
+if not core_shadowed_retirement_enabled():
+    need(len(shadowed_declarations) == 10,
+         "held current-release generated core cannot be silently mutated")
+else:
+    need(len(shadowed_declarations) == 0,
+         "new governed web release must retire all ten shadowed definitions")
+
+
+from qa_core_retirement_boundary import main as verify_core_retirement_boundaries
+verify_core_retirement_boundaries()
+
+print(f"Core shadowed declarations: {len(shadowed_declarations)}/10 (ratchet, no new names); issue #517 runtime regressions retained")
+
+print(
+    "MouldMaster architecture debt guard passed: "
+    f"{len(body_scripts)}/{baseline['runtimeBodyScriptCeiling']} bootstrap scripts; "
+    f"{len(root_runtime_scripts)}/{baseline['rootRuntimeScriptCeiling']} grandfathered root scripts; "
+    f"{len(actual_compat)}/{baseline['compatibilityLayerCeiling']} grandfathered compatibility layers (target 0); "
+    f"document.write {write_count}/{baseline['documentWriteCeiling']}; "
+    f"{len(core_runtime_scripts)} runtime-externalized frozen core scripts with handler bridge folded into final slot; "
+    "script-src self-only; script-src-attr none; style-src exact-hash/self-only with style-src-attr none; no unsafe-inline, cssText, setAttribute(style), active inline handlers, remote scripts, unsafe-eval, eval(), or new Function()"
+)
+
+need('window.openMobileMenu=function' not in read('primary-learning-practice-hubs.js'),'practice hubs reintroduced a mobile-menu wrapper; use shell lifecycle/navigation registry')
+for rel in ['src/domains/shell/pwa-shell.js','learning-analytics.js']:
+    need('window.openMobileMenu=function' not in read(rel),f'{rel} reintroduced a mobile-menu wrapper; app-shell-registry owns mobile More composition')
+pwa=read('src/domains/shell/pwa-shell.js')
+need("MM_RUNTIME_V2.after('startExam'" in pwa,'PWA question disclosures must prefer Runtime V2 startExam lifecycle')
+
+# Guard against fixed mission timeline obscuring Book and bottom navigation.
+import qa_mission_control_mobile_layout  # noqa: F401

@@ -1,0 +1,71 @@
+from pathlib import Path
+import json
+import re
+import subprocess
+
+ROOT=Path(__file__).resolve().parent
+
+def text(p): return (ROOT/p).read_text(encoding='utf-8')
+def need(ok,msg):
+    if not ok: raise AssertionError(msg)
+
+for p in ['assessment-quality-suite.js','assessment-stable-review-bridge.js','training-upgrade.js','index.html','service-worker.js','src/domains/runtime-packs/assessment-foundation-runtime-pack.js','desktop/electron/package.json','desktop/electron/scripts/generate-integrity.cjs','.github/workflows/qa.yml','.github/workflows/open-desktop-build.yml','.github/workflows/microsoft-store-msix.yml']:
+    need((ROOT/p).exists(),f'stable-review bridge file missing: {p}')
+
+bridge=text('assessment-stable-review-bridge.js')
+for marker in [
+    "MM_ASSESSMENT_QUALITY",
+    "q.mmId=q.stableId",
+    "stableIdsPrimary:true",
+    "fullBlueprintRequired:true",
+    "Assessment blueprint incomplete: missing",
+    "requiredTechnicalDomains:(S.blueprint||[]).slice()",
+    "legacyRecordsMigratedBy:'assessment-quality-suite.js'",
+]: need(marker in bridge,f'stable-review/blueprint guard marker missing: {marker}')
+p=subprocess.run(['node','--check',str(ROOT/'assessment-stable-review-bridge.js')],capture_output=True,text=True)
+need(p.returncode==0,f'assessment-stable-review-bridge.js syntax error: {p.stderr}')
+
+suite=text('assessment-quality-suite.js')
+need('migrateStableReviewIds' in suite,'quality suite must migrate older version-prefixed review records')
+need('techId(level,index)' in suite and 'regId(region,level,index)' in suite,'quality suite stable ID builders missing')
+need("const BLUEPRINT=['materials','machine','tooling','process','quality','troubleshooting']" in suite,'six-domain technical blueprint missing')
+need("const IDENTITY_LOCK_VERSION='2026.09.10.1'" in suite,'reviewed assessment identity lock version missing')
+need('function identityFingerprint' in suite and 'function identityFor' in suite,'reorder-safe assessment identity resolver missing')
+need('Assessment identity drift:' in suite and 'metadataInference' in suite,'identity/content drift must fail closed while regex metadata remains audit-only')
+need("stableId:techId(level,i),revision:VERSION,difficulty:difficulty(level,i)" not in suite,'technical runtime identity must not fall back to live array position')
+lock_match=re.search(r'const LOCKED_IDENTITIES=(\[[\s\S]*?\]);\nconst IDENTITY_BY_FINGERPRINT',suite)
+need(lock_match is not None,'reviewed identity lock payload missing')
+identity_lock=json.loads(lock_match.group(1))
+need(len(identity_lock)==57 and len({x['stableId'] for x in identity_lock})==57 and len({x['fingerprint'] for x in identity_lock})==57,'reviewed identity lock must contain 57 unique IDs/fingerprints')
+revision_index=json.loads(text('sources/QUESTION_REVISION_INDEX.json'))
+need({x['stableId'] for x in identity_lock}==set(revision_index.get('all_stable_ids') or []),'reviewed identity lock IDs differ from governed revision index')
+need(sum(x['kind']=='technical' for x in identity_lock)==30 and sum(x['kind']=='regional' for x in identity_lock)==27,'identity lock formal kind split drifted')
+need(all(x.get('reviewedRevision') in {2,3} for x in identity_lock),'identity lock must retain reviewed revision numbers')
+need(all(x.get('competency') and x.get('concept') and x.get('difficulty') for x in identity_lock),'identity lock must carry explicit competency/concept/difficulty metadata')
+
+upgrade=text('training-upgrade.js')
+need("m=/^tech:([^:]+):(\\d+)$/.exec(id)" in upgrade,'spaced-review resolver must support stable technical IDs')
+need("m=/^reg:([^:]+):([^:]+):(\\d+)$/.exec(id)" in upgrade,'spaced-review resolver must support stable regional IDs')
+
+idx=text('index.html')
+assessment_pack='src/domains/runtime-packs/assessment-foundation-runtime-pack.js'
+pack=text(assessment_pack)
+need(assessment_pack in idx,'assessment foundation pack not loaded by shell')
+need('<script src="./assessment-stable-review-bridge.js">' not in idx,'stable-review bridge must not be directly injected after packing')
+need('/* >>> assessment-stable-review-bridge.js */' in pack,'assessment foundation pack is missing stable-review bridge source marker')
+need(pack.index('/* >>> assessment-quality-suite.js */')<pack.index('/* >>> assessment-stable-review-bridge.js */')<pack.index('/* >>> assessment-analytics-ui.js */'),'stable-review bridge pack load order wrong')
+bootstrap_pack='src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js'
+need(bootstrap_pack in idx,'bootstrap assessment/source pack not loaded by shell')
+need(idx.index(assessment_pack)<idx.index('src/domains/shared/runtime-v2.js')<idx.index(bootstrap_pack),'assessment foundation pack shell boundary wrong')
+need("'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'" in text('service-worker.js'),'assessment foundation pack missing from offline cache')
+pkg=json.loads(text('desktop/electron/package.json'));froms={x.get('from') for x in pkg['build']['extraResources'] if isinstance(x,dict)}
+need('../../assessment-stable-review-bridge.js' in froms,'stable-review bridge missing from desktop package')
+need("'assessment-stable-review-bridge.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'stable-review bridge missing from integrity set')
+
+qy=text('.github/workflows/qa.yml')
+need("Repository-wide JavaScript syntax" in qy and 'python qa_stable_review_bridge.py' in qy,'release workflow missing stable-review filesystem syntax/QA contract')
+ow=text('.github/workflows/open-desktop-build.yml')
+need("- 'assessment-stable-review-bridge.js'" in ow and "- 'qa_stable_review_bridge.py'" in ow and 'python qa_stable_review_bridge.py' in ow,'desktop workflow missing stable-review bridge QA')
+need('python qa_stable_review_bridge.py' in text('.github/workflows/microsoft-store-msix.yml'),'Store workflow missing stable-review bridge QA')
+
+print('MouldMaster stable spaced-review ID, reviewed fingerprint identity lock and full-blueprint guard QA passed')

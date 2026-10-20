@@ -1,0 +1,42 @@
+name: Authoritative and Research Source Freshness
+
+on:
+  schedule:
+    - cron: '30 4 * * 1'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'sources/**'
+      - 'qa_source_freshness.py'
+      - 'qa_research_source_freshness.py'
+      - 'source-library.js'
+      - 'reference-sources.js'
+      - 'reference-deep-dive.js'
+      - 'reference-data.js'
+      - '.github/workflows/source-freshness.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  source-freshness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Check authoritative source review dates and live markers
+        run: python qa_source_freshness.py --network
+      - name: Check research DOI resolver freshness
+        if: always()
+        run: python qa_research_source_freshness.py --network
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: mouldmaster-source-freshness-reports
+          path: |
+            source-freshness-report.json
+            research-source-freshness-report.json
+          if-no-files-found: warn

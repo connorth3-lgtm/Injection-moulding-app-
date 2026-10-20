@@ -1,0 +1,78 @@
+'use strict';
+const fs=require('fs');
+const path=require('path');
+const {spawnSync}=require('child_process');
+const ROOT=path.resolve(__dirname,'..','..','..');
+const DESKTOP=path.resolve(__dirname,'..');
+const MAIN=fs.readFileSync(path.join(DESKTOP,'src','main.cjs'),'utf8');
+const PKG=JSON.parse(fs.readFileSync(path.join(DESKTOP,'package.json'),'utf8'));
+const LOCK=JSON.parse(fs.readFileSync(path.join(DESKTOP,'package-lock.json'),'utf8'));
+const VERSION=JSON.parse(fs.readFileSync(path.join(ROOT,'version.json'),'utf8'));
+const SERVICE_WORKER=fs.readFileSync(path.join(ROOT,'service-worker.js'),'utf8');
+const DOMAIN_MANIFEST=JSON.parse(fs.readFileSync(path.join(ROOT,'runtime-domain-manifest.json'),'utf8'));
+const INTEGRITY=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','integrity.json'),'utf8'));
+function need(cond,msg){if(!cond)throw new Error(msg)}
+need(PKG.license==='Apache-2.0','desktop package must remain Apache-2.0');
+need(/^\d+\.\d+\.\d+$/.test(PKG.devDependencies.electron),'Electron version must be exact');
+need(/^\d+\.\d+\.\d+$/.test(PKG.devDependencies['electron-builder']),'electron-builder version must be exact');
+need(LOCK.lockfileVersion>=3,'npm dependency lock must be lockfileVersion 3 or newer');
+need(LOCK.packages?.['']?.devDependencies?.electron===PKG.devDependencies.electron,'locked Electron version does not match package.json');
+need(LOCK.packages?.['']?.devDependencies?.['electron-builder']===PKG.devDependencies['electron-builder'],'locked electron-builder version does not match package.json');
+const releaseParts=String(VERSION.desktop_release||'').split('.');
+need(releaseParts.length===4&&releaseParts.every(x=>/^\d+$/.test(x)),'desktop_release must be a four-part numeric version');
+const normalized=releaseParts.map(x=>String(Number(x)));
+need(PKG.version===normalized.slice(0,3).join('.'),'desktop package version does not match desktop_release');
+need(String(PKG.build?.buildNumber)===normalized[3],'desktop buildNumber does not match desktop_release fourth component');
+need(PKG.build?.buildVersion===normalized.join('.'),'desktop buildVersion does not match desktop_release');
+need(String(PKG.build?.win?.artifactName||'').includes('${buildVersion}'),'Windows artifact name must include buildVersion');
+const fuses=PKG.build?.electronFuses||{};
+for(const [name,expected] of Object.entries({runAsNode:false,enableNodeOptionsEnvironmentVariable:false,enableNodeCliInspectArguments:false,enableEmbeddedAsarIntegrityValidation:true,onlyLoadAppFromAsar:true}))need(fuses[name]===expected,`Electron fuse must remain ${name}=${expected}`);
+for(const marker of ['nodeIntegration: false','contextIsolation: true','sandbox: true','webSecurity: true','allowRunningInsecureContent: false','setPermissionRequestHandler','setPermissionCheckHandler','will-attach-webview','setWindowOpenHandler',"server.listen(DESKTOP_PORT, '127.0.0.1'",'app.requestSingleInstanceLock()','const DESKTOP_PORT = 43139','const INTEGRITY_PATH = path.join(__dirname, \'..\', \'generated\', \'integrity.json\')','startLoopbackServer(integrity.files)','method !== \'GET\' && method !== \'HEAD\'','SHA-256 verification failed','Verified application asset changed after startup',"Object.prototype.hasOwnProperty.call(expectedFiles, name)","name === 'repair.html'","'Location': '/index.html'","clearStorageData({origin, storages: ['serviceworkers', 'cachestorage']})"])need(MAIN.includes(marker),`desktop security marker missing: ${marker}`);
+need(!MAIN.includes("server.listen(0, '127.0.0.1', () =>"),'desktop loopback origin must not use the legacy executable ephemeral-port call because browser storage is origin-scoped');
+need(MAIN.includes('http://127.0.0.1:${DESKTOP_PORT}'),'desktop renderer origin must be derived from the stable port');
+need(!MAIN.includes("storages: ['localstorage'")&&!MAIN.includes("storages: ['indexdb'"),'desktop PWA cleanup must preserve learner localStorage and IndexedDB');
+need(!MAIN.includes("process.resourcesPath, 'mouldmaster', 'integrity.json'"),'packaged integrity manifest must not be read from writable asset directory');
+need(INTEGRITY.schema===1,'integrity schema mismatch');
+for(const listName of ['CORE','OPTIONAL']){
+  const match=SERVICE_WORKER.match(new RegExp(`const\\s+${listName}\\s*=\\s*\\[(.*?)\\]\\s*;`,'s'));
+  need(match,`service-worker ${listName} asset list missing`);
+  for(const hit of match[1].matchAll(/['"]\.\/([^'"]+)['"]/g))need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,hit[1]),`desktop integrity parity missing service-worker asset: ${hit[1]}`);
+}
+need(INTEGRITY.release===VERSION.desktop_release,'integrity release must match desktop_release');
+need(Object.keys(INTEGRITY.files||{}).length>=15,'integrity manifest is incomplete');
+for(const [name,hash] of Object.entries(INTEGRITY.files)){need(/^[a-f0-9]{64}$/.test(hash),`bad SHA-256 for ${name}`);need(fs.existsSync(path.join(ROOT,name)),`integrity asset missing: ${name}`)}
+need(DOMAIN_MANIFEST?.schemaVersion===1&&Array.isArray(DOMAIN_MANIFEST.assets)&&Array.isArray(DOMAIN_MANIFEST.dataAssets),'runtime domain manifest invalid for desktop QA');
+for(const raw of [...DOMAIN_MANIFEST.assets,...DOMAIN_MANIFEST.dataAssets]){
+  need(typeof raw==='string'&&raw.startsWith('./'),`unsafe runtime manifest path in desktop QA: ${raw}`);
+  const name=raw.slice(2);
+  need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`runtime manifest asset is not integrity-hashed/servable by desktop: ${raw}`);
+}
+const packagedFrom=new Set((PKG.build?.extraResources||[]).map(x=>String(x.from||'').replace(/^\.\.\/\.\.\//,'')));
+const dynamicLearnerAssets=[
+  'repair.html','ui-shell.css','premium-ui.css','premium-dynamic.css','mobile-lesson-fix.css','learner-ux-repair.css','lesson-simple-experience.js','primary-learning-practice-hubs.js','learner-ux-repair.js',
+  'measured-evidence-integration.js','measured-evidence-decision.js','measured-learning-library.js','measured-learning-library.css','data/measured-learning'
+];
+for(const name of dynamicLearnerAssets){
+  need(packagedFrom.has(name),`desktop packaging parity missing dynamic learner asset: ${name}`);
+  if(!name.endsWith('/measured-learning'))need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`desktop integrity parity missing dynamic learner asset: ${name}`);
+}
+for(const name of ['src/domains/shell/learner-ui-polish.css','src/domains/engineering/spatial-twin.css','src/domains/shell/mission-control.css','src/domains/quality/data/quality-management-iso9001-v1.json'])need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`desktop integrity parity missing governed shell dependency: ${name}`);
+const requiredRuntimePacks=['learning-foundation-runtime-pack.js','assessment-foundation-runtime-pack.js','bootstrap-assessment-source-runtime-pack.js','evidence-runtime-pack.js','assessment-evidence-depth-runtime-pack.js','assessment-multimodal-runtime-pack.js','learning-process-diagnostics-runtime-pack.js','process-data-runtime-pack.js','curriculum-workspace-runtime-pack.js','shell-finalization-runtime-pack.js'];
+for(const name of requiredRuntimePacks)need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,'src/domains/runtime-packs/'+name),`desktop integrity parity missing shell runtime pack: ${name}`);
+for(const name of ['data/measured-learning/promoted-v1.json','data/measured-learning/manifest-v1.json','data/measured-learning/expansion-manifest-v2.json','data/measured-learning/v2-policy.json','data/measured-learning/source-readiness-v2.json'])need(Object.prototype.hasOwnProperty.call(INTEGRITY.files,name),`desktop measured-learning data is not integrity hashed: ${name}`);
+for(const req of ['generated/dependency-licenses.json','generated/sbom.cdx.json','THREAT_MODEL.md'])need(fs.existsSync(path.join(DESKTOP,req)),`desktop transparency artifact missing: ${req}`);
+const licences=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','dependency-licenses.json'),'utf8'));
+need(licences.schema===1 && Array.isArray(licences.packages),'dependency licence inventory invalid');
+const blocked=licences.packages.filter(x=>/proprietary|unlicensed|commercial-only/i.test(String(x.license||'')));
+need(blocked.length===0,`blocked/non-open dependency licence metadata: ${blocked.map(x=>`${x.name}@${x.version}:${x.license}`).join(', ')}`);
+const sbom=JSON.parse(fs.readFileSync(path.join(DESKTOP,'generated','sbom.cdx.json'),'utf8'));
+need(sbom.bomFormat==='CycloneDX','SBOM must be CycloneDX JSON');
+need(fs.existsSync(path.join(ROOT,'LICENSE')),'repository Apache-2.0 licence missing');
+need(fs.existsSync(path.join(ROOT,'OPEN_SOURCE_AND_PATENT_POLICY.md')),'open-source/patent policy missing');
+need(fs.existsSync(path.join(ROOT,'THIRD_PARTY_NOTICES.md')),'third-party notices missing');
+need(fs.existsSync(path.join(ROOT,'.github','workflows','microsoft-store-msix.yml')),'Microsoft Store build workflow missing');
+const legacyGuard=spawnSync(process.env.MM_PYTHON||'python',[path.join(ROOT,'qa_legacy_retirement_state.py')],{cwd:ROOT,encoding:'utf8'});
+if(legacyGuard.stdout)process.stdout.write(legacyGuard.stdout);
+if(legacyGuard.stderr)process.stderr.write(legacyGuard.stderr);
+need(legacyGuard.status===0,`legacy retirement state QA failed with exit ${legacyGuard.status}`);
+console.log('MouldMaster open desktop QA passed (stable single-instance loopback origin preserves browser storage; browser/desktop dynamic assets are packaged and integrity-hashed; legacy recovery retirement remains fail-closed)');

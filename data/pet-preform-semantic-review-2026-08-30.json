@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "reviewed": "2026-08-30",
+  "datasetId": "pet-preform-v2",
+  "decision": "terminal-zero-measured-values-simulation-optimization-model-workbook",
+  "source": {
+    "datasetDoi": "10.17632/vc3k9tt5zj.2",
+    "datasetVersion": 2,
+    "license": "CC BY 4.0",
+    "publisherFile": "Preform Manuscript Database .xlsx",
+    "publisherFileSha256": "20f6704a93df7638d682b692ae4cb7432ca7d94bbc950ef2bdd0cfc17db124dc",
+    "relatedArticleDoi": "10.1016/j.rinma.2026.101013",
+    "articleTitle": "Data driven approach to optimize polyethylene terephthalate water bottle preform injection molding process"
+  },
+  "deliveredTable": {
+    "worksheet": "ANN data ",
+    "rows": 27,
+    "columns": 26,
+    "headerNames": [
+      "Melt Temperature (°C)",
+      "Mold Temperature (°C)",
+      "Ambient Temperature (°C)",
+      "Pressure hold time (sec)",
+      "Pure cooling time (sec)",
+      "Residual stress at Post Filling End",
+      "Total stress Displacement",
+      "In-mold Residual stress Displacement",
+      "Quenching  thermal stress Displacement",
+      "Total stress Displacement (orientation effect)",
+      "In-mold Residual Von-mises stress",
+      "De-mold Residual Von-mises stress",
+      "Validation 2",
+      "H1_1",
+      "H1_2",
+      "H1_3",
+      "H1_4",
+      "H1_5",
+      "H1_6",
+      "Predicted Residual stress at Post Filling End",
+      "Predicted Total stress Displacement",
+      "Predicted In-mold Residual stress Displacement",
+      "Predicted Quenching  thermal stress Displacement",
+      "Predicted Total stress Displacement (orientation effect)",
+      "Predicted In-mold Residual Von-mises stress",
+      "Predicted De-mold Residual Von-mises stress"
+    ]
+  },
+  "fieldGroups": [
+    {
+      "group": "controlled-process-settings",
+      "columns": [
+        "Melt Temperature (°C)",
+        "Mold Temperature (°C)",
+        "Ambient Temperature (°C)",
+        "Pressure hold time (sec)",
+        "Pure cooling time (sec)"
+      ],
+      "role": "Taguchi/optimization input settings",
+      "measuredEvidenceEligible": false,
+      "reason": "The related article describes these as optimized injection-moulding process parameters/settings. A commanded/selected DOE setting is not a measured process signal merely because it has an engineering unit."
+    },
+    {
+      "group": "solidworks-plastics-simulation-results",
+      "columns": [
+        "Residual stress at Post Filling End",
+        "Total stress Displacement",
+        "In-mold Residual stress Displacement",
+        "Quenching  thermal stress Displacement",
+        "Total stress Displacement (orientation effect)",
+        "In-mold Residual Von-mises stress",
+        "De-mold Residual Von-mises stress"
+      ],
+      "role": "numerical simulation outputs",
+      "measuredEvidenceEligible": false,
+      "authoritativeEvidence": [
+        "https://help.solidworks.com/2023/english/swplastics/hidd_pack_results.htm",
+        "https://help.solidworks.com/2024/english/swplastics/hidd_warp_results.htm?id=10.3"
+      ],
+      "reason": "The workbook headers match SOLIDWORKS Plastics Pack/Warp result names. SOLIDWORKS defines these as analysis/simulation results for residual stress, deformation and von Mises stress."
+    },
+    {
+      "group": "model-validation-partition",
+      "columns": ["Validation 2"],
+      "role": "model/validation bookkeeping field; exact coding is not source-defined in the published workbook profile",
+      "measuredEvidenceEligible": false,
+      "reason": "No physical quantity, engineering unit, sensor, measurement method or quality definition is attached to this field. It cannot be promoted as measured evidence."
+    },
+    {
+      "group": "jmp-neural-hidden-layer-intermediates",
+      "columns": ["H1_1", "H1_2", "H1_3", "H1_4", "H1_5", "H1_6"],
+      "role": "ANN hidden-layer intermediate formula outputs",
+      "measuredEvidenceEligible": false,
+      "supportingEvidence": "https://www.jmp.com/content/dam/jmp/documents/en/academic/case-study-library/case-study-library-17/pdf/jmp031-boston-housing.pdf",
+      "reason": "JMP Neural Save Formulas uses H1_1, H1_2, ... for hidden-layer node formulas and Predicted <response> for output formulas. These fields are model intermediates, not physical measurements."
+    },
+    {
+      "group": "ann-predictions",
+      "columns": [
+        "Predicted Residual stress at Post Filling End",
+        "Predicted Total stress Displacement",
+        "Predicted In-mold Residual stress Displacement",
+        "Predicted Quenching  thermal stress Displacement",
+        "Predicted Total stress Displacement (orientation effect)",
+        "Predicted In-mold Residual Von-mises stress",
+        "Predicted De-mold Residual Von-mises stress"
+      ],
+      "role": "machine-learning predictions of simulation responses",
+      "measuredEvidenceEligible": false,
+      "reason": "The delivered headers explicitly identify these columns as predicted values."
+    }
+  ],
+  "articleEvidence": {
+    "publisherPage": "https://www.sciencedirect.com/science/article/pii/S2590048X26001299",
+    "methodBoundary": "The article explicitly combines statistical optimization, numerical simulation and machine learning. Its abstract reports optimized parameter settings and simulated/experimental correlation, but the published Mendeley workbook does not expose a source-defined physical measured quality-outcome column.",
+    "publishedWorkbookDoesNotContainIdentifiableMeasuredQualityOutcome": true
+  },
+  "countingBoundary": {
+    "tabularRows": 27,
+    "controlledSettingCells": 135,
+    "acceptedMeasuredProcessValues": 0,
+    "acceptedMeasuredQualityValues": 0,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "fullyProfiledMeasuredFamily": false,
+    "simulationValuesExcluded": true,
+    "predictedValuesExcluded": true,
+    "modelIntermediateValuesExcluded": true,
+    "settingsExcludedFromMeasuredCounts": true,
+    "rawRowsOrCellValuesCommitted": false
+  },
+  "terminalRule": "Do not reopen this source as measured evidence unless a publisher/author release supplies a physically measured outcome or measured machine/sensor channel with explicit provenance. The existing workbook remains useful as simulation/optimization/ML evidence but contributes zero measured values."
+}

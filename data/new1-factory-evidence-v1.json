@@ -1,0 +1,215 @@
+{
+  "schemaVersion": 1,
+  "caseId": "VA-02",
+  "kind": "authored-synthetic-index",
+  "materialState": "no verified grade or processing recipe",
+  "cell": "Training Cell 07",
+  "context": "One cavity becomes light; 4-cavity mould",
+  "units": "relative index around a fictional baseline of 100 (dimensionless)",
+  "notMeasured": true,
+  "notCalibrated": true,
+  "notAcceptanceLimit": true,
+  "description": "These twenty rows are authored, deterministic diagnostic-pattern examples, not measured factory shots or a physical model. The deliberate cavity-4 shift is not a validated defect prediction.",
+  "shots": [
+    {
+      "shot": 1,
+      "phase": "baseline",
+      "cavities": [
+        100,
+        100.1,
+        100,
+        100
+      ]
+    },
+    {
+      "shot": 2,
+      "phase": "baseline",
+      "cavities": [
+        100.1,
+        100,
+        99.9,
+        100.1
+      ]
+    },
+    {
+      "shot": 3,
+      "phase": "baseline",
+      "cavities": [
+        100,
+        99.9,
+        100.1,
+        99.9
+      ]
+    },
+    {
+      "shot": 4,
+      "phase": "baseline",
+      "cavities": [
+        99.9,
+        100.1,
+        100,
+        100
+      ]
+    },
+    {
+      "shot": 5,
+      "phase": "baseline",
+      "cavities": [
+        100.1,
+        100,
+        100.1,
+        100.1
+      ]
+    },
+    {
+      "shot": 6,
+      "phase": "drift",
+      "cavities": [
+        100,
+        100.1,
+        100,
+        99.8
+      ]
+    },
+    {
+      "shot": 7,
+      "phase": "drift",
+      "cavities": [
+        100.1,
+        100,
+        99.9,
+        99.6
+      ]
+    },
+    {
+      "shot": 8,
+      "phase": "drift",
+      "cavities": [
+        100,
+        99.9,
+        100.1,
+        99.3
+      ]
+    },
+    {
+      "shot": 9,
+      "phase": "drift",
+      "cavities": [
+        99.9,
+        100.1,
+        100,
+        99
+      ]
+    },
+    {
+      "shot": 10,
+      "phase": "drift",
+      "cavities": [
+        100.1,
+        100,
+        100.1,
+        98.7
+      ]
+    },
+    {
+      "shot": 11,
+      "phase": "fault",
+      "cavities": [
+        100,
+        100.1,
+        100,
+        98.6
+      ]
+    },
+    {
+      "shot": 12,
+      "phase": "fault",
+      "cavities": [
+        100.1,
+        100,
+        99.9,
+        98.5
+      ]
+    },
+    {
+      "shot": 13,
+      "phase": "fault",
+      "cavities": [
+        100,
+        99.9,
+        100.1,
+        98.4
+      ]
+    },
+    {
+      "shot": 14,
+      "phase": "fault",
+      "cavities": [
+        99.9,
+        100.1,
+        100,
+        98.6
+      ]
+    },
+    {
+      "shot": 15,
+      "phase": "fault",
+      "cavities": [
+        100.1,
+        100,
+        100.1,
+        98.5
+      ]
+    },
+    {
+      "shot": 16,
+      "phase": "recovery",
+      "cavities": [
+        100,
+        100.1,
+        100,
+        99.5
+      ]
+    },
+    {
+      "shot": 17,
+      "phase": "recovery",
+      "cavities": [
+        100.1,
+        100,
+        99.9,
+        99.8
+      ]
+    },
+    {
+      "shot": 18,
+      "phase": "recovery",
+      "cavities": [
+        100,
+        99.9,
+        100.1,
+        100
+      ]
+    },
+    {
+      "shot": 19,
+      "phase": "recovery",
+      "cavities": [
+        99.9,
+        100.1,
+        100,
+        100.1
+      ]
+    },
+    {
+      "shot": 20,
+      "phase": "recovery",
+      "cavities": [
+        100.1,
+        100,
+        100.1,
+        100
+      ]
+    }
+  ]
+}

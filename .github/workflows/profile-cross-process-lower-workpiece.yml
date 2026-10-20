@@ -1,0 +1,115 @@
+name: MouldMaster Cross-Process Lower Workpiece
+
+on:
+  push:
+    branches: [data/cross-process-lower-source-contract]
+    paths:
+      - 'data/cross-process-lower-workpiece-dictionary-v1.json'
+      - 'tools/profile_cross_process_lower_workpiece.py'
+      - 'qa_cross_process_lower_contract.py'
+      - '.github/workflows/profile-cross-process-lower-workpiece.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-cross-process-lower-workpiece
+  cancel-in-progress: false
+
+jobs:
+  profile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    outputs:
+      source_sha: ${{ steps.source.outputs.sha }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          ref: data/cross-process-lower-source-contract
+      - id: source
+        name: Record exact profiling source
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Python syntax
+        run: |
+          python -m py_compile tools/profile_cross_process_lower_workpiece.py
+          python -m py_compile qa_cross_process_lower_contract.py
+      - name: Validate source contract with synthetic fixture
+        run: python qa_cross_process_lower_contract.py
+      - name: Profile exact publisher archive
+        run: python tools/profile_cross_process_lower_workpiece.py
+      - name: Validate aggregate result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          result = json.loads(Path('data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json').read_text(encoding='utf-8'))
+          profile = result['profile']
+          assert result['source']['publisherChecksum'] == 'md5:069e190338b2ca29f736b21fabf407ba'
+          assert result['source']['sha256'] == 'a0c7c07997e6c5a996823744aceb82bfc7b4efd371c7be0f4afc60d04771ec90'
+          assert result['source']['sizeBytes'] == 685541746
+          assert profile['lowerWorkpieceTxtFilesAccepted'] > 0
+          assert profile['lowerWorkpieceTxtFilesRejected'] == 0
+          assert profile['lowerWorkpieceRowsAccepted'] > 0
+          assert profile['acceptedActualChannelsPerRow'] == 3
+          assert profile['commandChannelsPerRow'] == 1
+          assert profile['acceptedMeasuredTimeSeriesSamples'] == profile['lowerWorkpieceRowsAccepted'] * 3
+          assert profile['commandTargetValuesExcludedFromMeasuredCount'] == profile['lowerWorkpieceRowsAccepted']
+          assert profile['rawRowsOrCellValuesEmitted'] is False
+          assert result['retrieval']['rawPublisherFilesCommitted'] is False
+          assert result['retrieval']['rawRowsUploadedAsArtifact'] is False
+          PY
+      - name: Stage validated aggregate output
+        run: |
+          mkdir -p qa-artifacts/profile-output/data/public-benchmark-results
+          cp data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json qa-artifacts/profile-output/data/public-benchmark-results/
+      - name: Retain validated aggregate output
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: cross-process-lower-profile-${{ steps.source.outputs.sha }}
+          path: qa-artifacts/profile-output
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    needs: profile
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      actions: read
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      SOURCE_SHA: ${{ needs.profile.outputs.source_sha }}
+      TARGET_BRANCH: data/cross-process-lower-source-contract
+      ARTIFACT_NAME: cross-process-lower-profile-${{ needs.profile.outputs.source_sha }}
+    steps:
+      - name: Publish validated aggregate profile
+        run: |
+          set -euo pipefail
+          artifact_ids="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts?per_page=100" --jq ".artifacts[] | select(.name == \"$ARTIFACT_NAME\" and .expired == false) | .id")"
+          test "$(printf '%s\n' "$artifact_ids" | sed '/^$/d' | wc -l)" -eq 1
+          artifact_id="$(printf '%s\n' "$artifact_ids" | sed '/^$/d')"
+          gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/$artifact_id/zip" > artifact.zip
+          mkdir artifact
+          unzip -q artifact.zip -d artifact
+
+          gh auth setup-git
+          git init repo
+          cd repo
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          remote_head="$(git ls-remote origin "refs/heads/$TARGET_BRANCH" | cut -f1)"
+          test "$remote_head" = "$SOURCE_SHA" || { echo "Target branch advanced from $SOURCE_SHA to $remote_head; refusing stale aggregate publish."; exit 1; }
+          git fetch --depth=1 origin "$TARGET_BRANCH"
+          git checkout --detach "$SOURCE_SHA"
+          cp ../artifact/data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json data/public-benchmark-results/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- data/public-benchmark-results/cross-process-lower-workpiece-source-contract-v1.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Profile cross-process lower workpiece source contract"
+          git push origin "HEAD:$TARGET_BRANCH"

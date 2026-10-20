@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "libraryId": "measured-learning-library-v1",
+  "caseIds": [],
+  "boundary": "Only case IDs listed here and backed by QA-valid data/measured-learning/cases/MLM-xxx.json assets are learner-visible. Catalogue rows are not measured learner cases."
+}

@@ -1,0 +1,16 @@
+{
+  "schema": 2,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "mechanismId": "hot-runner-actual-behaviour",
+  "registryTarget": "data/evidence-coverage-v1.json",
+  "promotionOverlayTarget": "data/evidence-promotion-overlay-v2.json",
+  "primaryMeasuredRegistryTarget": "data/primary-measured-evidence-registry-v1.json",
+  "authorMetadataTarget": "data/primary-measured-promotion-authors-v1.json",
+  "promotionRuleSnapshot": {"minimumIndependentPublisherVerifiedPrimaryMeasured":2,"requiresMeasuredSignals":true,"requiresPhysicalQualityOutcome":true,"requiresExperimentalContext":true,"requiresExplicitLimitation":true,"predictionIsNotCausation":true,"universalProcessRecipesAllowed":false},
+  "eligibility": {"independentPublisherVerifiedPrimaryMeasured":2,"meetsMinimumIndependentStudies":true,"measuredSignalsPresent":true,"physicalQualityOutcomesPresent":true,"experimentalContextPresent":true,"explicitLimitationsPresent":true,"eligibleForPromotion":true,"registryPromotionApplied":true},
+  "qualifyingDois": ["10.1002/app.22371","10.1016/j.jmapro.2024.07.095"],
+  "supportingDois": ["10.3390/polym16081057","10.3390/polym15081924","10.1155/2021/6692133","10.22847/ksdme.19.2.202506.009","10.1016/j.matdes.2006.03.015"],
+  "independenceRationale": "The qualifying studies are separated by almost two decades, institutions, tooling and sensing methods. The 2005 programme directly measures command-to-actual sequential-valve-gate response with CCD, cavity-pressure transducers and accelerometer verification; the 2024 programme independently detects the melt front and validates real-time valve-gate sequencing on a large-part mould. They are distinct experiments, not duplicate publications or re-analysis of one hot-runner campaign.",
+  "promotionClaim": "Promote the mechanism-level statement that measured hot-runner or valve-gate actual response can differ from the commanded state and that cavity or melt-front evidence is needed to connect actuation with physical part-quality and filling behaviour. Do not promote any measured delay, valve sequence, temperature, pressure or timing value as a universal hot-runner setting or threshold."
+}

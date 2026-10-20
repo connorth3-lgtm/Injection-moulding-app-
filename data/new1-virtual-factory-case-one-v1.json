@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "id": "new1-virtual-factory-case-one",
+  "status": "development-only-not-deployed",
+  "authoredCase": "VA-02",
+  "owner": "Virtual Apprenticeship (existing canonical authored case and scorer)",
+  "headline": "One cavity becomes light in a four-cavity mould",
+  "stageFlow": [
+    "brief",
+    "baseline",
+    "evidence",
+    "hypothesis",
+    "test",
+    "intervention",
+    "verification",
+    "reflection"
+  ],
+  "bookModuleIds": [
+    "multi-cavity",
+    "feed-system",
+    "cavity-pressure",
+    "diagnostic-method"
+  ],
+  "competencySteps": {
+    "mechanism": "hypothesis",
+    "evidence": "test",
+    "controlled-response": "response",
+    "verification": "verify"
+  },
+  "assessmentPolicy": {
+    "type": "formative",
+    "scoreAuthority": "MM_VIRTUAL_APPRENTICESHIP.scoreReasoning",
+    "max": 4,
+    "accreditation": false,
+    "competenceCertification": false
+  },
+  "storagePolicy": {
+    "readOnlyFrom": "MM_RUNTIME_V2.storage",
+    "existingKey": "mm_virtual_apprenticeship_v1",
+    "newStoreCreated": false,
+    "exportToServer": false
+  },
+  "experimentalControls": {
+    "productionRuntimeLoaded": false,
+    "requiresReleaseBumpBeforeActivation": true,
+    "requiredHolds": [
+      "physical devices",
+      "real assistive technology",
+      "Book SME",
+      "curriculum SME",
+      "learner outcomes",
+      "NZQA/provider",
+      "signed Windows distribution"
+    ]
+  },
+  "growthTargets": {
+    "lessonsModules": "250+ proposed",
+    "diagnosticCases": "1000 proposed",
+    "questionsScenarios": "1500 proposed",
+    "book": "multi-volume proposed",
+    "trainerCohorts": "privacy-designed future capability"
+  }
+}

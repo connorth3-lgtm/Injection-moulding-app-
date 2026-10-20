@@ -1,0 +1,160 @@
+{
+  "schema": 1,
+  "version": "2026.09.10.newsource100pass.1",
+  "reviewed": "2026-09-10",
+  "purpose": "Results of a second 100-pass acquisition sweep restricted to sources not already represented by MM-DATA-001..178. Searches emphasized raw repositories, supplementary tables, industrial production studies, transfer datasets, multicavity measurements, material-lot effects and longitudinal/near-raw records. No third-party raw payload is committed and canonical counts remain unchanged until admission gates pass.",
+  "searchAudit": {
+    "targetedPasses": 100,
+    "startingResearchCandidateCount": 178,
+    "newCandidatesAcceptedForStaging": 6,
+    "cumulativeResearchCandidateCountAfterThisFile": 184,
+    "canonicalMeasuredFamilyIncrement": 0,
+    "canonicalAcceptedTimeSeriesValueIncrement": 0,
+    "rawThirdPartyPayloadsCommitted": 0,
+    "interpretation": "Six genuinely distinct sources survived duplicate and evidence-quality review. Several are measured and unusually useful, but rights and raw-admission status remain source-specific."
+  },
+  "sources": [
+    {
+      "id": "MM-DATA-179",
+      "name": "iGuzzini five-day industrial road-lens injection-moulding quality CSV",
+      "priority": "P0-ADMISSION-REVIEW",
+      "sourceType": "public_industrial_measured_cycle_quality_csv",
+      "evidenceClass": "measured_real_production_process_to_physical_quality",
+      "independenceFamily": "iGuzzini_Engel_EMAC_road_lens_2019_2020",
+      "paper": "https://doi.org/10.3390/info13060272",
+      "repository": "https://github.com/airtlab/machine-learning-for-quality-prediction-in-plastic-injection-molding",
+      "rawFile": {
+        "path": "dataset/data.csv",
+        "gitBlobSha": "1ca731e1e80451f6ebf857f3db69bc9f4566d073",
+        "sizeBytes": 127056,
+        "reportedRows": 1451,
+        "columns": 14,
+        "processFeatureCount": 13,
+        "labelColumn": "quality"
+      },
+      "machine": "Engel E-MAC 310/100",
+      "collection": "TIG Manufacturing Execution System",
+      "reportedProductionDays": ["2019-09-18", "2019-09-19", "2019-09-20", "2020-02-07", "2020-05-20"],
+      "processFields": ["melt temperature", "mould temperature", "filling time", "plasticizing time", "cycle time", "closing force", "clamping-force peak", "screw-torque peak", "screw-torque mean", "specific back-pressure peak", "specific injection-pressure peak", "screw position at end of hold", "shot volume"],
+      "qualitySemantics": "Four quality classes derived from photometric road-lens general uniformity U0: waste, acceptable, target and inefficient.",
+      "dataQualityGate": "README reports 1451 rows, but its displayed class counts 370+406+310+360 total 1446. Exact row-level class counts must be recomputed from the pinned CSV before any profile is accepted.",
+      "rights": {
+        "repositoryLicenseFile": false,
+        "releaseStatement": "README states dataset and experiment source code are freely released for research and educational purposes.",
+        "commercialReuseCleared": false,
+        "requiredAction": "Clarify permission for commercial/internal product use before copying or redistributing raw rows."
+      },
+      "value": "High-value real industrial labelled process dataset with five separated production days, enabling day-held-out temporal/domain validation instead of random-row-only evaluation.",
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "countAsIndependentFamilyBeforeAdmission": false},
+      "nextAction": "Profile the exact pinned CSV outside the product repository: exact rows, class counts, duplicates, missingness, ranges, day identity if recoverable, unit validation and leakage-safe day-based splits; resolve reuse rights before canonical admission."
+    },
+    {
+      "id": "MM-DATA-180",
+      "name": "Recycled-polypropylene machine-learning process-control raw appendix",
+      "priority": "P0-EVIDENCE",
+      "sourceType": "open_article_measured_process_control_table",
+      "evidenceClass": "measured_recyclate_process_to_physical_property_control",
+      "independenceFamily": "recycled_PP_MFR_APV_process_control_2025",
+      "article": "https://www.mdpi.com/2073-4360/17/19/2635",
+      "reportedDataLocation": "Appendix B, Table A1",
+      "measuredFields": ["material MFR", "trigger time", "actual pressure", "ultimate elongation", "yield stress", "modulus", "part weight", "apparent process viscosity/APV"],
+      "value": "Adds directly tabulated recycled-PP material-variation and control-response evidence linking incoming material rheology to process state and physical/mechanical outcomes.",
+      "rights": {"state": "open-article-data", "articleReuseSubjectToPublisherLicense": true, "separateRawFileNotEstablished": true},
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "articleTableEvidenceOnlyUntilAdmission": true},
+      "nextAction": "Transcribe or retrieve the literal appendix table with provenance, verify units and distinguish measured rows from model/control outputs; request author data if a fuller chronological table exists."
+    },
+    {
+      "id": "MM-DATA-181",
+      "name": "Medical-device scientific-moulding transfer, material-lot and cavity-balance dataset",
+      "priority": "P0-EVIDENCE",
+      "sourceType": "open_article_measured_cross_machine_transfer_tables",
+      "evidenceClass": "measured_cross_machine_material_lot_multicavity_physical_quality",
+      "independenceFamily": "medical_device_Arburg_221M_to_375V_transfer_2021",
+      "article": "https://www.mdpi.com/2504-4494/5/4/113",
+      "machines": ["Arburg 221 M", "Arburg 375 V"],
+      "material": "HDPE medical-device component",
+      "measuredEvidence": ["process DOE", "material lot A/B factor", "thread dimension", "maximum tensile strength", "two-cavity balance weights across 10 shots", "32-shot process-assessment weights", "pre/post-transfer process parameters"],
+      "value": "Rare source combining machine transfer, material-lot variation, multicavity physical measurements and post-transfer process validation in a medical-device moulding context.",
+      "rights": {"state": "open-article-tables", "separateMachineReadableRawDatasetLocated": false},
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "articleEvidenceOnlyUntilRawReleaseFound": true},
+      "nextAction": "Extract publisher-verifiable measured tables with shot/cavity identity intact; contact authors for original cycle-level transfer/DOE data and reuse terms."
+    },
+    {
+      "id": "MM-DATA-182",
+      "name": "Foxconn industrial injection-moulding dimensional and high-frequency sensor corpus mirror",
+      "priority": "P0-RIGHTS-TRACE",
+      "sourceType": "third_party_mirror_of_industrial_competition_dataset",
+      "evidenceClass": "industrial_cycle_dimension_machine_state_high_frequency_sensor",
+      "independenceFamily": "Foxconn_4th_Industrial_Big_Data_IMM",
+      "recentPaperContext": "https://link.springer.com/article/10.1007/s10845-026-02833-x",
+      "mirror": "https://github.com/dengxq888/Injection-Molding-Dataset",
+      "mirrorFiles": [
+        {"path": "Size.csv", "gitBlobSha": "a9f2a86ed497f9513c89d93af021043e6051e219", "sizeBytes": 702045},
+        {"path": "data_set.csv", "gitBlobSha": "015b475e9c15eccb11b0f1f9290da27afc4d92f3", "sizeBytes": 388838},
+        {"path": "data_spc.csv", "gitBlobSha": "dc040a928632f6bca97c0262d8e634d54b305488", "sizeBytes": 9554932},
+        {"path": "List of fields and their meanings.docx", "gitBlobSha": "10b9a131aa2a4f84bba6179b1cb2b1c1ab9e7a30", "sizeBytes": 37374}
+      ],
+      "reportedSignals": ["cycle/product dimensional measurements", "machine settings/status", "86 machine-state parameters", "high-frequency sensor data from 24 sensors with stage-dependent 20/50 Hz acquisition"],
+      "rights": {
+        "mirrorLicense": null,
+        "originalCompetitionDownloadCurrentlyAvailable": false,
+        "state": "unresolved-third-party-mirror",
+        "rawAdmissionAllowed": false
+      },
+      "value": "Potentially exceptional industrial multimodal corpus, but provenance/permission risk is high enough that the mirror must be treated only as an acquisition lead until original-owner rights are established.",
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "mirrorDoesNotEstablishPermission": true},
+      "nextAction": "Trace the original Foxconn/competition terms or contact the data owner; only after explicit permission should exact files be downloaded, fingerprinted and profiled."
+    },
+    {
+      "id": "MM-DATA-183",
+      "name": "59-part injection-moulding transfer-learning repository",
+      "priority": "P1-SIMULATION",
+      "sourceType": "public_multi_part_simulation_transfer_dataset",
+      "evidenceClass": "simulation_cross_part_process_to_weight",
+      "independenceFamily": "Lockner_Hopmann_59part_transfer_2020",
+      "article": "https://doi.org/10.1007/s00170-020-06511-3",
+      "repository": "https://gitlab.com/yanniklockner/dml_1",
+      "reportedScale": {"differentParts": 59},
+      "inputs": ["injection flow rate", "holding-pressure time", "holding pressure", "cooling time", "melt temperature", "cavity-wall temperature"],
+      "target": "part weight",
+      "provenanceBoundary": "Published study states results are based on simulation data and require experimental validation; this source must never be counted as measured production evidence.",
+      "rights": {"articleLicense": "CC BY 4.0", "repositoryFileLevelLicenseVerified": false, "exactPayloadFingerprintPending": true},
+      "value": "Large cross-part geometry/process transfer family useful for model-architecture and transfer-learning stress tests while kept strictly separate from measured evidence.",
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "simulationOnly": true},
+      "nextAction": "Inspect GitLab file inventory and repository licence through a supported route; fingerprint exact simulation tables and preserve part identity for leave-part-family-out evaluation."
+    },
+    {
+      "id": "MM-DATA-184",
+      "name": "Micro versus conventional injection-moulding multicavity precision/accuracy study",
+      "priority": "P1-EVIDENCE",
+      "sourceType": "open_article_measured_cross_machine_micro_moulding",
+      "evidenceClass": "measured_cross_process_multicavity_dimensional_quality",
+      "independenceFamily": "micro_vs_conventional_IM_precision_2020",
+      "article": "https://doi.org/10.3390/mi11121115",
+      "articleLicense": "CC BY 4.0",
+      "reportedDesign": {
+        "processes": ["conventional injection moulding", "micro injection moulding"],
+        "cavities": 4,
+        "partsPerCavityPerProcess": 10,
+        "reportedMeasuredParts": 80,
+        "startupShotsDiscardedPerRun": 50
+      },
+      "measuredEvidence": ["part mass", "optical dimensional measurements", "cavity-specific precision/accuracy", "process capability comparison"],
+      "value": "Independent physical-quality comparison across conventional and micro-injection equipment with cavity identity retained; useful for scale/process transfer validation.",
+      "rights": {"state": "open-CC-BY-4.0-article", "separateMachineReadableRawDatasetLocated": false},
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "articleEvidenceOnlyUntilRawReleaseFound": true},
+      "nextAction": "Retain measured tables as article evidence and seek author-level cavity/part source measurements if reusable raw files exist."
+    }
+  ],
+  "duplicateExclusions": [
+    "scatimdata/AVAPS high-resolution pressure-flow datasets: already present in the staged admission queue",
+    "FORinFPRO-HIMD: already present in the staged admission queue",
+    "Mendeley data model gtnb4j7bfx: already represented as MM-DATA-011",
+    "AD-STGN 6f9x8yg8nj: already represented as MM-DATA-026",
+    "RWTH PCR/OpenMMS/EPP/PASCOE families: already represented",
+    "University of Leon 2026 PP process/defect datasets: already MM-DATA-023/MM-DATA-024",
+    "4D injection moulding Figshare: already MM-DATA-051",
+    "pyscrew moulding-variation scenarios: already represented in prior candidates"
+  ],
+  "truthBoundary": "184 is a research-discovery count only. Measured/public/article/simulation/mirror status must remain distinct, and none of these six increases canonical measured-family or accepted-value counts before source-specific admission."
+}

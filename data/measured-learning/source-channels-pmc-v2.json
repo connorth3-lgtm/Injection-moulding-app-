@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "pmc4753395-hdpe-cenosphere-v1",
+  "registryId": "pmc-hdpe-measured-learning-channels-v2",
+  "sourceArtifact": "Tensile-Data.xlsx",
+  "sourceArtifactSha256": "sha256:6e376e0acdfc614b6c16e0fef99e0e74cace8bc4d931a08a729e05dfc2cd7783",
+  "evidenceRefs": [
+    "data/public-benchmark-results/pmc4753395-hdpe-cenosphere-v1.json",
+    "measured-source-proof:pmc-hdpe-tensile-source-proof.json",
+    "doi:10.1016/j.dib.2016.01.058"
+  ],
+  "policy": {
+    "onlyHashVerifiedWorkbookPairsPromote": true,
+    "stressAndStrainUnitsComeFromWorkbookHeaders": true,
+    "compositionSheetNamesAreSourceLabels": true,
+    "modelWorkbookIsExcluded": true
+  },
+  "channels": [
+    {"sourceChannel":"HDPE!A:B","semantic":"hdpe-tensile-stress-trace-replicate-1","unit":"MPa","role":"material-test-trace","coordinateChannel":"HDPE!A","coordinateSemantic":"strain","coordinateUnit":"%","promotionReady":true},
+    {"sourceChannel":"HDPE!C:D","semantic":"hdpe-tensile-stress-trace-replicate-2","unit":"MPa","role":"material-test-trace","coordinateChannel":"HDPE!C","coordinateSemantic":"strain","coordinateUnit":"%","promotionReady":true},
+    {"sourceChannel":"HDPE!E:F","semantic":"hdpe-tensile-stress-trace-replicate-3","unit":"MPa","role":"material-test-trace","coordinateChannel":"HDPE!E","coordinateSemantic":"strain","coordinateUnit":"%","promotionReady":true},
+    {"sourceChannel":"HDPE20!A:B","semantic":"hdpe20-tensile-stress-trace-replicate-1","unit":"MPa","role":"material-test-trace","coordinateChannel":"HDPE20!A","coordinateSemantic":"strain","coordinateUnit":"%","promotionReady":true},
+    {"sourceChannel":"HDPE40!A:B","semantic":"hdpe40-tensile-stress-trace-replicate-1","unit":"MPa","role":"material-test-trace","coordinateChannel":"HDPE40!A","coordinateSemantic":"strain","coordinateUnit":"%","promotionReady":true},
+    {"sourceChannel":"HDPE60!A:B","semantic":"hdpe60-tensile-stress-trace-replicate-1","unit":"MPa","role":"material-test-trace","coordinateChannel":"HDPE60!A","coordinateSemantic":"strain","coordinateUnit":"%","promotionReady":true}
+  ],
+  "boundary": "These channels are direct stress-versus-strain measurements from the exact benchmarked workbook. The X coordinate is strain percent, not time. Composition comparisons and repeated-specimen differences do not establish production-process root cause."
+}

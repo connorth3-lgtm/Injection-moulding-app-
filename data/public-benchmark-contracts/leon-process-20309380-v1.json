@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "datasetId": "leon-process-20309380",
+  "status": "blocked-embargo",
+  "source": {"doi": "10.5281/zenodo.20309380", "recordUrl": "https://zenodo.org/records/20309380", "version": "v1", "license": "CC BY 4.0", "access": "embargoed", "filesAvailableNotBefore": "2027-12-31", "automatedRetrievalAllowed": false},
+  "experimentContext": {"material": "SABIC 579S homopolymer polypropylene", "machine": "Mateu & Solé MiniMat 60", "mold": "two-cavity multicavity mold", "configurations": 1000, "registeredPartsPerBatch": 5, "priorDiscardedPartsPerBatch": 3, "fileManifest": ["Dataset.csv", "Parts_geometry.stp"], "datasetFields": ["batch", "label_viability", "Tinj", "tinj", "Pinj", "Ph", "Bp", "th", "P1_weight", "P2_weight", "P3_weight", "P4_weight", "P5_weight", "weight_avg", "energy", "cycle_time"], "recordUnit": "one injection batch/configuration"},
+  "embargoGate": {"notBefore": "2027-12-31", "metadataMayBeUsedBeforeEmbargoEnds": true, "rawRetrievalBeforeEmbargoEnds": false, "recheckEarlierReleaseAllowed": true},
+  "evidenceBoundary": "The dataset is explicitly CC BY 4.0, but its files are embargoed until 31 December 2027 or an earlier depositor release. Metadata-level structure is retained now; no raw-file request, retrieval, count promotion or simulated replacement is allowed before live availability is rechecked."
+}

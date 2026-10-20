@@ -1,0 +1,686 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-expansion-20260929-v9",
+  "status": "validated-regional-supply-expansion-with-staging",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Ninth expansion wave strengthening India, Malaysia and Australia/New Zealand-relevant exact-grade coverage while preserving incomplete rheology as context-only.",
+  "summary": {
+    "validatedGrades": 7,
+    "sourceReviewedStagingGrades": 3,
+    "manufacturers": 5,
+    "validatedFamilies": [
+      "PP",
+      "HDPE"
+    ],
+    "stagingFamilies": [
+      "HDPE"
+    ]
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-indianoil",
+      "name": "IndianOil",
+      "country": "India",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-indianoil-propel-p1110mas",
+          "manufacturer": {
+            "id": "mfr-indianoil",
+            "name": "IndianOil",
+            "country": "India",
+            "website": "https://iocl.com/"
+          },
+          "brand": "PROPEL",
+          "grade": "P1110MAS",
+          "aliases": [
+            "1110MAS"
+          ],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "PP homopolymer injection-moulding grade; current provisional TDS states high flow/stiffness, gloss and antistatic agent."
+          },
+          "properties": [
+            {
+              "id": "obs-indianoil-p1110mas-mfi",
+              "property": "Melt Flow Rate",
+              "value": 11,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-indianoil-p1110mas-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "IndianOil current typical value; compare only at 230°C/2.16 kg."
+            }
+          ],
+          "processing": [
+            {
+              "id": "proc-indianoil-p1110mas-process-temp",
+              "parameter": "Recommended processing temperature",
+              "min": 170,
+              "max": 230,
+              "value": null,
+              "unit": "°C",
+              "condition": "IndianOil provisional exact-grade TDS guidance; not a universal production recipe or guaranteed setting.",
+              "claimType": "supplier-guidance",
+              "sourceId": "src-indianoil-p1110mas-2026",
+              "sourcePage": "recommended processing temperature",
+              "productionRecipe": false
+            }
+          ],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-indianoil-p1110mas-2026",
+              "publisher": "IndianOil",
+              "title": "PROPEL P1110MAS Provisional Technical Datasheet",
+              "url": "https://iocl.com/uploads/TDS_23012026.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2026-01-23",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current IndianOil provisional exact-grade TDS reviewed. ASTM D1238 MFI retains full 230°C/2.16 kg context; processing temperature remains supplier guidance only."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-indianoil-propel-080m55",
+          "manufacturer": {
+            "id": "mfr-indianoil",
+            "name": "IndianOil",
+            "country": "India",
+            "website": "https://iocl.com/"
+          },
+          "brand": "PROPEL",
+          "grade": "080M55",
+          "aliases": [],
+          "polymer": {
+            "family": "HDPE",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "HDPE injection-moulding grade for caps/closures and industrial products."
+          },
+          "properties": [
+            {
+              "id": "obs-indianoil-080m55-mfi",
+              "property": "Melt Flow Rate",
+              "value": 8,
+              "unit": "g/10min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 190,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-indianoil-080m55-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": true,
+              "limitations": "IndianOil current exact-grade typical value; compare only at 190°C/2.16 kg."
+            },
+            {
+              "id": "obs-indianoil-080m55-density",
+              "property": "Density",
+              "value": 0.955,
+              "unit": "g/cm³",
+              "testMethod": "ASTM D792",
+              "direction": "not-applicable",
+              "sourceId": "src-indianoil-080m55-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": false,
+              "limitations": "Typical exact-grade density at 23°C."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-indianoil-080m55-2026",
+              "publisher": "IndianOil",
+              "title": "PROPEL HDPE 080M55 Technical Datasheet",
+              "url": "https://iocl.com/uploads/TDS_23012026.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2023-03-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current IndianOil-hosted exact-grade TDS reviewed. MFI retains full ASTM D1238 190°C/2.16 kg semantics."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-indianoil-propel-080m60",
+          "manufacturer": {
+            "id": "mfr-indianoil",
+            "name": "IndianOil",
+            "country": "India",
+            "website": "https://iocl.com/"
+          },
+          "brand": "PROPEL",
+          "grade": "080M60",
+          "aliases": [],
+          "polymer": {
+            "family": "HDPE",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current 2025 IndianOil grade sheet confirms HDPE injection-moulding grade 080M60 with MFI 8 and density 0.960; exact current TDS/test-condition normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-indianoil-080m60-grade-sheet-2026",
+              "publisher": "IndianOil",
+              "title": "PROPEL Grade Sheet 2025",
+              "url": "https://www.iocl.com/download/Grade_Sheet2025.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2025-01-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current 2025 IndianOil grade sheet confirms HDPE injection-moulding grade 080M60 with MFI 8 and density 0.960; exact current TDS/test-condition normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-indianoil-propel-080m60u",
+          "manufacturer": {
+            "id": "mfr-indianoil",
+            "name": "IndianOil",
+            "country": "India",
+            "website": "https://iocl.com/"
+          },
+          "brand": "PROPEL",
+          "grade": "080M60U",
+          "aliases": [],
+          "polymer": {
+            "family": "HDPE",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current 2025 IndianOil grade sheet confirms UV-stabilized HDPE injection-moulding grade 080M60U with MFI 8 and density 0.960; exact TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-indianoil-080m60u-grade-sheet-2026",
+              "publisher": "IndianOil",
+              "title": "PROPEL Grade Sheet 2025",
+              "url": "https://www.iocl.com/download/Grade_Sheet2025.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2025-01-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current 2025 IndianOil grade sheet confirms UV-stabilized HDPE injection-moulding grade 080M60U with MFI 8 and density 0.960; exact TDS normalization remains pending."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-indianoil-propel-180m50",
+          "manufacturer": {
+            "id": "mfr-indianoil",
+            "name": "IndianOil",
+            "country": "India",
+            "website": "https://iocl.com/"
+          },
+          "brand": "PROPEL",
+          "grade": "180M50",
+          "aliases": [],
+          "polymer": {
+            "family": "HDPE",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current 2025 IndianOil grade sheet confirms high-flow HDPE injection-moulding grade 180M50 with MFI 20 and density 0.950; exact TDS normalization remains pending."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-indianoil-180m50-grade-sheet-2026",
+              "publisher": "IndianOil",
+              "title": "PROPEL Grade Sheet 2025",
+              "url": "https://www.iocl.com/download/Grade_Sheet2025.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2025-01-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current 2025 IndianOil grade sheet confirms high-flow HDPE injection-moulding grade 180M50 with MFI 20 and density 0.950; exact TDS normalization remains pending."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-petronas-chemicals",
+      "name": "PETRONAS Chemicals",
+      "country": "Malaysia",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-petronas-propelinas-h500ng",
+          "manufacturer": {
+            "id": "mfr-petronas-chemicals",
+            "name": "PETRONAS Chemicals",
+            "country": "Malaysia",
+            "website": "https://www.petronas.com/pcg/"
+          },
+          "brand": "PROPELINAS",
+          "grade": "H500NG",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "PP homopolymer injection-moulding grade for furniture, housewares, containers and toys."
+          },
+          "properties": [
+            {
+              "id": "obs-petronas-h500ng-mfr",
+              "property": "Melt Flow Rate",
+              "value": 12,
+              "unit": "g/10min",
+              "testMethod": null,
+              "temperatureC": null,
+              "loadKg": null,
+              "direction": "not-applicable",
+              "sourceId": "src-petronas-h500ng-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": false,
+              "limitations": "Current PETRONAS portfolio publishes the exact-grade MFR but does not expose test method/temperature/load in this reviewed surface; keep context-only until the exact technical-data condition is captured."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-petronas-h500ng-2026",
+              "publisher": "PETRONAS Chemicals",
+              "title": "PROPELINAS Homopolymer PP product sheet",
+              "url": "https://www.petronas.com/pcg/sites/pcg/files/download/04%20190146%20Propelinas%20Homopolymer%20PP%20050819.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2019-08-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current PETRONAS product sheet and polymer portfolio confirm exact grade/application and MFR. MFR remains comparisonReady=false because the reviewed source surface does not state temperature/load."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-petronas-propelinas-h648tt",
+          "manufacturer": {
+            "id": "mfr-petronas-chemicals",
+            "name": "PETRONAS Chemicals",
+            "country": "Malaysia",
+            "website": "https://www.petronas.com/pcg/"
+          },
+          "brand": "PROPELINAS",
+          "grade": "H648TT",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "PP homopolymer grade for transparent thin-wall injection moulding."
+          },
+          "properties": [
+            {
+              "id": "obs-petronas-h648tt-mfr",
+              "property": "Melt Flow Rate",
+              "value": 53,
+              "unit": "g/10min",
+              "testMethod": null,
+              "temperatureC": null,
+              "loadKg": null,
+              "direction": "not-applicable",
+              "sourceId": "src-petronas-h648tt-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": false,
+              "limitations": "Current PETRONAS portfolio publishes the exact-grade MFR but does not expose test method/temperature/load in this reviewed surface; keep context-only until the exact technical-data condition is captured."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-petronas-h648tt-2026",
+              "publisher": "PETRONAS Chemicals",
+              "title": "PROPELINAS Homopolymer PP product sheet",
+              "url": "https://www.petronas.com/pcg/sites/pcg/files/download/04%20190146%20Propelinas%20Homopolymer%20PP%20050819.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2019-08-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current PETRONAS product sheet and polymer portfolio confirm exact grade/application and MFR. MFR remains comparisonReady=false because the reviewed source surface does not state temperature/load."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-lotte-titan",
+      "name": "LOTTE Chemical Titan",
+      "country": "Malaysia",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-lotte-titanpro-sh611",
+          "manufacturer": {
+            "id": "mfr-lotte-titan",
+            "name": "LOTTE Chemical Titan",
+            "country": "Malaysia",
+            "website": "https://www.lottechem.my/"
+          },
+          "brand": "TITANPRO",
+          "grade": "SH611",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "impactModified": true,
+            "notes": "High-impact polypropylene copolymer exact grade for injection moulding; current product data lists industrial pails, pallets and household electrical appliances."
+          },
+          "properties": [
+            {
+              "id": "obs-lotte-titan-sh611-mfr",
+              "property": "Melt Flow Rate",
+              "value": 18,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": null,
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-titan-sh611-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": false,
+              "limitations": "Current product data publishes ASTM D1238 MFR at 230°C but not the load on the reviewed sheet; context-only until load is explicitly sourced."
+            },
+            {
+              "id": "obs-lotte-titan-sh611-density",
+              "property": "Density",
+              "value": 0.9,
+              "unit": "g/cm³",
+              "testMethod": "ASTM D1505",
+              "direction": "not-applicable",
+              "sourceId": "src-lotte-titan-sh611-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": false,
+              "limitations": "Typical exact-grade density."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lotte-titan-sh611-2026",
+              "publisher": "LOTTE Chemical Titan",
+              "title": "TITANPRO SH611 Product Data",
+              "url": "https://www.lottechem.my/upload/goods/C101/C202/C367/KOR72920238248265917.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": "2025-10-01",
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current LOTTE Chemical Titan product data reviewed. MFR is kept context-only because the product sheet omits test load; application restrictions remain supplier-controlled."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-lyondellbasell",
+      "name": "LyondellBasell",
+      "country": "Netherlands",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-lyb-moplen-hp400l",
+          "manufacturer": {
+            "id": "mfr-lyondellbasell",
+            "name": "LyondellBasell",
+            "country": "Netherlands",
+            "website": "https://www.lyondellbasell.com/"
+          },
+          "brand": "Moplen",
+          "grade": "HP400L",
+          "aliases": [
+            "PLASVE HP400L"
+          ],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Australia/NZ-available moderate-flow PP homopolymer for injection-moulded containers, closures and lids."
+          },
+          "properties": [
+            {
+              "id": "obs-lyb-hp400l-mfr",
+              "property": "Melt Flow Rate",
+              "value": 6,
+              "unit": "g/10 min",
+              "testMethod": null,
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-lyb-moplen-hp400l-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": false,
+              "limitations": "LyondellBasell current exact-grade page publishes MFR at 230°C/2.16 kg, but the test method name is not surfaced in the reviewed source. Retained as conditioned context only until the method is explicitly sourced."
+            },
+            {
+              "id": "obs-lyb-hp400l-density",
+              "property": "Density",
+              "value": 0.9,
+              "unit": "g/cm³",
+              "testMethod": null,
+              "direction": "not-applicable",
+              "sourceId": "src-lyb-moplen-hp400l-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": false,
+              "limitations": "Typical exact-grade density from current product page."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lyb-moplen-hp400l-2026",
+              "publisher": "LyondellBasell",
+              "title": "Moplen HP400L current product data",
+              "url": "https://www.lyondellbasell.com/en/polymers/p/Moplen-HP400L/1bddaa3c-7a01-46bc-bb0a-69c503acdaab",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current LyondellBasell exact-grade product page reviewed. Regional availability and fully conditioned MFR temperature/load are preserved."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-lyb-moplen-hp400k",
+          "manufacturer": {
+            "id": "mfr-lyondellbasell",
+            "name": "LyondellBasell",
+            "country": "Netherlands",
+            "website": "https://www.lyondellbasell.com/"
+          },
+          "brand": "Moplen",
+          "grade": "HP400K",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "General-purpose PP homopolymer for injection moulding/extrusion; current page lists Asia-Pacific, Australia and New Zealand availability."
+          },
+          "properties": [
+            {
+              "id": "obs-lyb-hp400k-mfr",
+              "property": "Melt Flow Rate",
+              "value": 4,
+              "unit": "g/10 min",
+              "testMethod": null,
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-lyb-moplen-hp400k-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": false,
+              "limitations": "LyondellBasell current exact-grade page publishes MFR at 230°C/2.16 kg, but the test method name is not surfaced in the reviewed source. Retained as conditioned context only until the method is explicitly sourced."
+            },
+            {
+              "id": "obs-lyb-hp400k-density",
+              "property": "Density",
+              "value": 0.9,
+              "unit": "g/cm³",
+              "testMethod": null,
+              "direction": "not-applicable",
+              "sourceId": "src-lyb-moplen-hp400k-2026",
+              "sourcePage": "current manufacturer exact-grade data",
+              "comparisonReady": false,
+              "limitations": "Typical exact-grade density from current product page."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-lyb-moplen-hp400k-2026",
+              "publisher": "LyondellBasell",
+              "title": "Moplen HP400K current product data",
+              "url": "https://www.lyondellbasell.com/en/polymers/p/Moplen-HP400K/88b65baa-6644-4e5b-b936-dd4498eeb32a",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current LyondellBasell exact-grade product page reviewed. Regional availability and fully conditioned MFR temperature/load are preserved."
+          }
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "PETRONAS and LOTTE Titan MFR observations remain context-only where reviewed source surfaces omit comparison-critical test conditions.",
+    "IndianOil and LyondellBasell fully conditioned rheology is promoted where exact temperature/load are published.",
+    "All processing guidance remains non-recipe."
+  ]
+}

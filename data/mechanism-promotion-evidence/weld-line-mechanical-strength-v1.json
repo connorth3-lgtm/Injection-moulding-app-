@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "version": "2026.08.28.2",
+  "reviewed": "2026-08-28",
+  "mechanismId": "weld-line-mechanical-strength",
+  "registryTarget": "data/evidence-coverage-v1.json",
+  "promotionRuleSnapshot": {
+    "minimumIndependentPublisherVerifiedPrimaryMeasured": 2,
+    "requiresMeasuredSignals": true,
+    "requiresPhysicalQualityOutcome": true,
+    "requiresExperimentalContext": true,
+    "requiresExplicitLimitation": true,
+    "predictionIsNotCausation": true,
+    "universalProcessRecipesAllowed": false
+  },
+  "eligibility": {
+    "independentPublisherVerifiedPrimaryMeasured": 2,
+    "meetsMinimumIndependentStudies": true,
+    "measuredSignalsPresent": true,
+    "physicalQualityOutcomesPresent": true,
+    "experimentalContextPresent": true,
+    "explicitLimitationsPresent": true,
+    "eligibleForPromotion": true,
+    "registryPromotionApplied": true
+  },
+  "independenceRationale": "The counted studies are separate experimental programmes with disjoint author teams and different institutions, years, tooling and mechanical endpoints: the 2012 polypropylene obstacle-geometry tensile/impact study and the 2025 iPP/short-glass-fibre long-term durability programme. They are not duplicate versions or re-analyses of one moulding campaign.",
+  "studies": [
+    {
+      "id": "doi:10.1016/j.icheatmasstransfer.2011.11.012",
+      "title": "Investigation the effects of obstacle geometries and injection molding parameters on weld line strength using experimental and finite element methods in plastic injection molding",
+      "authors": ["Babur Ozcelik", "Emel Kuram", "M. Mustafa Topal"],
+      "year": 2012,
+      "journal": "International Communications in Heat and Mass Transfer",
+      "doi": "10.1016/j.icheatmasstransfer.2011.11.012",
+      "publisherUrl": "https://www.sciencedirect.com/science/article/pii/S0735193311002569",
+      "role": "primary-measured-study",
+      "verification": "publisher-verified",
+      "independenceKey": "ozcelik-kuram-topal-pp-weldline-2012",
+      "materialContext": "Polypropylene specimens moulded with intentionally generated weld lines and comparison geometries.",
+      "toolContext": "Experimental mould incorporated obstacles with different edge angles to generate controlled weld-line conditions; specimens were produced on a Mitsubishi 50 MetIII injection-moulding machine.",
+      "measuredSignals": ["melt temperature", "packing pressure", "obstacle edge angle / weld-line geometry", "injection-moulding process conditions"],
+      "physicalQualityOutcomes": ["measured tensile strength", "measured notched Izod impact strength", "comparison of specimens with and without weld lines"],
+      "supports": "Weld-line geometry and moulding conditions measurably change tensile and impact performance of injection-moulded polypropylene, demonstrating that weld-line structural risk requires mechanical evidence rather than appearance alone.",
+      "limitation": "The polypropylene grade, obstacle geometries, machine, tensile/impact methods and tested process window are experiment-specific; the measured parameter effects and numerical strengths are not universal weld-line acceptance limits or process settings."
+    },
+    {
+      "id": "doi:10.1016/j.polymertesting.2025.109035",
+      "title": "On the assessment of strength and durability of weld lines in injection-moulded unreinforced and short glass fiber reinforced polypropylene",
+      "authors": ["Aitor Arriaga", "Sten J. J. van den Broek", "Leon E. Govaert", "Tom A. P. Engels"],
+      "year": 2025,
+      "journal": "Polymer Testing",
+      "doi": "10.1016/j.polymertesting.2025.109035",
+      "publisherUrl": "https://www.sciencedirect.com/science/article/pii/S0142941825003496",
+      "role": "primary-measured-study",
+      "verification": "publisher-verified",
+      "independenceKey": "tue-iPP-weldline-durability-2025",
+      "materialContext": "Unreinforced isotactic polypropylene and 30% short-glass-fibre-reinforced iPP injection-moulded into specimens containing a central weld line.",
+      "toolContext": "Injection-moulded tensile specimens with a central stagnating-flow weld line; short- and long-term mechanical tests were performed across temperature and loading-rate conditions.",
+      "measuredSignals": ["test temperature from -20 °C to 80 °C", "strain-rate and stress-rate controlled loading", "creep-to-rupture and cyclic-fatigue loading history", "fatigue crack-growth experiments"],
+      "physicalQualityOutcomes": ["short-term weld-line tensile strength and failure mode", "creep-to-rupture lifetime", "cyclic-fatigue durability", "crack-growth behaviour and ductile-to-brittle failure transition"],
+      "supports": "Weld-line mechanical performance is loading-, temperature-, material- and time-dependent; short-term visual or tensile evidence alone can miss durability and crack-growth risks.",
+      "limitation": "The unreinforced and 30% short-glass-fibre iPP materials, weld geometry and mechanical loading programme are specific to the experiment; the reported strength transitions and test rates do not define universal weld-line thresholds."
+    }
+  ],
+  "supportingStudy": {
+    "id": "doi:10.1002/pen.26268",
+    "title": "Comparative study of weld-line strength for unfilled and glass-filled thermoplastic polyamide-6 materials",
+    "year": 2023,
+    "journal": "Polymer Engineering & Science",
+    "doi": "10.1002/pen.26268",
+    "publisherUrl": "https://4spepublications.onlinelibrary.wiley.com/doi/10.1002/pen.26268",
+    "role": "primary-measured-study",
+    "verification": "publisher-verified",
+    "use": "Supporting material/reinforcement evidence comparing tensile properties of moulded plaques with and without weld lines; not required for the two-study minimum.",
+    "limitation": "The tested unfilled, 30% glass-filled and 50% glass-filled PA6 materials and plaque geometry do not define universal weld-line strength-reduction factors."
+  },
+  "promotionClaim": "Promote the mechanism-level statement that measured weld-line structural performance depends on material, reinforcement, flow/weld geometry, thermal/process history and service loading, and that visual appearance alone is insufficient; mechanical testing and physical part-quality outcomes are required when structural integrity matters. Do not promote any reported tensile strength, impact strength, test rate, temperature, pressure or processing condition as a universal setting, acceptance limit or guaranteed root-cause threshold."
+}

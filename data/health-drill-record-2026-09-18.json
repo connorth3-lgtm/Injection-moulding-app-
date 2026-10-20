@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-18",
+  "environment": "repository-synthetic-no-production-mutation",
+  "backupRestore": {
+    "status": "pass",
+    "tool": "tools/health_restore_drill.py",
+    "scope": ["learner-backup-validation", "last-known-good-preservation", "engineering-case-additive-migration", "process-data-reset-contract"],
+    "realLearnerDataUsed": false
+  },
+  "releaseRollback": {
+    "status": "pass",
+    "mode": "synthetic-selection-drill",
+    "from": {"id":"synthetic-current", "sha256":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},
+    "restored": {"id":"synthetic-last-known-good", "sha256":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"},
+    "rulesVerified": ["select-retained-exact-artifact", "verify-digest-before-restore", "do-not-mutate-governed-release", "preserve-protected-release-path"],
+    "productionChanged": false
+  },
+  "frozenRecovery": {
+    "status": "pass",
+    "mode": "repository-integrity-drill",
+    "feed": "latest.json",
+    "rulesVerified": ["payload-url-immutable-commit", "payload-sha256-present", "launcher-url-immutable-commit", "launcher-sha256-present", "no-main-branch-recovery-url"],
+    "executableLaunched": false,
+    "productionChanged": false
+  },
+  "boundary": "These are deterministic repository/synthetic health drills. They are not physical-device, signed-distribution, real learner, real site, human SME or production rollback evidence."
+}

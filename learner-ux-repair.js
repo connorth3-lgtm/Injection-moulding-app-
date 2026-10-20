@@ -1,0 +1,254 @@
+/* MouldMaster learner UX repair — 2026.09.24.1 */
+(function(){
+'use strict';
+if(window.MM_LEARNER_UX_REPAIR)return;
+const VERSION='2026.09.24.1';
+const STYLE_VERSION='2026.10.07.1';
+const ASSESSMENT_BANK_VERSION='assessment-2026.08.30.1';
+const ASSESSMENT_HISTORY_KEY='mm-assessment-question-history-v4';
+const ASSESSMENT_RESULT_META_KEY='mm-assessment-result-meta-v1';
+const ASSESSMENT_HISTORY_LIMIT=8;
+const REDUNDANT_SELECTOR='.mm-mobile-actions,.mm-mobile-lessons,.mm-lesson-progress,.mm-reading-guide,.mm-read-marker';
+const FOCUSABLE_SELECTOR='button,a,input,select,textarea,[tabindex]';
+let lastLessonId=null;
+let queued=false;
+let resetQueued=false;
+
+function ensureStyles(){
+  if(document.querySelector('link[data-mm-learner-ux-repair]'))return;
+  const link=document.createElement('link');
+  link.rel='stylesheet';
+  link.href=`./learner-ux-repair.css?v=${encodeURIComponent(STYLE_VERSION)}`;
+  link.dataset.mmLearnerUxRepair=STYLE_VERSION;
+  document.head.appendChild(link);
+}
+function mobile(){return !!window.matchMedia?.('(max-width:760px)').matches}
+function lessonVisible(){const root=document.getElementById('lesson');return !!(root&&!root.classList.contains('hidden'))}
+function currentLessonId(){
+  try{return typeof currentLesson==='function'?String(currentLesson()?.id??''):''}catch(_){return ''}
+}
+function rememberTabIndex(el){
+  if(!el||el.dataset.mmUxPrevTabindex!==undefined)return;
+  el.dataset.mmUxPrevTabindex=el.hasAttribute('tabindex')?String(el.getAttribute('tabindex')):'__none__';
+}
+function hideRedundant(el){
+  if(!el)return;
+  if(el.dataset.mmUxHiddenByRepair!=='1'){
+    el.dataset.mmUxHiddenByRepair='1';
+    el.dataset.mmUxPrevHidden=el.hidden?'1':'0';
+    el.dataset.mmUxPrevAriaHidden=el.hasAttribute('aria-hidden')?String(el.getAttribute('aria-hidden')):'__none__';
+  }
+  el.hidden=true;
+  el.setAttribute('aria-hidden','true');
+  const focusables=[...(el.matches?.(FOCUSABLE_SELECTOR)?[el]:[]),...el.querySelectorAll?.(FOCUSABLE_SELECTOR)||[]];
+  focusables.forEach(x=>{rememberTabIndex(x);x.tabIndex=-1});
+}
+function restoreRedundant(root){
+  root?.querySelectorAll?.('[data-mm-ux-hidden-by-repair="1"]').forEach(el=>{
+    el.hidden=el.dataset.mmUxPrevHidden==='1';
+    const aria=el.dataset.mmUxPrevAriaHidden;
+    if(aria==='__none__')el.removeAttribute('aria-hidden');else if(aria!==undefined)el.setAttribute('aria-hidden',aria);
+    const focusables=[...(el.matches?.('[data-mm-ux-prev-tabindex]')?[el]:[]),...el.querySelectorAll?.('[data-mm-ux-prev-tabindex]')||[]];
+    focusables.forEach(x=>{
+      const prior=x.dataset.mmUxPrevTabindex;
+      if(prior==='__none__')x.removeAttribute('tabindex');else if(prior!==undefined)x.setAttribute('tabindex',prior);
+      delete x.dataset.mmUxPrevTabindex;
+    });
+    delete el.dataset.mmUxHiddenByRepair;
+    delete el.dataset.mmUxPrevHidden;
+    delete el.dataset.mmUxPrevAriaHidden;
+  });
+}
+function repairReferenceLauncherAccessibility(){
+  if(window.matchMedia?.('(max-width:900px)').matches)return;
+  const launcher=document.getElementById('mmrd-open');if(!launcher)return;
+  const style=getComputedStyle(launcher);
+  if(style.display==='none'||style.visibility==='hidden')return;
+  if(launcher.getAttribute('aria-hidden')==='true'&&launcher.tabIndex===-1){
+    launcher.removeAttribute('aria-hidden');
+    launcher.removeAttribute('tabindex');
+  }
+}
+function syncExamDisclosureGeneration(){
+  const host=document.getElementById('examQuestions');if(!host)return;
+  const questions=Array.from(host.children).filter(el=>el.classList.contains('question'));
+  if(!questions.length)return;
+  const signature=questions.map(q=>normaliseQuestionText(q.querySelector('h3,h4,strong,p')?.textContent||q.textContent).slice(0,180)).join('|');
+  if(!signature)return;
+  const governed=host.classList.contains('mm-focus-mode')||host.dataset.mmAssessmentUx==='1'||document.querySelector('.mm-exam-steps')!==null;
+  if(governed){
+    host.dataset.mmUxExamFormSignature=signature;
+    questions.forEach(question=>question.classList.remove('mm-question-collapsed'));
+    document.querySelectorAll('[data-mm-exam-question-toggle]').forEach(toggle=>toggle.remove());
+    delete host.dataset.mmQuestionDisclosure;
+    return;
+  }
+  if(host.dataset.mmUxExamFormSignature===signature)return;
+  host.dataset.mmUxExamFormSignature=signature;
+  delete host.dataset.mmQuestionDisclosure;
+  document.querySelectorAll('[data-mm-exam-question-toggle]').forEach(toggle=>toggle.remove());
+}
+function repairLessonChrome(){
+  const root=document.getElementById('lesson');
+  const article=root?.querySelector('.lesson-body');
+  if(!root||!article)return;
+  if(!mobile()){
+    restoreRedundant(root);
+    root.classList.remove('mm-learner-ux-repaired');
+    return;
+  }
+  root.classList.add('mm-learner-ux-repaired');
+  root.querySelectorAll(REDUNDANT_SELECTOR).forEach(hideRedundant);
+  const hero=article.querySelector(':scope > .mm-simple-lesson-hero');
+  if(hero&&article.firstElementChild!==hero)article.prepend(hero);
+}
+function resetLessonScroll(){
+  if(!mobile()||!lessonVisible())return;
+  const nodes=[document.documentElement,document.body,document.scrollingElement,document.querySelector('main.main'),document.querySelector('.main'),document.getElementById('app')];
+  for(const node of nodes){if(!node)continue;try{node.scrollTop=0;node.scrollLeft=0}catch(_){}}
+  try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(_){try{window.scrollTo(0,0)}catch(__){}}
+}
+function isPreviewPublication(){
+  return /\/preview(?:\/|$)/i.test(location.pathname)||document.querySelector('meta[name="mm-publication-boundary"][content="non-production-preview"]')!==null;
+}
+function ensurePreviewWarning(){
+  if(!isPreviewPublication())return;
+  let banner=document.getElementById('mmNonProductionPreviewWarning');
+  if(banner)return;
+  const host=document.querySelector('.main')||document.querySelector('main')||document.body;
+  if(!host)return;
+  banner=document.createElement('div');
+  banner.id='mmNonProductionPreviewWarning';
+  banner.className='mm-preview-boundary';
+  banner.setAttribute('role','status');
+  banner.setAttribute('aria-live','polite');
+  banner.innerHTML='<strong>Non-production preview.</strong> This preview is for learner review and validation only; it is not production, and the physical-device release gate still applies.';
+  host.prepend(banner);
+}
+function runRepair(reset){
+  repairLessonChrome();
+  repairReferenceLauncherAccessibility();
+  ensurePreviewWarning();
+  if(reset)resetLessonScroll();
+}
+function scheduleRepair(reset=false){
+  if(reset)resetQueued=true;
+  if(queued)return;
+  queued=true;
+  requestAnimationFrame(()=>{
+    queued=false;
+    const shouldReset=resetQueued;resetQueued=false;
+    runRepair(shouldReset);
+    requestAnimationFrame(()=>{
+      repairLessonChrome();repairReferenceLauncherAccessibility();ensurePreviewWarning();
+      if(shouldReset)resetLessonScroll();
+      requestAnimationFrame(()=>{repairLessonChrome();repairReferenceLauncherAccessibility();ensurePreviewWarning();if(shouldReset)resetLessonScroll()});
+    });
+  });
+}
+function onLessonRender(){
+  const id=currentLessonId();
+  const changed=!!id&&id!==lastLessonId;
+  if(id)lastLessonId=id;
+  scheduleRepair(changed);
+}
+function normaliseQuestionText(value){return String(value||'').replace(/\s+/g,' ').trim().toLowerCase()}
+function questionKey(item){return normaliseQuestionText(item?.q||item?.question||item?.[0])}
+function validQuestion(item){
+  if(!item||!questionKey(item))return false;
+  const options=Array.isArray(item.options)?item.options:(Array.isArray(item[1])?item[1]:null);
+  const correct=Number.isInteger(item.correct)?item.correct:(Number.isInteger(item[2])?item[2]:NaN);
+  return !!(options&&options.length>=2&&options.every(option=>String(option||'').trim())&&Number.isInteger(correct)&&correct>=0&&correct<options.length);
+}
+function dedupeForm(items){
+  const seen=new Set();
+  return (Array.isArray(items)?items:[]).filter(item=>{
+    const key=questionKey(item);
+    if(!validQuestion(item)){console.warn('[MouldMaster assessment] malformed question excluded',item);return false}
+    if(seen.has(key)){console.warn('[MouldMaster assessment] duplicate question excluded',key);return false}
+    seen.add(key);return true;
+  });
+}
+function historyScope(level,region){return `${String(level||'unknown')}|${String(region||'ALL')}`}
+function assessmentStore(){return window.MM_ASSESSMENT_STORAGE_SCOPE||null}
+function readAssessmentHistory(){
+  const store=assessmentStore();
+  if(!store?.read)return {};
+  const raw=store.read(ASSESSMENT_HISTORY_KEY,{});
+  return raw&&typeof raw==='object'&&!Array.isArray(raw)?raw:{}
+}
+function writeAssessmentHistory(history){
+  const store=assessmentStore();
+  if(!store?.write)return false;
+  return !!store.write(ASSESSMENT_HISTORY_KEY,history)
+}
+function rotateAwayFromPreviousFirst(form,previousFirst){
+  if(!previousFirst||form.length<2||questionKey(form[0])!==previousFirst)return form;
+  const at=form.findIndex((item,index)=>index>0&&questionKey(item)!==previousFirst);
+  if(at<1)return form;
+  const copy=form.slice();
+  const [replacement]=copy.splice(at,1);copy.unshift(replacement);
+  return copy;
+}
+function formFingerprint(form){
+  const text=form.map(item=>`${questionKey(item)}|${String(item.options?.[item.correct]??item?.[1]?.[item?.[2]]??'')}`).sort().join('\n');
+  let hash=2166136261;
+  for(let i=0;i<text.length;i++){hash^=text.charCodeAt(i);hash=Math.imul(hash,16777619)}
+  return `form-${(hash>>>0).toString(16).padStart(8,'0')}`;
+}
+function persistAssessmentResultMeta(level){
+  const form=window.MM_ACTIVE_QUESTION_FORM;
+  if(!form)return;
+  let region=form.region||'ALL';
+  let score=null;
+  try{
+    if(typeof activeExam!=='undefined'&&activeExam?.region)region=String(activeExam.region);
+    if(typeof user!=='undefined'&&user?.examScores){
+      const key=`${level}-${region}`;
+      score=user.examScores[key]??user.examScores[level]??null;
+    }
+  }catch(_){}
+  const record={bankVersion:ASSESSMENT_BANK_VERSION,formFingerprint:form.formFingerprint,level:String(level||form.level||''),region:String(region),score:Number.isFinite(Number(score))?Number(score):null,questionKeys:Array.from(form.questionKeys||[]),recordedAt:new Date().toISOString()};
+  const store=assessmentStore();
+  if(!store?.read||!store?.write)return;
+  const prior=store.read(ASSESSMENT_RESULT_META_KEY,[]);
+  const list=Array.isArray(prior)?prior:[];
+  store.write(ASSESSMENT_RESULT_META_KEY,[record,...list].slice(0,100));
+}
+function installAssessmentRotation(){
+  if(window.__MM_ASSESSMENT_ROTATION_V4__)return;
+  const R=window.MM_RUNTIME_V2;
+  if(!R?.transform||!R?.after)return;
+  R.transform('getExamQuestions',function(raw,level,region){
+    const scope=historyScope(level,region);
+    const history=readAssessmentHistory();
+    const recent=Array.isArray(history[scope])?history[scope].filter(Array.isArray).slice(0,ASSESSMENT_HISTORY_LIMIT):[];
+    if(!Array.isArray(raw)||!raw.length)throw new Error('Assessment question selector returned no questions.');
+    const clean=dedupeForm(raw);
+    if(clean.length!==raw.length)throw new Error('Assessment question selector returned duplicate or malformed questions.');
+    const chosen=rotateAwayFromPreviousFirst(clean,recent[0]?.[0]);
+    const keys=chosen.map(questionKey);
+    history[scope]=[keys,...recent].slice(0,ASSESSMENT_HISTORY_LIMIT);
+    writeAssessmentHistory(history);
+    window.MM_ACTIVE_QUESTION_FORM=Object.freeze({version:VERSION,bankVersion:ASSESSMENT_BANK_VERSION,formFingerprint:formFingerprint(chosen),level:String(level||''),region:String(region||'ALL'),questionKeys:Object.freeze(keys.slice())});
+    return chosen;
+  });
+  R.after('gradeExam',function(_result,level){persistAssessmentResultMeta(level)});
+  window.__MM_ASSESSMENT_ROTATION_V4__=Object.freeze({version:VERSION,bankVersion:ASSESSMENT_BANK_VERSION,historyKey:ASSESSMENT_HISTORY_KEY,resultMetaKey:ASSESSMENT_RESULT_META_KEY,baseCallsPerAttempt:1,historyLimit:ASSESSMENT_HISTORY_LIMIT,selectionPolicy:'one canonical generated form per learner attempt; only the opening order may be adjusted to avoid an immediate repeat'});
+}
+
+ensureStyles();
+window.MM_APP_SHELL?.events?.onRender?.('lesson',onLessonRender);
+window.MM_APP_SHELL?.events?.onViewChange?.(id=>{if(id==='lesson')scheduleRepair(true);syncExamDisclosureGeneration();ensurePreviewWarning()});
+window.addEventListener?.('mm:domains-ready',()=>{syncExamDisclosureGeneration();ensurePreviewWarning()});
+window.MM_RUNTIME_V2?.after?.('startExam',()=>requestAnimationFrame(syncExamDisclosureGeneration));
+window.addEventListener('resize',()=>scheduleRepair(false),{passive:true});
+
+lastLessonId=currentLessonId()||null;
+syncExamDisclosureGeneration();
+scheduleRepair(lessonVisible());
+repairReferenceLauncherAccessibility();
+ensurePreviewWarning();
+installAssessmentRotation();
+window.MM_LEARNER_UX_REPAIR=Object.freeze({version:VERSION,repair:()=>scheduleRepair(false),resetLesson:()=>scheduleRepair(true),assessmentRotation:window.__MM_ASSESSMENT_ROTATION_V4__||null,preview:isPreviewPublication()});
+})();

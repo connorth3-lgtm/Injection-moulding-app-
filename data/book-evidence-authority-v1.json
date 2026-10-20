@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "bookId": "mouldmaster-book",
+  "policy": "Evidence conclusion and evidence authority are separate dimensions. A supported claim is not a statement that every supporting source has equal authority.",
+  "classes": {
+    "controlling-standard": {
+      "meaning": "Published standards or controlling normative references within their stated scope.",
+      "sourceTypes": [
+        "standard"
+      ]
+    },
+    "authoritative-public-method": {
+      "meaning": "Authoritative public statistical or measurement methods; authoritative for the stated method, not for a manufacturer-specific process limit.",
+      "sourceTypes": [
+        "authoritative-statistics-handbook",
+        "authoritative-statistics-publication"
+      ]
+    },
+    "peer-reviewed": {
+      "meaning": "Peer-reviewed research or reviews used as scientific/engineering evidence; not controlling for exact manufacturer/site limits.",
+      "sourceTypes": [
+        "peer-reviewed",
+        "peer-reviewed-review"
+      ]
+    },
+    "manufacturer-grade-specific": {
+      "meaning": "Exact-grade or grade-specific manufacturer data. Controlling for the named grade/document scope when current.",
+      "sourceTypes": [
+        "grade-data-sheet",
+        "grade-specific-processing-data"
+      ]
+    },
+    "manufacturer-specific": {
+      "meaning": "Machine, mould-component, sensor or material manufacturer guidance/manuals. Authority is limited to the named product/system/family and document scope.",
+      "sourceTypes": [
+        "machine-manufacturer-process-guidance",
+        "machine-manufacturer-technical-brochure",
+        "machine-manufacturer-technical-data",
+        "machine-manufacturer-technical-documentation",
+        "machine-manufacturer-technical-guidance",
+        "manufacturer-guide",
+        "manufacturer-portfolio-guidance",
+        "manufacturer-service-manual",
+        "manufacturer-technical-guidance",
+        "manufacturer-troubleshooting-guide",
+        "manufacturer-user-manual",
+        "mould-component-manufacturer-guidance",
+        "sensor-manufacturer-technical-guidance"
+      ]
+    },
+    "industry-guidance": {
+      "meaning": "Industry process guidance or consortium material. Useful corroboration/teaching evidence but not a controlling standard or exact manufacturer specification.",
+      "sourceTypes": [
+        "industry-consortium-white-paper",
+        "industry-process-guidance"
+      ]
+    },
+    "engineering-software-guidance": {
+      "meaning": "Engineering software documentation used for model/method context; not a universal production setting.",
+      "sourceTypes": [
+        "engineering-software-documentation",
+        "engineering-software-technical-documentation"
+      ]
+    }
+  },
+  "learnerFacingBoundary": "Source evidence reviewed describes the governed claim/source review outcome. It does not collapse standards, peer-reviewed literature, manufacturer documentation and industry guidance into one authority tier, and it does not imply independent human SME approval."
+}

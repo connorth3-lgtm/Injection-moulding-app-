@@ -1,0 +1,41 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/desktop/electron"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      desktop-runtime:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      browser-qa:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/desktop/electron/msix-toolchain"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    groups:
+      msix-toolchain:
+        patterns:
+          - "*"

@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "release": "2026.10.20.2",
+  "commit": "83401a4bb217baa5c1a4acfa9181e7725e8098ac",
+  "browser": "chromium via @playwright/test 1.64.1",
+  "maxDiffPixels": 12,
+  "viewports": [
+    {
+      "name": "phone-360x800",
+      "width": 360,
+      "height": 800
+    },
+    {
+      "name": "phone-412x915",
+      "width": 412,
+      "height": 915
+    },
+    {
+      "name": "tablet-810x1080",
+      "width": 810,
+      "height": 1080
+    },
+    {
+      "name": "desktop-1440x900",
+      "width": 1440,
+      "height": 900
+    }
+  ],
+  "surfaces": [
+    "home",
+    "learn",
+    "materials",
+    "practice",
+    "lesson",
+    "more",
+    "assessment",
+    "listen-expanded",
+    "listening",
+    "book-contents",
+    "book-materials",
+    "book-late",
+    "book-trace"
+  ],
+  "policy": "Visual approval for exact-source PR #642 phone comparisons only: after reviewing the presented current-versus-baseline phone screenshots for the integrated app and Book Read Aloud controls, the owner replied “I approve” on 2026-10-20. The reviewed source is 83401a4bb217baa5c1a4acfa9181e7725e8098ac; Mobile Browser QA run 39376648825, screenshot artifact 12243349813 (ZIP digest sha256:33dd404528cd6b506426daba9e7688882332b82e88281e7ce79c0f2f825d5ce2). Artifact integrity and all 52 candidate plus 52 baseline PNG SHA256 values were verified. Against the previous 2026.10.16.1 baseline, 9 captures remained within the prior threshold and 43 exceeded it; approval accepts the reviewed design at this exact source only. The new immutable visual-baseline/2026.10.20.2 ref was created at and verified identical to 83401a4bb217baa5c1a4acfa9181e7725e8098ac. Preserve historical visual-baseline/2026.10.16.1 at 04628e13a6c9a9517bef22bae6c12a456896f299 and visual-baseline/2026.10.15.3 unchanged. All 52 captures, four viewports, thirteen surfaces, Chromium comparison and strict maxDiffPixels=12 remain in force with no masking or skipped surfaces. The original pre-approval artifact still records visualOwnerApproved=false; this later approval is documented separately. Visual approval is limited to design and does not certify a candidate producer pass, physical PWA/speech, human assistive-technology testing, SME/curriculum/provider/NZQA reviews, signing, release, merge, accreditation or production authority; external streams remain HOLD.",
+  "ref": "visual-baseline/2026.10.20.2",
+  "referenceCaptureToolchain": {
+    "framework": "@playwright/test",
+    "version": "1.64.1",
+    "browser": "chromium",
+    "referenceSourceSha": "83401a4bb217baa5c1a4acfa9181e7725e8098ac"
+  },
+  "currentComparisonToolchain": {
+    "framework": "@playwright/test",
+    "version": "1.64.1",
+    "browser": "chromium"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "datasetId": "leon-defects-20322729",
+  "status": "blocked-embargo",
+  "source": {"doi": "10.5281/zenodo.20322729", "recordUrl": "https://zenodo.org/records/20322729", "version": "v1", "license": "CC BY 4.0", "access": "embargoed", "filesAvailableNotBefore": "2027-12-31", "automatedRetrievalAllowed": false},
+  "experimentContext": {"material": "SABIC 579S homopolymer polypropylene", "mold": "two-cavity multicavity mold", "configurations": 1000, "shotsPerConfiguration": 5, "partsPerShot": 2, "picturesPerPart": 2, "feasiblePictures": 14620, "fileManifest": ["Images_dataset.rar", "Dataset_labeled.zip", "Quantitative_defects_and_process_parameters.csv", "Mold_geometry.step", "README.md"], "defectClasses": ["Air traps", "Cold slugs", "Cold spots", "Flash", "Flow marks", "Short shots", "Silver streaks", "Voids", "Weld lines", "Wrinkles"], "quantitativeCsvColumns": ["batch", "part_number", "injection_number", "Tinj", "tinj", "Pinj", "Bp", "Ph", "th", "Air_Trap", "Cold_Slug", "Cold_Spot", "Flash", "Flow_Mark", "Short_Shot", "Silver_Streak", "Void", "Weld_Line", "Wrinkle"]},
+  "overlapBoundary": {"shares1000BatchCampaignWith": "leon-process-20309380", "mustNotCountAsIndependentInjectionCampaign": true},
+  "embargoGate": {"notBefore": "2027-12-31", "metadataMayBeUsedBeforeEmbargoEnds": true, "rawRetrievalBeforeEmbargoEnds": false, "recheckEarlierReleaseAllowed": true},
+  "evidenceBoundary": "This CC BY 4.0 image/defect dataset is embargoed until 31 December 2027 or earlier release. It shares the same 1000-batch manufacturing campaign as the companion process dataset and must not be double-counted as an independent injection experiment family."
+}

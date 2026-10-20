@@ -1,0 +1,132 @@
+{
+  "schema": 2,
+  "status": "completed-public-measured-timeseries-benchmark",
+  "completedDate": "2026-08-28",
+  "source": {
+    "recordId": "20338544",
+    "doi": "10.5281/zenodo.20338544",
+    "title": "DATA-DRIVEN ENERGY EFFICIENCY IN INJECTION MOLDING: IDENTIFYING HIDDEN ENERGY LOSSES VIA PRODUCTION AND ENERGY DATA FUSION",
+    "publisher": "Zenodo",
+    "recordApi": "https://zenodo.org/api/records/20338544",
+    "accessStatus": "open",
+    "license": "cc-by-4.0",
+    "creators": ["Lakatos, Gábor"],
+    "descriptionInjectionContext": "Real injection-moulding plant production and energy data used to detect irregular energy usage and tempering-unit operation states.",
+    "measurementHardwareObserved": "Shelly Pro 3EM device identifiers in exact CSV rows",
+    "measurementSemanticSource": "Shelly Pro 3EM Gen2 EM technical documentation: phase current A, voltage V, active power W, apparent power VA, power factor dimensionless, frequency Hz; total fields are phase aggregates.",
+    "measurementSemanticDocumentation": "https://shelly-api-docs.shelly.cloud/gen2/ComponentsAndServices/EM/"
+  },
+  "measurementSemantics": {
+    "directInstrumentReportedPhysicalChannels": [
+      "A_ACT_POWER", "A_APRT_POWER", "A_CURRENT", "A_FREQ", "A_VOLTAGE",
+      "B_ACT_POWER", "B_APRT_POWER", "B_CURRENT", "B_FREQ", "B_VOLTAGE",
+      "C_ACT_POWER", "C_APRT_POWER", "C_CURRENT", "C_FREQ", "C_VOLTAGE"
+    ],
+    "unitsByMetricSuffix": {
+      "ACT_POWER": "W",
+      "APRT_POWER": "VA",
+      "CURRENT": "A",
+      "FREQ": "Hz",
+      "VOLTAGE": "V",
+      "PF": "dimensionless"
+    },
+    "derivedOrAggregateExcludedFromScalarLedger": [
+      "A_PF", "B_PF", "C_PF", "TOTAL_ACT_POWER", "TOTAL_APRT_POWER", "TOTAL_CURRENT"
+    ],
+    "neutralCurrentExcludedBecauseUnpopulated": "N_CURRENT",
+    "testDatasetExcludedFromScalarLedger": true,
+    "reasonTestExcluded": "test_dataset.csv is a separate curated/test file and may overlap the raw February/March production stream; excluding it prevents double counting."
+  },
+  "files": [
+    {
+      "name": "feb_production.csv",
+      "sizeBytes": 255372184,
+      "md5": "3b2daf123be817b271529b909e19edc5",
+      "sha256": "8a728a72f7fd4cf3821f244db0b31410bd27da0ca1997fc766673d044cf9da4c",
+      "publisherChecksum": "md5:3b2daf123be817b271529b909e19edc5",
+      "datasetRole": "raw-production-energy-timeseries",
+      "table": {
+        "rows": 816925,
+        "columns": 41,
+        "directPhysicalChannelCount": 15,
+        "directPhysicalChannelsComplete": true,
+        "directPhysicalScalarValues": 12253875,
+        "timeRange": {
+          "LOG_TIME": {"first": "2026-02-01T00:00:01.544000", "last": "2026-02-28T23:59:56.968000", "parseFailures": 0},
+          "OBSERVATION_TIME": {"first": "2026-01-31T23:59:50", "last": "2026-02-28T23:59:51", "parseFailures": 0}
+        },
+        "logTimeByDevice": {
+          "deviceCount": 2,
+          "commonPositiveDeltaSeconds": [
+            {"seconds": 4.992, "count": 4592},
+            {"seconds": 5.008, "count": 4248},
+            {"seconds": 4.976, "count": 4043},
+            {"seconds": 4.993, "count": 3913},
+            {"seconds": 5.007, "count": 3911}
+          ],
+          "nonpositiveDeltas": 0
+        }
+      }
+    },
+    {
+      "name": "mar_production.csv",
+      "sizeBytes": 141999050,
+      "md5": "12dd28a9e8a12ed734c3ca4398f93d1b",
+      "sha256": "26ea166c06180969e64e4055996b2609b9f13efa45080b7d674a546abb1d8d36",
+      "publisherChecksum": "md5:12dd28a9e8a12ed734c3ca4398f93d1b",
+      "datasetRole": "raw-production-energy-timeseries",
+      "table": {
+        "rows": 452962,
+        "columns": 41,
+        "directPhysicalChannelCount": 15,
+        "directPhysicalChannelsComplete": true,
+        "directPhysicalScalarValues": 6794430,
+        "timeRange": {
+          "LOG_TIME": {"first": "2026-03-01T00:00:00.129000", "last": "2026-03-31T23:59:57.693000", "parseFailures": 0},
+          "OBSERVATION_TIME": {"first": "2026-02-28T23:59:54", "last": "2026-03-31T23:59:52", "parseFailures": 0}
+        },
+        "logTimeByDevice": {
+          "deviceCount": 2,
+          "commonPositiveDeltaSeconds": [
+            {"seconds": 4.992, "count": 2824},
+            {"seconds": 5.008, "count": 2678},
+            {"seconds": 4.977, "count": 2487},
+            {"seconds": 4.993, "count": 2453},
+            {"seconds": 4.976, "count": 2417}
+          ],
+          "nonpositiveDeltas": 0
+        }
+      }
+    },
+    {
+      "name": "test_dataset.csv",
+      "sizeBytes": 896414,
+      "md5": "2a19cfa6f2fc569723e3ad8d78d8e418",
+      "sha256": "259d7cfa903320cb5a2d51c816771f07b0b39a701d2a1b4bde8bfb491fee5fee",
+      "publisherChecksum": "md5:2a19cfa6f2fc569723e3ad8d78d8e418",
+      "datasetRole": "derived-or-curated-test-subset-noncounting-for-scalars",
+      "table": {
+        "rows": 2901,
+        "columns": 40,
+        "directPhysicalChannelCount": 15,
+        "directPhysicalChannelsComplete": true,
+        "directPhysicalScalarValues": 43515,
+        "timeRange": {
+          "LOG_TIME": {"first": "2025-07-14T08:00:04.084000", "last": "2025-07-14T12:59:55.870000", "parseFailures": 0},
+          "OBSERVATION_TIME": {"first": "2025-07-14T07:59:59", "last": "2025-07-14T12:59:48", "parseFailures": 0}
+        },
+        "logTimeByDevice": {"deviceCount": 2, "commonPositiveDeltaSeconds": [{"seconds": 4.953, "count": 35}, {"seconds": 5.0, "count": 29}], "nonpositiveDeltas": 0}
+      }
+    }
+  ],
+  "csvFilesProfiled": 3,
+  "rawProductionFilesAccepted": 2,
+  "rawProductionRowsAccepted": 1269887,
+  "observedMachineNames": ["FGP085"],
+  "observedEnergyMeterDeviceIds": ["shellypro3em-a0dd6c9f408c", "shellypro3em-a0dd6c9f5048"],
+  "acceptedMeasuredRecords": 1269887,
+  "acceptedMeasuredTimeSeriesSamples": 19048305,
+  "rawSourceRowsCommitted": false,
+  "rawSourceFilesCommitted": false,
+  "boundary": "Only the two exact raw February/March production-energy streams count. Fifteen per-phase instrument-reported physical channels per row are accepted: active power, apparent power, current, frequency and voltage for phases A/B/C. Power factor and total fields are classified as derived/aggregate and excluded; neutral current is empty; the curated test dataset is excluded from the scalar ledger to avoid overlap. Timestamp parsing and per-device sample ordering are verified from LOG_TIME/OBSERVATION_TIME."
+}

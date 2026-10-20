@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "datasetId": "scatimdata-avaps",
+  "status": "candidate-until-executed-profile-passes",
+  "source": {
+    "title": "High-resolution injection-moulding time-series datasets (scatimdata)",
+    "repository": "https://github.com/sc4t1m/scatimdata",
+    "repositoryCommit": "7bd35941d75c97a3f276439377dc430ab47402be",
+    "license": "CC BY 4.0",
+    "peerReviewedCompanion": "10.3390/polym15040978",
+    "dataAvailabilityConfirmedByCompanion": true
+  },
+  "archives": [
+    {
+      "name": "dataset1.zip",
+      "gitBlobSha1": "3c6796453f724fd99e4c692edd1c9a6ad4a84c4f",
+      "sizeBytes": 5431885,
+      "expectedCycles": 1167,
+      "part": "Housing Part"
+    },
+    {
+      "name": "dataset2.zip",
+      "gitBlobSha1": "f271b73093612d21d153dbbe3f7f7b2457206941",
+      "sizeBytes": 8708313,
+      "expectedCycles": 829,
+      "part": "Stacking Box I"
+    },
+    {
+      "name": "dataset3.zip",
+      "gitBlobSha1": "697cb54676b0af9b25768eb7ec2c0768a1beeb20",
+      "sizeBytes": 7754358,
+      "expectedCycles": 1332,
+      "part": "Stacking Box II"
+    }
+  ],
+  "measurementContract": {
+    "cycleCount": 3328,
+    "timeSeriesSignals": [
+      "injection pressure curve",
+      "injection flow curve"
+    ],
+    "pointsPerSignalPerCycle": 2049,
+    "signalsPerCycle": 2,
+    "timeSeriesValuesPerCycle": 4098,
+    "sampleIntervalMilliseconds": 6,
+    "expectedMeasuredTimeSeriesSamples": 13638144,
+    "qualityOutcomes": [
+      "part weight",
+      "geometric dimension"
+    ],
+    "scalarProcessFeaturesReported": 12,
+    "cycleLinkage": "Machine process data and quality measurements are assigned by the injection-moulding machine cycle counter."
+  },
+  "acceptance": {
+    "requireAllThreeArchivesRetrievedFromPinnedCommit": true,
+    "requireArchiveSha256": true,
+    "requireArchiveSizeMatch": true,
+    "requireSafeArchivePaths": true,
+    "requireCycleCountsReconciled": true,
+    "requireTimeSeriesStructureObserved": true,
+    "requireNoRawValuesInProfile": true,
+    "rawPublisherFilesCommitted": false,
+    "rawPublisherRowsUploadedAsArtifact": false
+  },
+  "evidenceBoundary": "The companion article establishes the two signal identities, 6 ms sample interval, 2,049 points per signal, cycle linkage and measured quality targets. The executable benchmark must independently retrieve the three pinned archives, fingerprint them, inspect their stored structure and reconcile the delivered cycles before this dataset or its 13,638,144 time-series values can enter accepted MouldMaster counts."
+}

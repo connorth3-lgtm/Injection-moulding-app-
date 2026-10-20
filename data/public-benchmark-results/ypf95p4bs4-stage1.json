@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "status": "publisher-file-manifest-profiled",
+  "retrievedDate": "2026-08-29",
+  "source": {"datasetId":"mendeley-ypf95p4bs4-v1","datasetDoi":"10.17632/ypf95p4bs4.1","license":"CC BY 4.0","version":1},
+  "manifest": {
+    "fileCount": 5,
+    "files": [
+      {"id":"6724eb80-cc15-45a9-8183-e55b0394cfe7","filename":"PROP MEJORA.doe","sizeBytes":1314304,"sha256":"44013e5995b87502a33a5ddf6964c3a2ebccc6a579e7cfb7eeb10f77a245ffc5","contentType":"application/octet-stream","classification":"arena-model-noncounting"},
+      {"id":"c5d3ac51-e9f3-41cb-aa94-f7d75e5c83d3","filename":"PROP PESIMISTA.doe","sizeBytes":1100288,"sha256":"de21c04af999f64f3bfbc69846b955dfa622e6c834e8b4a5076eeb9394982d3f","contentType":"application/octet-stream","classification":"arena-model-noncounting"},
+      {"id":"5e6e9330-d819-4cd4-8d83-6039b4d33c78","filename":"TF-IN92-241-G198-Excel.xlsx","sizeBytes":13388863,"sha256":"b8bdf20f4e513d647ef4fc887f8846c254d0151657137a888f20752559ce1917","contentType":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","classification":"stage2-operational-workbook-candidate"},
+      {"id":"974f6478-6fc4-4ea3-af1f-ca4da023db6e","filename":"VALIDACION 3.doe","sizeBytes":1290752,"sha256":"d1f322532e113a7ccfa3b838dd256827eb5e5b82a366d2beed34de69fb28957c","contentType":"application/octet-stream","classification":"arena-model-noncounting"},
+      {"id":"ac19c98c-1f70-4f3b-a985-2589696dbf20","filename":"Validación propuesta.xlsx","sizeBytes":96107,"sha256":"c27548d6b947e816217bf37c392d0f7845dd67069ee7435014148fd075377fd1","contentType":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","classification":"stage2-validation-workbook-candidate"}
+    ],
+    "totalBytes": 17190314,
+    "rawPayloadsDownloaded": false,
+    "rawRowsOrArraysEmitted": false
+  },
+  "acceptance": {"countsAsFullyProfiledMeasuredDataset":false,"acceptedMeasuredTimeSeriesSamples":0,"stage2Required":true},
+  "evidenceBoundary": "The three .doe files are Arena model/simulation artifacts and are permanently non-counting. Only the two publisher XLSX files may advance to semantic profiling; neither counts until direct operational measurements are separated from simulation/validation/derived results."
+}

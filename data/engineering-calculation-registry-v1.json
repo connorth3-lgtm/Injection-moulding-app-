@@ -1,0 +1,818 @@
+{
+  "schemaVersion": 1,
+  "registryId": "mouldmaster-engineering-calculations-v1",
+  "status": "advisory-only",
+  "authorityBoundary": "No calculation in this registry grants production recipe, safety, machine-control or universal setpoint authority.",
+  "implementation": "src/domains/process/engineering-core.mjs",
+  "entries": [
+    {
+      "id": "EQ-PRESS-001",
+      "name": "Pressure unit conversion with semantic pressure type",
+      "formula": "P_out = P_in × unit conversion factor",
+      "inputs": [
+        "pressure value",
+        "pressure unit",
+        "pressure kind"
+      ],
+      "outputs": [
+        "Pa",
+        "kPa",
+        "MPa",
+        "bar"
+      ],
+      "scope": "Unit conversion only. Hydraulic, specific-plastic, nozzle, runner, cavity and pack-command pressures remain distinct.",
+      "evidenceAnchors": [
+        "PARIZS-2023-IN-MOLD-SENSORS"
+      ],
+      "uncertaintyBoundary": "No location-to-location or hydraulic-to-plastic conversion is inferred. Pressure units require canonical case (Pa, kPa, MPa, bar), so mPa or lowercase mpa cannot be silently read as MPa."
+    },
+    {
+      "id": "EQ-PRESS-002",
+      "name": "Location-explicit measured plastic-side pressure difference",
+      "formula": "DeltaP = P_upstream - P_downstream",
+      "inputs": [
+        "upstream pressure",
+        "downstream pressure",
+        "plastic-side pressure kinds",
+        "distinct location IDs",
+        "synchronised measurement basis"
+      ],
+      "outputs": [
+        "pressure difference",
+        "direction-consistency flag"
+      ],
+      "scope": "Arithmetic comparison of like-for-like actual plastic-side pressure signals tied to explicit locations and one comparison basis.",
+      "evidenceAnchors": [
+        "PARIZS-2023-IN-MOLD-SENSORS",
+        "AUTODESK-JUNCTURE-LOSS",
+        "RJG-DECOUPLED-WORKSHOP"
+      ],
+      "uncertaintyBoundary": "Hydraulic and command pressures are excluded; the difference is not automatically a pressure-loss coefficient, viscosity estimate, restriction diagnosis or causal attribution."
+    },
+    {
+      "id": "EQ-CF-001",
+      "name": "Clamp separating-force screening estimate",
+      "formula": "F = A_projected × P_representative",
+      "inputs": [
+        "projected area",
+        "explicit representative pressure"
+      ],
+      "outputs": [
+        "N",
+        "kN"
+      ],
+      "scope": "Arithmetic separating-force screen; not automatically a required machine clamp setting.",
+      "evidenceAnchors": [
+        "RAO-2017-TIEBAR-LOAD",
+        "HUANG-2018-CLAMP-SEPARATION"
+      ],
+      "uncertaintyBoundary": "Does not resolve spatial pressure gradients, mould/platen deflection, tie-bar imbalance or dynamic effects."
+    },
+    {
+      "id": "EQ-CF-002",
+      "name": "Clamp separating-force range",
+      "formula": "F_low/high = A_projected × P_low/high",
+      "inputs": [
+        "projected area",
+        "lower representative pressure",
+        "upper representative pressure"
+      ],
+      "outputs": [
+        "lower/upper N",
+        "lower/upper kN"
+      ],
+      "scope": "Uncertainty-aware screening range using an explicitly supplied pressure range.",
+      "evidenceAnchors": [
+        "RAO-2017-TIEBAR-LOAD",
+        "HUANG-2018-CLAMP-SEPARATION"
+      ],
+      "uncertaintyBoundary": "No safety factor or machine rating is invented."
+    },
+    {
+      "id": "EQ-SHOT-001",
+      "name": "Aggregate shot mass",
+      "formula": "m_shot = cavity_count × m_part + m_runner",
+      "inputs": [
+        "cavity count",
+        "part mass",
+        "optional runner mass"
+      ],
+      "outputs": [
+        "g",
+        "kg"
+      ],
+      "scope": "Mass accounting only.",
+      "evidenceAnchors": [
+        "ISO-294-1-2017"
+      ],
+      "uncertaintyBoundary": "Does not establish usable machine shot capacity."
+    },
+    {
+      "id": "EQ-SHOT-002",
+      "name": "Verified-basis shot-capacity utilisation",
+      "formula": "utilisation[%] = 100 × m_required / m_usable",
+      "inputs": [
+        "required shot mass",
+        "usable machine shot mass",
+        "verified comparable capacity basis flag",
+        "capacity basis reference",
+        "exact machine configuration ID",
+        "exact injection-unit configuration ID"
+      ],
+      "outputs": [
+        "machine/injection-unit identity",
+        "capacity basis reference",
+        "utilisation %",
+        "capacity margin g",
+        "capacity exceedance flag"
+      ],
+      "scope": "Capacity screen only after mass-basis equivalence is explicitly verified and tied to an exact machine/injection-unit configuration plus a traceable capacity basis reference.",
+      "evidenceAnchors": [
+        "ARBURG-PLASTICISING-SERVICE"
+      ],
+      "uncertaintyBoundary": "No universal preferred barrel-utilisation percentage is supplied; anonymous or unreferenced machine capacity is rejected."
+    },
+    {
+      "id": "EQ-CAP-001",
+      "name": "Clamp-force capacity comparison",
+      "formula": "utilisation[%] = 100 × F_required / F_available",
+      "inputs": [
+        "required clamp force",
+        "verified available clamp force",
+        "exact machine configuration ID",
+        "capacity basis reference"
+      ],
+      "outputs": [
+        "machine identity",
+        "capacity basis reference",
+        "utilisation %",
+        "force capacity margin",
+        "capacity exceedance flag"
+      ],
+      "scope": "Capacity comparison only after the applicable engineering clamp requirement and exact-machine usable capacity are independently established and referenced.",
+      "evidenceAnchors": [
+        "RAO-2017-TIEBAR-LOAD",
+        "HUANG-2018-CLAMP-SEPARATION"
+      ],
+      "uncertaintyBoundary": "Does not determine a machine clamp setpoint, preferred utilisation margin or mould/platen load distribution. Force units require canonical case (N, kN, MN), so mN cannot be silently read as MN; anonymous machine capacity is rejected."
+    },
+    {
+      "id": "EQ-CAP-002",
+      "name": "Specific-plastic-pressure capacity comparison",
+      "formula": "utilisation[%] = 100 × P_required_specific-plastic / P_available_specific-plastic",
+      "inputs": [
+        "required specific-plastic pressure",
+        "verified available machine specific-plastic pressure",
+        "exact machine configuration ID",
+        "exact injection-unit configuration ID",
+        "capacity basis reference"
+      ],
+      "outputs": [
+        "machine/injection-unit identity",
+        "capacity basis reference",
+        "utilisation %",
+        "pressure capacity margin",
+        "capacity exceedance flag"
+      ],
+      "scope": "Like-for-like plastic-side injection-pressure capacity screen tied to one exact machine/injection-unit configuration and a traceable capacity basis.",
+      "evidenceAnchors": [
+        "PARIZS-2023-IN-MOLD-SENSORS"
+      ],
+      "uncertaintyBoundary": "Hydraulic pressure cannot be substituted without a verified machine conversion basis; cavity pressure demand is not predicted; anonymous machine/injection-unit capacity is rejected."
+    },
+    {
+      "id": "EQ-CAP-003",
+      "name": "Volumetric injection-flow capacity comparison",
+      "formula": "utilisation[%] = 100 × Q_required / Q_available",
+      "inputs": [
+        "required volumetric flow",
+        "verified available machine volumetric flow",
+        "exact machine configuration ID",
+        "exact injection-unit configuration ID",
+        "capacity basis reference"
+      ],
+      "outputs": [
+        "machine/injection-unit identity",
+        "capacity basis reference",
+        "utilisation %",
+        "flow capacity margin",
+        "capacity exceedance flag"
+      ],
+      "scope": "Like-for-like volumetric injection-capacity screen tied to one exact machine/injection-unit configuration and a traceable capacity basis.",
+      "evidenceAnchors": [
+        "ISO-294-1-2017"
+      ],
+      "uncertaintyBoundary": "Does not infer melt-front velocity, gate shear rate, pressure loss or a preferred utilisation percentage; anonymous machine/injection-unit flow capacity is rejected."
+    },
+    {
+      "id": "EQ-CAP-004",
+      "name": "Plasticising-throughput capacity comparison",
+      "formula": "utilisation[%] = 100 × m_dot_required / m_dot_available",
+      "inputs": [
+        "required mass throughput",
+        "verified available plasticising rate",
+        "exact machine configuration ID",
+        "exact injection-unit configuration ID",
+        "exact material grade ID",
+        "capacity basis reference"
+      ],
+      "outputs": [
+        "machine/injection-unit/material identity",
+        "capacity basis reference",
+        "utilisation %",
+        "throughput capacity margin",
+        "capacity exceedance flag"
+      ],
+      "scope": "Grade/configuration-aware plasticising/recovery capacity screen tied to an exact machine, injection unit, material grade and traceable capacity basis.",
+      "evidenceAnchors": [
+        "ARBURG-PLASTICISING-SERVICE",
+        "BASF-ULTRAMID-PROCESSING"
+      ],
+      "uncertaintyBoundary": "Nominal catalogue plasticising output is not assumed to equal usable grade-specific recovery capability without a verified comparable basis; anonymous machine/grade capacity is rejected."
+    },
+    {
+      "id": "EQ-FIT-001",
+      "name": "Mould-height range fit",
+      "formula": "min_machine_mould_height <= mould_height <= max_machine_mould_height",
+      "inputs": [
+        "mould height",
+        "machine minimum mould height",
+        "machine maximum mould height",
+        "exact machine configuration ID",
+        "exact mould configuration ID"
+      ],
+      "outputs": [
+        "fit state",
+        "lower/upper geometric margins"
+      ],
+      "scope": "Exact-identity geometric fit screen for mould height.",
+      "evidenceAnchors": [
+        "ISO-20430-2020"
+      ],
+      "uncertaintyBoundary": "Does not prove installation, platen/load, tie-bar, ejector, nozzle, daylight or safety compatibility."
+    },
+    {
+      "id": "EQ-FIT-002",
+      "name": "Opening-stroke fit",
+      "formula": "required_opening_stroke <= available_opening_stroke",
+      "inputs": [
+        "required opening stroke",
+        "available machine opening stroke",
+        "exact machine configuration ID",
+        "exact mould configuration ID"
+      ],
+      "outputs": [
+        "fit state",
+        "stroke margin"
+      ],
+      "scope": "Exact-identity opening-stroke capacity screen.",
+      "evidenceAnchors": [
+        "ISO-20430-2020"
+      ],
+      "uncertaintyBoundary": "Required removal/action stroke must be established independently; no ejection, daylight or safety compatibility is inferred."
+    },
+    {
+      "id": "EQ-FIT-003",
+      "name": "Maximum-daylight fit",
+      "formula": "mould_closed_height + required_open_gap <= available_maximum_daylight",
+      "inputs": [
+        "mould closed height",
+        "required open gap",
+        "available maximum daylight",
+        "exact machine configuration ID",
+        "exact mould configuration ID"
+      ],
+      "outputs": [
+        "required maximum platen separation",
+        "fit state",
+        "daylight margin"
+      ],
+      "scope": "Exact-identity geometric daylight screen on one explicitly common datum/definition basis.",
+      "evidenceAnchors": [
+        "ISO-20430-2020"
+      ],
+      "uncertaintyBoundary": "Does not substitute for opening-stroke, ejector, tie-bar or safety checks."
+    },
+    {
+      "id": "EQ-FIT-004",
+      "name": "Tie-bar clear-opening fit",
+      "formula": "oriented_mould_width <= horizontal_clearance AND oriented_mould_height <= vertical_clearance",
+      "inputs": [
+        "oriented mould width",
+        "oriented mould height",
+        "horizontal tie-bar clearance",
+        "vertical tie-bar clearance",
+        "exact identities"
+      ],
+      "outputs": [
+        "axis fit states",
+        "axis margins",
+        "combined fit state"
+      ],
+      "scope": "Orientation-explicit tie-bar clear-opening geometric screen.",
+      "evidenceAnchors": [
+        "ISO-20430-2020"
+      ],
+      "uncertaintyBoundary": "No automatic mould rotation; hoses, manifolds, protrusions, handling path and ancillary hardware are excluded unless included in the entered envelope."
+    },
+    {
+      "id": "EQ-FIT-005",
+      "name": "Ejector-stroke fit",
+      "formula": "required_ejector_stroke <= available_ejector_stroke",
+      "inputs": [
+        "required ejector stroke",
+        "available ejector stroke",
+        "exact identities"
+      ],
+      "outputs": [
+        "fit state",
+        "stroke margin"
+      ],
+      "scope": "Exact-identity ejector-stroke screen.",
+      "evidenceAnchors": [
+        "ISO-20430-2020"
+      ],
+      "uncertaintyBoundary": "Does not prove ejector force, pattern, coupling, timing or interference compatibility."
+    },
+    {
+      "id": "EQ-FIT-006",
+      "name": "Declared-axis machine suitability composition",
+      "formula": "FAIL dominates; otherwise UNKNOWN dominates; otherwise MARGINAL dominates; PASS only when every declared required axis passes",
+      "inputs": [
+        "exact machine configuration ID",
+        "exact injection-unit configuration ID",
+        "exact mould configuration ID",
+        "explicit required-axis list",
+        "identity-carrying axis assessments or explicitly context-independent assessments",
+        "contextBasisRef for any context-independent assessment",
+        "marginalBasisRef on any MARGINAL assessment",
+        "declared basis"
+      ],
+      "outputs": [
+        "per-axis state and mismatch/unbound reason",
+        "coverage completeness",
+        "summary state"
+      ],
+      "scope": "Composition of explicitly declared machine/mould suitability axes while enforcing carried machine/injection-unit/mould identity and requiring an explicit referenced basis for any identity-free context-independent axis.",
+      "evidenceAnchors": [
+        "ISO-20430-2020"
+      ],
+      "uncertaintyBoundary": "PASS applies only to the declared axes and is not a universal declaration of safety, installability, validation or production readiness. Identity mismatch, unbound identity-free axes, missing context basis, or other unresolved required axes become UNKNOWN unless a known FAIL already dominates. A bare MARGINAL state without marginalBasisRef is treated as UNKNOWN."
+    },
+    {
+      "id": "EQ-FLOWPATH-001",
+      "name": "Hydraulic diameter from area and wetted perimeter",
+      "formula": "D_h = 4A/P",
+      "inputs": [
+        "cross-section area",
+        "wetted perimeter"
+      ],
+      "outputs": [
+        "hydraulic diameter"
+      ],
+      "scope": "Geometric characteristic for a fully wetted internal passage.",
+      "evidenceAnchors": [
+        "ISO-12165-2019",
+        "AUTODESK-RUNNER-LAYOUT"
+      ],
+      "uncertaintyBoundary": "Does not by itself establish pressure loss, viscosity, shear stress or a recommended runner/gate size."
+    },
+    {
+      "id": "EQ-FLOWPATH-002",
+      "name": "Uniform channel geometric volume",
+      "formula": "V = A × L",
+      "inputs": [
+        "uniform cross-section area",
+        "channel length"
+      ],
+      "outputs": [
+        "channel volume"
+      ],
+      "scope": "Geometric volume accounting for one uniform flow-path segment.",
+      "evidenceAnchors": [
+        "ISO-12165-2019",
+        "AUTODESK-RUNNER-LAYOUT"
+      ],
+      "uncertaintyBoundary": "Does not include junctions/transitions unless separately represented and does not model compressibility, packing or thermal expansion."
+    },
+    {
+      "id": "EQ-FLOWPATH-003",
+      "name": "Circular-channel apparent wall shear rate",
+      "formula": "gamma_dot_app = 32Q/(pi D^3)",
+      "inputs": [
+        "volumetric flow through exact circular passage",
+        "circular passage diameter"
+      ],
+      "outputs": [
+        "apparent wall shear rate"
+      ],
+      "scope": "Nominal geometric kinematic screen for a fully filled circular passage.",
+      "evidenceAnchors": [
+        "AUTODESK-GATE-DESIGN",
+        "AUTODESK-RUNNER-LAYOUT"
+      ],
+      "uncertaintyBoundary": "No Rabinowitsch correction; does not calculate viscosity, shear stress, heating, pressure loss or a safe material/gate shear-rate limit."
+    },
+    {
+      "id": "PROC-FLOWPATH-001",
+      "name": "Pressure-loss modelling readiness",
+      "formula": "Readiness gate over exact material, rheology, thermal state, geometry, flow, plastic-side measured pressure kinds and physical location semantics",
+      "inputs": [
+        "exact material grade",
+        "rheology model reference",
+        "thermal-state reference",
+        "flow-path geometry reference",
+        "volumetric flow",
+        "upstream/downstream plastic-side measured pressure kinds",
+        "distinct upstream/downstream location IDs"
+      ],
+      "outputs": [
+        "ready flag",
+        "blocking semantics"
+      ],
+      "scope": "Fail-closed semantic gate before any quantitative feed-system pressure-loss model is attempted.",
+      "evidenceAnchors": [
+        "AUTODESK-JUNCTURE-LOSS",
+        "AUTODESK-RUNNER-LAYOUT",
+        "ISO-294-1-2017"
+      ],
+      "uncertaintyBoundary": "Readiness is not model validation; MFR/MFI alone is not accepted as complete injection-moulding rheology, hydraulic/command pressure types are excluded, physical pressure locations must be explicit, and no pressure loss is calculated."
+    },
+    {
+      "id": "EQ-MTRANS-001",
+      "name": "Screw swept-volume geometry",
+      "formula": "V = (pi D^2 / 4) × stroke",
+      "inputs": [
+        "screw diameter",
+        "screw stroke",
+        "exact injection-unit configuration ID",
+        "screw-geometry basis reference"
+      ],
+      "outputs": [
+        "injection-unit identity",
+        "geometry basis reference",
+        "screw cross-sectional area",
+        "geometric swept volume"
+      ],
+      "scope": "Geometric swept barrel volume for one exact injection-unit configuration tied to referenced screw geometry.",
+      "evidenceAnchors": [
+        "RJG-MIV-CONSORTIUM-WHITE-PAPER",
+        "ARBURG-PLASTICISING-SERVICE"
+      ],
+      "uncertaintyBoundary": "Not delivered melt volume; non-return-valve backflow, compression, leakage, decompression and machine-specific signal definitions remain outside the geometry."
+    },
+    {
+      "id": "EQ-MTRANS-002",
+      "name": "Geometric volumetric flow from screw motion",
+      "formula": "Q = (pi D^2 / 4) × v",
+      "inputs": [
+        "screw diameter",
+        "actual forward screw linear speed",
+        "exact injection-unit configuration ID",
+        "screw-geometry basis reference",
+        "screw-motion basis reference"
+      ],
+      "outputs": [
+        "injection-unit identity",
+        "geometry/motion basis references",
+        "geometric volumetric displacement rate"
+      ],
+      "scope": "Geometric barrel displacement rate from referenced actual screw motion and exact screw geometry.",
+      "evidenceAnchors": [
+        "RJG-MIV-CONSORTIUM-WHITE-PAPER",
+        "ISO-294-1-2017"
+      ],
+      "uncertaintyBoundary": "Not proven cavity flow; controller command alone is insufficient, and check-ring/compressibility/leakage/decompression/signal-scaling effects remain outside the calculation."
+    },
+    {
+      "id": "EQ-MTRANS-003",
+      "name": "Required screw speed for target geometric volumetric rate",
+      "formula": "v = Q / (pi D^2 / 4)",
+      "inputs": [
+        "screw diameter",
+        "target volumetric flow",
+        "exact injection-unit configuration ID",
+        "screw-geometry basis reference",
+        "target-flow basis reference"
+      ],
+      "outputs": [
+        "injection-unit identity",
+        "geometry/flow basis references",
+        "required geometric screw linear speed"
+      ],
+      "scope": "Inverse geometric displacement calculation for a referenced target volumetric rate and exact target injection-unit geometry.",
+      "evidenceAnchors": [
+        "RJG-MIV-CONSORTIUM-WHITE-PAPER",
+        "ISO-294-1-2017"
+      ],
+      "uncertaintyBoundary": "Not a released machine setpoint; target-machine flow, acceleration and pressure capability must be validated separately."
+    },
+    {
+      "id": "EQ-MTRANS-004",
+      "name": "Geometric volumetric transfer between screw diameters",
+      "formula": "Q_source = A_source v_source; v_target = Q_source / A_target",
+      "inputs": [
+        "source screw diameter",
+        "source actual screw speed",
+        "source injection-unit ID",
+        "source screw-geometry basis reference",
+        "source motion basis reference",
+        "target screw diameter",
+        "target injection-unit ID",
+        "target screw-geometry basis reference",
+        "transfer-study basis reference"
+      ],
+      "outputs": [
+        "source/target injection-unit identities",
+        "geometry/motion/transfer references",
+        "preserved geometric volumetric rate",
+        "target geometric screw speed",
+        "speed ratio"
+      ],
+      "scope": "Reference-bound geometric volumetric-rate transfer between two explicitly identified injection units.",
+      "evidenceAnchors": [
+        "RJG-MIV-CONSORTIUM-WHITE-PAPER"
+      ],
+      "uncertaintyBoundary": "Preserves only geometric screw-displacement rate. It does not prove equivalent cavity fill, melt-front velocity, shear history, pressure demand, acceleration response, check-ring behaviour, melt condition or part quality."
+    },
+    {
+      "id": "EQ-FLOW-001",
+      "name": "Fill-stage measured rate arithmetic",
+      "formula": "Q = V/t; m_dot = m/t; v_ram = stroke/t",
+      "inputs": [
+        "fill time",
+        "optional fill volume",
+        "optional fill mass",
+        "optional injection stroke"
+      ],
+      "outputs": [
+        "cm3/s",
+        "g/s",
+        "mm/s"
+      ],
+      "scope": "Direct rate arithmetic over one explicitly matched fill interval.",
+      "evidenceAnchors": [
+        "ISO-294-1-2017"
+      ],
+      "uncertaintyBoundary": "Screw/ram speed is not melt-front velocity; no shear rate, viscosity or pressure loss is inferred."
+    },
+    {
+      "id": "EQ-RES-001",
+      "name": "Average residence-time estimate",
+      "formula": "t_avg = melt_inventory / mass_throughput_rate",
+      "inputs": [
+        "melt inventory mass",
+        "mass throughput rate",
+        "exact injection-unit configuration ID",
+        "melt-inventory basis reference",
+        "throughput basis reference"
+      ],
+      "outputs": [
+        "injection-unit identity",
+        "inventory/throughput basis references",
+        "average residence time",
+        "normalized throughput"
+      ],
+      "scope": "Steady-throughput average inventory/throughput estimate tied to one exact injection-unit configuration and explicit inventory/throughput evidence.",
+      "evidenceAnchors": [
+        "ARBURG-PLASTICISING-SERVICE",
+        "BASF-ULTRAMID-PROCESSING"
+      ],
+      "uncertaintyBoundary": "Not a residence-time distribution, exact oldest-material age, or grade-specific safe-residence verdict. Stagnant regions, hot-runner inventory, interruptions, purging and recirculation remain outside the estimate unless included in the referenced basis."
+    },
+    {
+      "id": "EQ-RES-002",
+      "name": "Average residence time from shot/cycle throughput",
+      "formula": "throughput = m_shot/t_cycle; t_avg = melt_inventory/throughput",
+      "inputs": [
+        "melt inventory mass",
+        "shot mass",
+        "cycle time",
+        "exact injection-unit configuration ID",
+        "melt-inventory basis reference",
+        "shot-mass basis reference",
+        "cycle-time basis reference"
+      ],
+      "outputs": [
+        "injection-unit identity",
+        "basis references",
+        "derived throughput",
+        "average residence time"
+      ],
+      "scope": "Average inventory/throughput estimate derived from referenced shot mass and cycle time for one exact injection-unit configuration.",
+      "evidenceAnchors": [
+        "ARBURG-PLASTICISING-SERVICE",
+        "BASF-ULTRAMID-PROCESSING"
+      ],
+      "uncertaintyBoundary": "Assumes one referenced shot leaves per referenced cycle. Purge/reject/interruption/recirculation flow is excluded unless represented; result is not a residence-time distribution or grade-specific safe-residence verdict."
+    },
+    {
+      "id": "EQ-THERM-001",
+      "name": "Relative cooling-time diffusion scaling",
+      "formula": "t_target/t_ref = (s_target/s_ref)^2 × (alpha_ref/alpha_target)",
+      "inputs": [
+        "reference cooling time",
+        "reference/target characteristic thickness",
+        "optional reference/target thermal diffusivity"
+      ],
+      "outputs": [
+        "scaling factor",
+        "estimated target cooling time"
+      ],
+      "scope": "First-order relative comparison only under comparable thermal boundary/ejection conditions.",
+      "evidenceAnchors": [
+        "PIGNON-2018-COOLING-ANALYTICAL",
+        "KUO-2022-COOLING-WARPAGE"
+      ],
+      "uncertaintyBoundary": "Not an absolute cooling predictor; crystallisation, thermal contact resistance, local geometry, circuit resistance and transient mould state can invalidate the scaling."
+    },
+    {
+      "id": "EQ-THERM-002",
+      "name": "Amorphous 1-D plane-wall centerline cooling estimate",
+      "formula": "t = s^2/(pi^2 alpha) × ln[(4/pi) × (T_melt - T_mould)/(T_eject - T_mould)]",
+      "inputs": [
+        "part thickness",
+        "thermal diffusivity",
+        "melt temperature",
+        "mould-surface temperature",
+        "centerline ejection temperature",
+        "exact material grade ID",
+        "amorphous morphology declaration",
+        "material morphology reference",
+        "thermal-model basis reference",
+        "thermal-diffusivity reference",
+        "ejection-criterion reference",
+        "mould-surface-temperature basis reference"
+      ],
+      "outputs": [
+        "exact material grade and morphology/model references",
+        "analytical cooling-time screen",
+        "temperature/logarithm diagnostic terms"
+      ],
+      "scope": "First-term one-dimensional plane-wall centerline cooling screen for an exact material grade explicitly documented as amorphous and tied to referenced morphology, thermal-model, diffusivity, ejection-criterion and mould-surface-temperature evidence.",
+      "evidenceAnchors": [
+        "PIGNON-2018-COOLING-ANALYTICAL",
+        "TORRES-ALBA-2020-CONFORMAL-COOLING"
+      ],
+      "uncertaintyBoundary": "Not valid for semi-crystalline phase-change behaviour and not a guaranteed cycle time. Constant-property/uniform-boundary assumptions exclude contact resistance, local geometry, nonuniform fill temperature, cooling-channel resistance, mould transient state and post-ejection reheating."
+    },
+    {
+      "id": "EQ-SHR-001",
+      "name": "Source-bound linear shrinkage compensation range",
+      "formula": "D_mould = D_target / (1 - S), where S = (D_mould - D_part) / D_mould",
+      "inputs": [
+        "target part dimension",
+        "lower/upper source-backed linear shrinkage",
+        "exact material grade ID",
+        "shrinkage direction",
+        "direction basis reference",
+        "shrinkage basis reference",
+        "conditioning/dimensional basis reference"
+      ],
+      "outputs": [
+        "material/grade/direction context",
+        "starting mould-dimension range",
+        "compensation range"
+      ],
+      "scope": "Arithmetic starting compensation using an explicit mould-referenced linear-shrinkage definition, exact material grade, explicit direction, source-backed shrinkage range and conditioning/dimensional basis.",
+      "evidenceAnchors": [
+        "ASTM-D955-21",
+        "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW",
+        "ISO-20457-2026"
+      ],
+      "uncertaintyBoundary": "Not a released tool dimension and does not supply or interchange generic polymer shrinkage constants. Fibre orientation, pressure/thermal history, crystallisation, geometry, conditioning, mould restraint and tolerances remain outside this arithmetic."
+    },
+    {
+      "id": "EQ-MAT-001",
+      "name": "Uncertainty-aware exact-grade moisture acceptance",
+      "formula": "Compare [measured moisture - uncertainty, measured moisture + uncertainty] with a supplier-controlled maximum moisture limit on the same mass-fraction basis",
+      "inputs": [
+        "exact material grade ID",
+        "sample ID",
+        "measured moisture",
+        "measurement uncertainty",
+        "supplier maximum moisture",
+        "measurement method reference",
+        "supplier requirement reference",
+        "mass-fraction basis"
+      ],
+      "outputs": [
+        "PASS / FAIL / INDETERMINATE",
+        "measurement bounds",
+        "nominal and conservative margin to limit"
+      ],
+      "scope": "Grade- and sample-specific moisture comparison only; supports source-first material control without generating a drying recipe.",
+      "evidenceAnchors": [
+        "iso-15512-2019",
+        "BASF-ULTRAMID-PROCESSING",
+        "BASF-ULTRASON-INJECTION"
+      ],
+      "uncertaintyBoundary": "PASS requires the upper measurement bound to be at/below the supplied grade limit; FAIL requires the lower bound to exceed it; overlap is INDETERMINATE. No dryer temperature, time, dew point, airflow or defect root cause is inferred."
+    },
+    {
+      "id": "PROC-GATE-001",
+      "name": "Repeatability-aware gate-seal plateau assessment",
+      "formula": "Compare adjacent repeated part-mass means against a user-supplied decision tolerance across at least three hold-time levels.",
+      "inputs": [
+        "hold-time levels",
+        "at least two part-mass replicates per level",
+        "user-supplied plateau tolerance"
+      ],
+      "outputs": [
+        "plateau-consistent/no-plateau conclusion",
+        "earliest consistent hold-time level",
+        "repeatability statistics"
+      ],
+      "scope": "Controlled-study analysis for one material/gate/mould/thermal state.",
+      "evidenceAnchors": [
+        "PARIZS-2023-IN-MOLD-SENSORS",
+        "RJG-GATE-SEAL-STUDY"
+      ],
+      "uncertaintyBoundary": "A mass plateau is evidence consistent with diminishing additional transfer, not universal proof of an exact physical gate-freeze instant."
+    }
+  ],
+  "unitPolicy": "Engineering input units preserve SI prefix case. Canonical pressure/force case is mandatory and ambiguous uppercase/lowercase prefix substitutions are rejected; examples include mPa != MPa, mN != MN, Mg != mg, Mm != mm and ML != mL.",
+  "evidenceResolution": {
+    "rule": "Every evidenceAnchors ID must resolve either from an existing governed repository evidence ledger or from engineeringEvidenceSupplements below. Raw DOI strings are not valid anchor IDs.",
+    "governedJsonSources": [
+      {
+        "path": "data/book-manifest-v1.json",
+        "collection": "sourceSeeds"
+      },
+      {
+        "path": "data/book-authored-foundations-v1.json",
+        "collection": "sourceSeeds"
+      },
+      {
+        "path": "data/book-evidence-registry-v1.json",
+        "collection": "sourceSeeds"
+      },
+      {
+        "path": "data/book-authored-remaining-v1.json",
+        "collection": "sourceSeeds"
+      },
+      {
+        "path": "data/book-claim-review-engineering-advanced-v1.json",
+        "collection": "sourceSeeds"
+      },
+      {
+        "path": "data/book-qualification-resolution-all-v1.json",
+        "collection": "newEvidence"
+      },
+      {
+        "path": "data/book-claim-resolution-all-v1.json",
+        "collection": "newEvidence"
+      },
+      {
+        "path": "sources/SOURCE_FRESHNESS.json",
+        "collection": "sources"
+      }
+    ],
+    "canonicalAcademicUrlSource": {
+      "path": "data/book-publication-authorization-v1.json",
+      "collection": "canonicalAcademicEvidenceUrls"
+    }
+  },
+  "engineeringEvidenceSupplements": [
+    {
+      "id": "RAO-2017-TIEBAR-LOAD",
+      "type": "peer-reviewed-journal",
+      "issuer": "CIRP Journal of Manufacturing Science and Technology",
+      "title": "Study on the clamping force measurement and partial load regulation technology of injection molding machine",
+      "url": "https://doi.org/10.1016/j.cirpj.2017.03.001",
+      "checked": "2026-10-02",
+      "currentState": "peer-reviewed-doi-verified",
+      "scope": "Tie-bar strain/load distribution and partial-load behaviour in injection moulding machines. Used to support clamp/tie-bar load context; not a universal clamp setpoint or direct cavity-pressure-to-clamp prescription."
+    },
+    {
+      "id": "HUANG-2018-CLAMP-SEPARATION",
+      "type": "peer-reviewed-journal",
+      "issuer": "Precision Engineering",
+      "title": "Influence of clamping force on tie-bar elongation, mold separation, and part dimensions in injection molding",
+      "url": "https://doi.org/10.1016/j.precisioneng.2017.11.007",
+      "checked": "2026-10-02",
+      "currentState": "peer-reviewed-doi-verified",
+      "scope": "Experimental relation among clamping force, tie-bar elongation, mould separation and part dimensions. Used for clamp/mould-separation evidence, not a universal optimum clamp force."
+    },
+    {
+      "id": "PIGNON-2018-COOLING-ANALYTICAL",
+      "type": "peer-reviewed-journal",
+      "issuer": "International Journal of Heat and Mass Transfer",
+      "title": "Improvement of heat transfer analytical models for thermoplastic injection molding and comparison with experiments",
+      "url": "https://doi.org/10.1016/j.ijheatmasstransfer.2017.09.078",
+      "checked": "2026-10-02",
+      "currentState": "peer-reviewed-doi-verified",
+      "scope": "Validated analytical cooling/solidification modelling for amorphous and semi-crystalline thermoplastics, including thermal-contact-resistance limitations. Supports first-order thermal screening, not universal absolute cooling time."
+    },
+    {
+      "id": "TORRES-ALBA-2020-CONFORMAL-COOLING",
+      "type": "peer-reviewed-journal",
+      "issuer": "Polymers",
+      "title": "A New Conformal Cooling Design Procedure for Injection Molding Based on Temperature Clusters and Multidimensional Discrete Models",
+      "url": "https://doi.org/10.3390/polym12010154",
+      "checked": "2026-10-02",
+      "currentState": "peer-reviewed-doi-verified",
+      "scope": "Peer-reviewed conformal-cooling study using temperature fields, geometry and cooling-design constraints. Used as corroborating cooling-system evidence; not a universal absolute cooling-time or channel-layout rule."
+    }
+  ]
+}

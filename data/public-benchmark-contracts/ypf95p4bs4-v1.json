@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "datasetId": "mendeley-ypf95p4bs4-v1",
+  "status": "metadata-profile-candidate",
+  "source": {
+    "datasetPage": "https://data.mendeley.com/datasets/ypf95p4bs4/1",
+    "datasetDoi": "10.17632/ypf95p4bs4.1",
+    "mendeleyDatasetId": "ypf95p4bs4",
+    "version": 1,
+    "publisher": "Mendeley Data",
+    "license": "CC BY 4.0"
+  },
+  "experimentContext": {
+    "process": "industrial injection moulding operations",
+    "publisherDescription": "package contains databases, Excel files, engineering-method data and Arena Simulation results used for an injection-moulding availability study",
+    "evidenceRisk": "measured/operational records are mixed with simulation-derived results"
+  },
+  "stage1Rules": {
+    "publisherMetadataOnly": true,
+    "downloadDatasetPayloads": false,
+    "separateOperationalDataFromArenaSimulationBeforeCounting": true,
+    "simulationOutputsNeverCountAsMeasuredEvidence": true,
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "acceptedMeasuredTimeSeriesSamples": 0
+  },
+  "evidenceBoundary": "Stage 1 enumerates exact publisher file metadata only. No source payload is downloaded. Operational/database files may advance to Stage 2, but Arena simulation outputs, engineered methodology artifacts and derived model results must remain non-counting unless an independently delivered measured source table is identified and semantically profiled."
+}

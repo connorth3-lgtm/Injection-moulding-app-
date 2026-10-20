@@ -1,0 +1,92 @@
+name: MouldMaster Domain Foundation QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.js'
+      - 'MouldMaster_Core_App.html'
+      - 'src/core-runtime/**'
+      - 'src/domains/**'
+      - 'data/materials/**'
+      - 'runtime-domain-manifest.json'
+      - 'material-catalog-v1.json'
+      - 'tools/material_catalog.py'
+      - 'tools/generate_runtime_manifest.py'
+      - 'tools/build_runtime_packs.py'
+      - 'tools/externalize_core_scripts.py'
+      - 'tools/generate_style_csp.cjs'
+      - 'tools/audit_inline_styles.py'
+      - 'tools/retire_inline_handler_attrs.py'
+      - 'tools/audit_inline_handlers.py'
+      - 'tools/verify_production_source.py'
+      - 'qa_material_catalog.py'
+      - 'qa_material_identity.py'
+      - 'qa_app_remediation.py'
+      - 'qa_architecture_debt.py'
+      - 'qa_webkit_regression.py'
+      - 'docs/DOMAIN_ARCHITECTURE_V1.md'
+      - 'index.html'
+      - 'src/domains/shell/pwa-shell.js'
+      - 'src/domains/shell/accessibility-hardening.js'
+      - 'service-worker.js'
+      - 'desktop/electron/**'
+      - '.github/workflows/pages.yml'
+      - '.github/workflows/mobile-browser-qa.yml'
+      - 'qa/**'
+      - 'playwright*.cjs'
+      - '.github/workflows/domain-foundation-qa.yml'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  domain-foundation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Domain and externalized core JavaScript syntax
+        run: |
+          node --check src/domains/domain-bootstrap.js
+          find src/domains -mindepth 2 -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
+          find src/core-runtime -type f -name '*.js' -print0 | sort -z | xargs -0 -n1 node --check
+      - name: Runtime pack determinism
+        run: python tools/build_runtime_packs.py --check
+      - name: Core script CSP migration
+        run: python tools/externalize_core_scripts.py --check
+      - name: Strict style CSP determinism
+        run: node tools/generate_style_csp.cjs --check
+      - name: Inline handler CSP retirement
+        run: |
+          python tools/retire_inline_handler_attrs.py --check
+          python tools/audit_inline_handlers.py --check
+      - name: Architecture debt ceiling
+        run: python qa_architecture_debt.py
+      - name: WebKit regression coverage contract
+        run: python qa_webkit_regression.py
+      - name: Material staging semantics
+        run: python tools/material_catalog.py validate
+      - name: Material identity behaviour
+        run: python qa_material_identity.py
+      - name: Generated domain manifest
+        run: python tools/generate_runtime_manifest.py --check
+      - name: Material and domain foundation QA
+        run: python qa_material_catalog.py
+      - name: App-wide remediation invariants
+        run: python qa_app_remediation.py
+      - name: Public Pages boundary still resolves
+        run: python tools/build_pages_artifact.py
+      - name: App-wide runtime/offline reconciliation
+        run: python qa_app_wide_audit.py

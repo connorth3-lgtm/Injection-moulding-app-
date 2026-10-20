@@ -1,0 +1,29 @@
+name: Frozen Recovery Contract
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'latest.json'
+      - 'tools/verify_frozen_recovery.py'
+      - '.github/workflows/frozen-recovery-contract.yml'
+  pull_request:
+    paths:
+      - 'latest.json'
+      - 'tools/verify_frozen_recovery.py'
+      - '.github/workflows/frozen-recovery-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-frozen-recovery:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+      - name: Download and hash immutable recovery payload
+        run: python tools/verify_frozen_recovery.py

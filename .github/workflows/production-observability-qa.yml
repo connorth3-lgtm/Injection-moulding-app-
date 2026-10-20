@@ -1,0 +1,37 @@
+name: Production Observability QA
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-observability-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  observability-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: JavaScript syntax
+        run: |
+          node --check src/domains/governance/production-health.js
+          node --check src/domains/shell/app-shell-finalize.js
+          node --check service-worker.js
+      - name: Local-only observability and learner-report privacy integrity
+        run: python qa_production_observability.py
+      - name: Production Pages allowlist still resolves
+        run: python tools/build_pages_artifact.py

@@ -1,0 +1,1 @@
+calibration_record_id,sensor_id,signal_id,machine_alias,mould_alias,cavity_alias,measurement_location,sensor_make_model_alias,serial_alias,engineering_unit,calibration_state,calibration_reference_alias,valid_from_shot,valid_to_shot,sampling_rate_hz,scale_factor,offset,zero_reference,notes

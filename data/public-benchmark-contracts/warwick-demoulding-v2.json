@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "datasetId": "warwick-demoulding",
+  "status": "retrieved-special-format-needs-origin-export",
+  "source": {"doi": "10.17632/x9hc7hf6xd.2", "recordUrl": "https://data.mendeley.com/datasets/x9hc7hf6xd/2", "license": "CC BY 4.0", "version": 2},
+  "retrievedFiles": [
+    {"name": "data1_09.06.2023_Material_Jetting.opju", "sizeBytes": 4143026, "sha256": "53739d36aed0426df00283f8fb1b7b2af014b5bbe1303237ec5ec083f4c02b5e"},
+    {"name": "data1_16.06.2023_b2b.opju", "sizeBytes": 264433, "sha256": "cc072f1cde8bb4eeee5fd53cc995d24783ba5ee525609cb4da4408b8e3880b4f"},
+    {"name": "data_visualisation.opju", "sizeBytes": 11432475, "sha256": "643260c698d84d63171948bf31032d6772f7aa00d32add9edff75ffa400b8395"},
+    {"name": "representative_curves_14.06.2023.opju", "sizeBytes": 4869172, "sha256": "3ed17602a83fdda1b3afdb48c949c68e468936a84f4b314b4bd8d729d79fc947"},
+    {"name": "surface_parameters_27.10.2023.opju", "sizeBytes": 715139, "sha256": "a98f9cf4b4286da502d20ee53c3156b5498641117bc20c0072145f4a241572ac"}
+  ],
+  "technicalGate": {"format": "OriginLab Unicode project (.opju)", "originViewerSupportsOpju": true, "validatedOpenSourceHeadlessLinuxParserAvailable": false, "validatedExportRoute": "Origin/OriginPro on Windows using originpro/PyOrigin or equivalent validated OriginLab export", "thirdPartyConverterReference": "JNisk/convert-opju, MIT, requires Origin 2024b on Windows", "rawOpjuAlreadyHashVerified": true, "acceptedTrialChannelSampleCountsRemainNullUntilExport": true},
+  "exportAcceptance": ["Each exported worksheet/matrix must retain originating OPJU file, project folder, book/sheet name, units/comments/formulas when available.", "Exported tables must be fingerprinted and reconciled against the five already-verified OPJU source hashes.", "Time columns, directly measured channels and derived/visualisation-only tables must be separated before sample counting.", "No graph-rendering or representative-curve workbook may be counted as an independent experiment if it duplicates raw acquisition data."],
+  "evidenceBoundary": "All five CC BY 4.0 OPJU files are already retrieved and source-hash verified. The remaining blocker is format extraction, not rights. A validated Windows Origin/OriginPro export is required before any trial, channel or sample count can be accepted."
+}

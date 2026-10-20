@@ -1,0 +1,87 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "datasetId": "openmms-tooling4g-real-world-v1",
+  "researchCandidateId": "MM-DATA-092",
+  "title": "OpenMMS real-world injection-mould monitoring raw case study",
+  "source": {
+    "paperDoi": "10.3390/s23073569",
+    "paperUrl": "https://www.mdpi.com/1424-8220/23/7/3569",
+    "repository": "https://github.com/TEPGomes/OpenMMS-T4G",
+    "rawFile": "Real_World_Test/Case_Study_Raw_Data.csv",
+    "rawFileUrl": "https://raw.githubusercontent.com/TEPGomes/OpenMMS-T4G/main/Real_World_Test/Case_Study_Raw_Data.csv",
+    "gitBlobSha": "d035660bce92f21954818a6379326d2897eebae8",
+    "sizeBytes": 2872573,
+    "repositoryLicense": "BSD-3-Clause",
+    "paperLicense": "CC BY 4.0",
+    "paperDataAvailabilityExplicitlyLinksRawFile": true
+  },
+  "experimentalContext": {
+    "machine": "Tederic D80",
+    "material": "DOW LDPE 780E",
+    "part": "cup-shaped part",
+    "samplingHzReported": 10,
+    "continuousCyclesReported": 110,
+    "normalCyclesReportedAtStart": 54,
+    "faultType": "simulated extraction-pin friction fault",
+    "faultMethod": "A screw is tightened against the ejector/extraction pin containing the force sensor; the fault is released and re-applied in repeated steps.",
+    "purpose": "Distinguish normal and abnormal mould operation using pressure, temperature, extraction force and inertial sensing."
+  },
+  "rawSchema": {
+    "headerVerifiedFromPinnedGitBlob": true,
+    "columnCount": 12,
+    "columns": ["t", "T1", "T2", "P", "F", "Ax", "Ay", "Az", "Gx", "Gy", "Gz", "t2"],
+    "semanticMapping": {
+      "t": "time field",
+      "T1": "temperature channel 1",
+      "T2": "temperature channel 2",
+      "P": "cavity pressure",
+      "F": "extraction/ejection force",
+      "Ax": "accelerometer x",
+      "Ay": "accelerometer y",
+      "Az": "accelerometer z",
+      "Gx": "gyroscope x",
+      "Gy": "gyroscope y",
+      "Gz": "gyroscope z",
+      "t2": "secondary time field"
+    },
+    "units": {
+      "status": "do-not-infer-from-column-names",
+      "nextAction": "Map each unit only from paper/source code or a publisher/author data dictionary."
+    },
+    "firstRowShapeVerified": true,
+    "literalFirstDataRow": [0.015883300000041345, 19.81, 22.5, 0.0, 0.0, 27.0, 4.0, 1000.0, -18200.0, -26040.0, -21770.0, 0.10011510000003909]
+  },
+  "profileStatus": {
+    "exactRowCount": null,
+    "missingnessByColumn": null,
+    "numericRangesByColumn": null,
+    "cycleSegmentationFromRawFile": null,
+    "reasonIncomplete": "The connected GitHub API exposes the pinned 2.87 MB raw blob and verified header/content, but the current analysis interface does not provide a safe full-file local stream for deterministic row/missingness calculation. Counts are therefore not guessed.",
+    "canonicalAcceptedMeasuredValues": 0,
+    "fullyProfiledMeasuredFamily": false
+  },
+  "qualityAndValidationValue": {
+    "normalToFaultProgression": true,
+    "physicalFaultIntervention": true,
+    "partQualityMeasurement": false,
+    "toolConditionSignal": true,
+    "maintenanceLearningValue": "high",
+    "diagnosticAssessmentValue": "high"
+  },
+  "governance": {
+    "rawThirdPartyFileCommittedToMouldMaster": false,
+    "rawRedistributionAllowedByThisProfile": false,
+    "rightsDecision": "Repository license and paper data-availability route are strong, but dataset-specific redistribution scope should still be recorded explicitly before MouldMaster republishes raw rows.",
+    "independenceGroup": "OpenMMS_TOOLING4G_2023",
+    "productionAuthority": false
+  },
+  "promotionGate": [
+    "Obtain/record dataset-specific reuse interpretation for the raw CSV.",
+    "Run deterministic full-file parser against the pinned blob and record exact row count/missingness/ranges.",
+    "Map units from authoritative documentation.",
+    "Derive cycle boundaries without leaking fault labels across train/test splits.",
+    "Preserve the first 54 normal cycles and later fault intervention chronologically.",
+    "Do not treat the simulated extraction fault as a natural wear-history dataset."
+  ]
+}

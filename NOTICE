@@ -1,0 +1,11 @@
+MouldMaster Academy
+
+Copyright 2026 MouldMaster Academy contributors.
+
+This repository is licensed under the Apache License, Version 2.0, except where a file or third-party work is expressly identified otherwise.
+
+External standards, legislation, regulator guidance, manufacturer documents, journal articles, websites and other sources referenced by URL are not incorporated into this repository's licence. Their own copyright, licence and access terms continue to apply. MouldMaster links to those works for reference and does not claim ownership of them.
+
+The project intends to use open standards and open-source dependencies wherever practical. A dependency or linked source must not be described as open source unless its applicable licence permits that description.
+
+The currently distributed MouldMasterAcademy.exe is a compiled binary whose corresponding launcher build source has not yet been located in this repository. Until reproducible source and build instructions for that binary are published, the project must not describe that executable itself as fully open source. The web/PWA source in this repository is covered by the repository licence subject to the third-party notices above.

@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "modelId": "hwamda-hmd400m6",
+  "modelLabel": "Hwamda HMD400M6",
+  "generation": "original-M6",
+  "scope": "historical catalogue observations; not serial-verified machine capability or production setpoints",
+  "disposition": "hold-oem-as-built-validation",
+  "installedControllerHost": "unknown",
+  "installedInjectionUnit": null,
+  "installedScrewDiameterMm": null,
+  "verifiedInstalledPressureMpa": null,
+  "machineSuitability": "unknown",
+  "independentlyVerifiedOemManuals": [],
+  "sourceVariantConflict": "unresolved",
+  "publishedInjectionVariants": [
+    {
+      "id": "hmd-m6-tech-pack",
+      "status": "documented-exact-model-distributor-archive",
+      "url": "https://kiaunoriumedis.lt/wp-content/uploads/2022/02/injection_machine.pdf",
+      "sourceNote": "M6 family technical data pack; HMD400M6 section, not an operation/service manual",
+      "screwDiameterMm": [
+        70,
+        80,
+        90
+      ],
+      "shotVolumeCm3": [
+        1385,
+        1809,
+        2289
+      ],
+      "injectionPressureMpa": [
+        206,
+        158,
+        125
+      ]
+    },
+    {
+      "id": "unattributed-alternative-ledger",
+      "status": "unverified-provenance-research-only",
+      "url": null,
+      "sourceNote": "Alternative values noted in surviving historical research without traceable OEM revision/serial applicability; not promoted",
+      "screwDiameterMm": [
+        70,
+        80,
+        90
+      ],
+      "shotVolumeCm3": [
+        1385,
+        1590,
+        2042
+      ],
+      "injectionPressureMpa": [
+        199,
+        152,
+        120
+      ]
+    }
+  ],
+  "missingOemDocuments": [
+    "original-M6 operation/maintenance manual",
+    "machine/serial-specific electrical schematic",
+    "machine/serial-specific hydraulic schematic",
+    "Hwamda OEM controller I/O assignment",
+    "lubrication diagram",
+    "exact injection-unit revision and installed screw documentation",
+    "serial-applicable parts book"
+  ],
+  "requiredResolution": "Authorised Hwamda or verified machine owner must identify the original HMD400M6 serial, original M6 generation, fitted controller and injection unit, revision-bound OEM manuals and source applicability. Generic Techmation family/M6-S servo documents are not substitutes. Site qualified physical acceptance is separate.",
+  "confidentialEvidenceHandling": "Keep serial/owner and proprietary manual copies in private authorised records. Public repo may retain only non-sensitive document title/revision/provenance and permitted URL."
+}

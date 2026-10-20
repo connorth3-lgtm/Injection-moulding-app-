@@ -1,0 +1,148 @@
+#!/usr/bin/env python3
+"""Prove current external-validation packets are bound to the actual public runtime bytes."""
+from __future__ import annotations
+
+import json
+import re
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent
+PAGES = ROOT / ".pages-dist"
+FP_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
+SHA_RE = re.compile(r"^[0-9a-f]{40}$")
+
+
+def need(ok: bool, message: str) -> None:
+    if not ok:
+        raise AssertionError(message)
+
+
+def load(path: str) -> dict:
+    target = ROOT / path
+    need(target.is_file(), f"missing required validation file: {path}")
+    value = json.loads(target.read_text(encoding="utf-8"))
+    need(isinstance(value, dict), f"validation JSON must be an object: {path}")
+    return value
+
+
+version = load("version.json")
+release = version.get("web_release")
+need(isinstance(release, str) and release, "version.json web_release is missing")
+ledger = load("data/release-external-validation-v1.json")
+evidence_release = ledger.get("release")
+need(isinstance(evidence_release, str) and evidence_release, "external-validation ledger release is missing")
+need(evidence_release == release, "external-validation ledger must be rebound to the current web release")
+
+candidate_workflow_text = (ROOT / ".github" / "workflows" / "premerge-public-candidate.yml").read_text(encoding="utf-8")
+candidate_reuse_guard = (ROOT / "tools" / "verify_retained_candidate_reuse.py").read_text(encoding="utf-8")
+for marker in (
+    "Verify retained candidate producer can be reused",
+    "tools/verify_retained_candidate_reuse.py",
+    "steps.impact.outputs.runtime != 'true' && steps.reuse.outputs.reusable == 'true'",
+    "steps.impact.outputs.runtime == 'true' || steps.reuse.outputs.reusable != 'true'",
+):
+    need(marker in candidate_workflow_text, f"pre-merge candidate reuse guard missing: {marker}")
+for marker in ("conclusion", "success", "artifactDigest", "artifactExpiresAt", "workflow/source provenance"):
+    need(marker in candidate_reuse_guard, f"retained-candidate live provenance guard missing: {marker}")
+
+candidate_quality_block = candidate_workflow_text.split("Require exact PR-head quality gates before candidate approval", 1)[1]
+need("required=(mobile-browser question-quality-50-pass)" in candidate_quality_block, "candidate producer must wait for browser/question quality gates")
+need("required=(integrity mobile-browser question-quality-50-pass)" not in candidate_quality_block, "candidate producer must not deadlock on integrity; protected integrity still gates merge")
+
+index_rel = ledger.get("validationIndex")
+need(index_rel == f"qa/EXTERNAL_VALIDATION_{evidence_release}.md", "release validation index path is stale")
+index_path = ROOT / index_rel
+need(index_path.is_file(), "release validation index is missing")
+index_text = index_path.read_text(encoding="utf-8")
+
+packet_expectations = {
+    "accessibility": ("reviewPacket", f"qa/ACCESSIBILITY_REAL_AT_{evidence_release}.md"),
+    "pwaPhysicalDevices": ("reviewPacket", f"qa/PWA_PHYSICAL_DEVICE_{evidence_release}.md"),
+    "windowsDistribution": ("readinessPacket", f"certification/WINDOWS_SIGNING_READINESS_{evidence_release}.md"),
+    "bookSme": ("reviewPacket", f"qa/BOOK_SME_REVIEW_{evidence_release}.md"),
+    "curriculumSme": ("reviewPacket", f"qa/CURRICULUM_SME_REVIEW_{evidence_release}.md"),
+    "learnerOutcomes": ("pilotPacket", f"qa/LEARNER_PILOT_{evidence_release}.md"),
+    "nzqaProvider": ("reviewPacket", f"qa/NZQA_EXTERNAL_VALIDATION_{evidence_release}.md"),
+}
+for section_name, (key, expected) in packet_expectations.items():
+    section = ledger.get(section_name) or {}
+    need(section.get(key) == expected, f"{section_name} packet path is stale")
+    need((ROOT / expected).is_file(), f"{section_name} packet is missing: {expected}")
+    need(expected in index_text, f"release validation index does not reference {expected}")
+
+book_packet = ROOT / packet_expectations["bookSme"][1]
+book_packet_text = book_packet.read_text(encoding="utf-8")
+need("\\n" not in book_packet_text, "Book SME packet contains escaped newline text instead of real Markdown paragraphs")
+
+access = load("data/accessibility-real-at-validation-v1.json")
+access_section = ledger["accessibility"]
+access_candidate = access_section.get("candidate") or {}
+need(access.get("release") == evidence_release, "real-AT contract release does not match evidence ledger")
+need(access.get("packet") == access_section.get("reviewPacket"), "real-AT packet binding drifted")
+need(SHA_RE.fullmatch(str(access.get("sourceSha") or "")) is not None, "real-AT source SHA is invalid")
+need(FP_RE.fullmatch(str(access.get("runtimeFingerprint") or "")) is not None, "real-AT runtime fingerprint is invalid")
+need(access_candidate.get("release") == evidence_release, "real-AT candidate release does not match evidence ledger")
+need(access_candidate.get("sourceSha") == access.get("sourceSha"), "real-AT candidate source SHA drifted")
+need(access_candidate.get("runtimeFingerprint") == access.get("runtimeFingerprint"), "real-AT candidate fingerprint drifted")
+
+nzqa = load("data/nzqa-external-validation-v1.json")
+nzqa_section = ledger["nzqaProvider"]
+nzqa_candidate = nzqa.get("candidate") or {}
+need(nzqa.get("release") == evidence_release, "NZQA external-validation contract release does not match evidence ledger")
+need(nzqa.get("packet") == nzqa_section.get("reviewPacket"), "NZQA packet binding drifted")
+need(SHA_RE.fullmatch(str(nzqa_candidate.get("sourceSha") or "")) is not None, "NZQA candidate source SHA is invalid")
+need(FP_RE.fullmatch(str(nzqa_candidate.get("runtimeFingerprint") or "")) is not None, "NZQA candidate runtime fingerprint is invalid")
+need(len(nzqa.get("requiredGates") or []) == 8, "NZQA external-validation contract must retain eight provider gates")
+need(nzqa.get("evidence") is None, "NZQA provider HOLD must not contain completion evidence")
+
+curriculum = load("qa/curriculum-semantic-review.json")
+need(curriculum.get("release") == evidence_release, "curriculum SME contract release does not match evidence ledger")
+need(curriculum.get("packet") == ledger["curriculumSme"].get("reviewPacket"), "curriculum SME packet binding drifted")
+need(len(curriculum.get("lessonIds") or []) == 120, "curriculum SME contract must retain 120 lessons")
+
+pwa = ledger.get("pwaPhysicalDevices") or {}
+candidate = pwa.get("currentCandidate") or {}
+need(candidate.get("release") == evidence_release, "physical PWA candidate release does not match evidence ledger")
+source_sha = str(candidate.get("sourceSha") or "")
+need(SHA_RE.fullmatch(source_sha) is not None, "physical PWA candidate source SHA is invalid")
+expected_name = f"physical-pwa-candidate-{source_sha}"
+need(candidate.get("artifactName") == expected_name, "physical PWA artifact name/source SHA binding drifted")
+need(FP_RE.fullmatch(str(candidate.get("runtimeFingerprint") or "")) is not None, "physical PWA candidate fingerprint is invalid")
+need(FP_RE.fullmatch(str(candidate.get("artifactDigest") or "")) is not None, "physical PWA artifact digest is invalid")
+candidate_run_id = candidate.get("candidateRunId", candidate.get("pagesRunId"))
+need(isinstance(candidate_run_id, int) and candidate_run_id > 0, "physical PWA candidate build run id is invalid")
+need(isinstance(candidate.get("artifactId"), int) and candidate["artifactId"] > 0, "physical PWA artifact id is invalid")
+need(bool(candidate.get("artifactExpiresAt")), "physical PWA artifact expiry is missing")
+
+# The release boundary must always bind to the exact current learner runtime, even
+# when every external workstream remains HOLD. Historical evidence records may stay
+# historical, but current release packets/candidates cannot silently lag behind.
+try:
+    subprocess.run([sys.executable, "tools/build_pages_artifact.py"], cwd=ROOT, check=True)
+    sys.path.insert(0, str(ROOT / "tools"))
+    from verify_pwa_physical_evidence import runtime_fingerprint  # type: ignore
+
+    actual_fp = runtime_fingerprint(PAGES)
+    need(actual_fp == candidate.get("runtimeFingerprint"), f"physical PWA packet fingerprint is stale: actual {actual_fp}, retained {candidate.get('runtimeFingerprint')}")
+    need(actual_fp == access.get("runtimeFingerprint"), "real-AT packet fingerprint is stale")
+    need(actual_fp == nzqa_candidate.get("runtimeFingerprint"), "NZQA external-validation packet fingerprint is stale")
+    need(source_sha == nzqa_candidate.get("sourceSha"), "NZQA external-validation candidate source SHA drifted from the retained public candidate")
+finally:
+    if PAGES.exists():
+        shutil.rmtree(PAGES)
+
+# A matching runtime fingerprint in JSON is insufficient when a tester packet
+# still points to a stale build artifact. Inspect all seven visible banners.
+from tools.hold_candidate_packet_integrity import validate_packets
+need(validate_packets(ROOT, ledger) == 7, "external HOLD packet provenance coverage incomplete")
+
+for name in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes", "nzqaProvider"):
+    need((ledger.get(name) or {}).get("status") == "hold", f"{name} must remain HOLD until genuine external evidence exists")
+
+print(
+    f"Release validation packet QA passed: current release {release}, evidence release {evidence_release}, retained runtime {candidate['runtimeFingerprint']} is bound to "
+    "physical-device, real-AT and NZQA/provider packets; all seven release-bound external workstreams remain explicit HOLDs."
+)

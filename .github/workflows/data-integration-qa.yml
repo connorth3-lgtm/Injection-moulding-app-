@@ -1,0 +1,99 @@
+name: Connected Process Data QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data-integration-runtime.js'
+      - 'process-data-intelligence-ui.js'
+      - 'process-data-semantic-registry.json'
+      - 'current-data-manifest.json'
+      - 'data/measured-data-collection-closeout-2026-08-30.json'
+      - 'data/measured-learning/**'
+      - 'measured-learning-library.js'
+      - 'measured-learning-library.css'
+      - 'src/domains/process/process-data-integrity.js'
+      - 'runtime-domain-manifest.json'
+      - 'index.html'
+      - 'src/domains/shell/app-shell-finalize.js'
+      - 'service-worker.js'
+      - 'desktop/electron/package.json'
+      - 'desktop/electron/scripts/generate-integrity.cjs'
+      - 'tools/build_pages_artifact.py'
+      - 'tools/generate_current_data_manifest.py'
+      - 'tools/generate_runtime_manifest.py'
+      - 'qa_data_integration.py'
+      - 'qa_process_data_integrity.cjs'
+      - '.github/workflows/data-integration-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  connected-data:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: JavaScript syntax
+        run: |
+          node --check data-integration-runtime.js
+          node --check process-data-intelligence-ui.js
+          node --check src/domains/process/process-data-integrity.js
+          node --check qa_process_data_integrity.cjs
+          node --check src/domains/shell/app-shell-finalize.js
+          node --check service-worker.js
+          node --check desktop/electron/scripts/generate-integrity.cjs
+      - name: Process-data integrity regressions
+        run: node qa_process_data_integrity.cjs
+      - name: Runtime domain manifest is generated
+        run: python tools/generate_runtime_manifest.py --check
+      - name: Current manifest is generated from governed ledger
+        run: python tools/generate_current_data_manifest.py --check
+      - name: Connected process-data architecture
+        run: python qa_data_integration.py
+      - name: Public Pages artifact boundary
+        run: python tools/build_pages_artifact.py
+      - name: Confirm governed raw data is absent from public artifact
+        run: |
+          test -f .pages-dist/data-integration-runtime.js
+          test -f .pages-dist/process-data-intelligence-ui.js
+          test -f .pages-dist/process-data-semantic-registry.json
+          test -f .pages-dist/current-data-manifest.json
+          python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          data_root = Path('.pages-dist/data')
+          files = {
+              path.relative_to(Path('.pages-dist')).as_posix()
+              for path in data_root.rglob('*')
+              if path.is_file()
+          } if data_root.exists() else set()
+          allowed = {
+              'data/measured-learning/promoted-v1.json',
+              'data/measured-learning/manifest-v1.json',
+              'data/measured-learning/expansion-manifest-v2.json',
+              'data/measured-learning/v2-policy.json',
+              'data/measured-learning/source-readiness-v2.json',
+          }
+          promoted = json.loads(Path('.pages-dist/data/measured-learning/promoted-v1.json').read_text(encoding='utf-8'))
+          case_ids = promoted.get('caseIds') or []
+          assert len(case_ids) == len(set(case_ids)), 'public promotion index contains duplicate case IDs'
+          for case_id in case_ids:
+              assert re.fullmatch(r'MLM-(?:00[1-9]|0[1-9]\d|100)', case_id), f'invalid public promoted case ID: {case_id!r}'
+              allowed.add(f'data/measured-learning/cases/{case_id}.json')
+          unexpected = sorted(files - allowed)
+          missing = sorted(allowed - files)
+          assert not unexpected, f'governed/raw data leaked into Pages artifact: {unexpected}'
+          assert not missing, f'expected measured-learning public assets missing: {missing}'
+          print(f'Public data boundary clean: {len(files)} governed measured-learning files, 0 raw/source/review artifacts.')
+          PY

@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "reviewed": "2026-09-09",
+  "purpose": "Rank the data that MouldMaster still needs after the 2026-09-09 research expansion. Priority is based on incremental decision value, independence and governability rather than raw source count.",
+  "principle": "More data is useful only when it adds a new measured context, closes an evidence mechanism, improves exact-grade identity, or supplies first-party validation. Mirrors, versions, simulations and papers from the same experiment do not increase independent evidence count.",
+  "priorityQueue": [
+    {
+      "rank": 1,
+      "priority": "P0",
+      "gap": "Authorised real-site shot-linked validation data",
+      "neededFields": ["cycle/shot identity", "machine and mould identity", "cavity identity where applicable", "material grade/lot/batch", "setpoints separated from actuals", "pressure/temperature/time/process actuals", "physical quality outcome", "defect/reject outcome", "intervention/change event", "timestamp/order"],
+      "why": "This is the main remaining gap between public research evidence and a defensible real-production validation claim.",
+      "currentState": "pilot-ready-human-comparison-required; zero authorised external-site validation datasets accepted for the production-validation claim",
+      "acquisitionRoute": "owner-authorised controlled transfer or owner-side aggregate profiling under the existing real-pilot contract"
+    },
+    {
+      "rank": 2,
+      "priority": "P0",
+      "gap": "Real MouldMaster learner-response telemetry",
+      "neededFields": ["assessment item identity/revision", "choice fingerprint", "correct/incorrect", "response latency", "attempt/order context", "learning/scenario context", "privacy-safe pseudonymous learner/session identity"],
+      "why": "External learner datasets can test analytics code but cannot calibrate MouldMaster item difficulty, discrimination or learning gain.",
+      "currentState": "0 real MouldMaster learner rows",
+      "acquisitionRoute": "privacy-safe device/app telemetry after release/approved pilot; never substitute proxy learner data into canonical psychometrics"
+    },
+    {
+      "rank": 3,
+      "priority": "P0",
+      "gap": "Independent blinded engineering judgments on MouldMaster cases",
+      "neededFields": ["reviewer independence", "case ID", "diagnosis", "evidence confidence", "recommended next measurement/action", "safety escalation", "agreement/disagreement", "blind review state"],
+      "why": "Public labels and papers do not establish whether independent injection-moulding engineers agree with MouldMaster's case reasoning.",
+      "currentState": "20 blinded review packets staged; 0 independent blinded MouldMaster engineer labels",
+      "acquisitionRoute": "collect blinded reviews before revealing reference diagnosis/outcome"
+    },
+    {
+      "rank": 4,
+      "priority": "P0",
+      "gap": "Rights-clear raw industrial cavity-pressure/anomaly corpus",
+      "targets": ["MM-DATA-085 ZHAW/Kistler DISTRAL D0-D6", "MM-DATA-084 Philips/CERTH six-machine corpus", "ProBayes main/d-optimal if B2SHARE license is clarified", "SKZ LoKI if B2SHARE license is clarified"],
+      "why": "Would add multi-mould/multi-machine drift, anomaly and bad-shot validation beyond current public families.",
+      "currentState": "high-value sources located but private/request-only or license-blank",
+      "acquisitionRoute": "written rights clarification or owner-side aggregate profiler"
+    },
+    {
+      "rank": 5,
+      "priority": "P0",
+      "gap": "Recover the already-rights-cleared RWTH PCR raw archive",
+      "targets": ["rwth-pcr-2025 / ExperimentalData.zip"],
+      "why": "The CC BY 4.0 rights and experimental value are already strong; retrieval failure is the only major blocker to exact profiling of cavity pressure, control and part mass across virgin/PCR transitions.",
+      "currentState": "authoritative record exposes the archive link, but exact archive bytes have not been successfully delivered/profiled in the repository workflow",
+      "acquisitionRoute": "publisher-supported download or manual authoritative transfer followed by fingerprint/profile"
+    },
+    {
+      "rank": 6,
+      "priority": "P1",
+      "gap": "Hot-runner actual-state data independent of displayed commands",
+      "neededFields": ["manifold/nozzle/zone actual temperature", "heater output/current", "valve-pin actual position/timing where applicable", "nozzle/cavity pressure", "cavity identity", "physical quality outcome"],
+      "why": "Current evidence is measured and useful, but a second independent source explicitly comparing command/display to actual hot-runner state would close the mechanism more cleanly.",
+      "currentCandidates": ["doi:10.3390/polym16081057", "doi:10.1002/pen.26689"]
+    },
+    {
+      "rank": 7,
+      "priority": "P1",
+      "gap": "Gas/projectile-assisted moulding measured data",
+      "neededFields": ["assist-medium pressure/timing", "penetration", "residual wall thickness", "void/surface outcome", "temperature/process history"],
+      "why": "Water-assisted evidence is now comparatively strong, but the broad assisted-moulding family should not be promoted by treating water, gas and projectile processes as interchangeable.",
+      "currentState": "multiple water/fluid-assisted studies verified; gas/projectile evidence still thinner"
+    },
+    {
+      "rank": 8,
+      "priority": "P1",
+      "gap": "Machine/mould maintenance lifecycle data with actual failure events",
+      "neededFields": ["machine/mould identifier", "sensor trends", "alarm/failure code", "maintenance action", "component replaced/repaired", "downtime", "pre/post condition", "shot/time history"],
+      "why": "Current energy/operations datasets capture states and downtime better than component-level failure progression; this limits predictive-maintenance learning.",
+      "currentTargets": ["MM-DATA-084 private six-machine corpus", "MM-DATA-083 OEE/SMED/TPM operations dataset"]
+    },
+    {
+      "rank": 9,
+      "priority": "P1",
+      "gap": "Tool wear, cooling-circuit and ejection-force longitudinal data",
+      "neededFields": ["tool/cavity identity", "cycle count", "cooling inlet/outlet temperature and flow", "eject force/current", "surface/wear condition", "maintenance event", "part-quality change"],
+      "why": "These mechanisms are operationally important but public datasets rarely link tool condition to shot-level process and quality over time.",
+      "currentState": "demoulding mechanism has strong study evidence, but longitudinal production tool-condition datasets remain sparse"
+    },
+    {
+      "rank": 10,
+      "priority": "P1",
+      "gap": "Exact commercial-grade material documents with immutable provenance",
+      "targets": ["SABIC PP 579S", "INEOS Terluran GP-35", "Momentive Silopren LSR 2070", "Bakelite PF 6680", "Idemitsu TARFLON IR1900", "Borealis HE125MO", "Borealis BJ368MO"],
+      "why": "These exact grades connect supplier truth to measured experiments and prevent generic polymer values from being treated as grade-specific truth.",
+      "currentState": "7 manufacturer-controlled source candidates staged; 0 new material-grade-v2 records promoted because exact PDS fingerprints/revisions are still incomplete",
+      "acquisitionRoute": "download authoritative PDS, SHA-256 fingerprint, record edition/region, map test conditions, preserve supplier-guidance limitations"
+    },
+    {
+      "rank": 11,
+      "priority": "P1",
+      "gap": "Raw gate-freeze/packing/part-weight cycles",
+      "targets": ["MM-DATA-086 / DOI 10.1002/pen.27078"],
+      "why": "The measured study strongly supports gate seal and pressure-integral reasoning, but raw cycles would enable direct benchmark/calibration rather than article-level aggregate evidence.",
+      "currentState": "publisher-verified article; raw dataset not located"
+    },
+    {
+      "rank": 12,
+      "priority": "P2",
+      "gap": "Rights-clear professional tooling-CAD corpus",
+      "targets": ["MM-DATA-079 MoldCAD / AIMold"],
+      "why": "5,000+ professional mould assemblies could dramatically improve parting/demould/side-action/tooling reasoning, but it is a separate CAD evidence class and licence must be explicit before use.",
+      "currentState": "project/repository located; explicit dataset/repository licence not yet captured"
+    }
+  ],
+  "mechanismReviewStatus": {
+    "strongCanonicalReReviewCandidates": ["fibre-breakage-retained-length", "liquid-silicone-rubber", "moisture-drying-degradation", "recyclate-process-variability"],
+    "improvedButStillPreferMoreIndependentEvidence": ["runner-gate-multicavity-imbalance", "hot-runner-actual-behaviour"],
+    "subfamilyCaution": ["fluid-assisted-moulding: water evidence must not automatically promote gas/projectile subfamilies"]
+  },
+  "doNotOptimizeFor": ["raw discovery count", "duplicate mirrors", "multiple papers from the same experiment", "simulation volume counted as measured evidence", "metadata sample counts without delivered files", "generic polymer property tables in place of exact supplier-grade documents", "synthetic/LLM QA counted as learner or engineering validation"],
+  "boundary": "This queue does not authorize collection from private systems, production-control actions, or redistribution of restricted data."
+}

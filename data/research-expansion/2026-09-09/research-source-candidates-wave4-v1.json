@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "reviewed": "2026-09-09",
+  "boundary": "High-value net-new acquisition/study candidates. Article-backed measurements do not become canonical raw-data families until exact data payloads/appendices are retrieved, fingerprinted, rights-reviewed and semantically profiled.",
+  "sources": [
+    {
+      "id": "MM-DATA-087",
+      "name": "LEGO six-machine-family injection-moulding energy measurement appendix",
+      "priority": "P0",
+      "sourceType": "industrial_cross_machine_energy_measurements",
+      "independenceFamily": "LEGO_SDU_energy_2026",
+      "source": "https://doi.org/10.1016/j.jclepro.2026.148574",
+      "institutionalOpenAccess": "https://portal.findresearcher.sdu.dk/en/publications/closing-the-lca-data-gap-early-prediction-of-injection-moulding-e-2/",
+      "reportedScale": {"steadyStateMeasurements": 275, "machineFamilies": 6, "industrialPartner": "LEGO Group"},
+      "reportedFields": ["machine type", "machine size", "cycle time", "shot weight", "mean machine power", "specific energy consumption / normalized energy metrics"],
+      "reportedPerformance": {"adjustedR2MeanMachinePower": 0.874, "MAPE_percent": 8.49},
+      "dataAvailability": "Publisher states research data are shared in Appendix 1; SDU hosts the final published version under CC BY.",
+      "value": "Excellent independent cross-machine-family industrial energy baseline, substantially more decision-relevant than another single-machine energy trace.",
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "requiresExactAppendixExtractionAndFingerprint": true},
+      "nextAction": "Retrieve the CC BY final PDF/Appendix 1 through a supported route; isolate literal research-data rows from model outputs; fingerprint and profile the 275 measurements."
+    },
+    {
+      "id": "MM-DATA-088",
+      "name": "Seal-less active vacuum venting measured injection-moulding study",
+      "priority": "P0-EVIDENCE",
+      "sourceType": "publisher_verified_primary_measured_article",
+      "independenceFamily": "Mifsud_Rochman_Refalo_vacuum_venting_2026",
+      "source": "https://doi.org/10.1016/j.jmapro.2026.05.017",
+      "reportedEvidence": ["short-shot analysis", "in-mould sensing", "cycle time", "energy consumption", "sink-mark depth", "burn-mark occurrence", "active-vacuum vs passive/no-venting comparison"],
+      "reportedOutcomes": ["23% cycle-time reduction", "96.9 cycles/hour", "15% energy reduction", ">60% sink-mark-depth reduction", "burn marks eliminated in reported high-speed trials"],
+      "value": "Strong modern measured evidence for venting/air-entrapment diagnosis with simultaneous quality, cycle and energy outcomes.",
+      "access": {"state": "article-published-raw-dataset-not-confirmed"},
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0},
+      "nextAction": "Check supplementary/source-data release and use aggregate findings for venting mechanism review meanwhile."
+    },
+    {
+      "id": "MM-DATA-089",
+      "name": "Micro-injection rapid-tooling in-line pressure and mechanical-property study",
+      "priority": "P1-REQUEST",
+      "sourceType": "open_article_request_data",
+      "independenceFamily": "Warwick_microIM_rapid_tooling_2026",
+      "source": "https://doi.org/10.1016/j.aime.2025.100179",
+      "reportedEvidence": ["20 mg micro-moulding cavity", "metal vs material-jetted rapid tooling", "in-line injection-pressure profiles", "process variation", "mechanical properties", "simulation comparison"],
+      "dataAvailability": "Data will be made available on request.",
+      "value": "Independent measured tooling-thermal/process-dynamics family linking pressure signatures to final mechanical response.",
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "authorizationOrAuthorReleaseRequired": true},
+      "nextAction": "Request the in-line pressure and mechanical-result data under explicit reuse terms."
+    },
+    {
+      "id": "MM-DATA-090",
+      "name": "Virgin/recycled glass-fibre SMA injection-moulding process dataset",
+      "priority": "P1",
+      "sourceType": "publisher_verified_measured_recyclate_process_study",
+      "independenceFamily": "CIRP_SMA_recycling_2025",
+      "source": "https://doi.org/10.1016/j.procir.2025.01.024",
+      "reportedScale": {"modelDataPoints": 6650, "materialConditions": ["virgin glass-fibre SMA", "recycled glass-fibre SMA", "mixture"]},
+      "reportedEvidence": ["mechanical characterisation", "rheological characterisation", "smallest cushion volume", "specific switching pressure", "process conditions", "material composition"],
+      "value": "Adds a non-PP recyclate/reinforced-material process family and supports process-transfer evidence under material recycling.",
+      "access": {"state": "open-article-exact-underlying-data-release-to-check"},
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0},
+      "nextAction": "Locate the exact 6,650-point source table/repository or request it from authors; separate physical measurements from ANN-expanded/derived values."
+    },
+    {
+      "id": "MM-DATA-091",
+      "name": "Micro-injection nominal-versus-actual machine-condition validation study",
+      "priority": "P1",
+      "sourceType": "publisher_verified_primary_measured_article",
+      "independenceFamily": "Trotta_Stampone_Tosello_microIM_2026",
+      "source": "https://doi.org/10.1016/j.jmapro.2026.06.019",
+      "reportedEvidence": ["POM miniaturized tensile specimen", "short-shot/injected-volume tests", "mould temperature", "melt temperature", "injection speed", "sensor-measured actual conditions", "injected mass", "simulation comparison"],
+      "value": "Direct evidence that nominal commands can differ from measured machine conditions enough to affect simulation/quality interpretation; useful for command-versus-actual semantics.",
+      "access": {"state": "open-article-raw-data-release-not-confirmed"},
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0},
+      "nextAction": "Inspect supplementary/source-data links and retain nominal-versus-measured fields separately if raw data become available."
+    }
+  ]
+}

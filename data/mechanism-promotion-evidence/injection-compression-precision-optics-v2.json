@@ -1,0 +1,16 @@
+{
+  "schema": 2,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "mechanismId": "injection-compression-precision-optics",
+  "registryTarget": "data/evidence-coverage-v1.json",
+  "promotionOverlayTarget": "data/evidence-promotion-overlay-v2.json",
+  "primaryMeasuredRegistryTarget": "data/primary-measured-evidence-registry-v1.json",
+  "authorMetadataTarget": "data/primary-measured-promotion-authors-v1.json",
+  "promotionRuleSnapshot": {"minimumIndependentPublisherVerifiedPrimaryMeasured":2,"requiresMeasuredSignals":true,"requiresPhysicalQualityOutcome":true,"requiresExperimentalContext":true,"requiresExplicitLimitation":true,"predictionIsNotCausation":true,"universalProcessRecipesAllowed":false},
+  "eligibility": {"independentPublisherVerifiedPrimaryMeasured":2,"meetsMinimumIndependentStudies":true,"measuredSignalsPresent":true,"physicalQualityOutcomesPresent":true,"experimentalContextPresent":true,"explicitLimitationsPresent":true,"eligibleForPromotion":true,"registryPromotionApplied":true},
+  "qualifyingDois": ["10.1002/pat.6166","10.1002/pen.23429"],
+  "supportingDois": ["10.1007/s12541-012-0286-x"],
+  "independenceRationale": "These are independent precision-optics injection-compression programmes with different authors, polymers and geometries. A 2023 plastic lens-array experiment measures optical path difference, displacement, birefringence and imaging quality, while a 2013 polystyrene and polycarbonate disk programme experimentally measures residual birefringence alongside simulation. They are separate experiments, not duplicate publications or re-analysis of the same data.",
+  "promotionClaim": "Promote the mechanism-level statement that measured injection-compression and thermal history can alter residual birefringence, dimensional response and optical physical part-quality, requiring independent optical or stress metrology. Do not promote compression gap, timing, temperature, pressure, birefringence or displacement values as universal production settings or acceptance limits."
+}

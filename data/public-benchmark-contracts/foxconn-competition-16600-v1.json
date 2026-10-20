@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "datasetId": "foxconn-competition-16600",
+  "status": "blocked-mirror-rights",
+  "source": {"mirror": "https://github.com/dengxq888/Injection-Molding-Dataset", "originalSource": "4th Industrial Big Data Innovation Competition, Task 2 — Virtual Metrology and Process Optimization for Injection Molding", "provider": "Foxconn Industrial Internet Co., Ltd.", "datasetLicense": null, "automatedRetrievalAllowed": false, "rawRedistributionAllowed": false},
+  "experimentContext": {"cycles": 16600, "train": 9960, "test": 6640, "signalFamilies": ["24 high-frequency sensor channels", "86 machine-status parameters", "81 process-setting parameters"], "quality": ["three dimensional measurements"], "sampling": "high-frequency traces plus scalar process/status/settings"},
+  "rightsGate": {"publicMirrorDoesNotProveOriginalCompetitionRights": true, "mirrorStatementOriginalOfficialDownloadUnavailable": true, "independentReusersTreatDataAsThirdPartyCompetitionData": true, "rawFilesMustNotBeDownloadedByAutomationUntilOriginalTermsAreCaptured": true},
+  "evidenceBoundary": "The public mirror explicitly says the original data no longer appear to have an official download link. Independent research repositories describe the data as third-party competition data and avoid redistributing it. MouldMaster therefore preserves the metadata but does not ingest or redistribute the mirror."
+}

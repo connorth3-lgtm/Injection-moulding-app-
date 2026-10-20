@@ -1,0 +1,219 @@
+name: Microsoft Store MSIX
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+  actions: read
+
+concurrency:
+  group: microsoft-store-msix-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  store-package:
+    runs-on: windows-latest
+    env:
+      MM_STORE_IDENTITY_NAME: ${{ vars.MM_STORE_IDENTITY_NAME }}
+      MM_STORE_PUBLISHER: ${{ vars.MM_STORE_PUBLISHER }}
+      MM_STORE_PUBLISHER_DISPLAY_NAME: ${{ vars.MM_STORE_PUBLISHER_DISPLAY_NAME }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Require governed current-main source
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          python tools/verify_production_source.py
+          --repository "${{ github.repository }}"
+          --source-sha "${{ github.sha }}"
+          --require-native-protection
+      - name: Require Partner Center identity
+        shell: pwsh
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:MM_STORE_IDENTITY_NAME)) {
+            Write-Error 'Repository variable MM_STORE_IDENTITY_NAME is required. Copy Identity/Name exactly from Microsoft Partner Center.'
+          }
+          if ([string]::IsNullOrWhiteSpace($env:MM_STORE_PUBLISHER)) {
+            Write-Error 'Repository variable MM_STORE_PUBLISHER is required. Copy Identity/Publisher exactly from Microsoft Partner Center.'
+          }
+          if ([string]::IsNullOrWhiteSpace($env:MM_STORE_PUBLISHER_DISPLAY_NAME)) {
+            Write-Error 'Repository variable MM_STORE_PUBLISHER_DISPLAY_NAME is required. Copy PublisherDisplayName exactly from Microsoft Partner Center.'
+          }
+          if ($env:MM_STORE_IDENTITY_NAME -notmatch '^[A-Za-z0-9.-]{3,50}$') {
+            Write-Error 'MM_STORE_IDENTITY_NAME does not satisfy the MSIX identity-name format.'
+          }
+          if ($env:MM_STORE_PUBLISHER -notmatch '^CN=.+') {
+            Write-Error 'MM_STORE_PUBLISHER must be the Partner Center Identity/Publisher value (normally beginning with CN=).'
+          }
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.12.0'
+          cache: 'npm'
+          cache-dependency-path: |
+            desktop/electron/package-lock.json
+            desktop/electron/msix-toolchain/package-lock.json
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Install exact locked dependencies
+        working-directory: desktop/electron
+        run: npm ci --no-audit --fund=false
+      - name: Install exact locked MSIX toolchain
+        working-directory: desktop/electron/msix-toolchain
+        run: npm ci --no-audit --fund=false
+      - name: Verify exact locked MSIX builder
+        working-directory: desktop/electron
+        run: node scripts/run-msix-builder.cjs --verify-toolchain
+      - name: Generate verified application evidence
+        working-directory: desktop/electron
+        run: |
+          npm run integrity
+          npm run licenses
+          npm run sbom
+          npm run qa
+      - name: Validate release and documentation coherence
+        working-directory: .
+        run: python qa_release_docs.py
+      - name: Validate Microsoft Store submission readiness
+        working-directory: .
+        run: python qa_store_submission.py
+      - name: Validate maturity runtime and release boundaries
+        working-directory: .
+        run: |
+          python qa_runtime_hardening.py
+          python qa_runtime_v2.py
+          python qa_assessment_runtime_v2.py
+          python qa_assessment_multimodal.py
+          python qa_lesson_deep_authoring_v2.py
+          python qa_authorised_site_pilot_framework.py
+          python qa_accessibility_hardening.py
+      - name: Validate material behaviour learning
+        working-directory: .
+        run: python qa_material_behaviour.py
+      - name: 100-pass data and assessment audit
+        working-directory: .
+        run: python qa_100_pass.py
+      - name: Deep question and answer QA
+        working-directory: .
+        run: python qa_question_deep_dive.py
+      - name: Validate assessment quality, blueprint and analytics
+        working-directory: .
+        run: python qa_assessment_quality.py
+      - name: Validate question evidence approval
+        working-directory: .
+        run: python qa_assessment_evidence.py
+      - name: Validate evidence maturity seven-gap deep dive
+        working-directory: .
+        run: python qa_evidence_maturity.py
+      - name: Validate guided process-data diagnostics
+        working-directory: .
+        run: python qa_process_data_diagnostics.py
+      - name: Validate 50-case process-data deep dive
+        working-directory: .
+        run: python qa_process_data_deep_dive_50.py
+      - name: Validate 20-pass 200-case process-data atlas
+        working-directory: .
+        run: python qa_process_data_20_pass.py
+      - name: Validate cross-library 264-case process-data sweep
+        working-directory: .
+        run: python qa_process_data_sweep.py
+      - name: Validate 50-pass real measured-evidence audit
+        working-directory: .
+        run: python qa_measured_evidence_50_pass.py
+      - name: Validate local real-data intake privacy
+        working-directory: .
+        run: python qa_process_data_local_intake.py
+      - name: Validate real process-data pilot readiness
+        working-directory: .
+        run: python qa_real_process_data_pilot.py
+      - name: Validate learner experience progression and mobile flow
+        working-directory: .
+        run: python qa_learning_experience.py
+      - name: Validate canonical app shell registry
+        working-directory: .
+        run: python qa_app_shell_registry.py
+      - name: Validate Mould Master evidence workspace
+        working-directory: .
+        run: python qa_mould_master_workspace.py
+      - name: Validate curriculum theory-practice-evidence integration
+        working-directory: .
+        run: python qa_curriculum_integration.py
+      - name: Validate specialist curriculum extensions
+        working-directory: .
+        run: python qa_specialist_curriculum.py
+      - name: Validate privacy-preserving learner analytics
+        working-directory: .
+        run: python qa_learning_analytics.py
+      - name: Validate learner-scoped assessment storage
+        working-directory: .
+        run: python qa_assessment_storage_scope.py
+      - name: Validate stable spaced-review IDs
+        working-directory: .
+        run: python qa_stable_review_bridge.py
+      - name: Validate final assessment revision and timing hardening
+        working-directory: .
+        run: python qa_assessment_final_hardening.py
+      - name: Validate assessment interaction and readability
+        working-directory: .
+        run: python qa_assessment_ux.py
+      - name: Validate authoritative source freshness metadata
+        working-directory: .
+        run: python qa_source_freshness.py
+      - name: Validate research DOI freshness metadata
+        working-directory: .
+        run: python qa_research_source_freshness.py
+      - name: Validate reference data and sources
+        working-directory: .
+        run: python qa_reference.py
+      - name: Validate plugin-backed research
+        working-directory: .
+        run: python qa_research.py
+      - name: Generate MSIX artwork from open MouldMaster icon
+        shell: pwsh
+        working-directory: desktop/electron
+        run: ./scripts/generate-msix-assets.ps1
+      - name: Build x64 + arm64 Store upload package
+        shell: pwsh
+        working-directory: desktop/electron
+        run: |
+          node scripts/run-msix-builder.cjs --win msix --x64 --arm64 `
+            --config.msix.applicationId='MouldMasterAcademy' `
+            --config.msix.identityName="$env:MM_STORE_IDENTITY_NAME" `
+            --config.msix.publisher="$env:MM_STORE_PUBLISHER" `
+            --config.msix.publisherDisplayName="$env:MM_STORE_PUBLISHER_DISPLAY_NAME" `
+            --config.msix.displayName='MouldMaster Academy' `
+            --config.msix.setBuildNumber=true `
+            --config.msix.minVersion='10.0.19041.0' `
+            --config.msix.createMsixbundle=true `
+            --config.msix.createMsixupload=true `
+            --config.msix.enforcePackageIntegrity=true `
+            --config.msix.artifactName='MouldMaster-Academy-Store-${buildVersion}.${ext}'
+      - name: Record source and SHA-256
+        shell: pwsh
+        run: |
+          git rev-parse HEAD | Set-Content 'desktop/electron/dist/SOURCE_COMMIT.txt'
+          Get-ChildItem 'desktop/electron/dist' -File | Where-Object { $_.Extension -in '.msix','.msixbundle','.msixupload' } | Get-FileHash -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  $($_.Path | Split-Path -Leaf)" } | Set-Content 'desktop/electron/dist/SHA256SUMS-STORE.txt'
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: mouldmaster-microsoft-store-msix
+          path: |
+            desktop/electron/dist/*.msix
+            desktop/electron/dist/*.msixbundle
+            desktop/electron/dist/*.msixupload
+            desktop/electron/dist/SHA256SUMS-STORE.txt
+            desktop/electron/dist/SOURCE_COMMIT.txt
+            desktop/electron/generated/integrity.json
+            desktop/electron/generated/dependency-licenses.json
+            desktop/electron/generated/sbom.cdx.json
+            assessment-quality-report.json
+            evidence-maturity-report.json
+            process-data-sweep-report.json
+            measured-evidence-50-pass-report.json
+            source-freshness-report.json
+            research-source-freshness-report.json
+          if-no-files-found: error

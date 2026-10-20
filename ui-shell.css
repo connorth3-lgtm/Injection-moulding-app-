@@ -1,0 +1,708 @@
+/* MouldMaster first-paint compact shell — 2026.09.06
+   Loaded in <head> so the learner UI never paints the legacy roomy layout first. */
+:root{--mm-mobile-nav-clearance:104px;--mm-control-size:44px;--mm-control-large:48px;--mm-radius-sm:12px;--mm-radius-md:14px;--mm-radius-lg:16px;--shadow:0 7px 22px rgba(0,0,0,.18)}
+
+/* One visible page title on self-titled learner views. */
+body[data-mm-view="path"] .topbar>div:first-child,
+body[data-mm-view="scenarios"] .topbar>div:first-child,
+body[data-mm-view="lesson"] .topbar>div:first-child{display:none!important}
+body[data-mm-view="path"] .topbar,
+body[data-mm-view="scenarios"] .topbar,
+body[data-mm-view="lesson"] .topbar{justify-content:flex-end!important}
+
+/* Retired gamification and legacy Home blocks must never reach first paint. The
+   runtime also removes these nodes, but hiding them here prevents mission,
+   welcome, standards, XP/rank and achievement flashes during startup. */
+#xpPop,.xp-pop,.achievement-grid,.fun-settings,.fun-dashboard .level-card,#profileMini .fun-hud{display:none!important}
+#dashboard .fun-dashboard,
+#dashboard .friendly-hero,
+#dashboard .hero,
+#dashboard .region-banner{display:none!important}
+.card{border-radius:14px!important;border-color:#263b58!important;box-shadow:var(--shadow)!important;background:linear-gradient(180deg,rgba(18,32,52,.96),rgba(13,25,42,.96))!important}
+.main{padding-top:20px}
+html.mm-book-instant-scroll,html.mm-book-instant-scroll body,html.mm-book-instant-scroll #mainContent,html.mm-book-instant-scroll .main,html.mm-book-instant-scroll #mmBookView{scroll-behavior:auto!important}
+.topbar{margin-bottom:16px!important}
+.topbar h1{line-height:1.12}
+.hero{gap:12px!important}
+.hero-main{padding:22px!important;min-height:220px!important}
+.hero-main h2{font-size:clamp(29px,4vw,34px)!important;margin-bottom:9px!important}
+.hero-main p{line-height:1.58!important}
+.kpis{gap:10px!important;margin:13px 0!important}.kpi{padding:14px!important}
+.section-head{margin:22px 0 10px!important}.grid,.grid2{gap:12px!important}.grid4{gap:10px!important}
+.course-card{min-height:220px!important;padding:16px!important}
+.lesson-body{padding:22px!important}
+.lesson-read-block,.mm-reading-guide,.question,.exam-card .question,.mm-teach,.mm-ref-panel,.lesson-source-box,.question-reference{box-shadow:none!important}
+.lesson-read-block,.mm-teach,.mm-ref-panel,.lesson-source-box,.question-reference{border-radius:12px!important}
+.mm-reading-guide{border-width:1px!important;border-radius:12px!important;padding:14px 16px!important}
+.lesson-read-primary{border-width:1px!important;box-shadow:none!important}
+.fun-dashboard.mm-daily-only{grid-template-columns:1fr!important;margin-bottom:14px!important}
+.fun-dashboard.mm-daily-only .mission-card{min-height:0!important;padding:18px!important}
+
+/* Primary Learn / Practice hubs. These rules live in an external stylesheet on
+   purpose: the app CSP blocks runtime-created <style> elements. */
+.mm-primary-hub{max-width:1040px;margin:0 auto;display:grid!important;gap:18px!important}
+.mm-primary-hub-head{padding:2px 2px 0!important}
+.mm-primary-hub-head .eyebrow{display:block!important;margin-bottom:5px!important}
+.mm-primary-hub-head h1{margin:0!important;font-size:clamp(29px,4vw,39px)!important;line-height:1.08!important;letter-spacing:-.025em!important}
+.mm-primary-hub-head p{margin:7px 0 0!important;color:#aebfd4!important;line-height:1.5!important;max-width:700px!important;font-size:15px!important}
+.mm-primary-hub .mm-hub-continue{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:22px!important;align-items:end!important;padding:23px 24px!important;border:1px solid #41617f!important;border-radius:18px!important;background:linear-gradient(180deg,#142b43,#10243a)!important;box-shadow:none!important;text-align:left!important}
+.mm-primary-hub .mm-hub-continue-copy .eyebrow{display:block!important;margin-bottom:7px!important;font-size:11px!important;letter-spacing:.13em!important}
+.mm-primary-hub .mm-hub-continue h2{margin:0!important;font-size:clamp(24px,3.4vw,32px)!important;line-height:1.15!important;letter-spacing:-.018em!important}
+.mm-primary-hub .mm-hub-continue p{margin:8px 0 0!important;color:#bfd0e1!important;line-height:1.52!important;max-width:700px!important;font-size:15px!important}
+.mm-primary-hub .mm-hub-progress{display:grid!important;grid-template-columns:minmax(0,320px) auto!important;align-items:center!important;gap:10px!important;margin-top:14px!important;color:#9eb3ca!important;font-size:12px!important}
+.mm-primary-hub .mm-hub-progress .mini-bar{width:100%!important;max-width:320px!important;margin:0!important}
+.mm-primary-hub .mm-hub-progress strong{color:#dce8f6!important;font-size:12px!important;white-space:nowrap!important}
+.mm-primary-hub .mm-hub-continue-action{min-width:185px!important;min-height:48px!important;padding:11px 17px!important;font-size:15px!important;font-weight:800!important}
+.mm-primary-hub .mm-hub-section{display:grid!important;gap:10px!important}
+.mm-primary-hub .mm-hub-section-head{display:flex!important;align-items:end!important;justify-content:space-between!important;gap:12px!important;padding:0 2px!important}
+.mm-primary-hub .mm-hub-section-head h2{margin:0!important;font-size:18px!important;line-height:1.25!important}
+.mm-primary-hub .mm-hub-section-head p{margin:0!important;color:#8299b2!important;font-size:12px!important}
+.mm-primary-hub .mm-hub-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:11px!important}
+.mm-primary-hub .mm-hub-tile{appearance:none!important;-webkit-appearance:none!important;width:100%!important;min-width:0!important;height:auto!important;min-height:142px!important;margin:0!important;padding:18px 19px!important;border:1px solid #304b68!important;border-radius:15px!important;background:linear-gradient(180deg,#11243a,#0e1f33)!important;color:#eef6ff!important;text-align:left!important;white-space:normal!important;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:flex-start!important;cursor:pointer!important;box-shadow:none!important;font:inherit!important;line-height:1.3!important;overflow:hidden!important}
+.mm-primary-hub .mm-hub-tile:hover{border-color:#52779a!important;background:linear-gradient(180deg,#152c45,#10243a)!important}
+.mm-primary-hub .mm-hub-tile:focus-visible{outline:2px solid #8fe8d6!important;outline-offset:2px!important}
+.mm-primary-hub .mm-hub-tile .eyebrow{display:block!important;width:100%!important;margin:0 0 6px!important;font-size:10px!important;line-height:1.25!important;letter-spacing:.12em!important;text-align:left!important}
+.mm-primary-hub .mm-hub-tile b{display:block!important;width:100%!important;margin:0!important;font-size:19px!important;line-height:1.22!important;text-align:left!important;color:#eef6ff!important}
+.mm-primary-hub .mm-hub-tile small{display:block!important;width:100%!important;margin:7px 0 0!important;color:#aebfd4!important;font-size:13px!important;line-height:1.45!important;max-width:560px!important;text-align:left!important;font-weight:500!important}
+.mm-primary-hub .mm-hub-tile-action{display:block!important;width:100%!important;margin-top:auto!important;padding-top:14px!important;color:#8fe8d6!important;font-size:12px!important;line-height:1.25!important;font-weight:850!important;text-align:left!important}
+.mm-primary-hub .mm-hub-assessment{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:18px!important;padding:16px 18px!important;border:1px solid #2c455f!important;border-radius:14px!important;background:#0e1f32!important}
+.mm-primary-hub .mm-hub-assessment-copy b{display:block!important;font-size:15px!important}
+.mm-primary-hub .mm-hub-assessment-copy small{display:block!important;margin-top:4px!important;color:#9eb2c9!important;line-height:1.4!important}
+.mm-primary-hub .mm-hub-assessment button{flex:0 0 auto!important;min-height:42px!important;padding:9px 14px!important}
+.mm-hub-detail-back{display:flex!important;align-items:center!important;gap:10px!important;margin:0 0 15px!important;padding:12px 14px!important;border:1px solid #304a68!important;border-radius:14px!important;background:#0f1f34!important;color:#dce8f6!important}
+.mm-hub-detail-back button{border:0!important;background:transparent!important;color:#8fe8d6!important;font-weight:800!important;padding:0!important}
+.mm-hub-detail-back span{color:#9fb1c7!important;font-size:13px!important}
+.mm-hub-picker-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;margin-top:14px!important}
+.mm-hub-picker-grid button{min-height:100px!important;padding:15px!important;border:1px solid #35516f!important;border-radius:14px!important;background:#11243a!important;color:#edf5ff!important;text-align:left!important;white-space:normal!important}
+.mm-hub-picker-grid button b{display:block!important;font-size:15px!important;margin-bottom:5px!important}
+.mm-hub-picker-grid button small{display:block!important;color:#a9bdd4!important;line-height:1.45!important}
+.mm-question-centre{max-width:980px!important;margin:0 auto!important}
+.mm-question-centre-card{padding:18px!important;border:1px solid #2f4b68!important;border-radius:16px!important;background:linear-gradient(180deg,#0f2136,#0c1b2d)!important}
+.mm-question-centre-card>span.eyebrow{display:block!important;margin-bottom:5px!important}
+.mm-question-centre-card>h2{margin:0!important;font-size:22px!important}
+.mm-question-centre-card>p.muted{margin:7px 0 0!important;max-width:760px!important;line-height:1.5!important}
+.mm-question-centre .mm-hub-picker-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.mm-question-centre .mm-hub-picker-grid button:first-child{grid-column:1/-1!important;min-height:112px!important;background:linear-gradient(145deg,#15304a,#10243a)!important;border-color:#4d7698!important}
+@media(max-width:700px){
+  .mm-primary-hub .mm-hub-assessment{display:block!important}
+  .mm-primary-hub .mm-hub-assessment button{width:100%!important;margin-top:10px!important}
+  .mm-question-centre-card{padding:14px!important}
+  .mm-question-centre .mm-hub-picker-grid{grid-template-columns:1fr!important}
+  .mm-question-centre .mm-hub-picker-grid button:first-child{grid-column:auto!important}
+}
+#dashboard .mm-dashboard-registry>.mm-dashboard-slot:empty{display:none!important}
+
+@media(max-width:700px){
+  :root{--mm-mobile-nav-clearance:104px}
+  html{scroll-padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))}
+  body{padding-bottom:0!important}
+  .main{padding:12px 12px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}
+  .topbar{position:relative!important;top:auto!important;z-index:1!important;background:transparent!important;backdrop-filter:none!important;gap:8px!important;margin-bottom:10px!important;padding:0 0 4px!important;align-items:flex-start!important}
+  .topbar h1{font-size:clamp(23px,7vw,27px)!important}.topbar p{font-size:12px!important;line-height:1.4!important;margin-top:3px!important}
+
+  /* References belong under More on mobile. Hide both legacy launchers before
+     runtime docking so neither can flash over the canonical bottom navigation. */
+  #mm-src-open,#mmrd-open{display:none!important;visibility:hidden!important;pointer-events:none!important}
+
+  /* Keep only a compact Search affordance in the top bar. Continue is already the
+     primary Home/Learn action, so duplicating it here creates noise. */
+  #app .top-actions{width:auto!important;gap:6px!important;flex:0 0 auto!important;align-items:flex-start!important;margin-left:auto!important}
+  #app .top-actions>*{flex:0 0 auto!important}
+  #app .top-actions #continueBtn{display:none!important}
+  #app #searchBtn{flex:0 0 var(--mm-control-size)!important;width:var(--mm-control-size)!important;min-width:var(--mm-control-size)!important;height:var(--mm-control-size)!important;min-height:var(--mm-control-size)!important;padding:0!important;font-size:0!important;display:grid!important;place-items:center!important;border-radius:var(--mm-radius-sm)!important}
+  #app #searchBtn::before{content:"";width:14px;height:14px;border:2px solid currentColor;border-radius:50%;display:block}#app #searchBtn::after{content:"";width:7px;height:2px;background:currentColor;border-radius:999px;position:absolute;transform:translate(8px,8px) rotate(45deg);transform-origin:left center}
+
+  .mobile-nav{position:fixed!important;left:0!important;right:0!important;bottom:0!important;background:rgba(7,16,28,.97)!important;border-top:1px solid #263b58!important;padding:6px 8px calc(6px + env(safe-area-inset-bottom))!important;box-shadow:0 -5px 18px rgba(0,0,0,.22),0 56px 0 #07101c!important}
+  .mobile-nav button{min-height:48px!important;padding:6px 4px!important}
+
+  #dashboard{padding-bottom:8px!important}
+  #dashboard .hero-main{padding:16px!important;min-height:0!important}
+  #dashboard .hero-main h2{font-size:clamp(25px,7.8vw,29px)!important;margin-top:7px!important}
+  #dashboard .hero-main p{font-size:13px!important;line-height:1.48!important;margin-bottom:8px!important}
+  #dashboard .hero-main .hero-buttons{margin-top:12px!important}
+  #dashboard .hero-main .hero-buttons>.secondary,
+  #dashboard .hero-main .hero-buttons>.ghost{display:none!important}
+
+  /* Simulator is in More and troubleshooting is the persistent Practice tab. */
+  #dashboard .kpis{display:none!important}
+
+  /* Progress stays visible but becomes one compact strip instead of a tall card. */
+  #dashboard .hero>.statbox{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:0!important;padding:8px 6px!important}
+  #dashboard .hero>.statbox .statline{padding:8px 6px!important;border:0!important;border-right:1px solid #263954!important;min-width:0!important}
+  #dashboard .hero>.statbox .statline:last-child{border-right:0!important}
+  #dashboard .hero>.statbox .statline b{font-size:20px!important;margin-top:2px!important}
+  #dashboard .hero>.statbox .statline .tiny{font-size:10px!important;line-height:1.25!important}
+
+  #dashboard .section-head{margin:16px 0 8px!important}
+  #dashboard .section-head p{display:none!important}
+  #dashboard .section-head>button{display:none!important}
+  #dashboard .grid{gap:9px!important}
+  #dashboard .grid .course-card:nth-child(n+4){display:none!important}
+  #dashboard .course-card{min-height:0!important;padding:12px!important}
+  #dashboard .course-card p{margin:5px 0!important;line-height:1.4!important}
+
+  /* Daily practice remains available, but as a small action card rather than a
+     second hero competing with the learner's primary next step. */
+  #dashboard .fun-dashboard.mm-daily-only{margin:8px 0 10px!important}
+  #dashboard .fun-dashboard.mm-daily-only .mission-card{padding:12px 14px!important}
+  #dashboard .fun-dashboard.mm-daily-only .mission-card h2{font-size:18px!important;margin:5px 0!important}
+  #dashboard .fun-dashboard.mm-daily-only .mission-card p{display:none!important}
+  #dashboard .fun-dashboard.mm-daily-only .mission-card .hero-buttons{margin-top:8px!important}
+  #dashboard .fun-dashboard.mm-daily-only .mission-card .hero-buttons>.ghost{display:none!important}
+
+  #dashboard .mm-specialist-strip{margin-bottom:10px!important}
+  .course-card{min-height:0!important;padding:14px!important}
+  .lesson-body{padding:14px!important}
+  .section-head{margin:18px 0 9px!important}
+  .toast{bottom:calc(84px + env(safe-area-inset-bottom))!important}
+
+  /* Learn / Practice must remain readable under the strict CSP on small screens. */
+  .mm-primary-hub{gap:14px!important}
+  .mm-primary-hub-head{padding:0!important}
+  .mm-primary-hub-head .eyebrow{margin-bottom:4px!important}
+  .mm-primary-hub-head h1{font-size:28px!important}
+  .mm-primary-hub-head p{font-size:14px!important;line-height:1.42!important;margin-top:6px!important}
+  .mm-primary-hub .mm-hub-continue{grid-template-columns:1fr!important;gap:13px!important;padding:16px!important;border-radius:16px!important}
+  .mm-primary-hub .mm-hub-continue h2{font-size:24px!important;line-height:1.16!important}
+  .mm-primary-hub .mm-hub-continue p{font-size:14px!important;line-height:1.42!important}
+  .mm-primary-hub .mm-hub-progress{grid-template-columns:minmax(0,1fr) auto!important;gap:8px!important;margin-top:11px!important}
+  .mm-primary-hub .mm-hub-progress .mini-bar{max-width:none!important}
+  .mm-primary-hub .mm-hub-progress strong{font-size:12px!important}
+  .mm-primary-hub .mm-hub-continue-action{width:100%!important;min-width:0!important;min-height:48px!important}
+  .mm-primary-hub .mm-hub-section{gap:8px!important}
+  .mm-primary-hub .mm-hub-section-head{align-items:flex-start!important;flex-direction:column!important;gap:2px!important;padding:0!important}
+  .mm-primary-hub .mm-hub-section-head h2{font-size:22px!important;line-height:1.2!important}
+  .mm-primary-hub .mm-hub-section-head p{display:none!important}
+  .mm-primary-hub .mm-hub-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  .mm-primary-hub .mm-hub-tile{min-height:96px!important;padding:13px!important;border-radius:var(--mm-radius-md)!important}
+  .mm-primary-hub .mm-hub-tile .eyebrow{display:none!important}
+  .mm-primary-hub .mm-hub-tile b{font-size:18px!important;line-height:1.18!important}
+  .mm-primary-hub .mm-hub-tile small{display:none!important}
+  .mm-primary-hub .mm-hub-tile-action{display:none!important}
+  .mm-primary-hub .mm-hub-assessment{align-items:stretch!important;flex-direction:column!important;gap:10px!important;padding:14px 15px!important}
+  .mm-primary-hub .mm-hub-assessment button{width:100%!important}
+  .mm-hub-picker-grid{grid-template-columns:1fr!important}
+  .mm-hub-picker-grid button{min-height:0!important}
+
+  html body[data-mm-view="profile"] .topbar{gap:8px!important;margin-bottom:10px!important;padding:0 0 4px!important}
+  html body[data-mm-view="profile"] .main{padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}
+  html body[data-mm-view="profile"] #profile{padding-bottom:10px!important}
+  html body[data-mm-view="profile"] #profile>*:last-child{margin-bottom:10px!important}
+  html.mm-ios-webkit body[data-mm-view="profile"] .main{padding-top:calc(12px + env(safe-area-inset-top))!important;padding-left:max(12px,env(safe-area-inset-left))!important;padding-right:max(12px,env(safe-area-inset-right))!important;padding-bottom:calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}
+  html.mm-ios-webkit .mobile-nav{padding-left:max(8px,env(safe-area-inset-left))!important;padding-right:max(8px,env(safe-area-inset-right))!important;padding-bottom:calc(6px + env(safe-area-inset-bottom))!important}
+}
+
+@media(min-width:701px) and (max-width:900px){
+  :root{--mm-mobile-nav-clearance:96px}
+  #app{grid-template-columns:1fr!important}
+  .sidebar{display:none!important}
+  .main{padding:18px 22px calc(var(--mm-mobile-nav-clearance) + env(safe-area-inset-bottom))!important}
+  .mobile-nav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;position:fixed!important;left:0!important;right:0!important;bottom:0!important;z-index:40!important;background:rgba(7,16,28,.97)!important;border-top:1px solid #263b58!important;padding:7px 10px calc(7px + env(safe-area-inset-bottom))!important;box-shadow:0 -10px 26px rgba(0,0,0,.25)!important}
+  .mobile-nav button{min-height:52px!important;border:0!important;background:transparent!important;color:#9eb1c3!important;padding:6px!important;border-radius:10px!important;display:grid!important;gap:2px!important;place-items:center!important;font-size:18px!important}
+  .mobile-nav button{min-width:0!important}
+  .mobile-nav button span{font-size:11px!important;overflow-wrap:anywhere!important}
+  .toast{bottom:calc(var(--mm-mobile-nav-clearance) + 12px + env(safe-area-inset-bottom))!important}
+  .mobile-nav button.active{color:#eafffa!important;background:rgba(29,61,78,.72)!important;box-shadow:inset 0 0 0 1px rgba(95,224,198,.16)!important}
+}
+
+/* Common modern phone widths keep a compact two-column layout but retain enough
+   explanation to distinguish similarly named learning/practice destinations.
+   Lock the eyebrow/action suppression here because later premium/mobile layers
+   may otherwise re-promote those secondary labels. */
+@media(min-width:381px) and (max-width:700px){
+  .mm-primary-hub .mm-hub-tile{min-height:122px!important}
+  html body .mm-primary-hub .mm-hub-tile .eyebrow{display:none!important}
+  html body .mm-primary-hub .mm-hub-tile small{display:-webkit-box!important;margin:6px 0 0!important;overflow:hidden!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2;line-clamp:2;max-height:2.9em!important;font-size:11px!important}
+  html body .mm-primary-hub .mm-hub-tile-action{display:none!important}
+}
+
+/* On the narrowest phones, a single column is easier to scan. Keep the cards
+   content-driven and restore a short explanation so they never become large,
+   empty-looking title slabs. */
+@media(max-width:380px){
+  .mm-primary-hub .mm-hub-grid{grid-template-columns:1fr!important;gap:10px!important}
+  .mm-primary-hub .mm-hub-tile{min-height:0!important;padding:14px 15px!important}
+  .mm-primary-hub .mm-hub-tile small{display:-webkit-box!important;margin:6px 0 0!important;overflow:hidden!important;-webkit-box-orient:vertical!important;-webkit-line-clamp:2;line-clamp:2;max-height:2.9em!important}
+}
+
+@media(max-width:390px){
+  #dashboard .hero>.statbox .statline{padding:7px 4px!important}
+  #dashboard .hero>.statbox .statline b{font-size:18px!important}
+  .mm-primary-hub-head h1{font-size:26px!important}
+  .mm-primary-hub .mm-hub-continue h2{font-size:22px!important}
+}
+
+/* Reference drawers are shell presentation; PWA runtime only controls behavior/state. */
+.mmsrc.mm-reference-drawer{background:transparent!important;align-items:flex-end!important;justify-content:flex-end!important;padding:12px!important;pointer-events:none!important}
+.mmsrc.mm-reference-drawer[data-open="1"]{display:flex!important}
+.mmsrc.mm-reference-drawer .mmsrc-panel{width:min(430px,calc(100vw - 24px))!important;max-height:min(72dvh,760px)!important;height:auto!important;border-radius:16px!important;pointer-events:auto!important;box-shadow:0 18px 52px rgba(0,0,0,.42)!important}
+.mmsrc.mm-reference-drawer .mmsrc-head{flex:0 0 auto!important}
+.mmsrc.mm-reference-drawer .mmsrc-body{min-height:0!important;overscroll-behavior:contain!important}
+.mmrd.mm-reference-data-drawer{background:transparent!important;align-items:flex-end!important;justify-content:flex-end!important;padding:12px!important;pointer-events:none!important}
+.mmrd.mm-reference-data-drawer[data-open="1"]{display:flex!important}
+.mmrd.mm-reference-data-drawer .mmrd-panel{width:min(520px,calc(100vw - 24px))!important;max-height:min(74dvh,800px)!important;height:auto!important;border-radius:16px!important;pointer-events:auto!important;box-shadow:0 18px 52px rgba(0,0,0,.42)!important}
+.mmrd.mm-reference-data-drawer .mmrd-head{flex:0 0 auto!important}
+.mmrd.mm-reference-data-drawer .mmrd-body{min-height:0!important;overscroll-behavior:contain!important}
+@media(max-width:680px){
+  .mmsrc.mm-reference-drawer{padding:6px 6px calc(82px + env(safe-area-inset-bottom))!important}
+  .mmsrc.mm-reference-drawer .mmsrc-panel{width:calc(100vw - 12px)!important;max-height:48dvh!important;border-radius:15px!important}
+  .mmsrc.mm-reference-drawer .mmsrc-head{padding-top:10px!important}
+  .mmrd.mm-reference-data-drawer,.mmrd.mm-reference-data-drawer[data-open="1"]{display:none!important;pointer-events:none!important}
+}
+
+
+/* Canonical app-shell registry geometry. Runtime measures the actual nav height;
+   static CSS owns presentation and clearance. */
+:root{--mm-mobile-nav-height:calc(70px + env(safe-area-inset-bottom));--mm-mobile-content-clearance:calc(var(--mm-mobile-nav-height) + 26px)}
+.mm-dashboard-registry{display:grid;gap:14px}.mm-dashboard-registry:empty{display:none}
+.mm-registry-nav-divider{height:1px;background:#20344d;margin:9px 8px}
+@media(max-width:700px){
+  html{scroll-padding-bottom:calc(var(--mm-mobile-content-clearance) + 12px)!important}
+  .main{padding-bottom:var(--mm-mobile-content-clearance)!important}
+  /* Do not feed the measured height back into the nav's own minimum height:\n     font scaling up AND down must resize the bar without getting stuck tall. */
+  .mobile-nav{min-height:calc(70px + env(safe-area-inset-bottom))!important;z-index:40!important}
+  .mobile-nav>button:not([data-view]):not([onclick*="openMobileMenu"]):not([data-mm-onclick*="openMobileMenu"]){display:none!important}
+  body[data-mm-view="dashboard"] #continueBtn{display:none!important}
+  .mm-mobile-actions{bottom:var(--mm-mobile-nav-height)!important;z-index:35!important;padding-bottom:9px!important}
+  #lesson .lesson-body{padding-bottom:calc(var(--mm-mobile-content-clearance) + 86px)!important}
+  .toast{bottom:calc(var(--mm-mobile-content-clearance) + 12px)!important}
+}
+
+
+/* Product-area dashboard presentation belongs to the canonical shell stylesheet. */
+.mm-product-areas{padding:18px}.mm-product-areas-head{display:flex;justify-content:space-between;gap:12px;align-items:end;margin-bottom:12px}.mm-product-areas-head h2{margin:3px 0 0}.mm-product-areas-head p{margin:5px 0 0;color:var(--muted);max-width:760px}.mm-product-area-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px}.mm-product-area{min-height:125px;text-align:left;padding:13px;border:1px solid #304b69;border-radius:12px;background:#0e1d31;color:#edf5ff}.mm-product-area:hover,.mm-product-area:focus-visible{background:#142843;border-color:#4c739c}.mm-product-area .icon{display:block;font-size:20px;margin-bottom:9px;color:var(--accent)}.mm-product-area b{display:block;font-size:14px}.mm-product-area small{display:block;color:#aebfd3;line-height:1.4;margin-top:5px}.mm-product-boundary{margin-top:10px;color:var(--muted);font-size:11px;line-height:1.45}
+@media(max-width:1050px){.mm-product-area-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:650px){.mm-product-area-grid{grid-template-columns:1fr 1fr}.mm-product-areas{padding:15px}.mm-product-areas-head{display:block}}
+
+/* Dedicated Materials page */
+.mm-material-page-hero{margin:0 0 16px;padding:22px;border:1px solid #31506e;border-radius:18px;background:radial-gradient(circle at 88% 0%,rgba(85,214,190,.14),transparent 34%),linear-gradient(145deg,#12243a,#0b1728);display:grid;gap:16px}
+.mm-material-page-hero h2{margin:4px 0 7px;font-size:clamp(25px,4vw,36px)}
+.mm-material-page-hero p{margin:0;color:#bfd0e2;line-height:1.55;max-width:900px}
+.mm-material-page-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.mm-material-page-stat{padding:11px 12px;border:1px solid #294966;border-radius:11px;background:#0a1728}
+.mm-material-page-stat b{display:block;font-size:20px}
+.mm-material-page-stat span{display:block;margin-top:2px;color:#9fb3c9;font-size:11px}
+.mm-material-page-nav{display:flex;gap:8px;flex-wrap:wrap}
+.mm-material-page-nav button{min-height:42px}
+.mm-material-learning-anchor{margin:16px 0 8px;padding:15px 17px;border:1px solid #29415c;border-radius:13px;background:#101c2e}
+.mm-material-learning-anchor h3{margin:3px 0 5px}
+.mm-material-learning-anchor p{margin:0;color:#b8c9dc;line-height:1.5;font-size:12px}
+@media(max-width:900px){.mm-material-page-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){
+  .mm-material-page-hero{padding:16px}
+  .mm-material-page-stats{grid-template-columns:1fr 1fr}
+  .mm-material-page-nav{display:grid;grid-template-columns:1fr 1fr}
+  .mm-material-page-nav button{width:100%}
+}
+
+/* Product design hierarchy cleanup — 2026.09.29.14
+   Reduce visual competition, strengthen task hierarchy, and make mobile feel native. */
+:root{
+  --mm-product-radius:14px;
+  --mm-product-radius-lg:18px;
+  --mm-product-gap:12px;
+  --mm-product-border:rgba(133,174,209,.16);
+  --mm-product-border-strong:rgba(133,183,219,.25);
+  --mm-product-surface:rgba(11,25,40,.94);
+  --mm-product-surface-raised:rgba(15,32,50,.96);
+  --mm-product-shadow:0 8px 24px rgba(0,0,0,.14);
+}
+
+/* Keep the dashboard focused: one strong next-action surface, quieter utilities. */
+#dashboard .mm-today-focus{
+  border-color:rgba(95,224,198,.30)!important;
+  box-shadow:0 18px 42px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.035)!important;
+}
+
+/* Navigation: primary destinations read first; secondary tools recede. */
+.sidebar #nav>button[data-view="dashboard"],
+.sidebar #nav>button[data-view="path"],
+.sidebar #nav>button[data-view="materials"],
+.sidebar #nav>button[data-view="scenarios"]{
+  font-weight:720!important;
+}
+.sidebar #nav>button[data-view="defects"],
+.sidebar #nav>button[data-view="simulator"],
+.sidebar #nav>button[data-view="coach"],
+.sidebar #nav>button[data-view="glossary"],
+.sidebar #nav>button[data-view="standards"],
+.sidebar #nav>button[data-view="exams"],
+.sidebar #nav>button[data-view="certificates"]{
+  color:#94a8bb!important;
+}
+.sidebar #nav .nav-group-label{margin-top:16px!important}
+.sidebar #nav button{min-height:42px!important}
+
+/* Standardise visual language across product surfaces. */
+.card,.form-card,.output-panel,.exam-card,.scenario,.chat,.cert,.visual-wrap,
+.mm-today-focus,.mm-curriculum-focus,.mm-specialist-strip,
+.mm-product-areas,.mm-material-page-hero,.mm-exact-materials,.mm-material-all-index,
+.mm-material-change-assistant,.mm-material-compare-card{
+  border-radius:var(--mm-product-radius-lg)!important;
+}
+.mm-product-area,.mm-hub-tile,.quick-action,.mm-material-index-card,.mm-exact-grade,
+.mm-material-page-stat,input,select,textarea,.secondary,.ghost,.primary{
+  border-radius:var(--mm-product-radius)!important;
+}
+.section-head{margin-top:24px!important}
+.section-head h2,.section-head h3{font-weight:750!important}
+.eyebrow{letter-spacing:.12em!important}
+
+/* Materials should read like a technical catalogue, not a card wall. */
+#materials #mmExactMaterialCatalog{padding:16px!important}
+#materials .mm-exact-head{align-items:start!important}
+#materials .mm-exact-search{margin-top:11px!important}
+#materials .mm-exact-results{gap:7px!important;margin-top:9px!important}
+#materials .mm-exact-grade{padding:10px 11px!important;border-radius:12px!important;background:#0d1b2d!important}
+#materials .mm-exact-grade h3{font-size:15px!important;margin:3px 0 5px!important}
+#materials .mm-exact-grade p{font-size:11px!important;line-height:1.38!important}
+#materials .mm-exact-key{margin:7px 0!important;padding:7px 8px!important}
+#materials .mm-material-all-index{padding:12px!important;margin:12px 0!important}
+#materials .mm-material-index-card{padding:9px 10px!important}
+#materials .mm-material-decision{margin-top:13px!important;padding-top:13px!important}
+#materials .mm-material-compare-controls{margin:9px 0!important}
+#materials .mm-material-page-hero{padding:18px!important;gap:13px!important}
+#materials .mm-material-page-stat{padding:9px 10px!important}
+#materials .mm-material-page-stat b{font-size:18px!important}
+#materials .mm-material-page-nav{gap:6px!important}
+
+/* Native-feeling mobile: fewer borders, stronger spacing, stable thumb targets. */
+@media(max-width:700px){
+  .main{padding-left:12px!important;padding-right:12px!important}
+  .topbar{border-bottom:0!important;padding-bottom:4px!important;margin-bottom:10px!important}
+  .topbar::after{display:none!important}
+  .mobile-nav{
+    left:8px!important;right:8px!important;bottom:max(8px,env(safe-area-inset-bottom))!important;
+    border:1px solid rgba(137,180,216,.16)!important;
+    border-radius:18px!important;
+    padding:6px!important;
+    min-height:64px!important;
+    background:rgba(7,18,30,.94)!important;
+    box-shadow:0 14px 38px rgba(0,0,0,.34)!important;
+    backdrop-filter:blur(18px) saturate(1.08)!important;
+    -webkit-backdrop-filter:blur(18px) saturate(1.08)!important;
+  }
+  .mobile-nav button{min-height:50px!important;border-radius:13px!important;padding:5px 3px!important}
+  .mobile-nav button span{font-size:10px!important}
+  .mobile-nav button.active{background:rgba(32,69,83,.82)!important;box-shadow:none!important}
+  :root{--mm-mobile-content-clearance:calc(var(--mm-mobile-nav-height) + 36px)}
+  .card,.form-card,.output-panel,.exam-card,.scenario,.chat,.cert,.visual-wrap{
+    box-shadow:none!important;border-color:rgba(132,174,209,.14)!important;
+  }
+  .mm-primary-hub .mm-hub-grid{gap:7px!important}
+  .mm-primary-hub .mm-hub-tile{border-color:rgba(129,170,205,.15)!important;box-shadow:none!important}
+  #materials .mm-material-page-hero{padding:14px!important}
+  #materials .mm-material-page-nav{grid-template-columns:1fr 1fr!important}
+  #materials .mm-exact-results,#materials .mm-material-all-results{gap:8px!important}
+  #materials .mm-exact-grade,#materials .mm-material-index-card{padding:11px!important}
+}
+
+@media(min-width:1100px){
+  #materials .mm-exact-results{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  #materials .mm-material-all-results{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+
+/* Final product-quality interaction states — 2026.09.29.15 */
+button:disabled,[aria-disabled="true"]{
+  cursor:not-allowed!important;
+  opacity:.48!important;
+  transform:none!important;
+  box-shadow:none!important;
+}
+[data-mm-material-compare-result][aria-busy="true"],
+[data-mm-material-change-result][aria-busy="true"]{
+  min-height:72px;
+  display:grid;
+  place-items:center;
+  color:#9fb2c5;
+  border:1px dashed rgba(129,171,207,.24);
+  border-radius:13px;
+  background:rgba(9,22,35,.5);
+}
+[data-mm-material-compare-result][aria-busy="true"]::before,
+[data-mm-material-change-result][aria-busy="true"]::before{
+  content:"Reviewing published evidence…";
+  font-size:12px;
+  letter-spacing:.01em;
+}
+[data-mm-material-compare-result][aria-busy="true"]>*,
+[data-mm-material-change-result][aria-busy="true"]>*{visibility:hidden}
+[data-mm-product-state="empty"]{max-width:760px}
+.mm-onboarding-product input,.mm-onboarding-product select,.mm-onboarding-product button{min-height:44px}
+.mm-onboarding-product fieldset{min-width:0}
+@media(max-width:700px){
+  .mm-onboarding-product{padding-bottom:4px}
+  .mm-onboarding-product input,.mm-onboarding-product select,.mm-onboarding-product button{min-height:48px}
+}
+@media(prefers-reduced-motion:reduce){
+  [data-mm-material-compare-result],[data-mm-material-change-result]{scroll-behavior:auto!important}
+}
+
+/* Startup and degraded states must feel like the same product. */
+#mmBootstrap.boot{
+  border-color:rgba(134,181,218,.2)!important;
+  border-radius:20px!important;
+  background:linear-gradient(180deg,#102238,#0a1929)!important;
+  box-shadow:0 24px 64px rgba(0,0,0,.34),inset 0 1px 0 rgba(255,255,255,.035)!important;
+}
+#mmBootstrap.boot b{letter-spacing:-.025em}
+#mmBootstrap.boot p{color:#9fb2c5!important}
+#mmBootstrap.boot .bar{height:5px!important;background:#1b3045!important}
+#mmStartupFailure{
+  max-width:720px!important;
+  margin:24px auto!important;
+  padding:20px!important;
+  border:1px solid rgba(255,133,133,.35)!important;
+  border-radius:18px!important;
+  background:linear-gradient(180deg,rgba(49,24,32,.96),rgba(29,17,23,.98))!important;
+  box-shadow:0 18px 48px rgba(0,0,0,.28)!important;
+  color:#ffe8e8!important;
+}
+#mmStartupFailure a,#mmStartupFailure button{min-height:44px!important}
+
+
+/* Unified educational defect finding / troubleshooting learning workbench. */
+.mm-dx-workbench{max-width:1280px;margin:0 auto;padding-bottom:35px}
+.mm-dx-hero{border:1px solid var(--border,#39526b);border-radius:20px;padding:clamp(18px,3vw,30px);background:linear-gradient(145deg,#101f33,#152d44);margin-bottom:18px}
+.mm-dx-hero h1{font-size:clamp(26px,3vw,38px);line-height:1.12;margin:8px 0}
+.mm-dx-hero p{max-width:830px;line-height:1.55}
+.mm-dx-disclaimer,.mm-dx-boundary{border-left:4px solid #e7b75c;border-radius:8px;background:rgba(231,183,92,.1);padding:12px 14px;font-size:14px;line-height:1.5}
+.mm-dx-layout{display:grid;grid-template-columns:minmax(260px,.9fr) minmax(0,1.5fr);gap:18px;align-items:start}
+.mm-dx-pane{border:1px solid var(--border,#39526b);background:var(--card,#111f33);border-radius:16px;padding:20px;min-width:0}
+.mm-dx-section-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.mm-dx-section-head h2{margin:0;font-size:21px}.mm-dx-section-head span{font-size:13px;opacity:.8}
+.mm-dx-library{display:grid;gap:9px;max-height:560px;overflow-y:auto;overscroll-behavior:contain;padding:3px}
+.mm-dx-symptom{min-width:0;display:grid;gap:4px;text-align:left;border:1px solid var(--border,#39526b);border-radius:11px;background:rgba(130,170,200,.06);padding:12px;color:inherit;cursor:pointer;white-space:normal}
+.mm-dx-symptom small{font-size:13px;line-height:1.4;opacity:.85}
+.mm-dx-symptom:hover,.mm-dx-symptom:focus-visible{border-color:#74dcc6}
+.mm-dx-symptom.is-selected{outline:2px solid #74dcc6;background:rgba(116,220,198,.11)}
+.mm-dx-symptom[hidden]{display:none}
+.mm-dx-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.mm-dx-field{display:grid;gap:6px;min-width:0;font-weight:600;font-size:14px}
+.mm-dx-field:has(textarea){grid-column:1/-1}
+.mm-dx-field input,.mm-dx-field select,.mm-dx-field textarea,.mm-dx-hypothesis select{width:100%;max-width:100%;background:var(--input-bg,#12233a);color:inherit;border:1px solid var(--border,#47627e);border-radius:10px;padding:10px 12px;min-height:43px;font:inherit;font-weight:400}
+.mm-dx-field textarea{min-height:88px;resize:vertical}
+.mm-dx-evidence{border:1px solid var(--border,#47627e);border-radius:12px;margin:14px 0;padding:14px}
+.mm-dx-evidence legend{font-weight:700;padding:0 5px}
+.mm-dx-check{display:flex;gap:10px;align-items:flex-start;padding:8px 0;font-size:14px;line-height:1.4;cursor:pointer}
+.mm-dx-check input{margin-top:3px;flex-shrink:0}
+/* The frozen core's generic input{width:100%;padding:10px} applies to
+   checkboxes too. Override only the unified diagnosis evidence controls. */
+#defects .mm-dx-check,#coach .mm-dx-check{display:flex;align-items:flex-start;gap:12px;width:100%;min-width:0;max-width:100%;box-sizing:border-box}
+#defects .mm-dx-check input[type="checkbox"],#coach .mm-dx-check input[type="checkbox"]{
+  display:block;width:19px;height:19px;min-width:19px;min-height:19px;
+  max-width:19px;max-height:19px;flex:0 0 19px;
+  padding:0;margin:2px 0 0;box-sizing:border-box;
+  appearance:auto;-webkit-appearance:checkbox;border-radius:4px!important
+}
+#defects .mm-dx-check span,#coach .mm-dx-check span{flex:1 1 0;min-width:0;overflow-wrap:anywhere;white-space:normal;line-height:1.45}
+#defects .mm-dx-evidence,#coach .mm-dx-evidence{min-width:0;max-width:100%;box-sizing:border-box;overflow-wrap:anywhere}
+#defects .mm-dx-workbench,#coach .mm-dx-workbench{min-width:0;max-width:100%;box-sizing:border-box}
+.mm-dx-main-action{margin-top:10px;max-width:100%;white-space:normal}
+.mm-dx-result-block{margin:16px 0;padding:15px;border:1px solid var(--border,#39526b);border-radius:12px}
+.mm-dx-result-block h3{margin:0 0 10px;font-size:18px}
+.mm-dx-result-block li{margin:7px 0;line-height:1.5}
+.mm-dx-hypothesis{border-top:1px solid var(--border,#39526b);padding:12px 0}
+.mm-dx-hypothesis p{margin:0 0 6px;line-height:1.4}
+.mm-dx-hypothesis label{display:grid;gap:5px;font-size:13px}
+.mm-dx-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.mm-dx-actions button{white-space:normal}
+@media(max-width:800px){.mm-dx-layout{grid-template-columns:1fr}.mm-dx-library{max-height:280px;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.mm-dx-library,.mm-dx-fields{grid-template-columns:1fr}.mm-dx-pane{padding:15px}.mm-dx-hero{padding:18px}.mm-dx-actions button{width:100%}}
+@media(prefers-reduced-motion:reduce){.mm-dx-workbench *{scroll-behavior:auto!important}}
+
+
+/* Blocking dialogs must outrank the fixed primary nav at every mobile size.
+   The audited core modal is z-index:20 while the shell nav uses z-index:40. */
+#modal.modal{z-index:60!important}
+
+/* Unified Learn / lesson catalogue — all canonical and optional specialist lessons. */
+.mm-all-lessons{margin:20px 0;padding:18px;border:1px solid #304a68;border-radius:17px;background:#0f2035;min-width:0}
+.mm-catalog-head h2{margin:0 0 5px;font-size:clamp(21px,3vw,26px);line-height:1.2}
+.mm-catalog-head p{margin:0 0 15px;color:#bccfe3;line-height:1.5}
+.mm-catalog-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(150px,210px);gap:10px}
+.mm-catalog-controls label{display:flex;flex-direction:column;gap:5px;min-width:0;color:#cde0f3;font-size:13px;font-weight:700}
+.mm-catalog-controls input,.mm-catalog-controls select{width:100%;min-width:0;min-height:46px;background:#09182a;border:1px solid #466584;border-radius:11px;color:#f1f7ff;padding:10px 12px;font:inherit;font-size:15px}
+.mm-catalog-controls :is(input,select):focus-visible,.mm-catalog-lesson:focus-visible,.mm-catalog-group summary:focus-visible{outline:3px solid #73ceff;outline-offset:2px}
+.mm-catalog-results{margin:12px 0 8px;color:#c0d4e7;font-size:13px}
+.mm-catalog-groups{display:grid;gap:8px}
+.mm-catalog-group{border:1px solid #324e6a;background:#10273d;border-radius:12px;overflow:hidden;min-width:0}
+.mm-catalog-group summary{cursor:pointer;display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 15px;font-weight:750;line-height:1.4;list-style-position:inside}
+.mm-catalog-group summary::marker{color:#8dcae9}
+.mm-catalog-group-name{flex:1;min-width:0}
+.mm-catalog-group-meta{font-size:12px;font-weight:650;color:#b6cae0;flex-shrink:0}
+.mm-catalog-rows{display:grid;padding:5px 8px 8px;border-top:1px solid #304a68}
+.mm-catalog-lesson{display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;text-align:left;min-height:45px;padding:8px 9px;border:0;border-bottom:1px solid #284057;border-radius:8px;color:#eaf4ff;background:transparent;cursor:pointer;font:inherit}
+.mm-catalog-lesson:last-child{border-bottom:0}
+.mm-catalog-lesson:hover,.mm-catalog-lesson.is-current{background:#1a3b55}
+.mm-catalog-num{font-size:12px;color:#9dc4df;font-weight:800}
+.mm-catalog-title{font-size:14px;line-height:1.4;overflow-wrap:anywhere}
+.mm-catalog-state{font-size:12px;color:#9dc7d6;white-space:nowrap}
+.mm-catalog-empty{color:#bed0df;font-size:14px;padding:14px 0}
+.mm-all-lessons [hidden],.mm-catalog-group[hidden],.mm-catalog-lesson[hidden],.mm-catalog-empty[hidden]{display:none!important}
+.mm-catalog-extra{margin:12px 0 0}.mm-catalog-extra button{min-height:44px}
+#lesson.mm-unified-lesson .lesson-layout.mm-one-column-lesson{grid-template-columns:minmax(0,1fr)!important;max-width:860px;margin-inline:auto}
+#lesson .mm-lesson-catalog-return{max-width:860px;margin:0 auto 12px}
+#lesson .mm-lesson-catalog-return button{min-height:44px;padding:9px 14px;font-size:14px}
+#lesson .mm-lesson-catalog-return button:focus-visible{outline:3px solid #73ceff;outline-offset:3px}
+@media(max-width:640px){
+  .mm-all-lessons{padding:13px;margin:14px 0}
+  .mm-catalog-controls{grid-template-columns:1fr}
+  .mm-catalog-group summary{align-items:flex-start;flex-wrap:wrap;gap:5px;padding:12px}
+  .mm-catalog-group-meta{width:100%;padding-left:18px}
+  .mm-catalog-lesson{grid-template-columns:33px minmax(0,1fr);gap:6px}
+  .mm-catalog-state{grid-column:2;padding-bottom:2px}
+}
+
+
+/* Material lessons keep their original authored reader and assessment state,
+   but no second material chapter or four-lesson sidebar is visible. */
+#materials .mat-learn-layout.mm-one-column-material{grid-template-columns:minmax(0,1fr);max-width:860px;margin-inline:auto}
+#materials .mat-lesson{min-width:0}
+#materials .mm-lesson-catalog-return{max-width:860px;margin:12px auto}
+#materials .mm-lesson-catalog-return button{min-height:44px;padding:9px 14px;font-size:14px}
+#materials .mm-lesson-catalog-return button:focus-visible{outline:3px solid #73ceff;outline-offset:3px}
+
+/* Compact lesson reading flow: goals are optional, technical reasoning stays intact. */
+#lesson.mm-simple-lesson .mm-simple-goals{margin:0 0 14px;border:1px solid #304a68;border-radius:13px;background:#0e1d31;overflow:hidden}
+#lesson.mm-simple-lesson .mm-simple-goals>summary{min-height:46px;display:flex;align-items:center;gap:8px;padding:10px 14px;cursor:pointer;color:#eaf3ff;font-size:15px;font-weight:750;list-style:none}
+#lesson.mm-simple-lesson .mm-simple-goals>summary::-webkit-details-marker{display:none}
+#lesson.mm-simple-lesson .mm-simple-goals>summary::before{content:'▸';color:#9fd8ff}
+#lesson.mm-simple-lesson .mm-simple-goals[open]>summary::before{content:'▾'}
+#lesson.mm-simple-lesson .mm-simple-goals-content{padding:4px 17px 15px;border-top:1px solid #304a68}
+#lesson.mm-simple-lesson .mm-simple-goals-content ul{margin:8px 0 0;padding-left:21px}
+#lesson.mm-simple-lesson .mm-simple-goals-content li{font-size:14px;line-height:1.55;color:#c7d6e8}
+#lesson.mm-simple-lesson .mm-simple-goals>summary:focus-visible{outline:3px solid #73ceff;outline-offset:-3px}
+#lesson.mm-simple-lesson #mmLessonDeepV2 .mm-extra-help{margin:15px 0 0;box-shadow:none}
+#lesson.mm-simple-lesson #mmLessonDeepV2 .mm-extra-help summary:focus-visible{outline:3px solid #73ceff;outline-offset:-3px}
+
+/* Integrated PR #585: searchable Materials-first catalogue, filters and result cards. */
+
+/* Keep the material catalogue in view on phones: advanced facets open on demand. */
+#materials .mm-material-all-search{display:flex;align-items:end;flex-wrap:wrap;gap:10px;margin:12px 0 8px}
+#materials .mm-material-all-search label{display:block;flex:1 1 240px;min-width:0}
+#materials .mm-material-all-search input{width:100%;max-width:100%;min-height:44px;margin-top:6px}
+#materials .mm-material-all-search button{min-height:44px}
+#materials .mm-material-all-search button[hidden]{display:none!important}
+#materials .mm-material-all-filters{margin:9px 0 12px;border:1px solid rgba(141,179,210,.28);border-radius:12px;background:rgba(7,22,35,.48);min-width:0}
+#materials .mm-material-all-filters summary{display:flex;align-items:center;gap:12px;min-height:46px;padding:11px 13px;cursor:pointer;list-style:none;font-weight:700}
+#materials .mm-material-all-filters summary::-webkit-details-marker{display:none}
+#materials .mm-material-all-filters summary::after{content:"⌄";font-size:21px;line-height:1;margin-left:0}
+#materials .mm-material-all-filters[open] summary::after{transform:rotate(180deg)}
+#materials .mm-material-all-filters [data-mm-all-material-filter-count]{margin-left:auto;font-size:12px;font-weight:600;color:var(--muted,#aebfd1)}
+#materials .mm-material-all-filters .mm-material-all-index-controls{padding:0 12px 12px;min-width:0}
+#materials .mm-material-all-filters select{min-width:0;max-width:100%}
+#materials .mm-material-all-filters summary:focus-visible{outline:2px solid #74dcc6;outline-offset:2px;border-radius:10px}
+@media(max-width:700px){
+  #materials .mm-material-all-search{display:block}
+  #materials .mm-material-all-search button:not([hidden]){width:100%;margin-top:8px}
+  #materials .mm-material-all-filters .mm-material-all-index-controls{grid-template-columns:minmax(0,1fr)!important}
+}
+
+/* A scannable catalogue: each result opens its evidence only on demand. */
+#materials .mm-material-index-card{min-width:0;overflow:visible}
+#materials .mm-material-index-summary{display:flex;flex-direction:column;align-items:flex-start;gap:5px;list-style:none;cursor:pointer;min-height:74px;position:relative;padding-right:24px}
+#materials .mm-material-index-summary::-webkit-details-marker{display:none}
+#materials .mm-material-index-summary:focus-visible{outline:2px solid #74dcc6;outline-offset:3px;border-radius:6px}
+#materials .mm-material-index-summary .mm-material-index-meta{margin:0;gap:8px}
+#materials .mm-material-index-title{font-size:16px;line-height:1.35;font-weight:750;overflow-wrap:anywhere}
+#materials .mm-material-index-summary .mm-material-index-subtitle{font-size:12px;color:var(--muted,#b5c6d8)}
+#materials .mm-material-index-expand{font-size:12px;color:#a9c9dc;font-weight:600}
+#materials .mm-material-index-summary::after{content:"⌄";position:absolute;right:3px;top:30px;font-size:20px}
+#materials .mm-material-index-card[open] .mm-material-index-summary::after{transform:rotate(180deg)}
+#materials .mm-material-index-card[open] .mm-material-index-expand{display:none}
+#materials .mm-material-index-detail{min-width:0;margin-top:10px;padding-top:10px;border-top:1px solid rgba(141,179,210,.22)}
+#materials .mm-material-index-detail p{overflow-wrap:anywhere}
+#materials .mm-material-index-detail button{max-width:100%;white-space:normal}
+
+/* Relevant provenance note appears with the advanced facets, not above the list. */
+#materials .mm-material-all-filters [data-mm-catalogue-boundary]{margin:0 12px 10px;padding:8px 10px;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+
+/* Phone Materials: show the catalogue search before repeated hero content. */
+@media(max-width:700px){
+  #materials #mmMaterialsPageIntro{padding:12px!important;gap:8px!important;margin-bottom:10px!important}
+  #materials #mmMaterialsPageIntro>div:first-child .eyebrow,
+  #materials #mmMaterialsPageIntro>div:first-child p{display:none!important}
+  #materials #mmMaterialsPageIntro h2{font-size:18px!important;line-height:1.3!important;margin:0!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-stats{display:flex!important;gap:0!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-stat{display:none!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-stat:first-child{
+    display:flex!important;align-items:baseline;gap:6px;padding:0!important;
+    border:0!important;background:none!important
+  }
+  #materials #mmMaterialsPageIntro .mm-material-page-stat b{font-size:14px!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-stat span{font-size:11px!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-nav{display:flex!important;gap:6px!important;flex-wrap:wrap!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-nav [data-mm-material-jump="catalog"]{display:none!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-nav button{
+    width:auto!important;min-height:38px!important;min-width:0!important;
+    padding:7px 9px!important;font-size:12px!important;flex:1 1 auto!important
+  }
+  #materials #mmExactMaterialCatalog{padding:12px!important}
+  #materials #mmExactMaterialCatalog .mm-exact-head h2{font-size:18px!important;line-height:1.3!important}
+  #materials #mmExactMaterialCatalog .mm-exact-head p:not(.mm-material-coverage){display:none!important}
+  #materials #mmExactMaterialCatalog .mm-material-coverage{font-size:11px!important;line-height:1.4!important}
+  #materials #mmExactMaterialCatalog .mm-material-all-index{padding:10px!important;margin-top:10px!important}
+  #materials #mmExactMaterialCatalog .mm-material-all-index-head .eyebrow{display:none!important}
+  #materials #mmExactMaterialCatalog .mm-material-all-index-head h3{font-size:18px!important;margin:0 0 4px!important}
+  #materials #mmExactMaterialCatalog .mm-material-all-index-head>p{display:none!important}
+}
+
+/* Materials: one catalogue heading instead of three competing hero/grade titles. */
+#materials #mmMaterialsPageIntro.mm-material-page-tools{
+  display:block!important;margin:0 0 10px!important;padding:0!important;
+  border:0!important;background:transparent!important;box-shadow:none!important
+}
+#materials #mmMaterialsPageIntro .mm-material-page-nav{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important
+}
+#materials #mmMaterialsPageIntro .mm-material-page-nav button{
+  width:100%!important;min-width:0!important;min-height:42px!important;
+  font-size:12px!important;line-height:1.25!important;
+  padding:8px!important;white-space:normal!important;flex:none!important
+}
+#materials #mmExactMaterialCatalog .mm-material-all-index{margin-top:0!important}
+#materials #mmExactMaterialCatalog .mm-material-all-index-head h3{margin:0 0 7px!important;font-size:21px!important}
+#materials #mmExactMaterialCatalog .mm-exact-head{
+  margin-top:18px!important;padding-top:16px!important;
+  border-top:1px solid rgba(141,179,210,.22)
+}
+@media(max-width:700px){
+  #materials #mmMaterialsPageIntro .mm-material-page-nav{gap:5px!important}
+  #materials #mmMaterialsPageIntro .mm-material-page-nav button{
+    font-size:11px!important;padding:7px 5px!important;min-height:42px!important
+  }
+  #materials #mmExactMaterialCatalog .mm-material-all-index-head h3{font-size:20px!important}
+}
+
+/* The Materials index can jump to an exact-grade evidence card. Keep its heading
+   below the compact topbar, and preserve a visible keyboard-focus destination. */
+#materials .mm-exact-grade{scroll-margin-top:88px}
+#materials .mm-exact-grade:focus{outline:2px solid #73ceff;outline-offset:3px}
+
+/* Book / Listening: keyboard route arrival needs an obvious focus target.
+   Keep this style in the external sheet rather than runtime <style> to retain
+   the strict generated CSP hash list and its deny-inline integrity check. */
+#mmListeningView .mm-listening-hero h2:focus{
+  outline:3px solid #79f5e0;
+  outline-offset:5px;
+  border-radius:5px;
+}
+@media(forced-colors:active){
+  #mmListeningView .mm-listening-hero h2:focus{outline-color:Highlight}
+}
+
+/* Diagnostic workbench: visible programmatic focus after an evidence-led
+   rerender, without changing the approved default visual layout. */
+#defects .mm-dx-results .mm-dx-section-head h2:focus,
+#coach .mm-dx-results .mm-dx-section-head h2:focus{
+  outline:3px solid #79f5e0;
+  outline-offset:4px;
+  border-radius:4px;
+}
+@media(forced-colors:active){
+  #defects .mm-dx-results .mm-dx-section-head h2:focus,
+  #coach .mm-dx-results .mm-dx-section-head h2:focus{
+    outline-color:Highlight;
+  }
+}

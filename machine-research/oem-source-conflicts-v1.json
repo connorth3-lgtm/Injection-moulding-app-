@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "scope": "Read-only public research evidence; not approved installed-machine geometry or production suitability",
+  "status": "unresolved-oem-source-conflict",
+  "conflicts": [
+    {
+      "id": "fanuc-roboshot-alpha-s30ib-platen-h-v",
+      "modelId": "fanuc-roboshot-alpha-s30ib",
+      "model": "FANUC ROBOSHOT α-S30iB",
+      "field": "platen_size_h_x_v",
+      "units": "mm",
+      "disposition": "quarantined",
+      "acceptedMachinePlatenSize": null,
+      "machineSuitability": "unknown",
+      "controllerAndSerial": "unverified",
+      "researchNote": "machine-research/FANUC-ROBOSHOT-ALPHA-S30IB-OEM-CONFLICT.md",
+      "resolutionEvidence": null,
+      "observations": [
+        {
+          "sourceId": "fanuc-europe-model",
+          "publisher": "FANUC Europe",
+          "region": "EU",
+          "url": "https://www.fanuc.eu/eu-en/product/roboshot/fanuc-roboshot-a-s30ib",
+          "revision": "live manufacturer model page; revision not established",
+          "checked": "2026-10-10",
+          "hMm": 440,
+          "vMm": 420
+        },
+        {
+          "sourceId": "fanuc-america-model",
+          "publisher": "FANUC America",
+          "region": "US",
+          "url": "https://www.fanucamerica.com/products/roboshot/roboshot-a-s30ib",
+          "revision": "live manufacturer model page; revision not established",
+          "checked": "2026-10-10",
+          "hMm": 440,
+          "vMm": 240
+        },
+        {
+          "sourceId": "fanuc-europe-mds-04995-en-2024",
+          "publisher": "FANUC Europe",
+          "region": "EU",
+          "url": "https://d16ohktstcjvly.cloudfront.net/asset/513891251684/document_juqs5kiecp567ad5pq7p4up070",
+          "revision": "MDS-04995-EN © 2024; manufacturer-linked mechanical specifications",
+          "checked": "2026-10-10",
+          "hMm": 440,
+          "vMm": 420
+        }
+      ],
+      "requiredToResolve": "Obtain revised FANUC OEM clarification of US/EU page variance and its region/revision/variant applicability, confirm fitted serial and platen before treating a machine as suitable. A workflow pass or revision text alone is not signoff."
+    }
+  ]
+}

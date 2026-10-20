@@ -1,0 +1,62 @@
+/* MouldMaster lesson deep authoring v2 — lesson-specific mechanism/evidence/decision layer 2026-09-01 */
+(function(){
+'use strict';
+if(window.MM_LESSON_DEEP_AUTHORING_V2)return;
+const VERSION='2026.09.07.4';
+const D=window.MM_DATA,R=window.MM_RUNTIME_V2;
+if(!D||!Array.isArray(D.lessons)||D.lessons.length!==120)throw new Error('lesson-deep-authoring-v2.js requires the canonical 120-lesson pathway');
+if(!R||typeof R.after!=='function')throw new Error('lesson-deep-authoring-v2.js requires runtime-v2.js');
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clean=v=>String(v??'').replace(/\s+/g,' ').trim();
+function uniq(rows){const out=[];for(const x of rows.map(clean).filter(Boolean))if(!out.includes(x))out.push(x);return out}
+function sentence(v){const x=clean(v);return !x?'':/[.!?]$/.test(x)?x:x+'.'}
+function compact(v,max=175){
+  const x=sentence(v);if(!x||x.length<=max)return x;
+  const first=x.match(/^.*?[.!?](?:\s|$)/)?.[0]?.trim();if(first&&first.length<=max)return first;
+  const clipped=x.slice(0,max+1),cut=clipped.lastIndexOf(' '),end=cut>Math.floor(max*.65)?clipped.slice(0,cut):x.slice(0,max);
+  return end.replace(/[,:;–—-]+\s*$/,'').trim()+'…';
+}
+function teachingRecord(l){
+  const objectives=uniq(l.objectives||[]),points=uniq(l.keypoints||[]),summary=clean(l.summary||l.intro||''),exercise=clean(l.exercise||'');
+  const guide=l.mmGuide||{};
+  const evidencePrompt=sentence(l.evidencePrompt||'');
+  const commonTrap=sentence(l.commonTrap||'');
+  const mechanism=sentence(summary||points[0]||guide.plain||`This lesson develops the ${clean(l.title)} mechanism.`);
+  const evidence=uniq([guide.evidence,...points.slice(0,3),...objectives.slice(0,2)]).slice(0,4);
+  const decision=sentence(exercise||guide.example||objectives[0]||`Explain how you would recognise and verify ${clean(l.title)} in a real moulding process.`);
+  const misconception=sentence(guide.mistake||points[points.length-1]||`Do not turn ${clean(l.title)} into a universal setting; verify the actual machine, mould, material and measurement context.`);
+  const teachBack=sentence(objectives.length?`Without using the lesson wording, explain ${objectives[objectives.length-1].replace(/^to\s+/i,'')}`:`Explain the evidence that would change your conclusion about ${clean(l.title)}`);
+  const boundary=/safe|guard|interlock|isolation|hazard|robot|fume/i.test([l.title,summary,...points].join(' '))?
+    'Safety boundary: use current machine documentation, authorised site procedures and applicable jurisdiction requirements. This learning activity never authorises bypassing safeguards or entering a danger zone.':
+    'Engineering boundary: this lesson teaches a mechanism and evidence chain, not a universal recipe. Exact grade data, machine/tool limits, validated site controls and product requirements govern production decisions.';
+  return {id:l.id,title:l.title,course:l.courseName,mechanism,evidence,decision,misconception,teachBack,evidencePrompt,commonTrap,boundary}
+}
+function pedagogicalPayload(r){return {mechanism:r.mechanism,evidence:r.evidence,decision:r.decision,misconception:r.misconception,teachBack:r.teachBack,evidencePrompt:r.evidencePrompt,commonTrap:r.commonTrap,boundary:r.boundary}}
+function fingerprintPayload(payload){let h=2166136261;for(const c of JSON.stringify(payload)){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return (h>>>0).toString(16).padStart(8,'0')}
+function contentFingerprint(r){return fingerprintPayload(pedagogicalPayload(r))}
+const records=D.lessons.map(teachingRecord);
+const byId=Object.fromEntries(records.map(x=>[String(x.id),x]));
+const fingerprints=records.map(contentFingerprint);
+if(new Set(fingerprints).size!==records.length)throw new Error('lesson deep authoring produced duplicate lesson records with substantively identical mechanism/evidence/decision/teach-back content');
+function style(){if(document.getElementById('mm-lesson-deep-v2-style'))return;const s=document.createElement('style');s.id='mm-lesson-deep-v2-style';s.textContent=`
+.mm-deep-v2{margin:12px 0;display:grid;gap:8px}.mm-deep-v2-card{border:1px solid #2e4968;border-radius:12px;background:#0e1d31}.mm-deep-v2-essentials{padding:0;overflow:hidden}.mm-deep-v2-row{display:grid;grid-template-columns:126px minmax(0,1fr);gap:14px;align-items:start;padding:12px 15px}.mm-deep-v2-row+.mm-deep-v2-row{border-top:1px solid #263f5c}.mm-deep-v2-row h4{margin:0;font-size:13px;line-height:1.35;color:#f2f7ff}.mm-deep-v2-row p{margin:0;font-size:13px;line-height:1.5;color:#c0d0e3}.mm-deep-v2 details.mm-deep-v2-card{padding:0;overflow:hidden}.mm-deep-v2 details>summary{min-height:46px;display:flex;align-items:center;padding:10px 13px;cursor:pointer;list-style:none}.mm-deep-v2 details>summary::-webkit-details-marker{display:none}.mm-deep-v2 details>summary::before{content:'▸';display:inline-block;margin-right:7px}.mm-deep-v2 details[open]>summary::before{content:'▾'}.mm-deep-v2-detail{padding:2px 15px 14px;border-top:1px solid #263f5c}.mm-deep-v2-detail h4{margin:14px 0 6px}.mm-deep-v2-detail p,.mm-deep-v2-detail li{font-size:13px;line-height:1.55;color:#c0d0e3}.mm-deep-v2-detail ul{padding-left:19px;margin:7px 0}.mm-deep-v2-boundary{padding:11px 13px;border-left:3px solid #d4b25b;background:#292414;color:#f0e1ad;font-size:12px;line-height:1.55}.mm-deep-v2-id{font-size:10px;color:#7f98b8;margin-top:10px}@media(max-width:720px){.mm-deep-v2{margin:10px 0}.mm-deep-v2-row{grid-template-columns:1fr;gap:3px;padding:10px 13px}.mm-deep-v2-row h4{font-size:15px}.mm-deep-v2-row p{font-size:14px;line-height:1.42}.mm-deep-v2 details>summary{padding:10px 13px}.mm-deep-v2-detail{padding:2px 13px 13px}}
+`;document.head.appendChild(s)}
+function current(){try{return typeof window.currentLesson==='function'?window.currentLesson():null}catch(_){return null}}
+// Full mechanism/evidence/decision/misconception/teach-back content remains available in the collapsed disclosure; the default mobile view shows only the minimum useful teaching signal.
+function markup(r){
+  const takeaway=compact(r.evidence[0]||r.mechanism,165);
+  const apply=compact(r.decision,175);
+  const safety=/^Safety boundary:/i.test(r.boundary);
+  const caution=compact(safety?r.boundary:r.misconception,175);
+  const secondaryLabel=safety?'Watch out':'Apply';
+  const secondaryText=safety?caution:apply;
+  return `<section class="mm-deep-v2" id="mmLessonDeepV2" aria-label="Lesson essentials"><article class="mm-deep-v2-card mm-deep-v2-essentials"><div class="mm-deep-v2-row"><h4>Key takeaway</h4><p>${esc(takeaway)}</p></div><div class="mm-deep-v2-row"><h4>${secondaryLabel}</h4><p>${esc(secondaryText)}</p></div></article><details class="mm-deep-v2-card"><summary><b>More detail</b></summary><div class="mm-deep-v2-detail"><h4>Mechanism</h4><p>${esc(r.mechanism)}</p><h4>Evidence chain</h4>${r.evidence.length?`<ul>${r.evidence.map(x=>`<li>${esc(sentence(x))}</li>`).join('')}</ul>`:'<p>Use the lesson objectives, current actuals and known-good comparison to build the evidence chain.</p>'}<h4>Evidence check</h4><p><b>Capture:</b> ${esc(r.evidencePrompt||'Compare the current setpoint, measured actuals and repeatability before drawing a conclusion.')}</p><p><b>Common trap:</b> ${esc(r.commonTrap||r.misconception)}</p><h4>Plant decision</h4><p>${esc(r.decision)}</p><h4>Misconception check</h4><p>${esc(r.misconception)}</p><h4>Teach-back</h4><p>${esc(r.teachBack)}</p><div class="mm-deep-v2-boundary"><b>Boundary:</b> ${esc(r.boundary)}</div><div class="mm-deep-v2-id">Authoring record ${esc(String(r.id))} · ${esc(contentFingerprint(r))}</div></div></details></section>`;
+}
+function enrich(){style();const l=current(),body=document.querySelector('#lesson article.lesson-body')||document.querySelector('#lesson .lesson-body');if(!l||!body||body.querySelector('#mmLessonDeepV2'))return;const r=byId[String(l.id)];if(!r)return;const anchor=body.querySelector('#mmTeaching')||body.querySelector('.mm-teaching-grid')||body.querySelector('.callout')||body.querySelector('h3');if(anchor)anchor.insertAdjacentHTML('afterend',markup(r));else body.insertAdjacentHTML('beforeend',markup(r))}
+R.after('renderLesson',()=>{try{enrich()}catch(e){console.warn('[MouldMaster lesson depth v2]',e)}});
+R.registerModule('lesson-deep-authoring-v2',{version:VERSION,type:'lesson-render-hook',records:records.length});
+let queued=false;const schedule=()=>{if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;try{enrich()}catch(_){}},0)};
+const lessonRoot=document.getElementById('lesson');if(lessonRoot)new MutationObserver(schedule).observe(lessonRoot,{childList:true,subtree:true});
+window.MM_LESSON_DEEP_AUTHORING_V2=Object.freeze({version:VERSION,total:records.length,records:records.map(x=>({...x,fingerprint:contentFingerprint(x)})),record:id=>byId[String(id)]||null,recordingMode:'runtime-v2 after-render hook',duplicatePolicy:'Substantive pedagogical payloads must be unique even when lesson IDs, titles or course labels differ.',policy:'Every canonical lesson receives a lesson-specific mechanism/evidence/decision/teach-back record derived from its own authored summary, objectives, keypoints, exercise and safety context; duplicate generated records are rejected.'});
+schedule();
+})();

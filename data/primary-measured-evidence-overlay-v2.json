@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "version": "2026.08.30.1",
+  "reviewed": "2026-08-30",
+  "baseRegistry": "data/primary-measured-evidence-registry-v1.json",
+  "status": "accepted-primary-measured-overlay",
+  "addedPacks": [
+    {"path": "data/primary-measured-evidence/breadth-production-cooling-v1.json", "entries": 5},
+    {"path": "data/primary-measured-evidence/longrun-fault-control-v1.json", "entries": 5}
+  ],
+  "baseSummary": {
+    "publisherVerifiedPeerReviewedPrimaryMeasured": 60,
+    "tierA": 4,
+    "tierB": 56,
+    "uniqueDois": 60
+  },
+  "delta": {
+    "publisherVerifiedPeerReviewedPrimaryMeasured": 10,
+    "tierA": 0,
+    "tierB": 10,
+    "uniqueDois": 10
+  },
+  "effectiveSummary": {
+    "publisherVerifiedPeerReviewedPrimaryMeasured": 70,
+    "tierA": 4,
+    "tierB": 66,
+    "uniqueDois": 70
+  },
+  "promotionCandidatesInheritedFromBase": 9,
+  "boundary": "This overlay is additive evidence only. It does not rewrite the 60-study historical base registry, does not add or alter measured-dataset acceptance, does not count reviews/simulation/synthetic evidence as primary measured, and does not turn study-specific values into universal process settings or causal authority."
+}

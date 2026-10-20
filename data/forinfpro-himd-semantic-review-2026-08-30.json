@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "version": "2026.08.30.1",
+  "reviewed": "2026-08-30",
+  "datasetId": "forinfpro-himd-v1",
+  "decision": "partial-measured-channel-acceptance",
+  "sources": {
+    "dataset": "https://doi.org/10.5281/zenodo.20744054",
+    "manufacturerInterfaceGuide": "https://a.storyblok.com/f/136567/x/077e977d5f/digital-solutions-user-guide-data-interfaces-en.pdf",
+    "manufacturerGuideEdition": "May 2026, ENGEL AUSTRIA GmbH",
+    "aggregateProbeWorkflowRun": 33277055008,
+    "machineFileSha256": "d249cbe4980b00f1565a100c3363dde4cf621c490233a4c184d47ad8d202e480"
+  },
+  "manufacturerEvidence": {
+    "documentedHeatingParameterPattern": "@Heating.zone number.parameter",
+    "documentedActualTemperatureSuffix": "rActualTemp",
+    "documentedRole": "real value / actual value",
+    "documentedEngineeringUnit": "degC",
+    "zoneAffiliationMachineSpecific": true,
+    "boundary": "The manufacturer documentation establishes temperature role/unit and the rActualTemp naming convention, but explicitly says heating-zone affiliation is machine-specific. The delivered zone identifiers are therefore retained as source identifiers rather than re-labelled as universal barrel/nozzle/oven positions."
+  },
+  "executedEvidence": {
+    "releaseFilesVerified": 3,
+    "totalRowsAcrossRelease": 12689,
+    "machineRows": 10132,
+    "machineDeliveredColumns": 101,
+    "machineNamedColumns": 60,
+    "allMachineRowsWidthConforming": true,
+    "all22RActualTempCandidatesCompleteLocalizedNumericTraces": true,
+    "rawRowsOrCellValuesEmitted": false,
+    "absoluteTimestampsEmitted": false
+  },
+  "timeBasis": {
+    "column": "Datum/Zeit",
+    "parsedRows": 10132,
+    "strictlyIncreasing": true,
+    "positiveDeltaCount": 10131,
+    "medianPositiveDeltaSeconds": 0.011953,
+    "minPositiveDeltaSeconds": 0.009834,
+    "maxPositiveDeltaSeconds": 0.014125,
+    "fixedSamplingIntervalAssumed": false,
+    "countedAsMeasuredSensorChannel": false
+  },
+  "acceptedColumns": [
+    "Heating.sv_Zone14.rActualTemp",
+    "Heating.sv_Zone13.rActualTemp",
+    "Heating.sv_Zone12.rActualTemp",
+    "Heating.sv_Zone11.rActualTemp",
+    "Heating.sv_Zone10.rActualTemp",
+    "Heating.sv_Zone9.rActualTemp",
+    "Heating.sv_Zone15.rActualTemp",
+    "Heating.sv_Zone16.rActualTemp",
+    "Heating.sv_Zone17.rActualTemp",
+    "Heating.sv_Zone18.rActualTemp",
+    "Heating.sv_Zone19.rActualTemp",
+    "Heating.sv_Zone20.rActualTemp",
+    "Heating.sv_Zone21.rActualTemp",
+    "Heating.sv_Zone22.rActualTemp",
+    "Heating.sv_Zone23.rActualTemp",
+    "Heating.sv_Zone24.rActualTemp"
+  ],
+  "acceptedChannelDefinition": {
+    "meaning": "ENGEL machine heating-zone actual temperature",
+    "engineeringUnit": "degC",
+    "measurementRole": "actual/real measured value",
+    "physicalLocationBoundary": "exact zone affiliation remains machine-specific; preserve delivered zone identifier",
+    "rowsPerChannel": 10132,
+    "acceptedMeasuredChannels": 16,
+    "acceptedMeasuredTimeSeriesSamples": 162112,
+    "formula": "16 * 10132"
+  },
+  "excludedGroups": {
+    "HeatingOven1RActualTemp": {
+      "columns": 6,
+      "reason": "The delivered suffix is suggestive, but no first-party documentation was found that maps the HeatingOven1 namespace to the same engineering-unit contract; remain fail-closed."
+    },
+    "otherMachineColumns": {
+      "reason": "Identifiers, timestamps, booleans, commands/setpoints, derived values and actual-value fields whose exact engineering units are not pinned remain excluded. Names alone are not used to infer units."
+    },
+    "cycle_001_pt.csv": {
+      "columns": ["time", "pressure", "temperature"],
+      "reason": "The Zenodo description establishes cavity pressure/temperature sensing, but the delivered file and public metadata do not state engineering units for these columns."
+    },
+    "cycle_001_us_rms.csv": {
+      "columns": ["time", "rms_ch0", "rms_ch3"],
+      "reason": "RMS channels are derived signal summaries and the delivered file does not provide an engineering-unit contract for direct measured-value counting."
+    }
+  },
+  "counting": {
+    "acceptedMeasuredTimeSeriesSamples": 162112,
+    "fullyProfiledFamilyCountChange": 0,
+    "rawPublisherDataCommitted": false,
+    "automaticPromotionFromNumericRange": false
+  },
+  "remainingAuthoritativeEvidenceRequired": [
+    "Machine-specific ENGEL parameter/configuration export containing physical units for additional actual-value fields.",
+    "First-party definition and unit mapping for the HeatingOven1 namespace if those six traces are to be promoted.",
+    "Engineering units and sensor/channel mapping for cycle_001_pt.csv pressure and temperature.",
+    "A direct-vs-derived and unit contract for any additional ultrasonic or DEA data before counting those values."
+  ]
+}

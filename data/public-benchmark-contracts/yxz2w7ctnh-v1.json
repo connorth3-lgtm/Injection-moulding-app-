@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "datasetId": "mendeley-yxz2w7ctnh-v1",
+  "status": "accepted-profiled-record-level-injection-mechanical-testing",
+  "source": {
+    "datasetPage": "https://data.mendeley.com/datasets/yxz2w7ctnh/1",
+    "datasetDoi": "10.17632/yxz2w7ctnh.1",
+    "version": 1,
+    "license": "CC BY 4.0",
+    "publisher": "Mendeley Data",
+    "files": [
+      {"id":"0dde1c6b-3618-4a62-bab4-af3ff5286f12","name":"data_3pbending_3d_print_d_ryan.xlsx","sha256":"5c8e5967a95d90a9652ed9167885118bc4ffe4792bf9167c19254ff526fa6742"},
+      {"id":"ff9cce79-7132-4375-956a-4b4948635cdc","name":"data_energy_3d_print_d_ryan.xlsx","sha256":"378f371f7d3b2a31902d59e4d654b8de3a7be6d057ba73dc8f1bd819b9cfcda0"},
+      {"id":"9893bf52-bbc7-4853-adba-45f8e38880d0","name":"data_impact_3d_print_d_ryan.xlsx","sha256":"2eba6818e340e963f88dcb03729aac793d5686c9c1416e81b00c104da3e41196"},
+      {"id":"e30b2a0b-12d2-461a-a119-efed84b2c82e","name":"data_tensile_3d_print_d_ryan.xlsx","sha256":"670fb27b14e34f68ee17de115c4f14b22c4aa4b9887ff8c73a42eb7b2a7e3b79"}
+    ]
+  },
+  "verifiedUniqueSheetHashes": {
+    "bending_PLA":"9bcdb887beb6",
+    "bending_ABS":"d5a2ae08abe5",
+    "tensile_PLA":"78d22198f4f6",
+    "tensile_ABS":"4a53e6780293",
+    "impact_ABS":"d1cc5956b92b",
+    "impact_PLA":"24199e8a4614",
+    "energy_PLA":"85760835bd44",
+    "energy_ABS":"ce9eb3a42d38",
+    "energy_test samples":"2fe0890e502c"
+  },
+  "semanticRules": {
+    "countOnlyExplicitInjectionMouldedBlocks": true,
+    "exclude3dPrintedBlocks": true,
+    "excludeEnergySheets": true,
+    "excludeImpactSheetsBecauseNoInjectionVsFdmIdentityIsDelivered": true,
+    "deduplicateRepeatedWorksheetHashesAcrossFiles": true,
+    "excludeFormulaCellsAsDerived": true,
+    "tensileInjectionBlocks": [
+      {"sheet":"tensile_PLA","marker":"M1","expectedMarkerContains":"INKECTION MOULDED","numericRegion":"O4:W22"},
+      {"sheet":"tensile_ABS","marker":"M1","expectedMarkerContains":"INjECTION MOULDED","numericRegion":"O4:W23"}
+    ],
+    "bendingDirectMeasurementBlocks": [
+      {"sheet":"bending_PLA","marker":"O1","expectedMarkerContains":"Injection moulded","directColumns":["P","Q","R","S"],"dataRows":[4,34],"headers":["Thick","Width","Fmax","dL"]},
+      {"sheet":"bending_ABS","marker":"P1","expectedMarkerContains":"Injection moulded","directColumns":["Q","R","S","T"],"dataRows":[4,32],"headers":["Thick","Width","Fmax","dL"]}
+    ],
+    "recordLevelNotHighFrequencyTimeSeries": true,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "rawRowsOrNumericValuesCommittedOrArtifacted": false
+  },
+  "acceptanceResult": {
+    "countsAsFullyProfiledMeasuredDataset": true,
+    "directRecordLevelInjectionMeasuredValues": 489,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "resultPath": "data/public-benchmark-results/yxz2w7ctnh-v1.json"
+  },
+  "evidenceBoundary": "Only numeric constants inside workbook regions explicitly headed as injection moulded are counted as direct record-level test values. Repeated worksheets are deduplicated by worksheet-content SHA256. Energy/FDM content, formulas, and impact sheets lacking an explicit manufacturing-route identity are excluded."
+}

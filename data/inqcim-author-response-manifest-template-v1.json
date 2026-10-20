@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "datasetId": "inqcim-2500-request",
+  "source": {
+    "paperDoi": "10.3390/polym14173551",
+    "projectId": "FFG 864885"
+  },
+  "authority": {
+    "name": "",
+    "role": "corresponding_author",
+    "organization": "",
+    "authorizationEvidence": ""
+  },
+  "authorization": {
+    "filesSuppliedOrAuthorizedLocation": false,
+    "retrieveAndProfileAllowed": false,
+    "automatedAggregateProfilingAllowed": false,
+    "rawRedistributionAllowed": false,
+    "attributionRequired": true,
+    "conditions": []
+  },
+  "delivery": {
+    "receivedDate": "",
+    "files": [
+      {
+        "relativePath": "",
+        "declaredRole": "machine_or_mold_measurement",
+        "publisherOrAuthorFilename": ""
+      }
+    ]
+  },
+  "semantics": {
+    "cycleIdentifierField": "",
+    "experimentIdentifierField": "",
+    "channels": [
+      {
+        "field": "",
+        "role": "measured_signal",
+        "quantity": "",
+        "unit": "",
+        "samplingRateHz": null,
+        "sourceEvidence": ""
+      }
+    ]
+  }
+}

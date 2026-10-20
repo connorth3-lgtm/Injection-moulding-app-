@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "datasetId": "mendeley-fhj5p7ww9v-v1",
+  "status": "accepted-profiled-restricted-noncommercial",
+  "source": {
+    "datasetPage": "https://data.mendeley.com/datasets/fhj5p7ww9v/1",
+    "datasetDoi": "10.17632/fhj5p7ww9v.1",
+    "mendeleyDatasetId": "fhj5p7ww9v",
+    "version": 1,
+    "publisher": "Mendeley Data",
+    "license": "CC BY-NC 3.0",
+    "automatedAggregateProfilingAllowedForNonCommercialEducation": true,
+    "commercialReuseAllowed": false,
+    "rawRedistributionAllowedUnderProjectPolicy": false,
+    "expectedPublisherFile": "DATA - COST.xlsx",
+    "acceptedPublisherSha256": "1cf9f038f2f9b968c7a78787ce6f9c684d50108542002e491f5979357725ce5e"
+  },
+  "experimentContext": {
+    "process": "microcellular-insert injection moulding",
+    "materialFamily": "polypropylene",
+    "groups": ["solid PP", "PP foam", "all-PP composite", "all-PP composite foam"],
+    "variedProcessFactors": ["injection temperature", "injection speed"],
+    "measuredOutcomes": ["weight", "flexural strength", "flexural modulus"],
+    "derivedOutcomes": ["weight reduction percentage", "flexural strength increase percentage", "flexural modulus increase percentage"],
+    "experimentalConditions": 8,
+    "acceptedMeasuredOutcomeValues": 96,
+    "recordUnit": "source-reported outcome value by material and experimental condition"
+  },
+  "acceptanceRules": {
+    "exactVersionAndPublisherFileRequired": true,
+    "publisherFileFingerprintRequired": true,
+    "deliveredWorkbookSchemaMustBeProfiled": true,
+    "measuredOutcomesMustBeSeparatedFromDerivedPercentages": true,
+    "processFactorsDeviationRowsAndFormulaComparisonsExcludedFromDirectMeasuredCount": true,
+    "recordLevelNotHighFrequencyTimeSeries": true,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "rawRowsOrCellValuesCommittedOrArtifacted": false,
+    "useScopeMustRemainNonCommercial": true
+  },
+  "acceptanceEvidence": {
+    "workflowRunId": 33231197349,
+    "resultPath": "data/public-benchmark-results/fhj5p7ww9v-v1.json",
+    "fullyProfiledMeasuredDataset": true
+  },
+  "evidenceBoundary": "The source is reusable for noncommercial educational/research purposes under CC BY-NC 3.0. The exact publisher workbook is SHA-256 matched and the aggregate layout is reconciled: 3 measured-outcome sheets x 4 material rows x 8 experimental conditions = 96 source-reported measured outcome values. Process factors, spread summaries and formula-derived comparisons are excluded. The source contributes zero high-frequency time-series samples and the licence is not widened into commercial permission or raw-data redistribution."
+}

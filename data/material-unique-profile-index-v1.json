@@ -1,0 +1,867 @@
+{
+  "version": "2026-09-28.10",
+  "source": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
+  "countingRule": "one manufacturer + exact grade identity equals one unique complete profile; multiple evidence rows enrich but do not increase profile count",
+  "uniqueExactCompleteProfiles": 89,
+  "profiles": [
+    {
+      "manufacturer": "Qenos",
+      "grade": "Alkatuff LL820",
+      "polymer": "LLDPE",
+      "supportingRecordIndexes": [
+        1,
+        133
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "SCGC",
+      "grade": "P700J",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        2,
+        97,
+        194
+      ],
+      "evidenceRowCount": 3
+    },
+    {
+      "manufacturer": "SCGC",
+      "grade": "P840J",
+      "polymer": "PP impact copolymer",
+      "supportingRecordIndexes": [
+        3
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "SCGC",
+      "grade": "P901J",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        4
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Kuraray",
+      "grade": "N1000A",
+      "polymer": "PA9T",
+      "supportingRecordIndexes": [
+        5,
+        153
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Kuraray",
+      "grade": "G1300A",
+      "polymer": "PA9T",
+      "supportingRecordIndexes": [
+        6,
+        154
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "grade": "E2000",
+      "polymer": "PA66",
+      "supportingRecordIndexes": [
+        7,
+        150
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "LyondellBasell Australia",
+      "grade": "Moplen HP400L / PLASVE HP400L",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        9
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "IndianOil",
+      "grade": "P1110MAS",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        13,
+        184
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "grade": "ASF-9860",
+      "polymer": "PBT",
+      "supportingRecordIndexes": [
+        14,
+        151
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "grade": "GP-5000",
+      "polymer": "PBT",
+      "supportingRecordIndexes": [
+        15,
+        152
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "grade": "DURANEX 3306",
+      "polymer": "PBT+PET",
+      "supportingRecordIndexes": [
+        17,
+        148,
+        210
+      ],
+      "evidenceRowCount": 3
+    },
+    {
+      "manufacturer": "Teijin",
+      "grade": "PANLITE SH-1126Z",
+      "polymer": "PC",
+      "supportingRecordIndexes": [
+        18,
+        149
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "grade": "TAIRILAC AG15A1-H",
+      "polymer": "ABS",
+      "supportingRecordIndexes": [
+        19
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LOTTE Chemical Titan",
+      "grade": "SH611",
+      "polymer": "PP impact copolymer",
+      "supportingRecordIndexes": [
+        23,
+        115,
+        200
+      ],
+      "evidenceRowCount": 3
+    },
+    {
+      "manufacturer": "LyondellBasell Australia",
+      "grade": "PLASVE/Moplen HP400L",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        26
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Kuraray",
+      "grade": "G1500A",
+      "polymer": "PA9T",
+      "supportingRecordIndexes": [
+        27,
+        155
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "UBE",
+      "grade": "1015GC6",
+      "polymer": "PA6",
+      "supportingRecordIndexes": [
+        28,
+        188
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "UBE",
+      "grade": "1013B",
+      "polymer": "PA6",
+      "supportingRecordIndexes": [
+        29,
+        189
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Supreme Petrochem",
+      "grade": "SH400HV",
+      "polymer": "HIPS",
+      "supportingRecordIndexes": [
+        30,
+        234
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "grade": "AF3500",
+      "polymer": "ABS",
+      "supportingRecordIndexes": [
+        31,
+        124,
+        171
+      ],
+      "evidenceRowCount": 3
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 3600G",
+      "polymer": "PESU",
+      "supportingRecordIndexes": [
+        32,
+        157
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "grade": "PLASVE HP741T",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        36,
+        160
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "grade": "PLASVE HP548S",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        37,
+        181
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "grade": "Moplen EP332K",
+      "polymer": "PP impact copolymer",
+      "supportingRecordIndexes": [
+        38,
+        161
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "grade": "Moplen EP336J",
+      "polymer": "PP impact copolymer",
+      "supportingRecordIndexes": [
+        39,
+        179
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "grade": "Moplen RP348NK",
+      "polymer": "PP random copolymer",
+      "supportingRecordIndexes": [
+        40,
+        162
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "grade": "Moplen EP641P",
+      "polymer": "PP impact copolymer",
+      "supportingRecordIndexes": [
+        41,
+        180
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "LyondellBasell Australia",
+      "grade": "Moplen HE649T",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        42,
+        163
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "grade": "GP-5400G",
+      "polymer": "PBT/GF",
+      "supportingRecordIndexes": [
+        46,
+        167
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "grade": "DURAFIDE 1140A66",
+      "polymer": "PPS",
+      "supportingRecordIndexes": [
+        51,
+        156,
+        211
+      ],
+      "evidenceRowCount": 3
+    },
+    {
+      "manufacturer": "Asahi Kasei",
+      "grade": "TENAC-C 4520",
+      "polymer": "POM copolymer",
+      "supportingRecordIndexes": [
+        52,
+        187
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "grade": "FUN-8520S",
+      "polymer": "polyarylate alloy",
+      "supportingRecordIndexes": [
+        53,
+        158
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "grade": "UG-100-20",
+      "polymer": "polyarylate composite",
+      "supportingRecordIndexes": [
+        54,
+        185
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "UNITIKA",
+      "grade": "UG-100-30",
+      "polymer": "polyarylate composite",
+      "supportingRecordIndexes": [
+        55,
+        186
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "ExxonMobil Chemical",
+      "grade": "Achieve Advanced PP7123KNE1",
+      "polymer": "PP",
+      "supportingRecordIndexes": [
+        67
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON CP15X",
+      "polymer": "POM",
+      "supportingRecordIndexes": [
+        69,
+        201
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON M25LV",
+      "polymer": "POM",
+      "supportingRecordIndexes": [
+        70,
+        202
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON TF-30",
+      "polymer": "POM",
+      "supportingRecordIndexes": [
+        71,
+        203
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON AW-01",
+      "polymer": "POM+PE",
+      "supportingRecordIndexes": [
+        72,
+        204
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON WR-01",
+      "polymer": "POM",
+      "supportingRecordIndexes": [
+        73,
+        205
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON M140-44",
+      "polymer": "POM",
+      "supportingRecordIndexes": [
+        74,
+        206
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON M450-44",
+      "polymer": "POM",
+      "supportingRecordIndexes": [
+        75,
+        207
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON GM-20",
+      "polymer": "POM-GF20",
+      "supportingRecordIndexes": [
+        76,
+        208
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON LU-02",
+      "polymer": "POM",
+      "supportingRecordIndexes": [
+        77,
+        209
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Kuraray",
+      "grade": "G1352A",
+      "polymer": "PA9T",
+      "supportingRecordIndexes": [
+        78,
+        190
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Kuraray",
+      "grade": "GL1350A",
+      "polymer": "PA9T",
+      "supportingRecordIndexes": [
+        79,
+        191
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Kuraray",
+      "grade": "G1350A-M47WF",
+      "polymer": "PA9T",
+      "supportingRecordIndexes": [
+        80,
+        192
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "UBE",
+      "grade": "3030B",
+      "polymer": "PA12",
+      "supportingRecordIndexes": [
+        81
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "ExxonMobil Chemical",
+      "grade": "Exceed PP7123KNE1",
+      "polymer": "PP impact copolymer",
+      "supportingRecordIndexes": [
+        88
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "grade": "LW-5300M",
+      "polymer": "PBT",
+      "supportingRecordIndexes": [
+        90,
+        168
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "LOTTE Chemical",
+      "grade": "GP-2306FC",
+      "polymer": "PBT",
+      "supportingRecordIndexes": [
+        91,
+        169
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "SCGC",
+      "grade": "P740J",
+      "polymer": "PP impact copolymer",
+      "supportingRecordIndexes": [
+        98,
+        195
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "SCGC",
+      "grade": "P744J",
+      "polymer": "PP impact copolymer",
+      "supportingRecordIndexes": [
+        99,
+        196
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "SCGC",
+      "grade": "P842J",
+      "polymer": "PP impact copolymer",
+      "supportingRecordIndexes": [
+        100,
+        197
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "IndianOil",
+      "grade": "180M50",
+      "polymer": "HDPE",
+      "supportingRecordIndexes": [
+        101,
+        233
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "IndianOil",
+      "grade": "080M60U",
+      "polymer": "HDPE",
+      "supportingRecordIndexes": [
+        102,
+        232
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "PETRONAS Chemicals",
+      "grade": "H500NG",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        119
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "PETRONAS Chemicals",
+      "grade": "H648TT",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        120
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Formosa Chemicals & Fibre",
+      "grade": "AG15A1-H",
+      "polymer": "ABS",
+      "supportingRecordIndexes": [
+        123,
+        170
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Polyplastics",
+      "grade": "DURACON M90-44",
+      "polymer": "POM",
+      "supportingRecordIndexes": [
+        147
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LyondellBasell",
+      "grade": "PLASVE HP400L",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        159
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Qenos",
+      "grade": "LDN248",
+      "polymer": "LDPE",
+      "supportingRecordIndexes": [
+        164
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Qenos",
+      "grade": "WRM124",
+      "polymer": "LDPE",
+      "supportingRecordIndexes": [
+        165
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Qenos",
+      "grade": "WSM168",
+      "polymer": "LDPE",
+      "supportingRecordIndexes": [
+        166
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "SCGC",
+      "grade": "P722JO",
+      "polymer": "PP impact copolymer",
+      "supportingRecordIndexes": [
+        177
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "SCGC",
+      "grade": "P841J",
+      "polymer": "PP impact copolymer",
+      "supportingRecordIndexes": [
+        178
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "IndianOil",
+      "grade": "080M60",
+      "polymer": "HDPE",
+      "supportingRecordIndexes": [
+        182
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "IndianOil",
+      "grade": "080M55",
+      "polymer": "HDPE",
+      "supportingRecordIndexes": [
+        183
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "PETRONAS Chemicals",
+      "grade": "PROPELINAS H500NG",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        198
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "PETRONAS Chemicals",
+      "grade": "PROPELINAS H648TT",
+      "polymer": "PP homopolymer",
+      "supportingRecordIndexes": [
+        199
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 4100G",
+      "polymer": "PESU",
+      "supportingRecordIndexes": [
+        243
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 4800G",
+      "polymer": "PESU",
+      "supportingRecordIndexes": [
+        244
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 3601GL20",
+      "polymer": "PESU-GF20",
+      "supportingRecordIndexes": [
+        245
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 4101GL20",
+      "polymer": "PESU-GF20",
+      "supportingRecordIndexes": [
+        246,
+        250
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 4101GL30",
+      "polymer": "PESU-GF30",
+      "supportingRecordIndexes": [
+        247,
+        251
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "Sumitomo Chemical",
+      "grade": "SUMIKAEXCEL 3601GL30",
+      "polymer": "PESU-GF30",
+      "supportingRecordIndexes": [
+        248,
+        252
+      ],
+      "evidenceRowCount": 2
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP1100AW",
+      "polymer": "PA6",
+      "supportingRecordIndexes": [
+        266
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP2300AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        267
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID HM2604AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        268
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP2100AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        275
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP2200AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        276
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP2400AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        277
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP2500AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        278
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3100AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        279
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3200AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        280
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3300AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        281
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3400AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        282
+      ],
+      "evidenceRowCount": 1
+    },
+    {
+      "manufacturer": "LG Chem",
+      "grade": "LUMID GP3500AW",
+      "polymer": "PA6-GF",
+      "supportingRecordIndexes": [
+        283
+      ],
+      "evidenceRowCount": 1
+    }
+  ]
+}

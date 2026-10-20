@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "status": "publisher-record-no-files-exposed",
+  "reviewedDate": "2026-08-30",
+  "source": {
+    "datasetId": "mendeley-ztkc87d6sr-v1",
+    "datasetDoi": "10.17632/ztkc87d6sr.1",
+    "license": "CC BY 4.0",
+    "version": 1,
+    "publisher": "Mendeley Data"
+  },
+  "profile": {
+    "publisherFilesExposed": 0,
+    "reportedEvidenceClasses": ["wear", "TGA", "FTIR", "SEM"],
+    "rawPublisherFilesCommitted": false,
+    "rawNumericValuesCommittedOrArtifacted": false
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": false,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "acceptedRecordLevelOrCharacterizationValues": 0,
+    "reason": "The publisher record exposes no payload files. Reported measurements remain metadata-only until exact source files are delivered, fingerprinted and semantically profiled."
+  },
+  "nextAction": "Recheck authoritative publisher file exposure; do not infer or count wear/TGA/FTIR/SEM values from metadata or article prose."
+}

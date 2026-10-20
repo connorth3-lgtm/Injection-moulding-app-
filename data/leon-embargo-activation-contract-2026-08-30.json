@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "reviewed": "2026-08-30",
+  "purpose": "Pin the live embargo, licence, overlap and activation boundary for the two Universidad de León injection-moulding datasets so an early or scheduled public release can be detected without premature retrieval or double counting.",
+  "campaign": {
+    "project": "PID2023-153047OB100",
+    "overlapGroup": "leon-process-20309380",
+    "independentExperimentFamilies": 1,
+    "recordsDescribeSame1000BatchCampaign": true,
+    "doubleCountCompanionRecords": false
+  },
+  "policy": {
+    "metadataMayBeRetainedDuringEmbargo": true,
+    "rawFileRetrievalAllowedWhileEmbargoed": false,
+    "automatedIngestionAllowedWhileEmbargoed": false,
+    "releaseDoesNotAutomaticallyChangeAcceptedCounts": true,
+    "releaseRequiresExactManifestAndChecksumCapture": true,
+    "releaseRequiresLicenceReconfirmation": true,
+    "releaseRequiresBatchShotPartSemanticReconciliation": true,
+    "rawRowsCommittedToRepository": false
+  },
+  "releaseWatch": {
+    "cadence": "daily",
+    "checker": "tools/check_leon_embargo_state.py",
+    "workflow": ".github/workflows/leon-embargo-watch.yml",
+    "expectedPublicAvailabilityDate": "2027-12-31",
+    "earlyReleaseAllowedByDepositor": true,
+    "earlyReleaseCondition": "Full open access may be granted earlier once the associated publications are released.",
+    "onEarlyOpen": "Fail the watch job with an actionable release-detected result; do not ingest until the activation checklist is completed.",
+    "onDateReachedStillEmbargoed": "Fail closed and require a live Zenodo recheck; do not assume a date alone makes files reusable."
+  },
+  "records": [
+    {
+      "datasetId": "leon-process-20309380",
+      "zenodoRecordId": 20309380,
+      "doi": "10.5281/zenodo.20309380",
+      "title": "Injection-Molded Polypropylene Parts: Experimental Process Dataset with Part Weights, Energy Consumption and CAD Geometry",
+      "publisher": "Zenodo",
+      "liveRecordUrl": "https://zenodo.org/records/20309380",
+      "apiRecordUrl": "https://zenodo.org/api/records/20309380",
+      "currentAccessState": "embargoed",
+      "checkedOn": "2026-08-30",
+      "license": "CC BY 4.0",
+      "embargoUntil": "2027-12-31",
+      "contact": {
+        "name": "Jesús Pérez-González",
+        "email": "jpereg@unileon.es"
+      },
+      "describedFiles": [
+        "Dataset.csv",
+        "Parts_geometry.stp"
+      ],
+      "describedStructure": {
+        "batches": 1000,
+        "doeBatches": 768,
+        "maximinBatches": 232,
+        "registeredWeightMeasurementsPerBatch": 5,
+        "preconditioningPartsDiscardedBeforeRegisteredMeasurements": 3,
+        "moldCavities": 2,
+        "partsPerInjectionCycleAccordingToRecord": 2,
+        "injectionCycleCountAcceptedBeforeFileProfiling": null,
+        "processParameters": 6,
+        "measuredOrDerivedOutputs": [
+          "P1_weight-P5_weight",
+          "weight_avg",
+          "energy",
+          "cycle_time",
+          "label_viability"
+        ]
+      },
+      "countingBoundary": "The metadata uses batch, part and two-cavity-cycle language that must be reconciled against the delivered CSV before an injection-cycle count is accepted.",
+      "automatedIngestionAllowed": false,
+      "rawRedistributionAllowed": false,
+      "acceptedMeasuredValues": 0
+    },
+    {
+      "datasetId": "leon-defects-20322729",
+      "zenodoRecordId": 20322729,
+      "doi": "10.5281/zenodo.20322729",
+      "title": "Injection-molded plastic parts defect dataset: raw images, segmentation masks, and quantitative defect metrics under varying process parameters",
+      "publisher": "Zenodo",
+      "liveRecordUrl": "https://zenodo.org/records/20322729",
+      "apiRecordUrl": "https://zenodo.org/api/records/20322729",
+      "currentAccessState": "embargoed",
+      "checkedOn": "2026-08-30",
+      "license": "CC BY 4.0",
+      "embargoUntil": "2027-12-31",
+      "contact": {
+        "name": "Iván Sánchez-Calleja",
+        "email": "isanc@unileon.es"
+      },
+      "describedFiles": [
+        "Images_dataset.rar",
+        "Dataset_labeled.zip",
+        "Quantitative_defects_and_process_parameters.csv",
+        "Mold_geometry.step",
+        "README.md"
+      ],
+      "describedStructure": {
+        "batches": 1000,
+        "doeBatches": 768,
+        "maximinBatches": 232,
+        "shotsPerBatch": 5,
+        "moldCavities": 2,
+        "partsPerShot": 2,
+        "inspectedPartsPerBatch": 10,
+        "imagesPerPart": 2,
+        "describedImagesBeforeFeasibilityFilteringPerBatch": 20,
+        "feasibleImagesReported": 14620,
+        "defectClasses": 10,
+        "processParameters": 6
+      },
+      "countingBoundary": "This record is a companion quality/vision view of the same 1,000-batch campaign as the process record and must not create a second independent injection experiment family.",
+      "automatedIngestionAllowed": false,
+      "rawRedistributionAllowed": false,
+      "acceptedMeasuredValues": 0
+    }
+  ],
+  "activationChecklist": [
+    "Confirm the live Zenodo record reports public/open file access rather than merely reaching the planned embargo date.",
+    "Confirm the record still grants CC BY 4.0 to the released files.",
+    "Capture the exact released filenames, byte sizes and checksums before parsing.",
+    "Profile delivered schemas without committing raw rows or images to the repository.",
+    "Reconcile batch, shot, part, cavity and image semantics across both companion records.",
+    "Preserve one shared overlap group and prevent companion-record double counting.",
+    "Only then update inventory access state, automated-ingestion flags and accepted measured counts."
+  ],
+  "projectCountingBoundary": {
+    "acceptedMeasuredValuesAddedByThisContract": 0,
+    "fullyProfiledFamiliesAddedByThisContract": 0
+  }
+}

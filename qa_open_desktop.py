@@ -1,0 +1,270 @@
+from pathlib import Path
+import json
+
+ROOT = Path(__file__).resolve().parent
+DESKTOP = ROOT / "desktop" / "electron"
+
+
+def require(condition, message):
+    if not condition:
+        raise AssertionError(message)
+
+
+for path in [
+    ROOT / "README.md",
+    ROOT / "SECURITY.md",
+    ROOT / "LICENSE",
+    ROOT / "OPEN_SOURCE_AND_PATENT_POLICY.md",
+    ROOT / "THIRD_PARTY_NOTICES.md",
+    DESKTOP / "README.md",
+    DESKTOP / "LEGACY_MIGRATION.md",
+    DESKTOP / "REAL_WINDOWS_VALIDATION.md",
+    DESKTOP / "THREAT_MODEL.md",
+    DESKTOP / "package.json",
+    DESKTOP / "package-lock.json",
+    DESKTOP / "msix-toolchain" / "package.json",
+    DESKTOP / "msix-toolchain" / "package-lock.json",
+    DESKTOP / "src" / "main.cjs",
+    DESKTOP / "scripts" / "generate-integrity.cjs",
+    DESKTOP / "scripts" / "generate-licenses.cjs",
+    DESKTOP / "scripts" / "generate-sbom.cjs",
+    DESKTOP / "scripts" / "generate-msix-assets.ps1",
+    DESKTOP / "scripts" / "run-msix-builder.cjs",
+    DESKTOP / "scripts" / "verify-real-windows-release.ps1",
+    DESKTOP / "scripts" / "qa.cjs",
+    ROOT / ".github" / "workflows" / "desktop-dependency-lock.yml",
+    ROOT / ".github" / "workflows" / "open-desktop-build.yml",
+    ROOT / ".github" / "workflows" / "publish-open-desktop.yml",
+    ROOT / ".github" / "workflows" / "microsoft-store-msix.yml",
+]:
+    require(path.exists(), f"open desktop/release file missing: {path.relative_to(ROOT)}")
+
+pkg = json.loads((DESKTOP / "package.json").read_text(encoding="utf-8"))
+lock = json.loads((DESKTOP / "package-lock.json").read_text(encoding="utf-8"))
+msix_pkg = json.loads((DESKTOP / "msix-toolchain" / "package.json").read_text(encoding="utf-8"))
+msix_lock = json.loads((DESKTOP / "msix-toolchain" / "package-lock.json").read_text(encoding="utf-8"))
+msix_runner = (DESKTOP / "scripts" / "run-msix-builder.cjs").read_text(encoding="utf-8")
+windows_verifier = (DESKTOP / "scripts" / "verify-real-windows-release.ps1").read_text(encoding="utf-8")
+for marker in (
+    "$matchingHashes = @()",
+    "$matchingHashes.Count -ne 1",
+    "Expected exactly one SHA-256 entry",
+):
+    require(marker in windows_verifier, f"real Windows release checksum verifier missing ambiguity guard: {marker}")
+require(pkg.get("license") == "Apache-2.0", "desktop package must remain Apache-2.0")
+require(lock.get("lockfileVersion", 0) >= 3, "desktop npm lockfile must be v3+")
+for dep in ("electron", "electron-builder"):
+    require(lock["packages"][""]["devDependencies"][dep] == pkg["devDependencies"][dep], f"locked {dep} version mismatch")
+require(pkg["devDependencies"].get("electron-builder") == "26.17.0", "portable/NSIS builder must remain pinned to 26.17.0")
+require(msix_pkg.get("devDependencies", {}).get("electron-builder") == "27.0.0-alpha.10", "isolated MSIX builder must be pinned to 27.0.0-alpha.10")
+locked_msix_builder = msix_lock.get("packages", {}).get("node_modules/electron-builder")
+require(locked_msix_builder is not None and locked_msix_builder.get("version") == "27.0.0-alpha.10", "isolated MSIX lock must resolve electron-builder 27.0.0-alpha.10")
+require("EXPECTED_VERSION = '27.0.0-alpha.10'" in msix_runner, "MSIX runner must fail closed on approved builder version")
+require("--verify-toolchain" in msix_runner and "msix-toolchain" in msix_runner, "MSIX runner must verify the isolated installed toolchain")
+msix_cmd = pkg.get("scripts", {}).get("dist:msix", "")
+require("node scripts/run-msix-builder.cjs --win msix" in msix_cmd, "local MSIX command must use the isolated locked runner")
+require("npx --yes electron-builder" not in msix_cmd, "local MSIX command must not resolve a builder from the network")
+require("--config.msix.setBuildNumber=true" in msix_cmd, "local MSIX command must preserve the desktop release build number")
+
+version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
+release = version.get("desktop_release", "")
+parts = release.split(".")
+require(len(parts) == 4 and all(x.isdigit() for x in parts), "desktop_release must be a four-part numeric version")
+normalized = [str(int(x)) for x in parts]
+expected_pkg_version = ".".join(normalized[:3])
+expected_build_number = normalized[3]
+expected_build_version = ".".join(normalized)
+expected_tag = f"desktop-v{release}"
+expected_url = f"https://github.com/{version.get('repository')}/releases/tag/{expected_tag}"
+require(pkg.get("version") == expected_pkg_version, "desktop package version must match the first three desktop_release components")
+require(str(pkg["build"].get("buildNumber")) == expected_build_number, "desktop buildNumber must match desktop_release fourth component")
+require(pkg["build"].get("buildVersion") == expected_build_version, "desktop buildVersion must match desktop_release")
+require("${buildVersion}" in pkg["build"]["win"].get("artifactName", ""), "Windows artifact name must include buildVersion")
+require(version.get("desktop_release_tag") == expected_tag, "desktop_release_tag must match desktop_release")
+require(version.get("desktop_release_url") == expected_url, "desktop_release_url must match the tagged GitHub release")
+require(version.get("windows_recovery_release"), "windows_recovery_release missing from version.json")
+require(version["desktop_release"] != version["windows_recovery_release"], "open desktop and legacy recovery lanes must be explicit and separate")
+
+desktop_readme = (DESKTOP / "README.md").read_text(encoding="utf-8")
+require(f"Current desktop release: `{release}`" in desktop_readme, "desktop README current release is stale")
+for marker in ["REAL_WINDOWS_VALIDATION.md", "verify-real-windows-release.ps1", "normal Windows 10/11", "127.0.0.1:43139"]:
+    require(marker in desktop_readme, f"desktop README real-Windows/stable-origin marker missing: {marker}")
+
+fuses = pkg["build"].get("electronFuses", {})
+for name, expected in {
+    "runAsNode": False,
+    "enableNodeOptionsEnvironmentVariable": False,
+    "enableNodeCliInspectArguments": False,
+    "enableEmbeddedAsarIntegrityValidation": True,
+    "onlyLoadAppFromAsar": True,
+}.items():
+    require(fuses.get(name) is expected, f"Electron fuse must remain {name}={str(expected).lower()}")
+
+main = (DESKTOP / "src" / "main.cjs").read_text(encoding="utf-8")
+for marker in [
+    "nodeIntegration: false",
+    "contextIsolation: true",
+    "sandbox: true",
+    "webSecurity: true",
+    "allowRunningInsecureContent: false",
+    "setPermissionRequestHandler",
+    "setPermissionCheckHandler",
+    "will-attach-webview",
+    "setWindowOpenHandler",
+    "const DESKTOP_PORT = 43139",
+    "server.listen(DESKTOP_PORT, '127.0.0.1'",
+    "requestSingleInstanceLock()",
+    "const INTEGRITY_PATH = path.join(__dirname, '..', 'generated', 'integrity.json')",
+    "startLoopbackServer(integrity.files)",
+    "Object.prototype.hasOwnProperty.call(expectedFiles, name)",
+    "Verified application asset changed after startup",
+    "method !== 'GET' && method !== 'HEAD'",
+    "SHA-256 verification failed",
+]:
+    require(marker in main, f"desktop security invariant missing: {marker}")
+require("server.listen(0, '127.0.0.1'" not in main, "desktop must not bind an ephemeral port because browser storage is origin-scoped")
+require("process.resourcesPath, 'mouldmaster', 'integrity.json'" not in main, "packaged integrity manifest must not be read from the writable asset directory")
+
+integrity_script = (DESKTOP / "scripts" / "generate-integrity.cjs").read_text(encoding="utf-8")
+require("MouldMaster_Academy_App.html" not in integrity_script, "frozen legacy Academy shadow app must not be part of current desktop integrity set")
+for marker in [
+    "RUNTIME_MANIFEST='runtime-domain-manifest.json'",
+    "runtimeManifest.assets",
+    "runtimeManifest.dataAssets",
+    "runtimeAssetPath",
+    "manifestFiles",
+]:
+    require(marker in integrity_script, f"desktop integrity generator does not derive the domain allowlist from runtime manifest: {marker}")
+require("src/domains/engineering/store-bridge.js" not in integrity_script, "retired engineering compatibility bridge remains in desktop integrity set")
+
+desktop_qa = (DESKTOP / "scripts" / "qa.cjs").read_text(encoding="utf-8")
+for marker in [
+    "runtime-domain-manifest.json",
+    "DOMAIN_MANIFEST.assets",
+    "DOMAIN_MANIFEST.dataAssets",
+    "runtime manifest asset is not integrity-hashed/servable by desktop",
+]:
+    require(marker in desktop_qa, f"desktop QA does not prove runtime-manifest serving coverage: {marker}")
+
+runtime_manifest = json.loads((ROOT / "runtime-domain-manifest.json").read_text(encoding="utf-8"))
+require(runtime_manifest.get("schemaVersion") == 1, "desktop QA runtime-domain manifest schema drift")
+required_domain_assets = {
+    "./src/domains/shared/learner-scope.js",
+    "./src/domains/engineering/engineering-store.js",
+    "./src/domains/learning/learning-analytics-loader.js",
+    "./src/domains/materials/material-registry.js",
+    "./src/domains/materials/material-search-index.js",
+    "./src/domains/shell/accessibility-loader.js",
+    "./src/domains/shell/product-areas.js",
+}
+require(required_domain_assets.issubset(set(runtime_manifest.get("assets") or [])), "desktop QA expected domain asset set drift")
+require("./material-catalog-v1.json" in (runtime_manifest.get("dataAssets") or []), "desktop QA material runtime data asset missing")
+
+extra = pkg["build"]["extraResources"]
+from_paths = {x.get("from") for x in extra if isinstance(x, dict)}
+require("../../MouldMaster_Academy_App.html" not in from_paths, "frozen legacy Academy shadow app must not ship in current desktop bundle")
+require("../../src/domains" in from_paths, "canonical domain modules must ship in current desktop bundle")
+require("generated/integrity.json" in from_paths, "packaged integrity manifest missing")
+require("generated/dependency-licenses.json" in from_paths, "dependency licence inventory missing")
+require("generated/sbom.cdx.json" in from_paths, "SBOM missing from package")
+# Every explicit same-origin release asset governed by the service worker must either be
+# covered by a packaged directory or appear directly in Electron extraResources.
+sw=(ROOT / "service-worker.js").read_text(encoding="utf-8")
+import re
+sw_assets=set(re.findall(r"['\"](\./[^'\"]+)['\"]",sw))
+explicit_root={a[2:] for a in sw_assets if '/' not in a[2:]}
+packaged_root={Path(x[6:]).name for x in from_paths if isinstance(x,str) and x.startswith('../../') and '/' not in x[6:]}
+desktop_exclusions={'MouldMaster_Core_App.html'}
+missing_root=sorted(explicit_root-packaged_root-desktop_exclusions)
+require(not missing_root,f"desktop extraResources missing service-worker root asset(s): {missing_root}")
+require(desktop_exclusions.isdisjoint(packaged_root),'legacy assembly routes must remain excluded from desktop resources')
+require('repair.html' in packaged_root,"repair.html must be integrity-packaged so the desktop server can fail closed while redirecting it to index.html")
+
+
+msix_assets = (DESKTOP / "scripts" / "generate-msix-assets.ps1").read_text(encoding="utf-8")
+require('"../../../mouldmaster-512.png"' in msix_assets, "MSIX artwork source path must resolve to repository root icon")
+
+real_windows = (DESKTOP / "REAL_WINDOWS_VALIDATION.md").read_text(encoding="utf-8")
+for marker in [
+    "manual evidence required",
+    "normal Windows 10/11",
+    "real legacy backup",
+    "offline launch",
+    "imported certificate/pass state is not trusted",
+    "imported analytics are reset",
+    "learner names, backup content, customer identifiers",
+]:
+    require(marker in real_windows, f"real-Windows retirement safeguard missing: {marker}")
+
+verify_script = (DESKTOP / "scripts" / "verify-real-windows-release.ps1").read_text(encoding="utf-8")
+for marker in [
+    "$IsWindows",
+    "Get-FileHash",
+    "SHA-256 mismatch",
+    "sha256_verified",
+    "content_copied_to_evidence = $false",
+    "manual_checks",
+]:
+    require(marker in verify_script, f"real-Windows evidence helper safeguard missing: {marker}")
+
+store = (ROOT / ".github" / "workflows" / "microsoft-store-msix.yml").read_text(encoding="utf-8")
+for marker in [
+    "MM_STORE_IDENTITY_NAME",
+    "MM_STORE_PUBLISHER",
+    "MM_STORE_PUBLISHER_DISPLAY_NAME",
+    "desktop/electron/msix-toolchain/package-lock.json",
+    "node scripts/run-msix-builder.cjs --verify-toolchain",
+    "node scripts/run-msix-builder.cjs --win msix --x64 --arm64",
+    "--config.msix.publisher=",
+    "--config.msix.setBuildNumber=true",
+    "createMsixupload=true",
+    "enforcePackageIntegrity=true",
+    "${buildVersion}",
+]:
+    require(marker in store, f"Store package gate missing: {marker}")
+require("npx --yes electron-builder" not in store, "Store package gate must not resolve electron-builder from the network")
+
+publish = (ROOT / ".github" / "workflows" / "publish-open-desktop.yml").read_text(encoding="utf-8")
+for marker in [
+    "build-windows-release:",
+    "publish-release:",
+    "contents: read",
+    "contents: write",
+    "Retain exact staged desktop release handoff",
+    "actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333",
+    "Verify staged release handoff identity and hashes",
+    "persist-credentials: false",
+    "Recheck governed current-main source before release write",
+    "npm run dist:portable",
+    "python qa_release.py",
+    "python qa_open_desktop.py",
+    "python qa_real_process_data_pilot.py",
+    "SHA256SUMS.txt",
+    "SOURCE_COMMIT.txt",
+    "dependency-licenses.json",
+    "sbom.cdx.json",
+    "git ls-remote --tags",
+    "gh release create",
+    "gh release upload",
+    "--target $env:GITHUB_SHA",
+]:
+    require(marker in publish, f"open desktop publish gate missing: {marker}")
+require("paths:\n      - 'version.json'" in publish, "desktop publishing must be driven by an explicit release-version change")
+builder_block = publish.split("  build-windows-release:", 1)[1].split("\n  publish-release:", 1)[0]
+publisher_block = publish.split("  publish-release:", 1)[1]
+require("contents: write" not in builder_block, "desktop build/package job must not receive repository write authority")
+require("contents: write" in publisher_block, "desktop release mutation must be isolated to the publication job")
+require("npm ci --no-audit --fund=false" not in publisher_block and "npm run dist:portable" not in publisher_block,
+        "desktop write-authority publication job must not run dependency installation or package build code")
+
+migration = (DESKTOP / "LEGACY_MIGRATION.md").read_text(encoding="utf-8")
+for marker in [
+    "not assumed to migrate automatically",
+    "progress-backup export",
+    "certificates must be re-earned",
+    "real Windows 10/11",
+    "SHA256SUMS.txt",
+]:
+    require(marker in migration, f"legacy migration safeguard missing: {marker}")
+
+print("MouldMaster open desktop release QA passed (stable origin persistence, runtime domain manifest as canonical serving allowlist, locked packaging toolchains, recovery lane separate)")

@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "bookId": "mouldmaster-book",
+  "release": "2026.10.06.5",
+  "status": "governed-instructional-diagrams",
+  "policy": "Instructional diagrams explain generic mechanisms. They are not scale drawings, CFD/FEA results, mould designs, safety drawings, machine-specific setup instructions or production limits.",
+  "diagrams": [
+    {
+      "id": "diagram-vp-transfer-v1",
+      "chapterId": "vp-transfer",
+      "title": "Velocity to pressure transfer",
+      "asset": "assets/book-diagrams/vp-transfer.svg",
+      "gitBlobSha1": "284ed3f5747502e85ad0159bd8c7e9c7a4f68c67",
+      "alt": "Conceptual graph showing screw-position/fill progression and cavity-pressure response around velocity-to-pressure transfer.",
+      "caption": "Transfer is a process transition, not a universal screw-position number. Interpret commanded state together with actual machine response and cavity evidence."
+    },
+    {
+      "id": "diagram-cavity-pressure-cycle-v1",
+      "chapterId": "cavity-pressure",
+      "title": "Cavity pressure through the moulding cycle",
+      "asset": "assets/book-diagrams/cavity-pressure-cycle.svg",
+      "gitBlobSha1": "b2fd092e9db6259b410a7e3fab74e65b9fe20a35",
+      "alt": "Conceptual cavity-pressure trace labelled fill, pack or hold influence, gate isolation and pressure decay.",
+      "caption": "Peak pressure alone can hide important process-history differences; location, calibration and the full trace remain part of the evidence."
+    },
+    {
+      "id": "diagram-feed-system-v1",
+      "chapterId": "feed-system",
+      "title": "Feed-system pressure-loss locations",
+      "asset": "assets/book-diagrams/runner-gate-flow-path.svg",
+      "gitBlobSha1": "62c5749ba9664df3a525ed47e5f4cc31e5c60741",
+      "alt": "Conceptual melt path from nozzle through sprue, runner and gate into the cavity.",
+      "caption": "Separate pressure demand by flow-path region rather than assuming the smallest feature is automatically the root cause."
+    },
+    {
+      "id": "diagram-cooling-balance-v1",
+      "chapterId": "cooling",
+      "title": "Cooling circuit balance",
+      "asset": "assets/book-diagrams/cooling-circuit-balance.svg",
+      "gitBlobSha1": "836053baff4eb8def2d5c75ad75fa58f38e8d0fa",
+      "alt": "Conceptual mould cooling circuit showing inlet and outlet evidence around an asymmetric hotter region.",
+      "caption": "Controller setpoints do not prove equal local thermal state. Compare flow, supply/return temperature, pressure drop and cavity-side evidence."
+    },
+    {
+      "id": "diagram-fountain-flow-v1",
+      "chapterId": "fill-study",
+      "title": "Fountain flow and frozen-layer development",
+      "asset": "assets/book-diagrams/fountain-flow.svg",
+      "gitBlobSha1": "b5db6d8cf37dc50b14d310d8c747cdab79ef3ec1",
+      "alt": "Conceptual cavity cross-section showing a hotter flowing core turning outward at the advancing flow front while cooler wall layers develop.",
+      "caption": "The diagram explains the mechanism only; actual layer thickness, orientation and thermal history depend on material, geometry and mould conditions."
+    },
+    {
+      "id": "diagram-gate-seal-v1",
+      "chapterId": "gate-seal",
+      "title": "Gate-seal response study",
+      "asset": "assets/book-diagrams/gate-seal.svg",
+      "gitBlobSha1": "1db697a621e05efb54d5564f98b840d81b395e37",
+      "alt": "Conceptual measured response versus hold-duration curve approaching a plateau.",
+      "caption": "A plateau can be useful evidence for the studied system, but it is not a universal hold-time prescription."
+    },
+    {
+      "id": "diagram-multicavity-balance-v1",
+      "chapterId": "multi-cavity",
+      "title": "Multi-cavity balance",
+      "asset": "assets/book-diagrams/multicavity-balance.svg",
+      "gitBlobSha1": "7b8b50b5e01bd2bf1caa77d0c8ef4e65afc1273d",
+      "alt": "Four-cavity layout fed from a common runner, illustrating why each cavity should retain its own identity.",
+      "caption": "Cavity-specific traces and quality results should be preserved before pooling; averages can hide systematic cavity offsets."
+    },
+    {
+      "id": "diagram-ejection-draft-v1",
+      "chapterId": "ejection-draft",
+      "title": "Draft and ejection evidence",
+      "asset": "assets/book-diagrams/ejection-draft.svg",
+      "gitBlobSha1": "e9d68cb718adf6c497d21b63e6f113b585f14be8",
+      "alt": "Conceptual moulded wall showing draft and an ejector-force direction.",
+      "caption": "Use ejector force/current, part temperature, surface condition and damage together; a rising ejector signal does not by itself prove inadequate draft."
+    },
+    {
+      "chapterId": "cycle",
+      "id": "diagram-cycle-timeline-v1",
+      "title": "Injection moulding cycle timeline",
+      "asset": "assets/book-diagrams/cycle-timeline.svg",
+      "gitBlobSha1": "abea85659c82708c985207f5e4dd3d96fba6199d",
+      "alt": "Conceptual timeline of plasticising, filling, transfer, packing, cooling and ejection.",
+      "caption": "Each stage hands conditions to the next; durations and overlap remain machine, mould, material and process dependent."
+    },
+    {
+      "chapterId": "plasticising-unit",
+      "id": "diagram-plasticising-sequence-v1",
+      "title": "Plasticising and shot preparation",
+      "asset": "assets/book-diagrams/plasticising-sequence.svg",
+      "gitBlobSha1": "2c112f50f798a26aad5deca0936de20256d778cc",
+      "alt": "Conceptual reciprocating-screw sequence showing feed, rotation/recovery, shot preparation and forward injection.",
+      "caption": "The sequence explains function, not screw geometry, residence limits or a machine-specific setup."
+    },
+    {
+      "chapterId": "cooling",
+      "id": "diagram-thermal-gradient-wall-v1",
+      "title": "Thermal gradient through a moulded wall",
+      "asset": "assets/book-diagrams/thermal-gradient-wall.svg",
+      "gitBlobSha1": "46519e7bf009e1fa2673f60cf43dd10ac469c986",
+      "alt": "Conceptual wall cross-section showing cooler wall-adjacent regions and a hotter core.",
+      "caption": "Actual temperature fields depend on material, wall thickness, mould construction and process conditions."
+    },
+    {
+      "chapterId": "warpage",
+      "id": "diagram-shrinkage-warpage-v1",
+      "title": "Uniform shrinkage versus differential warpage",
+      "asset": "assets/book-diagrams/shrinkage-warpage.svg",
+      "gitBlobSha1": "cdb29d18bc44c9282984dcefea5b3995c8f00b09",
+      "alt": "Conceptual comparison of more uniform contraction with differential deformation.",
+      "caption": "Warpage can combine shrinkage, orientation, thermal imbalance and constraint; the drawing does not assign one universal cause."
+    },
+    {
+      "chapterId": "weld-lines",
+      "id": "diagram-weld-line-formation-v1",
+      "title": "Weld-line formation around an obstacle",
+      "asset": "assets/book-diagrams/weld-line-formation.svg",
+      "gitBlobSha1": "cc9c739ee99f98673469fd8d15fb012d0370274f",
+      "alt": "Conceptual split flow around an obstacle followed by flow-front reunion.",
+      "caption": "Interface quality depends on local material, thermal, flow, gas and geometry conditions; no universal process adjustment is implied."
+    },
+    {
+      "chapterId": "fibre-orientation",
+      "id": "diagram-fibre-orientation-layers-v1",
+      "title": "Conceptual fibre-orientation layers",
+      "asset": "assets/book-diagrams/fibre-orientation-layers.svg",
+      "gitBlobSha1": "7dc98c994464def7391a6024218271944b4e49e2",
+      "alt": "Conceptual reinforced-wall section showing differing local fibre directions.",
+      "caption": "The figure explains anisotropy only; it is not a quantitative orientation prediction."
+    },
+    {
+      "chapterId": "capability",
+      "id": "diagram-capability-limits-v1",
+      "title": "Specification, process distribution and capability",
+      "asset": "assets/book-diagrams/capability-limits.svg",
+      "gitBlobSha1": "9752c9a8108699c4581ca69d9d8c2e3ccbea9801",
+      "alt": "Conceptual process distribution between lower and upper specification limits.",
+      "caption": "Capability indices require a defined stable population and credible measurement; the curve is illustrative only."
+    },
+    {
+      "chapterId": "doe",
+      "id": "diagram-doe-interaction-v1",
+      "title": "DOE interaction concept",
+      "asset": "assets/book-diagrams/doe-interaction.svg",
+      "gitBlobSha1": "8f572cd7769af633415eaf476c351bbd1a255a76",
+      "alt": "Conceptual non-parallel response lines showing an interaction.",
+      "caption": "The figure illustrates interaction logic; it does not replace a designed, replicated and confirmed experiment."
+    },
+    {
+      "chapterId": "diagnostic-method",
+      "id": "diagram-diagnostic-hypothesis-tree-v1",
+      "title": "Hypothesis-driven diagnostic tree",
+      "asset": "assets/book-diagrams/diagnostic-hypothesis-tree.svg",
+      "gitBlobSha1": "08fb117c7e56d335308bbbf72e42672e24dc33f8",
+      "alt": "Conceptual troubleshooting path from a defined symptom through competing mechanisms to discriminating evidence.",
+      "caption": "The tree structures reasoning; it does not prescribe unsafe tests or guarantee root cause."
+    },
+    {
+      "chapterId": "dimensional-stability",
+      "id": "diagram-dimensional-conditioning-v1",
+      "title": "Dimensional change with conditioning time",
+      "asset": "assets/book-diagrams/dimensional-conditioning.svg",
+      "gitBlobSha1": "331559507583cc67a73084371d2ffe7ef9a9d861",
+      "alt": "Conceptual dimension-versus-time response approaching a more stable conditioning state.",
+      "caption": "Measurement timing, temperature, humidity, material and product requirements remain part of the result."
+    },
+    {
+      "id": "diagram-machine-mould-system-overview-v1",
+      "chapterId": "machine-anatomy",
+      "title": "Machine, mould and safety system overview",
+      "asset": "assets/book-diagrams/machine-mould-system-overview.svg",
+      "gitBlobSha1": "9b51cd82ec3cf28f2197972d9a224e55647f0515",
+      "alt": "Conceptual flow from material feed through the injection unit, mould and ejection, with cooling and a distinct guarded intervention boundary.",
+      "caption": "Use the diagram to orient functions and evidence paths; actual architecture, guarding, isolation and access remain machine-, mould- and site-specific."
+    },
+    {
+      "id": "diagram-rheology-shear-temperature-v1",
+      "chapterId": "rheology",
+      "title": "Viscosity response to shear rate and temperature",
+      "asset": "assets/book-diagrams/rheology-shear-temperature.svg",
+      "gitBlobSha1": "f91fe5fcd6963733c58c62431a6b75cef03cf9bb",
+      "alt": "Conceptual downward-sloping apparent-viscosity curves versus shear rate, with a higher-temperature curve shown at lower resistance.",
+      "caption": "The curves illustrate shear-thinning and temperature sensitivity only; they contain no grade-specific values or universal processing settings."
+    },
+    {
+      "id": "diagram-complex-diagnostics-evidence-ledger-v1",
+      "chapterId": "complex-diagnostics",
+      "title": "Complex diagnostics evidence ledger",
+      "asset": "assets/book-diagrams/complex-diagnostics-evidence-ledger.svg",
+      "gitBlobSha1": "1d15e96cc178520fb730865d6a51f6f6e799a525",
+      "alt": "Conceptual evidence ledger linking one observed symptom to three competing hypotheses, predictions, discriminating tests, contradictions and updated confidence.",
+      "caption": "The ledger supports disciplined reasoning and visible uncertainty; it does not authorize unsafe tests or turn correlation into root-cause proof."
+    },
+    {
+      "id": "diagram-polymer-family-evidence-map-v1",
+      "chapterId": "material-families",
+      "title": "Polymer family evidence map",
+      "asset": "assets/book-diagrams/polymer-family-evidence-map.svg",
+      "gitBlobSha1": "4daebeff2e413c4d9e44b50cc60be0b601035df2",
+      "alt": "Conceptual sequence from polymer-family tendency to exact-grade documentation and then observed process evidence, emphasizing that a family label is not an exact-grade recipe.",
+      "caption": "Use family knowledge to frame questions, then verify the exact grade and the actual system response before treating material knowledge as transferable."
+    },
+    {
+      "id": "diagram-process-baseline-evidence-package-v1",
+      "chapterId": "process-baseline",
+      "title": "Defensible process baseline evidence package",
+      "asset": "assets/book-diagrams/process-baseline-evidence-package.svg",
+      "gitBlobSha1": "c8c65e17383e728a8b3bac19dbad80aa413047e4",
+      "alt": "Conceptual baseline package combining identity and context, commands, actual process signals, part outputs and visible unknowns before a later comparison.",
+      "caption": "A baseline is an evidence package for comparison, not a settings screenshot or proof that a future process state is equivalent."
+    },
+    {
+      "id": "diagram-filling-boundary-pattern-map-v1",
+      "chapterId": "short-shot",
+      "title": "Filling and boundary pattern comparison",
+      "asset": "assets/book-diagrams/filling-boundary-pattern-map.svg",
+      "gitBlobSha1": "08e7902c763da981d2598650aa2d8a65c0330ed2",
+      "alt": "Conceptual comparison of a common filling shortage, a cavity-local shortage and a local boundary-loss pattern using cavity and location evidence.",
+      "caption": "Use cavity and location patterns to rank common versus local mechanisms; the pattern is evidence, not automatic root-cause proof."
+    },
+    {
+      "id": "diagram-surface-defect-source-map-v1",
+      "chapterId": "black-specks",
+      "title": "Surface-defect source and evidence map",
+      "asset": "assets/book-diagrams/surface-defect-source-map.svg",
+      "gitBlobSha1": "3ca47b380fef52d03eaf766e2c044004dcdffce4",
+      "alt": "Conceptual source map linking material handling, melt-path and mould or cavity regions with time, cavity and location patterns before ranking competing surface-defect sources.",
+      "caption": "Map where and when the symptom appears before choosing a source hypothesis; cleaning success alone does not prove the original source."
+    }
+  ],
+  "authorityBoundary": {
+    "productionUse": "advisory-only",
+    "machineSpecific": false,
+    "scaleDrawing": false,
+    "validatedDesignAuthority": false,
+    "independentSmeStatus": "hold"
+  }
+}

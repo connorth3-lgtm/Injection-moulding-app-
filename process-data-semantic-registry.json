@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "version": "2026.09.02.1",
+  "status": "canonical-local-process-semantic-registry",
+  "scope": "Shared semantic definitions for local process-data intake, storage, diagnostics, troubleshooting links and learning. Definitions describe evidence roles only and do not define production setpoints or acceptance limits.",
+  "roleVocabulary": {
+    "actual": "Measured/observed process or quality value.",
+    "setpoint": "Requested control value. Never count as a measured actual merely because numeric.",
+    "command": "Command or target signal. Never count as a measured actual merely because numeric.",
+    "state": "Categorical/state signal whose code meanings must be authoritative.",
+    "quality": "Measured or classified quality outcome.",
+    "derived": "Feature calculated from measured data or a controller summary.",
+    "structural": "Index/linkage field, not a process measurement.",
+    "unresolved": "Meaning or role is not authoritative enough for process intelligence."
+  },
+  "entities": {
+    "machine": {"description": "Injection moulding machine or cell alias", "privacy": "non-person operational alias only"},
+    "mould": {"description": "Mould/tool alias", "privacy": "non-person operational alias only"},
+    "material_grade": {"description": "Exact polymer/resin grade when known", "privacy": "engineering identifier"},
+    "material_lot": {"description": "Material lot/batch alias", "privacy": "operational alias"},
+    "job": {"description": "Job/work-order alias", "privacy": "non-person operational alias only"},
+    "run": {"description": "Continuous local production/data-capture run", "privacy": "generated/local alias"},
+    "shot": {"description": "Individual moulding cycle/shot", "privacy": "sequence index/local key"},
+    "cavity": {"description": "Cavity position/alias", "privacy": "engineering identifier"},
+    "intervention": {"description": "Controlled change/maintenance/test event alias", "privacy": "non-person operational alias only"}
+  },
+  "channels": {
+    "shot_index": {"canonical_quantity": "shot_index", "meaning": "Source or generated shot/cycle sequence index", "role": "structural", "kind": "structural", "actualness": "not-applicable", "unit": null, "sampling_basis": "per-cycle", "confidence": "high", "source": "MouldMaster capture contract"},
+    "fill_time_s": {"canonical_quantity": "fill_time", "meaning": "Elapsed fill/injection phase time for the cycle", "role": "derived", "kind": "derived-feature", "actualness": "actual", "unit": "s", "sampling_basis": "per-cycle", "confidence": "medium", "source": "MouldMaster standard intake template", "status": "confirm-source-semantics"},
+    "transfer_position_mm": {"canonical_quantity": "transfer_position", "meaning": "Observed screw/ram position at transfer for the cycle", "role": "derived", "kind": "derived-feature", "actualness": "actual", "unit": "mm", "sampling_basis": "per-cycle", "confidence": "medium", "source": "MouldMaster standard intake template", "status": "confirm-source-semantics"},
+    "transfer_pressure_mpa": {"canonical_quantity": "transfer_pressure", "meaning": "Observed process pressure at transfer for the cycle", "role": "derived", "kind": "derived-feature", "actualness": "actual", "unit": "MPa", "sampling_basis": "per-cycle", "confidence": "medium", "source": "MouldMaster standard intake template", "status": "confirm-source-semantics"},
+    "cushion_mm": {"canonical_quantity": "cushion", "meaning": "Observed end-of-injection/hold cushion position for the cycle", "role": "derived", "kind": "derived-feature", "actualness": "actual", "unit": "mm", "sampling_basis": "per-cycle", "confidence": "medium", "source": "MouldMaster standard intake template", "status": "confirm-source-semantics"},
+    "recovery_time_s": {"canonical_quantity": "recovery_time", "meaning": "Observed screw recovery/plasticising time for the cycle", "role": "derived", "kind": "derived-feature", "actualness": "actual", "unit": "s", "sampling_basis": "per-cycle", "confidence": "medium", "source": "MouldMaster standard intake template", "status": "confirm-source-semantics"},
+    "peak_cavity_pressure_mpa": {"canonical_quantity": "peak_cavity_pressure", "meaning": "Peak cavity-pressure feature for the cycle", "role": "derived", "kind": "derived-feature", "actualness": "actual", "unit": "MPa", "sampling_basis": "per-cycle", "confidence": "medium", "source": "MouldMaster standard intake template", "status": "confirm-source-semantics"},
+    "pressure_time_area": {"canonical_quantity": "pressure_time_area", "meaning": "Pressure-time integral/area feature for the cycle", "role": "derived", "kind": "derived-feature", "actualness": "actual", "unit": null, "sampling_basis": "per-cycle", "confidence": "low", "source": "MouldMaster standard intake template", "status": "unit-must-be-confirmed"},
+    "part_mass_g": {"canonical_quantity": "part_mass", "meaning": "Measured part mass/weight outcome", "role": "quality", "kind": "quality-measurement", "actualness": "actual", "unit": "g", "sampling_basis": "per-cycle", "confidence": "medium", "source": "MouldMaster standard intake template", "status": "confirm-source-semantics"},
+    "cycle_time_s": {"canonical_quantity": "cycle_time", "meaning": "Observed total cycle duration", "role": "derived", "kind": "derived-feature", "actualness": "actual", "unit": "s", "sampling_basis": "per-cycle", "confidence": "medium", "source": "MouldMaster standard intake template", "status": "confirm-source-semantics"},
+    "cooling_time_s": {"canonical_quantity": "cooling_time", "meaning": "Cooling time field; source must confirm whether actual, setpoint or command", "role": "unresolved", "kind": "unresolved", "actualness": "unresolved", "unit": "s", "sampling_basis": "per-cycle", "confidence": "low", "source": "MouldMaster standard intake template", "status": "role-must-be-confirmed"},
+    "supply_temp_c": {"canonical_quantity": "coolant_supply_temperature", "meaning": "Measured coolant/process temperature on the supply side", "role": "actual", "kind": "direct-measurement", "actualness": "actual", "unit": "°C", "sampling_basis": "per-cycle", "confidence": "medium", "source": "MouldMaster standard intake template", "status": "confirm-source-semantics"},
+    "return_temp_c": {"canonical_quantity": "coolant_return_temperature", "meaning": "Measured coolant/process temperature on the return side", "role": "actual", "kind": "direct-measurement", "actualness": "actual", "unit": "°C", "sampling_basis": "per-cycle", "confidence": "medium", "source": "MouldMaster standard intake template", "status": "confirm-source-semantics"},
+    "flow_lmin": {"canonical_quantity": "coolant_flow", "meaning": "Measured coolant/process flow rate", "role": "actual", "kind": "direct-measurement", "actualness": "actual", "unit": "L/min", "sampling_basis": "per-cycle", "confidence": "medium", "source": "MouldMaster standard intake template", "status": "confirm-source-semantics"},
+    "dimension_value": {"canonical_quantity": "dimension", "meaning": "Measured dimensional quality value", "role": "quality", "kind": "quality-measurement", "actualness": "actual", "unit": null, "unit_from_column": "dimension_unit", "sampling_basis": "per-cycle", "confidence": "medium", "source": "MouldMaster standard intake template", "status": "unit-from-companion-column"},
+    "quality_result": {"canonical_quantity": "quality_result", "meaning": "Controlled quality disposition/category", "role": "state", "kind": "state-signal", "actualness": "not-applicable", "unit": null, "sampling_basis": "per-cycle", "confidence": "medium", "source": "MouldMaster standard intake template"},
+    "defect_code": {"canonical_quantity": "defect_code", "meaning": "Controlled defect code/category", "role": "state", "kind": "state-signal", "actualness": "not-applicable", "unit": null, "sampling_basis": "per-cycle", "confidence": "medium", "source": "MouldMaster standard intake template"}
+  },
+  "analysisGate": {
+    "blocking": ["unresolved role", "missing engineering meaning", "missing engineering unit for numeric evidence", "unknown sampling basis for actual/derived/quality channels", "sequence review warning", "retained non-numeric values in a numeric evidence channel"],
+    "warnings": ["greater than 20% missing values", "constant channel", "direct measurement without a local calibration reference"],
+    "boundary": "Passing the semantic/data-quality gate means the dataset is interpretable enough for local statistical evidence analysis; it does not certify process capability, machine safety or universal production limits."
+  },
+  "alignment": {
+    "conceptual": "EUROMAP 77 / OPC 40077-style entities (machine, mould, job, cycle/process parameters) are used as a future-integration naming direction only.",
+    "implementation": "No OPC UA server/client or machine-control interface is introduced by this registry."
+  }
+}

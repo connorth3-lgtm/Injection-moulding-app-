@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "version": "2026.08.30.1",
+  "reviewed": "2026-08-30",
+  "purpose": "Fresh-main source-by-source Wave-2 batch-4 extension layered on the XRD/XPS effective view. It promotes one new injection-operations family and recovers the already-inventoried SiC/Nylon-6 family through an alternate publisher release without duplicating the study family.",
+  "baseEffective": {
+    "wave2ExtensionVersion": "2026.08.30.1",
+    "inventoriedMeasuredSources": 31,
+    "automatedIngestionAllowed": 19,
+    "fullyProfiledMeasuredFamilies": 14,
+    "acceptedInjectionProcessTimeSeriesValues": 66521519
+  },
+  "delta": {
+    "inventoriedMeasuredSources": 1,
+    "automatedIngestionAllowed": 0,
+    "fullyProfiledMeasuredFamilies": 2,
+    "acceptedInjectionProcessTimeSeriesValues": 0,
+    "acceptedRecordLevelMeasuredValues": 706
+  },
+  "effective": {
+    "inventoriedMeasuredSources": 32,
+    "automatedIngestionAllowed": 19,
+    "fullyProfiledMeasuredFamilies": 16,
+    "acceptedInjectionProcessTimeSeriesValues": 66521519,
+    "wave2RecordLevelMeasuredValues": 1816,
+    "wave2MaterialCharacterizationTraceValues": 84482
+  },
+  "inventoryAdditions": [
+    {
+      "datasetId": "mendeley-ypf95p4bs4-v1",
+      "title": "Industrial injection-moulding operations and time-study dataset",
+      "source": "https://doi.org/10.17632/ypf95p4bs4.1",
+      "accessState": "executed-open",
+      "license": "CC BY 4.0",
+      "automatedIngestionAllowed": true,
+      "rawRedistributionAllowedWithAttribution": true,
+      "recordUnit": "direct observed injection-operation duration",
+      "count": {"acceptedRecordLevelMeasuredValues": 666, "acceptedMeasuredTimeSeriesSamples": 0},
+      "signals": ["injector cleaning/maintenance duration", "mould-change setup duration", "injector downtime duration", "Westinghouse setup observations"],
+      "quality": [],
+      "sampling": "record-level operational logs and time-study observations; not an injection-machine/cavity waveform",
+      "overlapGroup": "mendeley-ypf95p4bs4-v1",
+      "peerReviewedCompanion": null,
+      "priority": 32,
+      "statusNote": "Exact CC BY 4.0 operational workbook is SHA-verified. 666 literal duration observations are accepted from four injection-operation source blocks; simulation/model outputs, sales, formulas, pivots, intervention/proposal values, finance and schedule artifacts remain excluded."
+    }
+  ],
+  "inventoryUpdates": [
+    {
+      "datasetId": "mendeley-ztkc87d6sr-v1",
+      "replacement": {
+        "datasetId": "mendeley-ztkc87d6sr-v1",
+        "title": "SiC-reinforced Nylon-6 injection-moulded tribology dataset family",
+        "source": "https://doi.org/10.17632/ztkc87d6sr.1",
+        "alternateSource": "https://doi.org/10.17632/47k6jswwg7.1",
+        "accessState": "accepted-profiled-via-alternate-noncommercial-release",
+        "license": "CC BY-NC 3.0 accepted payload; primary record metadata CC BY 4.0",
+        "automatedIngestionAllowed": false,
+        "restrictedAggregateProfilingAllowed": true,
+        "rawRedistributionAllowedWithAttribution": false,
+        "recordUnit": "direct tribology measurement",
+        "count": {"acceptedRecordLevelMeasuredValues": 40, "acceptedMeasuredTimeSeriesSamples": 0},
+        "signals": ["coefficient of friction", "wear"],
+        "quality": [],
+        "sampling": "two machine-readable Word tables; 5 specimens x 4 applied loads for each of two measured domains",
+        "overlapGroup": "mendeley-ztkc87d6sr-v1",
+        "peerReviewedCompanion": "10.1016/j.dib.2020.105662",
+        "priority": 30,
+        "statusNote": "The alternate DOI 10.17632/47k6jswwg7.1 recovers the same previously blocked SiC/Nylon-6 family and does not create a second dataset family. Exactly 40 direct coefficient-of-friction/wear values are accepted under the alternate release's narrower CC BY-NC 3.0 boundary. TGA, FTIR and SEM remain image-only and are not OCR-counted."
+      }
+    }
+  ],
+  "executionAdditions": [
+    {"priority": 32, "datasetId": "mendeley-ypf95p4bs4-v1", "state": "accepted-profiled-record-level-injection-operations", "action": "keep exact operational workbook fingerprint and direct-observation selectors regression-pinned", "reason": "666 direct injection-operation duration observations accepted; zero process waveform samples"}
+  ],
+  "executionUpdates": [
+    {"datasetId": "mendeley-ztkc87d6sr-v1", "replacement": {"priority": 30, "datasetId": "mendeley-ztkc87d6sr-v1", "state": "accepted-profiled-restricted-noncommercial", "action": "retain accepted aggregate tribology profile under alternate CC BY-NC 3.0 boundary; do not treat alternate DOI as a second family", "reason": "40 direct coefficient-of-friction/wear values accepted from two machine-readable tables; TGA/FTIR/SEM remain image-only and zero process waveform samples are added"}}
+  ],
+  "effectiveInventorySummary": {
+    "datasets": 32,
+    "automatedIngestionAllowed": 19,
+    "rightsOrAccessReviewRequired": 3,
+    "embargoed": 2,
+    "requestOnly": 1,
+    "confidential": 1,
+    "publicMirrorRightsUnresolved": 2,
+    "publicResearchEducationTerms": 4,
+    "retrievalBlockedLicensed": 2
+  },
+  "effectiveExecutionSummary": {
+    "total": 32,
+    "acceptedProfiled": 16,
+    "acceptedRestrictedResearchEducation": 3,
+    "executingProfile": 0,
+    "queuedExecutable": 0,
+    "retrievalBlockedExecutable": 2,
+    "retrievedNotAccepted": 4,
+    "rightsOrTermsBlocked": 3,
+    "mirrorRightsBlocked": 2,
+    "embargoed": 2,
+    "requestOnly": 1,
+    "confidential": 1,
+    "partiallyAcceptedNotFullyProfiled": 1
+  },
+  "boundaries": {
+    "oldBatch4BranchInherited": false,
+    "alternateReleaseDoesNotCreateSecondFamily": true,
+    "narrowerDeliveredPayloadLicenseControlsAcceptedProfile": true,
+    "simulationAndDerivedOperationalArtifactsExcluded": true,
+    "imageOnlyTgaFtirSemNotOcrCounted": true,
+    "rawThirdPartyRowsOrFilesCommitted": false,
+    "recordLevelOperationalAndTribologyValuesDoNotInflateInjectionProcessWaveformMetric": true
+  }
+}

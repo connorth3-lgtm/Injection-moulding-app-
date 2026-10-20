@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 500" role="img" aria-labelledby="title desc">
+<title id="title">Surface-defect source and evidence map</title>
+<desc id="desc">Conceptual diagnostic map linking material handling, melt path and mould or cavity regions with time, cavity and location observations before ranking competing surface-defect sources.</desc>
+<g fill="none" stroke="currentColor" stroke-width="3">
+<rect x="55" y="75" width="220" height="85" rx="12"/><rect x="410" y="75" width="220" height="85" rx="12"/><rect x="765" y="75" width="220" height="85" rx="12"/>
+<path d="M275 118h125M630 118h125"/><path d="M385 106l15 12-15 12M740 106l15 12-15 12"/>
+<rect x="120" y="245" width="200" height="80" rx="12"/><rect x="420" y="245" width="200" height="80" rx="12"/><rect x="720" y="245" width="200" height="80" rx="12"/>
+<path d="M220 325L455 405M520 325v80M820 325L585 405"/>
+<rect x="365" y="405" width="310" height="65" rx="12"/>
+</g>
+<g font-family="system-ui,sans-serif" font-size="22" text-anchor="middle">
+<text x="165" y="110">Material handling</text><text x="165" y="138">incoming / changeover</text>
+<text x="520" y="110">Melt path</text><text x="520" y="138">screw · nozzle · manifold</text>
+<text x="875" y="110">Mould / cavity</text><text x="875" y="138">local regions</text>
+<text x="220" y="280">Time pattern</text><text x="220" y="306">start-up · stoppage · continuous</text>
+<text x="520" y="280">Cavity pattern</text><text x="520" y="306">one · several · all</text>
+<text x="820" y="280">Location pattern</text><text x="820" y="306">fixed · moving · random</text>
+<text x="520" y="445">Rank competing source hypotheses</text>
+</g>
+</svg>

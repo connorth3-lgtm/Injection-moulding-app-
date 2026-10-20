@@ -1,0 +1,84 @@
+{
+  "schema": 1,
+  "purpose": "Rank the data still worth acquiring after deliberate over-acquisition. More rows from already-covered contexts rank below missing outcome/linkage dimensions.",
+  "gaps": [
+    {
+      "rank": 1,
+      "gap": "authorised real-site shot-linked intervention and recovery histories",
+      "target": "shot/cycle ID -> machine/tool/cavity -> exact material lot -> process actuals -> cavity/tool signals -> physical defect/quality -> action -> verified recovery",
+      "why": "This remains the largest difference between strong mechanism evidence and production-grade diagnostic validation."
+    },
+    {
+      "rank": 2,
+      "gap": "real MouldMaster learner telemetry",
+      "target": "first answer, distractor, response time, confidence, retry, lesson exposure and later transfer performance",
+      "why": "External learner datasets can test analytics code but cannot calibrate MouldMaster item difficulty/discrimination."
+    },
+    {
+      "rank": 3,
+      "gap": "blinded independent engineer judgments",
+      "target": "at least three independent engineers per diagnostic case before app output is revealed",
+      "why": "Required to quantify diagnostic agreement, calibration and disagreement with real experts."
+    },
+    {
+      "rank": 4,
+      "gap": "rights-clear multi-machine multi-mould anomaly corpus",
+      "target": "multiple machines/tools, normal and abnormal cycles, actual failure cause and corrective action",
+      "why": "Several excellent industrial corpora are request-only or company-restricted."
+    },
+    {
+      "rank": 5,
+      "gap": "natural maintenance lifecycle data",
+      "target": "wear/deposit/fouling progression -> maintenance trigger -> repair/cleaning -> post-maintenance recovery",
+      "why": "Controlled NRV and simulated extraction faults are now well covered, but naturally accumulated lifecycle histories remain scarce."
+    },
+    {
+      "rank": 6,
+      "gap": "hot-runner actual-state raw data",
+      "target": "zone actual temperature, heater current/output, valve-pin actual state, alarms, nozzle/manifold state, cavity response and quality",
+      "why": "Current evidence contains measured hot-runner systems but little rights-clear raw actual-state telemetry."
+    },
+    {
+      "rank": 7,
+      "gap": "longitudinal cooling fouling and cleaning histories",
+      "target": "flow, inlet/outlet temperature, pressure drop, water quality, fouling progression, cleaning action and quality/energy recovery",
+      "why": "Cooling actuals and contamination mechanisms are now independently supported, but long-duration raw histories are still missing."
+    },
+    {
+      "rank": 8,
+      "gap": "multicavity shot-linked imbalance outcomes",
+      "target": "per-cavity pressure/temperature/weight/dimension/defect with runner/gate state and cavity identity",
+      "why": "Existing multicavity studies improve mechanism confidence but broader raw cavity-by-cavity outcome data would strengthen transfer."
+    },
+    {
+      "rank": 9,
+      "gap": "full raw admission of high-value public candidates",
+      "target": "OpenMMS, EPP raw workbook, RWTH PCR archive, LEGO six-machine appendix and other executable sources",
+      "why": "The discovery problem is solved for these sources; deterministic retrieval, hashing, profiling and rights admission now create more value than additional citations."
+    },
+    {
+      "rank": 10,
+      "gap": "exact commercial-grade + material-lot linkage",
+      "target": "immutable manufacturer PDS fingerprint plus supplier/lot/regrind/moisture/conditioning tied to measured moulding cases",
+      "why": "Exact-grade source candidates are growing, but plant-shot material lot identity remains much rarer."
+    },
+    {
+      "rank": 11,
+      "gap": "multimaterial / 2K raw production data",
+      "target": "component-specific injection actuals, interface/core position, hot-runner actuals and physical bond/dimensional outcomes",
+      "why": "2K/overmoulding mechanism evidence is now broad, but most raw production datasets are request-only."
+    },
+    {
+      "rank": 12,
+      "gap": "more real measured-data assessments with psychometric outcomes",
+      "target": "trace/case questions using rights-clear measured evidence, followed by real learner difficulty/discrimination statistics",
+      "why": "Question construction is no longer the main bottleneck; calibration and rights-clear measured evidence are."
+    }
+  ],
+  "deprioritised": [
+    "more generic time-series rows from already-covered single-machine contexts",
+    "simulation datasets without new geometry/process coverage",
+    "papers that duplicate an already staged experiment",
+    "model-generated QA presented as domain ground truth"
+  ]
+}

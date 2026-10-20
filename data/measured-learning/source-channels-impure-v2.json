@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "registryId": "measured-learning-source-channels-impure-v2",
+  "datasetId": "impure-pascoe-2022",
+  "channelResolution": "partial-governed",
+  "evidenceRefs": [
+    "data/impure-pascoe-channel-dictionary-v1.json",
+    "data/impure-pascoe-semantic-review-2026-08-30.json",
+    "doi:10.5281/zenodo.6913660",
+    "doi:10.3233/ATDE230912",
+    "doi:10.1051/matecconf/202440108011"
+  ],
+  "coordinatePolicy": {
+    "sourceChannel": "Time",
+    "semantic": "elapsed-time-from-cycle-start",
+    "unit": "s",
+    "transform": "parse source clock time and subtract the first parsed timestamp in the selected cycle; preserve delivered ordering and variable intervals"
+  },
+  "channels": [
+    {
+      "sourceChannel": "TempMold1[IRT/Pascoe]",
+      "semantic": "mould-cavity-1-contact-temperature",
+      "unit": "degC",
+      "role": "measured",
+      "measurementLocation": "mould cavity 1; Kistler 6188A combined pressure/contact-temperature sensor",
+      "coordinateChannel": "Time",
+      "coordinateSemantic": "elapsed-time-from-cycle-start",
+      "coordinateUnit": "s",
+      "promotionReady": true,
+      "limitation": "Relative elapsed time is derived only from differences in the source clock field; no uniform sampling interval is assumed."
+    },
+    {
+      "sourceChannel": "TempMold2[IRT/Pascoe]",
+      "semantic": "mould-cavity-2-contact-temperature",
+      "unit": "degC",
+      "role": "measured",
+      "measurementLocation": "mould cavity 2; Kistler 6188A combined pressure/contact-temperature sensor",
+      "coordinateChannel": "Time",
+      "coordinateSemantic": "elapsed-time-from-cycle-start",
+      "coordinateUnit": "s",
+      "promotionReady": true,
+      "limitation": "Relative elapsed time is derived only from differences in the source clock field; no uniform sampling interval is assumed."
+    },
+    {
+      "sourceChannel": "Pressure1[IRT/Pascoe]",
+      "semantic": "mould-cavity-1-pressure",
+      "unit": "bar",
+      "role": "measured",
+      "measurementLocation": "mould cavity 1; Kistler 6188A combined pressure/contact-temperature sensor",
+      "coordinateChannel": "Time",
+      "coordinateSemantic": "elapsed-time-from-cycle-start",
+      "coordinateUnit": "s",
+      "promotionReady": true,
+      "limitation": "Relative elapsed time is derived only from differences in the source clock field; no uniform sampling interval is assumed."
+    },
+    {
+      "sourceChannel": "Pressure2[IRT/Pascoe]",
+      "semantic": "mould-cavity-2-pressure",
+      "unit": "bar",
+      "role": "measured",
+      "measurementLocation": "mould cavity 2; Kistler 6188A combined pressure/contact-temperature sensor",
+      "coordinateChannel": "Time",
+      "coordinateSemantic": "elapsed-time-from-cycle-start",
+      "coordinateUnit": "s",
+      "promotionReady": true,
+      "limitation": "Relative elapsed time is derived only from differences in the source clock field; no uniform sampling interval is assumed."
+    }
+  ],
+  "excludedChannels": [
+    {"sourceChannel":"HydPressure[IRT/Pascoe]","reason":"source meaning is resolved but delivered export unit/scaling remains unresolved"},
+    {"sourceChannel":"ScrewPosition[IRT/Pascoe]","reason":"source meaning is resolved but delivered unit and position reference remain unresolved"},
+    {"sourceChannel":"Analog Input[1]","reason":"exact attached sensor/configuration is not source-pinned"},
+    {"sourceChannel":"Analog Input[2]","reason":"stage-dependent auxiliary sensor assignment prevents one global semantic/unit definition"}
+  ]
+}

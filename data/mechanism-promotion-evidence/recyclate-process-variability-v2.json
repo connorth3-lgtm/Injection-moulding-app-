@@ -1,0 +1,16 @@
+{
+  "schema": 2,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "mechanismId": "recyclate-process-variability",
+  "registryTarget": "data/evidence-coverage-v1.json",
+  "promotionOverlayTarget": "data/evidence-promotion-overlay-v2.json",
+  "primaryMeasuredRegistryTarget": "data/primary-measured-evidence-registry-v1.json",
+  "authorMetadataTarget": "data/primary-measured-promotion-authors-v1.json",
+  "promotionRuleSnapshot": {"minimumIndependentPublisherVerifiedPrimaryMeasured":2,"requiresMeasuredSignals":true,"requiresPhysicalQualityOutcome":true,"requiresExperimentalContext":true,"requiresExplicitLimitation":true,"predictionIsNotCausation":true,"universalProcessRecipesAllowed":false},
+  "eligibility": {"independentPublisherVerifiedPrimaryMeasured":2,"meetsMinimumIndependentStudies":true,"measuredSignalsPresent":true,"physicalQualityOutcomesPresent":true,"experimentalContextPresent":true,"explicitLimitationsPresent":true,"eligibleForPromotion":true,"registryPromotionApplied":true},
+  "qualifyingDois": ["10.1016/j.jprocont.2026.103725","10.1002/pen.26689"],
+  "supportingDois": ["10.1016/j.susmat.2024.e00897","10.1016/j.cirpj.2025.09.005","10.3390/polym11121908","10.1016/j.nxmate.2026.101622","10.1016/j.nxmate.2026.102559","10.3390/su13148102"],
+  "independenceRationale": "The qualifying studies are independent programmes from different institutions and data sources. The 2026 RWTH work measures cavity and screw-antechamber pressure, controller response and part mass for virgin and post-consumer-recycled polypropylene with an open companion dataset; the 2024 UMass Lowell programme independently compares virgin and recycled PP in a multi-cavity hot-runner tool using processing history, crystallization or morphology and physical mechanical outcomes. They do not duplicate or re-analyse one experiment.",
+  "promotionClaim": "Promote the mechanism-level statement that measured recyclate source, contamination, degradation and prior processing can alter moulding response and physical part-quality even when nominal resin identity appears similar. Do not promote any recycled-content fraction, pressure, temperature, residence time, melt-flow value or mechanical property as a universal acceptance rule or process setting."
+}

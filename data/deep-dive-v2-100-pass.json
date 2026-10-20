@@ -1,0 +1,830 @@
+{
+  "programme": "MouldMaster Deep Dive v2 — 100-pass execution",
+  "status_date": "2026-08-28",
+  "boundary": "These 100 passes are distinct evidence-discovery/knowledge-model passes. A seeded pass is not a claim that the topic is saturated or that raw publisher data have been executed.",
+  "pass_count": 100,
+  "status_semantics": {
+    "seeded_with_primary": "Discovery has at least one peer-reviewed/primary experimental evidence anchor from this research cycle.",
+    "gap_seeded": "The pass is explicitly opened and anchored by a broader measurement/review source; targeted primary-study saturation remains required."
+  },
+  "passes": [
+    {
+      "id": 1,
+      "title": "Non-return valve / check-ring wear",
+      "theme": "machine",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/pen.26246"],
+      "objective": "Measure closure/wear effects, shot repeatability and compensation boundaries."
+    },
+    {
+      "id": 2,
+      "title": "Screw wear condition monitoring",
+      "theme": "machine",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1063/5.0028341"],
+      "objective": "Relate actual flow/throughput signatures to screw wear without masking deterioration."
+    },
+    {
+      "id": 3,
+      "title": "Barrel wear and screw/barrel clearance",
+      "theme": "machine",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1002/pen.26246", "10.1016/j.measurement.2024.114163"],
+      "objective": "Find measured barrel-clearance/wear studies and quality effects."
+    },
+    {
+      "id": 4,
+      "title": "Plasticising torque, drive current and energy",
+      "theme": "machine",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1002/app.57853"],
+      "objective": "Use torque/current/electrical signatures to distinguish material load from machine condition."
+    },
+    {
+      "id": 5,
+      "title": "Recovery stability and screw-return repeatability",
+      "theme": "machine",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/PEN.20335"],
+      "objective": "Characterise recovery time/position repeatability and startup drift."
+    },
+    {
+      "id": 6,
+      "title": "Injection-axis command versus actual tracking",
+      "theme": "machine",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/PEN.760240910"],
+      "objective": "Separate commanded velocity/pressure from delivered machine motion and dynamic response."
+    },
+    {
+      "id": 7,
+      "title": "Nozzle pressure and nozzle-contact evidence",
+      "theme": "machine",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/polym16081057", "10.3390/s22134792"],
+      "objective": "Use nozzle pressure/contact evidence in pressure-loss and leakage diagnosis."
+    },
+    {
+      "id": 8,
+      "title": "Hydraulic thermal state, servo and valve response",
+      "theme": "machine",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/PEN.760240910", "10.1007/s00170-020-06511-3"],
+      "objective": "Capture oil/drive thermal state and response dynamics that change delivered process."
+    },
+    {
+      "id": 9,
+      "title": "Cold-start, warm-equilibrium and machine fingerprint",
+      "theme": "machine",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/polym16010054"],
+      "objective": "Build machine fingerprints across startup and operating points."
+    },
+    {
+      "id": 10,
+      "title": "Cross-machine transfer and normalization",
+      "theme": "machine",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/polym16010054", "10.1007/s00170-020-06511-3"],
+      "objective": "Study what transfers between machines and what must be re-characterised."
+    },
+    {
+      "id": 11,
+      "title": "Tie-bar load distribution",
+      "theme": "clamp_tool",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1016/J.CIRPJ.2017.03.001"],
+      "objective": "Measure individual tie-bar load and partial-load imbalance."
+    },
+    {
+      "id": 12,
+      "title": "Platen deflection and parallelism",
+      "theme": "clamp_tool",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1016/J.CIRPJ.2017.03.001"],
+      "objective": "Connect platen/mould parallelism to load distribution and quality."
+    },
+    {
+      "id": 13,
+      "title": "Mould separation under cavity load",
+      "theme": "clamp_tool",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1016/J.PRECISIONENG.2017.11.007"],
+      "objective": "Measure mould separation at multiple corners and link to cavity pressure/part geometry."
+    },
+    {
+      "id": 14,
+      "title": "Toggle/direct clamp mechanical error",
+      "theme": "clamp_tool",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/APP11020832"],
+      "objective": "Characterise clamping mechanism error and asymmetry."
+    },
+    {
+      "id": 15,
+      "title": "Ejector force and pin-load distribution",
+      "theme": "clamp_tool",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/PEN.11212"],
+      "objective": "Measure ejection force and pin-layout effects."
+    },
+    {
+      "id": 16,
+      "title": "Mould-open force and sticking",
+      "theme": "clamp_tool",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1016/j.measurement.2024.114163"],
+      "objective": "Find measured mould-open/sticking force studies and release signatures."
+    },
+    {
+      "id": 17,
+      "title": "Core pin deflection and core shift",
+      "theme": "clamp_tool",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1016/j.measurement.2024.114163"],
+      "objective": "Add measured local tool deflection/core-shift evidence."
+    },
+    {
+      "id": 18,
+      "title": "Slide and lifter mechanical condition",
+      "theme": "clamp_tool",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1016/j.measurement.2024.114163"],
+      "objective": "Find current/force/wear signatures for slides and lifters."
+    },
+    {
+      "id": 19,
+      "title": "Demoulding friction and release mechanics",
+      "theme": "clamp_tool",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/PEN.11212"],
+      "objective": "Separate thermal contraction, friction and mechanical binding in release."
+    },
+    {
+      "id": 20,
+      "title": "Clamp-force optimization and energy",
+      "theme": "clamp_tool",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1016/J.PRECISIONENG.2017.11.007"],
+      "objective": "Balance flash/venting/tool load and energy rather than defaulting to maximum force."
+    },
+    {
+      "id": 21,
+      "title": "Cooling flow regime and Reynolds effects",
+      "theme": "cooling",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1109/iciibms52876.2021.9651554"],
+      "objective": "Link coolant flow regime to cavity-surface thermal response."
+    },
+    {
+      "id": 22,
+      "title": "Cooling-circuit pressure drop",
+      "theme": "cooling",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1007/S11665-020-05251-5"],
+      "objective": "Treat pressure drop as evidence of circuit hydraulic condition and design trade-offs."
+    },
+    {
+      "id": 23,
+      "title": "Parallel/series circuit balance",
+      "theme": "cooling",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.3390/pr12061232"],
+      "objective": "Build measured circuit-balance cases retaining circuit identity."
+    },
+    {
+      "id": 24,
+      "title": "Scale, fouling and corrosion",
+      "theme": "cooling",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1016/j.measurement.2024.114163"],
+      "objective": "Find measured degradation of heat transfer from fouling/scale/corrosion."
+    },
+    {
+      "id": 25,
+      "title": "Baffles, bubblers and core cooling",
+      "theme": "cooling",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.3390/pr12061232"],
+      "objective": "Compare core-cooling architectures using measured thermal outcomes."
+    },
+    {
+      "id": 26,
+      "title": "Conformal cooling performance",
+      "theme": "cooling",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/pr12061232", "10.1007/978-3-031-38563-6_42"],
+      "objective": "Compare cycle time, uniformity, pressure loss and warpage against conventional cooling."
+    },
+    {
+      "id": 27,
+      "title": "Additively manufactured cooling insert integrity",
+      "theme": "cooling",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1007/S11665-020-05251-5"],
+      "objective": "Cover fatigue, structural integrity, channel geometry and AM-specific constraints."
+    },
+    {
+      "id": 28,
+      "title": "Mould thermal maps and warpage",
+      "theme": "cooling",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1109/iciibms52876.2021.9651554"],
+      "objective": "Connect spatial mould-surface temperature to warpage/shrinkage."
+    },
+    {
+      "id": 29,
+      "title": "Variotherm / rapid heat-cycle moulding",
+      "theme": "cooling",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1063/1.4918483"],
+      "objective": "Track dynamic cavity-wall temperature, replication and cycle trade-offs."
+    },
+    {
+      "id": 30,
+      "title": "High-conductivity inserts and thermal contact",
+      "theme": "cooling",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1016/j.measurement.2024.114163"],
+      "objective": "Find measured insert/contact-resistance evidence."
+    },
+    {
+      "id": 31,
+      "title": "Hot-runner thermal balance",
+      "theme": "hot_runner",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1063/1.4942273", "10.3390/polym16081057"],
+      "objective": "Retain zone/cavity identity and thermal imbalance evidence."
+    },
+    {
+      "id": 32,
+      "title": "Heater duty and thermocouple faults",
+      "theme": "hot_runner",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1063/1.4942273"],
+      "objective": "Add heater-current/duty and sensor-bias fault signatures."
+    },
+    {
+      "id": 33,
+      "title": "Manifold expansion, leakage and melt stagnation",
+      "theme": "hot_runner",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1063/1.4942273"],
+      "objective": "Use visualized stagnation and operating-state thermal mechanics."
+    },
+    {
+      "id": 34,
+      "title": "Valve-gate timing and response",
+      "theme": "hot_runner",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/APP.22371"],
+      "objective": "Measure command-to-motion delay and cavity response."
+    },
+    {
+      "id": 35,
+      "title": "Runner and cavity filling balance",
+      "theme": "hot_runner",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.4028/WWW.SCIENTIFIC.NET/KEM.364-366.1306", "10.5762/KAIS.2011.12.4.1581"],
+      "objective": "Quantify imbalance rather than assuming geometric balance."
+    },
+    {
+      "id": 36,
+      "title": "Gate freeze, vestige and erosion",
+      "theme": "hot_runner",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1016/j.measurement.2024.114163"],
+      "objective": "Find measured gate-freeze/erosion trajectories and pressure response."
+    },
+    {
+      "id": 37,
+      "title": "Venting and vacuum assistance",
+      "theme": "hot_runner",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1115/1.4032891", "10.1063/1.4918483"],
+      "objective": "Quantify air-removal effects from macro to micro moulding."
+    },
+    {
+      "id": 38,
+      "title": "Air traps and burn/dieseling mechanisms",
+      "theme": "hot_runner",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1007/s00170-023-11100-1"],
+      "objective": "Link cavity-pressure profile and venting evidence to burn/short-shot diagnosis."
+    },
+    {
+      "id": 39,
+      "title": "Gate/nozzle surface defects",
+      "theme": "hot_runner",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1063/1.4942273"],
+      "objective": "Trace flow/gate marks to local thermal and flow history."
+    },
+    {
+      "id": 40,
+      "title": "Family and multi-cavity runner systems",
+      "theme": "hot_runner",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.4028/WWW.SCIENTIFIC.NET/KEM.364-366.1306"],
+      "objective": "Build cavity-resolved balance reasoning for non-identical cavities."
+    },
+    {
+      "id": 41,
+      "title": "Moisture, drying and reabsorption",
+      "theme": "materials",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/app12031410", "10.37358/MP.20.1.5311"],
+      "objective": "Track actual material water content, exposure and product outcomes."
+    },
+    {
+      "id": 42,
+      "title": "Hydrolysis in PET/polyesters",
+      "theme": "materials",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/PI.813"],
+      "objective": "Separate hydrolytic molecular-weight loss from thermal degradation."
+    },
+    {
+      "id": 43,
+      "title": "Residence time and thermal/oxidative degradation",
+      "theme": "materials",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/molecules28052344"],
+      "objective": "Map residence/temperature/oxygen history to molecular and defect evidence."
+    },
+    {
+      "id": 44,
+      "title": "Batch-to-batch rheology variation",
+      "theme": "materials",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1179/146580100101540662"],
+      "objective": "Detect feedstock batch change using in-process pressure/viscosity signals."
+    },
+    {
+      "id": 45,
+      "title": "Regrind ratio and repeated heat history",
+      "theme": "materials",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1007/s10098-024-02818-x", "10.3390/polym14122429"],
+      "objective": "Track degradation and property change over multiple loops."
+    },
+    {
+      "id": 46,
+      "title": "PCR/PIR feedstock variability",
+      "theme": "materials",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/pen.26836", "10.1016/j.resconrec.2024.107538"],
+      "objective": "Characterise secondary feedstock variability without collapsing to MFR alone."
+    },
+    {
+      "id": 47,
+      "title": "Recyclate pvT and compressibility",
+      "theme": "materials",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/app.70411"],
+      "objective": "Use inline pvT/compressibility evidence for variable melts."
+    },
+    {
+      "id": 48,
+      "title": "Contamination, VOC and odor",
+      "theme": "materials",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1007/s10098-024-02818-x"],
+      "objective": "Track contamination/volatile changes separately from visual defects."
+    },
+    {
+      "id": 49,
+      "title": "Masterbatch, additive and dosing variation",
+      "theme": "materials",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1016/j.measurement.2024.114163"],
+      "objective": "Find gravimetric/volumetric dosing drift studies linked to part outcomes."
+    },
+    {
+      "id": 50,
+      "title": "Bulk density, feeding and conveying",
+      "theme": "materials",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1016/j.measurement.2024.114163"],
+      "objective": "Add feed-form/bulk-density/conveying evidence to recovery instability diagnosis."
+    },
+    {
+      "id": 51,
+      "title": "Crystallisation and semi-crystalline structure",
+      "theme": "materials",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/PEN.760301606"],
+      "objective": "Connect thermal history to crystallinity and local properties."
+    },
+    {
+      "id": 52,
+      "title": "High-performance PEEK/PAEK/PPS/LCP",
+      "theme": "materials",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/PEN.760301606"],
+      "objective": "Build high-temperature processing/material-state profiles with crystallinity evidence."
+    },
+    {
+      "id": 53,
+      "title": "Optical PC/PMMA/COC/COP behaviour",
+      "theme": "materials",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/polym16020168", "10.3390/polym16162318"],
+      "objective": "Cover birefringence, residual stress, haze, sink and geometric precision."
+    },
+    {
+      "id": 54,
+      "title": "Biopolymers and biodegradable resins",
+      "theme": "materials",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/POLYM13101616"],
+      "objective": "Treat moisture, degradation and mechanical effects as material-specific evidence."
+    },
+    {
+      "id": 55,
+      "title": "Electrically/thermally conductive compounds",
+      "theme": "materials",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1016/j.measurement.2024.114163"],
+      "objective": "Add filler orientation, conductivity anisotropy and flow/process effects."
+    },
+    {
+      "id": 56,
+      "title": "Flame-retardant and functional additives",
+      "theme": "materials",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1016/j.measurement.2024.114163"],
+      "objective": "Find measured residence, deposit, degradation and property trade-offs."
+    },
+    {
+      "id": 57,
+      "title": "Short-fibre orientation and anisotropy",
+      "theme": "composites",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1007/S40684-020-00226-2", "10.1002/PC.24277"],
+      "objective": "Use micro-CT/experimental validation to connect orientation to properties."
+    },
+    {
+      "id": 58,
+      "title": "Long-fibre attrition and length distribution",
+      "theme": "composites",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/POLYM13213846"],
+      "objective": "Track fibre length/orientation and process-induced damage."
+    },
+    {
+      "id": 59,
+      "title": "Reinforced-material weld-line strength",
+      "theme": "composites",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/polym17192712", "10.1063/1.4918486"],
+      "objective": "Separate cosmetic weld line from local structural damage/orientation."
+    },
+    {
+      "id": 60,
+      "title": "Organosheet and continuous-fibre hybrid overmoulding",
+      "theme": "composites",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/POLYM13213846"],
+      "objective": "Link overmould flow, fibre orientation and structural performance."
+    },
+    {
+      "id": 61,
+      "title": "Short-shot and incomplete fill mechanisms",
+      "theme": "defects",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1007/s00170-023-11100-1", "10.1109/icmeas58693.2023.10379241"],
+      "objective": "Build competing causes and pressure-profile discrimination."
+    },
+    {
+      "id": 62,
+      "title": "Flash and mould-separation mechanisms",
+      "theme": "defects",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1016/J.PRECISIONENG.2017.11.007"],
+      "objective": "Separate clamp/tool separation from viscosity/packing/parting-line causes."
+    },
+    {
+      "id": 63,
+      "title": "Sink, shrink and internal voids",
+      "theme": "defects",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/polym16162318"],
+      "objective": "Distinguish surface sink, shrink void and packing/cooling mechanisms."
+    },
+    {
+      "id": 64,
+      "title": "Burn marks, dieseling and trapped gas",
+      "theme": "defects",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1007/s00170-023-11100-1"],
+      "objective": "Use end-of-fill pressure/vent evidence instead of recipe-only fixes."
+    },
+    {
+      "id": 65,
+      "title": "Splay families: moisture, decompression, volatiles",
+      "theme": "defects",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.37358/MP.20.1.5311", "10.1007/s10098-024-02818-x"],
+      "objective": "Differentiate visually similar streak defects by material/process evidence."
+    },
+    {
+      "id": 66,
+      "title": "Jetting, hesitation and flow marks",
+      "theme": "defects",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1016/j.measurement.2024.114163"],
+      "objective": "Find measured flow-front/thermal evidence for surface-flow defects."
+    },
+    {
+      "id": 67,
+      "title": "Weld and meld lines",
+      "theme": "defects",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1007/s10845-024-02460-w", "10.3390/polym17192712"],
+      "objective": "Cover visibility, geometry, temperature, orientation and strength."
+    },
+    {
+      "id": 68,
+      "title": "Warpage, twist and bow",
+      "theme": "defects",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1007/S40684-020-00226-2", "10.1109/iciibms52876.2021.9651554"],
+      "objective": "Connect anisotropy and thermal imbalance to deformation."
+    },
+    {
+      "id": 69,
+      "title": "Gate, ejection and release damage",
+      "theme": "defects",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/PEN.11212"],
+      "objective": "Use force/location evidence for ejector and release damage."
+    },
+    {
+      "id": 70,
+      "title": "Optical and surface-quality defects",
+      "theme": "defects",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/polym16020168", "10.3390/polym16162318"],
+      "objective": "Build measured optical quality metrics beyond visual pass/fail."
+    },
+    {
+      "id": 71,
+      "title": "Microfeature and nanofeature replication",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1115/1.4032891", "10.1007/S00170-015-7602-4"],
+      "objective": "Use feature-level metrology and local thermal/venting evidence."
+    },
+    {
+      "id": 72,
+      "title": "Microfluidic and biomedical moulding",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1179/0743289811Y.0000000017", "10.1002/adem.202502009"],
+      "objective": "Cover microchannel fidelity, surface roughness and biomedical constraints."
+    },
+    {
+      "id": 73,
+      "title": "Ultrasonic micro-injection moulding",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1016/j.jmapro.2023.07.068"],
+      "objective": "Characterise sonication, injection force, mould temperature and flow repeatability."
+    },
+    {
+      "id": 74,
+      "title": "Injection-compression moulding",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/mi13081280"],
+      "objective": "Compare pressure distribution and replication to conventional injection."
+    },
+    {
+      "id": 75,
+      "title": "Gas-assisted injection moulding",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/PEN.20091"],
+      "objective": "Track gas penetration, residual wall thickness and interface dynamics."
+    },
+    {
+      "id": 76,
+      "title": "Water/projectile-assisted moulding",
+      "theme": "special_process",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.14314/POLIMERY.2007.088"],
+      "objective": "Find primary measured penetration/wall-thickness studies for water/projectile assistance."
+    },
+    {
+      "id": 77,
+      "title": "Microcellular / MuCell physical foaming",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/MA14154199"],
+      "objective": "Track cell morphology, density, surface and mechanical performance."
+    },
+    {
+      "id": 78,
+      "title": "Gas counter-pressure and core-back foaming",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/pen.26822", "10.3390/polym14061078"],
+      "objective": "Control nucleation timing, surface roughness, cell uniformity and skin."
+    },
+    {
+      "id": 79,
+      "title": "Chemical foaming",
+      "theme": "special_process",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.3390/MA14154209"],
+      "objective": "Add chemical blowing-agent decomposition and morphology evidence."
+    },
+    {
+      "id": 80,
+      "title": "Co-injection and sandwich moulding",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/PEN.23871"],
+      "objective": "Track interface position, residual stress and material distribution."
+    },
+    {
+      "id": 81,
+      "title": "2K/3K and sequential multi-shot moulding",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1115/1.4065847"],
+      "objective": "Link sequence/interface temperature to adhesion and dimensional outcomes."
+    },
+    {
+      "id": 82,
+      "title": "Polymer-polymer overmould adhesion",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1016/j.prostr.2024.01.043", "10.1002/POLB.21719"],
+      "objective": "Measure adhesion/failure mode with interface temperature and compatibilisation."
+    },
+    {
+      "id": 83,
+      "title": "Polymer-metal insert moulding",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1051/MFREVIEW/2020004", "10.1002/PEN.10253"],
+      "objective": "Cover surface state, insert temperature and mechanical interlocking."
+    },
+    {
+      "id": 84,
+      "title": "Hybrid composite / organosheet overmoulding",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/POLYM13213846"],
+      "objective": "Connect interface processing to structural performance."
+    },
+    {
+      "id": 85,
+      "title": "Liquid silicone rubber injection moulding",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1002/app.53381", "10.7735/KSMTE.2014.23.2.206"],
+      "objective": "Treat cure/crosslink pressure signatures and flash/venting as LSR-specific."
+    },
+    {
+      "id": 86,
+      "title": "LSR multi-material and overmoulding",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1007/S00170-017-0425-8"],
+      "objective": "Model rheo-kinetic behaviour and validate interface adhesion."
+    },
+    {
+      "id": 87,
+      "title": "Thermoset and rubber injection moulding",
+      "theme": "special_process",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/polym14204404", "10.5254/1.3538554"],
+      "objective": "Build cure-state and kinetic evidence rather than thermoplastic freeze assumptions."
+    },
+    {
+      "id": 88,
+      "title": "Powder, metal and ceramic injection fundamentals",
+      "theme": "special_process",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1016/j.measurement.2024.114163"],
+      "objective": "Add feedstock, debinding/sintering and moulding-stage defect evidence."
+    },
+    {
+      "id": 89,
+      "title": "Cleanroom and medical injection moulding",
+      "theme": "special_process",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1002/adem.202502009"],
+      "objective": "Add contamination, traceability, validation and precision evidence."
+    },
+    {
+      "id": 90,
+      "title": "In-mould labelling, decoration and electronics",
+      "theme": "special_process",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1016/j.measurement.2024.114163"],
+      "objective": "Add insert/film placement, interface and functional quality measurements."
+    },
+    {
+      "id": 91,
+      "title": "Cavity pressure and temperature sensing",
+      "theme": "sensors_quality",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/s22134792", "10.1007/s00170-023-11100-1"],
+      "objective": "Use complete curves and sensor location rather than scalar-only monitoring."
+    },
+    {
+      "id": 92,
+      "title": "Ultrasound, dielectric and capacitance sensing",
+      "theme": "sensors_quality",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/S21155193", "10.1109/tim.2024.3522402"],
+      "objective": "Develop multimodal material-state sensing and validation rules."
+    },
+    {
+      "id": 93,
+      "title": "Strain/tie-bar and indirect cavity-pressure sensing",
+      "theme": "sensors_quality",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1016/J.SNA.2018.11.009"],
+      "objective": "Calibrate indirect sensors against traceable references."
+    },
+    {
+      "id": 94,
+      "title": "Infrared, vision and advanced metrology",
+      "theme": "sensors_quality",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.21741/9781644903735-70"],
+      "objective": "Combine visual/thermal/metrology evidence with physical process signals."
+    },
+    {
+      "id": 95,
+      "title": "Sensor calibration, drift, timing and synchronisation",
+      "theme": "sensors_quality",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1109/sds60720.2024.00027", "10.1109/tim.2024.3522402"],
+      "objective": "Teach calibration, drift, lag, sample rate, filtering and clock alignment."
+    },
+    {
+      "id": 96,
+      "title": "MSA, capability and multivariate SPC",
+      "theme": "sensors_quality",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1177/00405175241239345"],
+      "objective": "Cover measurement variation before process diagnosis and multivariate control."
+    },
+    {
+      "id": 97,
+      "title": "Functional time-series and anomaly detection",
+      "theme": "data_science",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/polym15040978", "10.1109/access.2024.3425582"],
+      "objective": "Preserve waveforms and distinguish trend/anomaly from scalar thresholds."
+    },
+    {
+      "id": 98,
+      "title": "ML quality prediction and transfer learning",
+      "theme": "data_science",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.1007/S00170-020-06511-3", "10.1109/sds60720.2024.00027"],
+      "objective": "Separate predictive accuracy from causality and track domain shift."
+    },
+    {
+      "id": 99,
+      "title": "Predictive maintenance and energy signatures",
+      "theme": "data_science",
+      "status": "seeded_with_primary",
+      "evidence_anchors": ["10.3390/a18080521", "10.1063/5.0028341", "10.1002/app.57853"],
+      "objective": "Use condition signals and energy by phase without treating energy drift as recipe defect."
+    },
+    {
+      "id": 100,
+      "title": "Causal inference, digital twins and simulation discrepancy",
+      "theme": "data_science",
+      "status": "gap_seeded",
+      "evidence_anchors": ["10.1016/j.measurement.2024.114163"],
+      "objective": "Model evidence limits, interventions, uncertainty and simulation-to-machine discrepancy."
+    }
+  ],
+  "summary": {
+    "by_status": {
+      "seeded_with_primary": 78,
+      "gap_seeded": 22
+    },
+    "by_theme": {
+      "machine": 10,
+      "clamp_tool": 10,
+      "cooling": 10,
+      "hot_runner": 10,
+      "materials": 16,
+      "composites": 4,
+      "defects": 10,
+      "special_process": 20,
+      "sensors_quality": 6,
+      "data_science": 4
+    }
+  }
+}

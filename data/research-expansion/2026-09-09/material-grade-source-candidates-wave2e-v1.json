@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "purpose": "Manufacturer-controlled exact-grade source candidates. These are not validated material-grade records until PDS revision/fingerprint and property semantics are reviewed.",
+  "sources": [
+    {
+      "id": "MAT-SRC-010",
+      "manufacturer": "Borealis",
+      "grade": "BorSafe HE3490-LS",
+      "material": "HDPE",
+      "source": "https://www.borealisgroup.com/products/product-catalogue/borsafe-he3490-ls-1",
+      "linkedEvidence": ["MM-DATA-008-existing-NRV-family", "MM-DATA-113", "MM-DATA-114", "MM-DATA-115"],
+      "verifiedOnManufacturerSite": true,
+      "notes": "Official Borealis page exposes PDS download and grade properties; exact PDS bytes/revision should be fingerprinted before promotion."
+    },
+    {
+      "id": "MAT-SRC-011",
+      "manufacturer": "Evonik",
+      "grade": "VESTAKEEP 1000 CF30",
+      "material": "30% carbon-fibre reinforced PEEK",
+      "source": "https://www.evonik.com/en/products/hp/pr_52038502.html",
+      "pds": "https://products.evonik.com/assets/22/91/TDS_VESTAKEEP_1000_CF30_EN_Asset_4002291.pdf",
+      "linkedEvidence": ["MM-DATA-110"],
+      "verifiedOnManufacturerSite": true,
+      "notes": "Official Evonik injection-moulding grade and TDS; source paper uses this overmould compound."
+    },
+    {
+      "id": "MAT-SRC-012",
+      "manufacturer": "Toray Advanced Composites",
+      "grade": "Toray Cetex TC1225 LMPAEK",
+      "material": "continuous-fibre low-melt PAEK composite",
+      "source": "https://www.toraytac.com/product-explorer/products/gXuK/Toray-Cetex-TC1225",
+      "pds": "https://www.toraytac.com/media/3bd72fac-0406-48e4-bfc4-2ffd2398ac0c/zipxIA/TAC/Documents/Data_sheets/Thermoplastic/UDtapes%2Cprepregsandlaminates/Toray-Cetex-TC1225_PAEK_PDS.pdf",
+      "linkedEvidence": ["MM-DATA-110"],
+      "verifiedOnManufacturerSite": true,
+      "notes": "Official PDS explicitly identifies TC1225 as suitable for overmoulding with neat or short-fibre PEEK."
+    }
+  ]
+}

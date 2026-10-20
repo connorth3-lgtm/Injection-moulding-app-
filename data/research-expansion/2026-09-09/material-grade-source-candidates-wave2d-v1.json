@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "boundary": "Manufacturer-controlled exact-grade source candidate only. Promotion to material-grade-v2 requires exact source revision/date, immutable fingerprint and field-level semantic/test-context review.",
+  "entries": [
+    {
+      "id": "MAT-SRC-009",
+      "manufacturer": "Dow",
+      "grade": "DOW LDPE 780E",
+      "polymerFamily": "LDPE",
+      "sourceType": "manufacturer-product-page",
+      "source": "https://www.dow.com/en-us/pdp.dow-ldpe-780e-low-density-polyethylene-resin.98445z.html",
+      "manufacturerDescription": "Low-density polyethylene resin for conventional injection moulding, including housewares, toys, containers and compounding.",
+      "verifiedPublishedProperties": [
+        {"property": "density", "value": 0.923, "unit": "g/cm3"},
+        {"property": "melt index", "value": 20, "unit": "g/10 min", "test": "190 C / 2.16 kg, ASTM D1238"},
+        {"property": "Vicat softening point", "value": 93, "unit": "C"}
+      ],
+      "manufacturerProcessingContext": ["injection moulding fabrication method", "manufacturer page publishes melt/mould-temperature and injection-pressure guidance; retain as supplier guidance only, never a universal production recipe"],
+      "researchCrossLink": "MM-DATA-092",
+      "value": "Provides exact-grade manufacturer context for the raw OpenMMS fault-monitoring experiment, so its measured pressure/force/temperature traces can be tied to a named resin rather than generic LDPE.",
+      "promotionStatus": "candidate-needs-exact-technical-document-revision-retrieval-and-sha256",
+      "productionRecipe": false,
+      "limitations": "Typical manufacturer properties and process guidance require exact revision/test conditions and do not establish site-specific validated limits."
+    }
+  ]
+}

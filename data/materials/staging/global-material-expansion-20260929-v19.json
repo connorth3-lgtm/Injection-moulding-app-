@@ -1,0 +1,646 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-expansion-20260929-v19",
+  "status": "korea-source-reviewed-hyosung-expansion",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Nineteenth expansion wave adding current Hyosung Chemical exact Korean POKETONE and polypropylene identities while preserving conditioned-property rules.",
+  "summary": {
+    "validatedGrades": 0,
+    "sourceReviewedStagingGrades": 9,
+    "manufacturers": 1,
+    "countryFocus": "South Korea",
+    "stagingFamilies": [
+      "polyketone",
+      "PP"
+    ]
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-hyosung-chemical",
+      "name": "Hyosung Chemical",
+      "country": "South Korea",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-hyosung-poketone-m930",
+          "manufacturer": {
+            "id": "mfr-hyosung-chemical",
+            "name": "Hyosung Chemical",
+            "country": "South Korea",
+            "website": "https://www.hyosungchemical.com/"
+          },
+          "brand": "POKETONE",
+          "grade": "M930",
+          "aliases": [],
+          "polymer": {
+            "family": "polyketone",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Hyosung Chemical POKETONE portfolio exact grade. Manufacturer positioning: Advanced high flow. Portfolio page lists melting temperature 220°C and melt index 200 g/10 min, but reviewed surface does not expose full MI test temperature/load."
+          },
+          "properties": [
+            {
+              "id": "obs-hyosung-poketone-m930-mi",
+              "property": "Melt Index",
+              "value": 200,
+              "unit": "g/10 min",
+              "testMethod": "Hyosung portfolio listing; full test temperature/load not exposed on reviewed page",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Context-only portfolio value. Do not compare rheology until the exact test temperature/load and method are captured from grade-level technical data."
+            },
+            {
+              "id": "obs-hyosung-poketone-m930-tm",
+              "property": "Melting Temperature",
+              "value": 220,
+              "unit": "°C",
+              "testMethod": "manufacturer portfolio value",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Manufacturer portfolio context value; not a specification or production setting."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-hyosung-poketone-portfolio-20260929",
+              "publisher": "Hyosung Chemical",
+              "title": "HYOSUNG POKETONE current product portfolio",
+              "url": "https://www.hyosungchemical.com/en/business/pok",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Hyosung Chemical manufacturer portfolio confirms exact POKETONE grade identity and injection/extrusion portfolio positioning. MI remains context-only because temperature/load are not exposed on the reviewed page."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-hyosung-poketone-m330",
+          "manufacturer": {
+            "id": "mfr-hyosung-chemical",
+            "name": "Hyosung Chemical",
+            "country": "South Korea",
+            "website": "https://www.hyosungchemical.com/"
+          },
+          "brand": "POKETONE",
+          "grade": "M330",
+          "aliases": [],
+          "polymer": {
+            "family": "polyketone",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Hyosung Chemical POKETONE portfolio exact grade. Manufacturer positioning: High flow. Portfolio page lists melting temperature 220°C and melt index 60 g/10 min, but reviewed surface does not expose full MI test temperature/load."
+          },
+          "properties": [
+            {
+              "id": "obs-hyosung-poketone-m330-mi",
+              "property": "Melt Index",
+              "value": 60,
+              "unit": "g/10 min",
+              "testMethod": "Hyosung portfolio listing; full test temperature/load not exposed on reviewed page",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Context-only portfolio value. Do not compare rheology until the exact test temperature/load and method are captured from grade-level technical data."
+            },
+            {
+              "id": "obs-hyosung-poketone-m330-tm",
+              "property": "Melting Temperature",
+              "value": 220,
+              "unit": "°C",
+              "testMethod": "manufacturer portfolio value",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Manufacturer portfolio context value; not a specification or production setting."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-hyosung-poketone-portfolio-20260929",
+              "publisher": "Hyosung Chemical",
+              "title": "HYOSUNG POKETONE current product portfolio",
+              "url": "https://www.hyosungchemical.com/en/business/pok",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Hyosung Chemical manufacturer portfolio confirms exact POKETONE grade identity and injection/extrusion portfolio positioning. MI remains context-only because temperature/load are not exposed on the reviewed page."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-hyosung-poketone-m630",
+          "manufacturer": {
+            "id": "mfr-hyosung-chemical",
+            "name": "Hyosung Chemical",
+            "country": "South Korea",
+            "website": "https://www.hyosungchemical.com/"
+          },
+          "brand": "POKETONE",
+          "grade": "M630",
+          "aliases": [],
+          "polymer": {
+            "family": "polyketone",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Hyosung Chemical POKETONE portfolio exact grade. Manufacturer positioning: General purpose; high impact. Portfolio page lists melting temperature 220°C and melt index 6 g/10 min, but reviewed surface does not expose full MI test temperature/load."
+          },
+          "properties": [
+            {
+              "id": "obs-hyosung-poketone-m630-mi",
+              "property": "Melt Index",
+              "value": 6,
+              "unit": "g/10 min",
+              "testMethod": "Hyosung portfolio listing; full test temperature/load not exposed on reviewed page",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Context-only portfolio value. Do not compare rheology until the exact test temperature/load and method are captured from grade-level technical data."
+            },
+            {
+              "id": "obs-hyosung-poketone-m630-tm",
+              "property": "Melting Temperature",
+              "value": 220,
+              "unit": "°C",
+              "testMethod": "manufacturer portfolio value",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Manufacturer portfolio context value; not a specification or production setting."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-hyosung-poketone-portfolio-20260929",
+              "publisher": "Hyosung Chemical",
+              "title": "HYOSUNG POKETONE current product portfolio",
+              "url": "https://www.hyosungchemical.com/en/business/pok",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Hyosung Chemical manufacturer portfolio confirms exact POKETONE grade identity and injection/extrusion portfolio positioning. MI remains context-only because temperature/load are not exposed on the reviewed page."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-hyosung-poketone-m730",
+          "manufacturer": {
+            "id": "mfr-hyosung-chemical",
+            "name": "Hyosung Chemical",
+            "country": "South Korea",
+            "website": "https://www.hyosungchemical.com/"
+          },
+          "brand": "POKETONE",
+          "grade": "M730",
+          "aliases": [],
+          "polymer": {
+            "family": "polyketone",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Hyosung Chemical POKETONE portfolio exact grade. Manufacturer positioning: Low flow. Portfolio page lists melting temperature 220°C and melt index 3 g/10 min, but reviewed surface does not expose full MI test temperature/load."
+          },
+          "properties": [
+            {
+              "id": "obs-hyosung-poketone-m730-mi",
+              "property": "Melt Index",
+              "value": 3,
+              "unit": "g/10 min",
+              "testMethod": "Hyosung portfolio listing; full test temperature/load not exposed on reviewed page",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Context-only portfolio value. Do not compare rheology until the exact test temperature/load and method are captured from grade-level technical data."
+            },
+            {
+              "id": "obs-hyosung-poketone-m730-tm",
+              "property": "Melting Temperature",
+              "value": 220,
+              "unit": "°C",
+              "testMethod": "manufacturer portfolio value",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Manufacturer portfolio context value; not a specification or production setting."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-hyosung-poketone-portfolio-20260929",
+              "publisher": "Hyosung Chemical",
+              "title": "HYOSUNG POKETONE current product portfolio",
+              "url": "https://www.hyosungchemical.com/en/business/pok",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Hyosung Chemical manufacturer portfolio confirms exact POKETONE grade identity and injection/extrusion portfolio positioning. MI remains context-only because temperature/load are not exposed on the reviewed page."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-hyosung-poketone-m710",
+          "manufacturer": {
+            "id": "mfr-hyosung-chemical",
+            "name": "Hyosung Chemical",
+            "country": "South Korea",
+            "website": "https://www.hyosungchemical.com/"
+          },
+          "brand": "POKETONE",
+          "grade": "M710",
+          "aliases": [],
+          "polymer": {
+            "family": "polyketone",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Hyosung Chemical POKETONE portfolio exact grade. Manufacturer positioning: Low flow; low melting point. Portfolio page lists melting temperature 195°C and melt index 3-6 g/10 min, but reviewed surface does not expose full MI test temperature/load."
+          },
+          "properties": [
+            {
+              "id": "obs-hyosung-poketone-m710-mi",
+              "property": "Melt Index",
+              "value": "3-6",
+              "unit": "g/10 min",
+              "testMethod": "Hyosung portfolio listing; full test temperature/load not exposed on reviewed page",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Context-only portfolio value. Do not compare rheology until the exact test temperature/load and method are captured from grade-level technical data."
+            },
+            {
+              "id": "obs-hyosung-poketone-m710-tm",
+              "property": "Melting Temperature",
+              "value": 195,
+              "unit": "°C",
+              "testMethod": "manufacturer portfolio value",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Manufacturer portfolio context value; not a specification or production setting."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-hyosung-poketone-portfolio-20260929",
+              "publisher": "Hyosung Chemical",
+              "title": "HYOSUNG POKETONE current product portfolio",
+              "url": "https://www.hyosungchemical.com/en/business/pok",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Hyosung Chemical manufacturer portfolio confirms exact POKETONE grade identity and injection/extrusion portfolio positioning. MI remains context-only because temperature/load are not exposed on the reviewed page."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-hyosung-poketone-m410",
+          "manufacturer": {
+            "id": "mfr-hyosung-chemical",
+            "name": "Hyosung Chemical",
+            "country": "South Korea",
+            "website": "https://www.hyosungchemical.com/"
+          },
+          "brand": "POKETONE",
+          "grade": "M410",
+          "aliases": [],
+          "polymer": {
+            "family": "polyketone",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Hyosung Chemical POKETONE portfolio exact grade. Manufacturer positioning: Monofilament; low melting point. Portfolio page lists melting temperature 195°C and melt index 6-60 g/10 min, but reviewed surface does not expose full MI test temperature/load."
+          },
+          "properties": [
+            {
+              "id": "obs-hyosung-poketone-m410-mi",
+              "property": "Melt Index",
+              "value": "6-60",
+              "unit": "g/10 min",
+              "testMethod": "Hyosung portfolio listing; full test temperature/load not exposed on reviewed page",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Context-only portfolio value. Do not compare rheology until the exact test temperature/load and method are captured from grade-level technical data."
+            },
+            {
+              "id": "obs-hyosung-poketone-m410-tm",
+              "property": "Melting Temperature",
+              "value": 195,
+              "unit": "°C",
+              "testMethod": "manufacturer portfolio value",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Manufacturer portfolio context value; not a specification or production setting."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-hyosung-poketone-portfolio-20260929",
+              "publisher": "Hyosung Chemical",
+              "title": "HYOSUNG POKETONE current product portfolio",
+              "url": "https://www.hyosungchemical.com/en/business/pok",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Hyosung Chemical manufacturer portfolio confirms exact POKETONE grade identity and injection/extrusion portfolio positioning. MI remains context-only because temperature/load are not exposed on the reviewed page."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-hyosung-poketone-e700",
+          "manufacturer": {
+            "id": "mfr-hyosung-chemical",
+            "name": "Hyosung Chemical",
+            "country": "South Korea",
+            "website": "https://www.hyosungchemical.com/"
+          },
+          "brand": "POKETONE",
+          "grade": "E700",
+          "aliases": [],
+          "polymer": {
+            "family": "polyketone",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Hyosung Chemical POKETONE portfolio exact grade. Manufacturer positioning: PK compound for EVOH blend; retort resistance. Portfolio page lists melting temperature 195°C and melt index 0-3 g/10 min, but reviewed surface does not expose full MI test temperature/load."
+          },
+          "properties": [
+            {
+              "id": "obs-hyosung-poketone-e700-mi",
+              "property": "Melt Index",
+              "value": "0-3",
+              "unit": "g/10 min",
+              "testMethod": "Hyosung portfolio listing; full test temperature/load not exposed on reviewed page",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Context-only portfolio value. Do not compare rheology until the exact test temperature/load and method are captured from grade-level technical data."
+            },
+            {
+              "id": "obs-hyosung-poketone-e700-tm",
+              "property": "Melting Temperature",
+              "value": 195,
+              "unit": "°C",
+              "testMethod": "manufacturer portfolio value",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Manufacturer portfolio context value; not a specification or production setting."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-hyosung-poketone-portfolio-20260929",
+              "publisher": "Hyosung Chemical",
+              "title": "HYOSUNG POKETONE current product portfolio",
+              "url": "https://www.hyosungchemical.com/en/business/pok",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Hyosung Chemical manufacturer portfolio confirms exact POKETONE grade identity and injection/extrusion portfolio positioning. MI remains context-only because temperature/load are not exposed on the reviewed page."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-hyosung-poketone-m640",
+          "manufacturer": {
+            "id": "mfr-hyosung-chemical",
+            "name": "Hyosung Chemical",
+            "country": "South Korea",
+            "website": "https://www.hyosungchemical.com/"
+          },
+          "brand": "POKETONE",
+          "grade": "M640",
+          "aliases": [],
+          "polymer": {
+            "family": "polyketone",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Hyosung Chemical POKETONE portfolio exact grade. Manufacturer positioning: High low-temperature impact; high melting point. Portfolio page lists melting temperature 235°C and melt index 6 g/10 min, but reviewed surface does not expose full MI test temperature/load."
+          },
+          "properties": [
+            {
+              "id": "obs-hyosung-poketone-m640-mi",
+              "property": "Melt Index",
+              "value": 6,
+              "unit": "g/10 min",
+              "testMethod": "Hyosung portfolio listing; full test temperature/load not exposed on reviewed page",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Context-only portfolio value. Do not compare rheology until the exact test temperature/load and method are captured from grade-level technical data."
+            },
+            {
+              "id": "obs-hyosung-poketone-m640-tm",
+              "property": "Melting Temperature",
+              "value": 235,
+              "unit": "°C",
+              "testMethod": "manufacturer portfolio value",
+              "direction": "not-applicable",
+              "sourceId": "src-hyosung-poketone-portfolio-20260929",
+              "sourcePage": "current manufacturer portfolio",
+              "comparisonReady": false,
+              "limitations": "Manufacturer portfolio context value; not a specification or production setting."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-hyosung-poketone-portfolio-20260929",
+              "publisher": "Hyosung Chemical",
+              "title": "HYOSUNG POKETONE current product portfolio",
+              "url": "https://www.hyosungchemical.com/en/business/pok",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Hyosung Chemical manufacturer portfolio confirms exact POKETONE grade identity and injection/extrusion portfolio positioning. MI remains context-only because temperature/load are not exposed on the reviewed page."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-hyosung-pp-hj541cp",
+          "manufacturer": {
+            "id": "mfr-hyosung-chemical",
+            "name": "Hyosung Chemical",
+            "country": "South Korea",
+            "website": "https://www.hyosungchemical.com/"
+          },
+          "brand": "Hyosung Polypropylene",
+          "grade": "HJ541CP",
+          "aliases": [],
+          "polymer": {
+            "family": "PP",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Current Hyosung Chemical manufacturer page identifies HJ541CP as PP specially designed for caps in plastic containers and suitable for high-speed injection molding and CCM."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-hyosung-pp-hj541cp-20260929",
+              "publisher": "Hyosung Chemical",
+              "title": "Polypropylene HJ541CP for caps",
+              "url": "https://www.hyosungchemical.com/en/business/ppdh",
+              "kind": "manufacturer-site",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer page confirms the exact HJ541CP identity and high-speed injection-moulding cap application. No numeric property is promoted without exact-grade technical conditions."
+          }
+        }
+      ]
+    }
+  ],
+  "governance": {
+    "runtimePromotionBlocked": true,
+    "reason": "POKETONE portfolio MI lacks full temperature/load conditioning on reviewed page; HJ541CP page confirms identity/application without comparison-ready numeric technical data.",
+    "comparisonReadyNumericClaims": 0,
+    "productionRecipes": 0
+  }
+}

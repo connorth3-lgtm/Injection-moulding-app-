@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "purpose": "Second over-acquisition wave. Prioritises independently measured process, quality, material-batch, multi-material and recycled-material evidence beyond immediate app needs.",
+  "sources": [
+    {
+      "id": "MM-DATA-124",
+      "name": "EPP foam-moulding raw experimental AutoML dataset",
+      "status": "raw_public_rights_review",
+      "evidenceClass": "measured_foam_moulding_quality",
+      "source": "https://www.mdpi.com/2075-1702/14/7/797",
+      "rawRepository": "https://github.com/enesfurkanerkan/AutoML-Based-Prediction-of-Process-Outcomes-in-Expanded-Polypropylene-Foam-Injection-Molding",
+      "rawFile": "Github_AutoML-Based-Optimization-of-EPP/Data.xlsx",
+      "rawBlobSha": "b75f06766cbb3452d452bf4419e4bee079e80dbf",
+      "scale": "81 measured production trials",
+      "signals": ["five process parameters", "cycle time", "warpage"],
+      "notes": "Article is CC BY and explicitly publishes the raw experimental dataset on GitHub; repository has no explicit LICENSE file, so raw-file redistribution remains rights-review rather than assumed."
+    },
+    {
+      "id": "MM-DATA-125",
+      "name": "Pressure-controlled recycled-HDPE injection moulding experiment",
+      "status": "publisher_measured_study",
+      "evidenceClass": "measured_recycled_hdpe_control_quality_energy",
+      "source": "https://www.sciencedirect.com/science/article/pii/S2214993723000866",
+      "material": "50% post-industrial + 50% post-consumer Green Isotene HDPE",
+      "signals": ["cavity pressure", "in-mould rheology", "injection velocity", "packing pressure", "transfer position", "servo-motor power/energy", "tensile properties"],
+      "notes": "Independent recycled-HDPE family distinct from RWTH recycled PP. Open manuscript also available through OSTI."
+    },
+    {
+      "id": "MM-DATA-126",
+      "name": "Predictive quality control of rubber injection moulding",
+      "status": "publisher_structured_measured_dataset",
+      "evidenceClass": "measured_rubber_batch_variability",
+      "source": "https://link.springer.com/chapter/10.1007/978-3-032-19524-1_55",
+      "scale": "649 production cycles; 118 unique parameter combinations; three material batches with different viscosities",
+      "signals": ["six setpoints", "control variable", "residual cushion volume", "shot volume", "product weight", "normalised batch viscosity"],
+      "notes": "Unique setpoint combinations are separated across train/test/validation, making this unusually useful for leakage-safe batch-drift validation. Raw downloadable dataset not yet confirmed."
+    },
+    {
+      "id": "MM-DATA-127",
+      "name": "Three-colour co-injection + overmoulding automotive process",
+      "status": "confidential_request_only",
+      "evidenceClass": "measured_multimaterial_hotrunner_dimensional",
+      "source": "https://doi.org/10.1088/2631-8695/ade6c8",
+      "signals": ["three materials", "needle-valve hot runner", "conformal/slider/baffle cooling", "warpage simulation", "measured final warpage"],
+      "verifiedOutcome": "Initial simulated maximum warpage 1.743 mm; actual measured production result 0.477 mm after cooling/system redesign.",
+      "notes": "Data are confidential but available on reasonable request; strong acquisition target for multi-material/hot-runner actual behaviour."
+    },
+    {
+      "id": "MM-DATA-128",
+      "name": "PP / coconut-fibre composite multicomponent adhesion experiment",
+      "status": "request_only_measured_study",
+      "evidenceClass": "measured_multicomponent_interface_quality",
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8036955/",
+      "material": "Braskem EP 440 L PP + 30% coconut-fibre PP composite",
+      "scale": "16 factorial treatments; eight moulded specimens per condition",
+      "signals": ["injection temperature", "injection flow rate", "holding pressure", "overlap length", "pure-shear adhesive strength"],
+      "notes": "Arburg Allrounder 370 S two-component process. Data available on request."
+    },
+    {
+      "id": "MM-DATA-129",
+      "name": "Micro-scale CFD foam-injection-moulding data/materials repository target",
+      "status": "repository_request_route",
+      "evidenceClass": "foam_moulding_microstructure_validation",
+      "source": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13306941/",
+      "repository": "http://hdl.handle.net/21.11102/e6bc97b7-a112-480b-8545-8870534b2f03",
+      "notes": "2026 CC BY study; data and materials are stated to be available through the repository/request route. Keep simulation and physical validation data separated during ingestion."
+    },
+    {
+      "id": "MM-DATA-130",
+      "name": "Injection-moulded PE/PCRPE blend property dataset",
+      "status": "open_cc_dataset",
+      "evidenceClass": "measured_recycled_polyethylene_material_quality",
+      "source": "https://www.sciencedirect.com/science/article/pii/S2352340921007344",
+      "materials": ["LDPE", "LLDPE", "MDPE", "HDPE", "post-consumer recycled PE", "multiple blends"],
+      "signals": ["density", "melt flow rate", "TGA", "mechanical properties", "FTIR"],
+      "notes": "Data in Brief open dataset produced from injection-moulded samples; strong material/recyclate breadth with explicit Creative Commons publication."
+    },
+    {
+      "id": "MM-DATA-131",
+      "name": "Direct injection-moulded PA66-GF35 / high-strength-steel hybrid experiment",
+      "status": "publisher_measured_study",
+      "evidenceClass": "measured_polymer_metal_hybrid_failure",
+      "source": "https://www.sciencedirect.com/science/article/pii/S0924013618303819",
+      "materials": ["PA66-GF35", "HC 340/DP 590 dual-phase high-strength steel"],
+      "signals": ["tension force-displacement", "bending response", "DIC", "SEM failure modes", "interface debonding", "fibre breakage/pull-out"],
+      "notes": "Independent polymer-metal hybrid process/failure family; article raw data not confirmed open."
+    },
+    {
+      "id": "MM-DATA-132",
+      "name": "Thermo-mechanical recycling of post-consumer film-grade rLDPE with injection-moulded characterisation",
+      "status": "publisher_measured_study",
+      "evidenceClass": "measured_recycling_process_structure_property",
+      "source": "https://www.sciencedirect.com/science/article/pii/S2214993723001549",
+      "material": "Green Isotene recycled LDPE with reported ~5% PP contamination",
+      "signals": ["extrusion speed", "complex viscosity", "recycled-material characterisation", "injection-moulded property response"],
+      "notes": "Adds contaminated film-stream recycling and reprocessing-history evidence distinct from bottle-derived recycled HDPE/PP families."
+    }
+  ]
+}

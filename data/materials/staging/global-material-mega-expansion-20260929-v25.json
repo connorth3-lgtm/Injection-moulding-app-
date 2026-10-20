@@ -1,0 +1,1151 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-mega-expansion-20260929-v25",
+  "status": "polyplastics-lcp-staging-and-conditioned-pom-validation",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Add the current 21-grade LAPEROS LCP catalogue as source-reviewed staging while promoting two DURACON POM exact grades whose manufacturer pages expose fully conditioned ISO 1133 MFR/MVR.",
+  "summary": {
+    "validatedGrades": 2,
+    "sourceReviewedStagingGrades": 21,
+    "manufacturers": 1,
+    "countryFocus": "Japan",
+    "families": [
+      "POM",
+      "LCP"
+    ],
+    "brandCounts": {
+      "DURACON": 2,
+      "LAPEROS": 21
+    }
+  },
+  "governance": {
+    "laperosRuntimePromotionBlocked": true,
+    "noLcpNumericInference": true,
+    "duraconComparisonOnlyAtMatchedConditions": true
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-polyplastics",
+      "name": "Polyplastics Co., Ltd.",
+      "country": "Japan",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-duracon-m25lv",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "DURACON",
+          "grade": "M25LV",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Low VOC, high-viscosity DURACON POM exact grade."
+          },
+          "properties": [
+            {
+              "id": "obs-polyplastics-m25lv-mfr",
+              "property": "Melt Flow Rate",
+              "value": 2.5,
+              "unit": "g/10min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 190,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-polyplastics-duracon-m25lv-20260929",
+              "sourcePage": "manufacturer exact-grade catalogue",
+              "comparisonReady": true,
+              "limitations": "Manufacturer exact-grade typical value; compare only at identical ISO 1133 190°C / 2.16 kg conditions."
+            },
+            {
+              "id": "obs-polyplastics-m25lv-mvr",
+              "property": "Melt Volume-Flow Rate",
+              "value": 2.2,
+              "unit": "cm³/10min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 190,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-polyplastics-duracon-m25lv-20260929",
+              "sourcePage": "manufacturer exact-grade catalogue",
+              "comparisonReady": true,
+              "limitations": "Manufacturer exact-grade typical value; compare only at identical ISO 1133 190°C / 2.16 kg conditions."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-duracon-m25lv-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "DURACON® POM M25LV CF2001 exact-grade catalogue",
+              "url": "https://www.polyplastics.com/Gidb/GradeListSelectGradeAction.do?_LOCALE=ENGLISH&id=1632",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer exact-grade catalogue page reviewed. ISO 1133 MFR and MVR retain explicit 190°C / 2.16 kg conditioning; no production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-duracon-gb-25r",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "DURACON",
+          "grade": "GB-25R",
+          "aliases": [],
+          "polymer": {
+            "family": "POM",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Low-warpage DURACON POM exact grade; manufacturer ISO marking identifies POM-GB25. Glass-bead reinforcement is retained as source text rather than mapped to glass-fibre percentage."
+          },
+          "properties": [
+            {
+              "id": "obs-polyplastics-gb-25r-mfr",
+              "property": "Melt Flow Rate",
+              "value": 7,
+              "unit": "g/10min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 190,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-polyplastics-duracon-gb-25r-20260929",
+              "sourcePage": "manufacturer exact-grade catalogue",
+              "comparisonReady": true,
+              "limitations": "Manufacturer exact-grade typical value; compare only at identical ISO 1133 190°C / 2.16 kg conditions."
+            },
+            {
+              "id": "obs-polyplastics-gb-25r-mvr",
+              "property": "Melt Volume-Flow Rate",
+              "value": 5,
+              "unit": "cm³/10min",
+              "testMethod": "ISO 1133",
+              "temperatureC": 190,
+              "loadKg": 2.16,
+              "direction": "not-applicable",
+              "sourceId": "src-polyplastics-duracon-gb-25r-20260929",
+              "sourcePage": "manufacturer exact-grade catalogue",
+              "comparisonReady": true,
+              "limitations": "Manufacturer exact-grade typical value; compare only at identical ISO 1133 190°C / 2.16 kg conditions."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-duracon-gb-25r-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "DURACON® POM GB-25R CF3500/CD3501 exact-grade catalogue",
+              "url": "https://www.polyplastics.com/Gidb/GradeListSelectGradeAction.do?id=2272",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current manufacturer exact-grade catalogue page reviewed. ISO 1133 MFR and MVR retain explicit 190°C / 2.16 kg conditioning; no production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-a130",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "A130",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: High Strength, High Toughness; GF reinforced. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-a150",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "A150",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: High Stiffness. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-a230",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "A230",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: CF reinforced. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-a410",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "A410",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: Low Warpage, High Stiffness. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-e130g",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "E130G",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: Standard for SMT; GF reinforced; High Flow. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-e130i",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "E130i",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: GF reinforced. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-e463i",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "E463i",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: Low Warpage, Low Anisotropy. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-e471i",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "E471i",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: Low Warpage. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-e473i",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "E473i",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: Low Warpage, High Flow. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-e480i",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "E480i",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: Good Dimensional Stability. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-e481i",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "E481i",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: Low Warpage, Low Anisotropy. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-e525t",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "E525T",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: Low Fibrillation. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-ga130",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "GA130",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: Standard, High flow, for SMT; GF reinforced. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-ga481",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "GA481",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: Low Warpage, Low Anisotropy. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-ha475",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "HA475",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: Low Warpage, Super High Flow. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-s135",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "S135",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: High Heat Resistance, High-temperature Stiffness; GF reinforced. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-s140m",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "S140M",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: GF reinforced, High Flow. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-s150",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "S150",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: High Stiffness. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-s471",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "S471",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: Low Warpage. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-s475",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "S475",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: Low Warpage, Super High Flow. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-polyplastics-laperos-s478",
+          "manufacturer": {
+            "id": "mfr-polyplastics",
+            "name": "Polyplastics Co., Ltd.",
+            "country": "Japan",
+            "website": "https://www.polyplastics.com/"
+          },
+          "brand": "LAPEROS",
+          "grade": "S478",
+          "aliases": [],
+          "polymer": {
+            "family": "LCP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "Current manufacturer catalogue characteristic: Current catalogue exact LAPEROS grade. Reinforcement percentage/additive loading is not inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "publisher": "Polyplastics Co., Ltd.",
+              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
+              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+          }
+        }
+      ]
+    }
+  ]
+}

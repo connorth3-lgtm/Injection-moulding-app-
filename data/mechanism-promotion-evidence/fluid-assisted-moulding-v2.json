@@ -1,0 +1,16 @@
+{
+  "schema": 2,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "mechanismId": "fluid-assisted-moulding",
+  "registryTarget": "data/evidence-coverage-v1.json",
+  "promotionOverlayTarget": "data/evidence-promotion-overlay-v2.json",
+  "primaryMeasuredRegistryTarget": "data/primary-measured-evidence-registry-v1.json",
+  "authorMetadataTarget": "data/primary-measured-promotion-authors-v1.json",
+  "promotionRuleSnapshot": {"minimumIndependentPublisherVerifiedPrimaryMeasured":2,"requiresMeasuredSignals":true,"requiresPhysicalQualityOutcome":true,"requiresExperimentalContext":true,"requiresExplicitLimitation":true,"predictionIsNotCausation":true,"universalProcessRecipesAllowed":false},
+  "eligibility": {"independentPublisherVerifiedPrimaryMeasured":2,"meetsMinimumIndependentStudies":true,"measuredSignalsPresent":true,"physicalQualityOutcomesPresent":true,"experimentalContextPresent":true,"explicitLimitationsPresent":true,"eligibleForPromotion":true,"registryPromotionApplied":true},
+  "qualifyingDois": ["10.1155/2015/161938","10.1002/pen.20832"],
+  "supportingDois": ["10.1155/2020/3481752","10.1155/2014/238251","10.3139/217.0130","10.3139/217.2612","10.1179/174328906X79969","10.1016/j.powtec.2013.02.032","10.1155/2020/6154694","10.1002/app.42866"],
+  "independenceRationale": "The qualifying evidence comes from distinct teams and different assisted-moulding families and measurement approaches. A 2015 water-assisted programme physically evaluates residual wall thickness, cooling and surface quality, while an independent 2007 gas-assisted programme uses ultrasonic in-process measurement to infer and validate residual wall thickness. They are separate experimental programmes and not duplicate publications or re-analysis of the same hollow-part campaign.",
+  "promotionClaim": "Promote the mechanism-level statement that measured gas- or water-assisted penetration and thermal history can change residual wall thickness, cooling and physical part-quality, and that the different assisted-process families require their own evidence. Do not promote any assist pressure, delay, wall thickness, temperature or penetration value as a universal rule, and do not collapse water, gas and projectile-assisted moulding into one recipe."
+}

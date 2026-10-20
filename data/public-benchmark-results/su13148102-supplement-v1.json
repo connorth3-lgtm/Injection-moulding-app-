@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "status": "completed-public-measured-benchmark",
+  "retrieved_date": "2026-08-29",
+  "source": {
+    "datasetId": "su13148102-supplement",
+    "articleDoi": "10.3390/su13148102",
+    "license": "CC BY 4.0",
+    "requestedUrl": "https://www.mdpi.com/article/10.3390/su13148102/s1",
+    "resolvedUrl": "https://mdpi-res.com/d_attachment/sustainability/sustainability-13-08102/article_deploy/sustainability-13-08102-s001.zip",
+    "contentType": "application/zip",
+    "sizeBytes": 104525,
+    "sha256": "b546abea4eb9f14b6736dec415dc43c00240965b91de4c7ca92b2494321c6ace"
+  },
+  "profile": {
+    "rows": 955,
+    "columns": 45,
+    "selectedFile": "sustainability-1272832-supplementary.csv",
+    "fieldRoles": {
+      "processFields": [
+        "Cycle #",
+        "Cycle Time, s",
+        "Cav1 Cool Time, s",
+        "Cav2 Cool Time, s",
+        "Max Inj Pres, MPa",
+        "Max Cav1 Pres, MPa",
+        "Inj Flow Rate, ccps",
+        "Melt Temp, C",
+        "HR Viscosity, Pa.s",
+        "CP1 Viscosity, Pa.s",
+        "CP2 Viscosity, Pa.s",
+        "Inj Energy, J",
+        "Pack Energy, J",
+        "Temp Trend, dTdt",
+        "Cav Shear Rate, s-1",
+        "HR-Barrel Temp, C",
+        "Cooling Time, s",
+        "Screw Speed, RPM",
+        "Inj Velocity, inps",
+        "Part Temp, C",
+        "Mold Temp, C",
+        "tCycle*dD/dT, %"
+      ],
+      "mechanicalOutcomeFields": [
+        "Thickness, mm",
+        "Max Strain, pct",
+        "Ult Stress, MPa",
+        "Modulus, MPa",
+        "Toughness, MJ/m^3",
+        "Structural Norm, pct",
+        "Structural Loss, pct"
+      ],
+      "identifierGroupingFields": [
+        "Part #",
+        "Material #",
+        "DOE Run #",
+        "Cycle #",
+        "Tensile Test #",
+        "Tensile Material #",
+        "DOE Run",
+        "Specimen",
+        "Cavity #"
+      ],
+      "derivedOrEngineeredFields": [
+        "HR Viscosity, Pa.s",
+        "CP1 Viscosity, Pa.s",
+        "CP2 Viscosity, Pa.s",
+        "Inj Energy, J",
+        "Pack Energy, J",
+        "Temp Trend, dTdt",
+        "Cav Shear Rate, s-1",
+        "Intercept",
+        "Structural Norm, pct",
+        "Structural Loss, pct",
+        "Degradation, %@T",
+        "dDegradation/dT, %/C",
+        "tCycle*dD/dT, %"
+      ],
+      "materialFields": [
+        "Material #",
+        "Tensile Material #"
+      ],
+      "processAndMechanicalFieldsObserved": true,
+      "headerCount": 45,
+      "rawValuesEmitted": false
+    },
+    "schemaDiagnostics": {
+      "columnNames": [
+        "Part #",
+        "Material #",
+        "DOE Run #",
+        "Cycle #",
+        "Start Time, s",
+        "Cycle Time, s",
+        "Fill Time, s",
+        "Cav1 Cool Time, s",
+        "Cav2 Cool Time, s",
+        "Plas Time, s",
+        "Max Inj Pres, MPa",
+        "Max Cav1 Pres, MPa",
+        "Inj Flow Rate, ccps",
+        "Melt Temp, C",
+        "HR Viscosity, Pa.s",
+        "CP1 Viscosity, Pa.s",
+        "CP2 Viscosity, Pa.s",
+        "Inj Energy, J",
+        "Pack Energy, J",
+        "Pack Volume, pct",
+        "Temp Trend, dTdt",
+        "Cav Shear Rate, s-1",
+        "HR-Barrel Temp, C",
+        "Cooling Time, s",
+        "Screw Speed, RPM",
+        "Inj Velocity, inps",
+        "Part Temp, C",
+        "Mold Temp, C",
+        "Intercept",
+        "Tensile Test #",
+        "Tensile Material #",
+        "DOE Run",
+        "Specimen",
+        "Cavity #",
+        "Thickness, mm",
+        "Max Strain, pct",
+        "Ult Stress, MPa",
+        "Modulus, MPa",
+        "Toughness, MJ/m^3",
+        "Structural Norm, pct",
+        "Structural Loss, pct",
+        "Clock time, s",
+        "Degradation, %@T",
+        "dDegradation/dT, %/C",
+        "tCycle*dD/dT, %"
+      ],
+      "columnNameCount": 45,
+      "unnamedColumns": [],
+      "indexLikeColumns": [],
+      "namedColumnsExcludingIndexLike": 45,
+      "rawValuesEmitted": false
+    },
+    "materialGrouping": {
+      "column": "Material #",
+      "uniqueGroups": 5
+    },
+    "paperReported": {
+      "rows": 955,
+      "columns": 42,
+      "materials": 5,
+      "namedDataFile": "BioplasticsTensile.csv",
+      "experiment": "two-cavity hot-runner injection moulding of iPP, recycled PP blend, PBAT and two PLA grades",
+      "processFactors": [
+        "melt temperature",
+        "injection velocity",
+        "cycle time",
+        "screw speed"
+      ],
+      "physicalOutcomes": [
+        "strain to failure",
+        "ultimate stress",
+        "tensile modulus",
+        "toughness"
+      ],
+      "additionalMeasuredStateExamples": [
+        "observed cycle time",
+        "observed melt temperature",
+        "calculated cavity shear rate"
+      ]
+    },
+    "deliveredRelease": {
+      "retrievedFile": "sustainability-1272832-supplementary.csv",
+      "rows": 955,
+      "columns": 45,
+      "materials": 5,
+      "sha256": "b546abea4eb9f14b6736dec415dc43c00240965b91de4c7ca92b2494321c6ace",
+      "schemaDiscrepancy": "The current publisher supplement contains 45 substantive named fields, while the article text reports 42 columns and names BioplasticsTensile.csv. No unnamed or dummy index fields account for the difference. MouldMaster records the delivered release exactly and does not delete or invent columns to force agreement with the paper."
+    },
+    "paperReleaseColumnDelta": 3,
+    "recordUnit": "experimental observation / tensile-linked process record",
+    "countsAsTimeSeriesSamples": false,
+    "rawRowsOrCellValuesEmitted": false
+  },
+  "retrieval": {
+    "rawSupplementCommitted": false,
+    "rawRowsUploadedAsArtifact": false
+  },
+  "evidenceBoundary": "The peer-reviewed article reports 955 observations, 42 columns and five materials. The exact CC BY 4.0 publisher release retrieved by MouldMaster contains the same 955 observations and five material groups but 45 substantive named columns. Acceptance therefore requires the exact released file fingerprint, delivered 45-column schema, field/unit inspection, material grouping and explicit documentation of the 42-versus-45 paper/release discrepancy. This record-level DOE evidence does not count as high-frequency time-series samples and does not establish universal process settings."
+}

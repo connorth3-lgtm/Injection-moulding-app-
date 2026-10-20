@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "status": "completed-profiled-xps-vamas-material-tool-interface",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetId": "mendeley-crmb7xjymg-v1",
+    "datasetDoi": "10.17632/crmb7xjymg.1",
+    "license": "CC BY 4.0",
+    "version": 1,
+    "publisherFileName": "2025-07-05 XPS spectral data.vms",
+    "sha256": "b9fe94af44634712bc7f90fa5591ae0e7ba7aeadd0858eae3945bba8600cc52c",
+    "publisherSha256Matched": true,
+    "retrievedSizeBytes": 1388151,
+    "parser": "vamas 0.2.0",
+    "parserTextEncodingNormalization": "cp1252-to-utf8-temporary-copy"
+  },
+  "profile": {
+    "vamasBlockCount": 88,
+    "xpsBlockCount": 88,
+    "dependentVariablePointCountsByLabel": {"Counts":71868,"Transmission":71868},
+    "measuredDetectorCountsValues": 71868,
+    "otherDependentVariableValuesExcluded": 71868,
+    "blockSpecies": {"C 1s":16,"N 1s":16,"O 1s":16,"Si 2p":16,"XPS Survey":16,"Cr 2p":4,"Fe 2p":4},
+    "scanPointSetDistribution": {"301":17,"361":16,"2721":16,"381":15,"401":15,"521":4,"801":4,"421":1},
+    "rawSpectralValuesEmitted": false
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": true,
+    "evidenceClass": "material-tool-interface-xps-characterization",
+    "injectionMouldingCycleDataset": false,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "acceptedMaterialCharacterizationTraceValues": 71868,
+    "energyAxisExcluded": true,
+    "transmissionAndCalibrationVariablesExcluded": true
+  },
+  "retrieval": {"rawPublisherFileCommitted":false,"rawSpectralValuesUploadedAsArtifact":false},
+  "evidenceBoundary": "Only dependent-variable arrays labelled Counts are accepted as measured XPS detector values. REGULAR scan energy coordinates, Transmission/calibration variables, and the separate OPJU visualization project are excluded from measured-value counts."
+}

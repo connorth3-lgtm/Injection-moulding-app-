@@ -1,0 +1,174 @@
+{
+  "schema": 1,
+  "version": "2026.09.10.1",
+  "reviewed": "2026-09-10",
+  "purpose": "Source-backed public machine/material context acquired while completing the Minimum Production Dataset. These records are reference context only and must not be substituted for the actual production-site machine configuration, material lot, controlled process window, mould specification, part CTQs or calibration records.",
+  "applicabilityRule": "A public model/grade record may help identify or validate a site record only after the site supplies an exact matching machine configuration or exact commercial material identity. Public reference values are never a site-approved production recipe.",
+  "records": [
+    {
+      "id": "ref-sabic-pp579s-2026-09-10",
+      "kind": "exact-commercial-material-reference",
+      "manufacturer": "SABIC",
+      "brand": "SABIC PP",
+      "grade": "579S",
+      "polymerFamily": "PP",
+      "sourceBackedFacts": {
+        "mfr": {
+          "value": 47,
+          "unit": "g/10 min",
+          "condition": "230 C / 2.16 kg",
+          "claimType": "manufacturer-typical-property"
+        },
+        "density": {
+          "value": 905,
+          "unit": "kg/m3",
+          "claimType": "manufacturer-product-catalogue-typical-property"
+        },
+        "applications": ["housewares", "thin-wall packaging", "appliances", "caps and closures"],
+        "characteristics": ["low warpage", "high stiffness", "outstanding flowability", "high gloss"]
+      },
+      "sources": [
+        {
+          "publisher": "SABIC",
+          "title": "SABIC PP product page - 579S",
+          "url": "https://www.sabic.com/en/products/polymers/polypropylene-pp/sabic-pp",
+          "kind": "manufacturer-product-page",
+          "retrievedAt": "2026-09-10"
+        },
+        {
+          "publisher": "SABIC",
+          "title": "Polymer product catalogue",
+          "url": "https://www.sabic.com/en/Images/Polymers-All-Products_tcm1010-42650.pdf",
+          "kind": "manufacturer-product-catalogue",
+          "retrievedAt": "2026-09-10"
+        }
+      ],
+      "productionUse": false,
+      "limitations": "Does not prove that PP579S is the material currently used by any target production cell; current lot/batch identity, TDS/SDS and approved site material specification remain required."
+    },
+    {
+      "id": "ref-braskem-c711-70rna-2026-09-10",
+      "kind": "exact-commercial-material-reference",
+      "manufacturer": "Braskem",
+      "grade": "C711-70RNA",
+      "polymerFamily": "PP",
+      "sourceBackedFacts": {
+        "mfr": {"value": 70, "unit": "g/10 min", "condition": "230 C / 2.16 kg", "testMethod": "ISO 1133"},
+        "density": {"value": 0.9, "unit": "g/cm3", "testMethod": "ISO 1183"},
+        "flexuralModulus": {"value": 1250, "unit": "MPa", "testMethod": "ISO 178"},
+        "tensileStress": {"value": 24, "unit": "MPa", "testMethod": "ISO 527-2"},
+        "tensileStrain": {"value": 5, "unit": "%", "testMethod": "ISO 527-2"},
+        "charpyNotchedImpact23C": {"value": 8, "unit": "kJ/m2", "testMethod": "ISO 179-1/1eA"},
+        "charpyNotchedImpactMinus20C": {"value": 4, "unit": "kJ/m2", "testMethod": "ISO 179-1/1eA"},
+        "hdtUnder0_45MPaUnannealed": {"value": 95, "unit": "C", "testMethod": "ISO 75-2/B"},
+        "applications": ["thin-wall consumer goods", "thin-wall rigid packaging"]
+      },
+      "sources": [
+        {
+          "publisher": "Braskem",
+          "title": "PP Polypropylene - product table",
+          "url": "https://www.braskem.com/portal/europe/arquivos/listas/13622/thumb.pdf?v=",
+          "kind": "manufacturer-product-catalogue",
+          "retrievedAt": "2026-09-10",
+          "sourcePage": "10 (PDF page index 9 in retrieved file)"
+        }
+      ],
+      "productionUse": false,
+      "limitations": "Manufacturer table reports typical material properties. It does not establish a site process window, current material lot, or approval for a particular part/mould."
+    },
+    {
+      "id": "ref-arburg-520a-1500-800-2026-09-10",
+      "kind": "machine-family-configuration-reference",
+      "manufacturer": "ARBURG",
+      "modelFamily": "ALLROUNDER 520 A",
+      "configurationContext": "520 A 1500 with EUROMAP injection unit 800",
+      "sourceBackedFacts": {
+        "clampingForce": {"value": 1500, "unit": "kN", "context": "520 A family designation in current technical data"},
+        "tieBarSpacing": {"width": 520, "height": 520, "unit": "mm"},
+        "injectionUnit800AvailableScrewDiameters": {"values": [45, 50, 55], "unit": "mm"},
+        "configurationWarning": "ARBURG states that specifications relate to the basic machine version; deviations are possible depending on variants, process settings and material type, and some maxima may be mutually exclusive."
+      },
+      "sources": [
+        {
+          "publisher": "ARBURG",
+          "title": "ALLROUNDER 520 A technical data",
+          "url": "https://www.arburg.com/media/daten/publications/technical_data/electric_machines/ARBURG_ALLROUNDER_520A_TD_680085_en_GB.pdf",
+          "kind": "manufacturer-technical-data",
+          "retrievedAt": "2026-09-10"
+        },
+        {
+          "publisher": "ARBURG",
+          "title": "ALLROUNDER 520 A multi-component technical data",
+          "url": "https://www.arburg.com/media/daten/publications/technical_data/electric_machines/ARBURG_ALLROUNDER_520A_multi-component_TD_680285_en_US.pdf",
+          "kind": "manufacturer-technical-data",
+          "retrievedAt": "2026-09-10"
+        }
+      ],
+      "productionUse": false,
+      "limitations": "The public technical sheet establishes model-family capability, not the exact screw, controller options, pressure/flow limits, serial-specific equipment, calibration state or installed configuration of a target production machine. Site equipment records remain authoritative."
+    },
+    {
+      "id": "ref-rwth-pcr-research-cell-2026-09-10",
+      "kind": "research-process-context",
+      "sourceBackedFacts": {
+        "machine": "ARBURG ALLROUNDER 520 A 1500-800",
+        "materials": ["Systalen PP-24000 gr000 recycled polypropylene", "SABIC PP579S virgin polypropylene"],
+        "reportedSignals": ["screw antechamber pressure", "cavity pressure", "controller output", "screw velocity", "screw antechamber volume over time"],
+        "publisherArchive": "ExperimentalData.zip"
+      },
+      "sources": [
+        {
+          "publisher": "RWTH Aachen University",
+          "title": "PCR injection-moulding experimental dataset record",
+          "url": "https://publications.rwth-aachen.de/record/1016199/",
+          "kind": "research-data-record",
+          "retrievedAt": "2026-09-10"
+        }
+      ],
+      "productionUse": false,
+      "limitations": "Research-cell context only. The publisher archive still requires successful byte delivery, fingerprinting and semantic profiling before its numeric payload can increase MouldMaster accepted measured-data counts."
+    },
+    {
+      "id": "ref-pascoe-research-cell-2026-09-10",
+      "kind": "research-process-context",
+      "sourceBackedFacts": {
+        "machine": "Battenfield BA 600 CDC",
+        "sensors": [
+          "Kistler 4262A hydraulic-pressure sensor",
+          "Kistler P510 screw-position sensor",
+          "Kistler 4021B nozzle-temperature sensor",
+          "two Kistler 6188A combined cavity pressure/temperature sensors",
+          "TRACER vm base cooling-water temperature sensor"
+        ],
+        "acquisition": ["Kistler ComoNeo", "analogue and digital signal acquisition"]
+      },
+      "sources": [
+        {
+          "publisher": "Zenodo",
+          "title": "ImPure/PASCOE injection moulding dataset",
+          "url": "https://doi.org/10.5281/zenodo.6913660",
+          "kind": "research-data-record",
+          "retrievedAt": "2026-09-10"
+        },
+        {
+          "publisher": "IOS Press",
+          "title": "Upgrading Conventional Production Lines Through Implementing an Industry 4.0 Strategy",
+          "url": "https://doi.org/10.3233/ATDE230912",
+          "kind": "research-paper",
+          "retrievedAt": "2026-09-10"
+        }
+      ],
+      "productionUse": false,
+      "limitations": "Sensor identity does not determine delivered CSV engineering units or scaling. HydPressure, ScrewPosition and Analog Input[1]/[2] remain blocked until an authoritative delivered-data dictionary or author clarification is obtained."
+    }
+  ],
+  "siteOnlyStillRequired": [
+    "exact target machine serial/configuration/controller and calibration state",
+    "controlled production mould geometry, projected area, runner/gate/hot-runner and cooling-circuit data",
+    "exact material currently in use including lot/batch plus current TDS/SDS and approved site material specification",
+    "controlled part drawing/revision, CTQs, nominal values, LSL/USL and inspection methods",
+    "site-approved validated process window linked to the exact machine/mould/material/part combination",
+    "real production shot/trace/quality exports with channel dictionary",
+    "maintenance, change and intervention events relevant to the imported run"
+  ]
+}

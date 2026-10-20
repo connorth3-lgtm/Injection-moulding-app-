@@ -1,0 +1,723 @@
+/* GENERATED FILE — DO NOT EDIT DIRECTLY.
+ * Built by tools/build_runtime_packs.py from reviewed classic-script parts.
+ * Concatenation preserves the exact historical execution order; no code is transformed.
+ * Pack: learning-foundation-runtime-pack.js
+ */
+
+/* >>> reading-patch.js */
+/* MouldMaster lesson-reading enhancement — 2026.09.14.1 */
+(function(){
+  'use strict';
+  function norm(s){return String(s||'').replace(/\s+/g,' ').trim().toLowerCase();}
+  function marker(el,step,label,primary){
+    if(!el)return;
+    el.classList.add('lesson-read-block');
+    if(primary)el.classList.add('lesson-read-primary');
+    if(el.querySelector(':scope > .mm-read-marker'))return;
+    const m=document.createElement('div');
+    m.className='mm-read-marker';
+    m.innerHTML=`<b>${step}</b><span>${label}</span>`;
+    el.prepend(m);
+  }
+  function enhanceLesson(){
+    const article=document.querySelector('#lesson article.lesson-body');
+    if(!article)return;
+    if(!article.querySelector(':scope > .mm-reading-guide')){
+      const guide=document.createElement('div');
+      guide.className='mm-reading-guide';
+      guide.setAttribute('role','note');
+      guide.innerHTML='<span>START HERE</span><div><strong>Read boxes 1, 2 and 3 in order.</strong><p>Then complete yellow box 4. Open <b>Extra help</b> only if you want examples or a simpler explanation.</p></div>';
+      const progress=article.querySelector(':scope > .mm-lesson-progress');
+      progress?progress.after(guide):article.prepend(guide);
+    }
+    const blocks=[...article.children].filter(x=>x.classList?.contains('content-block'));
+    const findBlock=(pattern)=>blocks.find(x=>pattern.test(norm(x.querySelector('h3')?.textContent)));
+    const intro=findBlock(/^why this matters$/)||blocks[0];
+    const objectives=findBlock(/^by the end of this lesson|^learning objectives/);
+    const points=findBlock(/^key points$|^key engineering points|^what to remember/);
+    const exercise=[...article.children].find(x=>x.classList?.contains('callout'));
+    marker(intro,'1','READ THIS FIRST',true);
+    marker(objectives,'2','READ NEXT');
+    marker(points,'3','MAIN POINTS');
+    marker(exercise,'4','DO THIS AFTER READING');
+    exercise?.classList.add('lesson-read-task');
+    const teaching=article.querySelector('#mmTeaching');
+    if(teaching&&!teaching.parentElement?.classList.contains('mm-extra-help')){
+      const details=document.createElement('details');
+      details.className='mm-extra-help';
+      details.innerHTML='<summary><span>Extra help</span><b>Show examples and explanations</b></summary>';
+      teaching.before(details);
+      details.appendChild(teaching);
+    }
+    const next=article.querySelector('.lesson-actions-sticky .primary');
+    if(next&&/^complete\s*&\s*continue/i.test(next.textContent||''))next.textContent='Finished reading — next lesson →';
+    article.dataset.readEnhanced='1';
+  }
+  function loadReadAloud(){
+    if(window.MMReadAloud||document.querySelector('script[data-mm-read-aloud-runtime]'))return;
+    const script=document.createElement('script');
+    script.src=window.MM_RUNTIME_SCRIPT_URL?.('./read-aloud.js')||'./read-aloud.js';
+    script.dataset.mmReadAloudRuntime='1';
+    script.async=false;
+    document.head.appendChild(script);
+  }
+  function loadBook(){
+    if(window.MMBook||document.querySelector('script[data-mm-book-runtime]'))return;
+    const script=document.createElement('script');
+    script.src=window.MM_RUNTIME_SCRIPT_URL?.('./book-runtime.js')||'./book-runtime.js';
+    script.dataset.mmBookRuntime='1';
+    script.async=false;
+    document.head.appendChild(script);
+  }
+  function settleViewTop(){
+    const main=document.querySelector('main.main')||document.querySelector('.main');
+    if(main)main.scrollTop=0;
+    if(document.body)document.body.scrollTop=0;
+    const scrolling=document.scrollingElement;if(scrolling)scrolling.scrollTop=0;
+    try{window.scrollTo({top:0,left:0,behavior:'auto'})}catch(_){window.scrollTo(0,0)}
+  }
+  function installStableViewEntry(){
+    const R=window.MM_RUNTIME_V2;
+    if(!R?.before||!R?.after||window.__MM_STABLE_VIEW_ENTRY__)return false;
+    R.before('switchView',id=>{
+      // The exit bookmark must be recorded BEFORE settleViewTop resets the
+      // document scroll root. Shell onViewChange fires after that reset.
+      window.MMBook?.prepareRouteExit?.(id);
+      const active=document.activeElement;
+      if(active&&typeof active.blur==='function')active.blur();
+      settleViewTop();
+    });
+    R.after('switchView',()=>{settleViewTop();requestAnimationFrame(()=>requestAnimationFrame(settleViewTop))});
+    window.__MM_STABLE_VIEW_ENTRY__='2026.09.24.5-runtime-hook';
+    return true;
+  }
+  const run=()=>{enhanceLesson();installStableViewEntry()};
+  const boot=()=>{run();loadReadAloud();loadBook();};
+  const refresh=()=>requestAnimationFrame(run);
+  window.addEventListener?.('mm:domains-ready',refresh);
+  window.MM_APP_SHELL?.events?.onRender?.('lesson',refresh);
+  window.MM_APP_SHELL?.events?.onViewChange?.(id=>{if(id==='lesson')refresh()});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
+/* <<< reading-patch.js */
+
+/* >>> training-upgrade.js */
+/* MouldMaster guided training upgrade v2 — content 2026.08.23.5 */
+(function(){
+'use strict';
+const REVIEW_KEY='mm_spaced_review_v2', SIGN_KEY='mm_practical_signoff_v1', DAY=86400000;
+const esc=v=>String(v??'').replace(/[&<>\"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[m]));
+// Review scheduling and practical sign-off can contain learner-specific progress, supervisor identity and notes.
+// Keep them inside Runtime V2 learner scope; never fall back to historical device-global keys.
+const scopedStore=()=>window.MM_RUNTIME_V2?.storage||null;
+const load=(k,d)=>{try{const x=scopedStore()?.get?.(k,d);return x&&typeof x==='object'?x:d}catch(_){return d}};
+const save=(k,v)=>{try{return !!scopedStore()?.set?.(k,v)}catch(_){return false}};
+const qt=q=>q?.q??q?.[0]??'', qo=q=>q?.options??q?.[1]??[], qc=q=>Number(q?.correct??q?.[2]??0), qw=q=>q?.explanation??q?.why??q?.[3]??'', qfb=q=>q?.optionFeedback??q?.feedback??q?.[6]??[], qu=q=>q?.sourceUrl??q?.url??q?.[5]??'', qr=q=>q?.reference??q?.source??q?.[4]??'';
+
+const SRC={
+ safety:[['ISO 20430:2020','Injection moulding machine safety requirements.','https://www.iso.org/standard/68000.html'],['HSE — Plastics processing safety','UK machinery and plastics-processing guidance.','https://www.hse.gov.uk/pubns/plasindx.htm'],['OSHA Injection Molding eTool','US machine guarding and safe-access guidance.','https://www.osha.gov/etools/machine-guarding/plastics-machinery/horizontal-injection-molding-machines'],['WorkSafe NZ — Safe use of machinery','NZ machinery risk-management guidance.','https://www.worksafe.govt.nz/topic-and-industry/machinery/safe-use-of-machinery/']],
+ stats:[['NIST Engineering Statistics Handbook','Capability, measurement, DOE and statistical engineering.','https://www.itl.nist.gov/div898/handbook/'],['NIST — Process capability','Capability concepts and interpretation prerequisites.','https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm'],['NIST — Experimental design','Factors, interactions, randomisation and blocking.','https://www.itl.nist.gov/div898/handbook/pri/section1/pri13.htm']],
+ material:[['ISO 1133-1:2022','MFR/MVR testing under specified conditions.','https://www.iso.org/standard/83905.html'],['ASTM D1238','Melt-flow-rate test method for thermoplastics.','https://store.astm.org/standards/d1238'],['Trotta et al. (2021), Polymer Testing','Injection-moulding rheology and shear-thinning behaviour.','https://doi.org/10.1016/j.polymertesting.2021.107068'],['Hu et al. (2022), Polymers','Cooling-rate effects on polypropylene crystallisation.','https://doi.org/10.3390/polym14173646']],
+ thermal:[['Autodesk Moldflow — Cooling stage','Cooling-stage heat removal and solidification background.','https://help.autodesk.com/cloudhelp/2023/ENU/MoldflowInsight-CLC-Ref-Materials/files/glossary-of-terminology/MoldflowInsight_CLC_Ref_Materials_glossary_of_terminology_Cooling_stage_html.html'],['Zhao et al. (2022), Int J Adv Manuf Technol','Review of injection-moulding warpage/shrinkage and interacting process parameters.','https://pubmed.ncbi.nlm.nih.gov/35194289/'],['Hu et al. (2022), Polymers','Cooling-rate effects on crystallisation behaviour.','https://doi.org/10.3390/polym14173646']],
+ pack:[['Autodesk Moldflow — Packing guidance','Packing, hold and gate-freeze background.','https://help.autodesk.com/view/MOLDFLOW/2013/ENU/caas.html?url=caas%2Fvhelp%2Fhelp-dev-autodesk-com%2Fv%2FSimulation-Moldflow%2Fenu%2F2013%2FHelp%2F3Insight-360%2F3927-Process-3927%2F3933-Profiles3933%2F3945-Packing-3945.html'],['Zhao et al. (2022), Int J Adv Manuf Technol','Review of packing/cooling/process effects on shrinkage and warpage.','https://pubmed.ncbi.nlm.nih.gov/35194289/']],
+ flow:[['Trotta et al. (2021), Polymer Testing','High-shear moulding rheology and shear thinning.','https://doi.org/10.1016/j.polymertesting.2021.107068'],['Zhao et al. (2022), Int J Adv Manuf Technol','Multi-parameter injection-moulding review.','https://pubmed.ncbi.nlm.nih.gov/35194289/']],
+ tooling:[['ISO 20430:2020','Safety requirements at machine/tool interfaces.','https://www.iso.org/standard/68000.html'],['Zhao et al. (2022), Int J Adv Manuf Technol','Process/tooling interactions relevant to dimensional response.','https://pubmed.ncbi.nlm.nih.gov/35194289/']],
+ automation:[['ISO 20430:2020','Injection moulding machinery safety requirements.','https://www.iso.org/standard/68000.html'],['OSHA Injection Molding eTool','Integrated guarding and safe access around moulding machinery.','https://www.osha.gov/etools/machine-guarding/plastics-machinery/horizontal-injection-molding-machines'],['WorkSafe NZ — Safe use of machinery','Machinery safeguarding and risk-control guidance.','https://www.worksafe.govt.nz/topic-and-industry/machinery/safe-use-of-machinery/']]
+};
+function categories(text){const t=String(text||'').toLowerCase(),c=[];if(/guard|safety|interlock|lockout|isolation|hazard|robot|cell/.test(t))c.push('safety');if(/capability|cpk|ppk|doe|statistics|measurement|random|factorial|validation|sampling/.test(t))c.push('stats');if(/material|polymer|rheology|viscosity|mfr|mvr|moisture|dry|crystall|degrad|residence|regrind/.test(t))c.push('material');if(/cool|temperature|thermal|warpage|shrink|ejection/.test(t))c.push('thermal');if(/pack|hold|gate seal|sink/.test(t))c.push('pack');if(/fill|flow|pressure loss|shear|jet|weld|short shot|vent|burn/.test(t))c.push('flow');if(/\bmould\b|\bmold\b|runner|gate|tool|cavity|draft|clamp/.test(t))c.push('tooling');if(/automation|sensor|vision|eoat|robot|mes|traceability/.test(t))c.push('automation');return [...new Set(c)];}
+function refsFor(text,count=3){const out=[];for(const cat of categories(text))for(const s of (SRC[cat]||[]))if(!out.some(x=>x[2]===s[2]))out.push(s);return out.slice(0,count)}
+function refsHTML(text,title='Evidence & further reading'){const a=refsFor(text);if(!a.length)return `<section class="mm-ref-panel"><span class="eyebrow">References</span><h3>${title}</h3><p>No general external source was auto-selected for this topic. Use the lesson rationale, current machine/tool documentation, approved site procedures and any source specifically cited by the question or material grade.</p></section>`;return `<section class="mm-ref-panel"><span class="eyebrow">References</span><h3>${title}</h3>${a.map(s=>`<a href="${s[2]}" target="_blank" rel="noopener"><b>${esc(s[0])}</b><small>${esc(s[1])}</small><em>Open ↗</em></a>`).join('')}<p>General references support mechanisms, not universal production settings. Current supplier data, machine documentation, approved procedures and applicable law control specific limits.</p></section>`}
+
+const GUIDES=[
+ [/cycle|phase/,['The moulding cycle is a sequence of filling, transfer, packing/holding, cooling, recovery and mould movement. Each phase has a different physical purpose.','Compare phase times and actual values with a known-good cycle.','A total cycle gets longer: first identify which phase changed.','Treating total cycle time as one number and missing the changing phase.']],
+ [/setpoint|actual|controller/,['A setpoint is a command; an actual is evidence of what the machine and material actually did.','Trend fill time, peak pressure, transfer position, cushion and recovery time.','The recipe is unchanged but fill time drifts: compare actuals first.','Assuming equal recipes prove equal processes.']],
+ [/cushion|non-return|check valve/,['Cushion and shot-delivery consistency help reveal how repeatably material was delivered and packed.','Trend cushion, transfer, pressure and part mass together.','Cushion and mass vary together: investigate delivery before compensating with hold.','Masking unstable delivery with more packing.']],
+ [/moisture|dry|splay/,['Moisture-sensitive grades need grade-specific drying, handling and verification.','Check dryer performance, material history and the approved moisture method.','Splay follows humid exposure: verify moisture before unrelated machine changes.','Using one generic drying recipe for all resins.']],
+ [/viscosity|rheology|shear|mfr|mvr/,['Thermoplastic apparent viscosity depends on shear rate, temperature and material history; most melts are shear-thinning.','Compare controlled fill-rate response and pressure while holding other conditions stable.','A speed study changes pressure response even when the material grade is unchanged.','Treating MFR as a complete moulding rheology curve.']],
+ [/cool|warpage|shrink|temperature/,['Cooling and thermal balance affect solidification, shrinkage, ejection stability and warpage.','Track water condition, mould-surface temperature, ejection condition and dimensions.','A water-line change is followed by dimensional drift: verify the thermal system first.','Optimising cycle time without checking the quality boundary.']],
+ [/pack|hold|gate seal|sink/,['Packing compensates volumetric shrinkage while the gate still transmits useful pressure.','Use part-mass/gate-seal evidence plus local geometry and cooling.','Part mass reaches a plateau: extra hold time may no longer transmit useful pressure.','Extending hold time after effective gate seal.']],
+ [/short shot|burn|vent|weld|jet|flow/,['Flow defects are diagnosed by locating where the filling pattern, gas escape or joining flow fronts differ from the intended mechanism.','Use partial fills, pressure/fill-time actuals and physical flow-path evidence.','An end-fill burn points strongly toward gas escape/venting evidence.','Changing several unrelated settings at once.']],
+ [/capability|cpk|ppk|measurement|doe|factor|random|validation/,['Statistical conclusions depend on stable processes, adequate measurement and a design that supports the question being asked.','Verify stability/measurement first; use DOE structure when interactions matter.','A factor run only late in the shift may be confounded with time.','Treating one capability number or unstructured trial as proof.']],
+ [/guard|interlock|lockout|isolation|safety|robot|automation/,['Safeguards and authorised isolation are safety controls, not process variables.','Verify safeguard status and use the applicable site isolation/risk-control procedure.','A failed interlock is a safety defect, not a troubleshooting shortcut.','Bypassing protection to keep production running.']],
+ [/runner|gate|cavity|draft|tooling|tool design|clamp|parting line|hot runner/,['Tooling geometry and condition shape flow, sealing, cooling and ejection; local defects often require local evidence.','Inspect the exact affected location and compare cavity/branch behaviour before global changes.','Local flash appears after tool work: inspect local seating/parting-line condition first.','Using a global process change to hide a local tooling fault.']]
+];
+const COURSE_GUIDES={
+ 'Foundations':['Injection moulding turns a controlled polymer melt into a repeatable part through filling, packing, cooling and ejection.','Identify the current cycle phase, relevant setpoints and measured actuals before drawing a conclusion.','Map a normal production cycle from material feed through part ejection.','Treating the whole process as one setting or one symptom.'],
+ 'Machine & Controls':['The machine creates and measures the motions, forces, temperatures and timing used by the process.','Compare commanded values, measured actuals and machine capability with a known-good cycle.','A recipe is unchanged but an actual drifts: investigate the machine response.','Assuming the controller display proves the physical process repeated.'],
+ 'Materials':['Material chemistry, grade, condition and processing history control how the polymer flows and performs.','Verify the exact grade, supplier data, handling history and relevant material condition.','Two grades share a family name but require different handling and validation.','Using family-level rules as a substitute for grade-specific evidence.'],
+ 'Mould Design':['Mould geometry, feeding, venting, cooling and ejection create local process conditions inside each cavity.','Compare cavities and inspect the affected flow path, vent, cooling circuit or ejection feature.','One cavity changes while the others remain stable: investigate local evidence first.','Using a global machine change to hide a local mould condition.'],
+ 'Process Setup':['A robust setup deliberately establishes filling, transfer, packing, cooling and recovery from a recorded baseline.','Record actuals and part responses while changing one authorised factor at a time.','Build a process window from controlled studies, then document its centre and limits.','Copying settings without confirming the transferred process.'],
+ 'Defect Troubleshooting':['A defect is evidence of one or more physical mechanisms, not a direct instruction to change a setting.','Locate the defect, compare known-good evidence and test the strongest competing causes.','A defect appears in one cavity: separate local from system-wide causes first.','Changing several variables at once until appearance improves.'],
+ 'Scientific Moulding':['Scientific moulding uses measured process studies to separate filling, transfer, packing, cooling and recovery effects.','Use repeatable actuals, controlled studies and confirmed responses rather than recipe values alone.','A viscosity or gate-seal study defines evidence for a process decision.','Calling an undocumented setting change a scientific study.'],
+ 'Capability & Validation':['Validation links a stable, measured process to defined product requirements and an approved control strategy.','Confirm measurement adequacy and stability before interpreting capability or validation evidence.','A capable result is supported by stable data, suitable measurement and a justified sampling plan.','Treating a single Cpk value as proof regardless of stability or measurement.'],
+ 'DOE & Statistics':['Designed experiments separate factor effects from noise only when their structure supports the conclusion.','Check randomisation, blocking, replication, interactions and measurement before accepting an effect.','A factor run only late in a shift may be confounded with time.','Changing many factors informally and calling the result a DOE.'],
+ 'Automation & Sensors':['Automation combines machinery, controls and people into one integrated system whose process and safety states must be designed together.','Verify sensor location, calibration, sequence logic, guarding and failure response.','A cavity sensor and machine sensor disagree because they measure different locations and events.','Assuming automation removes the need for integrated risk assessment.'],
+ 'Advanced Tooling & Simulation':['Advanced tooling and simulation predict local flow and thermal behaviour, but predictions must be checked against the real mould and process.','Compare model assumptions with cavity, cooling, pressure, temperature and part evidence.','A simulation trend is validated against short-shot or sensor evidence before release.','Treating a simulation image as proof without checking assumptions.'],
+ 'Expert Process Engineering':['Expert decisions integrate material, machine, mould, method, measurement, safety and economics without losing traceability.','State the competing mechanisms, evidence, constraints and confirmation test.','A change proposal includes technical evidence, risk, validation and control-plan impact.','Optimising one metric while ignoring system constraints and downstream risk.']
+};
+function packGuide(a){return {plain:a[0],evidence:a[1],example:a[2],mistake:a[3]}}
+function guide(title,courseName){const t=String(title||'').toLowerCase();for(const [r,a] of GUIDES)if(r.test(t))return packGuide(a);return packGuide(COURSE_GUIDES[courseName]||COURSE_GUIDES['Expert Process Engineering'])}
+function enrichLessons(D){D.lessons.forEach(l=>{l.mmGuide=guide(l.title,l.courseName)})}
+
+const EXTRA=[
+ ['Fill time drifts but recipe does not','Over an hour, fill time slowly increases while saved recipe values remain unchanged.',['Increase injection speed until the old fill time returns','Compare fill-time/pressure actuals, material condition and thermal actuals with the known-good baseline','Increase hold pressure','Change cooling time first'],1,'Setpoints do not prove the material or machine response stayed constant.'],
+ ['One cavity becomes light','In an eight-cavity mould, one cavity gradually loses part mass while seven remain stable.',['Increase total shot size','Inspect the affected branch/gate and compare cavity balance before global changes','Increase hold time for every cavity','Reduce clamp force'],1,'A single-cavity change points first to local flow-path, gate, vent or thermal evidence.'],
+ ['Recovery time becomes erratic','Recovery time becomes erratic and cushion variation appears at the same time.',['Check feed/material delivery, recovery actuals and shot-delivery consistency','Increase cooling time','Change clamp force','Change robot delay'],0,'Recovery and cushion evidence point toward feed/plasticising/shot delivery.'],
+ ['Dimension shifts after water-line work','A critical dimension moves immediately after mould-water hoses were reconnected.',['Change hold pressure first','Verify circuit connection, flow and mould-surface temperature balance','Change transfer','Increase fill speed'],1,'The timing strongly implicates the changed thermal system.'],
+ ['Part sticks after texture change','Ejection force rises after a new surface texture is added.',['Review draft, texture direction, local cooling/ejection and tooling condition','Raise packing','Increase fill speed','Let the robot pull harder'],0,'Texture changes release behaviour; review tooling/ejection evidence.'],
+ ['Cpk drops after gauge change','Process and parts appear stable, but Cpk drops immediately after a new measurement fixture is introduced.',['Change moulding settings','Verify the measurement system before interpreting capability','Increase sample size only','Change specifications'],1,'A measurement-system change can alter observed variation.'],
+ ['DOE result changes by run order','A factor appears important only when all high settings were run late in the shift.',['Accept the effect as proven','Consider time confounding and randomise/block appropriately','Remove replication','Change the specification'],1,'Run order can confound factor effects with time-related nuisance changes.'],
+ ['Pressure sensor disagrees with machine','An in-cavity sensor trace changes while machine peak pressure is nearly constant.',['Assume one instrument is wrong','Recognise different measurement locations and investigate the local cavity event plus sensor health','Copy cavity pressure into the machine setpoint','Ignore the cavity sensor'],1,'Machine and local cavity pressure are different measurements.']
+];
+function addScenarios(D){const have=new Set((D.scenarios||[]).map(x=>x.title));for(const a of EXTRA)if(!have.has(a[0]))D.scenarios.push({title:a[0],situation:a[1],choices:a[2],correct:a[3],why:a[4],feedback:a[2].map((_,i)=>i===a[3]?a[4]:'This does not directly test the mechanism best supported by the evidence.')})}
+
+const BANK_VERSION='2026.08.21.1';
+function bankId(D,q,level,region){const text=qt(q);if(region){const a=D.regionalQuestions?.[region]?.[level]||[],i=a.findIndex(x=>qt(x)===text);return i>=0?`reg:${BANK_VERSION}:${region}:${level}:${i}`:null}const a=D.exams?.[level]||[],i=a.findIndex(x=>qt(x)===text);return i>=0?`tech:${BANK_VERSION}:${level}:${i}`:null}
+function patchQuestionIds(D){const base=window.getExamQuestions;if(typeof base!=='function')return;window.getExamQuestions=function(level,region){const arr=base.apply(this,arguments);arr.forEach(q=>{q.mmId=bankId(D,q,level,q.region||null)||`legacy:${level}:${String(qt(q)).slice(0,80)}`});return arr}}
+function findById(D,id){let m=/^tech:([^:]+):([^:]+):(\d+)$/.exec(id);if(m)return m[1]===BANK_VERSION?{level:m[2],q:D.exams?.[m[2]]?.[+m[3]]}:null;m=/^reg:([^:]+):([^:]+):([^:]+):(\d+)$/.exec(id);if(m)return m[1]===BANK_VERSION?{reg:m[2],level:m[3],q:D.regionalQuestions?.[m[2]]?.[m[3]]?.[+m[4]]}:null;m=/^tech:([^:]+):(\d+)$/.exec(id);if(m)return {level:m[1],q:D.exams?.[m[1]]?.[+m[2]]};m=/^reg:([^:]+):([^:]+):(\d+)$/.exec(id);if(m)return {reg:m[1],level:m[2],q:D.regionalQuestions?.[m[1]]?.[m[2]]?.[+m[3]]};return null}
+function recordReview(q,ok,confidence){if(!q)return;const id=q.mmId||`legacy:${String(qt(q)).slice(0,160)}`,st=load(REVIEW_KEY,{items:{}}),x=st.items[id]||{id,stage:0,right:0,wrong:0,due:Date.now()};if(ok){x.right++;x.stage=Math.min(5,x.stage+1);if(confidence==='low')x.stage=Math.max(1,x.stage-1);x.due=Date.now()+([1,2,4,7,14,30][x.stage]||30)*DAY}else{x.wrong++;x.stage=0;x.due=Date.now()+DAY}x.last=Date.now();x.confidence=confidence||'medium';st.items[id]=x;save(REVIEW_KEY,st)}
+function due(){return Object.values(load(REVIEW_KEY,{items:{}}).items||{}).filter(x=>x.due<=Date.now()||x.wrong>x.right).sort((a,b)=>(b.wrong-b.right)-(a.wrong-a.right)||a.due-b.due)}
+function difficulty(level,i,q){if(q?.region)return level==='Advanced'?'Expert safety':'Applied safety';if(level==='Beginner')return i<3?'Foundation':'Applied';if(level==='Intermediate')return i<3?'Applied':'Diagnostic';return i<3?'Diagnostic':'Expert'}
+function readHint(t){if(/checked first|check first/i.test(t))return 'Choose the first check that most directly tests the evidence.';if(/purpose/i.test(t))return 'Ask what job the phase, component or study is meant to do.';return 'Separate the symptom from the cause and choose the option best supported by measurable evidence.'}
+function exactRefs(q){return qu(q)?[[qr(q)||'Question source','Source cited by this assessment item.',qu(q)]]:[]}
+
+function lessonHTML(l){const g=l.mmGuide||guide(l.title,l.courseName);return `<section class="mm-teaching-grid" id="mmTeaching"><div class="mm-teach mm-plain"><span>PLAIN ENGLISH</span><h3>What this means</h3><p>${esc(g.plain)}</p></div><div class="mm-teach"><span>REAL MOULDING EXAMPLE</span><h3>What it looks like</h3><p>${esc(g.example)}</p></div><div class="mm-teach mm-mistake"><span>COMMON MISTAKE</span><h3>What to avoid</h3><p>${esc(g.mistake)}</p></div><div class="mm-teach"><span>EVIDENCE TO CHECK</span><h3>What would prove it?</h3><p>${esc(g.evidence)}</p></div></section>${refsHTML(l.title+' '+(l.courseName||''))}`}
+function patchLesson(D){if(typeof window.renderLesson!=='function')return;const base=window.renderLesson;window.renderLesson=function(){base.apply(this,arguments);try{const l=typeof window.currentLesson==='function'?window.currentLesson():null,b=document.querySelector('#lesson .lesson-body');if(!l||!b)return;if(!b.querySelector('#mmTeaching'))(b.querySelector('.callout')||b.querySelector('h3')||b).insertAdjacentHTML('afterend',lessonHTML(l));const c=D.courses.find(x=>x.id===l.course);if(c&&!b.querySelector('.mm-lesson-progress')){const i=c.lessonIds.indexOf(l.id)+1;b.insertAdjacentHTML('afterbegin',`<div class="mm-lesson-progress"><div><b>Lesson ${i} of ${c.lessonIds.length}</b><span>${Math.round(i/c.lessonIds.length*100)}%</span></div><i><b style="width:${i/c.lessonIds.length*100}%"></b></i></div>`)}if(innerWidth<720&&!b.querySelector('.mm-mobile-lessons')){const side=document.querySelector('#lesson .lesson-side');if(side){const x=document.createElement('button');x.className='secondary mm-mobile-lessons';x.textContent='☰ Lesson list';x.onclick=()=>side.classList.toggle('mm-open');b.prepend(x)}}}catch(_){}}}
+function patchExam(){
+ if(typeof window.startExam!=='function'||typeof window.gradeExam!=='function')return;
+ const start=window.startExam,grade=window.gradeExam;
+ window.startExam=function(level){
+  const r=start.apply(this,arguments);
+  if(window.activeExam)window.activeExam.mmSubmitted=false;
+  setTimeout(()=>document.querySelectorAll('#examQuestions .question').forEach((el,i)=>{
+   const q=window.activeExam?.questions?.[i];if(!q||el.querySelector('.mm-qmeta'))return;
+   el.querySelector('b')?.insertAdjacentHTML('afterend',`<div class="mm-qmeta"><span>${esc(difficulty(level,i,q))}</span><span>References after grading</span></div><div class="question-plain-language"><b>How to read this:</b> ${esc(readHint(qt(q)))}</div>`);
+   el.insertAdjacentHTML('beforeend',`<div class="mm-confidence"><b>Confidence:</b><label><input type="radio" name="conf${i}" value="low"> Low</label><label><input type="radio" name="conf${i}" value="medium" checked> Medium</label><label><input type="radio" name="conf${i}" value="high"> High</label></div>`);
+  }),0);
+  return r;
+ };
+ window.gradeExam=function(level){
+  const exam=window.activeExam;
+  if(!exam)return grade.apply(this,arguments);
+  if(exam.mmSubmitted){window.toast?.('This attempt has already been graded. Start a new exam to try again.');return false}
+  exam.mmSubmitted=true;
+  const qs=exam.questions||[],res=qs.map((q,i)=>{const a=document.querySelector(`input[name=ex${i}]:checked`),c=document.querySelector(`input[name=conf${i}]:checked`);return {q,sel:a?+a.value:null,conf:c?.value||'medium'}});
+  let r;
+  try{r=grade.apply(this,arguments)}catch(e){exam.mmSubmitted=false;throw e}
+  document.querySelectorAll('#examQuestions input').forEach(x=>x.disabled=true);
+  const gradeButton=[...document.querySelectorAll('#examQuestions ~ button, #modal button')].find(x=>/grade/i.test(x.textContent||''));
+  if(gradeButton){gradeButton.disabled=true;gradeButton.textContent='Attempt graded'}
+  res.forEach(x=>recordReview(x.q,x.sel===qc(x.q),x.conf));
+  setTimeout(()=>{
+   const host=document.querySelector('#answerReview');if(!host||document.querySelector('.mm-learning-debrief'))return;
+   const html=res.map((x,i)=>{const o=qo(x.q),f=qfb(x.q),cr=qc(x.q),refs=exactRefs(x.q);return `<details class="mm-debrief"><summary>${x.sel===cr?'✓':'↻'} Question ${i+1} · ${esc(difficulty(level,i,x.q))} · ${esc(x.conf)} confidence</summary><div><h4>Why the best answer is best</h4><p>${esc(qw(x.q)||'The best answer follows the mechanism and evidence described in the question.')}</p><h4>Why the other choices are weaker</h4><ul>${o.map((v,j)=>j===cr?'':`<li><b>${esc(v)}</b> — ${esc(f[j]||'This choice does not test the strongest mechanism supported by the evidence.')}</li>`).join('')}</ul><h4>References</h4>${refs.length?refs.map(s=>`<a class="mm-ref-link" href="${s[2]}" target="_blank" rel="noopener"><b>${esc(s[0])}</b><small>${esc(s[1])}</small></a>`).join(''):'<p>No external source was attached to this item; use its audited rationale.</p>'}</div></details>`}).join('');
+   host.insertAdjacentHTML('afterend',`<section class="mm-learning-debrief"><h3>Learning debrief</h3><p>This submitted attempt is locked. Wrong choices are explained as misconceptions, not recommended process changes.</p>${html}</section>`);
+  },0);
+  return r;
+ };
+}
+window.mmOpenReview=function(){const D=window.MM_DATA,items=due().map(x=>({x,z:findById(D,x.id)})).filter(v=>v.z?.q).slice(0,10);if(!items.length){window.openModal?.('<h2>Review weak areas</h2><div class="callout">Nothing is due right now.</div>');return}window.mmReviewItems=items;window.openModal?.(`<span class="eyebrow">Spaced repetition</span><h2>Review weak areas</h2>${items.map((v,i)=>`<div class="question"><b>${i+1}. ${esc(qt(v.z.q))}</b>${qo(v.z.q).map((o,j)=>`<label class="option"><input type="radio" name="rv${i}" value="${j}"> ${esc(o)}</label>`).join('')}<button class="secondary" data-mm-onclick="mmCheckReview(${i},this)">Check answer</button><div class="feedback hidden"></div></div>`).join('')}`)};
+window.mmCheckReview=function(i,b){const v=window.mmReviewItems?.[i],q=v?.z?.q,r=document.querySelector(`input[name=rv${i}]:checked`),f=b.parentElement.querySelector('.feedback');if(!q||!r){f.classList.remove('hidden');f.textContent='Choose an answer first.';return}q.mmId=v.x.id;const ok=+r.value===qc(q);recordReview(q,ok,'medium');f.classList.remove('hidden');f.innerHTML=`<b>${ok?'Correct ✓':'Review again'}</b><br>${esc(qw(q))}`;b.disabled=true};
+function patchExamHome(){if(typeof window.renderExams!=='function')return;const base=window.renderExams;window.renderExams=function(){base.apply(this,arguments);const h=document.querySelector('#exams');if(h&&!h.querySelector('.mm-review-card'))h.insertAdjacentHTML('afterbegin',`<div class="card mm-review-card"><div><span class="eyebrow">Spaced repetition</span><h3>Review weak areas</h3><p>Missed and low-confidence questions return on an increasing schedule using stable question-bank IDs.</p></div><div><b>${due().length}</b><span>due / weak</span><button class="secondary" data-mm-onclick="mmOpenReview()">Start review</button></div></div>`)}}
+
+const SIGN=['Identify guarded danger zones and explain why safeguards must remain effective','Explain the purpose of each major moulding-cycle phase','Distinguish setpoints from measured actuals','Recognise V/P transfer, cushion and shot-delivery evidence','Verify material identity and grade-specific handling information','Use safe authorised troubleshooting methods','Recognise common defect mechanisms','Collect a known-good baseline before process changes','Explain cavity-balance or partial-fill evidence','Explain gate-seal evidence','Interpret a simple process trend','Escalate conditions requiring maintenance, engineering or safety authority'];
+const signData=()=>load(SIGN_KEY,{checks:{},supervisor:'',date:'',notes:''});
+window.mmSaveSignoff=function(){const d=signData();SIGN.forEach((_,i)=>d.checks[i]=!!document.querySelector(`#mmSign${i}`)?.checked);d.supervisor=document.querySelector('#mmSupervisor')?.value||'';d.date=document.querySelector('#mmSignDate')?.value||'';d.notes=document.querySelector('#mmSignNotes')?.value||'';save(SIGN_KEY,d);window.toast?.('Practical sign-off saved locally')};
+function signHTML(){const d=signData();return `<section class="card mm-signoff"><span class="eyebrow">Practical competency</span><h2>Supervisor sign-off</h2><p>This local workplace learning record is not an accredited licence or legal compliance certificate.</p><div class="mm-sign-progress"><b>${Object.values(d.checks).filter(Boolean).length}/${SIGN.length}</b> observed</div>${SIGN.map((x,i)=>`<label><input id="mmSign${i}" type="checkbox" ${d.checks[i]?'checked':''}> <span>${esc(x)}</span></label>`).join('')}<div class="mm-sign-grid"><label>Supervisor / assessor<input id="mmSupervisor" value="${esc(d.supervisor)}"></label><label>Date<input id="mmSignDate" type="date" value="${esc(d.date)}"></label></div><label>Evidence / notes<textarea id="mmSignNotes">${esc(d.notes)}</textarea></label><button class="primary" data-mm-onclick="mmSaveSignoff()">Save practical record</button></section>`}
+function patchCert(){if(typeof window.renderCertificates!=='function')return;const base=window.renderCertificates;window.renderCertificates=function(){base.apply(this,arguments);const h=document.querySelector('#certificates');if(h&&!h.querySelector('.mm-signoff'))h.insertAdjacentHTML('beforeend',signHTML())}}
+
+function init(){const D=window.MM_DATA;if(!D||!Array.isArray(D.lessons)){setTimeout(init,100);return}if(window.__MM_TRAINING_V2__)return;window.__MM_TRAINING_V2__=true;enrichLessons(D);addScenarios(D);patchQuestionIds(D);patchLesson(D);patchExam();patchExamHome();patchCert();try{if(document.querySelector('#lesson:not(.hidden)'))window.renderLesson?.();if(document.querySelector('#exams:not(.hidden)'))window.renderExams?.()}catch(_){}}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+/* <<< training-upgrade.js */
+
+/* >>> training-qa-fix.js */
+/* MouldMaster training data/assessment bridge — 2026.10.04.1 */
+(function(){
+'use strict';
+const REVIEW_KEY='mm_spaced_review_v2', LEGACY_REVIEW='mm_spaced_review_v1', SIGN_KEY='mm_practical_signoff_v1', MEASURED_KEY='mm_real_measured_assessment_v1', PROCESS_DIAG_KEY='mm_process_data_diagnostics_v1', DIAGNOSTIC_LABS_KEY='mm_diagnostic_labs_v1', MATERIAL_LABS_KEY='mm_material_behaviour_labs_v1', ASSESSMENT_MEMBERSHIP_KEY='mm_assessment_membership_history_v2';
+const ASSESSMENT_ANALYTICS_PREFIXES=['mm_assessment_analytics_v1','mm_assessment_exposure_timing_v1','mm_assessment_opening_history_v1','mm_assessment_opening_history_v2','mm-assessment-question-history-v4','mm-assessment-result-meta-v1','mm_assessment_blueprint_history_v1',ASSESSMENT_MEMBERSHIP_KEY];
+const LEARNING_ANALYTICS_PREFIX='mm_learning_analytics_v1::', BOOK_RESUME_PREFIX='mm_book_resume_v1::', BOOK_AUDIO_PREFIX='mm_book_audio_v1::';
+const ANALYTICS_CLEANUP_CODE='MM_ANALYTICS_CLEANUP_FAILED', IMPORT_STORAGE_CODE='MM_IMPORT_STORAGE_FAILED';
+const LEARNER_ID_RE=/^[A-Za-z0-9][A-Za-z0-9._:@+-]{0,159}$/;
+function canonicalLearnerId(v){const s=String(v??'');if(!LEARNER_ID_RE.test(s))throw new Error('Invalid learner identifier');return s}
+function hasOwnLearner(users,id){return !!users&&Object.prototype.hasOwnProperty.call(users,id)}
+function cleanupError(area,detail){const e=new Error(`Local ${area} cleanup could not be verified${detail?`: ${detail}`:''}`);e.code=ANALYTICS_CLEANUP_CODE;e.area=area;return e}
+function matchingKeys(predicate,area){
+ try{const out=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&predicate(k))out.push(k)}return [...new Set(out)]}
+ catch(e){throw cleanupError(area,'storage index unavailable')}
+}
+function clearMatchingStores(area,predicate){
+ const targets=matchingKeys(predicate,area);
+ for(const k of targets){try{localStorage.removeItem(k)}catch(e){throw cleanupError(area,`delete failed for ${k}`)}}
+ const remaining=matchingKeys(predicate,area);
+ if(remaining.length)throw cleanupError(area,`remaining key(s): ${remaining.slice(0,3).join(', ')}`);
+ return Object.freeze({area,removed:targets.length,verified:true})
+}
+function clearAssessmentAnalyticsStores(){return clearMatchingStores('assessment analytics',k=>ASSESSMENT_ANALYTICS_PREFIXES.some(p=>k===p||k.startsWith(p+'::')))}
+function clearLearningAnalyticsStores(){return clearMatchingStores('Learning Insights analytics',k=>k.startsWith(LEARNING_ANALYTICS_PREFIX))}
+function clearAllAnalyticsStores(){
+ const results={},errors=[];
+ for(const [name,fn] of [['assessment',clearAssessmentAnalyticsStores],['learning',clearLearningAnalyticsStores]]){try{results[name]=fn()}catch(e){errors.push(e)}}
+ if(errors.length){const e=cleanupError('analytics',errors.map(x=>x.message).join(' | '));e.causes=errors;throw e}
+ return Object.freeze({assessment:results.assessment.removed,learning:results.learning.removed,total:results.assessment.removed+results.learning.removed,verified:true})
+}
+function learnerScope(){
+ const scope=window.MM_LEARNER_SCOPE;
+ if(!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function'||typeof scope.migrateStoragePrefix!=='function')throw cleanupError('learner storage','shared learner scope unavailable');
+ return scope
+}
+function trainingKey(base,learnerId){
+ const id=String(learnerId==null?(typeof db!=='undefined'?db?.activeUser:null):learnerId||'anonymous'),scope=learnerScope(),prefix=`${base}::`;
+ scope.registerStoragePrefix?.(prefix);
+ scope.migrateStoragePrefix(prefix,id);
+ return scope.storageKey(prefix,scope.tokenFor(id))
+}
+function trainingDestinationKey(base,learnerId){
+ const id=canonicalLearnerId(learnerId),scope=learnerScope();
+ return scope.storageKey(`${base}::`,scope.tokenFor(id))
+}
+function trainingKeyForBackup(base,learnerId){
+ const id=canonicalLearnerId(learnerId),scope=learnerScope(),prefix=`${base}::`,migration=scope.migrateStoragePrefix(prefix,id),status=String(migration?.status||'unknown');
+ if(/failed/.test(status))throw cleanupError('backup source',`learner storage migration could not be verified for ${prefix}${id}: ${status}`);
+ return scope.storageKey(prefix,scope.tokenFor(id))
+}
+function readTraining(base,d,learnerId){try{const x=JSON.parse(localStorage.getItem(trainingKey(base,learnerId))||'');return obj(x)?x:d}catch(_){return d}}
+function readTrainingForBackup(base,d,learnerId){
+ const key=trainingKeyForBackup(base,learnerId),raw=localStorage.getItem(key);
+ if(raw==null||raw==='')return d;
+ const parsed=JSON.parse(raw);
+ if(!obj(parsed))throw new Error(`Backup source is invalid for ${key}`);
+ return parsed
+}
+function legacyMaterialToken(raw){return String(raw||'anonymous').replace(/[^a-zA-Z0-9_-]/g,'_').slice(0,80)}
+function materialLegacyKey(raw){return MATERIAL_LABS_KEY+':'+legacyMaterialToken(raw)}
+function quarantineMaterialLegacy(raw,payload,reason){
+ const token=legacyMaterialToken(raw),source=MATERIAL_LABS_KEY+':'+token,target=`mm_scope_quarantine_v1::material-labs::${token}`;
+ try{
+  const wrapped=JSON.stringify({source,reason,payload:JSON.parse(payload)});
+  if(localStorage.getItem(target)==null)localStorage.setItem(target,wrapped);
+  if(localStorage.getItem(target)!==wrapped)return false;
+  localStorage.removeItem(source);return localStorage.getItem(source)==null
+ }catch(_){return false}
+}
+function migrateMaterialLabsLegacy(learnerId){
+ const id=canonicalLearnerId(learnerId),scope=learnerScope(),oldKey=materialLegacyKey(id),payload=localStorage.getItem(oldKey);
+ if(payload==null)return trainingKey(MATERIAL_LABS_KEY,id);
+ const token=legacyMaterialToken(id),owners=(scope.knownIds?.()||[]).filter(other=>legacyMaterialToken(other)===token);
+ if(owners.length!==1||owners[0]!==id){
+  if(!quarantineMaterialLegacy(id,payload,owners.length>1?'ambiguous-known-owners':'ownership-unproven'))throw cleanupError('material lab migration','legacy quarantine could not be verified');
+  return trainingKey(MATERIAL_LABS_KEY,id)
+ }
+ const next=trainingKey(MATERIAL_LABS_KEY,id),current=localStorage.getItem(next);
+ if(current==null){
+  localStorage.setItem(next,payload);
+  if(localStorage.getItem(next)!==payload)throw cleanupError('material lab migration','copy could not be verified');
+  localStorage.removeItem(oldKey);
+  if(localStorage.getItem(oldKey)!=null)throw cleanupError('material lab migration','legacy delete could not be verified')
+ }else if(current===payload){
+  localStorage.removeItem(oldKey);
+  if(localStorage.getItem(oldKey)!=null)throw cleanupError('material lab migration','duplicate legacy delete could not be verified')
+ }
+ return next
+}
+function materialLabsKey(learnerId){return migrateMaterialLabsLegacy(canonicalLearnerId(learnerId))}
+function readMaterialLabs(d,learnerId){try{const x=JSON.parse(localStorage.getItem(materialLabsKey(learnerId))||'');return obj(x)?x:d}catch(_){return d}}
+function readMaterialLabsForBackup(d,learnerId){
+ const key=materialLabsKey(learnerId),raw=localStorage.getItem(key);
+ if(raw==null||raw==='')return d;
+ const parsed=JSON.parse(raw);
+ if(!obj(parsed))throw new Error(`Backup source is invalid for ${key}`);
+ return parsed
+}
+function trainingStorePredicate(k){
+ const prefixes=[REVIEW_KEY+'::',SIGN_KEY+'::',MEASURED_KEY+'::',PROCESS_DIAG_KEY+'::',DIAGNOSTIC_LABS_KEY+'::',MATERIAL_LABS_KEY+'::',MATERIAL_LABS_KEY+':'],globals=new Set([REVIEW_KEY,LEGACY_REVIEW,SIGN_KEY,MEASURED_KEY,PROCESS_DIAG_KEY,DIAGNOSTIC_LABS_KEY,MATERIAL_LABS_KEY]);
+ return globals.has(k)||prefixes.some(p=>k.startsWith(p))
+}
+function clearTrainingExtrasStores(){return clearMatchingStores('training extras',trainingStorePredicate)}
+function uniqueKeys(values){return [...new Set(values.filter(Boolean))]}
+function learnerRuntimeAssessmentKeys(learnerId){
+ const id=canonicalLearnerId(learnerId),scope=learnerScope(),prefix=ASSESSMENT_MEMBERSHIP_KEY+'::',keys=[scope.storageKey(prefix,scope.tokenFor(id))],plan=scope.migrationPlan?.(id);
+ if(plan?.uniqueOwner&&plan.legacyToken)keys.push(scope.storageKey(prefix,plan.legacyToken));
+ return uniqueKeys(keys)
+}
+function learnerAssessmentKeys(learnerId){
+ const id=canonicalLearnerId(learnerId),api=window.MM_ASSESSMENT_STORAGE_SCOPE;
+ if(!api||typeof api.keysForLearner!=='function')throw cleanupError('assessment analytics','learner-scoped storage API unavailable');
+ return uniqueKeys([...api.keysForLearner(id),...learnerRuntimeAssessmentKeys(id)])
+}
+function learnerLearningAnalyticsKeys(learnerId){
+ const scope=window.MM_LEARNER_SCOPE;
+ if(!scope||typeof scope.tokenFor!=='function'||typeof scope.storageKey!=='function')throw cleanupError('Learning Insights analytics','learner scope unavailable');
+ const keys=[scope.storageKey(LEARNING_ANALYTICS_PREFIX,scope.tokenFor(learnerId))],plan=scope.migrationPlan?.(learnerId);
+ if(plan?.uniqueOwner&&plan.legacyToken)keys.push(scope.storageKey(LEARNING_ANALYTICS_PREFIX,plan.legacyToken));
+ return uniqueKeys(keys)
+}
+function learnerTrainingKeys(learnerId){
+ const id=canonicalLearnerId(learnerId),scope=learnerScope(),keys=[trainingDestinationKey(REVIEW_KEY,id),trainingDestinationKey(SIGN_KEY,id),trainingDestinationKey(MEASURED_KEY,id),trainingDestinationKey(PROCESS_DIAG_KEY,id),trainingDestinationKey(DIAGNOSTIC_LABS_KEY,id),trainingDestinationKey(MATERIAL_LABS_KEY,id),scope.storageKey(BOOK_RESUME_PREFIX,scope.tokenFor(id)),scope.storageKey(BOOK_AUDIO_PREFIX,scope.tokenFor(id))],plan=scope.migrationPlan?.(id);
+ if(plan?.uniqueOwner&&plan.legacyToken){
+  keys.push(scope.storageKey(REVIEW_KEY+'::',plan.legacyToken),scope.storageKey(SIGN_KEY+'::',plan.legacyToken),scope.storageKey(MEASURED_KEY+'::',plan.legacyToken),scope.storageKey(PROCESS_DIAG_KEY+'::',plan.legacyToken),scope.storageKey(DIAGNOSTIC_LABS_KEY+'::',plan.legacyToken))
+ }
+ const materialToken=legacyMaterialToken(id),materialOwners=(scope.knownIds?.()||[]).filter(other=>legacyMaterialToken(other)===materialToken);
+ if(materialOwners.length===1&&materialOwners[0]===id)keys.push(materialLegacyKey(id));
+ return uniqueKeys(keys)
+}
+function learnerOwnedKeys(learnerId){return uniqueKeys([...learnerAssessmentKeys(learnerId),...learnerLearningAnalyticsKeys(learnerId),...learnerTrainingKeys(learnerId)])}
+function snapshotKeys(keys){const out={};for(const k of uniqueKeys(keys))out[k]=localStorage.getItem(k);return out}
+function clearExactKeys(area,keys){
+ const targets=uniqueKeys(keys);for(const k of targets){try{localStorage.removeItem(k)}catch(_){throw cleanupError(area,`delete failed for ${k}`)}}
+ const remaining=targets.filter(k=>{try{return localStorage.getItem(k)!=null}catch(_){return true}});
+ if(remaining.length)throw cleanupError(area,`remaining key(s): ${remaining.slice(0,3).join(', ')}`);
+ return Object.freeze({area,removed:targets.length,verified:true})
+}
+function clearLearnerAnalyticsStores(learnerId){
+ const assessment=clearExactKeys('assessment analytics',learnerAssessmentKeys(learnerId));
+ const learning=clearExactKeys('Learning Insights analytics',learnerLearningAnalyticsKeys(learnerId));
+ return Object.freeze({assessment:assessment.removed,learning:learning.removed,total:assessment.removed+learning.removed,verified:true})
+}
+function clearLearnerTrainingExtras(learnerId){return clearExactKeys('training extras',learnerTrainingKeys(learnerId))}
+function cancelActiveExam(){
+ try{if(typeof activeExam!=='undefined')activeExam=null}catch(_){}
+ try{window.activeExam=null}catch(_){}
+}
+
+function mirror(){try{if(typeof activeExam==='undefined'||!activeExam)return;(activeExam.questions||[]).forEach(q=>{if(!q||typeof q!=='object')return;if(q.why==null)q.why=q.explanation;if(q.source==null)q.source=q.reference;if(q.url==null)q.url=q.sourceUrl;if(q.feedback==null)q.feedback=q.optionFeedback});window.activeExam=activeExam}catch(e){console.warn('[MouldMaster] exam bridge:',e)}}
+const baseStart=window.startExam;if(typeof baseStart==='function')window.startExam=function(){const r=baseStart.apply(this,arguments);mirror();setTimeout(mirror,0);return r};
+
+const obj=x=>x&&typeof x==='object'&&!Array.isArray(x), clamp=(n,a,b,d=0)=>Number.isFinite(+n)?Math.max(a,Math.min(b,+n)):d;
+const IMPORT_META_KEYS=new Set(['__proto__','prototype','constructor']);
+function importKey(v,max=160){const key=String(v??'').slice(0,max);return key&&!IMPORT_META_KEYS.has(key)?key:''}
+function cleanReview(v){const out={items:{}};if(!obj(v)||!obj(v.items))return out;for(const [id,x] of Object.entries(v.items).slice(0,1000)){if(!obj(x))continue;const sid=String(id).slice(0,220);if(!/^(tech|reg|legacy):/.test(sid))continue;out.items[sid]={id:sid,stage:Math.floor(clamp(x.stage,0,5)),due:clamp(x.due,0,4102444800000,Date.now()),wrong:Math.floor(clamp(x.wrong,0,100000)),right:Math.floor(clamp(x.right,0,100000)),last:clamp(x.last,0,4102444800000),confidence:['low','medium','high'].includes(x.confidence)?x.confidence:'medium'}}return out}
+function cleanSign(v){const o={checks:{},supervisor:'',date:'',notes:''};if(!obj(v))return o;if(obj(v.checks))for(const [k,b] of Object.entries(v.checks).slice(0,50)){const key=importKey(k,20);if(key)o.checks[key]=b===true}o.supervisor=String(v.supervisor||'').slice(0,160);o.date=String(v.date||'').slice(0,20);o.notes=String(v.notes||'').slice(0,10000);return o}
+function cleanMeasured(v){const out={};if(!obj(v))return out;for(const [id,row] of Object.entries(v).slice(0,50)){if(!obj(row))continue;const sid=importKey(id);if(!sid)continue;out[sid]={best:Math.round(clamp(row.best,0,100)),last:Math.round(clamp(row.last,0,100))}}return out}
+function cleanProcessDiagnostics(v){const out={};if(!obj(v))return out;for(const [id,row] of Object.entries(v).slice(0,100)){if(!obj(row))continue;const sid=importKey(id);if(!sid)continue;out[sid]={attempts:Math.floor(clamp(row.attempts,0,100000)),completed:row.completed===true,bestScore:Math.round(clamp(row.bestScore,0,100))}}return out}
+function cleanLabProgress(v){const out={};if(!obj(v))return out;for(const [id,row] of Object.entries(v).slice(0,100)){if(!obj(row))continue;const sid=importKey(id);if(!sid)continue;out[sid]={attempts:Math.floor(clamp(row.attempts,0,100000)),completed:row.completed===true,bestScore:Math.round(clamp(row.bestScore,0,100)),firstTry:row.firstTry===true}}return out}
+function read(k,d){try{const x=JSON.parse(localStorage.getItem(k)||'');return obj(x)?x:d}catch(_){return d}}
+function restoreSnapshot(before){let failed=false;for(const [k,v] of Object.entries(before)){try{if(v===null){localStorage.removeItem(k);if(localStorage.getItem(k)!==null)failed=true}else{localStorage.setItem(k,v);if(localStorage.getItem(k)!==v)failed=true}}catch(_){failed=true}}return !failed}
+function cleanupFailureMessage(action,rolledBack=true){return rolledBack?`${action} was not completed because local analytics/training cleanup could not be fully verified. Existing learner progress and local analytics/training state were restored.`:`${action} was not completed because local analytics/training cleanup could not be fully verified, and rollback could not be fully verified. Some local analytics/training state may have changed. Reopen MouldMaster and inspect local learner data before continuing.`}
+
+function buildTrainingExtras(users=(typeof db!=='undefined'?db?.users:null)){
+ if(!obj(users))throw new Error('Learner registry unavailable for backup');
+ const learners={};
+ for(const id of Object.keys(users)){
+  const sid=canonicalLearnerId(id);
+  learners[sid]={spacedReview:cleanReview(readTrainingForBackup(REVIEW_KEY,{items:{}},sid)),practicalSignoff:cleanSign(readTrainingForBackup(SIGN_KEY,{},sid)),measuredAssessment:cleanMeasured(readTrainingForBackup(MEASURED_KEY,{},sid)),processDiagnostics:cleanProcessDiagnostics(readTrainingForBackup(PROCESS_DIAG_KEY,{},sid)),diagnosticLabs:cleanLabProgress(readTrainingForBackup(DIAGNOSTIC_LABS_KEY,{},sid)),materialLabs:cleanLabProgress(readMaterialLabsForBackup({},sid))}
+ }
+ return {version:4,scope:'learner-registry',learners}
+}
+function trainingExtrasForImport(extras,users,active){
+ const out=new Map(),ids=Object.keys(users).map(canonicalLearnerId);
+ if(!obj(extras)||!Object.keys(extras).length||extras.version===2)return out;
+ if(extras.version===3){
+  if(extras.scope!=='active-learner'||canonicalLearnerId(extras.learnerId)!==active)throw new Error('Training extras learner scope mismatch');
+  out.set(active,{spacedReview:cleanReview(extras.spacedReview||{items:{}}),practicalSignoff:cleanSign(extras.practicalSignoff||{}),measuredAssessment:cleanMeasured(extras.measuredAssessment||{}),processDiagnostics:cleanProcessDiagnostics(extras.processDiagnostics||{}),diagnosticLabs:cleanLabProgress(extras.diagnosticLabs||{}),materialLabs:cleanLabProgress(extras.materialLabs||{})});
+  return out
+ }
+ if(extras.version!==4||extras.scope!=='learner-registry'||!obj(extras.learners))throw new Error('Unsupported training extras format');
+ const extraIds=Object.keys(extras.learners).map(canonicalLearnerId).sort(),wanted=[...ids].sort();
+ if(extraIds.length!==wanted.length||extraIds.some((id,index)=>id!==wanted[index]))throw new Error('Training extras registry does not match learner registry');
+ for(const id of ids){
+  const row=extras.learners[id];if(!obj(row))throw new Error(`Training extras missing learner ${id}`);
+  out.set(id,{spacedReview:cleanReview(row.spacedReview||{items:{}}),practicalSignoff:cleanSign(row.practicalSignoff||{}),measuredAssessment:cleanMeasured(row.measuredAssessment||{}),processDiagnostics:cleanProcessDiagnostics(row.processDiagnostics||{}),diagnosticLabs:cleanLabProgress(row.diagnosticLabs||{}),materialLabs:cleanLabProgress(row.materialLabs||{})})
+ }
+ return out
+}
+window.exportData=function(){try{
+ const p=JSON.parse(JSON.stringify(db));p.backupFormat='mouldmaster-backup-v2';p.trainingExtras=buildTrainingExtras(p.users);
+ const blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='mouldmaster-progress.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),0);
+ window.toast?.('Backup exported with learner-scoped review, sign-off, measured-assessment, process-diagnostics and lab progress')
+}catch(e){console.error('[MouldMaster] backup export failed:',e);alert('Backup could not be created on this device.')}};
+
+window.importData=function(file){
+ if(!file)return;
+ if(file.size>10*1024*1024){alert('That backup is too large to import safely. No existing data was changed.');return}
+ const r=new FileReader();
+ r.onload=()=>{
+  let committed=false;
+  try{
+   const x=JSON.parse(r.result);
+   if(!obj(x)||!obj(x.users)||typeof x.activeUser!=='string'||!hasOwnLearner(x.users,x.activeUser))throw new Error('Invalid backup structure');
+   if(typeof normaliseImportedUser!=='function')throw new Error('Core validator unavailable');
+   const entries=Object.entries(x.users);
+   if(!entries.length||entries.length>500)throw new Error('Invalid learner count in backup');
+   const users={};
+   for(const [id,u] of entries){
+    const sid=canonicalLearnerId(id),clean=normaliseImportedUser(u,sid);
+    if(hasOwnLearner(users,sid))throw new Error('Invalid or duplicate learner identifier');
+    if(u?.id!=null&&canonicalLearnerId(u.id)!==sid)throw new Error('Learner identifier mismatch');
+    clean.id=sid;clean.learningAwards=[];clean.learningAwardMeta={};clean.examPassStatus={};users[sid]=clean
+   }
+   const active=canonicalLearnerId(x.activeUser);if(!hasOwnLearner(users,active))throw new Error('Missing active learner');
+   const extras=trainingExtrasForImport(x.trainingExtras,users,active),proposed={activeUser:active,users};
+   const existingCount=obj(db?.users)?Object.keys(db.users).length:0;
+   if(typeof confirm==='function'&&!confirm(`Import this backup and replace all ${existingCount} local learner profile${existingCount===1?'':'s'} with the ${entries.length} profile${entries.length===1?'':'s'} in the backup? Existing local assessment and Learning Insights analytics will be cleared. Saved process-data evidence is managed separately.`))return;
+   const trainingWrites={};
+   for(const [id,row] of extras){
+    trainingWrites[trainingDestinationKey(REVIEW_KEY,id)]=JSON.stringify(row.spacedReview);
+    trainingWrites[trainingDestinationKey(SIGN_KEY,id)]=JSON.stringify(row.practicalSignoff);
+    trainingWrites[trainingDestinationKey(MEASURED_KEY,id)]=JSON.stringify(row.measuredAssessment||{});
+    trainingWrites[trainingDestinationKey(PROCESS_DIAG_KEY,id)]=JSON.stringify(row.processDiagnostics||{});
+    trainingWrites[trainingDestinationKey(DIAGNOSTIC_LABS_KEY,id)]=JSON.stringify(row.diagnosticLabs||{});
+    trainingWrites[trainingDestinationKey(MATERIAL_LABS_KEY,id)]=JSON.stringify(row.materialLabs||{})
+   }
+   const existingTraining=matchingKeys(trainingStorePredicate,'training extras');
+   const existingAnalytics=matchingKeys(k=>ASSESSMENT_ANALYTICS_PREFIXES.some(p=>k===p||k.startsWith(p+'::'))||k.startsWith(LEARNING_ANALYTICS_PREFIX),'analytics');
+   const before=snapshotKeys(['mouldmasterProDB',...existingTraining,...existingAnalytics,...Object.keys(trainingWrites)]);
+   try{
+    clearTrainingExtrasStores();
+    clearAllAnalyticsStores();
+    for(const [k,v] of Object.entries(trainingWrites)){localStorage.setItem(k,v);if(localStorage.getItem(k)!==v)throw new Error(`Training restore write could not be verified: ${k}`)}
+    const serialized=JSON.stringify(proposed);localStorage.setItem('mouldmasterProDB',serialized);
+    if(localStorage.getItem('mouldmasterProDB')!==serialized)throw new Error('Learner registry write could not be verified')
+   }catch(storageError){
+    const rolledBack=restoreSnapshot(before);
+    storageError.importRollbackVerified=rolledBack;
+    if(storageError?.code!==ANALYTICS_CLEANUP_CODE)storageError.code=IMPORT_STORAGE_CODE;
+    throw storageError
+   }
+   db=proposed;user=db.users[db.activeUser];committed=true;cancelActiveExam();
+   try{updateGlobalProgress();switchView('profile')}catch(uiError){console.warn('[MouldMaster] imported data saved; view refresh failed:',uiError)}
+   window.toast?.('Progress imported. Learner-scoped review/sign-off, measured-assessment, process-diagnostics and lab progress were restored. Certificates must be re-earned; local analytics were reset.')
+  }catch(e){
+   if(e?.code===ANALYTICS_CLEANUP_CODE){alert(cleanupFailureMessage('Import',e.importRollbackVerified!==false));return}
+   if(e?.code===IMPORT_STORAGE_CODE){
+    alert(e.importRollbackVerified===true?'Import could not be saved because browser storage failed. Existing learner progress and local analytics/training state were restored.':'Import failed because browser storage could not be updated, and rollback could not be fully verified. Reopen MouldMaster and inspect local learner data before continuing.');
+    return
+   }
+   if(committed)alert('Progress was imported, but the screen could not refresh. Reopen MouldMaster.');
+   else alert('That file is not a valid MouldMaster backup. No existing data was changed.')
+  }
+ };
+ r.onerror=()=>alert('That backup could not be read. No existing data was changed.');
+ r.readAsText(file)
+};
+
+function labelLearnerReset(){if(typeof document==='undefined')return;document.querySelectorAll?.('[data-mm-onclick="resetData()"]').forEach?.(button=>{if(String(button.textContent||'').trim()==='Reset all local data')button.textContent='Reset learner data'})}
+const baseRenderProfile=window.renderProfile;if(typeof baseRenderProfile==='function')window.renderProfile=function(){const result=baseRenderProfile.apply(this,arguments);labelLearnerReset();return result};
+function cleanResetLearner(prior,id){
+ const template=JSON.parse(JSON.stringify(defaultDB?.users?.[defaultDB.activeUser]||{})),clean={...template,id,name:String(prior?.name||'Learner'),role:prior?.role==='instructor'?'instructor':'learner'};
+ for(const key of ['region','experience','goal','dailyMinutes','onboardingDone'])if(prior&&Object.prototype.hasOwnProperty.call(prior,key))clean[key]=prior[key];
+ clean.completed=[];clean.bookmarks=[];clean.notes={};clean.examScores={};clean.examPassStatus={};clean.learningAwards=[];clean.learningAwardMeta={};clean.currentLesson=1;clean.lastSeen=new Date().toISOString();
+ if(obj(prior?.fun))clean.fun={sound:prior.fun.sound===true,celebrations:prior.fun.celebrations!==false};
+ return clean
+}
+const baseReset=window.resetData;if(typeof baseReset==='function')window.resetData=function(){
+ let active;try{active=canonicalLearnerId(db?.activeUser)}catch(_){alert('Learner reset is unavailable because the active learner identity is invalid.');return}
+ const prior=db?.users?.[active];if(!prior){alert('Learner reset is unavailable because the active learner profile could not be found.');return}
+ if(!confirm(`Reset learning data for "${String(prior.name||active)}" only? Other local learner profiles and saved process-data evidence will be kept. This learner's progress, notes, certificates, Book reading position, Book listening position, analytics, review/sign-off, measured-assessment, process-diagnostics and lab-progress state will be cleared.`))return;
+ let owned,before,proposed;
+ try{
+  owned=learnerOwnedKeys(active);
+  before=snapshotKeys(['mouldmasterProDB',...owned]);
+  proposed=JSON.parse(JSON.stringify(db));proposed.users[active]=cleanResetLearner(prior,active);proposed.activeUser=active
+ }catch(e){console.error('[MouldMaster] learner reset snapshot unavailable:',e);alert('Learner reset was not started because the current learner state could not be read safely. Reopen MouldMaster and try again.');return}
+ try{
+  clearLearnerAnalyticsStores(active);clearLearnerTrainingExtras(active);
+  const serialized=JSON.stringify(proposed);localStorage.setItem('mouldmasterProDB',serialized);
+  if(localStorage.getItem('mouldmasterProDB')!==serialized)throw new Error('Learner registry write could not be verified')
+ }catch(e){
+  const rolledBack=restoreSnapshot(before);console.error('[MouldMaster] learner reset blocked:',e);
+  alert(rolledBack?'Learner reset was not completed. Existing learner progress and scoped training state were restored.':'Learner reset failed and rollback could not be fully verified. Reopen MouldMaster and inspect local learner data before continuing.');
+  return
+ }
+ const beforeDb=db;db=proposed;user=db.users[active];if(db!==beforeDb)cancelActiveExam();
+ try{updateGlobalProgress();renderProfile()}catch(uiError){console.warn('[MouldMaster] learner reset saved; view refresh failed:',uiError)}
+ try{if(typeof window.MMBook?.clearAudioResume==='function')window.MMBook.clearAudioResume()}catch(_){ }
+ try{if(typeof window.MMBook?.clearResume==='function')window.MMBook.clearResume();else window.dispatchEvent(new CustomEvent('mm:book-resume-change',{detail:null}))}catch(_){ }
+ window.toast?.('This learner was reset, including the saved Book reading position and Book listening position. Other local learner profiles and saved process-data evidence were kept.');
+ labelLearnerReset()
+};
+labelLearnerReset();
+
+// Historical device-global review/sign-off ownership is ambiguous. Never adopt it into a learner scope.
+window.MM_TRAINING_DATA_BRIDGE={version:'2026.10.04.1',cleanupFailureCode:ANALYTICS_CLEANUP_CODE,canonicalLearnerId,buildTrainingExtras,trainingExtrasForImport,learnerOwnedKeys,clearLearnerAnalyticsStores,clearLearnerTrainingExtras,clearAssessmentAnalyticsStores,clearLearningAnalyticsStores,clearAllAnalyticsStores,clearTrainingExtrasStores,cancelActiveExam};
+})();
+/* <<< training-qa-fix.js */
+
+/* >>> backup-authority-notice.js */
+/* MouldMaster backup authority + integrity UX — 2026.10.04.1 */
+(function(){
+'use strict';
+if(window.MM_BACKUP_AUTHORITY_NOTICE)return;
+
+const VERSION='2026.10.04.1';
+const BACKUP_FORMAT='mouldmaster-backup-v3';
+const LEGACY_FORMAT='mouldmaster-backup-v2';
+const INTEGRITY_ALGORITHM='SHA-256';
+const CANONICALIZATION='json-stable-v1';
+const INTEGRITY_SCOPE='backupFormat+payload';
+const MAX_BACKUP_BYTES=10*1024*1024;
+const REVIEW_KEY='mm_spaced_review_v2', SIGN_KEY='mm_practical_signoff_v1';
+const LEGACY_SUCCESS='Backup imported and strictly validated';
+const CLEAR_SUCCESS='Progress imported. Certificates and pass authority must be re-earned; local assessment and Learning Insights analytics are reset.';
+const baseToast=window.toast;
+const baseImportData=window.importData;
+
+if(typeof baseToast==='function')window.toast=function(message){return baseToast.call(this,message===LEGACY_SUCCESS?CLEAR_SUCCESS:message)};
+
+function obj(value){return !!value&&typeof value==='object'&&!Array.isArray(value)}
+function clamp(n,a,b,d=0){return Number.isFinite(+n)?Math.max(a,Math.min(b,+n)):d}
+function cleanReview(value){
+ const out={items:{}};
+ if(!obj(value)||!obj(value.items))return out;
+ for(const [id,item] of Object.entries(value.items).slice(0,1000)){
+  if(!obj(item))continue;
+  const sid=String(id).slice(0,220);
+  if(!/^(tech|reg|legacy):/.test(sid))continue;
+  out.items[sid]={
+   id:sid,
+   stage:Math.floor(clamp(item.stage,0,5)),
+   due:clamp(item.due,0,4102444800000,Date.now()),
+   wrong:Math.floor(clamp(item.wrong,0,100000)),
+   right:Math.floor(clamp(item.right,0,100000)),
+   last:clamp(item.last,0,4102444800000),
+   confidence:['low','medium','high'].includes(item.confidence)?item.confidence:'medium'
+  };
+ }
+ return out;
+}
+function cleanSign(value){
+ const out={checks:{},supervisor:'',date:'',notes:''};
+ if(!obj(value))return out;
+ if(obj(value.checks))for(const [key,checked] of Object.entries(value.checks).slice(0,50))out.checks[String(key).slice(0,20)]=checked===true;
+ out.supervisor=String(value.supervisor||'').slice(0,160);
+ out.date=String(value.date||'').slice(0,20);
+ out.notes=String(value.notes||'').slice(0,10000);
+ return out;
+}
+function readLocalJson(key,fallback){
+ try{const value=JSON.parse(localStorage.getItem(key)||'');return obj(value)?value:fallback}catch(_){return fallback}
+}
+function stableStringify(value){
+ if(value===null)return 'null';
+ if(Array.isArray(value))return '['+value.map(stableStringify).join(',')+']';
+ if(obj(value))return '{'+Object.keys(value).sort().map(key=>JSON.stringify(key)+':'+stableStringify(value[key])).join(',')+'}';
+ if(typeof value==='string'||typeof value==='boolean')return JSON.stringify(value);
+ if(typeof value==='number'){
+  if(!Number.isFinite(value))throw new Error('Backup contains a non-finite number');
+  return JSON.stringify(value);
+ }
+ throw new Error('Backup contains an unsupported value');
+}
+function canonicalIntegrityInput(payload){return {backupFormat:BACKUP_FORMAT,payload}}
+function bytesToHex(buffer){return [...new Uint8Array(buffer)].map(byte=>byte.toString(16).padStart(2,'0')).join('')}
+async function sha256Hex(value){
+ const subtle=window.crypto&&window.crypto.subtle;
+ if(!subtle||typeof subtle.digest!=='function')throw new Error('SHA-256 backup integrity is unavailable in this browser context');
+ const canonical=stableStringify(value);
+ const bytes=new TextEncoder().encode(canonical);
+ return bytesToHex(await subtle.digest(INTEGRITY_ALGORITHM,bytes));
+}
+function legacyPayload(){
+ const payload=JSON.parse(JSON.stringify(db)),bridge=window.MM_TRAINING_DATA_BRIDGE;
+ if(!bridge||typeof bridge.buildTrainingExtras!=='function')throw new Error('Learner-scoped backup bridge unavailable');
+ payload.backupFormat=LEGACY_FORMAT;
+ payload.trainingExtras=bridge.buildTrainingExtras(payload.users);
+ return payload;
+}
+async function buildEnvelope(){
+ const payload=legacyPayload();
+ const digest=await sha256Hex(canonicalIntegrityInput(payload));
+ return {
+  backupFormat:BACKUP_FORMAT,
+  integrity:{algorithm:INTEGRITY_ALGORITHM,canonicalization:CANONICALIZATION,scope:INTEGRITY_SCOPE,digest},
+  payload
+ };
+}
+function exactKeys(value,expected){
+ if(!obj(value))return false;
+ const actual=Object.keys(value).sort(),wanted=[...expected].sort();
+ return actual.length===wanted.length&&actual.every((key,index)=>key===wanted[index]);
+}
+async function verifyEnvelope(envelope){
+ if(!exactKeys(envelope,['backupFormat','integrity','payload'])||envelope.backupFormat!==BACKUP_FORMAT)throw new Error('Invalid v3 backup envelope');
+ const meta=envelope.integrity;
+ if(!exactKeys(meta,['algorithm','canonicalization','scope','digest']))throw new Error('Invalid backup integrity metadata');
+ if(meta.algorithm!==INTEGRITY_ALGORITHM||meta.canonicalization!==CANONICALIZATION||meta.scope!==INTEGRITY_SCOPE)throw new Error('Unsupported backup integrity metadata');
+ if(typeof meta.digest!=='string'||!/^[0-9a-f]{64}$/.test(meta.digest))throw new Error('Invalid backup integrity digest');
+ if(!obj(envelope.payload)||envelope.payload.backupFormat!==LEGACY_FORMAT)throw new Error('Invalid backup payload');
+ const expected=await sha256Hex(canonicalIntegrityInput(envelope.payload));
+ if(expected!==meta.digest){const error=new Error('Backup integrity check failed');error.code='MM_BACKUP_INTEGRITY_MISMATCH';throw error}
+ return envelope.payload;
+}
+function readFileText(file){
+ if(file&&typeof file.text==='function')return file.text();
+ return new Promise((resolve,reject)=>{
+  const reader=new FileReader();
+  reader.onload=()=>resolve(String(reader.result||''));
+  reader.onerror=()=>reject(new Error('Backup file could not be read'));
+  reader.readAsText(file);
+ });
+}
+function downloadJson(value){
+ const blob=new Blob([JSON.stringify(value,null,2)],{type:'application/json'}),anchor=document.createElement('a');
+ anchor.href=URL.createObjectURL(blob);
+ anchor.download='mouldmaster-progress-v3.json';
+ anchor.click();
+ setTimeout(()=>URL.revokeObjectURL(anchor.href),0);
+}
+
+window.exportData=async function(){
+ try{
+  const envelope=await buildEnvelope();
+  downloadJson(envelope);
+  window.toast?.('Backup exported with SHA-256 integrity checksum and learner-scoped review/sign-off, measured-assessment, process-diagnostics and lab progress');
+ }catch(error){
+  console.error('[MouldMaster backup] export failed:',error);
+  alert('Backup could not be created with a verifiable SHA-256 integrity checksum on this device. No backup file was exported.');
+ }
+};
+
+window.importData=function(file){
+ if(!file)return;
+ if(file.size>MAX_BACKUP_BYTES){alert('That backup is too large to import safely. No existing data was changed.');return}
+ void (async()=>{
+  try{
+   const text=await readFileText(file),parsed=JSON.parse(text);
+   if(parsed?.backupFormat===BACKUP_FORMAT){
+    const payload=await verifyEnvelope(parsed);
+    if(typeof baseImportData!=='function')throw new Error('Core backup importer unavailable');
+    baseImportData(new Blob([JSON.stringify(payload)],{type:'application/json'}));
+    return;
+   }
+   if(!obj(parsed)||!obj(parsed.users)||typeof parsed.activeUser!=='string')throw new Error('Invalid legacy backup structure');
+   if(parsed.backupFormat&&parsed.backupFormat!==LEGACY_FORMAT)throw new Error('Unsupported backup format');
+   const proceed=typeof confirm!=='function'||confirm('This older MouldMaster backup has no cryptographic integrity checksum. Its structure will still be validated, but file corruption or modification cannot be independently detected. Continue importing this legacy backup?');
+   if(!proceed)return;
+   if(typeof baseImportData!=='function')throw new Error('Core backup importer unavailable');
+   baseImportData(file);
+  }catch(error){
+   console.error('[MouldMaster backup] import blocked:',error);
+   if(error?.code==='MM_BACKUP_INTEGRITY_MISMATCH')alert('This MouldMaster backup failed its SHA-256 integrity check. It may be corrupted or modified. No existing data was changed.');
+   else alert('That file is not a supported, verifiable MouldMaster backup. No existing data was changed.');
+  }
+ })();
+};
+
+function annotate(root=document){
+ for(const heading of root.querySelectorAll?.('h2')||[]){
+  if(String(heading.textContent||'').trim()!=='Backup & reset')continue;
+  const card=heading.closest('.card');if(!card||card.querySelector('[data-mm-backup-authority-note]'))continue;
+  const note=document.createElement('div');note.className='callout';note.dataset.mmBackupAuthorityNote='1';
+  note.innerHTML='<b>Transfer boundary:</b> Current backups include all local learner profiles plus each profile\'s scoped review/sign-off, measured-assessment, process-diagnostics, Diagnostic Learning Lab and Material Behaviour Lab progress, protected by a SHA-256 integrity checksum so corruption or file changes are detected before restore. Import replaces the local learner registry after confirmation. The checksum is not a digital signature and does not prove who created the backup. Certificates, pass authority and local analytics do not transfer as trusted evidence; certificates must be re-earned and analytics are reset after import.';
+  const controls=card.querySelector('.hero-buttons');card.insertBefore(note,controls||null);
+ }
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>annotate(),{once:true});else annotate();
+window.addEventListener?.('mm:domains-ready',()=>annotate());
+window.MM_APP_SHELL?.events?.onViewChange?.(()=>annotate());
+window.MM_APP_SHELL?.events?.onRender?.('profile',()=>annotate());
+
+window.MM_LEARNER_BACKUP_INTEGRITY=Object.freeze({
+ version:VERSION,
+ backupFormat:BACKUP_FORMAT,
+ legacyFormat:LEGACY_FORMAT,
+ algorithm:INTEGRITY_ALGORITHM,
+ canonicalization:CANONICALIZATION,
+ stableStringify,
+ buildEnvelope,
+ verifyEnvelope
+});
+window.MM_BACKUP_AUTHORITY_NOTICE=Object.freeze({version:VERSION,legacySuccess:LEGACY_SUCCESS,clearSuccess:CLEAR_SUCCESS,annotate,integrity:window.MM_LEARNER_BACKUP_INTEGRITY});
+})();
+/* <<< backup-authority-notice.js */

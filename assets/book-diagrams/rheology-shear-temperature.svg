@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" role="img" aria-labelledby="title desc">
+<title id="title">Conceptual viscosity response to shear rate and temperature</title>
+<desc id="desc">Two downward-sloping conceptual viscosity curves versus shear rate. The higher-temperature curve lies lower, illustrating shear-thinning and temperature sensitivity without numerical values.</desc>
+<g fill="none" stroke="currentColor" stroke-width="3">
+<path d="M120 70v360h740"/><path d="M170 120C330 145 480 235 800 345"/><path d="M170 205C350 225 540 300 800 385" stroke-dasharray="10 8"/>
+</g>
+<g font-family="system-ui,sans-serif" font-size="24">
+<text x="400" y="485">Shear rate →</text><text transform="translate(45 330) rotate(-90)">Apparent viscosity →</text>
+<text x="610" y="220">Lower temperature / higher resistance</text><text x="590" y="330">Higher temperature / lower resistance</text>
+<text x="155" y="105">Conceptual only</text>
+</g>
+</svg>

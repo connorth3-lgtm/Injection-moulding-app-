@@ -1,0 +1,167 @@
+from __future__ import annotations
+
+from pathlib import Path
+import json
+
+ROOT = Path(__file__).resolve().parent
+
+
+def release_key(value: str) -> tuple[int, int, int, int]:
+    """Compare release components numerically (the .10 suffix follows .9)."""
+    parts = value.split(".")
+    if len(parts) != 4 or not all(part.isdigit() for part in parts):
+        raise AssertionError(f"invalid governed web release: {value!r}")
+    return tuple(int(part) for part in parts)
+
+
+
+def load(path: str) -> dict:
+    target = ROOT / path
+    if not target.is_file():
+        raise AssertionError(f"governance binding is orphaned: missing {path}")
+    value = json.loads(target.read_text(encoding="utf-8"))
+    if not isinstance(value, dict):
+        raise AssertionError(f"governance binding must be a JSON object: {path}")
+    return value
+
+
+def referenced_file(owner: str, value: object) -> None:
+    path = str(value or "").strip()
+    if not path:
+        raise AssertionError(f"{owner} has an empty governed file binding")
+    if not (ROOT / path).is_file():
+        raise AssertionError(f"{owner} points to missing governed file {path}")
+
+
+def main() -> None:
+    model = load("data/governance-state-model-v1.json")
+    version = load("version.json")
+    release = str(version.get("web_release") or "").strip()
+    if not release:
+        raise AssertionError("current web release is missing")
+
+    bindings = model.get("currentReleaseBindings")
+    if not isinstance(bindings, dict):
+        raise AssertionError("canonical model has no currentReleaseBindings")
+    for key in ("externalValidation", "bookPublication", "bookIndependentSme", "curriculumIndependentSme", "nzqaExternalValidation", "desktopReleasePlatform", "mainGovernancePolicy"):
+        referenced_file(f"currentReleaseBindings.{key}", bindings.get(key))
+
+    external = load(str(bindings["externalValidation"]))
+    book_publication = load(str(bindings["bookPublication"]))
+    book_sme = load(str(bindings["bookIndependentSme"]))
+    curriculum_sme = load(str(bindings["curriculumIndependentSme"]))
+    nzqa_external = load(str(bindings["nzqaExternalValidation"]))
+    desktop_release = load(str(bindings["desktopReleasePlatform"]))
+    main_policy = load(str(bindings["mainGovernancePolicy"]))
+    if external.get("governance", {}).get("policyFile") != bindings["mainGovernancePolicy"]:
+        raise AssertionError("external-validation governance policy is orphaned from canonical main policy")
+    if main_policy.get("schemaVersion") != 1:
+        raise AssertionError("canonical main governance policy schema mismatch")
+
+    evidence_bindings = {
+        "external-validation": external,
+        "Book SME": book_sme,
+        "curriculum SME": curriculum_sme,
+        "NZQA external-validation": nzqa_external,
+    }
+    for label, binding in evidence_bindings.items():
+        evidence_release = str(binding.get("release") or "").strip()
+        if not evidence_release:
+            raise AssertionError(f"{label} binding has no release identity")
+        if release_key(evidence_release) > release_key(release):
+            raise AssertionError(f"{label} binding targets a future release")
+    if external.get("release") != release:
+        for key in ("accessibility", "pwaPhysicalDevices", "windowsDistribution", "bookSme", "curriculumSme", "learnerOutcomes", "nzqaProvider"):
+            if external[key].get("status") != "hold":
+                raise AssertionError(f"stale external-validation binding must remain HOLD for {key}")
+
+    referenced_file("external validation index", external.get("validationIndex"))
+    packet_fields = {
+        "accessibility": "reviewPacket",
+        "pwaPhysicalDevices": "reviewPacket",
+        "windowsDistribution": "readinessPacket",
+        "bookSme": "reviewPacket",
+        "curriculumSme": "reviewPacket",
+        "learnerOutcomes": "pilotPacket",
+        "nzqaProvider": "reviewPacket",
+    }
+    contract_fields = {
+        "accessibility": "evidenceContract",
+        "pwaPhysicalDevices": "evidenceContract",
+        "bookSme": "evidenceContract",
+        "curriculumSme": "evidenceContract",
+        "learnerOutcomes": "pilotContract",
+        "nzqaProvider": "evidenceContract",
+    }
+    for section_name, packet_key in packet_fields.items():
+        section = external.get(section_name)
+        if not isinstance(section, dict):
+            raise AssertionError(f"external-validation section is orphaned: {section_name}")
+        referenced_file(f"{section_name}.{packet_key}", section.get(packet_key))
+        contract_key = contract_fields.get(section_name)
+        if contract_key:
+            referenced_file(f"{section_name}.{contract_key}", section.get(contract_key))
+        status = section.get("status")
+        if status not in {"hold", "validated"}:
+            raise AssertionError(f"{section_name} has an ambiguous/transient public status: {status!r}")
+        required = section.get("required")
+        if not required:
+            raise AssertionError(f"{section_name} has no explicit exit condition; HOLD could become an unowned stuck state")
+
+    current = model.get("currentPublicBoundary")
+    if not isinstance(current, dict):
+        raise AssertionError("canonical model has no currentPublicBoundary")
+    expected_keys = {
+        "technicalAutomation",
+        "repositoryGovernance",
+        "bookPublicationAuthorization",
+        "bookIndependentSme",
+        "curriculumIndependentSme",
+        "physicalPwa",
+        "assistiveTechnology",
+        "windowsDistribution",
+        "learnerOutcomes",
+        "nzqaProviderValidation",
+        "desktopReleaseImmutability",
+        "productionAuthority",
+    }
+    if set(current) != expected_keys:
+        missing = sorted(expected_keys - set(current))
+        unknown = sorted(set(current) - expected_keys)
+        raise AssertionError(f"human-facing lifecycle surface has orphaned/missing states: missing={missing} unknown={unknown}")
+
+    derived = {
+        "technicalAutomation": external["technicalAutomation"]["status"],
+        "repositoryGovernance": external["governance"]["status"],
+        "bookPublicationAuthorization": book_publication["status"],
+        "bookIndependentSme": book_sme["status"],
+        "curriculumIndependentSme": external["curriculumSme"]["status"],
+        "physicalPwa": external["pwaPhysicalDevices"]["status"],
+        "assistiveTechnology": external["accessibility"]["status"],
+        "windowsDistribution": external["windowsDistribution"]["status"],
+        "learnerOutcomes": external["learnerOutcomes"]["status"],
+        "nzqaProviderValidation": external["nzqaProvider"]["status"],
+        "desktopReleaseImmutability": desktop_release["status"],
+        "productionAuthority": external["productionUse"]["status"],
+    }
+    if current != derived:
+        raise AssertionError(f"human-facing lifecycle state is stuck/orphaned from authoritative contracts: {current!r} != {derived!r}")
+
+    # External HOLDs are stable blocked states. Native-governance pending is also
+    # explicit and owned because it has a canonical policy, tracker and exit condition.
+    forbidden_public = {"pending", "in-progress", "processing", "unknown", "unresolved"}
+    for key, state in current.items():
+        if str(state).lower() in forbidden_public:
+            raise AssertionError(f"{key} exposes a transient/orphan-prone public state: {state}")
+
+    assurance = model.get("currentAssuranceEvidence")
+    if not isinstance(assurance, dict) or set(assurance) != {"staticContract", "behavioralBrowser", "externalHumanDevice"}:
+        raise AssertionError("assurance evidence layers are missing/orphaned")
+    if assurance["externalHumanDevice"].get("status") != "hold":
+        raise AssertionError("external human/device assurance cannot outrun current external HOLDs")
+
+    print("MouldMaster lifecycle orphan/stuck-state QA passed; all public states and assurance layers have live authoritative bindings and explicit exits")
+
+
+if __name__ == "__main__":
+    main()

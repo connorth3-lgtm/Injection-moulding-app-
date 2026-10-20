@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "sourceId": "MM-DATA-124",
+  "title": "EPP foam-moulding raw experimental dataset",
+  "paper": "https://www.mdpi.com/2075-1702/14/7/797",
+  "rawRepository": "https://github.com/enesfurkanerkan/AutoML-Based-Prediction-of-Process-Outcomes-in-Expanded-Polypropylene-Foam-Injection-Molding",
+  "rawFile": {
+    "path": "Github_AutoML-Based-Optimization-of-EPP/Data.xlsx",
+    "gitBlobSha": "b75f06766cbb3452d452bf4419e4bee079e80dbf",
+    "reportedSizeBytes": 12261
+  },
+  "experiment": {
+    "reportedMeasuredTrials": 81,
+    "machine": "Teubert EPP moulding machine",
+    "material": "expanded polypropylene beads",
+    "reportedInitialDensity_g_per_L": 21,
+    "inputs": "five process parameters; exact workbook columns require binary profiling",
+    "outputs": ["cycle time", "warpage"],
+    "processSequence": ["cross-steaming fixed-to-moving", "cross-steaming moving-to-fixed", "autoclave steam", "water cooling", "pressure stabilisation", "demoulding"]
+  },
+  "rights": {
+    "articleLicense": "CC BY 4.0",
+    "articleExplicitlyPublishesRawRepository": true,
+    "repositoryLicenseFileObserved": false,
+    "rawRedistributionStatus": "review_required",
+    "reason": "Public availability does not by itself establish a reusable raw-data licence. Keep external raw bytes out of MouldMaster until rights are resolved."
+  },
+  "admissionStatus": "pinned_profile_not_canonical",
+  "nextChecks": [
+    "download workbook through an approved binary path and compute cryptographic file hash",
+    "profile sheet names, columns, data types, missingness and exact row count",
+    "confirm units for all five inputs and both outputs",
+    "resolve raw-data licence/redistribution terms",
+    "confirm whether 81 trials are all physical observations and synthetic Monte-Carlo points are excluded from raw evidence",
+    "assign experiment-level holdout group to prevent synthetic/model output leakage"
+  ]
+}

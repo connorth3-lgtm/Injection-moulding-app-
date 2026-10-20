@@ -1,0 +1,55 @@
+{
+  "schema": 1,
+  "datasetId": "bottle-cap-7162-confidential",
+  "status": "blocked-pending-owner-authorized-profile",
+  "paperReference": {
+    "doi": "10.1016/j.asoc.2023.111029",
+    "productionCycles": 7162,
+    "qualityCriteria": 3,
+    "dataAvailability": "confidential"
+  },
+  "supportedModes": ["controlled-transfer", "owner-side-execution"],
+  "authorizationGate": {
+    "ownerMustBeIdentified": true,
+    "writtenAuthorityRequired": true,
+    "researchProfilingPermissionRequired": true,
+    "automatedAggregateProfilingPermissionRequired": true,
+    "aggregatePublicationPermissionRequired": true,
+    "rawRedistributionMustRemainFalseUnlessSeparatelyAudited": true,
+    "confidentialityConditionsMustBeRecordedBeforeExecution": true
+  },
+  "controlledTransferGate": {
+    "onlyRunLocallyOrInAnOwnerApprovedPrivateEnvironment": true,
+    "publicCiRawDataForbidden": true,
+    "supportedTabularInputForCurrentValidator": ["csv", "tsv"],
+    "requiredChecks": [
+      "fingerprint every delivered file",
+      "record aggregate table dimensions and headers only",
+      "establish a source-defined cycle identifier",
+      "require source-defined quantity, unit and evidence for every counted measured channel",
+      "exclude setpoints, commands, identifiers, labels, predictions and derived fields",
+      "emit no raw rows or individual cell values"
+    ]
+  },
+  "ownerSideExecutionGate": {
+    "confidentialRowsRemainInsideOwnerEnvironment": true,
+    "exactProfilerCommitRequired": true,
+    "aggregateArtifactMustDeclareNoRawRowsOrCellValues": true,
+    "paperCycleReconciliationRequired": 7162,
+    "aggregateMeasuredCountsMustReferenceOnlyManifestDeclaredMeasuredFields": true,
+    "sourceFileFingerprintsOrOwnerApprovedStableIdentifiersShouldBeIncludedWherePermitted": true
+  },
+  "promotionBoundary": {
+    "validatorMayMarkPromotionEligible": true,
+    "validatorMayAutoPromoteFullyProfiledFamily": false,
+    "manualRepositoryAuditStillRequired": true,
+    "acceptedMeasuredSamplesBeforeAuthorizedProfile": 0,
+    "familyCountChangeBeforeAuthorizedProfile": 0
+  },
+  "privacyBoundary": {
+    "rawRowsInRepository": false,
+    "rawRowsInPublicArtifacts": false,
+    "rawCellValuesInValidatorOutput": false,
+    "companyMachineProductOperatorIdentifiersInPublicOutput": false
+  }
+}

@@ -1,0 +1,282 @@
+/* MouldMaster indexed material catalog pagination — 2026.09.04 */
+(function(){
+'use strict';
+if(window.MM_MATERIAL_SEARCH_PAGINATION)return;
+const VERSION='2026.09.29.3';
+const PAGE_SIZE=24;
+const ALL_PAGE_SIZE=12;
+function clean(v){return String(v??'').trim()}
+function norm(v){return clean(v).toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function safeUrl(v){try{const u=new URL(clean(v),location.href);return u.protocol==='https:'?u.href:''}catch(_){return''}}
+function humanKind(v){return clean(v).replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase())}
+function propertyKey(obs){return norm(obs?.property).replace(/ /g,'_')}
+function valueText(obs){const value=obs?.value??'',unit=clean(obs?.unit);return `${clean(value)}${unit?` ${unit}`:''}`}
+function processValue(obs){const unit=clean(obs?.unit);if(obs?.value!==null&&obs?.value!==undefined)return `${clean(obs.value)}${unit?` ${unit}`:''}`;if(obs?.min!==null&&obs?.min!==undefined&&obs?.max!==null&&obs?.max!==undefined)return `${obs.min}–${obs.max}${unit?` ${unit}`:''}`;if(obs?.min!==null&&obs?.min!==undefined)return `≥ ${obs.min}${unit?` ${unit}`:''}`;if(obs?.max!==null&&obs?.max!==undefined)return `≤ ${obs.max}${unit?` ${unit}`:''}`;return 'Not stated'}
+function propertyCondition(obs){const parts=[];if(clean(obs?.testMethod))parts.push(clean(obs.testMethod));if(Number.isFinite(obs?.temperatureC))parts.push(`${obs.temperatureC}°C`);if(Number.isFinite(obs?.loadKg))parts.push(`${obs.loadKg} kg`);if(clean(obs?.specimen))parts.push(clean(obs.specimen));if(clean(obs?.conditioning))parts.push(clean(obs.conditioning));if(['flow','transverse'].includes(obs?.direction))parts.push(obs.direction==='flow'?'flow direction':'transverse direction');return parts.join(' · ')||'Condition not fully resolved'}
+function preferredProperty(g){const props=g?.properties||[];return props.find(o=>['mfr','mfi','melt_flow_index','melt_flow_rate','melt_mass_flow_rate','melt_volume_flow_rate','mvr'].includes(propertyKey(o)))||props[0]||null}
+function sourceById(g,id){return (g?.sources||[]).find(s=>s.id===id)||null}
+function sourceLink(g,id){const s=sourceById(g,id),url=safeUrl(s?.url);if(!s||!url)return'';return `<a class="mm-exact-source-link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(humanKind(s.kind)||'Primary source')}</a>`}
+function renderPropertyRows(g){return (g.properties||[]).map(o=>`<tr><th scope="row">${esc(o.property)}</th><td><strong>${esc(valueText(o))}</strong></td><td>${esc(propertyCondition(o))}</td><td><span class="mm-exact-status ${o.comparisonReady===true?'ready':'context'}">${o.comparisonReady===true?'Comparable when conditions match':'Context only'}</span>${sourceLink(g,o.sourceId)}</td></tr>`).join('')}
+function renderPropertyLimitations(g){const notes=[...new Set((g.properties||[]).map(o=>clean(o.limitations)).filter(Boolean))];return notes.length?`<div class="mm-exact-limitations"><b>Supplier limitation</b>${notes.map(n=>`<p>${esc(n)}</p>`).join('')}</div>`:''}
+function renderProcessingRows(g){return (g.processing||[]).map(o=>`<tr><th scope="row">${esc(o.parameter)}</th><td><strong>${esc(processValue(o))}</strong></td><td>${esc(o.condition||'Supplier guidance; verify current exact-grade source and site conditions.')}</td><td>${sourceLink(g,o.sourceId)}</td></tr>`).join('')}
+function renderSources(g){return (g.sources||[]).map(s=>{const url=safeUrl(s.url);return `<li><b>${esc(s.title)}</b><span>${esc(humanKind(s.kind))}${s.retrievedAt?` · retrieved ${esc(s.retrievedAt)}`:''}</span>${url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">Open primary source</a>`:''}</li>`}).join('')}
+function displayName(g){return window.MM_MATERIAL_REGISTRY?.displayName?.(g)||[g?.manufacturer?.name,g?.brand,g?.grade].map(clean).filter(Boolean).join(' · ')}
+function renderGrade(g){const key=preferredProperty(g),properties=g.properties||[],processing=g.processing||[],variant=[g?.identity?.variantId,g?.identity?.regionalVariant,g?.production?.country,g?.production?.plant].map(clean).filter(Boolean).join(' · ');return `<article class="mm-exact-grade" data-mm-material-grade="${esc(g.id)}"><span class="eyebrow">Exact commercial grade</span><h3>${esc(displayName(g))}</h3><p>${esc(g.polymer?.family||'Unknown polymer family')}${g.polymer?.blend&&g.polymer.blend!==g.polymer.family?` · ${esc(g.polymer.blend)}`:''}${variant?` · ${esc(variant)}`:''}</p>${key?`<div class="mm-exact-key"><span>Key sourced property</span><strong>${esc(key.property)} · ${esc(valueText(key))}</strong><small>${esc(propertyCondition(key))}</small></div>`:''}<p>${properties.length} sourced properties · ${processing.length} processing observations</p><details class="mm-exact-detail"><summary>View sourced grade details</summary><div class="mm-exact-detail-body">${properties.length?`<h4>Properties</h4>${renderPropertyLimitations(g)}<div class="mm-exact-table-wrap"><table class="mm-exact-table"><thead><tr><th>Property</th><th>Value</th><th>Test / condition</th><th>Evidence use</th></tr></thead><tbody>${renderPropertyRows(g)}</tbody></table></div>`:'<p class="mm-exact-empty">No property observations have been published for this exact grade yet.</p>'}${processing.length?`<h4>Supplier processing guidance</h4><p class="mm-exact-caution"><b>Starting evidence, not a production recipe.</b> Confirm the current supplier document, machine/tool constraints and site validation before making production changes.</p><div class="mm-exact-table-wrap"><table class="mm-exact-table"><thead><tr><th>Parameter</th><th>Guidance</th><th>Boundary / condition</th><th>Source</th></tr></thead><tbody>${renderProcessingRows(g)}</tbody></table></div>`:''}<h4>Primary sources</h4><ul class="mm-exact-sources">${renderSources(g)}</ul><p class="mm-exact-provenance">Lifecycle status: ${esc(g.lifecycle?.status||'unknown')} · checked ${esc(g.lifecycle?.checkedAt||'not recorded')} · provenance ${esc(g.provenance?.stage||'unknown')}.</p></div></details><div class="mm-exact-actions"><button type="button" class="secondary" data-mm-exact-case="${esc(g.id)}">Start Mould Master case</button></div></article>`}
+function materialTypeLabel(type){return ({'exact-grade':'Exact grade','reference-material':'Material family / reference','material-lab':'Material lab','material-practice':'Material practice'})[type]||humanKind(type)}
+function compactText(value,max=260){const text=clean(value).replace(/\s+/g,' ');return text.length>max?text.slice(0,max-1).trimEnd()+'…':text}
+function resultSummary(doc){
+  const p=doc?.payload||{};
+  if(doc.type==='exact-grade'){
+    const props=(p.properties||[]).map(x=>`${clean(x.property)} ${valueText(x)}`).join(' · ');
+    const proc=(p.processing||[]).map(x=>`${clean(x.parameter)} ${processValue(x)}`).join(' · ');
+    return compactText([props,proc].filter(Boolean).join(' · ')||doc.subtitle);
+  }
+  if(doc.type==='reference-material')return compactText([...(p.traits||[]),...(p.watch||[]),p.verify].filter(Boolean).join(' · '));
+  return compactText([p.summary,...(p.evidence||[]),...(p.related||[])].filter(Boolean).join(' · '));
+}
+function renderAllResult(doc){
+  const sourceCount=(doc.sourceIds||[]).length,cat=doc.catalog||null;
+  const catalogueMeta=cat?`<span class="mm-material-index-subtitle">${esc(cat.country)} · ${esc(cat.family)}</span>`:'';
+  const contextMeta=cat?`<p class="mm-material-index-subtitle"><b>${esc(cat.region)}</b> · ${esc(cat.country)} · ${esc(cat.manufacturer)} · ${esc(cat.family)} · ${esc(cat.evidenceStage||'unknown evidence stage')}</p>`:'';
+  const tags=cat?[...(cat.applications||[]),...(cat.processes||[]),...(cat.evidence||[])]:[];
+  const tagHtml=tags.length?`<div class="mm-material-index-meta">${[...new Set(tags)].map(tag=>`<span class="pill">${esc(tag)}</span>`).join('')}</div>`:'';
+  return `<details class="mm-material-index-card" data-mm-material-index-result="${esc(doc.id)}" data-mm-material-index-type="${esc(doc.type)}"><summary class="mm-material-index-summary"><span class="mm-material-index-meta"><span class="pill">${esc(materialTypeLabel(doc.type))}</span>${sourceCount?`<span>${sourceCount} evidence source${sourceCount===1?'':'s'}</span>`:''}</span><strong class="mm-material-index-title">${esc(doc.title)}</strong>${catalogueMeta}<span class="mm-material-index-expand">View details</span></summary><div class="mm-material-index-detail">${contextMeta}${tagHtml}${doc.subtitle?`<p class="mm-material-index-subtitle">${esc(doc.subtitle)}</p>`:''}<p>${esc(resultSummary(doc))}</p>${doc.materialGradeId&&doc.payload?`<div class="mm-material-sourced-detail" data-mm-unified-grade>${renderGrade(doc.payload)}<div class="mm-material-inline-actions" role="group" aria-label="Actions for ${esc(doc.title)}"><button type="button" class="secondary" data-mm-material-jump="compare" data-mm-grade-action="${esc(doc.materialGradeId)}">Compare grades</button><button type="button" class="secondary" data-mm-material-jump="change" data-mm-grade-action="${esc(doc.materialGradeId)}">Change assistant</button><button type="button" class="ghost" data-mm-material-jump="learning" data-mm-grade-action="${esc(doc.materialGradeId)}">Material learning</button></div></div>`:''}</div></details>`;
+}
+function installAllIndex(root,index,query,revealExactGrade){
+  if(root.querySelector('[data-mm-all-material-index]'))return;
+  const section=document.createElement('section');section.className='mm-material-all-index';section.dataset.mmAllMaterialIndex='';
+  section.innerHTML=`<div class="mm-material-all-index-head"><h3>All materials</h3></div><div class="mm-material-all-search"><label>Find a material<input data-mm-all-material-query type="search" placeholder="Name, polymer, grade or property"></label><button type="button" class="secondary" data-mm-all-material-clear hidden>Show all materials</button></div><details class="mm-material-all-filters" data-mm-all-material-filters><summary><span>Filter materials</span><span data-mm-all-material-filter-count>Optional</span></summary><p class="mm-exact-boundary" data-mm-catalogue-boundary>Country means the manufacturer's country. Region is a browsing facet derived from manufacturer country; neither proves exact-grade manufacturing origin, plant origin or local availability. Application and process tags come from explicit published grade text for browsing only and are not suitability recommendations. Only published records appear; private staging records are excluded.</p><div class="mm-material-all-index-controls"><label>Region<select data-mm-all-material-region><option value="">All regions</option></select></label><label>Country<select data-mm-all-material-country><option value="">All countries</option></select></label><label>Manufacturer<select data-mm-all-material-manufacturer><option value="">All manufacturers</option></select></label><label>Polymer family<select data-mm-all-material-family><option value="">All polymer families</option></select></label><label>Application<select data-mm-all-material-application><option value="">All applications</option></select></label><label>Process<select data-mm-all-material-process><option value="">All processes</option></select></label><label>Evidence<select data-mm-all-material-evidence><option value="">All evidence</option></select></label><label>Result type<select data-mm-all-material-type><option value="">All published material data</option><option value="exact-grade">Exact grades</option><option value="reference-material">Family / reference</option><option value="material-lab">Material labs</option><option value="material-practice">Material practice</option></select></label></div></details><p class="mm-exact-boundary" data-mm-all-material-status role="status" aria-live="polite"></p><section class="mm-material-family-detail" data-mm-family-detail hidden aria-label="Polymer family details"><header class="mm-family-detail-header"><div class="mm-family-detail-art" data-mm-family-detail-art aria-hidden="true"></div><div><span class="eyebrow">Polymer family</span><h3 data-mm-family-title></h3><p data-mm-family-count></p></div></header><nav class="mm-family-detail-tabs" data-mm-family-tabs aria-label="Family information"><button type="button" data-mm-family-view="overview" aria-pressed="false">Overview</button><button type="button" data-mm-family-view="grades" aria-pressed="true">Grades</button><button type="button" data-mm-family-view="properties" aria-pressed="false">Properties</button><button type="button" data-mm-family-view="applications" aria-pressed="false">Applications</button></nav><div class="mm-family-detail-info" data-mm-family-info hidden aria-live="polite"></div></section><nav class="mm-material-family-toolbar" data-mm-material-family-toolbar aria-label="Material catalogue views"><button type="button" class="secondary" data-mm-material-family-back hidden>← All polymer families</button><button type="button" class="secondary" data-mm-material-all-records>Browse all records, labs and references</button></nav><div class="mm-material-all-results" data-mm-all-material-results></div><div class="mm-exact-actions" data-mm-all-material-pager><button type="button" class="secondary" data-mm-all-material-page="previous">Previous</button><button type="button" class="secondary" data-mm-all-material-page="next">Next</button></div>`;
+  // The unified searchable catalogue must be the first child in DOM order;
+  // the previous indexed-grade engine remains mounted but hidden for deep links.
+  root.prepend(section);
+  // Move source-backed coverage counts into the compact catalogue header
+  // instead of deleting the only visible copy with the old Grade Library banner.
+  const retiredHead=root.querySelector('.mm-exact-head');
+  const coverage=retiredHead?.querySelector('[data-mm-material-coverage]');
+  if(coverage)section.querySelector('.mm-material-all-index-head')?.appendChild(coverage);
+  retiredHead?.remove();
+  const allQuery=section.querySelector('[data-mm-all-material-query]'),type=section.querySelector('[data-mm-all-material-type]'),region=section.querySelector('[data-mm-all-material-region]'),country=section.querySelector('[data-mm-all-material-country]'),catalogueManufacturer=section.querySelector('[data-mm-all-material-manufacturer]'),family=section.querySelector('[data-mm-all-material-family]'),application=section.querySelector('[data-mm-all-material-application]'),process=section.querySelector('[data-mm-all-material-process]'),evidence=section.querySelector('[data-mm-all-material-evidence]'),host=section.querySelector('[data-mm-all-material-results]'),status=section.querySelector('[data-mm-all-material-status]'),pager=section.querySelector('[data-mm-all-material-pager]'),previous=section.querySelector('[data-mm-all-material-page="previous"]'),next=section.querySelector('[data-mm-all-material-page="next"]');
+  const filterControls=[type,region,country,catalogueManufacturer,family,application,process,evidence];
+  const filterCount=section.querySelector('[data-mm-all-material-filter-count]');
+  const clearAll=section.querySelector('[data-mm-all-material-clear]');
+  const familiesBack=section.querySelector('[data-mm-material-family-back]');
+  const browseAll=section.querySelector('[data-mm-material-all-records]');
+  function updateFilterIndicators(){
+    const active=filterControls.filter(control=>Boolean(control.value)).length;
+    filterCount.textContent=active?`${active} active`:'Optional';
+    clearAll.hidden=!active&&!clean(allQuery.value);
+  }
+  // One photo-backed family folder per source-published polymer family.
+  // The family facet covers the WHOLE exact-grade corpus, not the first 12
+  // paginated rows. This makes all 95 published PP grades live in one folder.
+  // Exact-grade evidence stays on each record when the folder is opened.
+  const FAMILY_NAMES={
+    PP:'Polypropylene',HDPE:'High-density polyethylene',LDPE:'Low-density polyethylene',
+    PE:'Polyethylene',PA6:'Nylon 6',PA66:'Nylon 66',PA11:'Nylon 11',
+    POM:'Acetal',PC:'Polycarbonate',ABS:'Acrylonitrile butadiene styrene',
+    PBT:'Polybutylene terephthalate',PET:'Polyethylene terephthalate',
+    PMMA:'Acrylic',TPU:'Thermoplastic polyurethane',TPV:'Thermoplastic vulcanisate',
+    PEEK:'Polyether ether ketone',PPS:'Polyphenylene sulfide',
+    LSR:'Liquid silicone rubber'
+  };
+  let page=1,seq=0,facetsData=null,view='families',familyView='grades';
+  const familyDetail=section.querySelector('[data-mm-family-detail]');
+  const familyInfo=section.querySelector('[data-mm-family-info]');
+  const familyNotes={
+    PP:{overview:'Polypropylene is a semi-crystalline polymer family. Family-level behaviour varies with grade, fillers, formulation and process history.',properties:'General learning tendencies: often low density, good resistance to many chemicals, and shrinkage behaviour influenced by crystallinity and part geometry. Confirm each property against a current grade data sheet.',applications:'Examples discussed in polymer education include packaging, living hinges and components requiring chemical resistance. These are not grade recommendations; qualification depends on the actual application.'}
+  };
+  function syncFamilyTabs(){
+    const chosen=family.value;
+    const showing=view==='results'&&!!chosen&&type.value==='exact-grade'&&facetsData?.families.includes(chosen);
+    familyDetail.hidden=!showing;
+    if(!showing){
+      host.hidden=false;familyInfo.hidden=true;
+      // Returning to global search must not strand the pager in a stale
+      // non-Grades tab state. The render pass owns page-count visibility.
+      pager.hidden=view==='families'||pager.dataset.mmHasPages!=='1';
+      return;
+    }
+    const familyName=FAMILY_NAMES[chosen]||'Published polymer family';
+    const count=facetsData.counts?.families?.[chosen]||0;
+    const title=familyDetail.querySelector('[data-mm-family-title]');
+    const tally=familyDetail.querySelector('[data-mm-family-count]');
+    if(title)title.textContent=chosen+' · '+familyName;
+    if(tally)tally.textContent=count+' published grade'+(count===1?'':'s')+' · sourced exact-grade records below';
+    familyDetail.dataset.mmFamilyCurrent=chosen;
+    const note=familyNotes[chosen];
+    const text=familyView==='overview'?(note?.overview||'A family groups materials with related polymer chemistry. Published grade properties can differ significantly.'):
+      familyView==='properties'?(note?.properties||'Inspect a published grade to see sourced property values, units, test conditions and limitations. No universal production properties apply to an entire family.'):
+      (note?.applications||'Application suitability requires an actual grade identity, current supplier documentation, component testing and applicable workplace requirements.');
+    familyInfo.replaceChildren();
+    if(familyView!=='grades'){
+      const paragraph=document.createElement('p');paragraph.textContent=text;
+      const boundary=document.createElement('small');boundary.textContent='Educational family information only — not a material-selection approval or a production setting.';
+      familyInfo.append(paragraph,boundary);
+    }
+    familyInfo.hidden=familyView==='grades';
+    host.hidden=familyView!=='grades';
+    pager.hidden=familyView!=='grades'||pager.dataset.mmHasPages!=='1';
+    familyDetail.querySelectorAll('[data-mm-family-view]').forEach(button=>{
+      const selected=button.dataset.mmFamilyView===familyView;
+      button.setAttribute('aria-pressed',String(selected));
+    });
+  }
+  familyDetail.querySelector('[data-mm-family-tabs]')?.addEventListener('click',event=>{
+    const button=event.target.closest('button[data-mm-family-view]');
+    if(!button||!familyDetail.contains(button))return;
+    familyView=button.dataset.mmFamilyView;
+    syncFamilyTabs();
+  });
+  const noActiveFilters=()=>filterControls.every(control=>!control.value)&&!clean(allQuery.value);
+  function familyFolders(){
+    const familyCounts=facetsData?.counts?.families||{};
+    const families=(facetsData?.families||[]).slice().sort((a,b)=>{
+      if(a==='PP')return -1;if(b==='PP')return 1;
+      return (familyCounts[b]||0)-(familyCounts[a]||0)||a.localeCompare(b);
+    });
+    return families.map(code=>{
+      const count=familyCounts[code]||0;
+      const subtitle=FAMILY_NAMES[code]||'Published polymer family';
+      return `<button type="button" class="mm-material-family-card" data-mm-family-open="${esc(code)}" aria-label="Browse ${count} ${esc(code)} grades"><span class="mm-material-family-copy"><strong>${esc(code)}</strong><small>${esc(subtitle)}</small><span class="mm-material-family-count">${count} published grade${count===1?'':'s'}</span></span><span class="mm-material-family-go" aria-hidden="true">›</span></button>`;
+    }).join('');
+  }
+  function updateFamilyNavigation(){
+    familiesBack.hidden=view==='families'&&noActiveFilters();
+    browseAll.hidden=view!=='families';
+  }
+  async function installFacets(){
+    const f=await index.facets();facetsData=f;
+    for(const value of f.regions)region.insertAdjacentHTML('beforeend',`<option value="${esc(value)}">${esc(value)}</option>`);
+    for(const value of f.countries)country.insertAdjacentHTML('beforeend',`<option value="${esc(value)}">${esc(value)}</option>`);
+    for(const value of f.manufacturers)catalogueManufacturer.insertAdjacentHTML('beforeend',`<option value="${esc(value.id)}">${esc(value.name)} · ${esc(value.country)}</option>`);
+    for(const value of f.families)family.insertAdjacentHTML('beforeend',`<option value="${esc(value)}">${esc(value)} (${f.counts?.families?.[value]||0})</option>`);
+    for(const value of f.applications)application.insertAdjacentHTML('beforeend',`<option value="${esc(value)}">${esc(value)} (${f.counts?.applications?.[value]||0})</option>`);
+    for(const value of f.processes)process.insertAdjacentHTML('beforeend',`<option value="${esc(value)}">${esc(value)} (${f.counts?.processes?.[value]||0})</option>`);
+    for(const value of f.evidence)evidence.insertAdjacentHTML('beforeend',`<option value="${esc(value)}">${esc(value)} (${f.counts?.evidence?.[value]||0})</option>`);
+  }
+  async function render(reset=false){
+    if(reset)page=1;updateFilterIndicators();const mine=++seq;
+    if(view==='families'&&noActiveFilters()&&facetsData){
+      // Family folders are based on ALL exact grades, not paginated results.
+      const grades=Object.values(facetsData.counts?.families||{}).reduce((sum,n)=>sum+n,0);
+      const families=facetsData.families||[];
+      host.innerHTML=familyFolders();
+      pager.hidden=true;
+      status.textContent=`${families.length} polymer families · ${grades} exact grades. Choose a family or search all published records.`;
+      root.dataset.mmUnifiedMaterialIndex='1';
+      root.dataset.mmUnifiedMaterialTotal=String(index.stats()?.documents||grades);
+      updateFamilyNavigation();
+      syncFamilyTabs();
+      return;
+    }
+    const selected=type.value?[type.value]:null;const result=await index.searchAllPage(allQuery.value||'',{types:selected,region:region.value||null,country:country.value||null,manufacturerId:catalogueManufacturer.value||null,polymerFamily:family.value||null,application:application.value||null,process:process.value||null,evidence:evidence.value||null,page,pageSize:ALL_PAGE_SIZE});if(mine!==seq)return;
+    page=result.page;host.innerHTML=result.items.length?result.items.map(renderAllResult).join(''):'<div class="mm-exact-empty">No published material data match this search.</div>';
+    previous.disabled=!result.hasPrevious;next.disabled=!result.hasNext;pager.hidden=result.pageCount<=1;pager.dataset.mmHasPages=result.pageCount>1?'1':'0';
+    status.textContent=`${result.total} matching material records · page ${result.page} of ${result.pageCount}`;
+    updateFamilyNavigation();
+    syncFamilyTabs();
+    root.dataset.mmUnifiedMaterialIndex='1';root.dataset.mmUnifiedMaterialTotal=String(result.total);
+    // One visible catalogue and one result card per published record.
+    // Keep full exact-grade property/processing/source data in the expanded
+    // result rather than sending the learner to a second catalogue below.
+    host.querySelectorAll('[data-mm-exact-case]').forEach(button=>button.addEventListener('click',async()=>{
+      button.disabled=true;
+      try{await window.MM_MATERIAL_REGISTRY.startMouldMasterCase(button.dataset.mmExactCase)}
+      catch(err){console.error('[MouldMaster material case]',err);button.disabled=false}
+    }));
+    host.querySelectorAll('[data-mm-grade-action]').forEach(button=>button.addEventListener('click',()=>{
+      const id=button.dataset.mmGradeAction||'';
+      const action=button.dataset.mmMaterialJump||'';
+      const target=document.getElementById(({compare:'mmMaterialCompare',change:'mmMaterialChange',learning:'mmMaterialLearningAnchor'})[action]);
+      const workflows=root.querySelector('[data-mm-material-workflows]');
+      const selected=action==='compare'?root.querySelector('[data-mm-compare-a]')
+        :action==='change'?root.querySelector('[data-mm-change-before]'):null;
+      if(selected){
+        selected.value=id;
+        workflows.open=true;
+        // Notify the correct selector, so the comparison/delta action can
+        // re-evaluate its enabled state when the second grade is chosen.
+        selected.dispatchEvent(new Event('change',{bubbles:true}));
+      }
+      if(action==='learning'){
+        const guide=root.querySelector('[data-mm-family-science]');
+        if(guide)guide.open=true;
+      }
+      if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'}));
+    }));
+  }
+  // The folder button intentionally uses the same governed family facet
+  // used by advanced filters, so every selected grade remains source-backed.
+  host.addEventListener('click',event=>{
+    const button=event.target.closest('[data-mm-family-open]');
+    if(!button||!host.contains(button))return;
+    const code=button.dataset.mmFamilyOpen;
+    if(!facetsData?.families.includes(code))return;
+    family.value=code;type.value='exact-grade';allQuery.value='';
+    familyView='grades';view='results';render(true).catch(err=>console.warn('[MouldMaster family browse]',err));
+  });
+  familiesBack.addEventListener('click',()=>{
+    for(const control of filterControls)control.value='';
+    allQuery.value='';familyView='grades';view='families';
+    render(true).catch(err=>console.warn('[MouldMaster family browse]',err));
+  });
+  browseAll.addEventListener('click',()=>{
+    for(const control of filterControls)control.value='';
+    allQuery.value='';view='all';
+    render(true).catch(err=>console.warn('[MouldMaster unified material index]',err));
+  });
+  for(const control of [allQuery,type,region,country,catalogueManufacturer,family,application,process,evidence]){
+    control.addEventListener(control===allQuery?'input':'change',()=>{
+      // Search and advanced facets use the full unified, sourced index.
+      // Clearing the final search/facet returns to the illustrated family
+      // folders unless the learner deliberately chose the all-records view.
+      if(noActiveFilters()&&view!=='all')view='families';
+      else if(!noActiveFilters()){view='results';familyView='grades';}
+      render(true).catch(err=>console.warn('[MouldMaster unified material index]',err));
+    });
+  }
+  clearAll.addEventListener('click',()=>{
+    allQuery.value='';for(const control of filterControls)control.value='';
+    familyView='grades';view='families';
+    render(true).catch(err=>console.warn('[MouldMaster unified material index]',err));
+  });
+  previous.addEventListener('click',()=>{page=Math.max(1,page-1);render().catch(err=>console.warn('[MouldMaster unified material index]',err))});next.addEventListener('click',()=>{page+=1;render().catch(err=>console.warn('[MouldMaster unified material index]',err))});
+  installFacets().then(()=>render(true)).catch(err=>console.warn('[MouldMaster unified material index]',err));
+}
+function makeButton(label,action){const b=document.createElement('button');b.type='button';b.className='secondary';b.textContent=label;b.dataset.mmMaterialPage=action;return b}
+function replaceControl(root,selector){const old=root.querySelector(selector);if(!old)return null;const next=old.cloneNode(true);old.replaceWith(next);return next}
+async function enhance(){
+  const registry=window.MM_MATERIAL_REGISTRY,index=window.MM_MATERIAL_SEARCH;if(!registry?.installPanel||!index?.searchPage)return false;
+  await registry.installPanel();const root=document.getElementById('mmExactMaterialCatalog');if(!root||root.dataset.mmIndexedPagination==='1')return !!root;
+  root.dataset.mmIndexedPagination='1';
+  const query=replaceControl(root,'[data-mm-exact-query]'),manufacturer=replaceControl(root,'[data-mm-exact-manufacturer]'),host=root.querySelector('[data-mm-exact-results]');if(!query||!manufacturer||!host)return false;
+  installAllIndex(root,index,query,async id=>{
+    // A catalogue result is a navigation action, not just a search-box update.
+    // Wait for the indexed exact-grade render before revealing and focusing its
+    // evidence card; otherwise it remains below the fold on narrow screens.
+    // The all-materials catalogue is independent of the exact-grade panel's
+    // previous manufacturer selection. Clear that stale filter before jumping
+    // so a valid published grade cannot vanish from the destination results.
+    manufacturer.value='';
+    query.value=id;
+    await render(true);
+    const grade=host.querySelector('[data-mm-material-grade]');
+    if(grade?.dataset.mmMaterialGrade!==id)return;
+    grade.setAttribute('tabindex','-1');
+    grade.scrollIntoView({block:'start',behavior:'instant'});
+    grade.focus({preventScroll:true});
+  });
+  const status=document.createElement('p');status.className='mm-exact-boundary';status.dataset.mmMaterialPageStatus='';status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+  const pager=document.createElement('div');pager.className='mm-exact-actions';pager.dataset.mmMaterialPager='';const previous=makeButton('Previous','previous'),next=makeButton('Next','next');pager.append(previous,next);host.insertAdjacentElement('afterend',status);status.insertAdjacentElement('afterend',pager);
+  let page=1,seq=0;
+  async function render(reset=false){if(reset)page=1;const mine=++seq;const started=performance.now();const result=await index.searchPage(query.value||'',{manufacturerId:manufacturer.value||null,page,pageSize:PAGE_SIZE});if(mine!==seq)return;page=result.page;host.innerHTML=result.items.length?result.items.map(renderGrade).join(''):'<div class="mm-exact-empty">No published exact commercial grades match this filter. The family-level Academy material reference remains available above; it must not be treated as an exact-grade datasheet.</div>';host.querySelectorAll('[data-mm-exact-case]').forEach(b=>b.addEventListener('click',async()=>{b.disabled=true;try{await registry.startMouldMasterCase(b.dataset.mmExactCase)}catch(err){console.error('[MouldMaster materials]',err);b.disabled=false}}));previous.disabled=!result.hasPrevious;next.disabled=!result.hasNext;pager.hidden=result.pageCount<=1;status.textContent=`${result.total} matching exact grades · page ${result.page} of ${result.pageCount} · indexed in ${Math.max(0,Math.round(performance.now()-started))} ms`;root.dataset.mmMaterialSearchMode='indexed';root.dataset.mmMaterialPage=String(result.page);root.dataset.mmMaterialTotal=String(result.total)}
+  query.addEventListener('input',()=>render(true).catch(err=>console.warn('[MouldMaster materials index]',err)));manufacturer.addEventListener('change',()=>render(true).catch(err=>console.warn('[MouldMaster materials index]',err)));previous.addEventListener('click',()=>{page=Math.max(1,page-1);render().catch(err=>console.warn('[MouldMaster materials index]',err))});next.addEventListener('click',()=>{page+=1;render().catch(err=>console.warn('[MouldMaster materials index]',err))});
+  await render(true);return true;
+}
+function install(){enhance().catch(err=>console.warn('[MouldMaster materials index]',err))}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});else install();
+window.addEventListener('mm:domains-ready',install,{once:true});
+window.MM_APP_SHELL?.events?.onRender?.('materials',install);window.MM_APP_SHELL?.events?.onViewChange?.(view=>{if(view==='materials')install()});
+window.MM_MATERIAL_SEARCH_PAGINATION=Object.freeze({version:VERSION,enhance,pageSize:PAGE_SIZE,allPageSize:ALL_PAGE_SIZE});
+})();

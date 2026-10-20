@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "family": "imPURE_PASCOE_May2022",
+  "status": "public_raw_records__admission_pending",
+  "purpose": "Track the PASCOE raw per-cycle data as one experiment family across two trial days without double-counting independent process families.",
+  "records": [
+    {
+      "sourceId": "MM-DATA-133",
+      "date": "2022-05-17",
+      "doi": "10.5281/zenodo.6913660",
+      "recordUrl": "https://zenodo.org/records/6913660",
+      "reportedDescription": "open access data from PASCOE IM line",
+      "reportedTotalSize": "18.7 MB",
+      "confirmedVisibleFiles": [
+        {"name":"Pascoe_17_05_2022_Cycle1.csv","reportedSize":"60.0 kB","md5":"709cabf385abc87b89d62aaf75db9106"},
+        {"name":"Pascoe_17_05_2022_Cycle10.csv","reportedSize":"60.2 kB","md5":"d9a1169ad0773f329dc2dd51838d7e8b"},
+        {"name":"Pascoe_17_05_2022_Cycle100.csv","reportedSize":"60.7 kB","md5":"d30f072ea7d01a821bf9bea34f0b909c"},
+        {"name":"Trial 17 05 all stages.csv","reportedSize":"30.0 kB"},
+        {"name":"Trial 17 05 all stages_ires-labels.csv","reportedSize":"3.4 kB"}
+      ],
+      "notes": "Cycle files with IDs extending into the hundreds are exposed by the repository. Exact file count, final cycle count, schema, units and licence must be read from the authoritative record/API before canonical admission."
+    },
+    {
+      "sourceId": "MM-DATA-134",
+      "date": "2022-05-16",
+      "doi": "10.5281/zenodo.6913666",
+      "recordUrl": "https://zenodo.org/records/6913666",
+      "reportedDescription": "open access data from PASCOE IM line",
+      "reportedDistributionsFromEUDataCatalogue": 184,
+      "notes": "Companion day from the same PASCOE/imPURE line; use as within-family repeatability or day-to-day shift evidence, not an independent machine/mould family."
+    }
+  ],
+  "admissionChecklist": [
+    "verify record-level licence and whether it covers raw file reuse/redistribution",
+    "retrieve authoritative complete file manifests and immutable hashes",
+    "profile CSV headers, units, time base, missingness and cycle duration",
+    "decode all-stages and IRES-label semantics",
+    "identify machine, mould, material and experiment-stage metadata from authoritative project documentation",
+    "preserve 16-May and 17-May as one overlap family unless physical setup independence is proven",
+    "retain third-party raw payload outside this repository unless canonical rights policy explicitly permits storage"
+  ],
+  "canonicalImpact": {"newMeasuredFamilyClaimed": false, "acceptedValuesDelta": 0, "rawThirdPartyPayloadCommitted": false}
+}

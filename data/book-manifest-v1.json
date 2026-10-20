@@ -1,0 +1,193 @@
+{
+  "schema": 1,
+  "bookId": "mouldmaster-book",
+  "title": "MouldMaster Book",
+  "version": "2026.09.14.1",
+  "status": "foundation-source-review",
+  "audience": ["Beginner", "Setter/Technician", "Process Engineer", "Advanced Troubleshooting"],
+  "units": {"primary": "SI", "secondary": "common-imperial-where-useful"},
+  "principles": {
+    "canonicalLessonsAreAutomaticallyVerified": false,
+    "accuracyBeforeCoverage": true,
+    "manufacturerSpecificDataOverridesGenericGuidance": true,
+    "machineMouldMaterialAndSiteLimitsOverrideGenericGuidance": true,
+    "diagnosticHypothesesMustNotBePresentedAsGuaranteedFixes": true,
+    "unsupportedNumericClaimsFailClosed": true,
+    "uncertaintyMustBeVisible": true
+  },
+  "evidenceStates": ["planned", "source-review", "technical-review", "verified", "hold"],
+  "claimClasses": [
+    "fundamental",
+    "standard-defined",
+    "manufacturer-specific",
+    "grade-specific",
+    "machine-specific",
+    "mould-specific",
+    "measured-experimental",
+    "diagnostic-hypothesis"
+  ],
+  "sourceHierarchy": [
+    "applicable standards and official standards bodies",
+    "current material manufacturer processing guides, TDS and SDS",
+    "current machine, controller, hot-runner and mould-component manufacturer documentation",
+    "peer-reviewed polymer and processing research",
+    "established injection-moulding engineering references",
+    "governed MouldMaster canonical lesson content after technical review"
+  ],
+  "releaseRules": {
+    "verifiedChapterRequiresPrimarySources": true,
+    "verifiedChapterRequiresApplicabilityStatement": true,
+    "verifiedChapterRequiresTechnicalReviewRecord": true,
+    "numericClaimRequiresUnits": true,
+    "numericClaimRequiresSourceOrDeclaredMeasuredBasis": true,
+    "gradeSpecificSettingRequiresGradeSpecificSource": true,
+    "safetyClaimRequiresAuthoritativeSafetySource": true,
+    "conflictingSourcesRequireResolutionOrHold": true,
+    "staleOrSupersededSourcesCannotSupportVerifiedStatus": true
+  },
+  "sourceSeeds": [
+    {
+      "id": "ISO-20430-2020",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics and rubber machines — Injection moulding machines — Safety requirements",
+      "url": "https://www.iso.org/standard/68000.html",
+      "scope": "Injection-moulding-machine safety requirements and safe-use information within the standard scope",
+      "checked": "2026-09-14",
+      "currentState": "published-confirmed"
+    },
+    {
+      "id": "ISO-12165-2019",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Tools for moulding — Components of compression and injection moulds and diecasting dies — List of equivalent terms and symbols",
+      "url": "https://www.iso.org/standard/75669.html",
+      "scope": "Professional terminology for mould components and associated symbols",
+      "checked": "2026-09-14",
+      "currentState": "published-confirmed"
+    },
+    {
+      "id": "ASTM-D3641-24",
+      "type": "standard",
+      "issuer": "ASTM International",
+      "title": "Standard Practice for Injection Molding Test Specimens of Thermoplastic Molding and Extrusion Materials",
+      "url": "https://store.astm.org/d3641-24.html",
+      "scope": "General injection-moulding practice for thermoplastic test specimens; establishes that material-specific requirements and supplier guidance take precedence",
+      "checked": "2026-09-14",
+      "currentState": "active"
+    },
+    {
+      "id": "BASF-ULTRAMID-PROCESSING",
+      "type": "manufacturer-processing-guide",
+      "issuer": "BASF",
+      "title": "Ultramid (PA) product brochure — processing by injection moulding",
+      "url": "https://download.basf.com/p1/8a8081c57fd4b609017fdf6d619b22dc/en/Ultramid%3Csup%3E%C2%AE%3Csup%3E_%28PA%29_%E2%80%92_Product_Brochure_Brochure_English.pdf?view=",
+      "scope": "Manufacturer guidance for Ultramid polyamide processing; grade-specific processing data sheets remain controlling for individual products",
+      "checked": "2026-09-14",
+      "currentState": "current-public-manufacturer-document"
+    }
+  ],
+  "parts": [
+    {
+      "id": "foundations",
+      "title": "Part 1 — Foundations",
+      "chapters": [
+        {"id":"what-injection-moulding-is","title":"What injection moulding is and what the process must achieve","level":"Beginner","state":"source-review","claimClasses":["fundamental"],"sourceIds":[]},
+        {"id":"cycle","title":"The moulding cycle: plasticise, fill, transfer, pack, cool and eject","level":"Beginner","state":"source-review","claimClasses":["fundamental"],"sourceIds":[]},
+        {"id":"machine-anatomy","title":"Injection-moulding machine anatomy and terminology","level":"Beginner","state":"source-review","claimClasses":["fundamental","standard-defined"],"sourceIds":["ISO-20430-2020"]},
+        {"id":"mould-anatomy","title":"Mould anatomy and professional terminology","level":"Beginner","state":"source-review","claimClasses":["standard-defined"],"sourceIds":["ISO-12165-2019"]},
+        {"id":"safety-foundations","title":"Safety boundaries, stored energy, heat and guarded motion","level":"Beginner","state":"source-review","claimClasses":["standard-defined","machine-specific"],"sourceIds":["ISO-20430-2020"]}
+      ]
+    },
+    {
+      "id": "materials",
+      "title": "Part 2 — Materials",
+      "chapters": [
+        {"id":"polymer-structure","title":"Polymer structure: amorphous and semi-crystalline behaviour","level":"Beginner","state":"source-review","claimClasses":["fundamental"],"sourceIds":[]},
+        {"id":"rheology","title":"Viscosity, shear rate, temperature and flow behaviour","level":"Setter/Technician","state":"source-review","claimClasses":["fundamental","measured-experimental"],"sourceIds":[]},
+        {"id":"moisture-drying","title":"Moisture, drying and hydrolysis without universal drying numbers","level":"Setter/Technician","state":"source-review","claimClasses":["manufacturer-specific","grade-specific"],"sourceIds":["BASF-ULTRAMID-PROCESSING"]},
+        {"id":"thermal-history","title":"Residence time, thermal history and degradation","level":"Setter/Technician","state":"source-review","claimClasses":["manufacturer-specific","grade-specific","machine-specific"],"sourceIds":["BASF-ULTRAMID-PROCESSING"]},
+        {"id":"material-families","title":"Commodity, engineering and high-performance polymer families","level":"Setter/Technician","state":"source-review","claimClasses":["fundamental","manufacturer-specific"],"sourceIds":[]},
+        {"id":"fillers-additives","title":"Glass fibre, mineral, flame retardants, colour and other modifiers","level":"Process Engineer","state":"source-review","claimClasses":["fundamental","grade-specific"],"sourceIds":[]}
+      ]
+    },
+    {
+      "id": "machine",
+      "title": "Part 3 — The Machine",
+      "chapters": [
+        {"id":"plasticising-unit","title":"Screw, barrel, non-return valve and plasticising","level":"Setter/Technician","state":"source-review","claimClasses":["fundamental","machine-specific"],"sourceIds":[]},
+        {"id":"shot-utilisation","title":"Shot size, cushion, screw position and machine suitability","level":"Setter/Technician","state":"source-review","claimClasses":["machine-specific","measured-experimental"],"sourceIds":[]},
+        {"id":"velocity-pressure","title":"Injection velocity, pressure and machine control","level":"Setter/Technician","state":"source-review","claimClasses":["fundamental","machine-specific"],"sourceIds":[]},
+        {"id":"vp-transfer","title":"Velocity-to-pressure transfer and why transfer strategy matters","level":"Process Engineer","state":"source-review","claimClasses":["fundamental","measured-experimental"],"sourceIds":[]},
+        {"id":"clamp","title":"Clamp force, projected area and mould protection","level":"Setter/Technician","state":"source-review","claimClasses":["fundamental","machine-specific","mould-specific"],"sourceIds":[]}
+      ]
+    },
+    {
+      "id": "mould",
+      "title": "Part 4 — The Mould",
+      "chapters": [
+        {"id":"feed-system","title":"Sprues, runners and gates","level":"Setter/Technician","state":"source-review","claimClasses":["fundamental","mould-specific"],"sourceIds":["ISO-12165-2019"]},
+        {"id":"venting","title":"Venting, trapped gas and burn mechanisms","level":"Setter/Technician","state":"source-review","claimClasses":["fundamental","mould-specific","diagnostic-hypothesis"],"sourceIds":[]},
+        {"id":"cooling","title":"Cooling circuits, heat removal and cycle stability","level":"Process Engineer","state":"source-review","claimClasses":["fundamental","mould-specific","measured-experimental"],"sourceIds":[]},
+        {"id":"ejection-draft","title":"Draft, ejection and part release","level":"Setter/Technician","state":"source-review","claimClasses":["fundamental","mould-specific"],"sourceIds":[]},
+        {"id":"hot-runners","title":"Hot runners and heated feed systems","level":"Process Engineer","state":"source-review","claimClasses":["manufacturer-specific","mould-specific"],"sourceIds":[]}
+      ]
+    },
+    {
+      "id": "process-development",
+      "title": "Part 5 — Building a Process",
+      "chapters": [
+        {"id":"process-baseline","title":"Establishing a safe, documented baseline","level":"Setter/Technician","state":"source-review","claimClasses":["measured-experimental","machine-specific","mould-specific","grade-specific"],"sourceIds":["ASTM-D3641-24"]},
+        {"id":"fill-study","title":"Fill study and separating filling from packing effects","level":"Process Engineer","state":"source-review","claimClasses":["measured-experimental"],"sourceIds":[]},
+        {"id":"pressure-loss","title":"Pressure-loss study and locating restrictions","level":"Process Engineer","state":"source-review","claimClasses":["measured-experimental","diagnostic-hypothesis"],"sourceIds":[]},
+        {"id":"gate-seal","title":"Gate seal, hold time and part response","level":"Process Engineer","state":"source-review","claimClasses":["measured-experimental","mould-specific","grade-specific"],"sourceIds":[]},
+        {"id":"process-window","title":"Process windows, robustness and repeatability","level":"Process Engineer","state":"source-review","claimClasses":["measured-experimental"],"sourceIds":[]},
+        {"id":"documentation","title":"What a defensible process record should capture","level":"Setter/Technician","state":"source-review","claimClasses":["measured-experimental"],"sourceIds":["ASTM-D3641-24"]}
+      ]
+    },
+    {
+      "id": "troubleshooting",
+      "title": "Part 6 — Defects and Troubleshooting",
+      "chapters": [
+        {"id":"diagnostic-method","title":"Troubleshooting by mechanism and evidence, not guesswork","level":"Setter/Technician","state":"source-review","claimClasses":["diagnostic-hypothesis","measured-experimental"],"sourceIds":[]},
+        {"id":"short-shot","title":"Short shots and incomplete filling","level":"Setter/Technician","state":"source-review","claimClasses":["diagnostic-hypothesis"],"sourceIds":[]},
+        {"id":"flash","title":"Flash","level":"Setter/Technician","state":"source-review","claimClasses":["diagnostic-hypothesis"],"sourceIds":[]},
+        {"id":"sink-voids","title":"Sink marks and internal voids","level":"Setter/Technician","state":"source-review","claimClasses":["diagnostic-hypothesis"],"sourceIds":[]},
+        {"id":"splay","title":"Splay, silver streaks and volatile/moisture mechanisms","level":"Setter/Technician","state":"source-review","claimClasses":["diagnostic-hypothesis","grade-specific"],"sourceIds":[]},
+        {"id":"burns","title":"Burn marks, trapped gas and thermal damage","level":"Setter/Technician","state":"source-review","claimClasses":["diagnostic-hypothesis"],"sourceIds":[]},
+        {"id":"weld-lines","title":"Weld lines and flow-front interaction","level":"Process Engineer","state":"source-review","claimClasses":["diagnostic-hypothesis","mould-specific"],"sourceIds":[]},
+        {"id":"warpage","title":"Warpage, shrinkage and orientation","level":"Process Engineer","state":"source-review","claimClasses":["diagnostic-hypothesis","grade-specific","mould-specific"],"sourceIds":[]},
+        {"id":"black-specks","title":"Black specks, contamination and degradation","level":"Setter/Technician","state":"source-review","claimClasses":["diagnostic-hypothesis","machine-specific","grade-specific"],"sourceIds":[]}
+      ]
+    },
+    {
+      "id": "process-engineering",
+      "title": "Part 7 — Process Engineering",
+      "chapters": [
+        {"id":"cavity-pressure","title":"Cavity-pressure measurement and interpretation","level":"Process Engineer","state":"source-review","claimClasses":["measured-experimental","mould-specific"],"sourceIds":[]},
+        {"id":"doe","title":"Designed experiments and separating variables from noise","level":"Process Engineer","state":"source-review","claimClasses":["measured-experimental"],"sourceIds":[]},
+        {"id":"capability","title":"Repeatability, capability and measurement-system limits","level":"Process Engineer","state":"source-review","claimClasses":["measured-experimental"],"sourceIds":[]},
+        {"id":"process-monitoring","title":"Process monitoring, signals and alarm strategy","level":"Process Engineer","state":"source-review","claimClasses":["machine-specific","measured-experimental"],"sourceIds":[]},
+        {"id":"dimensional-stability","title":"Dimensional stability and separating process, material and mould effects","level":"Process Engineer","state":"source-review","claimClasses":["measured-experimental","grade-specific","mould-specific"],"sourceIds":[]}
+      ]
+    },
+    {
+      "id": "advanced",
+      "title": "Part 8 — Advanced Moulding",
+      "chapters": [
+        {"id":"fibre-orientation","title":"Fibre orientation, anisotropy and reinforced materials","level":"Advanced Troubleshooting","state":"source-review","claimClasses":["grade-specific","measured-experimental"],"sourceIds":[]},
+        {"id":"thin-wall","title":"Thin-wall and high-rate filling considerations","level":"Advanced Troubleshooting","state":"source-review","claimClasses":["machine-specific","mould-specific","grade-specific"],"sourceIds":[]},
+        {"id":"multi-cavity","title":"Multi-cavity balance and cavity-to-cavity variation","level":"Advanced Troubleshooting","state":"source-review","claimClasses":["mould-specific","measured-experimental"],"sourceIds":[]},
+        {"id":"high-performance-polymers","title":"High-performance polymers: source-first processing","level":"Advanced Troubleshooting","state":"source-review","claimClasses":["grade-specific","manufacturer-specific"],"sourceIds":[]},
+        {"id":"complex-diagnostics","title":"Complex diagnostics: competing mechanisms and controlled experiments","level":"Advanced Troubleshooting","state":"source-review","claimClasses":["diagnostic-hypothesis","measured-experimental"],"sourceIds":[]}
+      ]
+    }
+  ],
+  "canonicalLessonImport": {
+    "source": "window.MM_DATA.lessons",
+    "currentCountExpected": 120,
+    "role": "candidate educational source material",
+    "automaticBookEvidenceState": "unverified",
+    "rule": "Existing lesson text may inform a Book chapter only after claim-level source review; presence in the app is not evidence of technical correctness."
+  }
+}

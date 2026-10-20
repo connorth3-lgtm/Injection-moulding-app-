@@ -1,0 +1,65 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "reviewed": "2026-09-09",
+  "boundary": "Acquisition targets and publisher-verified study evidence only. Private/request-only datasets remain zero-count until explicit authorization and exact delivered files are profiled.",
+  "sources": [
+    {
+      "id": "MM-DATA-084",
+      "name": "Philips/CERTH six-machine injection-moulding predictive-maintenance dataset",
+      "priority": "P0-REQUEST",
+      "sourceType": "private_industrial_machine_health_quality",
+      "independenceFamily": "Philips_Drachten_BOOST40_six_IMM",
+      "source": "https://doi.org/10.3389/frai.2020.578152",
+      "reportedScale": {"machines": 6, "labelledMachines": 4, "unlabelledMachines": 2},
+      "reportedSignals": ["cycle time", "hold/injection pressure", "melt cushion", "hydraulic pressure", "switchover position/pressure", "clamp force", "mould-protection time", "oil temperature", "barrel-zone temperatures", "cooling time", "screw position", "back pressure", "plasticizing time", "heating energy", "motor energy", "total energy", "bad-shot/quality indicators"],
+      "physicalContext": "Production of plastic components for electric shavers; anomalies correspond to bad shots/rejected products.",
+      "access": {"state": "private-request-only", "contactRoute": "vrousop@iti.gr", "publisherStatement": "private and anonymized; access requests directed to corresponding author"},
+      "value": "One of the strongest machine-health targets found: multi-machine industrial data with explicit bad-shot labels and machine/process/energy variables.",
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "authorizationRequired": true},
+      "nextAction": "Request controlled research access or owner-side aggregate profiling with data-owner authorization, retention/deletion terms and non-identifying output rules."
+    },
+    {
+      "id": "MM-DATA-085",
+      "name": "ZHAW/Kistler multi-mould cavity-pressure anomaly-monitoring corpus",
+      "priority": "P0-REQUEST",
+      "sourceType": "industrial_cavity_pressure_anomaly_quality",
+      "independenceFamily": "ZHAW_Kistler_DISTRAL_IMM",
+      "source": "https://doi.org/10.1109/SDS60720.2024.00027",
+      "repositoryRecord": "https://doi.org/10.21256/zhaw-30430",
+      "reportedAcquisition": {"cavitySensorsPerMould": "1-8 Kistler pressure sensors", "nativeSamplingHz": 16000, "cycleDurationSeconds": "0.6-20", "storedMaxPointsPerTrace": 1000},
+      "reportedDatasetShape": {
+        "D0_trainValidationPressureCurves": 6448,
+        "D1_test": 2905,
+        "D2_test": 5104,
+        "D3_test": 4240,
+        "D4_test": 3024,
+        "D5_test": 260,
+        "D6_test": 260,
+        "labels": "EO, visual inspection, or physical measurements where available"
+      },
+      "signalsOutputs": ["cavity pressure time series", "mould ID", "cavity ID", "time-of-day metadata", "binary quality/anomaly labels", "holding pressure", "mould temperature", "injection-speed perturbation context"],
+      "access": {"state": "study-public-raw-corpus-not-located", "note": "The accepted paper is public; a separately downloadable raw D0-D6 corpus was not located during this pass."},
+      "value": "Large real-world pressure/anomaly corpus with multiple moulds/cavities and physical/visual labels; particularly valuable for drift, anomaly and transfer-learning validation.",
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0},
+      "nextAction": "Contact the DISTRAL/ZHAW/Kistler authors for a rights-cleared research release or owner-side profile of D0-D6."
+    },
+    {
+      "id": "MM-DATA-086",
+      "name": "Four-cavity gate-freeze and real-time part-weight pressure study",
+      "priority": "P0",
+      "sourceType": "publisher_verified_primary_measured_article",
+      "independenceFamily": "BME_Horvath_Kovacs_gate_freeze_weight_2025",
+      "source": "https://doi.org/10.1002/pen.27078",
+      "reportedSetup": {"mould": "four-cavity cold-runner", "materials": ["ABS", "PP"], "inMouldSensors": "post-gate and end-of-cavity pressure sensing", "physicalOutcome": "individual/part weight"},
+      "measuredEvidence": ["cavity-pressure integral", "pressure peak", "holding pressure", "holding time", "gate freeze-off", "part weight"],
+      "reportedGateFreezeContext": {"ABS_seconds": 4, "PP_seconds": 7},
+      "reportedModelContext": "Pressure-integral/peak-based weight estimation achieved R2 0.99 and below 0.96% maximum reported error over the tested 200-600 bar holding-pressure range.",
+      "value": "Strong independent gate-seal/packing/part-mass evidence that can support online gate-freeze learning and pressure-quality interpretation.",
+      "access": {"state": "article-open-raw-dataset-not-located"},
+      "governance": {"rawPayloadCommitted": false, "canonicalMeasuredCountIncrement": 0, "universalRecipeAllowed": false},
+      "nextAction": "Seek author-released raw pressure/weight cycles; until then retain only publisher-verified aggregate evidence."
+    }
+  ],
+  "boundaryNote": "Reported process settings and gate-freeze values are experiment-specific evidence, not universal production settings."
+}

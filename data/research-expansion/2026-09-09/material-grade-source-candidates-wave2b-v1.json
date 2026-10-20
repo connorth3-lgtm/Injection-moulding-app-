@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "reviewed": "2026-09-09",
+  "purpose": "Additional manufacturer-controlled exact-grade sources linked directly to measured injection-moulding studies/datasets. These remain source-reviewed staging until exact PDS bytes are fingerprinted and material-grade-v2 semantic validation passes.",
+  "grades": [
+    {
+      "id": "MAT-SRC-006",
+      "manufacturer": "Borealis",
+      "grade": "HE125MO",
+      "polymerFamily": "PP homopolymer",
+      "source": "https://www.borealisgroup.com/products/product-catalogue/he125mo-1",
+      "sourceKind": "manufacturer-product-page-with-PDS",
+      "manufacturerCurrentGeneralProperties": {"meltFlowRate": "12 g/10min (230 C/2.16 kg)", "density": "905 kg/m3"},
+      "manufacturerPositioning": ["injection moulding", "good flow", "high stiffness", "high-speed injection moulding", "easy-flow articles"],
+      "availablePdsObserved": {"revisionDate": "2023-01-27", "edition": "10", "documentIncludes": ["ISO-conditioned physical/mechanical properties", "melt-temperature guidance", "holding-pressure guidance", "mould-temperature guidance", "shrinkage context"]},
+      "linkedCanonicalDataset": "probayes-doptimal-v1",
+      "value": "Exact PP grade identity for the 303-cycle/28-point ProBayes d-optimal measured family.",
+      "provenance": {"stage": "source-reviewed-staging", "retrievedAt": "2026-09-09", "fingerprint": null},
+      "materialGradeV2Ready": false,
+      "nextAction": "Download the current authoritative PDS, SHA-256 fingerprint exact bytes, preserve edition/regional identity and encode test-conditioned values with supplier-guidance semantics only."
+    },
+    {
+      "id": "MAT-SRC-007",
+      "manufacturer": "Borealis",
+      "grade": "BJ368MO",
+      "polymerFamily": "PP heterophasic copolymer",
+      "source": "https://www.borealisgroup.com/products/product-catalogue/bj368mo",
+      "sourceKind": "manufacturer-product-page-with-PDS",
+      "manufacturerCurrentGeneralProperties": {"meltFlowRate": "70 g/10min (230 C/2.16 kg)", "density": "905 kg/m3"},
+      "manufacturerPositioning": ["good flow", "high stiffness", "high impact strength", "Borealis nucleation technology", "antistatic performance", "mould release", "cycle-time-reduction potential"],
+      "linkedMeasuredEvidence": "doi:10.3390/polym16081057",
+      "value": "Exact PP grade used in the publisher-verified hot-runner thin-wall sensor/quality study.",
+      "provenance": {"stage": "source-reviewed-staging", "retrievedAt": "2026-09-09", "fingerprint": null},
+      "materialGradeV2Ready": false,
+      "nextAction": "Retrieve and fingerprint the Borealis PDS; link only exact-grade properties/guidance to the hot-runner evidence family without promoting study settings to supplier limits."
+    }
+  ],
+  "boundary": "All processing values remain exact-grade supplier guidance with test/document context, never universal machine recipes."
+}

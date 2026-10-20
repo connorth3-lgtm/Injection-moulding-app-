@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 620" role="img" aria-labelledby="title desc">
+<title id="title">Complex diagnostics evidence ledger</title>
+<desc id="desc">Conceptual evidence-ledger diagram connecting one observed symptom to three competing hypotheses, predicted observations, tests, contradictions and updated confidence.</desc>
+<g fill="none" stroke="currentColor" stroke-width="3">
+<rect x="390" y="35" width="300" height="70" rx="12"/>
+<rect x="60" y="170" width="260" height="90" rx="12"/><rect x="410" y="170" width="260" height="90" rx="12"/><rect x="760" y="170" width="260" height="90" rx="12"/>
+<rect x="60" y="345" width="260" height="115" rx="12"/><rect x="410" y="345" width="260" height="115" rx="12"/><rect x="760" y="345" width="260" height="115" rx="12"/>
+<path d="M540 105L190 170M540 105v65M540 105l350 65"/>
+<path d="M190 260v85M540 260v85M890 260v85"/>
+<path d="M190 460c120 100 580 100 700 0"/>
+</g>
+<g font-family="system-ui,sans-serif" font-size="22" text-anchor="middle">
+<text x="540" y="78">Observed symptom + boundary</text>
+<text x="190" y="205">Hypothesis A</text><text x="190" y="235">Prediction</text>
+<text x="540" y="205">Hypothesis B</text><text x="540" y="235">Prediction</text>
+<text x="890" y="205">Hypothesis C</text><text x="890" y="235">Prediction</text>
+<text x="190" y="385">Discriminating test</text><text x="190" y="420">Result / contradiction</text>
+<text x="540" y="385">Discriminating test</text><text x="540" y="420">Result / contradiction</text>
+<text x="890" y="385">Discriminating test</text><text x="890" y="420">Result / contradiction</text>
+<text x="540" y="560">Update confidence • preserve uncertainty • define next safe test</text>
+</g>
+</svg>

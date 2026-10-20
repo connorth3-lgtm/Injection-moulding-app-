@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "status": "completed-public-measured-benchmark",
+  "completed_date": "2026-08-29",
+  "source": {
+    "datasetId": "openmms-t4g",
+    "title": "OpenMMS-T4G real mould-monitoring case data",
+    "repository": "https://github.com/TEPGomes/OpenMMS-T4G",
+    "repositoryCommit": "cfa6e23c7fc02a645e31e06d299021cb0a3ce3e7",
+    "license": "BSD-3-Clause",
+    "peerReviewedCompanion": "10.3390/s23073569",
+    "filePath": "Real_World_Test/Case_Study_Raw_Data.csv",
+    "gitBlobSha1": "d035660bce92f21954818a6379326d2897eebae8",
+    "sizeBytes": 2872573,
+    "sha256": "aa78e659bc4b7a0361882d2eaa516a0010bfb573d413a3600baad98aae397bf6"
+  },
+  "retrieval": {
+    "workflowRunId": 33218375066,
+    "aggregateArtifactId": 9704241444,
+    "aggregateArtifactDigest": "sha256:07cb40230130ae93472ab5441e274caeee0f2e278f091dc838e1ae3eea4ca537",
+    "mode": "credential-free pinned GitHub raw-file retrieval",
+    "rawPublisherFileCommitted": false,
+    "rawRowsUploadedAsArtifact": false,
+    "rawRowsOrCellValuesEmitted": false
+  },
+  "measurement_profile": {
+    "rows": 29808,
+    "columns": 12,
+    "headerSchemaExact": true,
+    "measuredSignalColumns": 10,
+    "acceptedMeasuredTimeSeriesSamples": 298080,
+    "signals": [
+      {"column":"T1","semantic":"temperature-1","unit":"degC","module":"temperature-pressure-force"},
+      {"column":"T2","semantic":"temperature-2","unit":"degC","module":"temperature-pressure-force"},
+      {"column":"P","semantic":"cavity-pressure","unit":"bar","module":"temperature-pressure-force"},
+      {"column":"F","semantic":"extraction-force","unit":"N","module":"temperature-pressure-force"},
+      {"column":"Ax","semantic":"acceleration-x","unit":"g","module":"inertial"},
+      {"column":"Ay","semantic":"acceleration-y","unit":"g","module":"inertial"},
+      {"column":"Az","semantic":"acceleration-z","unit":"g","module":"inertial"},
+      {"column":"Gx","semantic":"angular-velocity-x","unit":"dps/1000","module":"inertial"},
+      {"column":"Gy","semantic":"angular-velocity-y","unit":"dps/1000","module":"inertial"},
+      {"column":"Gz","semantic":"angular-velocity-z","unit":"dps/1000","module":"inertial"}
+    ],
+    "time_bases": {
+      "t": {
+        "unit": "s",
+        "module": "temperature-pressure-force",
+        "nonNull": 29808,
+        "monotonicNonDecreasing": true,
+        "strictlyIncreasingFraction": 1.0,
+        "medianPositiveStepSeconds": 0.0953855000002477
+      },
+      "t2": {
+        "unit": "s",
+        "module": "inertial",
+        "nonNull": 29808,
+        "monotonicNonDecreasing": true,
+        "strictlyIncreasingFraction": 1.0,
+        "medianPositiveStepSeconds": 0.09620139999969979
+      }
+    },
+    "sourceCodeSchemaBasis": "The pinned OpenMMS source code defines Time [s], Temperature 1/2 [degC], Pressure [bar], Force [N], Acceleration [g] and Angular velocity [dps/1000], and writes a second time base t2 for the inertial module when both modules operate."
+  },
+  "case_study_context": {
+    "paperReportedCycles": 110,
+    "paperReportedNormalCycles": 54,
+    "paperReportedVisualizationRateHz": 10,
+    "faultContext": "An extraction-system fault was simulated after the first 54 normal cycles; the abnormal condition was recreated by repeated retightening during the case study.",
+    "productionGeneralizationAllowed": false
+  },
+  "evidence_gaps": [
+    "The case-study CSV is one experimental monitoring campaign and does not establish a universal production process window.",
+    "The 29,808 rows are time samples across two synchronously recorded module time bases; they must not be relabelled as 29,808 moulding cycles.",
+    "The simulated extraction fault is valid condition-monitoring evidence for this experiment but is not by itself sufficient to promote a universal defect or machine-health mechanism."
+  ],
+  "boundary": "This result establishes one fully profiled real measured mould-monitoring dataset and 298,080 real sensor values for MouldMaster. It does not authorize universal process recipes, defect diagnoses or production changes."
+}

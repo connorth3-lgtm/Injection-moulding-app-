@@ -1,0 +1,391 @@
+const {test,expect}=require('@playwright/test');
+const BASE='http://127.0.0.1:4173/index.html';
+
+function learner(id,name){
+  return {id,name,role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},certificates:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+}
+async function boot(page,active='reader-a'){
+  await page.addInitScript(({active,a,b})=>{
+    localStorage.clear();
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:active,users:{'reader-a':a,'reader-b':b}}));
+  },{active,a:learner('reader-a','Reader A'),b:learner('reader-b','Reader B')});
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED)&&Boolean(window.MMBook?.openReaderChapter)&&Boolean(window.MM_LEARNER_SCOPE)&&!document.getElementById('mmBootstrap'));
+}
+async function scrollAnchor(page,locator,top=96){
+  await locator.evaluate(async(el,documentTargetTop)=>{
+    const documentRoot=document.scrollingElement||document.documentElement;
+    const settle=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    for(let pass=0;pass<8;pass++){
+      let root=documentRoot;
+      for(let node=el.parentElement;node&&node!==document.body;node=node.parentElement){
+        const style=getComputedStyle(node),overflow=String(style.overflowY||'').toLowerCase();
+        if(/^(auto|scroll|overlay)$/.test(overflow)&&(Number(node.scrollHeight)||0)>(Number(node.clientHeight)||0)+1){root=node;break;}
+      }
+      const documentScroll=root===documentRoot||root===document.documentElement||root===document.body;
+      const targetTop=documentScroll?documentTargetTop:Math.max(0,Math.round(root.getBoundingClientRect().top))+16;
+      const delta=el.getBoundingClientRect().top-targetTop;
+      if(Math.abs(delta)<=2)break;
+      if(documentScroll)window.scrollBy(0,delta);
+      else root.scrollTop=(Number(root.scrollTop)||0)+delta;
+      await settle();
+    }
+  },top);
+  await page.waitForTimeout(220);
+}
+
+async function activate(page,id){
+  await page.evaluate(id=>{
+    if(typeof window.switchUser!=='function')throw new Error('learner switch API unavailable');
+    window.switchUser(id);
+    window.MM_APP_SHELL?.dashboard?.requestCompose?.();
+  },id);
+  await page.waitForFunction(id=>{
+    const store=JSON.parse(localStorage.getItem('mouldmasterProDB')||'{}');
+    return store.activeUser===id&&Boolean(window.MMBook?.getResume)&&!document.getElementById('mmBootstrap');
+  },id);
+}
+
+test('Home Book opens on first load and Keep Reading is learner scoped',async({page})=>{
+  await boot(page);
+  const homeBook=page.locator('#dashboard [data-mm-home-book]');
+  await expect(homeBook).toBeVisible();
+  await expect(homeBook.getByRole('button',{name:'Open Book'})).toBeVisible();
+  await homeBook.getByRole('button',{name:'Open Book'}).click();
+  await expect(page.locator('#mmBookView')).toBeVisible();
+
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r01'));
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  const marker=page.locator('[data-mm-book-reader] [data-mm-book-anchor]').nth(3);
+  await expect(marker).toBeVisible();
+  await marker.evaluate(el=>el.scrollIntoView({block:'start',behavior:'auto'}));
+  await page.waitForTimeout(250);
+  const aKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
+  await page.getByRole('button',{name:'Home'}).first().click();
+  await expect(page.locator('#dashboard [data-mm-home-book]')).toContainText('Keep reading');
+  const aResume=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),aKey);
+  expect(aResume.id).toBe('r01');
+  expect(aResume.anchorId).toBeTruthy();
+
+  await activate(page,'reader-b');
+  await expect(page.locator('#dashboard [data-mm-home-book]')).toContainText('Injection moulding reference');
+  expect(await page.evaluate(()=>window.MMBook.getResume())).toBeNull();
+  const bKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
+  expect(bKey).not.toBe(aKey);
+});
+
+test('Keep Reading prioritises stable anchor ID over text/index fallback',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r08'));
+  const heads=page.locator('[data-mm-book-reader] [data-mm-book-anchor]');
+  await expect(heads.nth(4)).toBeVisible();
+  const target=heads.nth(4);
+  const targetAnchor=await target.getAttribute('data-mm-book-anchor');
+  const misleadingText=await heads.nth(1).innerText();
+  expect(targetAnchor).toBeTruthy();
+  await scrollAnchor(page,target);
+  await page.getByRole('button',{name:'Home'}).first().click();
+  const key=await page.evaluate(()=>window.MMBook.resumeStorageKey());
+  await page.evaluate(({key,misleadingText,targetAnchor})=>{
+    const saved=JSON.parse(localStorage.getItem(key));
+    saved.anchorId=targetAnchor;
+    saved.anchorIndex=1;
+    saved.anchorText=misleadingText;
+    localStorage.setItem(key,JSON.stringify(saved));
+  },{key,misleadingText,targetAnchor});
+
+  await page.locator('#dashboard [data-mm-home-book]').getByRole('button',{name:'Keep Reading'}).click();
+  const restored=page.locator(`[data-mm-book-reader] [data-mm-book-anchor="${targetAnchor}"]`);
+  await expect(restored).toBeVisible();
+  await page.waitForFunction(anchor=>Math.abs(document.querySelector(`[data-mm-book-reader] [data-mm-book-anchor="${anchor}"]`)?.getBoundingClientRect().top||9999)<180,targetAnchor);
+  const restoredTop=await restored.evaluate(el=>Math.round(el.getBoundingClientRect().top));
+  expect(Math.abs(restoredTop)).toBeLessThan(180);
+});
+
+test('Keep Reading survives Material Atlas hydration without anchor drift',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r03'));
+  const atlasHeading=page.getByRole('heading',{name:'Complete Material Data Atlas',exact:true});
+  await expect(atlasHeading).toBeVisible();
+  await expect(atlasHeading).toHaveAttribute('data-mm-book-anchor','module:material-families:atlas');
+  await page.waitForFunction(()=>document.querySelector('[data-mm-book-material-atlas]')&&!document.querySelector('[data-mm-book-material-status]'));
+  await expect(atlasHeading).toHaveAttribute('data-mm-book-anchor','module:material-families:atlas');
+  await scrollAnchor(page,atlasHeading);
+  const beforeTop=await atlasHeading.evaluate(el=>Math.round(el.getBoundingClientRect().top));
+  await page.getByRole('button',{name:'Home'}).first().click();
+  const saved=await page.evaluate(()=>window.MMBook.getResume());
+  expect(saved.anchorId).toBe('module:material-families:atlas');
+  expect(saved.anchorOffsetId).toBe(saved.anchorId);
+  await page.locator('#dashboard [data-mm-home-book]').getByRole('button',{name:'Keep Reading'}).click();
+  await page.waitForFunction(()=>document.querySelector('[data-mm-book-material-atlas]')&&!document.querySelector('[data-mm-book-material-status]'));
+  await expect(atlasHeading).toHaveAttribute('data-mm-book-anchor','module:material-families:atlas');
+  await page.waitForFunction(()=>Math.abs(document.querySelector('[data-mm-book-anchor="module:material-families:atlas"]')?.getBoundingClientRect().top||9999)<180);
+  const afterTop=await atlasHeading.evaluate(el=>Math.round(el.getBoundingClientRect().top));
+  expect(Math.abs(afterTop-beforeTop)).toBeLessThan(140);
+});
+
+test('Keep Reading restores, stale IDs fail to contents, and learner reset clears only active resume',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r02'));
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  const resumeTarget=page.locator('[data-mm-book-reader] [data-mm-book-anchor]').nth(4);
+  await expect(resumeTarget).toBeVisible();
+  const resumeAnchor=await resumeTarget.getAttribute('data-mm-book-anchor');
+  await scrollAnchor(page,resumeTarget);
+  const beforeTop=await resumeTarget.evaluate(el=>Math.round(el.getBoundingClientRect().top));
+  const aKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
+  await page.getByRole('button',{name:'Home'}).first().click();
+
+  await page.locator('#dashboard [data-mm-home-book]').getByRole('button',{name:'Keep Reading'}).click();
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  expect(await page.evaluate(()=>window.MMBook.getResume().id)).toBe('r02');
+  const restoredTarget=page.locator(`[data-mm-book-reader] [data-mm-book-anchor="${resumeAnchor}"]`);
+  await expect(restoredTarget).toBeVisible();
+  await page.waitForFunction(anchor=>Math.abs(document.querySelector(`[data-mm-book-reader] [data-mm-book-anchor="${anchor}"]`)?.getBoundingClientRect().top||9999)<180,resumeAnchor);
+  const restoredTop=await restoredTarget.evaluate(el=>Math.round(el.getBoundingClientRect().top));
+  expect(Math.abs(restoredTop-beforeTop)).toBeLessThan(160);
+
+  await activate(page,'reader-b');
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r03'));
+  const bKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
+  await page.getByRole('button',{name:'Home'}).first().click();
+  page.once('dialog',d=>d.accept());
+  await page.evaluate(()=>window.resetData());
+  await expect(page.locator('#dashboard [data-mm-home-book]')).toContainText('Injection moulding reference');
+  await expect(page.locator('#dashboard [data-mm-home-book]').getByRole('button',{name:'Open Book'})).toBeVisible();
+  expect(await page.evaluate(key=>localStorage.getItem(key),bKey)).toBeNull();
+  expect(await page.evaluate(key=>localStorage.getItem(key),aKey)).not.toBeNull();
+
+  await activate(page,'reader-a');
+  await page.evaluate(()=>{
+    const key=window.MMBook.resumeStorageKey();
+    const value=JSON.parse(localStorage.getItem(key));
+    value.id='removed-reader-id';
+    localStorage.setItem(key,JSON.stringify(value));
+  });
+  const result=await page.evaluate(()=>window.MMBook.openResume());
+  expect(result).toBeFalsy();
+  await expect(page.locator('[data-mm-book-contents]')).toBeVisible();
+  expect(await page.evaluate(()=>window.MMBook.getResume())).toBeNull();
+});
+
+
+
+test('Book delayed scroll saves cannot cross learner profiles',async({page})=>{
+  await boot(page,'reader-a');
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r08'));
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+
+  const aKey=await page.evaluate(()=>window.MMBook.resumeStorageKey());
+  const beforeA=await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),aKey);
+  expect(beforeA.id).toBe('r08');
+
+  // Core profile changes do not inherently navigate away from the Book view.
+  // A debounced scroll after switching must not persist A's reading state as B.
+  const bKey=await page.evaluate(()=>{
+    switchUser('reader-b');
+    return window.MMBook.resumeStorageKey();
+  });
+  expect(bKey).not.toBe(aKey);
+  await page.evaluate(()=>{
+    window.scrollTo(0,700);
+    window.dispatchEvent(new Event('scroll'));
+  });
+  await page.waitForTimeout(260);
+  expect(await page.evaluate(key=>localStorage.getItem(key),bKey)).toBeNull();
+  expect((await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),aKey)).id).toBe('r08');
+
+  // Once B explicitly starts reading, B gets a separate bookmark and A stays.
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r01'));
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  expect((await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),bKey)).id).toBe('r01');
+  expect((await page.evaluate(key=>JSON.parse(localStorage.getItem(key)),aKey)).id).toBe('r08');
+});
+
+
+test('Book reading bookmark survives immediate Contents exit and Listening scroll',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r08'));
+  const anchors=page.locator('[data-mm-book-reader] [data-mm-book-anchor]');
+  await expect(anchors.nth(6)).toBeVisible();
+  const chosen=await anchors.nth(6).getAttribute('data-mm-book-anchor');
+  expect(chosen).toBeTruthy();
+  // Move and navigate in the same browser task, before the 180ms scroll debounce.
+  await page.evaluate(()=>{
+    const target=document.querySelectorAll('[data-mm-book-reader] [data-mm-book-anchor]')[6];
+    target.scrollIntoView({block:'start',behavior:'instant'});
+    window.dispatchEvent(new Event('scroll'));
+    document.querySelector('[data-mm-book-back]').click();
+  });
+  await expect(page.locator('[data-mm-book-contents]')).toBeVisible();
+  const saved=await page.evaluate(()=>window.MMBook.getResume());
+  expect(saved.id).toBe('r08');
+  expect(saved.anchorId).toBe(chosen);
+
+  // Speech availability is device-dependent. Stub only its playback adapter:
+  // the Book's verified module gating and reading state remain production code.
+  await page.evaluate(()=>{
+    const panel=document.createElement('div');
+    panel.className='mm-read-aloud';
+    panel.innerHTML='<details><summary>Speech test adapter</summary><button type="button" data-mm-read="play">Play</button></details>';
+    document.body.prepend(panel);
+    window.MMReadAloud={supported:true,stop(){},refresh(){},startBookFromGesture(){return true}};
+    window.MMBook.startVerifiedListening();
+  });
+  await expect(page.locator('#mmBookView [data-mm-book-reader]')).toBeVisible();
+  await expect(page.locator('#mmBookView [data-mm-book-reader] h2').first()).toBeVisible();
+  await page.evaluate(()=>{
+    const reader=document.querySelector('#mmBookView [data-mm-book-reader]');
+    reader.scrollTop=500;
+    window.scrollTo(0,700);
+    window.dispatchEvent(new Event('scroll'));
+    reader.dispatchEvent(new Event('scroll'));
+  });
+  await page.waitForTimeout(250);
+  const after=await page.evaluate(()=>window.MMBook.getResume());
+  expect(after.id).toBe(saved.id);
+  expect(after.anchorId).toBe(saved.anchorId);
+  expect(after.scrollY).toBe(saved.scrollY);
+});
+
+test('Book Contents returns keyboard focus to the originating reader and module entries',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.open());
+  const chapter=page.locator('.mm-book-toc > li > button[data-mm-book-reader-chapter-open="r08"]');
+  const contents=page.locator('[data-mm-book-contents]');
+  await expect(chapter).toBeVisible();
+  await chapter.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  const back=page.locator('[data-mm-book-reader] > button[data-mm-book-back]').first();
+  await back.focus();
+  await expect(back).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(contents).toBeVisible();
+  await expect(chapter).toBeFocused();
+  await expect(chapter).toBeInViewport();
+
+  const index=page.locator('details.mm-book-governed-index');
+  await index.locator('summary').click();
+  const moduleButton=page.locator('[data-mm-book-chapter]').first();
+  await moduleButton.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  const moduleBack=page.locator('[data-mm-book-reader] > button[data-mm-book-back]').first();
+  await moduleBack.focus();
+  await expect(moduleBack).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(contents).toBeVisible();
+  await expect(moduleButton).toBeFocused();
+  await expect(moduleButton).toBeInViewport();
+});
+
+test('older compatible release bookmarks migrate after chapter validation and remain learner scoped',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r08'));
+  const anchor=page.locator('[data-mm-book-reader] [data-mm-book-anchor]').nth(4);
+  await expect(anchor).toBeVisible();
+  const anchorId=await anchor.getAttribute('data-mm-book-anchor');
+  await scrollAnchor(page,anchor);
+  await page.getByRole('button',{name:'Home'}).first().click();
+
+  const key=await page.evaluate(()=>{
+    const scoped=window.MMBook.resumeStorageKey();
+    const old=JSON.parse(localStorage.getItem(scoped));
+    old.bookRelease='2026.10.06.4';
+    localStorage.setItem(scoped,JSON.stringify(old));
+    return scoped;
+  });
+  expect((await page.evaluate(()=>window.MMBook.getResume())).bookRelease).toBe('2026.10.06.4');
+  expect(await page.evaluate(()=>window.MMBook.openResume())).toBeTruthy();
+  await expect(page.locator('[data-mm-book-reader-chapter="r08"]')).toBeVisible();
+  await expect(page.locator('[data-mm-book-anchor="'+anchorId+'"]')).toBeVisible();
+  const migrated=await page.evaluate(()=>window.MMBook.getResume());
+  expect(migrated.bookRelease).toBe(await page.evaluate(()=>window.MMBook.version));
+  expect(migrated.anchorId).toBe(anchorId);
+
+  await activate(page,'reader-b');
+  expect(await page.evaluate(()=>window.MMBook.getResume())).toBeNull();
+  await activate(page,'reader-a');
+  expect(await page.evaluate(key=>JSON.parse(localStorage.getItem(key))?.bookRelease,key)).toBe(migrated.bookRelease);
+});
+
+test('upgrade cannot silently use a changed heading index when the saved anchor is gone',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r08'));
+  await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
+  await page.getByRole('button',{name:'Home'}).first().click();
+  const oldKey=await page.evaluate(()=>{
+    const key=window.MMBook.resumeStorageKey();
+    const old=JSON.parse(localStorage.getItem(key));
+    old.bookRelease='2026.10.06.4';
+    old.anchorId='module:removed-legacy-module:section:8';
+    old.anchorIndex=6;
+    old.anchorText='Removed heading from prior edition';
+    old.anchorOffset=150;
+    old.anchorOffsetId=old.anchorId;
+    old.scrollY=900;
+    localStorage.setItem(key,JSON.stringify(old));
+    return key;
+  });
+  const events=await page.evaluate(async()=>{
+    const restored=new Promise(resolve=>window.addEventListener('mm:book-resume-restored',event=>resolve(event.detail),{once:true}));
+    const success=await window.MMBook.openResume();
+    return {success,detail:await restored};
+  });
+  expect(events.success).toBeTruthy();
+  expect(events.detail.anchorId).toBe('');
+  const current=await page.evaluate(()=>window.MMBook.getResume());
+  expect(current.bookRelease).toBe(await page.evaluate(()=>window.MMBook.version));
+  expect(current.anchorId).not.toBe('module:removed-legacy-module:section:8');
+  expect(await page.evaluate(key=>localStorage.getItem(key)!==null,oldKey)).toBe(true);
+});
+
+
+test('Book listening return focuses the original Contents listening control',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.open());
+  const listen=page.locator('#mmBookView [data-mm-book-mode="listen"]');
+  await expect(listen).toBeEnabled();
+  await page.evaluate(()=>{
+    const panel=document.createElement('div');
+    panel.className='mm-read-aloud';
+    panel.innerHTML='<details><summary>Speech test adapter</summary><button type="button" data-mm-read="play">Play</button></details>';
+    document.body.prepend(panel);
+    window.MMReadAloud={supported:true,stop(){},refresh(){},startBookFromGesture(){return true}};
+  });
+  await listen.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#mmBookView [data-mm-book-reader]')).toBeVisible();
+  const back=page.locator('#mmBookView [data-mm-book-reader] > button[data-mm-book-back]').first();
+  await back.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('#mmBookView [data-mm-book-contents]')).toBeVisible();
+  await expect(listen).toBeFocused();
+});
+
+
+test('Book reader page turns stop old speech before showing the next chapter',async({page})=>{
+  await boot(page);
+  await page.evaluate(()=>window.MMBook.openReaderChapter('r01'));
+  const book=page.locator('#mmBookView');
+  const reader=book.locator('[data-mm-book-reader]');
+  await expect(reader.locator('[data-mm-book-reader-chapter="r01"]')).toBeVisible();
+  const turn=reader.locator('[data-mm-book-page-turn]').first();
+  await expect(turn).toBeVisible();
+  await page.evaluate(()=>{
+    window.__mmBookSpeechStops=0;
+    window.MMReadAloud={
+      supported:true,
+      stop(){window.__mmBookSpeechStops++;}
+    };
+    const details=document.createElement('details');
+    details.className='mm-book-qa-audio';
+    details.innerHTML='<summary>Audio active</summary>';
+    details.open=true;
+    document.querySelector('.mm-read-aloud')?.appendChild(details);
+  });
+  await turn.click();
+  await expect(reader.locator('[data-mm-book-reader-chapter="r02"]')).toBeVisible();
+  expect(await page.evaluate(()=>window.__mmBookSpeechStops)).toBeGreaterThanOrEqual(1);
+});

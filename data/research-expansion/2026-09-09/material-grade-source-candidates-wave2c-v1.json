@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "boundary": "Manufacturer-controlled exact-grade source candidate only. Promotion to material-grade-v2 requires retrieval date, exact document revision, immutable fingerprint, lifecycle review and field-by-field semantic validation.",
+  "entries": [
+    {
+      "id": "MAT-SRC-008",
+      "manufacturer": "Victrex",
+      "grade": "VICTREX PEEK 450G",
+      "polymerFamily": "PEEK",
+      "sourceType": "manufacturer-product-page-and-datasheet",
+      "source": "https://www.victrex.com/en/products/polymers/peek-polymers/450g",
+      "datasheetIndex": "https://www.victrex.com/en/datasheets",
+      "manufacturerDescription": "Standard-flow, general-purpose unfilled PEEK granule grade for injection moulding and extrusion.",
+      "verifiedPublishedProperties": [
+        "density",
+        "moulding shrinkage flow/transverse",
+        "water absorption",
+        "tensile modulus",
+        "tensile stress",
+        "flexural strength/modulus",
+        "impact strength",
+        "melt viscosity",
+        "melt flow rate",
+        "melting temperature",
+        "crystallisation temperature"
+      ],
+      "researchCrossLink": "MM-DATA-056",
+      "value": "Closes exact-grade provenance for the PEEK 450G crystallisation/material-characterisation research family.",
+      "promotionStatus": "candidate-needs-exact-pdf-revision-and-sha256",
+      "productionRecipe": false,
+      "limitations": "Typical manufacturer values and processing guidance must retain test conditions and must not be presented as universal site settings."
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "version": "2026.08.30.1",
+  "reviewed": "2026-08-30",
+  "purpose": "Public-source recheck of the four next-step measured-data actions after PR #103. This ledger is fail-closed: metadata, machine-family conventions, sensor model capabilities and inferred units never increase accepted counts.",
+  "canonicalEffectiveBefore": {
+    "inventoriedMeasuredSources": 34,
+    "automatedIngestionAllowed": 21,
+    "fullyProfiledMeasuredFamilies": 17,
+    "acceptedInjectionProcessTimeSeriesValues": 85569824
+  },
+  "actions": [
+    {
+      "id": "discovery-queue-cleanup",
+      "status": "completed",
+      "result": "four already-promoted discoveries removed from the active queue; AD-STGN remains the only active discovery",
+      "countDelta": 0,
+      "governanceBoundary": "queue membership is workflow state, not measured-data acceptance"
+    },
+    {
+      "id": "cross-process-upper-pressure-state-recheck",
+      "datasetId": "cross-process-chain-17240390",
+      "status": "blocked-no-authoritative-unit-or-state-dictionary",
+      "publicChecks": [
+        {
+          "source": "https://zenodo.org/records/17240390",
+          "finding": "publisher still describes upper injection-moulding measurements as pressure target/actual, velocity, volume and state, and ~1 kHz sampling, without an engineering unit for pressure or a state-code mapping"
+        },
+        {
+          "source": "https://github.com/nikolaiwest/cpc-data/blob/main/schema/recordings/injection_molding.py",
+          "finding": "current author loader still reads injection_pressure_target, injection_pressure_actual, melt_volume, injection_velocity and state directly from CSV and applies no source-defined pressure-unit or state semantic conversion"
+        },
+        {
+          "source": "https://github.com/nikolaiwest/cpc-data/issues",
+          "finding": "public repository issue search located no source-author answer defining injection_pressure_actual units or state codes"
+        }
+      ],
+      "potentialAdditionalMeasuredTimeSeriesSamplesIfResolved": 21907374,
+      "acceptedMeasuredTimeSeriesSamplesFromThisRecheck": 0,
+      "decision": "keep injection_pressure_actual non-counting; keep pressure target and state non-counting; retain prepared source-author clarification text unsent"
+    },
+    {
+      "id": "impure-pascoe-semantics-recheck",
+      "datasetId": "impure-pascoe-2022",
+      "status": "blocked-four-columns-still-source-undefined",
+      "publicChecks": [
+        {
+          "source": "https://zenodo.org/records/6913660",
+          "finding": "live dataset record continues to expose cycle CSVs and stage files but provides no field-level unit/scaling dictionary for the unresolved columns"
+        },
+        {
+          "source": "https://doi.org/10.3233/ATDE230912",
+          "finding": "instrumentation paper identifies Kistler 4262A hydraulic-pressure, P510 screw-position, 4021B nozzle-temperature and 6188A cavity pressure/temperature sensors plus ComoNeo acquisition, but does not bind delivered CSV numeric fields to engineering units/scales"
+        },
+        {
+          "source": "https://doi.org/10.1051/matecconf/202440108011",
+          "finding": "later ML paper confirms hydraulic pressure, screw position, nozzle temperature and heating-water temperature were collected in CSV form, but does not define the delivered HydPressure/ScrewPosition units, position origin, or Analog Input[1]/[2] sensor-to-stage mappings"
+        }
+      ],
+      "currentlyAcceptedMeasuredTimeSeriesSamples": 1188348,
+      "maximumAdditionalProfiledNumericValuesPotentiallyResolvable": 1188348,
+      "acceptedMeasuredTimeSeriesSamplesFromThisRecheck": 0,
+      "decision": "retain the four unresolved columns fail-closed; retain prepared source-author clarification text unsent"
+    },
+    {
+      "id": "ad-stgn-file-exposure-recheck",
+      "datasetId": "ad-stgn-injection-moulding-v1",
+      "status": "retrieval-blocked-publisher-no-files",
+      "publicChecks": [
+        {
+          "source": "https://data.mendeley.com/datasets/6f9x8yg8nj/1",
+          "finding": "live page still reports the real industrial injection-moulding case, CC BY 4.0, 66 continuous sensors, 7 control actions, 88,000 training samples and 22,614 validation samples; a Download All control is rendered but the Files section exposes no public file entries"
+        }
+      ],
+      "acceptedMeasuredTimeSeriesSamplesFromThisRecheck": 0,
+      "decision": "keep all reported channel/sample counts metadata-only until publisher payload files are exposed and profiled"
+    }
+  ],
+  "canonicalEffectiveAfter": {
+    "inventoriedMeasuredSources": 34,
+    "automatedIngestionAllowed": 21,
+    "fullyProfiledMeasuredFamilies": 17,
+    "acceptedInjectionProcessTimeSeriesValues": 85569824
+  },
+  "countDelta": {
+    "inventoriedMeasuredSources": 0,
+    "automatedIngestionAllowed": 0,
+    "fullyProfiledMeasuredFamilies": 0,
+    "acceptedInjectionProcessTimeSeriesValues": 0
+  },
+  "rawThirdPartyPayloadCommitted": false
+}

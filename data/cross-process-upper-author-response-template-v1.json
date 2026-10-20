@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "datasetId": "cross-process-chain-17240390",
+  "streamId": "upper-workpiece-injection-moulding",
+  "status": "pending-source-clarification",
+  "authority": {
+    "sourceType": null,
+    "sourceReference": null,
+    "sourceIdentity": null
+  },
+  "pressure": {
+    "injection_pressure_target": {
+      "role": "command",
+      "engineeringUnit": null,
+      "sourceEvidence": null
+    },
+    "injection_pressure_actual": {
+      "role": "measured-signal",
+      "engineeringUnit": null,
+      "rawMachineTag": null,
+      "sourceEvidence": null
+    }
+  },
+  "state": {
+    "encoding": null,
+    "sourceEvidence": null,
+    "mapping": {
+      "0": null,
+      "1": null,
+      "2": null,
+      "4": null,
+      "8": null
+    }
+  },
+  "promotionBoundary": {
+    "pressureActualMayCountOnlyAfterResolvedValidation": true,
+    "pressureTargetAlwaysNonCounting": true,
+    "stateAlwaysNonCountingAsNumericMeasurement": true,
+    "noMachineFamilyInference": true
+  }
+}

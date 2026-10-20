@@ -1,0 +1,43 @@
+# Assessment semantic review contract
+
+This contract complements deterministic assessment QA with a human semantic-review checklist for all 209 learner-visible keyed decisions. It does not alter answer keys or claim external validation.
+
+Every reviewed item must satisfy all of the following:
+
+- **Unambiguous stem:** the prompt supplies enough context for one defensible best answer and does not depend on hidden assumptions.
+- **Technically defensible key:** the keyed choice follows from the stated evidence and respects machine-, mould-, material-, site- and grade-specific boundaries.
+- **Plausible distractors:** wrong choices represent credible misconceptions or weaker reasoning, not jokes, obvious absolutes, unsafe instructions or grammatical giveaways.
+- **Explanation quality:** feedback states why the keyed choice is stronger and, where a near competitor exists, why that competitor is weaker.
+- **Evidence dependency:** safety/legal claims use the applicable jurisdiction source; technical claims use approved evidence and do not turn research findings into universal production settings.
+- **Safety boundary:** distractors are assessment contrasts, never authorised procedures; safeguard bypass, unsafe intervention and unverified universal recipes remain rejected.
+- **Readable language:** wording is concise enough for the target level, defines unavoidable specialist terminology through context, and avoids unnecessary double negatives.
+- **Identity and duplication:** the item tests a distinct decision under its stable ID and is not a paraphrased duplicate of another keyed item.
+- **Measurement discipline:** unresolved units, signal reference, timing, provenance or measurement adequacy must not support a confident quantitative conclusion.
+- **UI fit:** stem, choices and explanation remain understandable on narrow mobile layouts without relying on colour, hover, answer position or option length.
+
+## Coverage
+
+The governed review population is 209 keyed decisions:
+
+- 57 live exam questions: 30 technical and 27 regional safety/compliance.
+- 40 shop-floor scenario drills.
+- 36 Diagnostic Learning Lab decisions.
+- 24 Material Behaviour Lab decisions.
+- 40 optional Material Practice decisions.
+- 12 Measured-Data Evidence Challenge decisions based on governed real-measured dataset contracts.
+
+Release automation continues to enforce structural, key, cue, evidence and source gates. This semantic contract records the additional pedagogical standard that automated heuristics cannot prove by themselves. Question wording or answer-key changes still require the repository's normal content review and version-control process.
+
+## Completion and independence boundary
+
+A deterministic pass does not constitute semantic approval. A complete semantic review must record an item-level disposition for all 209 learner-visible keyed decisions and explicitly cover the stem, keyed answer, every distractor, explanation/feedback, evidence fit, Book consistency and safety/applicability boundary.
+
+Where a keyed proposition is taught in the governed Book, the reviewer must confirm that the assessment does not contradict, overstate or silently generalise the Book's current authorized wording. Where the Book deliberately leaves a mechanism qualified or context-dependent, the assessment must preserve that uncertainty rather than force an unjustified universal answer.
+
+Human semantic review, independent Book SME review and real assistive-technology validation are separate evidence classes. Automation and AI-assisted review may identify defects and enforce coverage, but must not create, infer or self-attest those human approvals.
+
+## Assessment-authority boundary
+
+The current 7-technical-item regional exam sample is a formative/learning-completion check. Semantic approval of individual items does not convert that sample into a validated professional-competence examination, and the current 80% threshold is not treated as an empirically established competence cut-score.
+
+Any future high-stakes or externally recognised summative assessment must use a separately governed blueprint with adequate item sampling across every claimed domain, real-learner response data, item and test-level psychometric analysis appropriate to the decision, defensible standard setting, independent moderation, fairness/accessibility review and practical/workplace evidence where competence is claimed. Safety mastery must not rely on a trivially small random sample merely because the zero-wrong rule is retained.

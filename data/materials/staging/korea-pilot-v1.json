@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "pilotId": "korea-engineering-materials-v1",
+  "status": "pilot-in-progress",
+  "purpose": "Stress-test the canonical material-grade model against large commercial engineering-plastics catalogues without publishing unverified grade claims.",
+  "progress": {
+    "targetManufacturers": 4,
+    "sourceReviewedManufacturers": 4,
+    "validatedManufacturers": 3,
+    "sourceReviewedExactGrades": 15,
+    "publishedExactGrades": 11,
+    "lastReviewedAt": "2026-09-03"
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-lotte-chemical",
+      "name": "LOTTE Chemical",
+      "country": "South Korea",
+      "stage": "validated-published-pilot",
+      "gradeRecords": [],
+      "validatedDatasetId": "lotte-exact-grade-pilot-v1",
+      "validatedGradeIds": [
+        "mat-lotte-infino-nh-1033",
+        "mat-lotte-infino-nh-1034r",
+        "mat-lotte-infino-ae-3060-h",
+        "mat-lotte-infino-xp-2140c"
+      ],
+      "publishedRuntimeCatalog": "material-catalog-v1.json",
+      "publishedGradeCount": 4,
+      "sourceQueue": []
+    },
+    {
+      "id": "mfr-lg-chem",
+      "name": "LG Chem",
+      "country": "South Korea",
+      "stage": "validated-published-pilot",
+      "gradeRecords": [],
+      "validatedDatasetId": "lg-chem-exact-grade-pilot-v1",
+      "validatedGradeIds": [
+        "mat-lgchem-lupoy-gp1000ml",
+        "mat-lgchem-lupoy-gp5206f",
+        "mat-lgchem-lupoy-gp1000l"
+      ],
+      "publishedRuntimeCatalog": "material-catalog-v1.json",
+      "publishedGradeCount": 3,
+      "sourceQueue": []
+    },
+    {
+      "id": "mfr-kep",
+      "name": "Korea Polyacetal (KPAC)",
+      "country": "South Korea",
+      "stage": "validated-published-pilot",
+      "gradeRecords": [],
+      "validatedDatasetId": "kepital-exact-grade-pilot-v1",
+      "validatedGradeIds": [
+        "mat-kepital-f1003h",
+        "mat-kepital-f2003",
+        "mat-kepital-f3003",
+        "mat-kepital-fg2025"
+      ],
+      "publishedRuntimeCatalog": "material-catalog-v1.json",
+      "publishedGradeCount": 4,
+      "sourceQueue": []
+    },
+    {
+      "id": "mfr-kolon-enp",
+      "name": "KOLON ENP",
+      "country": "South Korea",
+      "stage": "source-reviewed-staging",
+      "gradeRecords": [],
+      "stagingDatasetId": "kolon-enp-exact-grade-pilot-v1",
+      "sourceReviewedGradeIds": [
+        "mat-kolon-kocetal-k300",
+        "mat-kolon-kocetal-k700",
+        "mat-kolon-kocetal-k100hs",
+        "mat-kolon-kocetal-gf702"
+      ],
+      "sourceReviewedGradeCount": 4,
+      "sourceQueue": []
+    }
+  ],
+  "publicationGate": {
+    "requiresExactCommercialGrade": true,
+    "requiresPrimaryManufacturerSource": true,
+    "requiresSourceRevisionOrRetrievalDate": true,
+    "requiresSemanticPropertyChecks": true,
+    "allowsDirectStagingToRuntime": false
+  },
+  "notes": [
+    "This umbrella manifest tracks pilot progress without duplicating exact-grade records; gradeRecords intentionally remains empty here.",
+    "LOTTE pilot progress points to the separately validated lotte-exact-grade-pilot-v1 dataset and the published runtime catalog.",
+    "LG Chem pilot progress points to the separately validated lg-chem-exact-grade-pilot-v1 dataset; exact-grade claims come only from current LG Chem/LG Chem On primary TDS records.",
+    "KEPITAL pilot progress points to the separately validated kepital-exact-grade-pilot-v1 dataset. The stable mfr-kep identifier is retained while the current primary brand-owner source is identified as Korea Polyacetal (KPAC), which states that it sustains the KEPITAL brand.",
+    "KEPITAL melt-flow values remain omitted because the reviewed current KPAC exact-grade sheets do not expose the temperature/load required for engineering comparison.",
+    "KOLON ENP now has four primary-source-reviewed exact KOCETAL grade identities in kolon-enp-exact-grade-pilot-v1. They remain source-reviewed staging only: no numeric property is validated or published until complete test context and the stronger source-identity requirements are satisfied.",
+    "Acquired source documents should be fingerprinted before extraction where redistribution/rights permit local retention.",
+    "Every extracted observation must reference a sourceId and retain its test conditions rather than collapsing datasheet tables into generic values."
+  ]
+}

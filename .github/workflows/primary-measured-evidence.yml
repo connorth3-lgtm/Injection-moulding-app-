@@ -1,0 +1,122 @@
+name: MouldMaster Primary Measured Evidence
+
+on:
+  push:
+    branches: [main, evidence-coverage-hardening]
+    paths:
+      - 'data/primary-measured-evidence-registry-v1.json'
+      - 'data/primary-measured-evidence-overlay-v2.json'
+      - 'data/primary-measured-evidence/**'
+      - 'data/measured-dataset-inventory-v1.json'
+      - 'data/measured-dataset-rights-review-*.json'
+      - 'data/public-benchmark-contracts/**'
+      - 'data/public-benchmark-results/**'
+      - 'data/measured-data-discovery-queue-v1.json'
+      - 'data/measured-data-collection-closeout-2026-08-30.json'
+      - 'data/evidence-coverage-v1.json'
+      - 'data/content-scale-targets-overlay-v2.json'
+      - 'data/sensor-machine-health-registry-v2.json'
+      - 'data/sensor-machine-health/**'
+      - 'tools/materialize_evidence_overlays.py'
+      - 'qa_primary_measured_evidence.py'
+      - 'qa_measured_dataset_inventory.py'
+      - 'qa_blocked_dataset_contracts.py'
+      - 'qa_remaining_dataset_terminal_states.py'
+      - 'qa_measured_data_discovery_queue.py'
+      - 'qa_measured_data_collection_closeout.py'
+      - 'sources/PRIMARY_MEASURED_EVIDENCE_REGISTRY.md'
+      - '.github/workflows/primary-measured-evidence.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/primary-measured-evidence-registry-v1.json'
+      - 'data/primary-measured-evidence-overlay-v2.json'
+      - 'data/primary-measured-evidence/**'
+      - 'data/measured-dataset-inventory-v1.json'
+      - 'data/measured-dataset-rights-review-*.json'
+      - 'data/public-benchmark-contracts/**'
+      - 'data/public-benchmark-results/**'
+      - 'data/measured-data-discovery-queue-v1.json'
+      - 'data/measured-data-collection-closeout-2026-08-30.json'
+      - 'data/evidence-coverage-v1.json'
+      - 'data/content-scale-targets-overlay-v2.json'
+      - 'data/sensor-machine-health-registry-v2.json'
+      - 'data/sensor-machine-health/**'
+      - 'tools/materialize_evidence_overlays.py'
+      - 'qa_primary_measured_evidence.py'
+      - 'qa_measured_dataset_inventory.py'
+      - 'qa_blocked_dataset_contracts.py'
+      - 'qa_remaining_dataset_terminal_states.py'
+      - 'qa_measured_data_discovery_queue.py'
+      - 'qa_measured_data_collection_closeout.py'
+      - 'sources/PRIMARY_MEASURED_EVIDENCE_REGISTRY.md'
+      - '.github/workflows/primary-measured-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mouldmaster-primary-measured-evidence-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  primary-measured-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Validate immutable measured-data closeout before evidence overlays
+        run: python qa_measured_data_collection_closeout.py
+      - name: Materialize additive evidence overlays in CI workspace only
+        run: python tools/materialize_evidence_overlays.py
+      - name: Validate deduplicated effective peer-reviewed primary measured registry
+        run: python qa_primary_measured_evidence.py
+      - name: Validate governed measured dataset inventory
+        run: python qa_measured_dataset_inventory.py
+      - name: Validate fail-closed blocked dataset contracts
+        run: python qa_blocked_dataset_contracts.py
+      - name: Validate all remaining dataset terminal states
+        run: python qa_remaining_dataset_terminal_states.py
+      - name: Validate new measured-data discovery queue
+        run: python qa_measured_data_discovery_queue.py
+      - name: Revalidate measured-data collection closeout after evidence overlays
+        run: python qa_measured_data_collection_closeout.py
+      - name: Upload aggregate primary measured registry QA report
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: mouldmaster-primary-measured-evidence
+          path: primary-measured-evidence-report.json
+          if-no-files-found: error
+      - name: Upload aggregate measured dataset inventory QA report
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: mouldmaster-measured-dataset-inventory
+          path: measured-dataset-inventory-report.json
+          if-no-files-found: error
+      - name: Upload aggregate blocked dataset contracts QA report
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: mouldmaster-blocked-dataset-contracts
+          path: blocked-dataset-contracts-report.json
+          if-no-files-found: error
+      - name: Upload aggregate remaining dataset terminal-state report
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: mouldmaster-remaining-dataset-terminal-states
+          path: remaining-dataset-terminal-states-report.json
+          if-no-files-found: error
+      - name: Upload aggregate measured-data discovery report
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: mouldmaster-measured-data-discovery-queue
+          path: measured-data-discovery-queue-report.json
+          if-no-files-found: error
+      - name: Upload measured-data collection closeout report
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: mouldmaster-measured-data-collection-closeout
+          path: measured-data-collection-closeout-report.json
+          if-no-files-found: error

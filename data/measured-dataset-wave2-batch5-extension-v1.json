@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "version": "2026.08.30.2",
+  "reviewed": "2026-08-30",
+  "purpose": "Fresh-main Wave-2 batch-5 extension. It promotes the fully audited Zenodo industrial production-energy family and carries the AD-STGN automotive injection-moulding record as an explicit CC BY 4.0 retrieval blocker because the publisher currently exposes no payload files.",
+  "baseEffective": {
+    "inventoriedMeasuredSources": 32,
+    "automatedIngestionAllowed": 19,
+    "fullyProfiledMeasuredFamilies": 16,
+    "acceptedInjectionProcessTimeSeriesValues": 66521519
+  },
+  "delta": {
+    "inventoriedMeasuredSources": 2,
+    "automatedIngestionAllowed": 2,
+    "fullyProfiledMeasuredFamilies": 1,
+    "acceptedInjectionProcessTimeSeriesValues": 19048305,
+    "acceptedRecordLevelMeasuredValues": 0
+  },
+  "effective": {
+    "inventoriedMeasuredSources": 34,
+    "automatedIngestionAllowed": 21,
+    "fullyProfiledMeasuredFamilies": 17,
+    "acceptedInjectionProcessTimeSeriesValues": 85569824,
+    "wave2RecordLevelMeasuredValues": 1816,
+    "wave2MaterialCharacterizationTraceValues": 84482
+  },
+  "inventoryAdditions": [
+    {
+      "datasetId": "zenodo-energy-20338544",
+      "title": "Industrial injection-moulding production and electrical-energy time series",
+      "source": "https://doi.org/10.5281/zenodo.20338544",
+      "accessState": "executed-open",
+      "license": "CC BY 4.0",
+      "automatedIngestionAllowed": true,
+      "rawRedistributionAllowedWithAttribution": true,
+      "recordUnit": "instrument-reported production-energy sample",
+      "count": {"rawProductionRowsAccepted": 1269887, "directPhysicalChannels": 15, "acceptedMeasuredTimeSeriesSamples": 19048305},
+      "signals": ["phase A/B/C active power", "phase A/B/C apparent power", "phase A/B/C current", "phase A/B/C frequency", "phase A/B/C voltage"],
+      "quality": ["MES production/device state retained as context, not scalar measurement count"],
+      "sampling": "per-device LOG_TIME deltas cluster around 5 seconds in the two accepted raw production streams",
+      "overlapGroup": "zenodo-energy-20338544",
+      "peerReviewedCompanion": null,
+      "priority": 33,
+      "statusNote": "Exact Zenodo CC BY 4.0 February and March production CSVs are checksum-verified. 1,269,887 rows x 15 direct Shelly Pro 3EM physical channels yield 19,048,305 accepted measured values. Power factor/totals, neutral current, and the curated test subset are excluded."
+    },
+    {
+      "datasetId": "ad-stgn-injection-moulding-v1",
+      "title": "AD-STGN real-world automotive injection-moulding production-line dataset",
+      "source": "https://doi.org/10.17632/6f9x8yg8nj.1",
+      "accessState": "retrieval-blocked-publisher-no-files",
+      "license": "CC BY 4.0",
+      "automatedIngestionAllowed": true,
+      "rawRedistributionAllowedWithAttribution": true,
+      "recordUnit": "reported production-line sample; publisher payload not obtained",
+      "count": {"reportedContinuousSensorMeasurements": 66, "reportedDiscreteControlActions": 7, "reportedTrainingSamples": 88000, "reportedValidationSamples": 22614, "acceptedMeasuredTimeSeriesSamples": 0},
+      "signals": ["66 reported continuous sensor measurements; exact fields unavailable until publisher files are exposed"],
+      "quality": [],
+      "sampling": "metadata-only reported sample counts; not accepted measurements",
+      "overlapGroup": "ad-stgn-injection-moulding-v1",
+      "peerReviewedCompanion": null,
+      "priority": 34,
+      "statusNote": "The live CC BY 4.0 Mendeley record describes a real injection-moulding production line but exposes zero file entries through public listings/page HTML. Reported channel/sample counts remain metadata only and contribute zero accepted values."
+    }
+  ],
+  "executionAdditions": [
+    {"priority": 33, "datasetId": "zenodo-energy-20338544", "state": "accepted-profiled-industrial-energy-timeseries", "action": "keep exact Zenodo file fingerprints, channel masks, overlap exclusion and timestamp-order checks regression-pinned", "reason": "19,048,305 direct physical production-energy values accepted from two raw streams"},
+    {"priority": 34, "datasetId": "ad-stgn-injection-moulding-v1", "state": "retrieval-blocked-executable", "action": "recheck Mendeley file exposure; do not count metadata sample/channel claims", "reason": "CC BY 4.0 rights are clear but no publisher payload bytes are currently exposed"}
+  ],
+  "effectiveInventorySummary": {
+    "datasets": 34,
+    "automatedIngestionAllowed": 21,
+    "rightsOrAccessReviewRequired": 3,
+    "embargoed": 2,
+    "requestOnly": 1,
+    "confidential": 1,
+    "publicMirrorRightsUnresolved": 2,
+    "publicResearchEducationTerms": 4,
+    "retrievalBlockedLicensed": 3
+  },
+  "effectiveExecutionSummary": {
+    "total": 34,
+    "acceptedProfiled": 17,
+    "acceptedRestrictedResearchEducation": 3,
+    "executingProfile": 0,
+    "queuedExecutable": 0,
+    "retrievalBlockedExecutable": 3,
+    "retrievedNotAccepted": 4,
+    "rightsOrTermsBlocked": 3,
+    "mirrorRightsBlocked": 2,
+    "embargoed": 2,
+    "requestOnly": 1,
+    "confidential": 1,
+    "partiallyAcceptedNotFullyProfiled": 1
+  },
+  "boundaries": {
+    "oldEvidenceScaleBranchInherited": false,
+    "zenodoTestDatasetExcludedToPreventOverlap": true,
+    "derivedElectricalAggregatesExcluded": true,
+    "adStgnMetadataDoesNotCountWithoutPayload": true,
+    "rawThirdPartyRowsOrFilesCommitted": false,
+    "waveformDeltaComesOnlyFromDirectInstrumentReportedPhysicalChannels": true
+  }
+}

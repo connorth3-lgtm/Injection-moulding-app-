@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 520" role="img" aria-labelledby="title desc">
+<title id="title">Defensible process baseline evidence package</title>
+<desc id="desc">Conceptual baseline record combining identity and context, commanded conditions, actual process signals, part outputs and known unknowns before a later comparison.</desc>
+<g fill="none" stroke="currentColor" stroke-width="3">
+<rect x="70" y="70" width="235" height="80" rx="12"/><rect x="370" y="70" width="235" height="80" rx="12"/><rect x="670" y="70" width="235" height="80" rx="12"/>
+<rect x="220" y="220" width="235" height="80" rx="12"/><rect x="525" y="220" width="235" height="80" rx="12"/>
+<rect x="330" y="380" width="320" height="80" rx="12"/>
+<path d="M187 150L430 380M487 150L475 380M787 150L520 380M337 300L445 380M642 300L535 380"/>
+</g>
+<g font-family="system-ui,sans-serif" font-size="22" text-anchor="middle">
+<text x="187" y="105">Identity + context</text><text x="187" y="132">material · machine · mould</text>
+<text x="487" y="105">Commands</text><text x="487" y="132">documented requested state</text>
+<text x="787" y="105">Actual signals</text><text x="787" y="132">what the process did</text>
+<text x="337" y="255">Part outputs</text><text x="337" y="282">cavity · timing · result</text>
+<text x="642" y="255">Unknowns + changes</text><text x="642" y="282">missing evidence stays visible</text>
+<text x="490" y="415">Defensible comparison</text><text x="490" y="442">baseline ≠ settings screenshot</text>
+</g>
+</svg>

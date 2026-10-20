@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "datasetId": "probayes-main-v2",
+  "status": "blocked-rights-review",
+  "source": {
+    "recordUrl": "https://b2share.eudat.eu/records/k0v7s-jf859",
+    "legacyRecordId": "4c5692b886db419180f716acf895bf06",
+    "datasetDoi": "10.23728/b2share.4c5692b886db419180f716acf895bf06",
+    "publisher": "B2SHARE",
+    "version": "v2",
+    "published": "2022-10-25",
+    "technicalModified": "2025-10-28",
+    "access": "open",
+    "license": null,
+    "licenseEvidenceStatus": "The current B2SHARE v2 record exposes Rights > License with no value. EUDAT B2FIND does report Creative Commons Attribution (CC-BY) for the earlier ProBayes v1 legacy record 03133fb279294389a15baefd55e4257a, but that licence evidence is tied to a different DOI/file release and is not carried forward to the changed v2 files without explicit version-specific evidence.",
+    "priorVersionLicenseEvidence": {
+      "registry": "EUDAT B2FIND",
+      "recordUrl": "https://b2find.eudat.eu/dataset/00e35196-1983-57a0-8ec1-ae2bee01da40",
+      "version": "v1",
+      "legacyRecordId": "03133fb279294389a15baefd55e4257a",
+      "datasetDoi": "10.23728/b2share.03133fb279294389a15baefd55e4257a",
+      "reportedRights": "Creative Commons Attribution (CC-BY); info:eu-repo/semantics/openAccess",
+      "appliesToCurrentV2": false
+    },
+    "automatedRetrievalAllowed": false,
+    "rawRedistributionAllowed": false,
+    "reportedTotalSize": "107.0 MB"
+  },
+  "experimentContext": {
+    "project": "ProBayes",
+    "process": "injection moulding",
+    "machine": "KraussMaffei 160-750PX",
+    "part": "warpage shell",
+    "materials": [
+      "polypropylene (PP)",
+      "ABS containing 70% recyclate"
+    ],
+    "injectionMouldedParts": 564,
+    "experimentalPoints": 47,
+    "featuresPerPart": 334,
+    "dataSources": 9,
+    "recordUnit": "one produced part / injection-moulding cycle identified by MachineCycleID",
+    "variedSetParameters": [
+      "cylinder temperature",
+      "mould temperature",
+      "injection speed",
+      "holding pressure"
+    ],
+    "qualitySemantics": [
+      "manual OK/NOK inspection",
+      "additional source-defined labels"
+    ]
+  },
+  "publisherFileManifest": [
+    {"name":"data_description.pdf","size":"8.2 MB","md5":"2455efb8cb3fcf930a84f4a82347190a","role":"documentation"},
+    {"name":"dataset_V2.parquet","size":"89.4 MB","md5":"f04efe419e63db5fb4a392e1569ea417","role":"combined per-cycle dataset"},
+    {"name":"DatasetV2_Report_Minimal.html","size":"9.3 MB","md5":"5b9569a824fb1e0566721eec7be33c2b","role":"profiling report"},
+    {"name":"DataXplorer-Parameter_Names.xlsx","size":"22.2 kB","md5":"772dacf3c15db62644e3ce5411e91079","role":"parameter-name mapping"}
+  ],
+  "rightsGate": {
+    "publicDownloadDoesNotEqualReusePermission": true,
+    "rawFilesMustNotBeDownloadedByAutomationUntilLicenceIsExplicit": true,
+    "requiredEvidence": [
+      "An explicit licence or written reuse permission tied to ProBayes v2 legacy record 4c5692b886db419180f716acf895bf06 is captured; the CC-BY metadata for the earlier v1 release is not treated as version-transitive evidence.",
+      "The captured terms permit automated ingestion and aggregate profiling.",
+      "The exact v2 file manifest and checksums are revalidated at retrieval time."
+    ]
+  },
+  "profilingPlanAfterRightsClearance": [
+    "Verify dataset_V2.parquet against its publisher MD5 and retain a SHA-256 fingerprint in the aggregate result.",
+    "Confirm exactly 564 MachineCycleID records and reconcile 47 experimental points from delivered data.",
+    "Classify the 334 features by the nine source systems and distinguish measured fields, setpoints, identifiers, extracted features and labels.",
+    "Keep cycle-level features distinct from any embedded time-series-derived arrays or summaries; do not infer high-frequency sample counts from the word Timeseries alone.",
+    "Verify manual OK/NOK and other labels against source-defined semantics before mechanism/defect promotion.",
+    "Emit aggregate schemas, counts and fingerprints only; do not commit or artifact raw third-party rows or arrays."
+  ],
+  "evidenceBoundary": "The ProBayes v2 record documents 564 real injection-moulded parts across 47 experimental points, two materials, 334 features and nine data sources, with unique MachineCycleID records and manual quality labels. Exact publisher file names, sizes and MD5 checksums are available. EUDAT B2FIND preserves CC-BY metadata for the earlier v1 release, but the current v2 B2SHARE Rights > License field is blank and the v2 release has a different legacy record, DOI and file manifest. The v1 licence is therefore not assumed to cover v2, which remains non-executable and contributes no accepted measured count until version-specific reuse terms are captured."
+}

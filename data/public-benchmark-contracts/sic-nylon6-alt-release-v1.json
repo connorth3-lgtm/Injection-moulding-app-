@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "datasetId": "sic-nylon6-injection-moulded-v1",
+  "status": "alternate-release-profile-candidate",
+  "source": {
+    "primaryDatasetDoi": "10.17632/ztkc87d6sr.1",
+    "primaryReleaseLicense": "CC BY 4.0",
+    "alternateDatasetDoi": "10.17632/47k6jswwg7.1",
+    "alternateMendeleyDatasetId": "47k6jswwg7",
+    "alternateVersion": 1,
+    "alternateReleaseLicense": "CC BY-NC 3.0",
+    "publisher": "Mendeley Data",
+    "companionArticleDoi": "10.1016/j.dib.2020.105662"
+  },
+  "experimentContext": {
+    "material": "SiC-reinforced Nylon 6 / Polyamide 6 composites",
+    "manufacturingRoute": "injection moulding",
+    "measuredDomains": ["wear / coefficient of friction", "TGA/DTG thermal degradation", "FTIR", "SEM before/after wear"]
+  },
+  "rules": {
+    "sameStudyAcrossTwoPublisherRecordsMustCountAsOneDatasetFamily": true,
+    "alternateReleaseUseScopeMustRemainNonCommercial": true,
+    "rawRedistributionAllowedUnderProjectPolicy": false,
+    "payloadMustBeDeliveredAndFingerprintVerifiedBeforeAcceptance": true,
+    "simulationOrArticleOnlyValuesDoNotCount": true,
+    "acceptedMeasuredTimeSeriesSamplesBeforeProfiling": 0
+  },
+  "evidenceBoundary": "The alternate Mendeley release may recover missing publisher files for the already-known SiC/Nylon-6 injection-moulding study, but it does not create a second dataset family. Any accepted evidence inherits the narrower CC BY-NC 3.0 use boundary of the delivered alternate release. No raw files or numeric values are committed."
+}

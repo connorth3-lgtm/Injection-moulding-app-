@@ -1,0 +1,239 @@
+{
+  "schema": 1,
+  "bookId": "mouldmaster-book",
+  "version": "2026.09.14.4-audit",
+  "policy": "accuracy-overkill",
+  "reviewScope": "all-46-chapters-all-137-claims",
+  "reviewedAt": "2026-09-14",
+  "publicationEffect": "none",
+  "chapterPromotionAuthorized": false,
+  "purpose": "Resolve the remaining claim-level evidence holds across the complete Book while preserving fail-closed publication rules and correcting stale ledger summary counts without rewriting historical claim records.",
+  "sourceLedgerOrder": [
+    "book-claim-review-foundations-materials-machine-v1.json",
+    "book-claim-review-process-tooling-v1.json",
+    "book-claim-review-troubleshooting-v1.json",
+    "book-claim-review-engineering-advanced-v1.json",
+    "book-claim-review-high-risk-v1.json",
+    "book-claim-resolution-high-risk-v1.json",
+    "book-claim-resolution-high-risk-v2.json"
+  ],
+  "auditCorrections": [
+    {
+      "ledger": "book-claim-review-foundations-materials-machine-v1.json",
+      "storedSummary": {"claims":33,"supported":13,"qualified":16,"hold":4,"conflicting":0},
+      "recountFromClaimRecords": {"claims":33,"supported":11,"qualified":19,"hold":3,"conflicting":0},
+      "reason": "The stored summary does not match the 33 individual claim conclusions. The individual claim records are treated as authoritative; this audit supersedes only the summary counts."
+    },
+    {
+      "ledger": "book-claim-review-troubleshooting-v1.json",
+      "storedSummary": {"claims":24,"supported":13,"qualified":9,"hold":2,"conflicting":0},
+      "recountFromClaimRecords": {"claims":24,"supported":12,"qualified":11,"hold":1,"conflicting":0},
+      "reason": "The stored summary does not match the 24 individual claim conclusions. The individual claim records are treated as authoritative; this audit supersedes only the summary counts."
+    }
+  ],
+  "newEvidence": [
+    {
+      "id": "RJG-PRESSURE-LIMITED-FILL",
+      "type": "industry-process-guidance",
+      "issuer": "RJG, Inc.",
+      "title": "How to Prevent and Troubleshoot Short Shots",
+      "url": "https://rjginc.com/short-shots-whats-the-deal/",
+      "checked": "2026-09-14",
+      "state": "current-public",
+      "scope": "States that insufficient available injection pressure or an injection-pressure limit set too low can make a filling process pressure-limited so constant commanded velocity is not maintained as resistance changes. Used as process-control evidence, not as a universal pressure-setting source."
+    },
+    {
+      "id": "SUMITOMO-SE-EV-S-TECHDATA",
+      "type": "machine-manufacturer-technical-data",
+      "issuer": "Sumitomo (SHI) Demag",
+      "title": "SE-EV-S technical data",
+      "url": "https://brasil.sumitomo-shi-demag.eu/fileadmin/user_upload/Subs/BR/SE-EV-S_techdata_e.pdf",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-document",
+      "scope": "Documents machine-specific screw-position display, maximum/minimum cushion monitoring, filling-pressure monitoring and V/P switchover functions. Supports use of screw position/cushion as controller-specific process signals, not a universal cushion target."
+    },
+    {
+      "id": "ENGEL-MELT-CUSHION-OPTIMISATION",
+      "type": "machine-manufacturer-process-guidance",
+      "issuer": "ENGEL",
+      "title": "Tips for process optimization in injection molding",
+      "url": "https://www.engelglobal.com/us/blog/tips-for-process-optimization-in-injection-molding",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-guidance",
+      "scope": "Treats melt-cushion fluctuation as a monitored process signal and links variation to settings and screw condition. Does not define a universal cushion value."
+    },
+    {
+      "id": "DME-VENTING-SOLUTIONS",
+      "type": "mould-component-manufacturer-guidance",
+      "issuer": "DME",
+      "title": "Venting Solutions",
+      "url": "https://www.dme.net/venting-solutions/",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-guidance",
+      "scope": "Describes application-specific venting methods, placement and engineered components and identifies short-shot studies as a way to locate critical venting areas. Does not establish one universal vent geometry."
+    },
+    {
+      "id": "DME-SINTERED-VENTS-FAQ",
+      "type": "mould-component-manufacturer-guidance",
+      "issuer": "DME",
+      "title": "Sintered Vents FAQ",
+      "url": "https://www.dme.net/sintered-vents-faq/",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-guidance",
+      "scope": "States that vent selection and performance vary with resin grade/viscosity and refers users to product installation specifications and resin suppliers for application-specific limits."
+    },
+    {
+      "id": "KISTLER-MOULD-TEMPERATURE-MONITORING",
+      "type": "sensor-manufacturer-technical-guidance",
+      "issuer": "Kistler",
+      "title": "Predictive maintenance and mold monitoring in injection molding",
+      "url": "https://www.kistler.com/INT/en/predictive-maintenance-and-mold-monitoring-in-injection-molding/C00000573",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-guidance",
+      "scope": "Explains that controlled mould heat removal depends on the temperature-control medium/system and that in-mould temperature sensing can detect restricted flow or heat-transfer malfunctions. Supports measurement-based cooling diagnosis rather than treating a controller setpoint as proof of mould thermal state."
+    },
+    {
+      "id": "RJG-FILL-ONLY-PART",
+      "type": "industry-process-guidance",
+      "issuer": "RJG, Inc.",
+      "title": "Mastering Fill Only Parts in Molding",
+      "url": "https://rjginc.com/establishing-a-fill-only-part-sometimes-easier-said-than-done/",
+      "checked": "2026-09-14",
+      "state": "current-public",
+      "scope": "Directly discusses establishing fill-only parts, the limits of part-weight interpretation and the need to account for compressibility and gate state. Used to support the existence/purpose of a controlled fill-only study, not a universal fill percentage."
+    },
+    {
+      "id": "RJG-GATE-SEAL-STUDY",
+      "type": "industry-process-guidance",
+      "issuer": "RJG, Inc.",
+      "title": "Seeing Gate Discharge with Sensors",
+      "url": "https://rjginc.com/tip/seeing-gate-discharge-with-sensors/",
+      "checked": "2026-09-14",
+      "state": "current-public",
+      "scope": "Describes a gate-seal study using part weight at different hold times and an alternative cavity-pressure-curve method; explicitly notes measurement and mould-behaviour limitations."
+    },
+    {
+      "id": "HUSKY-EMI-HOT-RUNNER-2024",
+      "type": "manufacturer-service-manual",
+      "issuer": "Husky Technologies",
+      "title": "EMI Hot Runner Service Manual v2.4",
+      "url": "https://www.husky.co/contentassets/59b3dcff9d564dc998b386aa0f5ebb6b/hr_emi_v2-4_eng_202405_5079195.pdf",
+      "checked": "2026-09-14",
+      "state": "public-manufacturer-service-manual",
+      "scope": "For purge/start-up activity, directs users to the injection-machine manufacturer's documentation and includes system-specific operating/safety instructions. Supports the Book boundary that purging and hot machine intervention cannot be governed by generic troubleshooting text."
+    },
+    {
+      "id": "ENGEL-THIN-WALL-E-SPEED",
+      "type": "machine-manufacturer-technical-guidance",
+      "issuer": "ENGEL",
+      "title": "Thin wall injection molding machine for plastic parts",
+      "url": "https://www.engelglobal.com/en/us/products/injection-molding-machines/thin-wall-injection-molding-machine",
+      "checked": "2026-09-14",
+      "state": "current-public-manufacturer-guidance",
+      "scope": "ENGEL explicitly links thin-wall filling capability to rapid acceleration, injection speed and available injection pressure, demonstrating that machine dynamics/capability matter beyond a nominal pressure number. Product-specific numeric performance is not imported as a Book setpoint."
+    },
+    {
+      "id": "RJG-MIV-CONSORTIUM-WHITE-PAPER",
+      "type": "industry-consortium-white-paper",
+      "issuer": "RJG / Medical Device OEM Consortium",
+      "title": "Machine Independent Variables white paper",
+      "url": "https://rjginc.com/wp-content/uploads/2022/06/MIV-White-Paper-FINAL.pdf",
+      "checked": "2026-09-14",
+      "state": "current-public",
+      "scope": "Requires machine capability to cover acceptable shot capacity, melt preparation, volumetric injection rate and non-pressure-limited operation when transferring a process between machines. Used as corroborating capability evidence, not as a universal suitability percentage."
+    }
+  ],
+  "resolutions": [
+    {
+      "claimId": "rheology-02",
+      "previous": "hold",
+      "newConclusion": "supported",
+      "evidence": ["PARIZS-2023-IN-MOLD-SENSORS","KISTLER-CAVITY-PRESSURE-MONITORING","RJG-PRESSURE-LIMITED-FILL"],
+      "reason": "Independent in-mould sensing evidence distinguishes local cavity pressure from upstream machine signals, while process guidance shows that material resistance and pressure limitation alter machine pressure/velocity response. The claim remains diagnostic and non-unique."
+    },
+    {
+      "claimId": "shot-utilisation-01",
+      "previous": "hold",
+      "newConclusion": "qualified",
+      "evidence": ["SUMITOMO-SE-EV-S-TECHDATA","ENGEL-MELT-CUSHION-OPTIMISATION"],
+      "reason": "Machine manufacturers treat screw position and cushion as monitored process values, but implementation and interpretation are controller/machine specific. The Book correctly avoids a universal cushion target."
+    },
+    {
+      "claimId": "velocity-pressure-02",
+      "previous": "hold",
+      "newConclusion": "supported",
+      "evidence": ["RJG-PRESSURE-LIMITED-FILL"],
+      "reason": "RJG directly states that a pressure-limited fill may no longer maintain constant velocity when resistance increases. The Book wording preserves the distinction between the commanded control mode and a limiting condition and leaves controller-specific behavior external."
+    },
+    {
+      "claimId": "venting-03",
+      "previous": "hold",
+      "newConclusion": "qualified",
+      "evidence": ["DME-VENTING-SOLUTIONS","DME-SINTERED-VENTS-FAQ"],
+      "reason": "DME demonstrates that vent selection, location, geometry and installation are application/product specific. The requirement for tooling/site authorization is retained as a MouldMaster governance boundary rather than presented as a universal technical standard. No generic vent dimension is authorized."
+    },
+    {
+      "claimId": "cooling-02",
+      "previous": "hold",
+      "newConclusion": "qualified",
+      "evidence": ["KISTLER-MOULD-TEMPERATURE-MONITORING"],
+      "reason": "Kistler distinguishes the temperature-control system from temperature measured in the mould and uses in-mould sensing to detect flow/heat-transfer problems. Exact offsets and sensor locations remain tool-specific."
+    },
+    {
+      "claimId": "cooling-03",
+      "previous": "hold",
+      "newConclusion": "supported",
+      "evidence": ["KISTLER-MOULD-TEMPERATURE-MONITORING","NIST-MEASUREMENT-CHARACTERIZATION"],
+      "reason": "Manufacturer monitoring guidance and measurement-system principles support diagnosing cooling with measured thermal/process evidence rather than inferring performance from a controller setpoint. Safe measurement methods remain site/tool specific as already excluded by the claim."
+    },
+    {
+      "claimId": "fill-study-01",
+      "previous": "hold",
+      "newConclusion": "supported",
+      "evidence": ["RJG-FILL-ONLY-PART","RJG-DECOUPLED-WORKSHOP"],
+      "reason": "RJG directly documents fill-only process development and separately lists fill-only short-shot studies in its governed training. The Book claim describes purpose only and does not prescribe a universal fill percentage."
+    },
+    {
+      "claimId": "gate-seal-02",
+      "previous": "hold",
+      "newConclusion": "supported",
+      "evidence": ["RJG-GATE-SEAL-STUDY","PARIZS-2023-IN-MOLD-SENSORS"],
+      "reason": "RJG directly describes varying hold time and weighing parts for a gate-seal study, while peer-reviewed in-mould sensor work independently supports gate-freeze interpretation from pressure/mass response. The claim explicitly treats a plateau as evidence rather than universal proof."
+    },
+    {
+      "claimId": "black-specks-03",
+      "previous": "hold",
+      "newConclusion": "qualified",
+      "evidence": ["ISO-20430-2020","HUSKY-EMI-HOT-RUNNER-2024","HUSKY-ULTRASHOT-SERVICE-2023"],
+      "reason": "Manufacturer service material directs purge activity back to machine-specific documentation and the existing high-risk safety evidence requires hazardous-energy controls for service/mould-area intervention. The Book intentionally provides no purge or disassembly procedure."
+    },
+    {
+      "claimId": "thin-wall-02",
+      "previous": "hold",
+      "newConclusion": "supported",
+      "evidence": ["ENGEL-THIN-WALL-E-SPEED","RJG-MIV-CONSORTIUM-WHITE-PAPER"],
+      "reason": "ENGEL explicitly links thin-wall capability to acceleration, injection speed and pressure, while the consortium transfer framework independently requires sufficient shot capacity, volumetric injection rate and non-pressure-limited operation. This supports the multi-capability wording without importing product-specific numeric values."
+    }
+  ],
+  "effectiveCountsAfterAllResolutions": {
+    "chapters": 46,
+    "claims": 137,
+    "supported": 74,
+    "qualified": 63,
+    "hold": 0,
+    "conflicting": 0
+  },
+  "ledgerBreakdownAfterResolutions": [
+    {"scope":"foundations-materials-machine","chapters":11,"claims":33,"supported":13,"qualified":20,"hold":0,"conflicting":0},
+    {"scope":"process-tooling","chapters":8,"claims":24,"supported":9,"qualified":15,"hold":0,"conflicting":0},
+    {"scope":"troubleshooting-excluding-warpage","chapters":8,"claims":24,"supported":12,"qualified":12,"hold":0,"conflicting":0},
+    {"scope":"engineering-advanced","chapters":12,"claims":36,"supported":31,"qualified":5,"hold":0,"conflicting":0},
+    {"scope":"high-risk","chapters":7,"claims":20,"supported":9,"qualified":11,"hold":0,"conflicting":0}
+  ],
+  "publicationBoundary": {
+    "evidenceHoldsRemaining": 0,
+    "evidenceConflictsRemaining": 0,
+    "verifiedChaptersAuthorized": 0,
+    "reason": "Clearing claim-level evidence holds is necessary but does not self-authorize publication. The Book accuracy gate still requires explicit chapter-level technical/publication sign-off, source-currentness confirmation at promotion, and release validation that read/listen surfaces render the same governed text."
+  }
+}

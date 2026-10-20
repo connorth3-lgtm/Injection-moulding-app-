@@ -1,0 +1,16 @@
+{
+  "schema": 2,
+  "version": "2026.08.29.1",
+  "reviewed": "2026-08-29",
+  "mechanismId": "surface-replication-release",
+  "registryTarget": "data/evidence-coverage-v1.json",
+  "promotionOverlayTarget": "data/evidence-promotion-overlay-v2.json",
+  "primaryMeasuredRegistryTarget": "data/primary-measured-evidence-registry-v1.json",
+  "authorMetadataTarget": "data/primary-measured-promotion-authors-v1.json",
+  "promotionRuleSnapshot": {"minimumIndependentPublisherVerifiedPrimaryMeasured":2,"requiresMeasuredSignals":true,"requiresPhysicalQualityOutcome":true,"requiresExperimentalContext":true,"requiresExplicitLimitation":true,"predictionIsNotCausation":true,"universalProcessRecipesAllowed":false},
+  "eligibility": {"independentPublisherVerifiedPrimaryMeasured":2,"meetsMinimumIndependentStudies":true,"measuredSignalsPresent":true,"physicalQualityOutcomesPresent":true,"experimentalContextPresent":true,"explicitLimitationsPresent":true,"eligibleForPromotion":true,"registryPromotionApplied":true},
+  "qualifyingDois": ["10.1016/j.jmapro.2019.04.010","10.1002/pen.24772"],
+  "supportingDois": ["10.3390/ma11081442","10.1021/acsapm.9b00312","10.1002/app.30053"],
+  "independenceRationale": "The qualifying studies are distinct experimental programmes from separate teams and tooling contexts. One applies a factorial process study and multi-scale physical surface metrology to randomly micro-textured mouldings, while the other uses variothermal PMMA microfluidic replication with independently measured cavity-surface temperature and in-cavity melt pressure. They do not duplicate or re-analyse the same moulding experiment.",
+  "promotionClaim": "Promote the mechanism-level statement that measured local thermal and pressure history, feature scale, polymer and tool surface can change physical part-quality through replication fidelity and release behaviour, so physical surface metrology is required. Do not promote tested temperatures, pressures, feature ratios, timing or replication percentages as universal settings or acceptance limits."
+}

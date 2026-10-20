@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "datasetId": "pmc4753395-hdpe-cenosphere-v1",
+  "status": "accepted-profiled-material-test-traces",
+  "source": {
+    "articlePage": "https://pmc.ncbi.nlm.nih.gov/articles/PMC4753395/",
+    "datasetDoi": "10.1016/j.dib.2016.01.058",
+    "pmcid": "PMC4753395",
+    "articleVersion": 1,
+    "publisher": "Data in Brief / PMC mirror",
+    "license": "CC BY 4.0",
+    "supplementUrl": "https://pmc.ncbi.nlm.nih.gov/articles/instance/4753395/bin/mmc1.zip",
+    "cloudMetadataUrl": "https://pmc-oa-opendata.s3.amazonaws.com/metadata/PMC4753395.1.json",
+    "supplementLabel": "mmc1.zip",
+    "expectedMeasuredWorkbook": "Tensile-Data.xlsx",
+    "expectedTheoreticalWorkbook": "Porfiri-Gupta-Model.xlsx"
+  },
+  "experimentContext": {
+    "process": "industrial-scale polymer injection moulding",
+    "matrixMaterial": "HDPE",
+    "filler": "fly-ash cenospheres",
+    "reportedCompositionsWeightPercent": [0, 20, 40, 60],
+    "measuredData": ["tensile load", "tensile displacement", "source-delivered stress-strain traces derived from tensile tests"],
+    "reportedInjectionFactors": ["mould temperature", "nozzle temperature", "heating-zone temperature", "screw speed", "injection speed", "injection time", "holding time", "cooling time", "cycle time"],
+    "theoreticalDataToExclude": ["Porfiri-Gupta model outputs", "parametric theoretical estimates"]
+  },
+  "stage1Evidence": {
+    "retrievalRoute": "pmc-current-cloud-media",
+    "cloudMetadataLicenseCode": "CC BY",
+    "supplementSha256": "cf6224bf9f2dc93c5c19ef1a4d4439fc44d4df34fe53ef04b2b05b29c82d9342",
+    "nestedRarSha256": "2f86606b0450c2cd549ef177714dd352dc884a40924e287ca7a92aadf4113fd2",
+    "measuredWorkbookSha256": "6e376e0acdfc614b6c16e0fef99e0e74cace8bc4d931a08a729e05dfc2cd7783",
+    "theoreticalWorkbookSha256": "e25db4b43e93b262c4d6c37df0e56e77bafa95053ef11906efb5255ae34fbe8c",
+    "measuredWorkbookSheets": ["HDPE", "HDPE20", "HDPE40", "HDPE60", "PLots"],
+    "theoreticalWorkbookSheets": ["E=const", "eta=const"]
+  },
+  "stage2Rules": {
+    "exactFingerprintsRequired": true,
+    "measuredWorkbookOnlyForAcceptedTraceCounts": true,
+    "compositionSheets": ["HDPE", "HDPE20", "HDPE40", "HDPE60"],
+    "plotSheetMustBeExcluded": true,
+    "theoreticalWorkbookMustBeExcluded": true,
+    "stressAndStrainMustBeClassifiedByTextHeaders": true,
+    "rawNumericValuesMustNotBeEmitted": true,
+    "rawThirdPartyFilesMustNotBeCommitted": true,
+    "injectionMachineTimeSeriesSamplesAdded": 0,
+    "countsAsFullyProfiledMeasuredDataset": true
+  },
+  "acceptanceEvidence": {
+    "stressTraceValues": 71442,
+    "strainTraceValues": 71442,
+    "stressStrainTracePointPairs": 71442,
+    "materialTestTraceValues": 142884,
+    "preHeaderNumericCellsExcluded": 20,
+    "plotNumericCellsExcluded": 4,
+    "theoreticalWorkbookValuesAccepted": 0,
+    "acceptedInjectionProcessTimeSeriesSamplesAdded": 0
+  },
+  "evidenceBoundary": "This source contains physical tensile-test evidence from injection-moulded HDPE/cenosphere specimens, but its delivered Tensile-Data.xlsx exposes stress-strain traces rather than injection-machine/cavity process waveforms. Accepted counts include only paired stress and strain numeric cells below the row-2 semantic headers on HDPE, HDPE20, HDPE40 and HDPE60. Exactly 20 pre-header numeric cells, the PLots sheet and the entire Porfiri-Gupta theoretical workbook are excluded. These material-test trace values remain separate from MouldMaster's accepted injection-process high-frequency time-series total. No raw numeric values or third-party files are emitted, committed or uploaded."
+}

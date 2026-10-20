@@ -1,0 +1,56 @@
+# Local build outputs, dependencies and machine-specific artifacts.
+# This file does NOT untrack or delete governed historical evidence already in Git.
+
+# Node / Electron / browser automation
+/node_modules/
+/desktop/electron/node_modules/
+/desktop/electron/dist/
+/desktop/electron/out/
+/dist/
+/build/
+/playwright-report/
+/test-results/
+/blob-report/
+/.nyc_output/
+coverage/
+.playwright/
+
+# Python temporary files, caches and virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Generated governed publishing/test artifacts (not canonical source files)
+/.pages-dist/
+/.pages-hold/
+/physical-pwa-candidate/
+/qa-artifacts/
+*.log
+
+# Never stage local configuration or credential stores by accident
+.env
+.env.*
+*.pem
+*.p12
+*.pfx
+id_rsa
+id_ed25519
+
+# Locally built or downloaded distribution packages. Already tracked, audited
+# frozen-recovery executable/ZIP evidence stays tracked until governed retirement.
+*.exe
+*.dll
+*.msi
+*.msix
+*.zip
+*.dmg
+
+# Operating-system and editor debris
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

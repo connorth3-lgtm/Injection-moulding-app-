@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "version": "2026.09.03.1",
+  "reviewed": "2026-09-03",
+  "purpose": "Execution record for the five requested measured-data follow-ups. Public metadata, sensor-family capability, inferred units and inaccessible payloads do not increase accepted counts.",
+  "baselineAcceptedInjectionProcessTimeSeriesValues": 85569824,
+  "actions": [
+    {
+      "number": 1,
+      "datasetId": "cross-process-chain-17240390",
+      "action": "resolve upper-workpiece pressure unit and state-code meanings",
+      "status": "blocked-source-author-clarification-required",
+      "checks": [
+        "Zenodo record 17240390 still names pressure target/actual and state without defining the pressure unit or codes 0/1/2/4/8.",
+        "The current author repositories cpc-data and cross-process-chain-error-detection were searched locally at their public main branches; the loader passes pressure and state through without a unit conversion or state dictionary.",
+        "Same-author upper-workpiece documentation defines volume and injection-velocity units only."
+      ],
+      "decision": "Keep upper pressure actual and state non-counting; keep pressure target classified as a command.",
+      "potentialAdditionalMeasuredValuesIfPressureIsAuthoritativelyResolved": 21907374,
+      "acceptedMeasuredValuesAdded": 0
+    },
+    {
+      "number": 2,
+      "datasetId": "cross-process-chain-17240390",
+      "action": "apply definitions and rerun full promotion",
+      "status": "not-promoted-fail-closed",
+      "checks": [
+        "Lower parser contract remains complete at 4,989 files, 2,475,581 rows and 7,426,743 accepted actual values.",
+        "Upper parser contract remains complete at 10,697 files, 21,907,374 rows and 43,814,748 accepted volume/velocity values.",
+        "Parser and clarification QA pass with upper pressure/state explicitly blocked."
+      ],
+      "decision": "Do not manufacture a definition merely to mark the family complete.",
+      "acceptedMeasuredValuesAdded": 0
+    },
+    {
+      "number": 3,
+      "datasetId": "warwick-demoulding",
+      "action": "export five OPJU projects",
+      "status": "blocked-origin-environment-unavailable",
+      "checks": [
+        "No OriginLab installation was found in the standard 64-bit or 32-bit Program Files locations or Windows uninstall registry entries on the execution host.",
+        "All five publisher OPJU files remain SHA-256 verified and the completed-export validator remains available.",
+        "Origin Viewer 10.4 supports OPJU and active-sheet CSV export, but its download requires user-supplied registration details and a manual GUI workflow."
+      ],
+      "decision": "Keep Warwick trial/channel/sample counts null and accepted measured values at zero until a real Origin/OriginPro or validated Viewer export is completed and reconciled.",
+      "acceptedMeasuredValuesAdded": 0
+    },
+    {
+      "number": 4,
+      "datasetId": "rwth-pcr-2025",
+      "action": "retry authoritative archive retrieval",
+      "status": "retrieval-blocked-source-response",
+      "checks": [
+        "The canonical ExperimentalData.zip version 1 URL and both documented download-query variants were retried on 2026-09-03.",
+        "All three attempts failed before delivering a structurally valid ZIP; no response body or raw source payload was retained.",
+        "The aggregate runner remained fail-closed with zero accepted samples."
+      ],
+      "decision": "Keep RWTH unprofiled until the publisher endpoint delivers the archive or the publisher supplies the exact file through another authoritative route.",
+      "acceptedMeasuredValuesAdded": 0
+    },
+    {
+      "number": 5,
+      "datasetId": "impure-pascoe-2022",
+      "action": "map sensor-channel units and meanings",
+      "status": "partial-mapping-complete-four-columns-blocked",
+      "checks": [
+        "Two mould-temperature and two cavity-pressure channels are already accepted, contributing 1,188,348 measured values.",
+        "The PASCOE instrumentation and machine-learning papers identify the 4262A hydraulic-pressure, P510 screw-position, 4021B nozzle-temperature and 6188A cavity sensors.",
+        "The 4262A family supports multiple pressure ranges, units and electrical outputs, so the sensor model alone cannot define the delivered CSV scaling.",
+        "HydPressure, ScrewPosition and Analog Input[1]/[2] still lack authoritative export units/scaling and stable stage-to-sensor mappings."
+      ],
+      "decision": "Retain the four resolved physical channels and keep the four unresolved columns non-counting pending the prepared author clarification request.",
+      "maximumAdditionalProfiledNumericValuesPotentiallyResolvable": 1188348,
+      "acceptedMeasuredValuesAdded": 0
+    }
+  ],
+  "finalAcceptedInjectionProcessTimeSeriesValues": 85569824,
+  "acceptedMeasuredValuesDelta": 0,
+  "rawThirdPartyPayloadCommitted": false,
+  "nextExternalInputs": [
+    "A source-author answer for the cross-process upper pressure unit and state codes.",
+    "A user-registered Origin/OriginPro or Origin Viewer environment for the Warwick exports.",
+    "A working authoritative RWTH archive response.",
+    "A PASCOE source-author data dictionary for the four unresolved ImPure columns."
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "version": "2026.09.10.1",
+  "datasetId": "openmms-tooling4g-real-world-v1",
+  "researchCandidateId": "MM-DATA-092",
+  "checkedAt": "2026-09-10",
+  "source": {
+    "repository": "https://github.com/TEPGomes/OpenMMS-T4G",
+    "rawPath": "Real_World_Test/Case_Study_Raw_Data.csv",
+    "pinnedGitBlobSha": "d035660bce92f21954818a6379326d2897eebae8",
+    "reportedSizeBytes": 2872573
+  },
+  "newVerification": {
+    "rawBlobReachableThroughConnectedGitHubSource": true,
+    "headerReverified": true,
+    "columnCount": 12,
+    "columns": ["t", "T1", "T2", "P", "F", "Ax", "Ay", "Az", "Gx", "Gy", "Gz", "t2"],
+    "firstRowsConsistentWithExistingPinnedProfile": true
+  },
+  "notYetVerified": {
+    "exactDataRowCount": null,
+    "missingnessByColumn": null,
+    "numericRangesByColumn": null,
+    "authoritativeUnitsByColumn": null,
+    "deterministicCycleSegmentation": null
+  },
+  "attemptedFullProfileBoundary": "The connected GitHub source returns the pinned raw content but truncates oversized content, and line-range reads did not provide a deterministic random-access stream for this file. Exact profile metrics are therefore not guessed.",
+  "canonicalImpact": {
+    "fullyProfiledMeasuredFamilyDelta": 0,
+    "acceptedMeasuredValueDelta": 0,
+    "rawThirdPartyPayloadCommitted": false
+  },
+  "nextAction": [
+    "Use an approved full-file binary/text download path against the pinned blob.",
+    "Compute cryptographic hash on retrieved bytes and confirm it maps to the pinned Git blob.",
+    "Calculate exact row count, missingness, robust ranges and timestamp monotonicity.",
+    "Resolve authoritative units from paper/source documentation.",
+    "Derive chronological cycle boundaries without mixing the first 54 normal cycles with later induced-fault periods across evaluation splits."
+  ]
+}

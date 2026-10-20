@@ -1,0 +1,4572 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "global-material-mega-expansion-20260929-v27",
+  "status": "source-reviewed-staging-ube-nylon-mega-wave",
+  "reviewedAt": "2026-09-29",
+  "purpose": "Large current UBE exact-grade acquisition across PA6, PA66, PA12, copolyamides, polyamide blends and bio-based PA56/PA510 injection/tube-coating materials.",
+  "summary": {
+    "validatedGrades": 0,
+    "sourceReviewedStagingGrades": 98,
+    "manufacturers": 1,
+    "countryFocus": "Japan",
+    "familyCounts": {
+      "PA12": 29,
+      "PA6": 40,
+      "PA6+PP": 1,
+      "PA510": 3,
+      "PA56": 14,
+      "PA66+PP": 1,
+      "PA66+PE": 2,
+      "PA66": 5,
+      "PA6/66": 3
+    }
+  },
+  "governance": {
+    "runtimePromotionBlocked": true,
+    "noNumericPropertyInference": true,
+    "compositionPercentOnlyFromExplicitGenericMarking": true
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-ube",
+      "name": "UBE Corporation",
+      "country": "Japan",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3020gx6",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3020GX6",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-(GF+CF); elemental technology/features: Glass fiber reinforced; Carbon fiber reinforced; Electrical conductivity."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3024gu6l1",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3024GU6L1",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-GF30; elemental technology/features: Glass fiber reinforced; Heat resistance.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3024gc6",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3024GC6",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-GF30; elemental technology/features: Glass fiber reinforced.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030ji26l",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030JI26L",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-IP; elemental technology/features: Impact resistance; Heat resistance; Good adhesion; Multi layer; Single layer."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030ji6l",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030JI6L",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-IP; elemental technology/features: Impact resistance; Weather resistance; Good adhesion; Multi layer."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030ji9l",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030JI9L",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-IP; elemental technology/features: Impact resistance; Heat resistance; Weather resistance; Single layer."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030ji5l",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030JI5L",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-IP; elemental technology/features: Impact resistance; Heat resistance; Weather resistance; Single layer."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030lux",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030LUX",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12; elemental technology/features: Heat resistance; Coating."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3024nux",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3024NUX",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12; elemental technology/features: Good mold release."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030gu601",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030GU601",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-GF30; elemental technology/features: Glass fiber reinforced; Low friction; Low wear.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030b",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030B",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12; elemental technology/features: Neat resin."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3024lu",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3024LU",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12; elemental technology/features: Heat resistance; Weather resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030ji46l",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030JI46L",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-IP; elemental technology/features: Impact resistance; Heat resistance; Weather resistance; Single layer."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030ji46",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030JI46",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-IP; elemental technology/features: Impact resistance; Heat resistance; Weather resistance; Single layer."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030jlx8",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030JLX8",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-P; elemental technology/features: Heat resistance; Weather resistance; Single layer."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030jfx3",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030JFX3",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-P; elemental technology/features: Heat resistance; Weather resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030jfx1",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030JFX1",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-P; elemental technology/features: Heat resistance; Weather resistance; Single layer."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3024u",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3024U",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12; elemental technology/features: Neat resin; Heat resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3024gc650",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3024GC650",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-GF30; elemental technology/features: Glass fiber reinforced.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3020x15",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3020X15",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12; elemental technology/features: Heat resistance; Coating."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3020u",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3020U",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12; elemental technology/features: Neat resin; Heat resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3014u",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3014U",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12; elemental technology/features: Neat resin; Heat resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3012u",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3012U",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12; elemental technology/features: Neat resin; Heat resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1015gx78v",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1015GX78V",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF33; elemental technology/features: Glass fiber reinforced; Heat resistance; Weather resistance.",
+            "glassFibrePct": 33
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1020s",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1020S",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-FR(30); elemental technology/features: Heat resistance; Flammability; High oxygen index."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1018se",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1018SE",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-FR(30); elemental technology/features: Heat resistance; Flammability; High oxygen index."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1015gu9l",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1015GU9L",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF45; elemental technology/features: Glass fiber reinforced; Heat resistance.",
+            "glassFibrePct": 45
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1015gc651",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1015GC651",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF28; elemental technology/features: Glass fiber reinforced; Heat resistance.",
+            "glassFibrePct": 28
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1015b",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1015B",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6; elemental technology/features: Neat resin."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013r550a",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013R550A",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-MD25; elemental technology/features: Mineral filled.",
+            "mineralPct": 25
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1015rxn",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1015RXN",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-MD25; elemental technology/features: Mineral filled; Heat resistance.",
+            "mineralPct": 25
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1015gnkf",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1015GNKF",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF30; elemental technology/features: Glass fiber reinforced; Heat resistance; Good mold release.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1015gu6",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1015GU6",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF30; elemental technology/features: Glass fiber reinforced; Heat resistance.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1015gu3",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1015GU3",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF15; elemental technology/features: Glass fiber reinforced; Heat resistance.",
+            "glassFibrePct": 15
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1015gi2",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1015GI2",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Glass fiber reinforced; Impact resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1015gc9",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1015GC9",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF45; elemental technology/features: Glass fiber reinforced.",
+            "glassFibrePct": 45
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1015gc3",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1015GC3",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF15; elemental technology/features: Glass fiber reinforced.",
+            "glassFibrePct": 15
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-nap1400f",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "NAP1400F",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6+PP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6+PP; elemental technology/features: Impact resistance; Heat resistance; Weather resistance; Low water absorption; Calcium chloride resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx017",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX017",
+          "aliases": [],
+          "polymer": {
+            "family": "PA510",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; High gas barrier properties; Low water absorption."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx016",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX016",
+          "aliases": [],
+          "polymer": {
+            "family": "PA510",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; Glass fiber reinforced; Heat resistance; Low water absorption."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx015",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX015",
+          "aliases": [],
+          "polymer": {
+            "family": "PA510",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; Low water absorption."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx014",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX014",
+          "aliases": [],
+          "polymer": {
+            "family": "PA56",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; Glass fiber reinforced; Heat resistance; Low friction; Low wear; High limiting PV value."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx013",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX013",
+          "aliases": [],
+          "polymer": {
+            "family": "PA56",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; Glass fiber reinforced; Heat resistance; High stiffness; Flammability."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx012",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX012",
+          "aliases": [],
+          "polymer": {
+            "family": "PA56",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; Glass fiber reinforced; Heat resistance; Flammability."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx011",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX011",
+          "aliases": [],
+          "polymer": {
+            "family": "PA56",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; Glass fiber reinforced; Heat resistance; Flammability."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx010",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX010",
+          "aliases": [],
+          "polymer": {
+            "family": "PA56",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; Glass fiber reinforced; Heat resistance; High stiffness."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx009",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX009",
+          "aliases": [],
+          "polymer": {
+            "family": "PA56",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; Glass fiber reinforced; Heat resistance; High stiffness."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx008",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX008",
+          "aliases": [],
+          "polymer": {
+            "family": "PA56",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; Glass fiber reinforced; Heat resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx007",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX007",
+          "aliases": [],
+          "polymer": {
+            "family": "PA56",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; Glass fiber reinforced; Heat resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx006",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX006",
+          "aliases": [],
+          "polymer": {
+            "family": "PA56",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; Glass fiber reinforced; Heat resistance; Low water absorption."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx005",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX005",
+          "aliases": [],
+          "polymer": {
+            "family": "PA56",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; Glass fiber reinforced; Heat resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx004",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX004",
+          "aliases": [],
+          "polymer": {
+            "family": "PA56",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; High gas barrier properties."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx003",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX003",
+          "aliases": [],
+          "polymer": {
+            "family": "PA56",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; Flammability."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx002",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX002",
+          "aliases": [],
+          "polymer": {
+            "family": "PA56",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; High gas barrier properties; Low water absorption."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-ucnx001",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "UCNX001",
+          "aliases": [],
+          "polymer": {
+            "family": "PA56",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: not stated; elemental technology/features: Bio-composites; Good mold release."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-nap2400b",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "NAP2400B",
+          "aliases": [],
+          "polymer": {
+            "family": "PA66+PP",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA66+PP+PA6; elemental technology/features: Impact resistance; Heat resistance; Low water absorption; Calcium chloride resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-nae2216",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "NAE2216",
+          "aliases": [],
+          "polymer": {
+            "family": "PA66+PE",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA66+PE; elemental technology/features: Glass fiber reinforced; Heat resistance; Low friction."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-nae2100u",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "NAE2100U",
+          "aliases": [],
+          "polymer": {
+            "family": "PA66+PE",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA66+PE; elemental technology/features: Low friction; High limiting PV value."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-2026gu501",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "2026GU501",
+          "aliases": [],
+          "polymer": {
+            "family": "PA66",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA66-GF25; elemental technology/features: Glass fiber reinforced; Heat resistance; High limiting PV value.",
+            "glassFibrePct": 25
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-2020gu753",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "2020GU753",
+          "aliases": [],
+          "polymer": {
+            "family": "PA66",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA66-GF35; elemental technology/features: Glass fiber reinforced; Heat resistance; Low water absorption; Calcium chloride resistance.",
+            "glassFibrePct": 35
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-2020gu651",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "2020GU651",
+          "aliases": [],
+          "polymer": {
+            "family": "PA66",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA66-GF30; elemental technology/features: Glass fiber reinforced; Heat resistance.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-2020gu6",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "2020GU6",
+          "aliases": [],
+          "polymer": {
+            "family": "PA66",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA66-GF30; elemental technology/features: Glass fiber reinforced; Heat resistance.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-2020gc4",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "2020GC4",
+          "aliases": [],
+          "polymer": {
+            "family": "PA66",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA66-GF20; elemental technology/features: Glass fiber reinforced.",
+            "glassFibrePct": 20
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1218iu",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1218IU",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6+PA6/66-I; elemental technology/features: Impact resistance; Heat resistance; High gas barrier properties."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1030u2",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1030U2",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6; elemental technology/features: Heat resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1030nu1",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1030NU1",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6; elemental technology/features: Good mold release."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1030nu",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1030NU",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6; elemental technology/features: Heat resistance; Good mold release."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1030b",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1030B",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6; elemental technology/features: Neat resin."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-5033b",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "5033B",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6/66",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6/66; elemental technology/features: Neat resin."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-5023uw",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "5023UW",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6/66",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6/66; elemental technology/features: Neat resin; Heat resistance; Good mold release."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-5023b",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "5023B",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6/66",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6/66; elemental technology/features: Neat resin."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3035lu1",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3035LU1",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12; elemental technology/features: Single layer."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030ufx1",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030UFX1",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12; elemental technology/features: Neat resin."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030u",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030U",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12; elemental technology/features: Neat resin; Multi layer; Single layer."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030jlx2",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030JLX2",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-P; elemental technology/features: Heat resistance; Weather resistance; Single layer."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3030jlx1",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3030JLX1",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12-P; elemental technology/features: Single layer."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-3014b",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBESTA",
+          "grade": "3014B",
+          "aliases": [],
+          "polymer": {
+            "family": "PA12",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA12; elemental technology/features: Neat resin."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1022b",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1022B",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6; elemental technology/features: Neat resin."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1018i",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1018I",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-I; elemental technology/features: Impact resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013nu250",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013NU250",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6; elemental technology/features: Heat resistance; Good mold release."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013nu",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013NU",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6; elemental technology/features: Heat resistance; Good mold release."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013nh",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013NH",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6; elemental technology/features: Heat resistance; Good mold release."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013iu50",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013IU50",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-I; elemental technology/features: Impact resistance; Heat resistance; Low water absorption; Calcium chloride resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013asx25",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013ASX25",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6+6T/6I; elemental technology/features: Heat resistance; Low water absorption; Calcium chloride resistance; Good adhesion."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013asx24",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013ASX24",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6+6T/6I; elemental technology/features: Heat resistance; Low water absorption; Calcium chloride resistance; Good adhesion."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013nw9",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013NW9",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6; elemental technology/features: Good mold release."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013nw850",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013NW850",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6; elemental technology/features: Good mold release."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013nw8",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013NW8",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6; elemental technology/features: Good mold release."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013i",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013I",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-I; elemental technology/features: Impact resistance; Heat resistance."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013guyl1",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013GUYL1",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF60; elemental technology/features: Glass fiber reinforced; Heat resistance; Low water absorption; Calcium chloride resistance; High stiffness.",
+            "glassFibrePct": 60
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013guy50",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013GUY50",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF60; elemental technology/features: Glass fiber reinforced; Heat resistance; High stiffness.",
+            "glassFibrePct": 60
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013gux50",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013GUX50",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF50; elemental technology/features: Glass fiber reinforced; Heat resistance; High stiffness.",
+            "glassFibrePct": 50
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013gusx3",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013GUSX3",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF30; elemental technology/features: Glass fiber reinforced; Heat resistance; Low water absorption; Calcium chloride resistance; Good adhesion.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013gusx2",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013GUSX2",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF30; elemental technology/features: Glass fiber reinforced; Heat resistance; Low water absorption; Calcium chloride resistance; Good adhesion.",
+            "glassFibrePct": 30
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1013gu750",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1013GU750",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF35; elemental technology/features: Glass fiber reinforced; Heat resistance.",
+            "glassFibrePct": 35
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1011gc4",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1011GC4",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6-GF20; elemental technology/features: Glass fiber reinforced.",
+            "glassFibrePct": 20
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1011fb",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1011FB",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6; elemental technology/features: Neat resin."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-ube-1010x1",
+          "manufacturer": {
+            "id": "mfr-ube",
+            "name": "UBE Corporation",
+            "country": "Japan",
+            "website": "https://www.ube.com/"
+          },
+          "brand": "UBE Nylon",
+          "grade": "1010X1",
+          "aliases": [],
+          "polymer": {
+            "family": "PA6",
+            "morphology": "unknown"
+          },
+          "composition": {
+            "notes": "UBE generic identification/marking: PA6; elemental technology/features: Neat resin."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-09-29"
+          },
+          "sources": [
+            {
+              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "publisher": "UBE Corporation",
+              "title": "Injection/Tube-coating Grade Search System",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
+              "kind": "other",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-09-29"
+            }
+          ],
+          "provenance": {
+            "stage": "staging",
+            "ingestedAt": "2026-09-29T00:00:00Z",
+            "reviewedAt": "2026-09-29T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+          }
+        }
+      ]
+    }
+  ]
+}

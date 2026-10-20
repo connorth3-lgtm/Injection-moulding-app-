@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-20",
+  "reviewBy": "2026-10-28",
+  "owner": "repository-maintainer",
+  "policy": "Critical runtime/build support status must be re-reviewed from authoritative upstream sources before reviewBy. EOL components fail maintenance QA and require an explicit protected upgrade or a time-bounded owned exception that cannot disable required gates.",
+  "components": [
+    {
+      "id": "node-ci",
+      "declared": "22",
+      "statusAtReview": "lts",
+      "eol": "2027-04-30",
+      "owner": "repository-maintainer",
+      "rationale": "Primary JavaScript QA/build runtime used by protected workflows.",
+      "authoritativeSource": "https://nodejs.org/en/about/previous-releases"
+    },
+    {
+      "id": "python-ci",
+      "declared": "3.12",
+      "statusAtReview": "security",
+      "eolMonth": "2028-10",
+      "owner": "repository-maintainer",
+      "rationale": "Primary governance, data and release-verification runtime used by protected workflows.",
+      "authoritativeSource": "https://devguide.python.org/versions/"
+    },
+    {
+      "id": "electron-desktop",
+      "declared": "44.9.0",
+      "statusAtReview": "supported-stable",
+      "eol": "2027-03-02",
+      "owner": "repository-maintainer",
+      "rationale": "Security boundary and runtime for the open Windows desktop wrapper.",
+      "authoritativeSource": "https://releases.electronjs.org/schedule"
+    },
+    {
+      "id": "electron-builder",
+      "declared": "26.17.0",
+      "statusAtReview": "pinned-build-tool",
+      "reviewRequired": true,
+      "owner": "repository-maintainer",
+      "rationale": "Creates portable/NSIS/MSIX desktop artifacts; changes affect package and signing behavior.",
+      "evidenceSource": "desktop/electron/package.json"
+    },
+    {
+      "id": "github-actions-critical",
+      "declaredMajors": {
+        "checkout": 7,
+        "setup-node": 7,
+        "setup-python": 7,
+        "upload-artifact": 7
+      },
+      "statusAtReview": "exact-sha-governed",
+      "reviewRequired": true,
+      "owner": "repository-maintainer",
+      "rationale": "Critical build/release automation actions are pinned to reviewed immutable commit SHAs across workflows and separately checked by repository QA; major annotations are informational only.",
+      "evidenceSource": ".github/workflows",
+      "declaredShas": {
+        "checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "setup-node": "949feb2413d6458794dcd2491c4babbbce0c15c1",
+        "setup-python": "5fda3b95a4ea91299a34e894583c3862153e4b97",
+        "upload-artifact": "cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+      }
+    }
+  ],
+  "exceptions": []
+}

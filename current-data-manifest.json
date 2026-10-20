@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "version": "2026.09.02.1",
+  "generatedFrom": "data/measured-data-collection-closeout-2026-08-30.json",
+  "generatedFromVersion": "2026.08.30.1",
+  "effectiveMeasuredState": {
+    "inventoriedMeasuredSources": 34,
+    "rightsExecutableSources": 21,
+    "fullyProfiledMeasuredFamilies": 17,
+    "acceptedInjectionProcessTimeSeriesValues": 85569824
+  },
+  "semanticRegistry": "./process-data-semantic-registry.json",
+  "evidenceStates": [
+    "measured",
+    "synthetic",
+    "research-derived",
+    "draft-unvalidated"
+  ],
+  "boundaries": {
+    "measuredDoesNotMeanUniversal": true,
+    "unresolvedSemanticsFailClosed": true,
+    "commandsAndSetpointsAreNotMeasuredActuals": true,
+    "rawThirdPartyNumericPayloadShippedToPublicRuntime": false,
+    "siteLocalPreparedDataIsNotAutomaticallyPromotedToRepositoryMeasuredEvidence": true
+  },
+  "localProcessData": {
+    "storage": "IndexedDB",
+    "database": "mouldmaster-process-data-v1",
+    "rawUpload": false,
+    "intelligence": [
+      "site-local baseline",
+      "drift comparison",
+      "before-after intervention comparison",
+      "structured troubleshooting links",
+      "learner recommendation bridge"
+    ]
+  }
+}

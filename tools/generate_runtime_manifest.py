@@ -1,0 +1,109 @@
+from __future__ import annotations
+
+from pathlib import Path
+import argparse
+import json
+
+ROOT = Path(__file__).resolve().parents[1]
+DOMAINS = ROOT / "src" / "domains"
+OUTPUT = ROOT / "runtime-domain-manifest.json"
+PRIORITY_ASSETS = [
+    "./src/domains/shared/learner-scope.js",
+    "./src/domains/shared/data-spine.js",
+    "./src/domains/shared/signal-registry.js",
+    "./src/domains/research/governed-mechanisms.js",
+    "./src/domains/assessment/assessment-analytics-v2.js",
+    "./src/domains/engineering/engineering-store.js",
+    "./src/domains/engineering/evidence-chain.js",
+    "./src/domains/engineering/research-context.js",
+    "./src/domains/learning/learning-analytics-loader.js",
+    "./src/domains/learning/activity-events-v2.js",
+    "./src/domains/learning/learner-model.js",
+    "./src/domains/learning/delayed-transfer-reviews.js",
+    "./src/domains/learning/book-runtime.js",
+    "./src/domains/learning/book-claim-trace.js",
+    "./src/domains/materials/material-registry.js",
+    "./src/domains/materials/material-search-index.js",
+    "./src/domains/materials/material-search-pagination.js",
+    "./src/domains/materials/material-observation-v2.js",
+    "./src/domains/process/evidence-granularity.js",
+    "./src/domains/learning/content-intelligence.js",
+    "./src/domains/process/engineering-core-browser.js",
+    "./src/domains/engineering/engineer-simulator-ui.js",
+    "./src/domains/engineering/virtual-apprenticeship.js",
+    "./src/domains/engineering/spatial-twin.js",
+]
+# Presentation repair must run after every other domain has had a chance to add
+# learner-facing shell/navigation chrome. Keeping this in the generator makes the
+# order reproducible instead of relying on alphabetical discovery or mutation timing.
+TRAILING_ASSETS = ["./src/domains/shell/learner-ui-polish.js"]
+# runtime-domain-manifest dataAssets remains the canonical validated material-data
+# channel. Other packaged domain data (such as Book JSON) is governed and hashed by
+# its owning feature/package checks rather than widening this material invariant.
+DATA_ASSETS = ["./material-catalog-v1.json"]
+# Generated classic-script packs are injected synchronously by index.html at
+# specific legacy ordering boundaries. Loading them again through the async
+# domain manifest would execute their source parts twice.
+EXCLUDED_DIRS = {"runtime-packs"}
+BOOTSTRAP_OR_PACK_OWNED_ASSETS = {
+    "./src/domains/governance/production-health.js",
+    "./src/domains/shared/runtime-v2.js",
+    "./src/domains/shell/app-shell-registry.js",
+    "./src/domains/shell/pwa-shell.js",
+    "./src/domains/shell/accessibility-hardening.js",
+    "./src/domains/shell/app-shell-finalize.js",
+    "./src/domains/assessment/assessment-answer-cue-fix.js",
+    "./src/domains/assessment/assessment-final-hardening.js",
+    "./src/domains/assessment/assessment-psychometric-hardening.js",
+    "./src/domains/research/reference-20x-extension.js",
+    "./src/domains/research/reference-research-extension.js",
+    "./src/domains/learning/specialist-evidence-gap-extension.js",
+    "./src/domains/learning/training-qa-fix.js",
+    "./src/domains/learning/backup-authority-notice.js",
+}
+
+
+def build_manifest() -> dict:
+    discovered = []
+    for path in sorted(DOMAINS.rglob("*.js")):
+        if path.name == "domain-bootstrap.js":
+            continue
+        relative = path.relative_to(DOMAINS)
+        if any(part in EXCLUDED_DIRS for part in relative.parts[:-1]):
+            continue
+        asset = "./" + path.relative_to(ROOT).as_posix()
+        if asset in BOOTSTRAP_OR_PACK_OWNED_ASSETS:
+            continue
+        discovered.append(asset)
+    priority = [asset for asset in PRIORITY_ASSETS if asset in discovered]
+    trailing = [asset for asset in TRAILING_ASSETS if asset in discovered]
+    fixed = set(priority + trailing)
+    assets = priority + [asset for asset in discovered if asset not in fixed] + trailing
+    for asset in DATA_ASSETS:
+        if not (ROOT / asset.removeprefix("./")).is_file():
+            raise FileNotFoundError(f"Runtime data asset is missing: {asset}")
+    return {
+        "schemaVersion": 1,
+        "generatedBy": "tools/generate_runtime_manifest.py",
+        "assets": assets,
+        "dataAssets": DATA_ASSETS,
+    }
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Generate the MouldMaster public domain runtime asset manifest")
+    parser.add_argument("--check", action="store_true", help="fail if the committed manifest is stale")
+    args = parser.parse_args()
+    expected = json.dumps(build_manifest(), indent=2, ensure_ascii=False) + "\n"
+    if args.check:
+        actual = OUTPUT.read_text(encoding="utf-8")
+        if actual != expected:
+            raise SystemExit("runtime-domain-manifest.json is stale; run tools/generate_runtime_manifest.py")
+        print("Domain runtime manifest is current")
+        return
+    OUTPUT.write_text(expected, encoding="utf-8")
+    print(f"Wrote {OUTPUT.relative_to(ROOT)}")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,172 @@
+const {test,expect}=require('@playwright/test');
+const BASE='http://127.0.0.1:4173/';
+
+async function openApp(page,width,learningAwards=[]){
+  await page.addInitScript(({learningAwards})=>{
+    const id='reachability-qa',user={id,name:'Reachability QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},learningAwards,currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+      localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:id,users:{[id]:user}}));
+  },{learningAwards});
+  await page.setViewportSize({width,height:900});
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>typeof window.MM_APP_SHELL_FINALIZED==='string'&&!document.getElementById('mmBootstrap')&&!!window.MMBook,{timeout:30000});
+  await page.evaluate(async()=>{if(window.MM_ACCESSIBILITY_HARDENING_LOADING)await window.MM_ACCESSIBILITY_HARDENING_LOADING});
+  await page.waitForFunction(()=>window.MM_ACCESSIBILITY_HARDENING?.nonBlockingDrawersExcluded===true,{timeout:10000});
+  await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
+}
+async function mobileHub(page,name){await page.locator('.mobile-nav > button').filter({hasText:name}).click()}
+async function mobileMore(page){await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();await expect(page.locator('#modal .modal-card')).toBeVisible()}
+async function revealMoreAction(page,action){
+  // A More destination is reachable through a visible native disclosure,
+  // not required to be permanently visible inside a collapsed category.
+  const group=action.locator('xpath=ancestor::details[contains(@class,"mm-more-disclosure")][1]');
+  await expect(group.locator(':scope > summary')).toBeVisible();
+  if(!(await group.evaluate(node=>node.open)))await group.locator(':scope > summary').click();
+  await expect(action).toBeVisible({timeout:10000});
+}
+
+async function closeModal(page){const b=page.getByRole('button',{name:/^close$/i}).first();if(await b.isVisible().catch(()=>false))await b.click();await expect(page.locator('#modal')).toHaveClass(/hidden/)}
+async function expectVisible(page,selector){await expect(page.locator(selector)).toBeVisible({timeout:10000})}
+async function expectNoHorizontalOverflow(page,label){const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+1);expect(overflow,label+' must not introduce horizontal page overflow').toBeFalsy()}
+async function openAssessmentsFromQuestionCentre(page,width){
+ if(width<=900)await mobileHub(page,'Practice');
+ else{const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click()}
+ await expectVisible(page,'#scenarios .mm-practice-hub');
+ const centre=page.locator('#scenarios [data-mm-hub-action="question-centre"]');await expect(centre).toBeVisible();await centre.click();
+ await expectVisible(page,'#scenarios .mm-question-centre');
+ const assessments=page.locator('#scenarios .mm-question-centre [data-mm-hub-action="assessments"]');await expect(assessments).toBeVisible();await assessments.click();
+ await expectVisible(page,'#exams');
+}
+
+async function openDeepLink(page,view){
+ await page.addInitScript(()=>{
+  const id='deep-link-qa',user={id,name:'Deep Link QA',role:'learner',completed:[],bookmarks:[],notes:{},examScores:{},learningAwards:[],currentLesson:1,lastSeen:new Date().toISOString(),onboardingDone:true,experience:'Beginner',goal:'Learn the full process',dailyMinutes:15,region:'ALL'};
+  localStorage.setItem('mouldmasterProDB',JSON.stringify({activeUser:id,users:{[id]:user}}));
+ });
+ await page.setViewportSize({width:768,height:900});
+ await page.goto(BASE+'index.html?view='+encodeURIComponent(view),{waitUntil:'domcontentloaded'});
+ await page.waitForFunction(()=>typeof window.MM_APP_SHELL_FINALIZED==='string'&&!document.getElementById('mmBootstrap'),{timeout:30000});
+ await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
+}
+test.describe('canonical startup deep links',()=>{
+ test('core and compatibility view routes open their requested learner surfaces',async({page})=>{
+  for(const [view,selector] of [['materials','#materials'],['assessment','#exams'],['standards','#standards']]){
+   await openDeepLink(page,view);
+   await expectVisible(page,selector);
+  }
+ });
+ test('custom governed routes open Book, process data and readiness surfaces',async({page})=>{
+  for(const [view,selector] of [['book','#mmBookView'],['processDataLabs','#processDataLabs'],['standards-readiness','#mmStandardsReadinessView']]){
+   await openDeepLink(page,view);
+   await expectVisible(page,selector);
+  }
+ });
+});
+
+for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name:'desktop',width:1440}]){
+ test.describe('UI-only feature reachability '+viewport.name,()=>{
+  test('dashboard never exposes obsolete three-certificate denominator',async({page})=>{
+   await openApp(page,viewport.width,['Beginner-ALL','Beginner-UK','Beginner-US','Beginner-NZ']);
+   await expect(page.locator('#dashboard')).not.toContainText('4/3');
+   const state=await page.evaluate(()=>{
+     const rows=[...document.querySelectorAll('#dashboard .statline')],row=rows.find(x=>String(x.textContent||'').includes('Certificates earned'));
+     return row?{present:true,value:String(row.querySelector('b')?.textContent||''),visible:!!(row.offsetWidth||row.offsetHeight||row.getClientRects().length)}:{present:false}
+   });
+   if(state.present)expect(state.value).toBe('4');
+  });
+  test('Book is discoverable and opens through visible UI',async({page})=>{
+   await openApp(page,viewport.width);
+   if(viewport.width<=900){await mobileMore(page);const book=page.locator('[data-mm-registry-menu="book"]');await revealMoreAction(page,book);await book.click()}
+   else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();const book=page.locator('[data-mm-registry-menu="book"]');await revealMoreAction(page,book);await book.click()}
+   await expectVisible(page,'#mmBookView');
+  });
+  test('Measured Data catalog is reachable through visible Practice and Process Data controls',async({page})=>{
+   await openApp(page,viewport.width);
+   if(viewport.width<=900){await mobileHub(page,'Practice');await expectVisible(page,'#scenarios .mm-practice-hub')}
+   else {const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click();await expectVisible(page,'#scenarios .mm-practice-hub')}
+   const process=page.locator('#scenarios [data-mm-hub-action="process-data"]');await expect(process).toBeVisible();await process.click();
+   await expectVisible(page,'#processDataLabs');
+   const measured=page.locator('#processDataLabs [data-mme-catalog-launcher] [data-mme-open-catalog]');await expect(measured).toBeVisible();await measured.click();
+   await expectVisible(page,'#processDataLabs [data-mm-measured-evidence="catalog"]');
+   await expect(page.locator('#processDataLabs')).toContainText('Browse all 17 measured families');
+   await expect(page.locator('#pageTitle')).toHaveText('Measured Data');
+  });
+  test('core learning and practice destinations are reachable by clicks',async({page})=>{
+   await openApp(page,viewport.width);
+   if(viewport.width<=900){
+    await mobileHub(page,'Learn');await expectVisible(page,'#path .mm-learn-hub');
+    await mobileHub(page,'Materials');await expectVisible(page,'#materials');
+    await openAssessmentsFromQuestionCentre(page,viewport.width);
+    await mobileHub(page,'Practice');await page.locator('#scenarios [data-mm-hub-action="labs"]').click();await page.locator('#modal [data-mm-hub-action="simulator"]').click();await expectVisible(page,'#simulator');
+   }else{
+    for(const [view,selector] of [['path','#path'],['scenarios','#scenarios'],['materials','#materials']]){
+     const b=page.locator('#nav button[data-view="'+view+'"]');await expect(b).toBeVisible();await b.click();await expectVisible(page,selector);
+    }
+   }
+  });
+
+  test('Book and assessment surfaces survive zoom and preserve focus recovery',async({page})=>{
+   await openApp(page,viewport.width);await page.evaluate(()=>{document.documentElement.style.fontSize='200%'});
+   if(viewport.width<=900){await mobileMore(page);const trigger=page.locator('.mobile-nav > button').filter({hasText:'More'});await closeModal(page);await expect(trigger).toBeFocused();await mobileMore(page);const book=page.locator('[data-mm-registry-menu="book"]');await revealMoreAction(page,book);await book.click()}
+   else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();const book=page.locator('[data-mm-registry-menu="book"]');await revealMoreAction(page,book);await book.click()}
+   await expectVisible(page,'#mmBookView');await expectNoHorizontalOverflow(page,'Book at 200% text scaling');
+   await openAssessmentsFromQuestionCentre(page,viewport.width);await expectNoHorizontalOverflow(page,'Assessments at 200% text scaling');
+  });
+  test('reference UI exposes one canonical launcher without duplicate desktop controls',async({page})=>{
+   await openApp(page,viewport.width);
+   if(viewport.width<=900){
+    await expect(page.locator('#mm-src-open')).toBeHidden();await expect(page.locator('#mmrd-open')).toBeHidden();
+    await mobileMore(page);await revealMoreAction(page,page.locator('[data-mm-registry-menu="reference-data"]'));
+   }else{
+    await expect(page.locator('#mmrd-open')).toBeVisible();await expect(page.locator('#mm-src-open')).toBeHidden();
+    await expect(page.locator('#mm-src-open')).toHaveAttribute('aria-hidden','true');await expect(page.locator('#mm-src-open')).toHaveAttribute('tabindex','-1');
+    const visibleReferenceLaunchers=await page.locator('#mm-src-open:visible,#mmrd-open:visible').count();expect(visibleReferenceLaunchers).toBe(1);
+   }
+  });
+  test('reference launcher state follows tablet-to-desktop resize without duplicates',async({page})=>{
+   await openApp(page,768);
+   await expect(page.locator('#mm-src-open')).toBeHidden();await expect(page.locator('#mmrd-open')).toBeHidden();
+   await page.setViewportSize({width:1024,height:900});
+   await expect(page.locator('#mmrd-open')).toBeVisible();await expect(page.locator('#mm-src-open')).toBeHidden();
+   await expect(page.locator('#mm-src-open')).toHaveAttribute('aria-hidden','true');await expect(page.locator('#mm-src-open')).toHaveAttribute('tabindex','-1');
+   await page.setViewportSize({width:768,height:900});
+   await expect(page.locator('#mm-src-open')).toBeHidden();await expect(page.locator('#mmrd-open')).toBeHidden();
+  });
+  test('shell-registered tools are discoverable through their intended visible surface',async({page})=>{
+   await openApp(page,viewport.width);
+   if(viewport.width<=900){
+    await mobileMore(page);
+    for(const id of ['book','learning-insights','repair-app-files'])await revealMoreAction(page,page.locator('[data-mm-registry-menu="'+id+'"]'));
+    await closeModal(page);await mobileHub(page,'Practice');
+    for(const action of ['troubleshooting','process-data','labs'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
+   }else{
+    const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();await expect(page.locator('#modal .modal-card')).toBeVisible();
+    for(const name of ['Standards & safety','Profile & data'])await revealMoreAction(page,page.locator('#modal .quick-action').filter({hasText:name}));
+    for(const name of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks'])await expect(page.locator('#modal .quick-action').filter({hasText:name})).toHaveCount(0);
+    await closeModal(page);
+    const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click();await expectVisible(page,'#scenarios .mm-practice-hub');
+    for(const action of ['troubleshooting','process-data','labs','question-centre'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
+    await page.locator('#scenarios [data-mm-hub-action="question-centre"]').click();
+    await expectVisible(page,'#scenarios .mm-question-centre');
+    for(const label of ['Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions'])await expect(page.locator('#scenarios .mm-question-centre').getByRole('button',{name:new RegExp(label,'i')})).toBeVisible();
+   }
+  });
+ });
+}
+
+
+test('desktop References drawer remains explicitly non-blocking and keeps canonical launcher semantics',async({page})=>{
+ await openApp(page,1440);
+ await expect(page.locator('#mmrd-open')).toBeVisible();
+ await page.locator('#mmrd-open').click();
+ const drawer=page.locator('.mmrd');
+ await expect(drawer).toBeVisible();
+ await expect(drawer).toHaveAttribute('data-mm-non-blocking','1');
+ await expect(drawer).toHaveAttribute('aria-modal','false');
+ expect(await page.evaluate(()=>window.MM_ACCESSIBILITY_HARDENING?.nonBlockingDrawersExcluded===true)).toBeTruthy();
+ await page.setViewportSize({width:768,height:900});
+ await expect(page.locator('#mmrd-open')).toBeHidden();
+ await expect(drawer).toHaveAttribute('aria-modal','false');
+ await page.setViewportSize({width:1440,height:900});
+ await expect(page.locator('#mmrd-open')).toBeVisible();
+ await expect(drawer).toHaveAttribute('aria-modal','false');
+});

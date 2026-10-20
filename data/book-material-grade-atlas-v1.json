@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 2,
+  "bookId": "mouldmaster-book",
+  "atlasVersion": "2026.10.01.2",
+  "bookRuntimeCompatibility": "2026.10.06.5",
+  "status": "technical-review-material-atlas",
+  "title": "Complete Material Data Atlas",
+  "boundary": "Book material reference data remains technical-review evidence. Canonical catalogue values and regional evidence retain manufacturer, grade, source, test-condition, lifecycle, value-status and process context. Typical or manufacturer-measured values are not guaranteed specifications, universal settings or production setpoints. Current supplier TDS/SDS/processing guidance, machine/mould limits and site controls remain authoritative.",
+  "canonicalCatalog": {
+    "path": "material-catalog-v1.json",
+    "catalogVersion": "generated",
+    "status": "validated",
+    "manufacturerCount": 28,
+    "gradeCount": 260,
+    "boundary": "Compiled only from staged exact-grade records whose provenance stage is validated/published and which pass semantic QA. Internal staging/schema files are not part of the public runtime artifact. Commercial grade names may legitimately coexist when variant/revision/production identity differs."
+  },
+  "regionalEvidence": {
+    "sourcePath": "data/asian-aus-nz-material-grade-extraction-wave2-v1.json",
+    "packagedPath": "src/domains/learning/book-data/book-material-regional-evidence-v1.json",
+    "version": "2026-09-28.40",
+    "scope": "Asia including Singapore, Australia and New Zealand primary-source material evidence wave 2",
+    "policy": {
+      "noUniversalSettings": true,
+      "noInterpolationAcrossGrades": true,
+      "regionalAvailabilityIsNotManufacturingOrigin": true,
+      "typicalValuesAreNotSpecifications": true
+    },
+    "recordCount": 284,
+    "statusCounts": {
+      "candidate-complete": 161,
+      "conditional": 4,
+      "discovery-only": 112,
+      "candidate-partial": 7
+    }
+  },
+  "regionalProfileIndex": {
+    "path": "data/material-unique-profile-index-v1.json",
+    "version": "2026-09-28.10",
+    "profileCount": 89,
+    "countingRule": "one manufacturer + exact grade identity equals one unique complete profile; multiple evidence rows enrich but do not increase profile count",
+    "role": "Reconciliation/enrichment view only; it does not define complete Book material coverage."
+  },
+  "coverage": {
+    "canonicalExactGrades": 260,
+    "regionalEvidenceRows": 284,
+    "regionalExactProfiles": 89,
+    "completeDefinition": "All canonical public exact-grade records plus every row in the governed Asia/Australia/New Zealand evidence wave."
+  }
+}

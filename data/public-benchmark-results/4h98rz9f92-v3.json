@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "status": "completed-public-measured-record-level-benchmark",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetId": "mendeley-4h98rz9f92-v3",
+    "datasetDoi": "10.17632/4h98rz9f92.3",
+    "version": 3,
+    "license": "CC BY 4.0",
+    "companionArticleDoi": "10.1016/j.dib.2024.110987",
+    "publisherFileId": "368356fe-618c-4eab-82e6-53dc86762943",
+    "publisherFileName": "Raw Data.xlsx",
+    "sha256": "39210169aac62a1455603d37cdffaca93cf0c46189ea4258c5f3c0a4a37255c9",
+    "publisherSha256Matched": true,
+    "retrievedSizeBytes": 14922
+  },
+  "profile": {
+    "process": "injection moulding",
+    "material": "HDPE with graphite nanoplatelets",
+    "experimentalRows": 35,
+    "numericColumns": 22,
+    "deliveredNumericCells": 770,
+    "roleCounts": {
+      "experimentIdentifier": 35,
+      "processInputs": 105,
+      "tensileModulusDirectReplicates": 175,
+      "tensileModulusDerivedAverage": 35,
+      "hardnessDirectReplicates": 175,
+      "hardnessDerivedAverage": 35,
+      "toughnessDirectReplicates": 175,
+      "toughnessDerivedAverage": 35
+    },
+    "directMeasuredPropertyValues": 525,
+    "directMeasuredPropertyBreakdown": {"tensileModulus":175,"hardness":175,"toughness":175},
+    "derivedAverageValuesExcluded": 105,
+    "processInputValuesExcludedFromMeasuredOutcomeCount": 105,
+    "experimentIdentifiersExcluded": 35,
+    "formulaCells": 0,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "rawRowsOrCellValuesEmitted": false,
+    "numericMeasurementValuesEmitted": false
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": true,
+    "recordLevelMeasuredDataset": true,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "derivedAverageValuesExcluded": true,
+    "modelAndClassificationFilesExcluded": true
+  },
+  "retrieval": {"rawPublisherFileCommitted":false,"rawRowsOrCellValuesUploadedAsArtifact":false},
+  "evidenceBoundary": "The exact CC BY 4.0 Raw Data.xlsx workbook is SHA-256 matched. Across 35 injection-moulding experiments, 15 direct replicate outcome columns provide 525 measured mechanical-property values: 175 tensile-modulus, 175 hardness and 175 toughness measurements. Three 35-row average columns are derived summaries and excluded. GNP percentage, injection temperature and injection pressure are process inputs, experiment numbers are identifiers, and Random-Forest/model/classification/supporting files are excluded. This record-level dataset contributes zero to the high-frequency time-series sample metric."
+}

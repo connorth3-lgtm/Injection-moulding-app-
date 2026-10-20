@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "status": "accepted-restricted-profile",
+  "retrieved_date": "2026-08-29",
+  "sourceWorkflowRun": 33229910314,
+  "sourceArtifact": {
+    "id": 9708145379,
+    "name": "mouldmaster-restricted-measured-benchmark-iguzzini",
+    "digest": "sha256:ae88eea7210ab1b448e092a0b4704212b25da0d42ff4eb3733bb8819c9bee494"
+  },
+  "source": {
+    "datasetId": "iguzzini-road-lenses",
+    "repository": "https://github.com/airtlab/machine-learning-for-quality-prediction-in-plastic-injection-molding",
+    "pinnedCommit": "41b8f392923d37b50b5098ed918dd2f0de1bc328",
+    "file": "dataset/data.csv",
+    "gitBlobSha": "1ca731e1e80451f6ebf857f3db69bc9f4566d073",
+    "sha256": "c8424a6a47cb793383e19e646212b09f5b63b66147a9397f26fdd8760b6889e0",
+    "sizeBytes": 127056,
+    "peerReviewedCompanion": "10.3390/info13060272",
+    "releaseTerms": "Dataset and source code are freely released for research and educational purposes; citation requested.",
+    "useScope": "research-and-education-only",
+    "rawRedistributionAllowed": false
+  },
+  "profile": {
+    "rows": 1451,
+    "columns": 14,
+    "headers": [
+      "Melt temperature",
+      "Mold temperature",
+      "time_to_fill",
+      "ZDx - Plasticizing time",
+      "ZUx - Cycle time",
+      "SKx - Closing force",
+      "SKs - Clamping force peak value",
+      "Ms - Torque peak value current cycle",
+      "Mm - Torque mean value current cycle",
+      "APSs - Specific back pressure peak value",
+      "APVs - Specific injection pressure peak value",
+      "CPn - Screw position at the end of hold pressure",
+      "SVo - Shot volume",
+      "quality"
+    ],
+    "processFeatureColumns": [
+      "Melt temperature",
+      "Mold temperature",
+      "time_to_fill",
+      "ZDx - Plasticizing time",
+      "ZUx - Cycle time",
+      "SKx - Closing force",
+      "SKs - Clamping force peak value",
+      "Ms - Torque peak value current cycle",
+      "Mm - Torque mean value current cycle",
+      "APSs - Specific back pressure peak value",
+      "APVs - Specific injection pressure peak value",
+      "CPn - Screw position at the end of hold pressure",
+      "SVo - Shot volume"
+    ],
+    "processFeatureCount": 13,
+    "nonNullCounts": {
+      "Melt temperature": 1451,
+      "Mold temperature": 1451,
+      "time_to_fill": 1451,
+      "ZDx - Plasticizing time": 1451,
+      "ZUx - Cycle time": 1451,
+      "SKx - Closing force": 1451,
+      "SKs - Clamping force peak value": 1451,
+      "Ms - Torque peak value current cycle": 1451,
+      "Mm - Torque mean value current cycle": 1451,
+      "APSs - Specific back pressure peak value": 1451,
+      "APVs - Specific injection pressure peak value": 1451,
+      "CPn - Screw position at the end of hold pressure": 1451,
+      "SVo - Shot volume": 1451,
+      "quality": 1451
+    },
+    "recordLevelMeasuredProcessValues": 18863,
+    "qualityNonNull": 1451,
+    "deliveredQualityCounts": {"1": 370, "2": 406, "3": 310, "4": 365},
+    "publisherReportedQualityCounts": {"1": 370, "2": 406, "3": 310, "4": 360},
+    "publisherReportedQualityCountSum": 1446,
+    "deliveredQualityCountSum": 1451,
+    "deliveredMinusReportedByClass": {"1": 0, "2": 0, "3": 0, "4": 5},
+    "rawRowsOrCellValuesEmitted": false
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": true,
+    "useScope": "research-and-education-only",
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "recordLevelOnly": true,
+    "rawPublisherFileCommitted": false,
+    "rawRowsUploadedAsArtifact": false
+  },
+  "evidenceBoundary": "The exact pinned real-production CSV passed aggregate profiling under the repository's explicit research/education release terms. All 1,451 rows contain all 13 process fields and a quality label. The delivered class-4 count is 365, resolving the README's 1,446-vs-1,451 discrepancy: its class-4 prose count is short by five. This is record-level evidence, not a high-frequency waveform dataset, and the restricted release terms are not widened into raw redistribution rights."
+}

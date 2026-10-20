@@ -1,0 +1,129 @@
+{
+  "schema": 1,
+  "version": "2026.09.10.100pass.1",
+  "reviewed": "2026-09-10",
+  "purpose": "Results of 100 distinct targeted search passes across the remaining hard gaps. Search repetition was varied by mechanism, data modality, access route and production context; rediscovered sources were excluded rather than re-counted.",
+  "searchAudit": {
+    "targetedPasses": 100,
+    "passFamilies": [
+      "shot-to-action-to-recovery",
+      "cross-machine transfer",
+      "multicavity physical outcomes",
+      "hot-runner actual/device state",
+      "maintenance and tool wear",
+      "material lot/batch/moisture linkage",
+      "2K/multimaterial overmoulding",
+      "cooling/fouling/thermal state",
+      "open raw dataset repositories",
+      "longitudinal drift and real production"
+    ],
+    "newCandidatesAcceptedForStaging": 4,
+    "cumulativeResearchCandidateCountAfterThisFile": 178,
+    "canonicalMeasuredFamilyIncrement": 0,
+    "canonicalAcceptedTimeSeriesValueIncrement": 0,
+    "interpretation": "Only four sufficiently distinct and useful families survived duplicate and evidence-quality review. This low novelty rate is evidence of discovery saturation, not a reason to weaken admission standards."
+  },
+  "sources": [
+    {
+      "id": "MM-DATA-175",
+      "name": "Six-month industrial polymer-melt stability / pre-defect drift corpus",
+      "priority": "P0-REQUEST",
+      "sourceType": "industrial_longitudinal_cycle_state_quality_drift",
+      "evidenceClass": "measured_real_production_longitudinal",
+      "independenceFamily": "Leiria_industrial_melt_stability_2025_2026",
+      "article": "https://doi.org/10.3390/polym18010032",
+      "articleLicense": "CC BY 4.0",
+      "reportedScale": {
+        "continuousProductionMonths": 6,
+        "approxCycles": 280000,
+        "rawSensors": 264,
+        "reducedSignals": 47,
+        "piecesPerCycle": 2,
+        "approxCycleSeconds": 55
+      },
+      "reportedSignals": ["temperature", "pressure", "torque", "stage time", "force", "engineered viscosity indicator"],
+      "qualitySemantics": "Operator-identified non-conforming parts are used to define pre-defect volatile windows; these derived windows must remain distinguished from directly observed defect labels.",
+      "value": "One of the strongest longitudinal real-production candidates found for gradual drift, pre-defect instability and maintenance-stop-aware temporal validation.",
+      "dataAvailability": "Article states original contributions are included in the article and further inquiries may be directed to the corresponding author; the underlying company cycle table is not established as openly reusable raw data.",
+      "governance": {
+        "rawPayloadCommitted": false,
+        "canonicalMeasuredCountIncrement": 0,
+        "industrialOwnerPermissionRequiredForRawUse": true,
+        "derivedVolatileWindowsNotPhysicalDefectRows": true
+      },
+      "nextAction": "Request an anonymized chronological cycle table preserving stop/maintenance boundaries, direct defect events, machine-state signals and rights for internal validation/derived aggregate publication."
+    },
+    {
+      "id": "MM-DATA-176",
+      "name": "150,000-shot SLM injection-mould tool-life production study",
+      "priority": "P1-EVIDENCE",
+      "sourceType": "publisher_verified_longitudinal_tool_life",
+      "evidenceClass": "measured_tool_wear_and_functional_quality",
+      "independenceFamily": "Lancaster_Alexandria_SLM_toollife_2019",
+      "article": "https://doi.org/10.3390/ma12233910",
+      "articleLicense": "CC BY 4.0",
+      "tooling": "four Stainless Steel 316L SLM-fabricated injection-mould tool insert sets",
+      "reportedProduction": {
+        "initialToolRuns": [10000, 20000, 30000, 40000],
+        "fourthToolCumulativeShots": 150000,
+        "inspectionSamplesPerAdditional10000Run": 170
+      },
+      "measuredEvidence": ["tool dimensional measurements before/after runs", "microhardness", "surface/tool condition", "sampled molded-part dimensional accuracy", "visual inspection", "functional fit to automotive headlamp housing"],
+      "value": "Net-new long-horizon tooling durability evidence with explicit shot counts and repeated dimensional/functional inspection. It strengthens natural tool-life evidence but is not a maintenance-intervention/recovery dataset.",
+      "access": "Open CC BY article with reported tables/figures; no separate machine-readable raw production table located in the 100-pass review.",
+      "governance": {
+        "rawPayloadCommitted": false,
+        "canonicalMeasuredCountIncrement": 0,
+        "articleEvidenceOnlyUntilRawReleaseFound": true
+      },
+      "nextAction": "Use publisher-verifiable tables as lower-level longitudinal tooling evidence and contact authors for batch-level dimensional measurements if reusable source data exist."
+    },
+    {
+      "id": "MM-DATA-177",
+      "name": "Industrial mould wear-out survival dataset across multiple moulds",
+      "priority": "P0-OWNER-REQUEST",
+      "sourceType": "industrial_mould_lifetime_survival_data",
+      "evidenceClass": "measured_multi_mould_maintenance_lifecycle",
+      "independenceFamily": "DTU_MADE_SPIR_mould_wearout_2020",
+      "article": "https://doi.org/10.1080/0951192X.2020.1829062",
+      "reportedContext": "Real datasets supplied by an industrial injection-moulding partner operating a multitude of moulds with differing geometry/size and running settings.",
+      "reportedMethods": ["mould clustering", "Kaplan-Meier survival curves", "random survival forest", "conditional survival / early-warning implementation"],
+      "value": "Directly addresses multi-mould natural wear-out/lifetime prediction, a rarer evidence class than controlled wear tests.",
+      "rights": "Industrial partner data are described in the publication; no public reusable raw dataset or explicit redistribution permission was located.",
+      "governance": {
+        "rawPayloadCommitted": false,
+        "canonicalMeasuredCountIncrement": 0,
+        "industrialOwnerPermissionRequired": true
+      },
+      "nextAction": "Request controlled access or owner-side profiling with anonymized mould family, cycle/age exposure, event/censor status, maintenance history and failure definition retained."
+    },
+    {
+      "id": "MM-DATA-178",
+      "name": "Operating-condition drift detection with incremental injection-moulding quality updates",
+      "priority": "P0-REQUEST",
+      "sourceType": "measured_chronological_quality_drift_and_update",
+      "evidenceClass": "measured_process_drift_quality_monitoring",
+      "independenceFamily": "HUST_operating_drift_2025",
+      "article": "https://doi.org/10.3390/polym17223025",
+      "articleLicense": "CC BY 4.0",
+      "reportedChronology": {
+        "initialTrainingMoulds": 100,
+        "firstDetectedDriftMould": 216,
+        "firstRelabelWindow": "217-236",
+        "secondDetectedDriftMould": 344,
+        "secondRelabelWindow": "345-364"
+      },
+      "reportedOutcome": "After incremental updating, the paper reports lower prediction error and a large reduction in anomaly rate across later production intervals.",
+      "dataAvailability": "Raw supporting data will be made available by the authors on request.",
+      "value": "Useful explicit chronological drift/update family for validating leakage-safe temporal monitoring and model-refresh logic.",
+      "governance": {
+        "rawPayloadCommitted": false,
+        "canonicalMeasuredCountIncrement": 0,
+        "authorRequestRequired": true,
+        "driftPointsRemainStudySpecific": true
+      },
+      "nextAction": "Request the ordered per-mould dataset with original process signals, directly measured quality fields, sample/relabel boundaries and all update timestamps preserved."
+    }
+  ],
+  "saturationFinding": "After 100 targeted passes, most high-ranking results were already represented by MM-DATA-001..174 or were lower-value article-only variants. Further generic web searching has sharply diminishing expected value compared with admission engineering and direct data-owner requests."
+}

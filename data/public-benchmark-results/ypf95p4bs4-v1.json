@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "status": "accepted-profiled-record-level-injection-operations",
+  "retrievedDate": "2026-08-29",
+  "source": {
+    "datasetId": "mendeley-ypf95p4bs4-v1",
+    "datasetDoi": "10.17632/ypf95p4bs4.1",
+    "license": "CC BY 4.0",
+    "publisherFileName": "TF-IN92-241-G198-Excel.xlsx",
+    "sha256": "b8bdf20f4e513d647ef4fc887f8846c254d0151657137a888f20752559ce1917",
+    "publisherSha256Matched": true
+  },
+  "profile": {
+    "acceptedDirectObservedBlocks": [
+      {"sheet":"Limpieza 2023 (Mtto)","directMeasuredField":"Tiempo (m)","selection":"Máquina = Inyectora","directObservedValues":26,"sourceRecordsWithAcceptedValue":26},
+      {"sheet":"Setup 2023","directMeasuredField":"Tiempo(h)","selection":"Operación contains Cambio de molde","directObservedValues":194,"sourceRecordsWithAcceptedValue":194},
+      {"sheet":"Paradas de Maquinaria 2023","directMeasuredField":"Tiempo (m)","selection":"Máquina = Inyectora","directObservedValues":116,"sourceRecordsWithAcceptedValue":116},
+      {"sheet":"Tiempos de Setup (Westinghouse)","directMeasuredField":"Observaciones (min)","selection":"merged observation columns 4-13; activity rows only","directObservedValues":330,"sourceActivityRowsWithAcceptedValues":51,"observationColumns":10}
+    ],
+    "directRecordLevelInjectionOperationalMeasurements": 666,
+    "excludedSheetsAndArtifacts": {
+      "arenaDoeFiles": 3,
+      "validationWorkbook": "simulation/model validation and scenario outputs",
+      "salesSheet": "commercial records, not injection-process measurements",
+      "summaryPivotFormulaSheets": "derived summaries/formulas",
+      "proposalSmedTpmSsdSheets": "proposed/intervention data, not baseline direct measurements",
+      "financeAndScheduleSheets": "economic/project calculations"
+    },
+    "rawNumericValuesEmitted": false
+  },
+  "acceptance": {
+    "countsAsFullyProfiledMeasuredDataset": true,
+    "acceptedRecordLevelMeasuredValues": 666,
+    "acceptedMeasuredTimeSeriesSamples": 0,
+    "evidenceClass": "record-level injection-operation duration measurements"
+  },
+  "retrieval": {"validationWorkbookDownloaded":false,"doeFilesDownloaded":false,"rawPublisherFileCommitted":false,"rawNumericValuesUploadedAsArtifact":false},
+  "evidenceBoundary": "Acceptance is restricted to direct literal duration observations in four source-log/time-study blocks: injector cleaning/maintenance, historical mould-change setup, injector downtime incidents, and Westinghouse setup observations. Dates, identifiers, sales, formulas, pivots, availability/MTBF/MTTR calculations, proposal/intervention values, finance, Arena models and validation scenario outputs are excluded."
+}

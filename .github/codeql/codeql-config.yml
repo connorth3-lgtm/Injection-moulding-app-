@@ -1,0 +1,8 @@
+# MouldMaster CodeQL default-setup configuration.
+#
+# MouldMaster_Core_App.html is the immutable legacy Windows recovery payload.
+# Its bytes are pinned by latest.json and qa_recovery_immutability.py and are not
+# the executable browser/PWA/Electron runtime. Active generated runtime remains
+# under src/core-runtime and is intentionally NOT excluded.
+paths-ignore:
+  - MouldMaster_Core_App.html

@@ -1,0 +1,105 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "reviewed": "2026-09-09",
+  "purpose": "Updated priority queue after wave-4 discovery and mechanism verification. Rank by incremental validation value, independence, rights clarity and likelihood of becoming canonical evidence.",
+  "priorityQueue": [
+    {
+      "rank": 1,
+      "priority": "P0",
+      "gap": "Authorised real-site shot-linked validation data",
+      "why": "Still the single largest gap between public research breadth and a defensible MouldMaster real-production validation claim.",
+      "minimumFields": ["cycle/shot ID", "machine", "mould", "cavity", "exact material grade/lot", "setpoints", "actual signals", "physical quality", "defect/reject", "intervention", "verified recovery/outcome", "chronological order"]
+    },
+    {
+      "rank": 2,
+      "priority": "P0",
+      "gap": "Real MouldMaster learner telemetry",
+      "why": "No external educational dataset can establish MouldMaster item difficulty, discrimination, confidence calibration or learning gain.",
+      "currentState": "0 real MouldMaster learner rows"
+    },
+    {
+      "rank": 3,
+      "priority": "P0",
+      "gap": "Independent blinded engineer review",
+      "why": "The app now has prepared blinded case packets but still has no independent MouldMaster-specific engineering labels.",
+      "currentState": "20 blinded packets; 0 completed independent blinded labels"
+    },
+    {
+      "rank": 4,
+      "priority": "P0",
+      "gap": "Rights-clear multi-machine / multi-mould industrial pressure and anomaly data",
+      "targets": ["MM-DATA-084 Philips/CERTH", "MM-DATA-085 ZHAW/Kistler", "ProBayes licence clarification", "SKZ LoKI licence clarification"],
+      "why": "Would improve transfer, drift, anomaly and bad-shot validation across genuinely different work systems."
+    },
+    {
+      "rank": 5,
+      "priority": "P0",
+      "gap": "Extract and profile the LEGO six-machine-family energy appendix",
+      "targets": ["MM-DATA-087"],
+      "why": "275 industrial steady-state measurements across six machine families are unusually valuable independent calibration data; publisher explicitly states research data are in Appendix 1 and the final article is CC BY.",
+      "nextAction": "Retrieve exact final PDF/Appendix through a supported route, fingerprint, extract literal research rows and separate measurements from regression outputs."
+    },
+    {
+      "rank": 6,
+      "priority": "P0",
+      "gap": "Recover and profile the RWTH PCR archive",
+      "targets": ["rwth-pcr-2025 / ExperimentalData.zip"],
+      "why": "Authoritative record now clearly exposes the ZIP endpoint and rich cavity-pressure/part-mass semantics, but the current automated environment still fails to deliver the binary payload.",
+      "nextAction": "Use publisher-supported/manual authoritative transfer, then fingerprint and profile without committing raw files."
+    },
+    {
+      "rank": 7,
+      "priority": "P1",
+      "gap": "Machine/mould maintenance lifecycle data with actual component failures",
+      "why": "Current operations and energy datasets are strong on state/downtime but weak on component degradation -> maintenance action -> recovery.",
+      "minimumFields": ["component", "cycle/time history", "condition signal", "fault code", "maintenance action", "replacement/repair", "downtime", "post-maintenance quality"]
+    },
+    {
+      "rank": 8,
+      "priority": "P1",
+      "gap": "Hot-runner actual-state data",
+      "why": "Measured hot-runner studies exist, but command/display versus actual manifold/nozzle/valve state remains thin.",
+      "minimumFields": ["zone actual temperature", "heater power/current", "valve-pin actual", "nozzle/cavity pressure", "cavity ID", "physical quality"]
+    },
+    {
+      "rank": 9,
+      "priority": "P1",
+      "gap": "Tool wear / cooling-circuit / ejection-force longitudinal data",
+      "why": "Public studies support these mechanisms, but longitudinal production records linking tool condition to shot-level quality remain scarce."
+    },
+    {
+      "rank": 10,
+      "priority": "P1",
+      "gap": "Complete exact-grade material provenance",
+      "targets": ["MAT-SRC-001..MAT-SRC-008"],
+      "why": "Eight manufacturer-controlled exact-grade sources are now staged, including Victrex PEEK 450G, but each still needs exact PDS revision/retrieval date/SHA-256 and field-level test-context mapping before material-grade-v2 promotion."
+    },
+    {
+      "rank": 11,
+      "priority": "P1",
+      "gap": "Raw gate-freeze and micro-injection pressure cycles",
+      "targets": ["MM-DATA-086", "DOI 10.1007/s10965-026-04946-y"],
+      "why": "Article-level evidence is now strong; raw repeated cycles would unlock direct trace-based assessment and benchmark validation."
+    },
+    {
+      "rank": 12,
+      "priority": "P2",
+      "gap": "Specialist gas/projectile-assisted raw data and rights-clear professional tooling CAD",
+      "targets": ["DOI 10.3390/polym15091985", "MM-DATA-079 MoldCAD/AIMold"],
+      "why": "Fluid-assisted mechanism evidence is now substantially stronger at article level, so raw specialist datasets and explicit CAD licensing are the remaining value rather than more papers."
+    }
+  ],
+  "mechanismStatusAfterWave4": {
+    "strongReReview": ["fibre-breakage-retained-length", "liquid-silicone-rubber", "fluid-assisted-moulding", "moisture-drying-degradation", "recyclate-process-variability", "gate-freeze-and-part-mass"],
+    "improvedNeedMore": ["runner-gate-multicavity-imbalance", "hot-runner-actual-behaviour", "cross-material-process-transfer", "venting-air-entrapment"],
+    "note": "Strong re-review does not mean automatic promotion; canonical criteria and independent-source overlap checks still apply."
+  },
+  "deprioritized": [
+    "additional generic single-material time series without new context",
+    "simulation-only volume",
+    "duplicate mirrors or versions",
+    "more out-of-domain learner proxy datasets",
+    "generic polymer property compilations when exact manufacturer grade documents exist"
+  ]
+}

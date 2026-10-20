@@ -1,0 +1,171 @@
+{
+  "schema": 1,
+  "version": "2026.09.10.1",
+  "reviewed": "2026-09-10",
+  "purpose": "Current public/external data acquisition recheck for MouldMaster. This record distinguishes newly resolved authoritative context from payloads or channel semantics that remain unavailable. Metadata, sensor-family capability, publication-reported counts and inaccessible payloads do not increase accepted measured-data counts.",
+  "baselineAcceptedInjectionProcessTimeSeriesValues": 85569824,
+  "acceptedMeasuredValuesDelta": 0,
+  "finalAcceptedInjectionProcessTimeSeriesValues": 85569824,
+  "rawThirdPartyPayloadCommitted": false,
+  "sources": [
+    {
+      "datasetId": "cross-process-chain-17240390",
+      "source": "https://doi.org/10.5281/zenodo.17240390",
+      "status": "semantic-clarification-still-required",
+      "newlyResolvedContext": [
+        "The lower-workpiece delivered TXT format explicitly declares pressure in bar, melt volume in cm3 and injection flow in cm3/s.",
+        "The upper-workpiece public files expose time, injection_pressure_target, injection_pressure_actual, melt_volume, injection_velocity and state."
+      ],
+      "stillMissing": [
+        "Authoritative engineering unit for upper-workpiece pressure target/actual.",
+        "Authoritative meanings for upper-workpiece state codes."
+      ],
+      "decision": "Keep upper-workpiece pressure actual and state non-counting. Do not copy the lower-workpiece bar unit into the upper-workpiece family by inference.",
+      "potentialAdditionalMeasuredValuesIfPressureIsAuthoritativelyResolved": 21907374,
+      "acceptedMeasuredValuesAdded": 0
+    },
+    {
+      "datasetId": "impure-pascoe-2022",
+      "source": "https://doi.org/10.5281/zenodo.6913660",
+      "instrumentationSource": "https://doi.org/10.3233/ATDE230912",
+      "status": "hardware-context-resolved-export-semantics-still-blocked",
+      "newlyResolvedContext": {
+        "machine": "Battenfield BA 600 CDC injection moulding machine, manufactured 1998 in the cited PASCOE instrumentation study",
+        "machineSensors": [
+          "Kistler 4262A hydraulic-pressure sensor",
+          "Kistler P510 screw-position sensor",
+          "Kistler 4021B nozzle-temperature sensor"
+        ],
+        "mouldSensors": [
+          "two Kistler 6188A combined cavity pressure/temperature sensors"
+        ],
+        "coolingSensor": "TRACER vm base cooling-water temperature sensor on the main pipe to the mould",
+        "acquisition": [
+          "Kistler ComoNeo",
+          "digital and analogue machine/sensor acquisition",
+          "ProfiNet / Ethernet-IP capability described in the instrumentation study"
+        ],
+        "datasetFileEvidence": [
+          "Zenodo record exposes individual cycle CSV files including Pascoe_17_05_2022_Cycle1.csv.",
+          "Zenodo record also exposes stage-label CSV files for the 17 May trial."
+        ]
+      },
+      "alreadyAcceptedMeasuredValues": 1188348,
+      "stillMissing": [
+        "Authoritative delivered-CSV engineering units and scaling for HydPressure.",
+        "Authoritative delivered-CSV engineering units and scaling for ScrewPosition.",
+        "Authoritative stable mapping and units/scaling for Analog Input[1] and Analog Input[2]."
+      ],
+      "decision": "Use the hardware map as source-backed context only. Do not derive CSV units/scaling from sensor model capability or plausible numeric ranges.",
+      "maximumAdditionalProfiledNumericValuesPotentiallyResolvable": 1188348,
+      "acceptedMeasuredValuesAdded": 0
+    },
+    {
+      "datasetId": "warwick-demoulding",
+      "source": "https://doi.org/10.17632/x9hc7hf6xd.2",
+      "status": "research-apparatus-context-resolved-special-format-export-still-required",
+      "newlyResolvedContext": {
+        "material": "Braskem C711-70RNA polypropylene in the related experimental study",
+        "machine": "Wittmann Microsystems 50 micro-injection moulding machine",
+        "reportedResearchProcessConditions": {
+          "meltTemperatureC": 190,
+          "injectionVelocityMmPerS": 200,
+          "switchOverPressureBar": 150,
+          "packingPressureBar": 200,
+          "packingDurationS": 6,
+          "clampingForceKn": 45,
+          "cycleTimeS": 29,
+          "shotSizeCm3": 0.445
+        },
+        "demouldingForceAcquisition": [
+          "Kistler 9211B sensor behind a 3 mm ejector pin",
+          "Kistler 5073A charge amplifier",
+          "NI cDAQ-9174 with NI9215 voltage-input module",
+          "LabVIEW 2022",
+          "10 kHz acquisition",
+          "reported sensor sensitivity -4.4 pC/N"
+        ]
+      },
+      "deliveredDatasetState": "Five publisher OPJU projects remain the authoritative delivered files; no trusted CSV/XLSX export was obtained in this recheck.",
+      "decision": "Keep trial/channel/sample counts unpromoted until a trusted Origin/OriginPro or validated Origin Viewer export is completed and reconciled.",
+      "acceptedMeasuredValuesAdded": 0
+    },
+    {
+      "datasetId": "rwth-pcr-2025",
+      "source": "https://doi.org/10.18154/RWTH-2025-06809",
+      "status": "openaccess-schema-context-resolved-machine-delivery-still-blocked",
+      "newlyResolvedContext": {
+        "machine": "Arburg Allrounder 520 A 1500-800",
+        "materials": [
+          "Systalen PP-24000 gr000 recycled polypropylene",
+          "SABIC PP579S virgin polypropylene"
+        ],
+        "reportedRecordSignals": [
+          "screw antechamber pressure",
+          "cavity pressure",
+          "controller output",
+          "screw velocity",
+          "screw antechamber volume over time"
+        ],
+        "partMassControllerIterationData": [
+          "cavity-pressure reference",
+          "part mass",
+          "part-mass reference"
+        ],
+        "publisherArchive": "ExperimentalData.zip"
+      },
+      "deliveryState": "The authoritative RWTH record advertises the archive as OpenAccess, but automated retrieval still does not deliver a structurally valid ZIP to the research client.",
+      "decision": "Keep zero newly accepted samples until actual archive bytes are delivered, fingerprinted and semantically validated.",
+      "acceptedMeasuredValuesAdded": 0
+    },
+    {
+      "datasetId": "ad-stgn-injection-moulding-v1",
+      "source": "https://doi.org/10.17632/6f9x8yg8nj.1",
+      "status": "metadata-confirmed-files-still-not-exposed",
+      "newlyResolvedContext": {
+        "license": "CC BY 4.0",
+        "collectionWindow": "2025-02-02 to 2025-03-14",
+        "reportedContinuousSensors": 66,
+        "reportedDiscreteControlActions": 7,
+        "reportedNormalTrainingSamples": 88000,
+        "reportedNormalValidationSamples": 22614,
+        "processStages": ["clamping", "injection", "holding", "cooling", "ejection", "robot pick/place"]
+      },
+      "stillMissing": "Public payload file entries/bytes required for file-level profiling and semantic validation.",
+      "decision": "Keep publication/record-level scale metadata non-counting until files are actually exposed and profiled.",
+      "acceptedMeasuredValuesAdded": 0
+    },
+    {
+      "datasetId": "strathclyde-rtim-tablets-v1",
+      "source": "https://doi.org/10.15129/e1a516b3-41ad-4b38-81e1-6ebec17b8e7d",
+      "status": "reopened-exact-publisher-file-listing-now-visible-byte-profile-pending",
+      "newlyResolvedContext": {
+        "license": "CC BY 4.0",
+        "fileName": "doi.org_10.1016_j.ijpharm.2022.121956_AllData.xlsx",
+        "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "publisherDisplayedSize": "33.6 KB",
+        "reportedContents": [
+          "gravimetric analysis",
+          "dimensional analysis",
+          "optical coherence tomography analysis",
+          "dissolution testing",
+          "rapid tooling injection moulding tablet data"
+        ]
+      },
+      "priorState": "retrieval-blocked-http",
+      "reopenTrigger": "The authoritative publisher record is now publicly indexed with the exact CC BY 4.0 XLSX filename and size.",
+      "stillMissing": "Delivered workbook bytes followed by sheet/column/unit/row profiling and classification of measured versus derived/supporting values.",
+      "decision": "Reopen acquisition work, but do not count any workbook values until bytes are actually obtained and profiled.",
+      "acceptedMeasuredValuesAdded": 0
+    }
+  ],
+  "remainingExternalInputs": [
+    "Cross-process source-author clarification for upper-workpiece pressure unit and state-code meanings.",
+    "PASCOE source-author/delivered-data dictionary for HydPressure, ScrewPosition and Analog Input[1]/[2] units/scaling/mapping.",
+    "Trusted Origin/OriginPro or validated Origin Viewer export of the five Warwick OPJU projects.",
+    "Successful first-party delivery of RWTH ExperimentalData.zip.",
+    "Public file exposure by the AD-STGN Mendeley record.",
+    "Successful first-party delivery of the Strathclyde RTIM XLSX followed by file-level profiling."
+  ],
+  "siteOnlyBoundary": "Machine serial/configuration, exact production mould geometry/cooling, actual in-use material lot, controlled part drawing/CTQs, site-approved process window, calibration records and real production shot/trace/quality data cannot be reconstructed from public research sources and must be supplied from the production site."
+}

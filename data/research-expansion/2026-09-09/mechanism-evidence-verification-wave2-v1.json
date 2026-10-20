@@ -1,0 +1,201 @@
+{
+  "schema": 1,
+  "version": "2026.09.09.1",
+  "reviewed": "2026-09-09",
+  "purpose": "Source-verification addendum for mechanisms still provisional in data/evidence-coverage-v1.json. This file does not mutate canonical promotion status; it records publisher-level evidence that should be reviewed against the existing promotion rule.",
+  "canonicalPromotionRuleReferenced": {
+    "minimumIndependentPublisherVerifiedPrimaryMeasured": 2,
+    "requiresMeasuredSignals": true,
+    "requiresPhysicalQualityOutcome": true,
+    "requiresExperimentalContext": true,
+    "requiresExplicitLimitation": true
+  },
+  "mechanisms": [
+    {
+      "mechanismId": "runner-gate-multicavity-imbalance",
+      "currentCanonicalStatus": "provisional",
+      "verificationCandidates": [
+        {
+          "sourceId": "W4403380517",
+          "doi": "10.3390/polym16202874",
+          "title": "Impact of Runner Size, Gate Size, Polymer Viscosity, and Molding Process on Filling Imbalance in Geometrically Balanced Multi-Cavity Injection Molding",
+          "publisher": "MDPI Polymers",
+          "verification": "publisher-verified-primary-measured",
+          "license": "CC BY 4.0",
+          "measuredEvidence": ["four-cavity flow-length imbalance", "tensile properties by cavity/packing state", "runner size", "gate size", "polymer viscosity/material family", "conventional versus microcellular moulding"],
+          "physicalOutcome": ["flow-length deviation", "tensile strength", "elongation"],
+          "limitation": "Study-specific four-cavity geometry, polymers and gate/runner dimensions; it supports the imbalance mechanism but no universal runner/gate sizing rule."
+        },
+        {
+          "sourceId": "MM-DATA-078",
+          "doi": "10.3390/s22072704",
+          "title": "Machine Learning in Injection Molding: An Industry 4.0 Method of Quality Prediction",
+          "publisher": "MDPI Sensors",
+          "verification": "publisher-verified-primary-measured-supporting",
+          "license": "CC BY 4.0 article",
+          "measuredEvidence": ["16-cavity mould", "30 in-mould pressure sensors", "100 Hz pressure traces", "part mass", "holding-pressure/holding-time variation"],
+          "physicalOutcome": ["part mass"],
+          "limitation": "The classification analysis emphasized the first cavity/runner; use as multicavity pressure-supporting evidence, not direct proof of runner-balance causation."
+        }
+      ],
+      "reviewImpact": "The first study is a strong candidate to raise publisher-verified primary measured coverage. The second strengthens cavity-specific sensing but should not be counted as an independent imbalance proof without a mechanism-specific review."
+    },
+    {
+      "mechanismId": "hot-runner-actual-behaviour",
+      "currentCanonicalStatus": "provisional",
+      "verificationCandidates": [
+        {
+          "sourceId": "W4394726558",
+          "doi": "10.3390/polym16081057",
+          "title": "Out-of-Mold Sensor-Based Process Parameter Optimization and Adaptive Process Quality Control for Hot Runner Thin-Walled Injection-Molded Parts",
+          "publisher": "MDPI Polymers",
+          "verification": "publisher-verified-primary-measured",
+          "license": "open-access article; underlying raw data available on request",
+          "material": "Borealis PP BJ368MO",
+          "experimentalContext": ["two-cavity hot-runner mould", "0.35 mm thin-wall part", "1000 Hz nozzle-pressure sensor", "tie-bar strain/clamping-force measurement", "screw position", "at least four repeats per experiment"],
+          "physicalOutcome": ["part weight", "gate-area deformation/defect observations", "weight variation and standard deviation"],
+          "limitation": "External nozzle-pressure and tie-bar sensing do not directly measure every hot-runner zone or valve-pin actual; the tested mould, material and adaptive-control logic are application-specific."
+        }
+      ],
+      "reviewImpact": "Strong candidate to move this source from metadata-screened to publisher-verified measured evidence; a second independent study is still needed for promotion."
+    },
+    {
+      "mechanismId": "liquid-silicone-rubber",
+      "currentCanonicalStatus": "provisional",
+      "verificationCandidates": [
+        {
+          "sourceId": "W4308973098",
+          "doi": "10.1002/app.53381",
+          "title": "Novel approach to characterize the cross-linking effect of liquid silicone rubber via cavity pressure analysis during injection molding",
+          "publisher": "Wiley Journal of Applied Polymer Science",
+          "verification": "publisher-verified-primary-measured",
+          "license": "open access / CC BY 4.0",
+          "measuredEvidence": ["LSR cavity-pressure curves", "cross-linking/cure-state interpretation", "experimental validation"],
+          "physicalOutcome": ["cure/cross-linking state inferred from measured process response"],
+          "limitation": "Cure behavior is formulation-, tool-temperature- and geometry-specific; cavity-pressure signatures cannot be generalized to all LSR grades."
+        },
+        {
+          "sourceId": "W4388077386",
+          "doi": "10.3390/polym15214278",
+          "title": "Liquid Silicone Rubber Headlamp Lens Injection Molding Process Optimization Based on Tie Bar Elongation and NSGA III",
+          "publisher": "MDPI Polymers",
+          "verification": "publisher-verified-primary-measured",
+          "license": "CC BY 4.0 article; raw data available on request",
+          "measuredEvidence": ["tie-bar strain/clamping-force monitoring", "mould cavity pressure", "process-parameter variation"],
+          "physicalOutcome": ["lens residual stress", "optical transmittance"],
+          "limitation": "Optical LSR lens system and tested process window are application-specific; optimization settings are not transferable recipes."
+        },
+        {
+          "sourceId": "W2135174259",
+          "doi": "10.7735/ksmte.2014.23.2.206",
+          "title": "Effects of Variation in Process Parameters on Cavity Pressure and Mechanical Strength of Molded Parts in LSR Injection Molding",
+          "publisher": "Journal of the Korean Society of Manufacturing Technology Engineers",
+          "verification": "publisher-record-primary-measured",
+          "measuredEvidence": ["in-mould temperature", "cavity pressure", "process-parameter variation"],
+          "physicalOutcome": ["tensile strength", "flash-related moulding behavior"],
+          "limitation": "Older LSR formulation, mould and sensor arrangement; independent review should confirm full-text reuse/licence before canonical evidence promotion."
+        }
+      ],
+      "reviewImpact": "Two independent modern publisher-verified measured studies now appear to satisfy the core evidence shape for LSR. Canonical promotion should still wait for independence/limitations review and exact source capture."
+    },
+    {
+      "mechanismId": "fluid-assisted-moulding",
+      "currentCanonicalStatus": "provisional",
+      "verificationCandidates": [
+        {
+          "sourceId": "W2074306211",
+          "doi": "10.1155/2015/161938",
+          "title": "Experimental and Numerical Investigation of the Effect of Process Conditions on Residual Wall Thickness and Cooling and Surface Characteristics of Water-Assisted Injection Molded Hollow Products",
+          "publisher": "Wiley/Hindawi Advances in Materials Science and Engineering",
+          "verification": "publisher-verified-primary-measured-plus-simulation",
+          "license": "open access",
+          "measuredEvidence": ["water-assisted moulding experiments", "process-condition variation", "residual-wall/cooling/surface measurements"],
+          "physicalOutcome": ["residual wall thickness", "cooling response", "surface characteristics"],
+          "limitation": "Water-assisted hollow-product geometry and equipment-specific results; does not represent gas/projectile-assisted processes."
+        },
+        {
+          "sourceId": "W1974522617",
+          "doi": "10.1155/2014/238251",
+          "title": "A Study on the Void Formation in Residual Wall Thickness of Fluid-Assisted Injection Molding Parts",
+          "publisher": "Hindawi Advances in Materials Science and Engineering",
+          "verification": "publisher-verified-primary-measured-plus-simulation",
+          "license": "CC BY",
+          "measuredEvidence": ["water versus silicone-oil assisted moulding experiments", "thermal/process comparison"],
+          "physicalOutcome": ["void formation", "residual-wall behavior"],
+          "limitation": "Fluid, curved hollow geometry and thermal boundary conditions are specific; water, gas and projectile assistance remain separate specialist families."
+        },
+        {
+          "sourceId": "W3111723492",
+          "doi": "10.1155/2020/3481752",
+          "title": "Study of Residual Wall Thickness and Multiobjective Optimization for Process Parameters of Water-Assisted Injection Molding",
+          "publisher": "Wiley/Hindawi Advances in Polymer Technology",
+          "verification": "publisher-verified-experimental-confirmation-plus-model",
+          "license": "CC BY 4.0",
+          "measuredEvidence": ["confirmation experiments", "short-shot size", "water pressure", "melt temperature", "water-assist delay/mould temperature"],
+          "physicalOutcome": ["hollowed core ratio", "wall-thickness difference"],
+          "limitation": "Much of the parameter mapping is CFD/surrogate-model based; count only the confirmation experiments as primary measured evidence."
+        }
+      ],
+      "reviewImpact": "Water/fluid-assisted evidence is substantially stronger than the canonical metadata-screened state suggests. Promotion of the broad combined family should still avoid treating water, gas and projectile assistance as interchangeable."
+    },
+    {
+      "mechanismId": "moisture-drying-degradation",
+      "currentCanonicalStatus": "provisional",
+      "verificationCandidates": [
+        {
+          "sourceId": "W4210347133",
+          "doi": "10.3390/app12031410",
+          "title": "An Investigation to Reduce the Effect of Moisture on Injection-Molded Parts through Optimization of Plasticization Parameters",
+          "publisher": "MDPI Applied Sciences",
+          "verification": "publisher-verified-primary-measured",
+          "license": "CC BY 4.0 article",
+          "materials": ["TPU", "PC"],
+          "measuredEvidence": ["material moisture/drying condition", "back pressure", "screw speed", "barrel temperature"],
+          "physicalOutcome": ["air-bubble area", "surface gloss", "appearance"],
+          "limitation": "TPU/PC, tested moisture states and plasticization conditions are grade/process-specific; supplier drying limits remain controlling guidance."
+        },
+        {
+          "sourceId": "W3017124338",
+          "doi": "10.37358/MP.20.1.5311",
+          "title": "Considerations on the Drying of the Raw Material and Consequences on the Quality of the Injected Products",
+          "publisher": "Materiale Plastice",
+          "verification": "publisher-record-primary-measured",
+          "materials": ["AKULON polyamide", "DESMOPAN TPU"],
+          "measuredEvidence": ["different moisture-content conditions", "injection-moulded hygroscopic materials"],
+          "physicalOutcome": ["splay/surface appearance defects", "residual-moisture quality relationship"],
+          "limitation": "Specific commercial materials and older drying equipment/process context; exact grade/drying guidance must not be generalized."
+        },
+        {
+          "sourceId": "W2990075833",
+          "doi": "10.3390/polym11121908",
+          "title": "Study of the Influence of the Reprocessing Cycles on the Final Properties of Polylactide Pieces Obtained by Injection Molding",
+          "publisher": "MDPI Polymers",
+          "verification": "publisher-verified-primary-measured-supporting-degradation",
+          "license": "CC BY 4.0 article",
+          "measuredEvidence": ["up to six reprocessing cycles", "melt-flow/thermal/material-state change"],
+          "physicalOutcome": ["mechanical properties", "ductility/toughness", "yellowing/transparency", "crystallinity"],
+          "limitation": "This source supports process-induced degradation/reprocessing rather than moisture specifically."
+        }
+      ],
+      "reviewImpact": "Two independent measured moisture/drying studies plus independent reprocessing-degradation evidence are now publisher-located. This mechanism is a strong candidate for canonical re-review."
+    },
+    {
+      "mechanismId": "fibre-breakage-retained-length",
+      "currentCanonicalStatus": "provisional",
+      "verificationCandidates": [
+        {
+          "sourceId": "W4313653197",
+          "doi": "10.1002/pc.27232",
+          "title": "Relation between injection molding conditions, fiber length and mechanical properties for highly reinforced long fiber polypropylene",
+          "publisher": "Polymer Composites / Wiley",
+          "verification": "primary-measured-source-identity-confirmed; full publisher capture still required",
+          "measuredEvidence": ["retained fibre length", "fibre orientation", "back pressure", "screw speed", "injection speed"],
+          "physicalOutcome": ["tensile strength", "impact resistance"],
+          "limitation": "Highly reinforced long-glass-fibre PP only; raw data are not an open reusable dataset in the reviewed sources."
+        }
+      ],
+      "reviewImpact": "Source identity and measured evidence shape are confirmed, but this mechanism still needs at least one more independent publisher-verified retained-length study before promotion."
+    }
+  ],
+  "boundary": "This addendum records verification evidence only. It does not authorize raw-data reuse, does not change evidence-coverage-v1.json, and does not convert study-specific settings into universal process recipes."
+}
