@@ -4,8 +4,8 @@
   "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.20.4.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "fail",
-    "claim": "Release 2026.10.20.4 candidate artifact was retained from Pre-merge Public Candidate run 39469543774 for source d0f582cef71364fcd0fce3ce07f2a69731aebd8c. Exact-head automated checks are still being completed; this record does not claim a technical QA pass. All seven independent human/device/provider streams remain HOLD."
+    "status": "pass",
+    "claim": "Release 2026.10.20.4 exact-source candidate source 264091fc0eabb309fba3d5b255bfc36c36730679 was produced by Pre-merge Public Candidate run 39470451630 (success), retaining artifact 12287815554 with runtime fingerprint sha256:7f977664ddcf352f5bbed506ec26273c19ce50adcaf0e381f58caed052700425. Required exact-head software QA passed, including Read Aloud and mobile-browser regressions. This is software-controlled evidence only; all seven independent human/device/provider streams remain HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -30,8 +30,8 @@
     },
     "candidate": {
       "release": "2026.10.20.4",
-      "sourceSha": "d0f582cef71364fcd0fce3ce07f2a69731aebd8c",
-      "runtimeFingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      "sourceSha": "264091fc0eabb309fba3d5b255bfc36c36730679",
+      "runtimeFingerprint": "sha256:7f977664ddcf352f5bbed506ec26273c19ce50adcaf0e381f58caed052700425"
     }
   },
   "pwaPhysicalDevices": {
@@ -52,14 +52,14 @@
     },
     "currentCandidate": {
       "release": "2026.10.20.4",
-      "sourceSha": "d0f582cef71364fcd0fce3ce07f2a69731aebd8c",
-      "runtimeFingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-      "candidateRunId": 39469543774,
+      "sourceSha": "264091fc0eabb309fba3d5b255bfc36c36730679",
+      "runtimeFingerprint": "sha256:7f977664ddcf352f5bbed506ec26273c19ce50adcaf0e381f58caed052700425",
+      "candidateRunId": 39470451630,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 12285498577,
-      "artifactName": "physical-pwa-candidate-d0f582cef71364fcd0fce3ce07f2a69731aebd8c",
-      "artifactDigest": "sha256:2f5d3dfac919a0f4c8a828064ea5ea4e12621201a1e924aaef230f18f25a4ef7",
-      "artifactExpiresAt": "2027-01-18T17:50:22Z"
+      "artifactId": 12287815554,
+      "artifactName": "physical-pwa-candidate-264091fc0eabb309fba3d5b255bfc36c36730679",
+      "artifactDigest": "sha256:458f01633a1d5e84588229a6fc44fcb7b1e4d111f2f5f8e8f2d644a4cb12c500",
+      "artifactExpiresAt": "2027-01-18T17:56:45Z"
     }
   },
   "windowsDistribution": {
@@ -125,20 +125,20 @@
     },
     "candidate": {
       "release": "2026.10.20.4",
-      "sourceSha": "d0f582cef71364fcd0fce3ce07f2a69731aebd8c",
-      "runtimeFingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      "sourceSha": "264091fc0eabb309fba3d5b255bfc36c36730679",
+      "runtimeFingerprint": "sha256:7f977664ddcf352f5bbed506ec26273c19ce50adcaf0e381f58caed052700425"
     }
   },
   "webCandidate": {
     "release": "2026.10.20.4",
-    "sourceSha": "d0f582cef71364fcd0fce3ce07f2a69731aebd8c",
-    "runtimeFingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-    "candidateRunId": 39469543774,
+    "sourceSha": "264091fc0eabb309fba3d5b255bfc36c36730679",
+    "runtimeFingerprint": "sha256:7f977664ddcf352f5bbed506ec26273c19ce50adcaf0e381f58caed052700425",
+    "candidateRunId": 39470451630,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 12285498577,
-    "artifactName": "physical-pwa-candidate-d0f582cef71364fcd0fce3ce07f2a69731aebd8c",
-    "artifactDigest": "sha256:2f5d3dfac919a0f4c8a828064ea5ea4e12621201a1e924aaef230f18f25a4ef7",
-    "artifactExpiresAt": "2027-01-18T17:50:22Z"
+    "artifactId": 12287815554,
+    "artifactName": "physical-pwa-candidate-264091fc0eabb309fba3d5b255bfc36c36730679",
+    "artifactDigest": "sha256:458f01633a1d5e84588229a6fc44fcb7b1e4d111f2f5f8e8f2d644a4cb12c500",
+    "artifactExpiresAt": "2027-01-18T17:56:45Z"
   },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:08abe9d8df03d3c6bf8075db86e51e00c9e289adb2f8c6667f248b2ea1268cbe",
     "artifactExpiresAt": "2027-01-18T10:48:45Z"
   },
-  "candidateStatus": "HOLD — exact-source candidate artifact retained; required automated checks are still being completed; all seven independent external review streams remain HOLD.",
+  "candidateStatus": "PASS — exact-source candidate artifact retained from producer run 39470451630, completed with success; required exact-head automated checks passed; all seven independent external review streams remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.10.20.2",
     "sourceSha": "6d14b9d738f0cf04f182cecad6491e1830fc449c",
