@@ -53,7 +53,8 @@ RUNTIME_MARKERS = (
     "status unavailable — do not infer approval",
     "verifiedChapterHtml",
     "startVerifiedListening",
-    "details.open=true;play.click()",
+    "details.open=true;",
+    "reader.startBookFromGesture()",
     "Authored draft cannot self-promote to verified",
     "WORKED_CASES_PATH",
     "validateWorkedCases",
@@ -77,7 +78,7 @@ RUNTIME_MARKERS = (
     "getMaterialRegionalEvidence",
     "readerListeningModuleHtml",
     "readerListeningChapterHtml",
-    "allReaderChapters().map(readerListeningChapterHtml)",
+    "allReaderChapters().map(reader=>readerListeningChapterHtml(reader,",
 )
 
 
@@ -185,7 +186,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         raise AssertionError("live Book runtime is missing governed markers: " + ", ".join(missing_runtime))
 
     listening_module = re.search(
-        r"function readerListeningModuleHtml\(chapter\)\{(.*?)\}\s*function readerListeningChapterHtml\(reader\)",
+        r"function readerListeningModuleHtml\s*\(\s*chapter(?:\s*,\s*options\s*=\s*\{\s*\})?\s*\)\s*\{(.*?)\}\s*function readerListeningChapterHtml\s*\(\s*reader(?:\s*,\s*options\s*=\s*\{\s*\})?\s*\)",
         runtime,
         re.S,
     )
@@ -198,6 +199,25 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         raise AssertionError("live Book listen surface must exclude the technical-review material appendix")
     if "readerSections(chapter)" not in listening_body:
         raise AssertionError("live Book listen surface no longer uses the governed condensed reader sections")
+
+    listening_start = re.search(
+        r"function startVerifiedListening\s*\(\s*\{\s*resume\s*=\s*false\s*\}\s*=\s*\{\s*\}\s*\)\s*\{(.*?)\}\s*function openBook",
+        runtime,
+        re.S,
+    )
+    if not listening_start:
+        raise AssertionError("live Book runtime is missing the governed Read Aloud start handler")
+    listening_start_body = listening_start.group(1)
+    for marker in (
+        "allReaderChapters().map(reader=>readerListeningChapterHtml(reader,",
+        "details.open=true;",
+        "reader.startBookFromGesture()",
+    ):
+        if marker not in listening_start_body:
+            raise AssertionError(f"live Book Read Aloud handler is missing required behavior: {marker}")
+    listening_start_code = re.sub(r"//[^\n]*", "", listening_start_body)
+    if re.search(r"\bplay\s*\.\s*click\s*\(", listening_start_code):
+        raise AssertionError("live Book Read Aloud must start speech directly from the learner gesture")
 
     manifest = fetch_json(candidate, MANIFEST)
     if manifest.get("schema") != 1 or manifest.get("bookId") != "mouldmaster-book":
