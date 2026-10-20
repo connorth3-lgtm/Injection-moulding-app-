@@ -37,7 +37,7 @@ for cfg in ['playwright.config.cjs','playwright.webkit-full.config.cjs']:
     need('material-search-scale' in text(cfg),f'{cfg} does not run scaled material pagination')
     need('material-unified-search' in text(cfg),f'{cfg} does not run unified material index regression')
 scale=text(spec)
-for marker in ['length:72','toHaveCount(1)','toHaveCount(24)','page 1 of 3','page 2 of 3','aria-live','1500']:
+for marker in ['length:72','toHaveCount(1)','toHaveLength(24)','page 1 of 3','page 2 of 3','aria-live','1500']:
     need(marker in scale,f'material scale regression marker missing: {marker}')
 index_code=text('src/domains/materials/material-search-index.js')
 for marker in ['searchAllPage','referenceDocuments','labDocuments','exactGradeDocument','window.MM_REFERENCE_DATA','window.MM_MATERIAL_BEHAVIOUR_LABS','window.MM_MATERIAL_PRACTICE_EXTENSIONS']:
