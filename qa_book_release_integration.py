@@ -247,6 +247,9 @@ need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('sectionCo
 need(sum(len(x.get('sections') or []) for x in enrichment.get('chapterPatches', []) if isinstance(x, dict)) == 14, 'evidence-enrichment ledger section count drifted')
 live_pages_verifier=(ROOT/'tools/verify_book_pages_candidate.py').read_text(encoding='utf-8')
 need('sum(len(x.get("sections") or []) for x in patches if isinstance(x, dict)) != 14' in live_pages_verifier, 'live Book Pages verifier enrichment count drifted from governed 14-section contract')
+need('"details.open=true;"' in live_pages_verifier and '"reader.startBookFromGesture()"' in live_pages_verifier, 'live Book Pages verifier must check direct user-gesture Read Aloud rather than the removed synthetic play.click() path')
+need('"allReaderChapters().map(reader=>readerListeningChapterHtml(reader,"' in live_pages_verifier, 'live Book Pages verifier must check the current all-reader-chapters renderer call')
+need(r'function readerListeningModuleHtml\s*\(' in live_pages_verifier and r'function readerListeningChapterHtml\s*\(' in live_pages_verifier, 'live Book Pages verifier must accept the current renderer signatures')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('independentSmeStatus') == 'hold', 'evidence-enrichment authorization must preserve SME HOLD')
 
 claim_auth=authorization.get('claimEvidenceReferenceAuthorization') or {}
