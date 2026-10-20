@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.10.20.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
-  "scope": "Release 2026.10.20.1 stages the Book Read Aloud callback fix and successor web/cache identity. Exact-source public candidate artifact and current-head technical checks are pending; all seven independent external validation workstreams remain HOLD.",
-  "approvalBoundary": "Technical automation remains FAIL until the 2026.10.20.1 exact-source candidate artifact and exact-head browser/question-quality checks succeed. All seven independent human/device/provider reviews remain HOLD, production root advisory-only and tester invitation STOP/no-send.",
+  "candidateSourceSha": "0e31db7dec3a0f35bf296142cfb12bf4c6d164f0",
+  "scope": "Release 2026.10.20.1 stages the Book Read Aloud callback fix and successor web/cache identity. The exact-source public candidate artifact, strict browser checks and question-quality run passed; all seven independent external validation workstreams remain HOLD.",
+  "approvalBoundary": "Technical automation PASS is limited to the exact 2026.10.20.1 candidate source and recorded automated checks. All seven independent human/device/provider reviews remain HOLD; production root stays advisory-only and tester invitation stays STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,

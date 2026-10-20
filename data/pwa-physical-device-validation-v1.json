@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.10.20.1 technical candidate provenance is pending. No execution on physical iOS/iPadOS and Android devices has been recorded; install, update, offline and audible Book speech remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json; production root, signing, provider and machine-control authority remain on HOLD.",
+  "boundary": "Retained release 2026.10.20.1 candidate 0e31db7dec3a0f35bf296142cfb12bf4c6d164f0 and artifact 12239132766 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -42,7 +42,17 @@
   },
   "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier.",
   "release": "2026.10.20.1",
-  "candidate": null,
+  "candidate": {
+    "release": "2026.10.20.1",
+    "sourceSha": "0e31db7dec3a0f35bf296142cfb12bf4c6d164f0",
+    "runtimeFingerprint": "sha256:a208ca2c5fd94a00bde098f94232de14baf5625145ed2d7f2e6f09ce2caa20cf",
+    "candidateRunId": 39365753604,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 12239132766,
+    "artifactName": "physical-pwa-candidate-0e31db7dec3a0f35bf296142cfb12bf4c6d164f0",
+    "artifactDigest": "sha256:d44e325a2fd88f41f72b561bcfdd4e700c6e8e2bfd1cebbb4a0ccfc21cc1bae5",
+    "artifactExpiresAt": "2027-01-18T03:43:08Z"
+  },
   "previousCandidate": {
     "release": "2026.10.16.1",
     "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
