@@ -5,7 +5,7 @@
 (function(){
   'use strict';
 
-  const VERSION='2026.10.20.4';
+  const VERSION='2026.10.20.5';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -231,18 +231,23 @@
     try{return synth.speaking===true}catch(_){return false}
   }
 
-  function cancelDeviceSpeech(){
-    // Browser/OS voice providers may throw while being stopped. A failed
-    // cancel must never prevent the app controls from resetting safely.
+  function cancelDeviceSpeech(force=false){
+    // Some mobile providers mishandle cancel() immediately before a new
+    // utterance. Clear a device queue only when it is active, or when an
+    // explicit stop/failed-start must invalidate the current request.
     if(!supported)return;
+    if(!force){
+      try{if(synth.speaking!==true&&synth.pending!==true)return}catch(_){return}
+    }
     try{synth.cancel()}catch(_){}
   }
 
   function stop(reason){
     // Invalidate active callbacks before cancel: some device voices dispatch
     // a synchronous cancellation error from synth.cancel().
+    const cancelActive=starting||speaking||paused;
     speakToken+=1;
-    cancelDeviceSpeech();
+    cancelDeviceSpeech(cancelActive);
     selectionPending=false;
     starting=false;speaking=false;paused=false;
     clearHighlight();
@@ -312,7 +317,7 @@
         // A platform may deliver a late onstart after timeout. Invalidate it
         // before canceling or retrying, including when cancel emits no error.
         speakToken+=1;
-        cancelDeviceSpeech();starting=false;speaking=false;paused=false;
+        cancelDeviceSpeech(true);starting=false;speaking=false;paused=false;
         if(androidSpeech){
           // Timer callbacks cannot recover a blocked mobile user gesture.
           setStatus('Device voice did not start. Tap Listen again; check Android text-to-speech settings if it stays silent.');
