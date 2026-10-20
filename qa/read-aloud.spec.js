@@ -169,8 +169,8 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load()});
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.20.6');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.20.6');
+  await expect(host).toHaveAttribute('data-version','2026.10.20.7');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.20.7');
   await expect(host.locator('summary')).toContainText('Listen');
 
   const placement=await page.evaluate(()=>{
@@ -258,7 +258,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.supported===true)).toBeTruthy();
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.20.6');
+  await expect(host).toHaveAttribute('data-version','2026.10.20.7');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {
@@ -300,7 +300,7 @@ test('Read Aloud waits for delayed Windows voices and selects the device voice b
   await host.locator('[data-mm-read="play"]').click();
   await expect.poll(()=>page.evaluate(()=>window.__mmDelayedVoiceName||'')).toBe('Windows QA Voice');
   await expect.poll(()=>page.evaluate(()=>window.__mmDelayedSpeech||'')).toContain('Delayed Windows voice sentinel.');
-  await expect(host.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(host.locator('.mm-read-status')).toHaveText('Speech request is active. Did you hear sound?');
 });
 
 test('Android empty voice list speaks within the original tap without waiting for voiceschanged', async ({ page }) => {
@@ -336,7 +336,7 @@ test('Android empty voice list speaks within the original tap without waiting fo
   await expect.poll(()=>page.evaluate(()=>window.__mmAndroidSpoken||'')).toBe('Android read aloud');
   expect(await page.evaluate(()=>window.__mmAndroidSpeechInsideGesture)).toBe(true);
   expect(await page.evaluate(()=>window.__mmAndroidLanguage)).toBe('');
-  await expect(host.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(host.locator('.mm-read-status')).toHaveText('Speech request is active. Did you hear sound?');
   await host.locator('[data-mm-read="stop"]').click();
 });
 
@@ -370,7 +370,7 @@ test('iOS empty voice list starts speech within the original tap task',async({pa
   await player.locator('[data-mm-read="play"]').click();
   await expect.poll(()=>page.evaluate(()=>window.__mmIosSpoken||'')).toContain('iOS device voice starts');
   expect(await page.evaluate(()=>window.__mmIosSpokeInTap)).toBe(true);
-  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(player.locator('.mm-read-status')).toHaveText('Speech request is active. Did you hear sound?');
 });
 
 test('Automatic sentence chaining stops when the lesson rewrites its visible text',async({page})=>{
@@ -922,7 +922,7 @@ test('Book verified listening starts Android device speech in the original tap a
   await expect(page.locator('#mmBookView .mm-book-reader-module').first()).toBeVisible();
   const player=page.locator('.mm-read-aloud');
   await expect(player.locator('details')).toHaveAttribute('open','');
-  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(player.locator('.mm-read-status')).toHaveText('Speech request is active. Did you hear sound?');
   await page.locator('#mmBookView [data-mm-book-back]').first().click();
   await expect(page.locator('#mmBookView [data-mm-book-contents]')).toBeVisible();
   await expect(player.locator('details')).not.toHaveAttribute('open','');
@@ -1141,7 +1141,7 @@ test('Android first-word regression: sound test and next sentence do not cancel 
   await player.locator('[data-mm-read="play"]').click();
   expect(await page.evaluate(()=>window.__mmAndroidNoIdleCancel.cancels)).toBe(0);
   await page.evaluate(()=>window.__mmAndroidNoIdleCancel.spoken[1].onstart?.());
-  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(player.locator('.mm-read-status')).toHaveText('Speech request is active. Did you hear sound?');
   await page.evaluate(()=>window.__mmAndroidNoIdleCancel.spoken[1].onend?.());
   await expect.poll(()=>page.evaluate(()=>window.__mmAndroidNoIdleCancel.spoken.length)).toBe(3);
   expect(await page.evaluate(()=>window.__mmAndroidNoIdleCancel.cancels)).toBe(0);
@@ -1193,9 +1193,9 @@ test('Android silent TTS is distinguishable from browser media output without cl
   await panel.locator('[data-mm-read="audio-output"]').click();
   await page.evaluate(()=>window.__previousAudioOutputTone=window.__mediaOutputTone);
   await panel.locator('[data-mm-read="play"]').click();
-  await expect(panel.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(panel.locator('.mm-read-status')).toHaveText('Speech request is active. Did you hear sound?');
   await page.evaluate(()=>window.__previousAudioOutputTone.onended?.());
-  await expect(panel.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(panel.locator('.mm-read-status')).toHaveText('Speech request is active. Did you hear sound?');
   expect(await page.evaluate(()=>window.__mediaOutputCalls.includes('close-output'))).toBe(true);
 });
 
@@ -1224,7 +1224,7 @@ test('Android delayed start is not canceled when the watchdog sees no active spe
   await expect(player.locator('.mm-read-status')).toHaveText('Android voice has not confirmed playback yet. It may still start; press Stop if it stays silent.');
   expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(0);
   await page.evaluate(()=>window.__lateAndroidVoice.current.onstart?.());
-  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(player.locator('.mm-read-status')).toHaveText('Speech request is active. Did you hear sound?');
   expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(0);
   await player.locator('[data-mm-read="stop"]').click();
   expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(1);
@@ -1261,8 +1261,35 @@ test('Android speaking flag prevents the startup watchdog from canceling audible
   await player.locator('summary').click();
   await player.locator('[data-mm-read="play"]').click();
   await page.evaluate(()=>{window.__androidSpeakingVoice.speaking=true;window.__androidSpeakingWatchdog[0]();});
-  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(player.locator('.mm-read-status')).toHaveText('Speech request is active. Did you hear sound?');
   expect(await page.evaluate(()=>window.__androidSpeakingVoice.cancels)).toBe(0);
   await player.locator('[data-mm-read="stop"]').click();
   expect(await page.evaluate(()=>window.__androidSpeakingVoice.cancels)).toBe(1);
+});
+
+test('Read Aloud audio check records what the learner heard and gives a useful Android voice recovery path',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Audio check redesign sentinel.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    class Utterance{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={speaking:false,getVoices(){return[];},speak(u){this.current=u;queueMicrotask(()=>u.onstart?.());},cancel(){this.speaking=false;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const host=page.locator('.mm-read-aloud');
+  await host.locator('details').evaluate(el=>{el.open=true;});
+  await expect(host.locator('h2')).toHaveText('Check sound, then listen');
+  await host.locator('[data-mm-read="beeps-heard"]').click();
+  await expect(host.locator('[data-mm-read="guidance"]')).toContainText('Now play the phone voice sample');
+  await host.locator('[data-mm-read="test"]').click();
+  await expect(host.locator('.mm-read-status')).toHaveText('Voice sample is playing. Choose the result you heard above.');
+  await host.locator('[data-mm-read="voice-silent"]').click();
+  await expect(host.locator('[data-mm-read="voice-silent"]')).toHaveAttribute('aria-pressed','true');
+  await expect(host.locator('[data-mm-read="guidance"]')).toContainText('Text-to-speech output');
+  await expect(host.locator('[data-mm-read="guidance"]')).toContainText('Select an installed speech engine and voice');
+  await host.locator('[data-mm-read="beeps-silent"]').click();
+  await expect(host.locator('[data-mm-read="guidance"]')).toContainText('Both checks were silent');
+  await host.locator('[data-mm-read="voice-heard"]').click();
+  await expect(host.locator('[data-mm-read="guidance"]')).toContainText('You confirmed that the phone voice is audible');
 });
