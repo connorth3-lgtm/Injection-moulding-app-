@@ -30,7 +30,19 @@ async function visibleMoreAction(page,id){
 }
 async function closeModal(page){const b=page.getByRole('button',{name:/^close$/i}).first();if(await b.isVisible().catch(()=>false))await b.click();await expect(page.locator('#modal')).toHaveClass(/hidden/)}
 async function expectVisible(page,selector){await expect(page.locator(selector)).toBeVisible({timeout:10000})}
-async function expectNoHorizontalOverflow(page,label){const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+1);expect(overflow,label+' must not introduce horizontal page overflow').toBeFalsy()}
+async function expectNoHorizontalOverflow(page,label){
+ const metrics=await page.evaluate(()=>{
+  const root=document.documentElement,viewport=root.clientWidth;
+  const offenders=[...document.querySelectorAll('body *')].map(el=>{
+   const rect=el.getBoundingClientRect(),style=getComputedStyle(el);
+   const classes=typeof el.className==='string'?el.className:'';
+   return {node:el.tagName.toLowerCase()+(el.id?'#'+el.id:'')+(classes?' .'+classes.trim().replace(/\\s+/g,'.'):''),left:Math.round(rect.left),right:Math.round(rect.right),width:Math.round(rect.width),scrollWidth:el.scrollWidth,clientWidth:el.clientWidth,position:style.position,overflowX:style.overflowX};
+  }).filter(item=>item.right>viewport+1||item.left < -1).sort((a,b)=>b.right-a.right).slice(0,12);
+  return {clientWidth:root.clientWidth,scrollWidth:root.scrollWidth,bodyScrollWidth:document.body.scrollWidth,offenders};
+ });
+ const overflow=metrics.scrollWidth>metrics.clientWidth+1;
+ expect(overflow,`${label} must not introduce horizontal page overflow: ${JSON.stringify(metrics)}`).toBeFalsy()
+}
 async function openAssessmentsFromQuestionCentre(page,width){
  if(width<=900)await mobileHub(page,'Practice');
  else{const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click()}
