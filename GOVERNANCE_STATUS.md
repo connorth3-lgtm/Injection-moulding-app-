@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | Exact-source retained candidate for release 2026.10.20.3 is pending producer and provenance verification; no current candidate is claimed. |
-| Behavioral / browser | **fail** | Exact-source browser and speech regression coverage for release 2026.10.20.3 is pending; results from a prior source do not transfer. |
+| Static / contract | **pass** | Successful exact-source release 2026.10.20.3 producer run 39410559794 retained artifact 12259316379 for source 9ea761d15597f15631565cf514e46dc163c9f2c5 with fingerprint sha256:b9875512b44d9d5bfed5d6f21c9ab280950114f6d1e89e8dc3dd349d2d745eed. Software contract QA passed; no human, device or production approval is implied. |
+| Behavioral / browser | **pass** | Automated browser and Read Aloud regression suites passed for release 2026.10.20.3 source 9ea761d15597f15631565cf514e46dc163c9f2c5; Mobile Browser QA run 39410559791 passed Chromium, WebKit, cross-browser and 500 reliability runs, and Read Aloud QA run 39410560202 passed. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

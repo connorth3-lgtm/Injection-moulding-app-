@@ -1,10 +1,12 @@
 # MouldMaster 2026.10.20.3 — Read Aloud default voice fix
 
-**STATUS: EXACT-SOURCE CANDIDATE PENDING / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** This release updates Book Read Aloud so mobile platforms can select their system default speech voice when no voices are listed. The release is a non-publishing validation candidate; it does not authorize production publication, tester invitations, accreditation, learner efficacy claims or production use.
+**STATUS: EXACT-SOURCE CANDIDATE RETAINED / AUTOMATED TECHNICAL QA PASS / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** This release updates Book Read Aloud so mobile platforms can select their system default speech voice when no voices are listed. The release is a non-publishing validation candidate; it does not authorize production publication, tester invitations, accreditation, learner efficacy claims or production use.
 
 ## Current candidate and technical evidence
 
-The release-specific exact-source candidate artifact has not yet been produced. Its producer run, source, artifact digest and runtime fingerprint will be recorded here only after the candidate workflow completes successfully. Release `2026.10.20.2` is historical and does not validate this release.
+Release `2026.10.20.3` is bound to source `9ea761d15597f15631565cf514e46dc163c9f2c5`, runtime fingerprint `sha256:b9875512b44d9d5bfed5d6f21c9ab280950114f6d1e89e8dc3dd349d2d745eed`, [Pre-merge Public Candidate run 39410559794](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39410559794), retained artifact `12259316379` (`physical-pwa-candidate-9ea761d15597f15631565cf514e46dc163c9f2c5`), digest `sha256:08abe9d8df03d3c6bf8075db86e51e00c9e289adb2f8c6667f248b2ea1268cbe`, expiry `2027-01-18T10:48:45Z`.
+
+Exact-source automated checks passed: [Mobile Browser QA 39410559791](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39410559791) (Chromium visual, reachability and substantive suites; WebKit substantive; cross-browser; all five 100-run reliability shards), [Question Quality 50-Pass 39410560044](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39410560044), [Read Aloud QA 39410560202](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39410560202), [Combined Learn Book QA 39410559701](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39410559701), and [Windows Listen package 39410559812](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39410559812). Automated software tests do not establish actual audible speech on a physical phone or device.
 
 The owner-approved visual baseline remains pinned to its historical source and is used as an automated comparison reference. This Read Aloud behavior change does not alter the visible interface. The historical visual approval does not approve device behavior, accessibility, release or deployment.
 

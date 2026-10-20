@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.10.20.3",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
-  "scope": "Release 2026.10.20.3 stages the mobile Read Aloud default voice fix. The exact-source candidate and software QA are pending; all seven independent external validation workstreams remain HOLD.",
-  "approvalBoundary": "Exact-source technical automation is pending for 2026.10.20.3; visual approval from the earlier release does not approve device behavior, accessibility, release or deployment. No physical-device, human assistive-technology/SME, learner-outcome, Windows signing or NZQA/provider acceptance is claimed; all seven independent external reviews remain HOLD. The candidate is non-publishing, production authority remains advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": "9ea761d15597f15631565cf514e46dc163c9f2c5",
+  "scope": "Release 2026.10.20.3 stages the mobile Read Aloud default voice fix. The exact-source candidate and automated software QA passed; all seven independent external validation workstreams remain HOLD.",
+  "approvalBoundary": "Exact-source technical automation passed for release 2026.10.20.3. This supports a non-production preview only; it does not claim physical-device audibility, human assistive-technology or SME review, learner outcomes, Windows signing, or NZQA/provider acceptance. All seven independent external reviews remain HOLD; production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
