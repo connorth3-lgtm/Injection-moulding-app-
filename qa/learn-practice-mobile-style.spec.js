@@ -10,6 +10,9 @@ async function openApp(page){
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.waitForFunction(()=>typeof window.MM_APP_SHELL_FINALIZED==='string'&&/^\d{4}\.\d{2}\.\d{2}\.\d+$/.test(window.MM_APP_SHELL_FINALIZED)&&window.MM_PRIMARY_HUBS);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
+  // Shell finalization can precede the reference-layout script's DOM-ready boot
+  // in WebKit. Wait for the actual shared-layout marker before asserting CSS.
+  await page.waitForFunction(()=>document.documentElement.classList.contains('mm-reference-layout'));
 }
 
 async function openHub(page,label,selector){
@@ -738,6 +741,7 @@ test('mobile Practice source-owned choices occupy one readable column at 360 and
     await page.setViewportSize({width,height:850});
     await page.evaluate(()=>switchView('scenarios'));
     await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
+    await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
     const metrics=await page.locator('#scenarios .mm-practice-hub .mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid').first().evaluate(root=>{
       const tiles=[...root.querySelectorAll(':scope > button.mm-hub-tile')];
       return {columns:new Set(tiles.map(x=>Math.round(x.getBoundingClientRect().left))).size,
@@ -758,7 +762,9 @@ test('Practice adds five unscored worked fault reviews with mechanisms, verifica
   await expect(cases).toHaveCount(5);
   await expect(page.locator('#scenarios #mmPracticeCases')).toContainText('not five more governed scenarios');
   await cases.first().locator('summary').click();
-  await expect(cases.first()).toHaveAttribute('open','');
+  // `open` is a reflected boolean property; assert the disclosure state
+  // directly instead of relying on a serialized empty attribute in WebKit.
+  await expect(cases.first()).toHaveJSProperty('open',true);
   for(const label of ['Observe the evidence','Compare plausible causes','Verify safely','Common mistake to avoid'])
     await expect(cases.first()).toContainText(label);
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
