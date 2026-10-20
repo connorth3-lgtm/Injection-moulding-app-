@@ -5,7 +5,7 @@
 (function(){
   'use strict';
 
-  const VERSION='2026.10.20.6';
+  const VERSION='2026.10.20.5';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
