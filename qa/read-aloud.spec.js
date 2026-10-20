@@ -1137,6 +1137,35 @@ test('Book Listen advances when an Android speech provider omits onstart',async(
   await expect(player.locator('.mm-read-status')).toHaveText('Stopped');
 });
 
+test('Android sentence handoff does not cancel speech while the previous utterance is ending',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First Android sentence. Second Android sentence.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onboundary=null;this.onend=null;this.onerror=null;}}
+    const synth={speaking:false,cancels:0,cancelsAtSpeak:[],utterances:[],getVoices(){return[];},
+      speak(u){this.utterances.push(u);this.cancelsAtSpeak.push(this.cancels);this.speaking=true;},
+      cancel(){this.cancels++;this.speaking=false;},
+      pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__androidHandoffSpeech=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('summary').click();
+  await player.locator('[data-mm-read="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__androidHandoffSpeech.utterances.length)).toBe(1);
+  await page.evaluate(()=>{
+    // Android can still report the ending utterance as active while onend runs.
+    window.__androidHandoffSpeech.utterances[0].onstart?.();
+    window.__androidHandoffSpeech.utterances[0].onend?.();
+  });
+  await expect.poll(()=>page.evaluate(()=>window.__androidHandoffSpeech.utterances.length)).toBe(2);
+  expect(await page.evaluate(()=>window.__androidHandoffSpeech.cancelsAtSpeak)).toEqual([0,0]);
+  await player.locator('[data-mm-read="stop"]').click();
+  expect(await page.evaluate(()=>window.__androidHandoffSpeech.cancels)).toBe(1);
+});
+
 test('Android watchdog keeps active speech when the provider omits onstart',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Speech remains active without an onstart event.</p></main></body></html>');
   await page.evaluate(()=>{
