@@ -5,7 +5,7 @@
 (function(){
   'use strict';
 
-  const VERSION='2026.10.20.2';
+  const VERSION='2026.10.20.3';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -176,6 +176,16 @@
     return selectedVoice;
   }
 
+  function applyAvailableVoice(utterance){
+    // Android and iOS may expose a working default system voice while
+    // getVoices() returns an empty list. Supplying the page's generic "en"
+    // hint in that state can make some platform engines select a voice they
+    // cannot synthesize. Leave lang empty and let the OS choose its default.
+    if(!selectedVoice){utterance.lang='';return;}
+    utterance.voice=selectedVoice;
+    utterance.lang=selectedVoice.lang||document.documentElement.lang||navigator.language||'en';
+  }
+
   function waitForVoice(timeout=1200){
     if(refreshVoice())return Promise.resolve(selectedVoice);
     if(!supported)return Promise.resolve(null);
@@ -267,8 +277,7 @@
       let utterance;
       try{
         utterance=new SpeechSynthesisUtterance(unit.text);
-        if(selectedVoice){utterance.voice=selectedVoice;utterance.lang=selectedVoice.lang||document.documentElement.lang||'en';}
-        else utterance.lang=document.documentElement.lang||'en';
+        applyAvailableVoice(utterance);
         utterance.rate=Number((playlistMode?listeningUI?.speed:ui?.speed)?.value||1);
       }catch(err){
         // Voice provider constructors and property setters can fail before
@@ -405,9 +414,8 @@
     let utterance;
     try{
       utterance=new SpeechSynthesisUtterance('MouldMaster sound test. You should hear this sentence.');
-      const voice=refreshVoice();
-      if(voice){utterance.voice=voice;utterance.lang=voice.lang||document.documentElement.lang||'en';}
-      else utterance.lang=document.documentElement.lang||navigator.language||'en';
+      refreshVoice();
+      applyAvailableVoice(utterance);
       utterance.rate=1;
     }catch(_){
       stop('Phone voice could not be prepared. Check text-to-speech settings.');
