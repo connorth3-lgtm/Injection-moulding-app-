@@ -261,7 +261,7 @@
   const androidSpeech=/Android/i.test(navigator.userAgent||'');
   const iosSpeech=/iPhone|iPad|iPod/i.test(navigator.userAgent||'')
     ||(/Macintosh/i.test(navigator.userAgent||'')&&Number(navigator.maxTouchPoints||0)>1);
-  function speakCurrent(retry=0){
+  function speakCurrent(retry=0,replaceCurrent=false){
     selectionPending=false;
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');updateButtons();return;}
     // Automatic sentence chaining also needs source validation. A lesson
@@ -282,7 +282,7 @@
       if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
       // Must run directly inside the original tap handler on Android, even
       // with an empty voice list. The platform can pick its default voice.
-      cancelDeviceSpeech();
+      if(replaceCurrent)cancelDeviceSpeech(true);
       let utterance;
       try{
         utterance=new SpeechSynthesisUtterance(unit.text);
@@ -508,7 +508,7 @@
     // Editing the playback rate while paused must not resume narration.
     // The new rate is applied when the next sentence is synthesized.
     if(paused){setStatus('Paused. Updated speed applies to the next sentence.');updateButtons();return;}
-    if(speaking)speakCurrent();
+    if(speaking)speakCurrent(0,true);
   }
 
   function togglePlaylist(){
@@ -531,7 +531,7 @@
     index=nextIndex;
     refreshBookControls();
     if(autoplay){
-      speaking=false;paused=false;speakCurrent();
+      speaking=false;paused=false;speakCurrent(0,true);
       return;
     }
     // A paused device still owns an utterance at the old position. Cancel it
@@ -702,7 +702,7 @@
     ui={host,play:host.querySelector('[data-mm-read="play"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),voice:host.querySelector('[data-mm-read="voice"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),current:host.querySelector('[data-mm-read="current"]'),bookNav:host.querySelector('[data-mm-book-audio-controls]'),bookChapter:host.querySelector('[data-mm-book-audio-chapter]'),bookPrev:host.querySelector('[data-mm-book-audio-prev]'),bookNext:host.querySelector('[data-mm-book-audio-next]'),follow:host.querySelector('[data-mm-book-audio-follow]')};
     ui.play.addEventListener('click',toggle);host.querySelector('[data-mm-read="test"]').addEventListener('click',testDeviceSound);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
     ui.speed.addEventListener('change',()=>changeSpeed(false));
-    ui.voice.addEventListener('change',()=>{preferredVoiceId=ui.voice.value;refreshVoice();if(speaking&&!playlistMode)speakCurrent();});
+    ui.voice.addEventListener('change',()=>{preferredVoiceId=ui.voice.value;refreshVoice();if(speaking&&!playlistMode)speakCurrent(0,true);});
     ui.bookChapter.addEventListener('change',()=>selectBookChapter(ui.bookChapter.value));
     ui.bookPrev.addEventListener('click',()=>jumpBookChapter(-1));
     ui.bookNext.addEventListener('click',()=>jumpBookChapter(1));
