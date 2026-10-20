@@ -35,20 +35,23 @@ function readLiteral(source,start){
 }
 
 function styleElementTexts(source,rel){
-  const create=/\\b(?:const|let|var)\\s+([A-Za-z_$][\\w$]*)\\s*=\\s*(?:document|d)\\.createElement\\(\\s*(['"])style\\2\\s*\\)/g;
+  const create=/\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:document|d)\.createElement\(\s*(['"])style\2\s*\)/g;
   const matches=[...source.matchAll(create)];
   const texts=[];
   for(let i=0;i<matches.length;i++){
     const match=matches[i];
-    const variable=match[1].replace(/[.*+?^${}()|[\\]\\\\]/g,'\\\\$&');
+    const variable=match[1].replace(/\$/g,'\\$');
     const start=(match.index||0)+match[0].length;
     const end=i+1<matches.length?(matches[i+1].index||source.length):source.length;
     const segment=source.slice(start,end);
+    const insertion=new RegExp('\\b[A-Za-z_$][\\w$]*\\s*\\.\\s*(?:appendChild|append)\\(\\s*'+variable+'\\s*\\)');
+    const insertionMatch=insertion.exec(segment);
+    const beforeInsertion=insertionMatch?segment.slice(0,insertionMatch.index):segment;
     // A runtime stylesheet may be assembled from multiple static chunks before
     // insertion. Hash the final textContent value that the browser evaluates.
-    const assign=new RegExp(`\\\\b${variable}\\\\s*\\\\.\\\\s*textContent\\\\s*(\\\\+=|=)\\\\s*`,'g');
-    const assignments=[...segment.matchAll(assign)];
-    if(!assignments.length||assignments[0][1]!=='=')fail(`${rel}: style element ${match[1]} has no static textContent assignment before the next style element`);
+    const assign=new RegExp('\\b'+variable+'\\s*\\.\\s*textContent\\s*(\\+=|=)\\s*','g');
+    const assignments=[...beforeInsertion.matchAll(assign)];
+    if(!assignments.length||assignments[0][1]!=='=')fail(rel+': style element '+match[1]+' has no static textContent assignment before insertion');
     let value='';
     for(const assignment of assignments){
       const literalStart=start+assignment.index+assignment[0].length;
