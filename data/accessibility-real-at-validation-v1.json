@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.16.1",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.16.1.md",
-  "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
-  "runtimeFingerprint": "sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27",
+  "release": "2026.10.20.1",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.20.1.md",
+  "sourceSha": "0e31db7dec3a0f35bf296142cfb12bf4c6d164f0",
+  "runtimeFingerprint": "sha256:a208ca2c5fd94a00bde098f94232de14baf5625145ed2d7f2e6f09ce2caa20cf",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.16.1 is bound to exact retained learner-runtime candidate e336f656351afa4eeaaae0940969bea881ae9b68; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.20.1 is bound to exact retained learner-runtime candidate 0e31db7dec3a0f35bf296142cfb12bf4c6d164f0; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -306,9 +306,9 @@
     "textZoom200Percent": true
   },
   "previousCandidate": {
-    "release": "2026.10.15.3",
-    "sourceSha": "d827fb7d9d0e73486b49fc27f29a5ccdff092f36",
-    "runtimeFingerprint": "sha256:80ed59be26c4c6e7906ca4abeb55b5df1df0cbaa94390749427ff6cc991d6d3f"
+    "release": "2026.10.16.1",
+    "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
+    "runtimeFingerprint": "sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27"
   },
-  "technicalCandidateStatus": "exact retained successful public producer — independent real AT review pending"
+  "technicalCandidateStatus": "Exact-source retained public candidate and automated checks passed: producer run 39365753604, Mobile Browser QA run 39365753819, Question Quality 50-Pass run 39365753816, and Read Aloud QA run 39365753925. Independent real NVDA and VoiceOver review remains HOLD pending execution."
 }

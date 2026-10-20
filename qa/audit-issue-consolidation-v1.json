@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.10.16.1",
+  "release": "2026.10.20.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
-  "scope": "Verified current 2026.10.16.1 technical producer run 38864931906 at exact source e336f656351afa4eeaaae0940969bea881ae9b68 retained artifact 12030806569 and public runtime fingerprint sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27; strict 52-screen/12px owner-approved visual baseline and same-source Mobile Browser QA / Question Quality passed. Protected PR latest-head checks remain independent; all seven external validation workstreams remain HOLD.",
-  "approvalBoundary": "Technical automation PASS for successful 2026.10.16.1 producer and exact-source browser checks only. All seven independent human/device/provider reviews remain HOLD, production root advisory-only and tester invitation STOP/no-send pending live protected-main operator checks.",
+  "candidateSourceSha": "0e31db7dec3a0f35bf296142cfb12bf4c6d164f0",
+  "scope": "Release 2026.10.20.1 stages the Book Read Aloud callback fix and successor web/cache identity. The exact-source public candidate artifact, strict browser checks and question-quality run passed; all seven independent external validation workstreams remain HOLD.",
+  "approvalBoundary": "Technical automation PASS is limited to the exact 2026.10.20.1 candidate source and recorded automated checks. All seven independent human/device/provider reviews remain HOLD; production root stays advisory-only and tester invitation stays STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -43,9 +43,10 @@
   "productionAuthority": "advisory-only",
   "humanEvidenceStatus": "hold",
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
-  "lastReviewedDate": "2026-10-17",
+  "lastReviewedDate": "2026-10-20",
   "previousVerifiedCandidate": {
-    "release": "2026.10.15.3",
-    "sourceSha": "d827fb7d9d0e73486b49fc27f29a5ccdff092f36"
+    "release": "2026.10.16.1",
+    "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
+    "runtimeFingerprint": "sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27"
   }
 }
