@@ -333,24 +333,25 @@ else:
 visual_package = json.loads(text('package.json'))
 visual_version = visual_package.get('devDependencies',{}).get('@playwright/test')
 need(bool(visual_version), 'pinned Playwright QA dependency is missing')
-# The immutable screenshot reference was captured using Playwright 1.63.0.
+# The immutable screenshot reference was captured using Playwright 1.64.1.
 # Current PR tooling can advance without rewriting the historical approval.
 approved_capture = visual.get('referenceCaptureToolchain') or {}
 need(approved_capture == {
-         'framework':'@playwright/test', 'version':'1.64.0',
+         'framework':'@playwright/test', 'version':'1.64.1',
          'browser':'chromium', 'referenceSourceSha':visual.get('commit')},
      'owner-approved current screenshot capture provenance missing/stale')
-need(visual.get('browser') == "chromium via @playwright/test 1.64.0",
+need(visual.get('browser') == "chromium via @playwright/test 1.64.1",
      'owner-approved current screenshot toolchain label was rewritten')
-# The 2026.10.16.1 phone-only successor was separately reviewed by the
-# owner from the actual three source-linked before/after screenshots. Lock the
-# exact reviewed ref/source/artifact and preserve the previous .15.3 record:
-# no blanket automatic approval, hidden pixels or pixel tolerance increase.
-review_new=text('qa/VISUAL_REVIEW_2026.10.16.1_PR639.md')
+# The 2026.10.20.2 phone comparisons were separately reviewed by the owner
+# from source-linked screenshots. Lock the exact reviewed ref/source/artifact
+# and preserve both approved historical predecessor records: no blanket
+# automatic approval, hidden pixels or pixel tolerance increase.
+review_new=text('qa/VISUAL_REVIEW_2026.10.20.2_PR642.md')
+review_previous=text('qa/VISUAL_REVIEW_2026.10.16.1_PR639.md')
 review_predecessor=text('qa/VISUAL_REVIEW_2026.10.15.3_PR638.md')
-need(visual.get('release')=='2026.10.16.1'
-     and visual.get('ref')=='visual-baseline/2026.10.16.1'
-     and visual.get('commit')=='04628e13a6c9a9517bef22bae6c12a456896f299'
+need(visual.get('release')=='2026.10.20.2'
+     and visual.get('ref')=='visual-baseline/2026.10.20.2'
+     and visual.get('commit')=='83401a4bb217baa5c1a4acfa9181e7725e8098ac'
      and visual.get('maxDiffPixels')==12
      and [v.get('name') for v in visual.get('viewports',[])]==[
          'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
@@ -358,14 +359,18 @@ need(visual.get('release')=='2026.10.16.1'
          'home','learn','materials','practice','lesson','more','assessment',
          'listen-expanded','listening','book-contents','book-materials',
          'book-late','book-trace']
+     and 'visual-baseline/2026.10.16.1' in visual.get('policy','')
+     and '04628e13a6c9a9517bef22bae6c12a456896f299' in visual.get('policy','')
      and 'visual-baseline/2026.10.15.3' in visual.get('policy','')
-     and '82b1677caecb50c95c5395166317132447851e5b' in visual.get('policy','')
-     and '12023269036' in visual.get('policy','')
-     and 'bf52e4488c878e4d1a0357eaa67b61aebb65455500f66d2e5d2e5286cfbd3ed6' in visual.get('policy','')
-     and 'Yes that' in visual.get('policy','')
      and 'STATUS: OWNER VISUAL APPROVAL' in review_new
-     and '04628e13a6c9a9517bef22bae6c12a456896f299' in review_new
-     and '12023269036' in review_new
+     and '83401a4bb217baa5c1a4acfa9181e7725e8098ac' in review_new
+     and '12243349813' in review_new
+     and '33dd404528cd6b506426daba9e7688882332b82e88281e7ce79c0f2f825d5ce2' in review_new
+     and 'STATUS: OWNER VISUAL APPROVAL' in review_previous
+     and '04628e13a6c9a9517bef22bae6c12a456896f299' in review_previous
+     and '12023269036' in review_previous
+     and 'bf52e4488c878e4d1a0357eaa67b61aebb65455500f66d2e5d2e5286cfbd3ed6' in review_previous
+     and 'STATUS: OWNER VISUAL APPROVAL' in review_new
      and 'visual-baseline/2026.10.13.3' in review_predecessor
      and '82b1677caecb50c95c5395166317132447851e5b' in review_predecessor
      and '352bf204ae77779d548bc77dcf8b0a63db2a84e1' in review_predecessor,

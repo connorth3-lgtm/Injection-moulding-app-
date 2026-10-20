@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.10.20.2",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
-  "scope": "Release 2026.10.20.2 stages the integrated Android Learn and Practice plus Book/Listen source, including the Read Aloud completion fix. The integrated exact-source producer, fresh browser checks and owner visual review are pending; all seven independent external validation workstreams remain HOLD.",
-  "approvalBoundary": "No technical PASS is claimed for 2026.10.20.2: its exact-source candidate and fresh browser/visual evidence are pending. All seven independent human/device/provider reviews remain HOLD; production root stays advisory-only and tester invitation stays STOP/no-send.",
+  "candidateSourceSha": "e841e470e651c9f9c8766f1941554e60d554523f",
+  "scope": "Release 2026.10.20.2 stages the integrated Android Learn and Practice plus Book/Listen source, including the Read Aloud completion fix. The exact retained candidate artifact, exact-source software QA and owner visual baseline approval are recorded; all seven independent external validation workstreams remain HOLD.",
+  "approvalBoundary": "Exact-source technical automation PASS and visual-design approval are recorded for 2026.10.20.2. No physical-device, human assistive-technology/SME, learner-outcome, Windows signing or NZQA/provider acceptance is claimed; all seven independent external reviews remain HOLD. The candidate is non-publishing, production authority remains advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
