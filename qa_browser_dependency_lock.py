@@ -9,7 +9,7 @@ def need(ok, msg):
 
 pkg = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
 lock = json.loads((ROOT / "package-lock.json").read_text(encoding="utf-8"))
-expected = {"@playwright/test": "1.64.0", "pixelmatch": "8.0.0", "pngjs": "7.0.0"}
+expected = {"@playwright/test": "1.64.1", "pixelmatch": "8.0.0", "pngjs": "7.0.0"}
 need(pkg.get("private") is True, "browser QA package must be private")
 need(pkg.get("devDependencies") == expected, "browser QA direct dependency pins drifted")
 need(lock.get("lockfileVersion") == 3, "browser QA lockfileVersion must remain 3")
@@ -17,9 +17,9 @@ root = (lock.get("packages") or {}).get("") or {}
 need(root.get("devDependencies") == expected, "browser QA lock root pins drifted")
 
 expected_integrity = {
-    "node_modules/@playwright/test": "sha512-oTN9FNYuN6bqQMwiho6jJKLCG2/QOYCixGXuCjRmzOq23eODeukuY2XiAVoVpAECbuezMt1MHQjAiQxK8F+Y+g==",
-    "node_modules/playwright": "sha512-kVzTnYFYEyQ9RGzBjNCd2+yEqWmVbxl3AHPynv3qQ6JTjv4a+kwRcnqQwIpuP3NnrnIrE/Q6wWAIAvMfIE2/Yg==",
-    "node_modules/playwright-core": "sha512-T9r+MZkTECl2+oUcZ26YgZzTrYidTsIhYYkJix+6iDOymOb1FB2RLLSOxRGnZGv5DStt+aduIVbt+E8WygXYpg==",
+    "node_modules/@playwright/test": "sha512-IaYGml/nSOiZWROfPtuIL7neuu9qDOZ3TNvNljUIrhDMxiGTgPjzj/g9p9RxpS2tSepPDRY+UwAaEeiKtUvIAg==",
+    "node_modules/playwright": "sha512-HCrVhHr5QQuwYoswEUGTb7gGp522yflbv/ST8nF4sFWGuLjQCt17Q/EubpGGSNKYn1tsTCPZxqHhHCfVURu7UA==",
+    "node_modules/playwright-core": "sha512-BC4s8y6SEVA6Q1rSxZTto8hI1KUI3xXlHGZgvGqP4IqPdI/a6FX9H29IDNz7vKo9l21b6LfYosScPL6M3xxyDQ==",
     "node_modules/pixelmatch": "sha512-cIqOLfh5k52us715qf3B3+kTOxZv+WDv77HN7xokLScYQGYQHi4m/ynoDIPpvF2LvCyUJGyvzY64i0QCXtzu1g==",
     "node_modules/pngjs": "sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==",
 }
