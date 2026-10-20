@@ -169,8 +169,8 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load()});
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.19.1');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.19.1');
+  await expect(host).toHaveAttribute('data-version','2026.10.20.6');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.20.6');
   await expect(host.locator('summary')).toContainText('Listen');
 
   const placement=await page.evaluate(()=>{
@@ -258,7 +258,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.supported===true)).toBeTruthy();
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.19.1');
+  await expect(host).toHaveAttribute('data-version','2026.10.20.6');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {
@@ -335,7 +335,7 @@ test('Android empty voice list speaks within the original tap without waiting fo
   // The first-tap assertion must not require skipping the heading.
   await expect.poll(()=>page.evaluate(()=>window.__mmAndroidSpoken||'')).toBe('Android read aloud');
   expect(await page.evaluate(()=>window.__mmAndroidSpeechInsideGesture)).toBe(true);
-  expect(await page.evaluate(()=>window.__mmAndroidLanguage)).toBe('en');
+  expect(await page.evaluate(()=>window.__mmAndroidLanguage)).toBe('');
   await expect(host.locator('.mm-read-status')).toHaveText('Reading');
   await host.locator('[data-mm-read="stop"]').click();
 });
@@ -1197,4 +1197,72 @@ test('Android silent TTS is distinguishable from browser media output without cl
   await page.evaluate(()=>window.__previousAudioOutputTone.onended?.());
   await expect(panel.locator('.mm-read-status')).toHaveText('Reading');
   expect(await page.evaluate(()=>window.__mediaOutputCalls.includes('close-output'))).toBe(true);
+});
+
+test('Android delayed start is not canceled when the watchdog sees no active speech',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Android TTS may start after its speaking flag stays false.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    const nativeSetTimeout=window.setTimeout.bind(window);
+    window.__androidWatchdogCallbacks=[];
+    window.setTimeout=(fn,delay,...args)=>{
+      if(delay===6000){window.__androidWatchdogCallbacks.push(()=>fn(...args));return 600000+window.__androidWatchdogCallbacks.length;}
+      return nativeSetTimeout(fn,delay,...args);
+    };
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onboundary=null;this.onend=null;this.onerror=null;}}
+    const synth={cancels:0,current:null,getVoices(){return[];},speak(u){this.current=u;},
+      cancel(){this.cancels++;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__lateAndroidVoice=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('summary').click();
+  await player.locator('[data-mm-read="play"]').click();
+  await page.evaluate(()=>window.__androidWatchdogCallbacks[0]());
+  await expect(player.locator('.mm-read-status')).toHaveText('Android voice has not confirmed playback yet. It may still start; press Stop if it stays silent.');
+  expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(0);
+  await page.evaluate(()=>window.__lateAndroidVoice.current.onstart?.());
+  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(0);
+  await player.locator('[data-mm-read="stop"]').click();
+  expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(1);
+
+  await player.locator('[data-mm-read="test"]').click();
+  await page.evaluate(()=>window.__androidWatchdogCallbacks[window.__androidWatchdogCallbacks.length-1]());
+  await expect(player.locator('.mm-read-status')).toHaveText('Android voice has not confirmed sound yet. It may still start; press Stop if it stays silent.');
+  expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(1);
+  await page.evaluate(()=>window.__lateAndroidVoice.current.onstart?.());
+  await expect(player.locator('.mm-read-status')).toHaveText('Sound test started. If silent, turn up media volume and check the selected audio output.');
+  expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(1);
+  await player.locator('[data-mm-read="stop"]').click();
+});
+
+test('Android speaking flag prevents the startup watchdog from canceling audible speech',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Speech can be active without an onstart callback.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    const nativeSetTimeout=window.setTimeout.bind(window);
+    window.__androidSpeakingWatchdog=[];
+    window.setTimeout=(fn,delay,...args)=>{
+      if(delay===6000){window.__androidSpeakingWatchdog.push(()=>fn(...args));return 700000+window.__androidSpeakingWatchdog.length;}
+      return nativeSetTimeout(fn,delay,...args);
+    };
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onboundary=null;this.onend=null;this.onerror=null;}}
+    const synth={cancels:0,speaking:false,current:null,getVoices(){return[];},speak(u){this.current=u;},
+      cancel(){this.cancels++;this.speaking=false;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__androidSpeakingVoice=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('summary').click();
+  await player.locator('[data-mm-read="play"]').click();
+  await page.evaluate(()=>{window.__androidSpeakingVoice.speaking=true;window.__androidSpeakingWatchdog[0]();});
+  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  expect(await page.evaluate(()=>window.__androidSpeakingVoice.cancels)).toBe(0);
+  await player.locator('[data-mm-read="stop"]').click();
+  expect(await page.evaluate(()=>window.__androidSpeakingVoice.cancels)).toBe(1);
 });
