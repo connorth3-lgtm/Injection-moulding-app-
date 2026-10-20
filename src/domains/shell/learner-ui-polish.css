@@ -3,7 +3,7 @@
 .topbar .mm-preview-status{flex:0 0 100%!important;grid-column:1/-1!important;grid-row:auto!important;width:100%!important;display:block!important;margin:3px 0 0!important;font-size:10px!important;line-height:1.3!important;font-weight:750!important;letter-spacing:.045em!important}
 .topbar .mm-preview-status a{color:#93f0df!important;text-decoration:underline!important;text-underline-offset:2px!important}
 .topbar .mm-preview-status a:focus-visible{outline:2px solid #55d6be!important;outline-offset:3px!important;border-radius:3px}
-/* MouldMaster learner UI polish — 2026.10.20.1 */
+/* MouldMaster learner UI polish — 2026.10.20.2 */
 
 /* Book: the evidence contract stays visible and accessible, but it no longer
    competes with the learner's chapter choice above the fold. */
@@ -290,7 +290,7 @@
   #dashboard .mm-home-book-actions button{width:100%!important;min-width:0!important;min-height:44px!important;padding:8px 9px!important;font-size:11.5px!important;white-space:nowrap!important}
 }
 
-/* Canonical Home hierarchy — 2026.10.20.1 */
+/* Canonical Home hierarchy — 2026.10.20.2 */
 /* Home keeps one dominant lesson decision, one persistent Book/Keep Reading surface,
    and two specialist shortcuts without duplicating Learn, Materials, Practice or Saved lessons. */
 #dashboard{
@@ -4106,5 +4106,872 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
 @media(prefers-reduced-motion:reduce){
   .mm-reference-layout #scenarios .mm-practice-guided-progress{
     scroll-behavior:auto!important;
+  }
+}
+
+
+/* 2026-10-17 physical Android review: 32 optional Learn checks should not
+   force users past eight full lists before reaching their lesson catalogue.
+   Each chapter is a native keyboard/screen-reader disclosure; child answers
+   remain source-owned details and the existing 169-question bank is untouched. */
+.mm-reference-layout #path .mm-learn-reasoning-chapter>summary.mm-learn-reasoning-chapter-title{
+  cursor:pointer;list-style:none;min-height:64px;
+  border-bottom:0;align-items:center;
+}
+.mm-reference-layout #path .mm-learn-reasoning-chapter>summary::-webkit-details-marker{display:none;}
+.mm-reference-layout #path .mm-learn-reasoning-chapter[open]>summary{
+  border-bottom:1px solid #397497;
+}
+.mm-reference-layout #path .mm-learn-reasoning-chapter>summary:focus-visible{
+  outline:3px solid #9efbe8;outline-offset:-3px;border-radius:12px;
+}
+.mm-reference-layout #path .mm-learn-chapter-toggle{
+  display:inline-block;flex:0 0 14px;text-align:center;
+  font-size:22px;line-height:1;color:#a9f4e7;transition:transform .14s ease;
+}
+.mm-reference-layout #path .mm-learn-reasoning-chapter[open] .mm-learn-chapter-toggle{
+  transform:rotate(180deg);
+}
+@media(max-width:700px){
+  .mm-reference-layout #path .mm-learn-reasoning-chapter>summary{
+    gap:8px;padding:12px!important;
+  }
+  .mm-reference-layout #path .mm-learn-reasoning-chapter-title>div{
+    min-width:0;flex:1;
+  }
+  .mm-reference-layout #path .mm-learn-chapter-count{
+    white-space:nowrap;flex:0 0 auto;
+  }
+  /* Keep the existing measured bottom-nav clearance. Never mask other
+     screens with a global fixed overlay merely to hide partial content. */
+  .mm-reference-layout #path :is(
+    .mm-learn-reasoning-chapter>summary,.mm-learn-reasoning-item>summary,
+    .mm-catalog-extra button,.mm-learn-jump a
+  ){scroll-margin-bottom:calc(var(--mm-mobile-content-clearance,110px) + 18px);}
+}
+@media(prefers-reduced-motion:reduce){
+  .mm-reference-layout #path .mm-learn-chapter-toggle{transition:none;}
+}
+
+
+
+/* 2026-10-17 Android: integrate the 32 original unscored, evidence-led
+   teaching questions contextually across the canonical 120 core lessons.
+   One native disclosure per mapped lesson, never another long Learn list. */
+.mm-reference-layout #lesson .mm-lesson-reasoning{
+  width:100%;max-width:100%;min-width:0;box-sizing:border-box;
+  margin:17px 0;padding:0;border:1px solid #4b89a5;
+  border-radius:16px;overflow:hidden;
+  background:linear-gradient(155deg,#104061,#0a2d48);color:#eaf8ff;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-group>summary{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;list-style:none;min-height:68px;box-sizing:border-box;
+  padding:15px 17px;cursor:pointer;color:#effcff;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-group>summary::-webkit-details-marker{
+  display:none;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-group>summary>span:first-child{
+  display:grid;min-width:0;gap:4px;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-group>summary .eyebrow{
+  color:#93f6de!important;font-size:11px;letter-spacing:.04em;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-group>summary strong{
+  font-size:18px;line-height:1.25;color:#f4fcff;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-group>summary small{
+  font-size:13px;line-height:1.42;color:#c2dfeb;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-chevron{
+  flex:0 0 16px;font-size:22px;line-height:1;color:#a5f5e5;
+  transition:transform .15s ease;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-group[open] .mm-lesson-reasoning-chevron{
+  transform:rotate(180deg);
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-group[open]>summary{
+  border-bottom:1px solid #397496;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-questions{padding:12px;display:grid;gap:10px;}
+.mm-reference-layout #lesson .mm-lesson-reasoning-question{
+  min-width:0;border:1px solid #477d9b;border-radius:12px;
+  overflow:hidden;background:#0e344f;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-question>summary{
+  display:grid;gap:6px;cursor:pointer;min-height:60px;padding:13px;
+  color:#f5fbff;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-topic{
+  font-size:11px;color:#9beddd;text-transform:uppercase;letter-spacing:.035em;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-question>summary strong{
+  font-size:15px;line-height:1.44;color:#f5fbff;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-question>summary small{
+  font-size:12px;color:#badbe9;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-answer{
+  padding:15px;border-top:1px solid #43718a;
+  background:rgba(5,25,41,.82);color:#d7eaf4;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-answer>b{
+  display:block;color:#a2f2de;font-size:14px;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-answer>p{
+  /* The reference-layout lesson rule sets *all* lesson paragraphs to dark
+     text with !important for light cards. This nested card is dark: override
+     that inherited high-priority semantic rule explicitly for legibility. */
+  margin:5px 0 12px;font-size:14px;line-height:1.58;color:#d7eaf4!important;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-questions>.mm-learn-safety-note{
+  font-size:12px;line-height:1.55;color:#b9d5e6!important;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning :is(summary):focus-visible{
+  outline:3px solid #a3ffe8;outline-offset:-4px;border-radius:10px;
+}
+@media(max-width:700px){
+  .mm-reference-layout #lesson .mm-lesson-reasoning-group>summary{padding:12px;gap:10px;}
+  .mm-reference-layout #lesson .mm-lesson-reasoning-questions{padding:10px;}
+  .mm-reference-layout #lesson .mm-lesson-reasoning :is(summary){
+    scroll-margin-bottom:calc(var(--mm-mobile-content-clearance,110px) + 16px);
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .mm-reference-layout #lesson .mm-lesson-reasoning-chevron{transition:none;}
+}
+
+
+/* PR #640 — Materials-style information hierarchy across the learner app.
+   The Materials index is the visual reference: navy panels, thin blue edges,
+   a clear title, an honest summary, a useful fact, and one obvious next step.
+   Do not hide lesson prose, governed choices, safety warnings or real actions. */
+.mm-reference-layout{
+  --mm-tidy-surface:#101f34;
+  --mm-tidy-row:#082237;
+  --mm-tidy-edge:#2f5972;
+  --mm-tidy-ink:#edf7ff;
+  --mm-tidy-muted:#b7cddd;
+  --mm-tidy-detail:#7fe8d4;
+}
+.mm-reference-layout :is(#dashboard,#path .mm-learn-hub,#scenarios .mm-practice-hub,#lesson){
+  min-width:0;overflow-wrap:break-word;
+}
+.mm-reference-layout #path .mm-tidy-overview,
+.mm-reference-layout #scenarios .mm-tidy-overview{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:11px;
+  box-sizing:border-box;min-width:0;padding:16px;
+  border:1px solid var(--mm-tidy-edge);border-radius:16px;
+  background:var(--mm-tidy-surface);color:var(--mm-tidy-ink);
+}
+.mm-reference-layout .mm-tidy-overview .eyebrow{
+  display:block;color:var(--mm-tidy-detail)!important;letter-spacing:.085em;
+  font-size:10px!important;line-height:1.3;
+}
+.mm-reference-layout .mm-tidy-overview :is(h1,h2){
+  color:var(--mm-tidy-ink)!important;margin:4px 0 5px!important;
+  font-size:clamp(19px,3.5vw,24px)!important;line-height:1.2!important;
+}
+.mm-reference-layout .mm-tidy-overview p{
+  color:var(--mm-tidy-muted)!important;font-size:13px!important;
+  line-height:1.45!important;margin:0!important;max-width:72ch;
+}
+.mm-reference-layout .mm-tidy-facts{
+  display:flex;flex-wrap:wrap;gap:7px;min-width:0;
+}
+.mm-reference-layout .mm-tidy-facts>span{
+  display:inline-flex;align-items:center;gap:5px;min-width:0;
+  padding:6px 9px;border:1px solid #315b74;border-radius:9px;
+  background:var(--mm-tidy-row);font-size:12px;line-height:1.3;
+  color:var(--mm-tidy-muted);white-space:normal;
+}
+.mm-reference-layout .mm-tidy-facts strong{color:var(--mm-tidy-detail);font-variant-numeric:tabular-nums}
+.mm-reference-layout #dashboard .mm-reference-title{
+  font-size:clamp(20px,3vw,24px)!important;line-height:1.2!important;
+  margin:0 0 9px!important;color:var(--mm-tidy-ink)!important;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-tools h3,
+.mm-reference-layout #path .mm-learn-courses-head h2,
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section-head h2{
+  color:var(--mm-tidy-ink)!important;font-size:18px!important;
+  line-height:1.26!important;letter-spacing:-.01em;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-tool{
+  display:grid!important;grid-template-columns:38px minmax(0,1fr)!important;
+  grid-template-rows:auto!important;align-items:center!important;
+  justify-content:stretch!important;text-align:left!important;
+  gap:9px!important;padding:10px!important;min-height:78px!important;
+  background:var(--mm-tidy-row)!important;
+  border:1px solid var(--mm-tidy-edge)!important;border-radius:13px!important;
+  box-shadow:none!important;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-icon{
+  display:grid;place-items:center;font-size:23px!important;
+  width:38px;height:38px;border-radius:10px;background:#10374b;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-copy{
+  display:grid;align-content:center;gap:4px;min-width:0;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-copy b{
+  display:block;color:#f2faff!important;font-size:13px!important;line-height:1.25!important;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-copy small{
+  display:block;color:var(--mm-tidy-muted)!important;
+  font-size:11px!important;line-height:1.32!important;white-space:normal;
+}
+.mm-reference-layout #dashboard .mm-home-book,
+.mm-reference-layout #dashboard .mm-home-toolbox{
+  border:1px solid var(--mm-tidy-edge)!important;
+  border-radius:15px!important;box-shadow:none!important;
+}
+/* The primary lesson decision remains the elevated, unmistakable Home card;
+   secondary utilities stay flat as in the Materials catalogue. */
+.mm-reference-layout #dashboard .mm-today-focus{
+  border:1px solid #366c88!important;border-radius:20px!important;
+  background:linear-gradient(150deg,#12405a,#0a2c44)!important;
+  box-shadow:0 9px 26px rgba(0,10,26,.2)!important;
+}
+.mm-reference-layout #dashboard .mm-today-focus p,
+.mm-reference-layout #dashboard .mm-home-book :is(p,small){
+  line-height:1.45!important;
+}
+.mm-reference-layout #dashboard .mm-home-toolbox{
+  background:var(--mm-tidy-surface)!important;
+}
+.mm-reference-layout #path .mm-hub-continue,
+.mm-reference-layout #scenarios .mm-reference-practice-feature{
+  background:#0b2c46!important;border:1px solid var(--mm-tidy-edge)!important;
+  border-radius:15px!important;box-shadow:none!important;
+}
+.mm-reference-layout #path .mm-learn-jump a{
+  border-radius:10px;background:var(--mm-tidy-row)!important;
+  border-color:var(--mm-tidy-edge)!important;color:#e4f5fd!important;
+  text-decoration:none;min-height:44px!important;white-space:normal;
+}
+.mm-reference-layout #path .mm-learn-master-lesson{
+  border:1px solid var(--mm-tidy-edge)!important;border-radius:16px!important;
+  background:var(--mm-tidy-surface)!important;box-shadow:none!important;
+}
+.mm-reference-layout #path .mm-learn-master-intro{
+  padding:1px 1px 11px!important;
+}
+.mm-reference-layout #path .mm-learn-master-intro h2{
+  font-size:clamp(19px,3.5vw,24px)!important;margin:5px 0 7px!important;
+}
+.mm-reference-layout #path .mm-learn-master-intro p{
+  color:var(--mm-tidy-muted)!important;font-size:13px!important;line-height:1.45!important;
+}
+.mm-reference-layout #path .mm-learn-master-meta{
+  margin-top:9px!important;color:#8ee9d7!important;line-height:1.45!important;
+}
+.mm-reference-layout #path .mm-learn-step{
+  padding:15px 0 17px!important;border-color:#2d4e65!important;
+}
+.mm-reference-layout #path .mm-learn-step-head{
+  gap:10px!important;margin:0 0 12px!important;
+}
+.mm-reference-layout #path .mm-learn-step-num{
+  flex:0 0 34px!important;height:34px!important;border-radius:9px!important;
+  background:#113d56!important;color:var(--mm-tidy-detail)!important;
+}
+.mm-reference-layout #path .mm-learn-step-head h3{
+  font-size:17px!important;line-height:1.25!important;
+}
+.mm-reference-layout #path .mm-learn-arena h3{
+  font-size:clamp(19px,3.5vw,23px)!important;line-height:1.22!important;margin:4px 0 6px!important;
+}
+.mm-reference-layout #path .mm-learn-arena p{
+  color:var(--mm-tidy-muted)!important;font-size:13px!important;
+}
+.mm-reference-layout #path .mm-learn-arena-counts>div{
+  min-width:0!important;padding:10px!important;border-radius:10px!important;
+  border-color:var(--mm-tidy-edge)!important;background:var(--mm-tidy-row)!important;
+}
+.mm-reference-layout #path .mm-learn-arena-counts strong{font-size:23px!important}
+.mm-reference-layout #path .mm-learn-arena-counts span{line-height:1.3!important;text-align:center}
+.mm-reference-layout #path .mm-learn-master-lesson .mm-learn-question-centre .mm-hub-picker-grid{
+  border-color:var(--mm-tidy-edge)!important;border-radius:13px!important;
+  background:var(--mm-tidy-row)!important;
+}
+.mm-reference-layout #path .mm-learn-master-lesson .mm-learn-question-centre .mm-hub-picker-grid>button{
+  min-height:84px!important;padding:11px!important;gap:4px 10px!important;
+}
+.mm-reference-layout #path .mm-learn-master-lesson .mm-learn-question-centre .mm-hub-picker-grid>button b{
+  font-size:14px!important;line-height:1.32!important;
+}
+.mm-reference-layout #path .mm-learn-master-lesson .mm-learn-question-centre .mm-hub-picker-grid>button small{
+  font-size:12px!important;line-height:1.4!important;white-space:normal!important;
+}
+.mm-reference-layout #path .mm-learn-master-lesson .mm-learn-question-centre .mm-hub-picker-grid>button .mm-reference-practice-art{
+  width:52px!important;height:52px!important;
+}
+.mm-reference-layout #path .mm-learn-capstone{
+  border-color:var(--mm-tidy-edge)!important;border-radius:13px!important;
+}
+.mm-reference-layout #path .mm-learn-capstone h3{
+  font-size:18px!important;
+}
+.mm-reference-layout #scenarios .mm-practice-diagnose-journey,
+.mm-reference-layout #scenarios .mm-practice-guided,
+.mm-reference-layout #scenarios .mm-practice-cases{
+  border:1px solid var(--mm-tidy-edge)!important;
+  border-radius:15px!important;background:var(--mm-tidy-surface)!important;
+  box-shadow:none!important;
+}
+.mm-reference-layout #scenarios .mm-practice-diagnose-head h2,
+.mm-reference-layout #scenarios .mm-practice-guided-intro h2,
+.mm-reference-layout #scenarios .mm-practice-cases-head h2{
+  font-size:clamp(17px,3.5vw,22px)!important;line-height:1.25!important;
+}
+.mm-reference-layout #scenarios .mm-practice-diagnose-head p,
+.mm-reference-layout #scenarios .mm-practice-guided-intro p,
+.mm-reference-layout #scenarios .mm-practice-cases-head p{
+  font-size:13px!important;line-height:1.48!important;color:var(--mm-tidy-muted)!important;
+}
+.mm-reference-layout #scenarios .mm-practice-diagnose-stages>div{
+  border:1px solid var(--mm-tidy-edge)!important;
+  border-radius:11px!important;background:var(--mm-tidy-row)!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile{
+  border:1px solid var(--mm-tidy-edge)!important;border-radius:13px!important;
+  background:var(--mm-tidy-row)!important;box-shadow:none!important;
+  min-height:102px!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile :is(b,small){
+  white-space:normal!important;overflow:visible!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero.mm-reference-deep-head{
+  border-color:var(--mm-tidy-edge)!important;border-radius:15px!important;
+  background:#0b3049!important;box-shadow:none!important;
+}
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.mm-simple-section:not(.mm-simple-note-section),
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.content-block:not(.mm-simple-note-section),
+.mm-reference-layout #lesson.mm-simple-lesson .lesson-body>.mm-next-card{
+  border-radius:13px!important;box-shadow:none!important;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning{
+  border-radius:14px!important;border-color:var(--mm-tidy-edge)!important;
+  background:#0b304b!important;
+}
+.mm-reference-layout #lesson .mm-lesson-reasoning-question{
+  border-color:var(--mm-tidy-edge)!important;
+  background:var(--mm-tidy-row)!important;
+}
+.mm-reference-layout #modal .mm-more-disclosure,
+.mm-reference-layout #modal .mm-reference-more-card{
+  border-radius:13px!important;box-shadow:none!important;
+}
+.mm-reference-layout #modal .mm-reference-more-card .mm-more-disclosure-items>.quick-action{
+  min-height:70px!important;border-radius:10px!important;
+}
+@media(min-width:701px){
+  .mm-reference-layout #path .mm-tidy-overview,
+  .mm-reference-layout #scenarios .mm-tidy-overview{
+    grid-template-columns:minmax(0,1.4fr) minmax(240px,.8fr);align-items:center;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:700px){
+  .mm-reference-layout #dashboard .mm-reference-home-hero{
+    min-height:195px!important;padding:13px!important;
+    background:#092b43!important;box-shadow:none!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-hero-words{
+    padding-bottom:63px!important;max-width:72%!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-home-hero h2{
+    font-size:21px!important;margin:0 0 5px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-home-hero p{
+    font-size:12px!important;line-height:1.42!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-home-hero .mm-reference-hero-photo{
+    width:53%!important;height:70%!important;right:-10%!important;top:20%!important;
+    opacity:.7!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-home-hero .mm-reference-home-practice{
+    min-height:49px!important;bottom:10px!important;left:10px!important;
+    right:10px!important;width:calc(100% - 20px)!important;
+    border-radius:10px!important;padding:7px 10px!important;box-shadow:none!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-home-practice .mm-reference-play{
+    width:29px;height:29px;flex-basis:29px;font-size:12px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-tools{
+    margin:11px 0!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-tool{
+    min-height:78px!important;padding:9px!important;
+    grid-template-columns:31px minmax(0,1fr)!important;gap:7px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-icon{
+    width:31px;height:31px;font-size:19px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-copy b{font-size:12px!important}
+  .mm-reference-layout #dashboard .mm-reference-quick-copy small{font-size:10.5px!important}
+  .mm-reference-layout #dashboard .mm-today-focus{
+    padding:13px!important;gap:9px!important;
+  }
+  .mm-reference-layout #dashboard .mm-today-focus h2{font-size:20px!important}
+  .mm-reference-layout #path .mm-learn-jump{
+    display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    gap:6px!important;
+  }
+  .mm-reference-layout #path .mm-learn-jump a{
+    padding:7px 5px!important;font-size:11px!important;
+    text-align:center;line-height:1.3!important;
+  }
+  .mm-reference-layout #path .mm-learn-master-lesson{
+    padding:12px!important;
+  }
+  .mm-reference-layout #path .mm-learn-master-lesson .mm-learn-question-centre .mm-hub-picker-grid>button{
+    grid-template-columns:52px minmax(0,1fr)!important;
+    min-height:80px!important;
+  }
+  .mm-reference-layout #scenarios .mm-practice-diagnose-journey,
+  .mm-reference-layout #scenarios .mm-practice-guided,
+  .mm-reference-layout #scenarios .mm-practice-cases{
+    padding:12px!important;gap:10px!important;
+  }
+  .mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile{
+    padding:12px!important;
+  }
+  .mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero.mm-reference-deep-head{
+    padding:15px!important;
+  }
+  .mm-reference-layout #lesson.mm-simple-lesson .mm-simple-lesson-hero h1{
+    font-size:clamp(23px,6vw,30px)!important;
+  }
+}
+@media(max-width:370px){
+  .mm-reference-layout #dashboard .mm-reference-home-hero{min-height:225px!important}
+  .mm-reference-layout #dashboard .mm-reference-hero-words{max-width:80%!important}
+  .mm-reference-layout .mm-tidy-facts>span{font-size:11px;padding:6px 7px}
+}
+@media(forced-colors:active){
+  .mm-reference-layout :is(#path,#scenarios) .mm-tidy-overview,
+  .mm-reference-layout #dashboard .mm-reference-quick-tool,
+  .mm-reference-layout #path .mm-learn-master-lesson,
+  .mm-reference-layout #scenarios :is(.mm-practice-diagnose-journey,.mm-practice-guided,.mm-practice-cases){
+    background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout #dashboard .mm-today-focus{
+    background:Canvas!important;color:CanvasText!important;
+    border:1px solid CanvasText!important;box-shadow:none!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .mm-reference-layout #dashboard .mm-reference-quick-tool,
+  .mm-reference-layout #path .mm-learn-jump a{transition:none!important}
+}
+
+
+/* PR #640 — exact Materials catalogue parity for the primary learner tabs.
+   Materials is the layout source: compact heading, full-width search, 64px
+   illustrated rows, useful secondary labels and one clear drill-in chevron.
+   These are real controls; no training data or decisions are replaced. */
+.mm-reference-layout #dashboard .mm-reference-home-hero{
+  min-height:120px!important;max-height:none!important;
+  margin:0 0 9px!important;padding:13px!important;
+  border:1px solid #2b5268!important;border-radius:14px!important;
+  background:#101f34!important;box-shadow:none!important;
+}
+.mm-reference-layout #dashboard .mm-reference-hero-words{
+  max-width:74%!important;padding-bottom:0!important;align-self:center;
+}
+.mm-reference-layout #dashboard .mm-reference-home-hero h2{
+  font-size:20px!important;line-height:1.25!important;margin:0 0 5px!important;
+}
+.mm-reference-layout #dashboard .mm-reference-home-hero p{
+  font-size:12px!important;line-height:1.42!important;
+  max-width:32ch!important;margin:0!important;
+}
+.mm-reference-layout #dashboard .mm-reference-home-hero .mm-reference-hero-photo{
+  width:27%!important;height:94%!important;max-width:none!important;
+  top:3%!important;right:4px!important;
+  object-fit:contain!important;opacity:1!important;
+}
+.mm-reference-layout #dashboard .mm-reference-home-hero:after{
+  background:linear-gradient(90deg,rgba(3,17,30,.14),transparent 65%)!important;
+}
+/* The separate Practice shortcut no longer floats over the welcome copy. */
+.mm-reference-layout #dashboard > .mm-reference-home-practice{
+  position:relative!important;inset:auto!important;
+  display:grid!important;grid-template-columns:42px minmax(0,1fr) 18px!important;
+  gap:10px!important;width:100%!important;min-height:68px!important;
+  margin:0 0 10px!important;padding:9px 11px!important;
+  border:1px solid #298c8a!important;border-radius:11px!important;
+  background:#0a333e!important;box-shadow:none!important;
+  text-align:left!important;
+}
+.mm-reference-layout #dashboard > .mm-reference-home-practice .mm-reference-play{
+  width:42px!important;height:42px!important;flex:0 0 42px!important;
+  border-radius:9px!important;background:#125965!important;
+  color:#79f5dd!important;box-sizing:border-box;
+}
+.mm-reference-layout #dashboard > .mm-reference-home-practice:after{
+  content:"›";grid-column:3;grid-row:1;
+  align-self:center;justify-self:center;color:#d3e9f2;font-size:24px;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-tools{
+  margin:10px 0 14px!important;min-width:0;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-grid{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+  gap:8px!important;width:100%;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-tool{
+  display:grid!important;grid-template-columns:62px minmax(0,1fr) 16px!important;
+  grid-template-rows:auto!important;min-height:80px!important;
+  gap:10px!important;align-items:center!important;justify-items:stretch!important;
+  width:100%!important;padding:7px 10px 7px 7px!important;
+  border:1px solid #2b5267!important;border-radius:11px!important;
+  background:#071f2d!important;box-shadow:none!important;text-align:left!important;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-icon{
+  grid-column:1;grid-row:1;
+  display:grid!important;place-items:center!important;
+  box-sizing:border-box;width:62px!important;height:62px!important;
+  border:1px solid #315b70!important;border-radius:9px!important;
+  background:#0b3446!important;font-size:28px!important;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-copy{
+  grid-column:2;grid-row:1;
+  display:grid!important;min-width:0;gap:4px!important;align-content:center;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-copy b{
+  color:#f0f9ff!important;font-size:16px!important;line-height:1.25!important;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-copy small{
+  color:#a7cedd!important;font-size:12px!important;line-height:1.34!important;
+}
+.mm-reference-layout #dashboard .mm-reference-quick-tool:after{
+  content:"›";grid-column:3;grid-row:1;
+  justify-self:center;align-self:center;color:#dbf0f7;font-size:25px;
+}
+/* The current lesson remains prominent but compact enough for quick tools
+   to start within the first phone viewport. */
+.mm-reference-layout #dashboard .mm-today-focus{
+  padding:12px!important;margin:0 0 10px!important;
+  border-radius:20px!important;
+}
+.mm-reference-layout #dashboard .mm-today-focus h2{
+  font-size:18px!important;line-height:1.23!important;
+}
+.mm-reference-layout #dashboard .mm-today-focus>button{min-height:44px!important}
+/* Match Materials: searchable native catalogue is the main Learn surface. */
+.mm-reference-layout #path .mm-learn-hub{gap:9px!important;}
+.mm-reference-layout #path .mm-reference-title{order:-4!important;margin:0 0 4px!important}
+.mm-reference-layout #path .mm-tidy-overview{order:-3!important;padding:11px!important;gap:6px!important}
+.mm-reference-layout #path .mm-tidy-overview h1{font-size:18px!important}
+.mm-reference-layout #path .mm-tidy-overview p{font-size:12px!important}
+.mm-reference-layout #path .mm-tidy-facts{gap:5px!important}
+.mm-reference-layout #path .mm-tidy-facts>span{font-size:11px!important;padding:5px 7px!important}
+.mm-reference-layout #path .mm-hub-continue{
+  order:-2!important;display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;gap:8px!important;
+  padding:12px!important;margin:0!important;border-radius:13px!important;
+}
+.mm-reference-layout #path .mm-hub-continue h2{font-size:19px!important;line-height:1.22!important}
+.mm-reference-layout #path .mm-hub-continue p{font-size:12px!important;line-height:1.35!important}
+.mm-reference-layout #path .mm-hub-continue-action{min-height:44px!important}
+.mm-reference-layout #path .mm-learn-courses{
+  order:-1!important;min-width:0;
+}
+.mm-reference-layout #path .mm-learn-jump{order:0!important;margin:8px 0 0!important}
+.mm-reference-layout #path .mm-learn-master-lesson{order:1!important}
+.mm-reference-layout #path .mm-catalog-extra{order:2!important}
+.mm-reference-layout #path .mm-learn-courses-head{margin:2px 0 9px!important}
+.mm-reference-layout #path .mm-learn-courses-head h2{font-size:17px!important}
+.mm-reference-layout #path .mm-learn-courses-head p{font-size:12px!important;line-height:1.4!important}
+.mm-reference-layout #path .mm-all-lessons .mm-catalog-head{margin:0 0 8px!important}
+.mm-reference-layout #path .mm-all-lessons .mm-catalog-head h2{font-size:16px!important}
+.mm-reference-layout #path .mm-all-lessons .mm-catalog-head p{font-size:11px!important}
+.mm-reference-layout #path .mm-all-lessons .mm-catalog-controls{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+  gap:8px!important;margin:0 0 8px!important;
+}
+.mm-reference-layout #path .mm-all-lessons .mm-catalog-controls label{
+  min-width:0!important;width:100%;font-size:12px!important;
+}
+.mm-reference-layout #path [data-mm-catalog-query],
+.mm-reference-layout #path [data-mm-catalog-filter]{
+  box-sizing:border-box!important;width:100%!important;min-width:0!important;
+  min-height:46px!important;border:1px solid #34566c!important;
+  border-radius:10px!important;background:#0a2638!important;
+  color:#f1f9ff!important;font-size:15px!important;padding:9px 11px!important;
+}
+.mm-reference-layout #path .mm-catalog-group{
+  border:1px solid #2b5368!important;border-radius:11px!important;
+  background:#071f2d!important;overflow:hidden!important;
+}
+.mm-reference-layout #path .mm-catalog-group>summary.mm-unified-course-summary{
+  display:grid!important;grid-template-columns:64px minmax(0,1fr) 19px!important;
+  min-height:80px!important;gap:4px 10px!important;
+  padding:7px 10px 7px 7px!important;align-items:center!important;
+  border:0!important;background:#071f2d!important;box-shadow:none!important;
+}
+.mm-reference-layout #path .mm-unified-course-summary>.mm-reference-course-art{
+  grid-column:1!important;grid-row:1/span 3!important;
+  width:64px!important;height:64px!important;border-radius:9px!important;
+}
+.mm-reference-layout #path .mm-unified-course-summary>.mm-catalog-group-name{
+  grid-column:2!important;grid-row:1!important;
+  color:#f3faff!important;font-size:16px!important;line-height:1.2!important;
+}
+.mm-reference-layout #path .mm-unified-course-summary>.mm-reference-course-desc{
+  grid-column:2!important;grid-row:2!important;
+  color:#b4d4df!important;font-size:12px!important;line-height:1.34!important;
+}
+.mm-reference-layout #path .mm-unified-course-summary>.mm-catalog-group-meta{
+  grid-column:2!important;grid-row:3!important;color:#83e7d3!important;
+  font-size:11px!important;line-height:1.3!important;
+}
+.mm-reference-layout #path .mm-catalog-group>summary.mm-unified-course-summary:after{
+  content:"⌄"!important;display:block!important;
+  grid-column:3!important;grid-row:1/span 3!important;align-self:center!important;
+  color:#d8efff!important;font-size:22px!important;
+}
+.mm-reference-layout #path .mm-catalog-group[open]>summary.mm-unified-course-summary:after{
+  content:"⌃"!important;
+}
+.mm-reference-layout #path .mm-catalog-rows{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:5px!important;
+  padding:8px!important;border-top:1px solid #2b5368!important;
+}
+.mm-reference-layout #path .mm-catalog-lesson{
+  box-sizing:border-box!important;display:grid!important;
+  grid-template-columns:45px minmax(0,1fr) auto!important;
+  gap:8px!important;align-items:center!important;text-align:left!important;
+  min-height:48px!important;border-radius:9px!important;
+  border:1px solid #2a5066!important;background:#0a293d!important;
+  color:#edf8ff!important;padding:7px 9px!important;
+}
+.mm-reference-layout #path .mm-catalog-lesson .mm-catalog-num{
+  display:grid;place-items:center;min-width:38px;min-height:33px;
+  border-radius:8px;background:#123d55;color:#a1efdf!important;
+  font-size:11px!important;
+}
+.mm-reference-layout #path .mm-catalog-lesson .mm-catalog-title{
+  font-size:13px!important;line-height:1.35!important;color:#f1f9ff!important;
+}
+.mm-reference-layout #path .mm-catalog-lesson .mm-catalog-state{
+  font-size:11px!important;color:#a6d4df!important;
+}
+/* Practice follows the same search/filter and 64px illustrated row pattern. */
+.mm-reference-layout #scenarios .mm-practice-hub{gap:9px!important}
+.mm-reference-layout #scenarios .mm-reference-title{order:-4!important;margin:0 0 4px!important}
+.mm-reference-layout #scenarios .mm-hub-continue{order:-3!important}
+.mm-reference-layout #scenarios .mm-practice-hub>.mm-tidy-overview{
+  order:-2!important;padding:11px!important;gap:7px!important;
+}
+.mm-reference-layout #scenarios .mm-tidy-overview h1{font-size:18px!important}
+.mm-reference-layout #scenarios .mm-tidy-overview p{font-size:12px!important}
+.mm-reference-layout #scenarios .mm-practice-hub>.mm-hub-section{
+  order:-1!important;min-width:0;
+}
+.mm-reference-layout #scenarios .mm-practice-hub>.mm-hub-section .mm-hub-section-head{
+  margin:0 0 8px!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub>.mm-hub-section .mm-hub-section-head h2{
+  font-size:17px!important;margin:3px 0 5px!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub>.mm-hub-section .mm-hub-section-head p{
+  font-size:12px!important;line-height:1.4!important;color:#a9c9d9!important;
+}
+.mm-reference-layout #scenarios .mm-practice-search{
+  display:grid;gap:5px;width:100%;box-sizing:border-box;
+  margin:0 0 6px;color:#c9e7f2;font-size:12px;font-weight:650;
+}
+.mm-reference-layout #scenarios .mm-practice-search input{
+  display:block;box-sizing:border-box;width:100%;min-width:0;
+  min-height:47px;padding:10px 12px;border-radius:10px;
+  border:1px solid #34566c;background:#0a2638;
+  color:#f2faff;font-size:15px;
+}
+.mm-reference-layout #scenarios .mm-practice-search input:focus-visible{
+  outline:3px solid #7beedb;outline-offset:2px;
+}
+.mm-reference-layout #scenarios .mm-practice-count{
+  margin:4px 0 10px!important;color:#8cdecf!important;
+  font-size:12px!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub>.mm-hub-section .mm-hub-grid{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:8px!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile,
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-section .mm-reference-practice-choice{
+  display:grid!important;grid-template-columns:64px minmax(0,1fr) 16px!important;
+  grid-template-rows:repeat(4,auto)!important;align-items:center!important;
+  gap:3px 10px!important;min-height:94px!important;
+  padding:7px 10px 7px 7px!important;
+  border:1px solid #2b5368!important;border-radius:11px!important;
+  background:#071f2d!important;box-shadow:none!important;text-align:left!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile[hidden]{
+  display:none!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile>.mm-reference-practice-art{
+  grid-column:1!important;grid-row:1/span 4!important;
+  width:64px!important;height:64px!important;border-radius:9px!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile>.eyebrow,
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile>b,
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile>small,
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile>.mm-hub-tile-action{
+  grid-column:2!important;min-width:0!important;white-space:normal!important;
+  overflow-wrap:anywhere!important;overflow:visible!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile>.eyebrow{
+  grid-row:1!important;color:#85e8d5!important;font-size:10px!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile>b{
+  grid-row:2!important;color:#f2faff!important;
+  font-size:16px!important;line-height:1.2!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile>small{
+  grid-row:3!important;color:#b4d3df!important;
+  font-size:12px!important;line-height:1.35!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile>.mm-hub-tile-action{
+  grid-row:4!important;color:#78e4d0!important;
+  font-size:11px!important;line-height:1.3!important;
+}
+.mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile:after{
+  content:"›";grid-column:3;grid-row:1/span 4;
+  align-self:center;justify-self:center;color:#d8efff;font-size:24px;
+}
+.mm-reference-layout #scenarios .mm-practice-diagnose-journey{order:1!important}
+.mm-reference-layout #scenarios .mm-practice-guided{order:2!important}
+.mm-reference-layout #scenarios .mm-practice-cases{order:3!important}
+@media(min-width:701px){
+  .mm-reference-layout #dashboard .mm-reference-quick-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  .mm-reference-layout #scenarios .mm-practice-hub>.mm-hub-section .mm-hub-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  .mm-reference-layout #path .mm-all-lessons .mm-catalog-controls{
+    grid-template-columns:minmax(0,1fr) 180px!important;
+  }
+}
+@media(max-width:700px){
+  .mm-reference-layout #dashboard .mm-reference-quick-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  .mm-reference-layout #path .mm-all-lessons{
+    padding:0!important;margin:0!important;
+  }
+  .mm-reference-layout #path .mm-catalog-group>summary.mm-unified-course-summary{
+    min-height:77px!important;
+  }
+  .mm-reference-layout #path .mm-learn-jump{
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:370px){
+  .mm-reference-layout #dashboard .mm-reference-home-hero{
+    min-height:132px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-hero-words{
+    max-width:78%!important;
+  }
+  .mm-reference-layout #path .mm-unified-course-summary>.mm-catalog-group-name,
+  .mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile>b{
+    font-size:14px!important;
+  }
+}
+@media(forced-colors:active){
+  .mm-reference-layout #dashboard .mm-reference-quick-tool,
+  .mm-reference-layout #dashboard > .mm-reference-home-practice,
+  .mm-reference-layout #path .mm-catalog-group,
+  .mm-reference-layout #scenarios .mm-practice-hub .mm-hub-grid>.mm-hub-tile{
+    background:Canvas!important;color:CanvasText!important;
+    border:1px solid CanvasText!important;
+  }
+}
+
+
+/* Final Materials parity: the useful catalogue leads, not repeated banners. */
+.mm-reference-layout #path .mm-hub-continue{
+  order:-2!important;gap:7px!important;
+}
+.mm-reference-layout #path .mm-hub-continue-copy .eyebrow{
+  color:#7fedd9!important;font-size:10px!important;
+}
+.mm-reference-layout #path .mm-learn-courses{
+  order:-1!important;
+}
+.mm-reference-layout #path .mm-all-lessons .mm-catalog-head{
+  margin:0 0 10px!important;
+}
+.mm-reference-layout #path .mm-all-lessons .mm-catalog-head h2{
+  color:#f1f9ff!important;font-size:19px!important;
+}
+.mm-reference-layout #path .mm-all-lessons .mm-catalog-head p{
+  color:#a9cddb!important;line-height:1.43!important;
+}
+.mm-reference-layout #scenarios .mm-hub-continue{order:0!important}
+.mm-reference-layout #scenarios .mm-practice-hub>.mm-hub-section{order:-2!important}
+.mm-reference-layout #scenarios .mm-hub-section-head h2{
+  font-size:19px!important;color:#f1f9ff!important;
+}
+.mm-reference-layout #scenarios .mm-hub-section-head p{
+  color:#afcedb!important;
+}
+@media(max-width:700px){
+  .mm-reference-layout #path .mm-hub-continue{
+    grid-template-columns:minmax(0,1fr)!important;
+    align-items:stretch!important;
+  }
+  .mm-reference-layout #path .mm-hub-continue h2{font-size:16px!important}
+  .mm-reference-layout #path .mm-hub-continue-action{
+    grid-column:1!important;grid-row:auto!important;
+    width:100%!important;min-height:44px!important;
+    padding:9px!important;font-size:13px!important;
+  }
+  .mm-reference-layout #path .mm-hub-progress{font-size:11px!important}
+  .mm-reference-layout #scenarios .mm-hub-section-head{margin:0 0 8px!important}
+}
+
+/* Filtered lessons are genuinely hidden, despite Materials-parity grid skin.
+   This is essential for specialist Done/Todo privacy and keyboard navigation. */
+.mm-reference-layout #path .mm-catalog-lesson[hidden],
+.mm-reference-layout #path .mm-catalog-group[hidden]{display:none!important;}
+
+/* PR640 tablet home density contract: keep the existing training focus visible
+   before the first screen fold on 810px compact-navigation tablets while
+   retaining full text, 44px controls and Materials-style actionable rows. */
+@media (min-width:701px) and (max-width:900px){
+  .mm-reference-layout #dashboard .mm-reference-home-hero{
+    min-height:100px!important;
+    padding:10px 13px!important;
+    margin-bottom:6px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-home-practice{
+    min-height:58px!important;
+    margin:0 0 6px!important;
+    padding:7px 10px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-tools{
+    margin:6px 0 8px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-grid{
+    gap:6px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-tool{
+    min-height:70px!important;
+    padding:6px 9px 6px 6px!important;
+  }
+  .mm-reference-layout #dashboard .mm-reference-quick-icon{
+    width:54px!important;height:54px!important;
   }
 }

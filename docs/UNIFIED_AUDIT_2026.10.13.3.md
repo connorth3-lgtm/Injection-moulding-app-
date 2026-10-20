@@ -2,7 +2,7 @@
 
 > **Archived snapshot — 17 October 2026; not current.** The release table, issue counts and follow-up text below preserve the state at that review date and must not be used as current release status.
 >
-> **Status checked 20 October 2026 (NZDT):** protected `main` is `81d10b73ead8501889b476e96b39412a5fedce28` and declares web release `2026.10.16.1`. The current retained, non-publishing preview candidate is `2026.10.20.1`, bound to source `0e31db7dec3a0f35bf296142cfb12bf4c6d164f0`; see [issue #619](https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/619). PR [#648](https://github.com/connorth3-lgtm/Injection-moulding-app-/pull/648) merged to `preview` and includes a Book Read Aloud fix for speech providers that send `onend` without `onstart`. That fix is absent from the checked `main` source; this PR backports the callback fix, adds regressions, and stages the successor web/cache identity `2026.10.20.1`. Its exact-source retained public candidate succeeded (producer run `39365753604`; Mobile Browser QA `39365753819`; Question Quality 50-Pass `39365753816`; Read Aloud QA `39365753925`). The candidate is non-publishing; H4 post-binding release checks remain pending. The preview candidate is not a public Pages deployment, and independent device, assistive-technology, SME, learner-outcome and provider reviews remain HOLD.
+> **Status checked 20 October 2026 (UTC):** protected `main` is `f896b988385b77c4190a7584db13b88748b7b106` and declares web release `2026.10.20.1`. The integrated Learn/Book draft stages successor release `2026.10.20.2`; its exact-source producer and fresh browser/visual review are pending. The prior main candidate is `2026.10.20.1`, bound to source `f896b988385b77c4190a7584db13b88748b7b106`, fingerprint `sha256:a208ca2c5fd94a00bde098f94232de14baf5625145ed2d7f2e6f09ce2caa20cf`, producer run `39368081782`, artifact `12240591156`, digest `sha256:59829f91d1cc0c1654fab81049bbe1d205c608c561964a05c0b16be63ea8444e`, expiry `2026-11-19T04:11:07Z`. It is historical for the integrated source and does not validate release `2026.10.20.2`; see [issue #619](https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/619). The candidate is non-publishing. Seven independent device, assistive-technology, SME, learner-outcome, Windows-signing and provider review workstreams remain HOLD; production authority stays advisory-only.
 >
 > Use the generated [governance status](../GOVERNANCE_STATUS.md), [Book governance status](../BOOK_GOVERNANCE_STATUS.md) and the latest candidate/evidence tracker [issue #619](https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/619) for current state. The first-read report's 850-word measure remains an editorial target, not an acceptance gate.
 
@@ -12,16 +12,15 @@
 
 | Fact | Audited evidence |
 | --- | --- |
-| Last independently verified protected `main` | `ef4c4f6cfc53b912f5fbe953f551b030a8c8a318`, historical PR #638 squash merge; **not the new Android PR** |
-| Historical original audited merge | `89fe3e24c11c3eb660953870fce7e819280c55df` from PR #627; immutable historical record |
-| Last verified hosted preview | `2026.10.15.3` under `/preview/` from issue #512; **do not claim 2026.10.16.1 is live before new main deploy** |
-| Current governed PR release | `2026.10.16.1`, pending owner-authorized protected-main merge |
-| Retained public candidate source | `e336f656351afa4eeaaae0940969bea881ae9b68` |
-| Genuine producer | successful [run 38864931906](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/38864931906), retained artifact `12030806569` |
-| Technical evidence | same-source Mobile Browser QA `38864931666` and Question Quality 50-Pass `38864931729` succeeded; latest-head protected merge checks must be independently green |
-| Visual lock | owner-approved immutable `visual-baseline/2026.10.16.1` at `04628e13a6c9a9517bef22bae6c12a456896f299`, 52 unmasked captures and maximum 12 differing pixels |
-| Root release | production HOLD, advisory-only; no machine-control/accreditation authorization |
-| External acceptance | seven independent human/device/provider workstreams HOLD |
+| Last verified hosted non-production preview | 2026.10.16.1 after protected PR #639 merge; `main` merge SHA `53712742aa8c82e400a264f4c0e4a38b864335c4`; **2026.10.17.1 is NOT yet live** |
+| Original audited historical merge | `89fe3e24c11c3eb660953870fce7e819280c55df` from PR #627 remains immutable provenance |
+| Current draft candidate family | `2026.10.17.1` on PR #640, explicit technical FAIL and visual owner approval outstanding |
+| Current retained public candidate | **NONE for 2026.10.17.1**; successful new source-bound producer, artifact hash, expiry and fingerprint missing |
+| Last authenticated prior producer | `2026.10.16.1` source `e336f656351afa4eeaaae0940969bea881ae9b68` and artifact `12030806569`; history only |
+| Browser automation | Draft substantive Chromium/WebKit, cross-browser, feature reachability and five 100-run reliability shards passed; strict new 52-screen/12px visual baseline unapproved |
+| Visual provenance | Previous immutable approved ref `visual-baseline/2026.10.16.1` pinned to `04628e13a6c9a9517bef22bae6c12a456896f299`; **do not move or auto-approve it** |
+| Root/production boundary | Production HOLD, educational/advisory only; no validated recipe, machine control or accreditation |
+| External acceptance | All seven human/device/provider workstreams remain HOLD |
 
 The web release, Android release and Windows desktop are **separate lanes**; a passing browser workflow cannot certify physical Android/iOS, signed Windows or a provider's program. Avoid describing preview as production.
 

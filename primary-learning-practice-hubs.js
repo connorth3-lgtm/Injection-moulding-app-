@@ -623,6 +623,7 @@ function createLessonCatalog(){
   function mountLesson(){
     const root=document.getElementById('lesson');
     if(!root||!root.querySelector('.lesson-body'))return;
+    mountLessonReasoning(root);
     root.querySelector('.mm-lessons-drawer')?.remove();
     root.querySelector('.lesson-side')?.remove();
     root.classList.add('mm-unified-lesson');
@@ -1022,14 +1023,80 @@ const LEARN_REASONING_CHAPTERS=Object.freeze([
     "short": "Validation"
   }
 ]);
+// Editorial crosswalk: one relevant, existing core lesson per source-authored
+// reflection. The 120-lesson curriculum and 169 governed assessment prompts
+// are immutable here. These 32 original answers remain *unscored* teaching.
+const LEARN_REASONING_TO_CORE_LESSON=Object.freeze({
+  'LR-01':46,
+  'LR-02':54,
+  'LR-03':39,
+  'LR-04':51,
+  'LR-05':53,
+  'LR-06':58,
+  'LR-07':65,
+  'LR-08':48,
+  'LR-09':45,
+  'LR-10':59,
+  'LR-11':30,
+  'LR-12':29,
+  'LR-13':56,
+  'LR-14':55,
+  'LR-15':64,
+  'LR-16':47,
+  'LR-17':34,
+  'LR-18':37,
+  'LR-19':60,
+  'LR-20':105,
+  'LR-21':94,
+  'LR-22':82,
+  'LR-23':76,
+  'LR-24':112,
+  'LR-25':6,
+  'LR-26':41,
+  'LR-27':15,
+  'LR-28':28,
+  'LR-29':75,
+  'LR-30':89,
+  'LR-31':73,
+  'LR-32':80
+});
+function learnReasoningForLesson(lessonId){
+  const id=Number(lessonId);
+  if(!Number.isInteger(id)||id<1||id>120)return [];
+  return LEARN_REASONING_REVIEWS.filter(q=>LEARN_REASONING_TO_CORE_LESSON[q.id]===id);
+}
+function lessonReasoningMarkup(lessonId){
+  const questions=learnReasoningForLesson(lessonId);
+  if(!questions.length)return '';
+  return `<section class="mm-lesson-reasoning" id="mmLessonReasoning" data-mm-lesson-reasoning-id="${Number(lessonId)}" aria-label="Lesson understanding checks">
+   <details class="mm-lesson-reasoning-group"><summary><span><span class="eyebrow">Optional · unscored lesson check</span><strong>Check your understanding</strong><small>${questions.length} evidence-based question${questions.length===1?'':'s'} for this lesson</small></span><span aria-hidden="true" class="mm-lesson-reasoning-chevron">⌄</span></summary>
+   <div class="mm-lesson-reasoning-questions">
+   ${questions.map(q=>`<details class="mm-lesson-reasoning-question" data-mm-lesson-reasoning-question="${esc(q.id)}"><summary><span class="mm-lesson-reasoning-topic">${esc(q.topic)}</span><strong>${esc(q.question)}</strong><small>Reveal the reasoning ↓</small></summary><div class="mm-lesson-reasoning-answer"><b>Suggested answer</b><p>${esc(q.answer)}</p><b>Why that is plausible</b><p>${esc(q.explanation)}</p><b>Evidence to verify</b><p>${esc(q.evidence)}</p><b>Common mistake to avoid</b><p>${esc(q.pitfall)}</p></div></details>`).join('')}
+   <p class="mm-learn-safety-note">Teaching only. These optional questions do not affect the 169 governed assessment prompts, completion, scoring or competence records, and they do not authorise equipment operation. Use supplier guidance and approved site procedures for real equipment.</p></div></details></section>`;
+}
+function mountLessonReasoning(root){
+  if(!root?.querySelector('.lesson-body'))return;
+  const id=Number(lessonContext()?.lesson?.id);
+  const previous=root.querySelector('#mmLessonReasoning');
+  if(previous&&Number(previous.dataset.mmLessonReasoningId)===id)return;
+  previous?.remove();
+  const markup=lessonReasoningMarkup(id);if(!markup)return;
+  const anchor=root.querySelector('#mmCurriculumPractice')||root.querySelector('#mmNotes');
+  if(anchor)anchor.insertAdjacentHTML('beforebegin',markup);
+  else root.querySelector('.lesson-body').insertAdjacentHTML('beforeend',markup);
+}
 function learnReasoningMarkup(){
   return LEARN_REASONING_CHAPTERS.map(chapter=>{
     const questions=LEARN_REASONING_REVIEWS.filter(item=>item.chapter===chapter.label);
-    return `<section class="mm-learn-reasoning-chapter" aria-labelledby="mmLearnChapter-${esc(chapter.id)}">
-      <header class="mm-learn-reasoning-chapter-title"><div><span class="eyebrow">${esc(chapter.short)} · unscored teaching</span><h4 id="mmLearnChapter-${esc(chapter.id)}">${esc(chapter.title)}</h4></div><span class="mm-learn-chapter-count">${questions.length} questions</span></header>
+    // Physical Android feedback: the 32 optional prompts must be discoverable
+    // without making users scroll through all of them to reach All lessons.
+    // Native nested details preserve every authored question, answer, and
+    // keyboard/screen-reader affordance; all eight groups begin collapsed.
+    return `<details class="mm-learn-reasoning-chapter" aria-labelledby="mmLearnChapter-${esc(chapter.id)}">
+      <summary class="mm-learn-reasoning-chapter-title"><div><span class="eyebrow">${esc(chapter.short)} · unscored teaching</span><h4 id="mmLearnChapter-${esc(chapter.id)}">${esc(chapter.title)}</h4></div><span class="mm-learn-chapter-count">${questions.length} questions</span><span class="mm-learn-chapter-toggle" aria-hidden="true">⌄</span></summary>
       ${questions.map(item=>`<details class="mm-learn-reasoning-item"><summary><span class="mm-learn-reasoning-topic">${esc(item.id)} · ${esc(item.topic)}</span><strong>${esc(item.question)}</strong><span class="mm-learn-reveal">Reveal the reasoning ↓</span></summary>
         <div class="mm-learn-reasoning-answer"><b>Suggested answer</b><p>${esc(item.answer)}</p><b>Why that is plausible</b><p>${esc(item.explanation)}</p><b>Evidence to verify</b><p>${esc(item.evidence)}</p><b>Common mistake to avoid</b><p>${esc(item.pitfall)}</p></div></details>`).join('')}
-    </section>`;
+    </details>`;
   }).join('');
 }
 function learnHubMarkup(){
@@ -1039,9 +1106,10 @@ function learnHubMarkup(){
   return `<div class="mm-primary-hub mm-learn-hub">
     <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>Lessons</h1><p>Core, material science and specialist lessons in one place.</p></header>
     <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
-    <nav class="mm-learn-jump" aria-label="Learn section shortcuts"><a href="#mmLearnArena">Troubleshooting</a><a href="#mmLearnQuestions">Questions</a><a href="#mmLearnReasoning">Answers & safety</a><a href="#mmLearnCourses">All lessons</a></nav>
+    <nav class="mm-learn-jump" aria-label="Learn section shortcuts"><a href="#mmLearnArena">Troubleshooting</a><a href="#mmLearnQuestions">Questions</a><a href="#mmLearnCourses">All lessons</a></nav>
+    <section class="mm-learn-courses" id="mmLearnCourses" aria-label="Search and browse all lessons">${lessonCatalog.markup()}</section>
     <section class="mm-learn-master-lesson" aria-labelledby="mmLearnMasterHeading">
-      <header class="mm-learn-studio-head mm-learn-master-intro"><span class="eyebrow">One complete interactive lesson</span><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>One connected lesson in three stages: diagnose a real-world situation, practise your decisions, and understand why the answer fits the evidence.</p><div class="mm-learn-master-meta">3 connected stages · 169 governed prompts · 32 unscored explanations</div></header>
+      <header class="mm-learn-studio-head mm-learn-master-intro"><span class="eyebrow">One complete interactive lesson</span><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>One connected lesson in three stages: diagnose a real-world situation, practise your decisions, and understand why the answer fits the evidence.</p><div class="mm-learn-master-meta">3 connected stages · 169 governed prompts · 32 optional questions inside their relevant core lessons</div></header>
       <div class="mm-learn-studio" aria-label="Three stages of the combined lesson">
       <section class="mm-learn-step mm-learn-step-arena" aria-labelledby="mmLearnArenaStep">
         <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">01</span><div><span class="eyebrow">Investigate</span><h3 id="mmLearnArenaStep">Read the evidence</h3></div></div>
@@ -1057,18 +1125,18 @@ function learnHubMarkup(){
           ${questionCentreMarkup(true)}
         </section>
       </section>
-      </div>
       <section class="mm-learn-step mm-learn-step-reasoning" aria-labelledby="mmLearnReasoningStep">
         <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">03</span><div><span class="eyebrow">Reflect</span><h3 id="mmLearnReasoningStep">Explain your reasoning</h3></div></div>
-        <section class="mm-learn-reasoning" id="mmLearnReasoning" aria-labelledby="mmLearnReasoningHeading"><div class="mm-learn-reasoning-head"><span class="eyebrow">32 optional learning checks · 8 topics</span><h2 id="mmLearnReasoningHeading">Understand the answer</h2><p>Go deeper with 32 realistic questions across cycle evidence, materials, tooling, filling, part quality, safety and scientific validation. Each reveals a suggested answer, the underlying reasoning, evidence to verify and a common mistake to avoid. These unscored teaching prompts are <strong>not</strong> part of the 169 governed question bank, formal assessment or evidence of competence.</p></div><div class="mm-learn-reasoning-list">${learnReasoningMarkup()}</div><p class="mm-learn-safety-note">Educational scenarios only. Use current supplier instructions, approved site procedures and authorised human review for real equipment.</p></section>
+        <!-- The 32 optional teaching checks live in their matching core lessons; this is the separate unscored capstone. -->
       <section class="mm-learn-capstone" id="mmLearnCapstone" aria-labelledby="mmLearnCapstoneTitle"><header><span class="eyebrow">Final case · unscored</span><h3 id="mmLearnCapstoneTitle">One case. Four evidence checkpoints.</h3><p>A new polymer lot arrives. Silver streaks and variable cushion appear during trial shots. Work through this hypothetical case before choosing another activity.</p></header><div class="mm-learn-capstone-steps">
 <details><summary><span>01</span><b>Characterise the change</b><small>What is known versus suspected?</small></summary><p>Separate observed streaks and shot variability from assumptions about wet resin. Compare cavity-labelled parts, timestamps and a suitable known-good baseline.</p></details>
 <details><summary><span>02</span><b>Gather discriminating evidence</b><small>What would distinguish mechanisms?</small></summary><p>Confirm grade and lot, dryer and feed evidence, transfer/cushion traces and cavity distribution. Ask whether variation tracks material, tool or machine signals.</p></details>
 <details><summary><span>03</span><b>Choose a safe check</b><small>What must be authorised?</small></summary><p>Follow site-specific safety procedures; agree one documented hypothesis and acceptance metric with competent personnel. Never bypass a guard or reuse another grade's drying recipe.</p></details>
 <details><summary><span>04</span><b>Verify the recovery</b><small>When is the investigation complete?</small></summary><p>Record before/after actuals, representative cavity-labelled quality and measurement confidence. Formal process approval requires the site's change-control evidence and human review.</p></details></div><p class="mm-learn-safety-note">Training only; this case has no machine-control or workplace competency authority.</p></section>
       </section>
+      </div>
     </section>
-    <section class="mm-learn-courses" id="mmLearnCourses" aria-labelledby="mmLearnCoursesHeading"><div class="mm-learn-courses-head"><span class="eyebrow">Your learning library</span><h2 id="mmLearnCoursesHeading">Courses and lessons</h2><p>One searchable catalogue of core, material-science and specialist lessons. Your existing local progress is unchanged.</p></div>${lessonCatalog.markup()}</section>
+
     <div class="mm-catalog-extra"><button class="secondary" type="button" data-mm-hub-action="learn-resources">Open Learning Resources →</button></div>
   </div>`;
 }
@@ -1156,7 +1224,7 @@ function questionCentreMarkup(embeddedLesson=false){
  <button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic questions</b><small>${q.diagnostic} guided fault-isolation decisions across the diagnostic labs.</small></button>
  <button type="button" data-mm-hub-action="material-labs"><b>Material questions</b><small>${q.materials} resin/evidence decisions across the material labs.</small></button>
  <button type="button" data-mm-hub-action="measured-decisions"><b>Measured-evidence decisions</b><small>${q.measured} decisions grounded in audited measured-data contracts.</small></button>
- </div><p class="tiny muted" style="margin-top:12px">${q.total} governed question/decision prompts across these five modes. Book chapter self-checks and lesson exercises stay with the teaching they belong to.</p>`;
+ </div><p class="tiny muted" style="margin-top:12px">${q.total} governed question/decision prompts across these five modes. Book chapter self-checks, the 32 optional reasoning questions and lesson exercises stay with the core lessons they belong to.</p>`;
 }
 function openQuestionCentreDetail(){
   const root=document.getElementById('scenarios');if(!root)return;
@@ -1466,20 +1534,35 @@ function practiceHubMarkup(){
     <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1>What should I practise next?</h1><p>${esc(practiceStatusLine(plan))}</p></header>
     ${recommendedPracticeMarkup(plan,done)}
     ${practicePlanRows(plan)}
-    <section class="mm-practice-diagnose-journey" aria-label="Three-step diagnostic workflow"><div class="mm-practice-diagnose-head"><span class="eyebrow">Connected troubleshooting</span><h2>One problem. One evidence trail.</h2><p>Choose a real learning tool for the stage you need. Its native feedback, score and evidence stay independent.</p></div><div class="mm-practice-diagnose-stages"><div><strong>01 · Observe</strong><span>Describe the defect, location and baseline</span></div><div><strong>02 · Isolate</strong><span>Compare material, machine and mould causes</span></div><div><strong>03 · Verify</strong><span>Choose a discriminating check and record the result</span></div></div></section>
-    ${practiceGuidedMarkup()}
-    ${practiceCaseReviewMarkup()}
-    <section class="mm-hub-section"><div class="mm-hub-section-head"><h2>Choose by the job you want to practise</h2><p>Practice is for learning; assessments stay separate.</p></div><div class="mm-hub-grid">
+    <section class="mm-hub-section"><div class="mm-hub-section-head"><span class="eyebrow">Choose by the job you want to practise</span><h2>Practice tools</h2><p>Practice is for learning; assessments stay separate. ${scenarioCount} scenarios · 5 question modes · 169 governed prompts.</p></div><label class="mm-practice-search"><span>Find practice</span><input type="search" data-mm-practice-query autocomplete="off" placeholder="Search a tool or topic" aria-controls="mmPracticeToolResults"></label><p class="mm-practice-count" aria-live="polite" data-mm-practice-count>5 tools shown</p><div class="mm-hub-grid" id="mmPracticeToolResults">
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="troubleshooting"><span class="eyebrow">Find the cause · 5–15 min</span><b>Diagnose a moulding problem</b><small>Start from a defect, separate plausible mechanisms and choose the next discriminating check.</small><span class="mm-hub-tile-action">Choose troubleshooting practice →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="scenario-detail"><span class="eyebrow">Make a decision · about 5 min</span><b>Work a shop-floor scenario</b><small>Read the evidence and choose the strongest next action${scenarioCount?` across ${scenarioCount} scenarios`:''}. Each launch rotates the case.</small><span class="mm-hub-tile-action">Start next scenario →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="process-data"><span class="eyebrow">Read evidence · 10–20 min</span><b>Analyse process data</b><small>Prepare local data, verify signal meaning and compare a fault or recovery against a valid baseline.</small><span class="mm-hub-tile-action">Open data diagnosis →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Explore behaviour · 5–15 min</span><b>Use labs & simulators</b><small>Test process and material reasoning in a controlled training environment without changing a real machine.</small><span class="mm-hub-tile-action">Choose a lab or simulator →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="question-centre"><span class="eyebrow">Questions & checks · choose a mode</span><b>Question Centre</b><small>Formal checks, diagnostic and material questions, scenarios and measured-evidence decisions in one place. Lesson exercises and Book self-checks remain beside their teaching.</small><span class="mm-hub-tile-action">Open all question modes →</span></button>
     </div></section>
+    <section class="mm-practice-diagnose-journey" aria-label="Three-step diagnostic workflow"><div class="mm-practice-diagnose-head"><span class="eyebrow">Connected troubleshooting</span><h2>One problem. One evidence trail.</h2><p>Choose a real learning tool for the stage you need. Its native feedback, score and evidence stay independent.</p></div><div class="mm-practice-diagnose-stages"><div><strong>01 · Observe</strong><span>Describe the defect, location and baseline</span></div><div><strong>02 · Isolate</strong><span>Compare material, machine and mould causes</span></div><div><strong>03 · Verify</strong><span>Choose a discriminating check and record the result</span></div></div></section>
+    ${practiceGuidedMarkup()}
+    ${practiceCaseReviewMarkup()}
+
   </div>`;
 }
 function renderLearnHub(){const root=document.getElementById('path');if(!root)return;root.dataset.mmHubMode='hub';root.innerHTML=learnHubMarkup();bind(root);lessonCatalog.attach(root)}
-function renderPracticeHub(){const root=document.getElementById('scenarios');if(!root)return;root.dataset.mmHubMode='hub';root.innerHTML=practiceHubMarkup();bind(root);window.MM_APP_SHELL?.navigation?.setCustomActive?.('')}
+function renderPracticeHub(){
+  const root=document.getElementById('scenarios');if(!root)return;
+  root.dataset.mmHubMode='hub';root.innerHTML=practiceHubMarkup();bind(root);
+  const input=root.querySelector('[data-mm-practice-query]');
+  const count=root.querySelector('[data-mm-practice-count]');
+  input?.addEventListener('input',()=>{
+    const query=input.value.trim().toLowerCase();let shown=0;
+    root.querySelectorAll('#mmPracticeToolResults > button').forEach(button=>{
+      const match=!query||button.textContent.toLowerCase().includes(query);
+      button.hidden=!match;if(match)shown++;
+    });
+    if(count)count.textContent=shown?`${shown} tool${shown===1?'':'s'} shown`:'No matching tools. Try another search.';
+  });
+  window.MM_APP_SHELL?.navigation?.setCustomActive?.('');
+}
 function detailBack(root,label,back){
   const bar=document.createElement('div');bar.className='mm-hub-detail-back';bar.innerHTML=`<button type="button">← ${esc(back)}</button><span>${esc(label)}</span>`;
   bar.querySelector('button').addEventListener('click',()=>{
@@ -1676,6 +1759,13 @@ if(typeof currentView==='string'){
   if(currentView==='scenarios')renderPracticeHub();
 }
 window.MM_APP_SHELL?.navigation?.sync?.();
+// Read-only QA/reader crosswalk. No persistence, course or scoring mutation.
+window.MM_LESSON_REASONING=Object.freeze({
+  count:LEARN_REASONING_REVIEWS.length,
+  crosswalk:()=>LEARN_REASONING_REVIEWS.map(q=>Object.freeze({
+    id:q.id,lessonId:LEARN_REASONING_TO_CORE_LESSON[q.id],topic:q.topic
+  }))
+});
 window.MM_QUESTION_CENTRE=Object.freeze({version:VERSION,open:openQuestionCentreDetail,counts:questionCentreCounts,scope:'Learner-facing consolidated launcher only; governed question sources, scoring, outcome-review status and evidence remain in their canonical subsystems.'});
 window.MM_PRIMARY_HUBS={version:VERSION,renderLearnHub,renderPracticeHub,openCurrentLesson,openLearningPathDetail,openScenarioDetail,nextScenarioIndex,learnerPracticePlan,openLearningResources:()=>openPicker('learn-resources'),learnToolOrigin:()=>learnToolOrigin,clearLearnToolOrigin:()=>{learnToolOrigin=null;}};
 })();

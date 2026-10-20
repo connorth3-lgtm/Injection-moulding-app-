@@ -145,6 +145,44 @@ test('mobile bottom sheet leaves scroll clearance for Book chapter text and cont
   expect(geometry.panelHeight).toBeLessThan(geometry.viewportHeight-75);
   expect(geometry.width).toBeLessThanOrEqual(geometry.viewportWidth+2);
 });
+test('expanded Book Read Aloud playback and voice controls fit narrow phone panels',async({page})=>{
+  await seedLearner(page);
+  for(const width of [360,412]){
+    await page.setViewportSize({width,height:900});
+    await page.goto(APP,{waitUntil:'domcontentloaded'});
+    await page.waitForFunction(()=>window.MMBook?.open&&window.MM_APP_SHELL_FINALIZED);
+    await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load();});
+    const details=page.locator('.mm-read-aloud details');
+    await details.evaluate(el=>{el.open=true});
+    const player=page.locator('.mm-read-aloud');
+    await expect(player.locator('[data-mm-read="stop"]')).toBeVisible();
+    await expect(player.locator('[data-mm-read="voice"]')).toBeVisible();
+    const metrics=await page.evaluate(()=>{
+      const details=document.querySelector('.mm-read-aloud details');
+      const panel=details.querySelector('.mm-read-panel');
+      const controls=details.querySelector('.mm-read-controls');
+      const meta=details.querySelector('.mm-read-meta');
+      const box=node=>{const r=node.getBoundingClientRect();return{left:r.left,right:r.right}};
+      return{
+        viewport:innerWidth,
+        document:document.documentElement.scrollWidth,
+        details:box(details),
+        panelClient:panel.clientWidth,panelScroll:panel.scrollWidth,
+        controlsClient:controls.clientWidth,controlsScroll:controls.scrollWidth,
+        metaClient:meta.clientWidth,metaScroll:meta.scrollWidth,
+        controlsRight:Math.max(...Array.from(controls.children,button=>box(button).right)),
+        voice:box(meta.querySelector('[data-mm-read="voice"]'))
+      };
+    });
+    expect(metrics.document).toBeLessThanOrEqual(metrics.viewport+2);
+    expect(metrics.panelScroll).toBeLessThanOrEqual(metrics.panelClient+1);
+    expect(metrics.controlsScroll).toBeLessThanOrEqual(metrics.controlsClient+1);
+    expect(metrics.metaScroll).toBeLessThanOrEqual(metrics.metaClient+1);
+    expect(metrics.controlsRight).toBeLessThanOrEqual(metrics.details.right+1);
+    expect(metrics.voice.left).toBeGreaterThanOrEqual(metrics.details.left-1);
+    expect(metrics.voice.right).toBeLessThanOrEqual(metrics.details.right+1);
+  }
+});
 test('public preview status is shown only for a preview URL, not local desktop paths', async ({page}) => {
   await seedLearner(page);
   await page.goto(APP);
@@ -169,8 +207,8 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load()});
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.20.1');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.20.1');
+  await expect(host).toHaveAttribute('data-version','2026.10.20.2');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.20.2');
   await expect(host.locator('summary')).toContainText('Listen');
 
   const placement=await page.evaluate(()=>{
@@ -258,7 +296,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.supported===true)).toBeTruthy();
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.20.1');
+  await expect(host).toHaveAttribute('data-version','2026.10.20.2');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {
@@ -1012,6 +1050,31 @@ test('Book Contents narration does not pick an unrelated screen when the reader 
   const units=await page.evaluate(()=>window.MMReadAloud.refresh().map(u=>u.text));
   expect(units).toEqual(['Book Contents heading.','Choose a reader chapter from the Book.']);
 });
+
+for(const phone of ['Android','iPhone']){
+  test(`Phone sound diagnostic starts its short TTS sample on the original ${phone} tap`,async({page})=>{
+    await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Phone sound diagnostic does not need a Book content queue.</p></main></body></html>');
+    await page.evaluate(phone=>{
+      const ua=phone==='Android'?'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/130.0 Mobile Safari/537.36':'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1';
+      Object.defineProperty(navigator,'userAgent',{configurable:true,value:ua});
+      class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.voice=null;this.onstart=null;this.onend=null;this.onerror=null;}}
+      const synth={getVoices(){return[];},cancel(){this.cancels=(this.cancels||0)+1;},
+        speak(u){window.__phoneTestVoiceText=u.text;window.__phoneTestVoiceRate=u.rate;window.__phoneTestGesture=navigator.userActivation?.isActive??true;queueMicrotask(()=>{u.onstart?.();u.onend?.();});},
+        pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+      Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+      Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+    },phone);
+    await page.addScriptTag({path:'read-aloud.js'});
+    // Phone player is collapsed until the learner opens the Listen panel.
+    // The sound test is inside that panel and must be visibly actionable.
+    await page.locator('.mm-read-aloud summary').click();
+    await expect(page.locator('.mm-read-aloud details')).toHaveAttribute('open','');
+    await page.locator('.mm-read-aloud [data-mm-read="test"]').click();
+    await expect.poll(()=>page.evaluate(()=>window.__phoneTestVoiceText||'')).toBe('MouldMaster sound test. You should hear this sentence.');
+    await expect(page.locator('.mm-read-aloud .mm-read-status')).toContainText('Sound test finished');
+    expect(await page.evaluate(()=>window.__phoneTestVoiceRate)).toBe(1);
+  });
+}
 
 test('Android voice completion advances sentences when onstart is omitted',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First device sentence. Second device sentence.</p></main></body></html>');

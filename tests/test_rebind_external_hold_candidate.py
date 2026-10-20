@@ -52,8 +52,8 @@ class CandidateRebindRegression(unittest.TestCase):
 
     def test_pending_release_packet_accepts_only_exact_retain_identity(self):
         current = copy.deepcopy(CANDIDATE)
-        current["release"] = "2026.10.20.1"
-        path = "qa/BOOK_SME_REVIEW_2026.10.20.1.md"
+        current["release"] = "2026.10.20.2"
+        path = "qa/BOOK_SME_REVIEW_2026.10.20.2.md"
         source = (ROOT / path).read_text(encoding="utf-8")
         # The canonical current packet legitimately transitions from PENDING
         # to RETAINED after a producer artifact is verified. Build a pending
@@ -64,27 +64,27 @@ class CandidateRebindRegression(unittest.TestCase):
                   if line.startswith(("> **PENDING ", "> **RETAINED "))]
         self.assertEqual(len(active), 1)
         if lines[active[0]].startswith("> **RETAINED "):
-            lines[active[0]] = ("> **PENDING 2026.10.20.1 TECHNICAL ARTIFACT — STOP FOR EXTERNAL REVIEW.** "
+            lines[active[0]] = ("> **PENDING 2026.10.20.2 TECHNICAL ARTIFACT — STOP FOR EXTERNAL REVIEW.** "
                                 "Candidate artifact pending; all independent reviews HOLD.\n")
         pending = "".join(lines)
-        self.assertIn("> **PENDING 2026.10.20.1 TECHNICAL ARTIFACT", pending)
+        self.assertIn("> **PENDING 2026.10.20.2 TECHNICAL ARTIFACT", pending)
         rewritten = update_banner(pending, current, path)
-        self.assertIn("> **RETAINED 2026.10.20.1 TECHNICAL ARTIFACT", rewritten)
+        self.assertIn("> **RETAINED 2026.10.20.2 TECHNICAL ARTIFACT", rewritten)
         self.assertIn(current["sourceSha"], rewritten.splitlines()[4])
         self.assertIn("STATUS: HOLD", rewritten)
         self.assertEqual(rewritten.splitlines()[5:], pending.splitlines()[5:])
         self.assertEqual(update_banner(rewritten, current, path), rewritten)
 
         stale = pending.replace(
-            "> **PENDING 2026.10.20.1 TECHNICAL ARTIFACT",
+            "> **PENDING 2026.10.20.2 TECHNICAL ARTIFACT",
             "> **PENDING 2026.10.17.1 TECHNICAL ARTIFACT", 1,
         )
         with self.assertRaises(SystemExit):
             update_banner(stale, current, path)
 
         duplicate = pending.replace(
-            "> **PENDING 2026.10.20.1 TECHNICAL ARTIFACT",
-            "> **PENDING 2026.10.20.1 TECHNICAL ARTIFACT\n> **PENDING 2026.10.20.1 TECHNICAL ARTIFACT", 1,
+            "> **PENDING 2026.10.20.2 TECHNICAL ARTIFACT",
+            "> **PENDING 2026.10.20.2 TECHNICAL ARTIFACT\n> **PENDING 2026.10.20.2 TECHNICAL ARTIFACT", 1,
         )
         with self.assertRaises(SystemExit):
             update_banner(duplicate, current, path)
@@ -92,7 +92,7 @@ class CandidateRebindRegression(unittest.TestCase):
     def test_previous_at_candidate_keeps_the_previous_release_identity(self):
         previous = {"release": "2026.10.16.1"}
         contract = {
-            "release": "2026.10.20.1",
+            "release": "2026.10.20.2",
             "sourceSha": "a" * 40,
             "runtimeFingerprint": "sha256:" + "b" * 64,
         }

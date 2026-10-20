@@ -42,6 +42,6 @@ jobs:
         run: |
           python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/mm-book-audio-http.log 2>&1 &
       - name: Verify actual Book and Listening speech interactions in Chromium
-        run: npx playwright test qa/read-aloud.spec.js --config=playwright.config.cjs
+        run: npx playwright test qa/read-aloud.spec.js qa/book-audio-deep.spec.js --config=playwright.config.cjs
       - name: Production Pages allowlist still resolves
         run: python tools/build_pages_artifact.py

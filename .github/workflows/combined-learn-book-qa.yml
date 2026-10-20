@@ -1,0 +1,71 @@
+name: Combined Learn Book QA
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: combined-learn-book-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  combined-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '22.12.0'
+          package-manager-cache: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.12'
+      - name: Check merged learning and audio scripts
+        run: |
+          node --check primary-learning-practice-hubs.js
+          node --check read-aloud.js
+          node --check src/domains/shell/learner-ui-polish.js
+          node --check src/domains/learning/book-runtime.js
+      - name: Install pinned browser test dependencies
+        run: |
+          npm ci --no-audit --fund=false
+          npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Start candidate app
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/mm-combined-http.log 2>&1 &
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:4173/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Test Learn and Book together in Chromium
+        if: matrix.browser == 'chromium'
+        env:
+          MM_LESSON_REVIEW_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npx playwright test qa/learn-practice-mobile-style.spec.js qa/book-audio-deep.spec.js --config=playwright.config.cjs
+      - name: Test Learn and Book together in WebKit
+        if: matrix.browser == 'webkit'
+        env:
+          MM_LESSON_REVIEW_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: npx playwright test qa/learn-practice-mobile-style.spec.js qa/book-audio-deep.spec.js --config=playwright.webkit-full.config.cjs
+      - name: Upload integration review artifacts
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: combined-learn-book-${{ matrix.browser }}
+          path: qa-artifacts/
+          if-no-files-found: warn
+          retention-days: 14

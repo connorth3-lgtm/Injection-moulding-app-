@@ -68,8 +68,11 @@ evidence_pack=text("src/domains/runtime-packs/evidence-runtime-pack.js")
 require("/* >>> reference-2026-expansion.js */" in evidence_pack, "main app evidence pack must load the 2026 reference expansion")
 revision_match = re.search(r"CACHE_REVISION='([^']+)'", sw)
 require(revision_match is not None and "${CACHE_VERSION}-${CACHE_REVISION}" in sw, "PWA cache revision marker missing")
-revision_dates = [int(x) for x in re.findall(r"20\d{6}", revision_match.group(1))]
-require(revision_dates and max(revision_dates) >= 20260824, "PWA cache revision must not predate the reference expansion")
+version_match = re.search(r"CACHE_VERSION='(\d{4})\.(\d{2})\.(\d{2})\.[^']+'", sw)
+require(version_match is not None, "PWA cache version must identify the governed release date")
+cache_release_date = int("".join(version_match.groups()))
+require(cache_release_date >= 20260824, "PWA cache release must not predate the reference expansion")
+require(bool(revision_match.group(1).strip()), "PWA cache revision must distinguish the current worker generation")
 for asset in ["reference-data.html", "reference-2026-expansion.js"]:
     require(f"'./{asset}'" in sw, f"PWA offline cache missing expanded reference asset: {asset}")
 

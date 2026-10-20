@@ -21,8 +21,8 @@ version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
 package = json.loads((ROOT / "desktop/electron/package.json").read_text(encoding="utf-8"))
 integrity_generator = (ROOT / "desktop/electron/scripts/generate-integrity.cjs").read_text(encoding="utf-8")
 
-need(version.get("read_aloud_version") == "2026.10.20.1", "Read Aloud version marker mismatch")
-need("const VERSION='2026.10.20.1'" in runtime, "Read Aloud runtime version mismatch")
+need(version.get("read_aloud_version") == "2026.10.20.2", "Read Aloud version marker mismatch")
+need("const VERSION='2026.10.20.2'" in runtime, "Read Aloud runtime version mismatch")
 
 # The feature must be output-only speech synthesis. Microphone capture, recognition,
 # recording and application-controlled telemetry/network paths are forbidden here.
@@ -106,6 +106,25 @@ for marker in (
 ):
     need(marker in runtime, f"Listening mode contract missing: {marker}")
 need("same local device voice" not in runtime, "Listening privacy copy must not imply all voice processing is local")
+
+# Book audio is chapter-aware, learner-scoped cursor events are emitted without
+# storage inside the voice engine, and presentation modes remain source-governed.
+for marker in (
+    'data-mm-book-audio-controls', 'data-mm-book-audio-chapter',
+    'data-mm-book-audio-follow', 'data-mm-read="voice"',
+    'queueBookStart', 'selectBookChapter', 'jumpBookChapter',
+    'mm:book-audio-position', 'mm:book-audio-complete',
+    'bookSentenceIndex', 'scrollIntoView',
+):
+    need(marker in runtime, f"Book audio deep-fix contract missing: {marker}")
+book = (ROOT / "src/domains/learning/book-runtime.js").read_text(encoding="utf-8")
+for marker in (
+    'BOOK_AUDIO_PREFIX', 'activeAudioScopeKey', 'getAudioResume:readAudioResume',
+    'Complete source text (all 46 modules)', 'Complete text and 27 worked examples',
+    'Shorter first-read text', 'Independent human SME review pending',
+    'Read all original source sections',
+):
+    need(marker in book, f"Book reading/listening transparency contract missing: {marker}")
 
 # Read Aloud/Listening must not know or alter assessment keying/storage internals.
 for forbidden in (
