@@ -1,11 +1,11 @@
-/* MouldMaster Read Aloud + Listening — 2026.10.19.1
+/* MouldMaster Read Aloud + Listening — 2026.10.20.6
  * Learner-controlled text-to-speech using the browser/device speech-synthesis service.
  * No microphone access, recording, speech recognition, network upload, or learner-content storage.
  */
 (function(){
   'use strict';
 
-  const VERSION='2026.10.19.1';
+  const VERSION='2026.10.20.6';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -265,6 +265,19 @@
     const id=selectedVoice.voiceURI||`${selectedVoice.name}:${selectedVoice.lang}`;
     return preferredVoiceId&&preferredVoiceId===id?selectedVoice:null;
   }
+  function applyAvailableVoice(utterance){
+    const voice=utteranceVoice();
+    if(voice){
+      utterance.voice=voice;
+      utterance.lang=voice.lang||document.documentElement.lang||navigator.language||'en';
+    }else if(androidSpeech||iosSpeech){
+      // On mobile, leave voice and language unset so the OS uses its own default.
+      utterance.lang='';
+    }else utterance.lang=document.documentElement.lang||navigator.language||'en';
+  }
+  function deviceIsSpeaking(){
+    try{return synth.speaking===true}catch(_){return false}
+  }
   function speakCurrent(retry=0){
     selectionPending=false;
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');updateButtons();return;}
@@ -292,9 +305,7 @@
       let utterance;
       try{
         utterance=new SpeechSynthesisUtterance(unit.text);
-        const voice=utteranceVoice();
-        if(voice){utterance.voice=voice;utterance.lang=voice.lang||document.documentElement.lang||'en';}
-        else utterance.lang=document.documentElement.lang||navigator.language||'en';
+        applyAvailableVoice(utterance);
         utterance.rate=Number((playlistMode?listeningUI?.speed:ui?.speed)?.value||1);
       }catch(err){
         // Voice provider constructors and property setters can fail before
@@ -306,18 +317,37 @@
         return;
       }
       let started=false;
-      const startTimer=setTimeout(()=>{
+      let startTimer;
+      const markStarted=()=>{
         if(token!==speakToken||started)return;
+        // Some mobile providers begin output without dispatching onstart.
+        // Use the same visibility boundary for the event and active-state fallback.
+        if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
+        clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
+        highlight(unit);
+        if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-position',{detail:{chapterId:unit.bookChapterId,unitIndex:unit.bookSentenceIndex}}));
+        setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();
+      };
+      startTimer=setTimeout(()=>{
+        if(token!==speakToken||started)return;
+        // Do not cut off audible speech just because a provider omitted onstart.
+        // SpeechSynthesis.speaking is the fallback for that mobile behavior.
+        if(deviceIsSpeaking()){markStarted();return;}
+        if(androidSpeech){
+          // Android can omit start/boundary events and report speaking=false
+          // while its provider is still initializing. Canceling here can cut
+          // off the first audible word, so keep the utterance active and let
+          // its late start/end or an explicit Stop settle it.
+          setStatus('Android voice has not confirmed playback yet. It may still start; press Stop if it stays silent.');
+          updateButtons();
+          return;
+        }
         // A platform may deliver a late onstart after timeout. Invalidate it
         // before canceling or retrying, including when cancel emits no error.
         speakToken+=1;
         activeUtterance=null;
         cancelDeviceSpeech();starting=false;speaking=false;paused=false;
-        if(androidSpeech){
-          // Timer callbacks cannot recover a blocked mobile user gesture.
-          setStatus('Device voice did not start. Tap Listen again; check Android text-to-speech settings if it stays silent.');
-          updateButtons();
-        }else if(iosSpeech){
+        if(iosSpeech){
           setStatus('Device voice did not start. Tap Listen again; check iOS speech settings if it stays silent.');
           updateButtons();
         }else if(retry<1){
@@ -326,16 +356,8 @@
           setStatus('Device voice did not start. Check Windows speech voices, then try again.');updateButtons();
         }
       },(androidSpeech||iosSpeech)?6000:2500);
-      utterance.onstart=()=>{
-        if(token!==speakToken)return;
-        // An OS voice can acknowledge a queued utterance after visibility
-        // changed. Invalidate the utterance rather than claiming playback.
-        if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
-        clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
-        highlight(unit);
-        if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-position',{detail:{chapterId:unit.bookChapterId,unitIndex:unit.bookSentenceIndex}}));
-        setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();
-      };
+      utterance.onstart=markStarted;
+      utterance.onboundary=markStarted;
       utterance.onend=()=>{
         clearTimeout(startTimer);
         // Some mobile voice providers report completion without an onstart
@@ -479,26 +501,35 @@
     try{
       utterance=new SpeechSynthesisUtterance('MouldMaster sound test. You should hear this sentence.');
       refreshVoice();
-      const voice=utteranceVoice();
-      if(voice){utterance.voice=voice;utterance.lang=voice.lang||document.documentElement.lang||'en';}
-      else utterance.lang=document.documentElement.lang||navigator.language||'en';
+      applyAvailableVoice(utterance);
       utterance.rate=1;
     }catch(_){
       stop('Phone voice could not be prepared. Check text-to-speech settings.');
       return;
     }
     let started=false;
-    const timer=setTimeout(()=>{
+    let timer;
+    const markStarted=()=>{
       if(token!==speakToken||started)return;
-      stop('Phone voice did not start. Check text-to-speech settings and try again.');
-    },6000);
-    utterance.onstart=()=>{
-      if(token!==speakToken)return;
       clearTimeout(timer);
       started=true;starting=false;speaking=true;paused=false;
       setStatus('Sound test started. If silent, turn up media volume and check the selected audio output.');
       updateButtons();
     };
+    timer=setTimeout(()=>{
+      if(token!==speakToken||started)return;
+      if(deviceIsSpeaking()){markStarted();return;}
+      if(androidSpeech){
+        // Match the playback watchdog: a false Android speaking flag does not
+        // prove that its TTS service has stopped initializing.
+        setStatus('Android voice has not confirmed sound yet. It may still start; press Stop if it stays silent.');
+        updateButtons();
+        return;
+      }
+      stop('Phone voice did not start. Check text-to-speech settings and try again.');
+    },6000);
+    utterance.onstart=markStarted;
+    utterance.onboundary=markStarted;
     utterance.onend=()=>{
       clearTimeout(timer);
       if(activeUtterance===utterance)activeUtterance=null;
