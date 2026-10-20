@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.20.6",
-  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.20.6.md",
+  "release": "2026.10.20.7",
+  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.20.7.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "pass",
-    "claim": "Successful exact-source candidate producer run 39498822390 retained artifact 12298154315 for 2026.10.20.6 source 874249689137f6f25c47791496e13a7ba03f1e43 (public-runtime fingerprint sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f). Read Aloud QA, Combined Learn Book QA, Mobile Browser QA, Question Quality 50-Pass and the physical-device contract QA passed. These software checks do not establish physical speaker output or any independent human/device/provider validation."
+    "status": "fail",
+    "claim": "Exact-source technical candidate retention and the required browser/question-quality checks for 2026.10.20.7 are pending. This staged state preserves all external validation and production boundaries as HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -21,14 +21,15 @@
   "accessibility": {
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
-    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.20.6.md",
-    "candidate": {
+    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.20.7.md",
+    "candidate": null,
+    "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
+    "previousCandidate": {
       "release": "2026.10.20.6",
       "sourceSha": "874249689137f6f25c47791496e13a7ba03f1e43",
       "runtimeFingerprint": "sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f"
     },
-    "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
-    "previousCandidate": {
+    "previousPreviousCandidate": {
       "release": "2026.10.16.1",
       "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
       "runtimeFingerprint": "sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27"
@@ -37,8 +38,10 @@
   "pwaPhysicalDevices": {
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
-    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.20.6.md",
-    "currentCandidate": {
+    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.20.7.md",
+    "currentCandidate": null,
+    "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
+    "previousCandidate": {
       "release": "2026.10.20.6",
       "sourceSha": "874249689137f6f25c47791496e13a7ba03f1e43",
       "runtimeFingerprint": "sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f",
@@ -49,8 +52,7 @@
       "artifactDigest": "sha256:d87337c678c5dae801a3269519e31d718755dbd0fbab70760786d1fdae62592a",
       "artifactExpiresAt": "2027-01-18T21:15:07Z"
     },
-    "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
-    "previousCandidate": {
+    "previousPreviousCandidate": {
       "release": "2026.10.16.1",
       "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
       "runtimeFingerprint": "sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27",
@@ -66,7 +68,7 @@
     "status": "hold",
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
-    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.10.20.6.md",
+    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.10.20.7.md",
     "sourceSha": "7cfcf8285239411221fe05d5c356e29d39ade36c",
     "desktopRelease": "2026.09.29.1",
     "evidence": null,
@@ -80,20 +82,20 @@
   "bookSme": {
     "status": "hold",
     "evidenceContract": "data/book-sme-review-v1.json",
-    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.10.20.6.md",
+    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.10.20.7.md",
     "required": "Independent human SME approval of all 46 governed Book modules across the six required review dimensions; the 20 reader chapters are structural groupings only.",
     "contentRelease": "2026.10.06.5"
   },
   "curriculumSme": {
     "status": "hold",
     "evidenceContract": "qa/curriculum-semantic-review.json",
-    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.10.20.6.md",
+    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.10.20.7.md",
     "required": "Traceable human SME semantic approval of all 120 canonical lessons."
   },
   "learnerOutcomes": {
     "status": "hold",
     "pilotContract": "data/learner-pilot-v1.json",
-    "pilotPacket": "qa/LEARNER_PILOT_2026.10.20.6.md",
+    "pilotPacket": "qa/LEARNER_PILOT_2026.10.20.7.md",
     "evidence": null,
     "required": "Longitudinal real-learner outcome evidence before efficacy or genuine psychometric-validity claims."
   },
@@ -116,20 +118,27 @@
   "nzqaProvider": {
     "status": "hold",
     "evidenceContract": "data/nzqa-external-validation-v1.json",
-    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.20.6.md",
+    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.20.7.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
-    "candidate": {
+    "candidate": null,
+    "previousCandidate": {
       "release": "2026.10.20.6",
       "sourceSha": "874249689137f6f25c47791496e13a7ba03f1e43",
       "runtimeFingerprint": "sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f"
     },
-    "previousCandidate": {
+    "previousPreviousCandidate": {
       "release": "2026.10.16.1",
       "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
       "runtimeFingerprint": "sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27"
     }
   },
-  "webCandidate": {
+  "webCandidate": null,
+  "candidatePolicy": {
+    "previewBranchAuthoritative": false,
+    "evidenceAuthority": "retained-exact-head-artifact",
+    "rule": "External human/device/provider evidence must bind to the retained exact-head candidate artifact and runtime fingerprint, never to the mutable preview branch tip."
+  },
+  "previousCandidate": {
     "release": "2026.10.20.6",
     "sourceSha": "874249689137f6f25c47791496e13a7ba03f1e43",
     "runtimeFingerprint": "sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f",
@@ -140,12 +149,8 @@
     "artifactDigest": "sha256:d87337c678c5dae801a3269519e31d718755dbd0fbab70760786d1fdae62592a",
     "artifactExpiresAt": "2027-01-18T21:15:07Z"
   },
-  "candidatePolicy": {
-    "previewBranchAuthoritative": false,
-    "evidenceAuthority": "retained-exact-head-artifact",
-    "rule": "External human/device/provider evidence must bind to the retained exact-head candidate artifact and runtime fingerprint, never to the mutable preview branch tip."
-  },
-  "previousCandidate": {
+  "candidateStatus": "HOLD — 2026.10.20.7 technical candidate retention is pending exact-head software checks; all seven independent review streams remain HOLD. The preview candidate does not authorize Pages publication or production.",
+  "previousPreviousCandidate": {
     "release": "2026.10.19.1",
     "sourceSha": "4e8169602ca73fc78cfd2f2421a263632cfe84ea",
     "runtimeFingerprint": "sha256:1f498160634145407bd394bfe8c32ed70a1ce5f862834e8159d2f1e9fdd6cee9",
@@ -156,8 +161,7 @@
     "artifactDigest": "sha256:04a8e7f21d5256986d996911e20bb9051eb0ecd5373ab94537255644bbe7a224",
     "artifactExpiresAt": "2027-01-16T17:06:33Z"
   },
-  "candidateStatus": "HOLD — exact-source technical artifact retained and automated checks passed; all seven independent review streams remain HOLD. The preview candidate does not authorize Pages publication or production.",
-  "previousPreviousCandidate": {
+  "priorTechnicalCandidate": {
     "release": "2026.10.16.1",
     "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
     "runtimeFingerprint": "sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27",
@@ -168,7 +172,7 @@
     "artifactDigest": "sha256:957f7a0b2e16aab3fd4b59fe86706b637a440593081152748fc18c8332cd32e7",
     "artifactExpiresAt": "2027-01-14T07:04:41Z"
   },
-  "priorTechnicalCandidate": {
+  "earlierTechnicalCandidate": {
     "release": "2026.10.11.1",
     "sourceSha": "886116199e611b225dbae7b266f4c1402287d8e7",
     "runtimeFingerprint": "sha256:9271d2b52806780953e8b50d3ae66505dca50da11684b8dd9272e9da5e83155b",

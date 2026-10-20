@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "pass",
+    "technicalAutomation": "fail",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "pass",
-      "meaning": "Software-controlled release 2026.10.20.6 source 874249689137f6f25c47791496e13a7ba03f1e43 was retained by successful producer run 39498822390; artifact 12298154315 has fingerprint sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f. The current release-bound contracts identify this candidate. Automated checks do not establish physical speaker output or any independent human/device/provider validation."
+      "status": "fail",
+      "meaning": "Current release 2026.10.20.7 is staged without candidate source, retained artifact or runtime fingerprint. Contract shape checks are being prepared; no technical pass is asserted."
     },
     "behavioralBrowser": {
-      "status": "pass",
-      "meaning": "Behavioral browser checks passed for release 2026.10.20.6 source 874249689137f6f25c47791496e13a7ba03f1e43: exact-source Read Aloud QA, Combined Learn Book QA, Mobile Browser QA and Question Quality 50-Pass succeeded. Automated checks do not prove audible physical-phone output or real assistive-technology interaction."
+      "status": "fail",
+      "meaning": "Required exact-source browser and question-quality checks for release 2026.10.20.7 are pending; no technical pass is asserted."
     },
     "externalHumanDevice": {
       "status": "hold",

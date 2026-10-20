@@ -1,0 +1,10 @@
+# Independent curriculum SME review — 2026.10.20.7
+**STATUS: HOLD — no real curriculum SME review has been completed for 2026.10.20.7. Candidate artifact retention remains pending; previous-release artifacts and checks are historical only.**
+
+> **PENDING 2026.10.20.7 TECHNICAL ARTIFACT — STOP: candidate retention and all independent review remain HOLD.**
+
+## Required independently reviewed evidence
+
+Human semantic reviews of 120 lessons across seven dimensions. A named reviewer must supply dated, actual source- and artifact-bound, privacy-safe validation after successful technical retention. All task results **PENDING**, no human/device/provider pass asserted.
+
+Educational/advisory use only. No machine-control, production recipe, learner competence, signed distribution, NZQA/accreditation or production-root authorisation is conferred by this staging packet.
