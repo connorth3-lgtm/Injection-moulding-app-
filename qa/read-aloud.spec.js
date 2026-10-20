@@ -576,6 +576,8 @@ test('Entering Listening stops active single-screen audio without autoplaying a 
   await expect(listen).toHaveText('Pause');
   await expect.poll(()=>page.evaluate(()=>window.__mmHandoffLastSpoken)).toContain('Current Book paragraph');
   const countBefore=await page.evaluate(()=>window.__mmHandoffSynth.started);
+  // Collapse the player while speech continues so the custom nav button stays exposed.
+  await compact.locator('details').evaluate(el=>{el.open=false});
   await page.locator('[data-mm-listening-tab]').click();
   await expect(page.locator('#mmListeningView')).toBeVisible();
   await expect(listen).toHaveText('Listen');
@@ -1034,7 +1036,7 @@ for(const phone of ['Android','iPhone']){
     await expect(page.locator('.mm-read-aloud details')).toHaveAttribute('open','');
     await page.locator('.mm-read-aloud [data-mm-read="test"]').click();
     await expect.poll(()=>page.evaluate(()=>window.__phoneTestVoiceText||'')).toBe('MouldMaster sound test. You should hear this sentence.');
-    await expect(page.locator('.mm-read-aloud .mm-read-status')).toContainText('Sound test finished');
+    await expect(page.locator('.mm-read-aloud .mm-read-status')).toContainText('Voice sample finished');
     expect(await page.evaluate(()=>window.__phoneTestVoiceRate)).toBe(1);
   });
 }
@@ -1137,7 +1139,7 @@ test('Android first-word regression: sound test and next sentence do not cancel 
   await player.locator('[data-mm-read="test"]').click();
   expect(await page.evaluate(()=>window.__mmAndroidNoIdleCancel.cancels)).toBe(0);
   await page.evaluate(()=>{const u=window.__mmAndroidNoIdleCancel.spoken[0];u.onstart?.();u.onend?.();});
-  await expect(player.locator('.mm-read-status')).toContainText('Sound test finished');
+  await expect(player.locator('.mm-read-status')).toContainText('Voice sample finished');
   expect(await page.evaluate(()=>window.__mmAndroidNoIdleCancel.cancels)).toBe(0);
   await player.locator('[data-mm-read="play"]').click();
   expect(await page.evaluate(()=>window.__mmAndroidNoIdleCancel.cancels)).toBe(0);
@@ -1235,7 +1237,7 @@ test('Android delayed start is not canceled when the watchdog sees no active spe
   await expect(player.locator('.mm-read-status')).toHaveText('Android voice has not confirmed sound yet. It may still start; press Stop if it stays silent.');
   expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(1);
   await page.evaluate(()=>window.__lateAndroidVoice.current.onstart?.());
-  await expect(player.locator('.mm-read-status')).toHaveText('Sound test started. If silent, turn up media volume and check the selected audio output.');
+  await expect(player.locator('.mm-read-status')).toHaveText('Voice sample is playing. Choose the result you heard above.');
   expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(1);
   await player.locator('[data-mm-read="stop"]').click();
 });

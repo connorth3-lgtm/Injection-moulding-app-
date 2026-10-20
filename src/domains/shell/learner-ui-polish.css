@@ -5087,6 +5087,7 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
 
 /* Read Aloud visual redesign: make the entry point legible and the player feel
    like a focused audio surface, with clear contrast between playback and checks. */
+body:has(#mmBookView:not(.hidden)) #app .top-actions>.mm-read-aloud{position:relative!important}
 body:has(#mmBookView:not(.hidden)) #app .top-actions>.mm-read-aloud details:not([open]){
   box-sizing:border-box!important;width:168px!important;min-width:168px!important;
   height:48px!important;min-height:48px!important;margin:0!important;
