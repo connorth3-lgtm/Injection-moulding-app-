@@ -350,7 +350,7 @@
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "Exact-source behavioral software QA passed for ec3f46df3126e850132a90861299b3c089448d43: Read Aloud QA run 39514093064, Mobile Browser QA run 39514093109 (Chromium and WebKit), Question Quality 50-Pass run 39514093078, and Combined Learn Book QA run 39514093137. Browser simulation does not establish audible output, physical-device behavior or human assistive-technology review."
+      "meaning": "For release 2026.10.20.7 source ec3f46df3126e850132a90861299b3c089448d43, exact-source behavioral software QA passed: Read Aloud QA run 39514093064, Mobile Browser QA run 39514093109 (Chromium and WebKit), Question Quality 50-Pass run 39514093078, and Combined Learn Book QA run 39514093137. Browser simulation does not establish audible output, physical-device behavior or human assistive-technology review."
     },
     "externalHumanDevice": {
       "status": "hold",
