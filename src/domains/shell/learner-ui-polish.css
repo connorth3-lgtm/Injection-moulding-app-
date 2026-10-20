@@ -3354,6 +3354,52 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   }
 }
 
+/* Keep the expanded Book audio check inside the responsive header at 200% text size.
+   It stays in document flow, has a bounded width, and cannot widen the page. */
+@media(max-width:700px){
+  #app .topbar:has(.mm-read-aloud details[open]){
+    display:flex!important;flex-direction:column!important;flex-wrap:wrap!important;
+    width:100%!important;max-width:100%!important;min-width:0!important;
+    box-sizing:border-box!important;
+  }
+  #app .top-actions:has(.mm-read-aloud details[open]){
+    display:flex!important;flex:1 1 100%!important;align-self:stretch!important;
+    width:100%!important;max-width:100%!important;min-width:0!important;
+    margin:0!important;box-sizing:border-box!important;
+  }
+  #app .top-actions>.mm-read-aloud:has(details[open]){
+    flex:1 1 100%!important;width:100%!important;max-width:100%!important;
+    min-width:0!important;margin:0!important;box-sizing:border-box!important;
+  }
+  #app .top-actions>.mm-read-aloud details[open]{
+    width:100%!important;max-width:min(360px,100%)!important;
+    min-width:0!important;box-sizing:border-box!important;margin:0!important;
+  }
+}
+@media(min-width:701px){
+  #app .topbar:has(.mm-read-aloud details[open]){
+    display:flex!important;flex-wrap:wrap!important;align-items:flex-start!important;
+    width:100%!important;max-width:100%!important;min-width:0!important;
+    box-sizing:border-box!important;
+  }
+  #app .top-actions:has(.mm-read-aloud details[open]){
+    display:flex!important;flex:1 1 100%!important;
+    width:100%!important;max-width:100%!important;min-width:0!important;
+    flex-wrap:wrap!important;justify-content:flex-end!important;
+    margin:0!important;box-sizing:border-box!important;
+  }
+  #app .top-actions>.mm-read-aloud:has(details[open]){
+    flex:0 1 min(360px,100%)!important;width:min(360px,100%)!important;
+    max-width:100%!important;min-width:0!important;margin-left:auto!important;
+    box-sizing:border-box!important;
+  }
+  #app .top-actions>.mm-read-aloud details[open]{
+    position:relative!important;inset:auto!important;display:block!important;
+    width:100%!important;max-width:360px!important;min-width:0!important;
+    box-sizing:border-box!important;box-shadow:none!important;z-index:9!important;
+  }
+}
+
 /* Practice tool subpages keep their own learning workflows but share a clear,
    keyboard-accessible return path and title treatment with the main hub.
    Do not restyle any protected hub screenshot or override activity answers. */
