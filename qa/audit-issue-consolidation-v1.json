@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.10.20.5",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
-  "scope": "Release 2026.10.20.5 stages the Android Read Aloud idle-cancel fix. Its exact-source candidate has not yet been retained or cleared by exact-head QA; all seven independent external validation workstreams remain HOLD.",
-  "approvalBoundary": "Release 2026.10.20.5 is awaiting exact-source candidate production and exact-head software QA. No physical-device audibility, human assistive-technology or SME review, learner outcomes, Windows signing, or NZQA/provider acceptance is claimed. All seven independent external reviews remain HOLD; production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": "2b757e45dcf9fda8b3d6b06cb8ee681714cbd1ad",
+  "scope": "Release 2026.10.20.5 retains an exact-source candidate for the Android Read Aloud speech-queue fix. Exact-source Read Aloud QA, Mobile Browser QA and Question Quality 50-Pass succeeded; all seven independent external validation workstreams remain HOLD.",
+  "approvalBoundary": "Exact-source technical automation passed for release 2026.10.20.5, source 2b757e45dcf9fda8b3d6b06cb8ee681714cbd1ad, fingerprint sha256:823228e414f98d0e74a3d2e1b3bb491d1d2a3f61d28339bedf40e2b13bb2f456, producer run 39483291565 and artifact 12291733543. This supports a non-production preview only; it does not claim audible output on a physical phone, human assistive-technology or SME review, learner outcomes, Windows signing or NZQA/provider acceptance. All seven independent external reviews remain HOLD; production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,

@@ -1,10 +1,10 @@
-# MouldMaster 2026.10.20.5 — Android Read Aloud idle-cancel fix
+# MouldMaster 2026.10.20.5 — Android Read Aloud speech-queue fix
 
-**STATUS: EXACT-HEAD CANDIDATE PENDING / AUTOMATED QA IN PROGRESS / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** Release 2026.10.20.5 skips cancellation of an idle device speech queue before starting Read Aloud. No exact-source candidate artifact is retained yet, and no real-device audio result is claimed.
+**STATUS: EXACT-SOURCE CANDIDATE RETAINED / AUTOMATED QA PASSED / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** Release 2026.10.20.5 avoids canceling Android speech at idle startup, sentence handoff and natural completion. The exact-source browser candidate passed automated QA; audible output on a physical phone remains unconfirmed.
 
 ## Candidate status and technical evidence
 
-No exact-source artifact has been retained for release 2026.10.20.5 yet. The producer will record source SHA, runtime fingerprint, artifact digest, expiry and run provenance after the exact-head candidate workflow and required software quality gates succeed. Until then, technical automation remains FAIL and tester handoff remains STOP/no-send. Automated browser checks cannot confirm audible output on a physical phone.
+The exact-source candidate for release 2026.10.20.5 is source 2b757e45dcf9fda8b3d6b06cb8ee681714cbd1ad, retained by successful Pre-merge Public Candidate run 39483291565 as artifact 12291733543 (physical-pwa-candidate-2b757e45dcf9fda8b3d6b06cb8ee681714cbd1ad), digest sha256:622f40906dd99d40f100800786095cf336314f516d1b9f80e5bbfa94aa77a9d2, expiry 2027-01-18T19:25:11Z, runtime fingerprint sha256:823228e414f98d0e74a3d2e1b3bb491d1d2a3f61d28339bedf40e2b13bb2f456. Exact-head Read Aloud QA, Mobile Browser QA and Question Quality 50-Pass succeeded. This is automated software evidence only; it does not confirm audible output on a physical phone. All seven external review workstreams remain HOLD, and tester handoff remains STOP until protected-main deployment and live preview verification.
 
 The owner-approved visual baseline remains pinned to its historical source and is used as an automated comparison reference. This Read Aloud behavior change does not alter the visible interface. The historical visual approval does not approve device behavior, accessibility, release or deployment.
 
