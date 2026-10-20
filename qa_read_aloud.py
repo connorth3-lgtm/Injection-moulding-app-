@@ -61,7 +61,7 @@ for marker in (
     'data-mm-read="stop"', 'data-mm-read="speed"', "0.75,1,1.25,1.5",
     'data-mm-read="beeps-heard"', 'data-mm-read="beeps-silent"', 'data-mm-read="voice-heard"',
     'data-mm-read="voice-silent"', 'data-mm-read="guidance"', "Text-to-speech output",
-    "the app cannot confirm whether sound reached your speaker or headphones",
+    "The app cannot confirm whether sound reached your speaker or headphones",
     'role="status"', 'aria-live="polite"',
     "Read Aloud is not available in this browser/device.",
     "Device voice did not start. Check Windows speech voices, then try again.",
