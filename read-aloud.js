@@ -242,12 +242,12 @@
     try{synth.cancel()}catch(_){}
   }
 
-  function stop(reason){
+  function stop(reason,cancelSpeech=true){
     // Invalidate active callbacks before cancel: some device voices dispatch
     // a synchronous cancellation error from synth.cancel().
     const cancelActive=starting||speaking||paused;
     speakToken+=1;
-    cancelDeviceSpeech(cancelActive);
+    if(cancelSpeech)cancelDeviceSpeech(cancelActive);
     selectionPending=false;
     starting=false;speaking=false;paused=false;
     clearHighlight();
@@ -347,7 +347,7 @@
         if(index<units.length-1){index+=1;speakCurrent();}
         else {
           if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-complete'));
-          stop(playlistMode?'Finished all lessons':'Finished reading');
+          stop(playlistMode?'Finished all lessons':'Finished reading',false);
         }
       };
       utterance.onerror=event=>{
@@ -454,7 +454,7 @@
     utterance.onboundary=markStarted;
     utterance.onend=()=>{
       clearTimeout(timer);
-      if(token===speakToken)stop('Sound test finished. If you heard nothing, check media volume and your phone text-to-speech voice.');
+      if(token===speakToken)stop('Sound test finished. If you heard nothing, check media volume and your phone text-to-speech voice.',false);
     };
     utterance.onerror=event=>{
       clearTimeout(timer);
