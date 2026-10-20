@@ -23,6 +23,15 @@ def write(path,data):path.write_text(json.dumps(data,indent=2)+"\n",encoding="ut
 def need(cond,msg):
     if not cond:raise SystemExit(msg)
 
+def previous_at_candidate(previous, at):
+    """Preserve the old accessibility source under its actual old release key."""
+    return {
+        "release": previous.get("release"),
+        "sourceSha": at["sourceSha"],
+        "runtimeFingerprint": at["runtimeFingerprint"],
+    }
+
+
 def assert_hold_boundaries(ledger,at,nzqa,pwa):
     hold_statuses(ledger)
     need(ledger["accessibility"]["status"]=="hold","accessibility status must remain HOLD")
@@ -40,24 +49,29 @@ def update_banner(text, candidate, path):
     """Replace only the release-specific artifact banner, retaining review evidence."""
     lines = text.splitlines(keepends=True)
     need(bool(lines) and candidate["release"] in lines[0], f"{path}: release heading stale")
-    # Pre-retention packets are honest PENDING templates; after a real artifact
-    # exists this explicit rebind transaction promotes the banner identity only,
-    # never the independent human/device review status. Reject ambiguity/staleness.
+    # A new release starts with a truthful PENDING artifact banner. Only a
+    # real successful producer may later supply the retained candidate identity.
+    # Both staged and already-bound packets must have exactly one active banner;
+    # never accept a prior release's banner or ambiguous duplicated provenance.
     positions = [i for i, line in enumerate(lines[:12])
                  if line.startswith("> **RETAINED ") or line.startswith("> **PENDING ")]
-    need(len(positions) == 1, f"{path}: missing or ambiguous technical-artifact banner")
+    need(len(positions) == 1, f"{path}: missing or ambiguous artifact banner")
     i = positions[0]
-    need(lines[i].startswith(f'> **PENDING {candidate["release"]} ') or
-         lines[i].startswith(f'> **RETAINED {candidate["release"]} '),
-         f"{path}: active technical-artifact banner release stale")
-    need(any("STATUS: HOLD" in line for line in lines[:12]),
-         f"{path}: human/device review HOLD must be explicit")
-    try:
-        validate_packet(text, path, candidate, candidate["release"])
-        return text
-    except ValueError:
-        pass
-    i = positions[0]
+    banner_release = re.match(
+        r"^> \*\*(?:PENDING|RETAINED) (\d{4}\.\d{2}\.\d{2}\.\d+) (?:TECHNICAL )?ARTIFACT",
+        lines[i],
+    )
+    need(bool(banner_release) and banner_release.group(1) == candidate["release"],
+         f"{path}: artifact banner release mismatch")
+    if lines[i].startswith("> **PENDING "):
+        need("ARTIFACT" in lines[i] and "STOP" in lines[i],
+             f"{path}: pending artifact banner must explicitly preserve tester HOLD")
+    else:
+        try:
+            validate_packet(text, path, candidate, candidate["release"])
+            return text
+        except ValueError:
+            pass
     expiry, fingerprint, digest = (candidate[key] for key in ("artifactExpiresAt", "runtimeFingerprint", "artifactDigest"))
     source, run, artifact = candidate["sourceSha"], candidate["candidateRunId"], candidate["artifactId"]
     banner = (
@@ -180,8 +194,7 @@ def main():
             if pwa.get("candidate"):pwa["previousCandidate"]=copy.deepcopy(pwa["candidate"])
             if nzqa.get("candidate"):nzqa["previousCandidate"]=copy.deepcopy(nzqa["candidate"])
             if at.get("sourceSha") and at.get("runtimeFingerprint"):
-                at["previousCandidate"]={"release":at["release"],"sourceSha":at["sourceSha"],
-                                         "runtimeFingerprint":at["runtimeFingerprint"]}
+                at["previousCandidate"]=previous_at_candidate(previous,at)
         # An unverified new artifact must not inherit its predecessor's PASS.
         ledger["technicalAutomation"]={
             "status":"fail",

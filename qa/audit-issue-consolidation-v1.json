@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.10.17.1",
+  "release": "2026.10.20.2",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
   "candidateSourceSha": null,
-  "scope": "Draft 2026.10.17.1 PR #640 embeds 32 optional teaching checks across existing core lessons; no successful new release-producer, immutable owner-approved screenshots, public runtime fingerprint or artifact. Prior 2026.10.16.1 exact-source e336f656351afa4eeaaae0940969bea881ae9b68 is historical only.",
-  "approvalBoundary": "Current technical FAIL pending owner's specific visual review, exact-source public candidate, six required checks; external human/device/provider seven HOLD. Advisory only, no tester invitations/merge/publication.",
+  "scope": "Release 2026.10.20.2 stages the integrated Android Learn and Practice plus Book/Listen source, including the Read Aloud completion fix. The integrated exact-source producer, fresh browser checks and owner visual review are pending; all seven independent external validation workstreams remain HOLD.",
+  "approvalBoundary": "No technical PASS is claimed for 2026.10.20.2: its exact-source candidate and fresh browser/visual evidence are pending. All seven independent human/device/provider reviews remain HOLD; production root stays advisory-only and tester invitation stays STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -43,9 +43,10 @@
   "productionAuthority": "advisory-only",
   "humanEvidenceStatus": "hold",
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
-  "lastReviewedDate": "2026-10-17",
+  "lastReviewedDate": "2026-10-20",
   "previousVerifiedCandidate": {
-    "release": "2026.10.16.1",
-    "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68"
+    "release": "2026.10.20.1",
+    "sourceSha": "f896b988385b77c4190a7584db13b88748b7b106",
+    "runtimeFingerprint": "sha256:a208ca2c5fd94a00bde098f94232de14baf5625145ed2d7f2e6f09ce2caa20cf"
   }
 }

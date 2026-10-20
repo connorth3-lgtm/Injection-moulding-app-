@@ -8,7 +8,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from rebind_external_hold_candidate import stage_governance_model, commit_staged_files, update_banner
+from rebind_external_hold_candidate import (
+    stage_governance_model, commit_staged_files, update_banner, previous_at_candidate,
+)
 
 CANDIDATE = {
     "release": "2026.10.11.3",
@@ -48,60 +50,57 @@ class CandidateRebindRegression(unittest.TestCase):
         self.assertIn("STATUS: HOLD", rewritten)
         self.assertIn("46 governed", rewritten)
 
-    def test_pending_release_packets_are_rebindable_without_claiming_approval(self):
-        # Live packets have already been rebound to a *real* retained artifact.
-        # Construct a synthetic PENDING template locally so this regression
-        # continues to test the PENDING -> RETAINED transition without
-        # overwriting or misrepresenting actual current technical evidence.
-        candidate = {**CANDIDATE, "release": "2026.10.11.11"}
-        paths = (
-            "qa/ACCESSIBILITY_REAL_AT_2026.10.11.11.md",
-            "qa/PWA_PHYSICAL_DEVICE_2026.10.11.11.md",
-            "certification/WINDOWS_SIGNING_READINESS_2026.10.11.11.md",
-            "qa/BOOK_SME_REVIEW_2026.10.11.11.md",
-            "qa/CURRICULUM_SME_REVIEW_2026.10.11.11.md",
-            "qa/LEARNER_PILOT_2026.10.11.11.md",
-            "qa/NZQA_EXTERNAL_VALIDATION_2026.10.11.11.md",
-        )
-        for path in paths:
-            with self.subTest(path=path):
-                retained = (ROOT / path).read_text(encoding="utf-8")
-                self.assertIn("> **RETAINED ", retained)
-                lines = retained.splitlines(keepends=True)
-                indices = [i for i, line in enumerate(lines[:12])
-                           if line.startswith("> **RETAINED ")]
-                self.assertEqual(len(indices), 1)
-                i = indices[0]
-                lines[i] = ("> **PENDING 2026.10.11.11 synthetic unit-test fixture:** "
-                            "not real release evidence." + chr(10))
-                pending = "".join(lines)
-                after = update_banner(pending, candidate, path)
-                self.assertIn("> **RETAINED ", after)
-                self.assertNotIn("> **PENDING ", after)
-                self.assertIn("STATUS: HOLD", after)
-                self.assertNotIn("not yet successfully retained", after)
-                self.assertEqual(pending.splitlines()[5:], after.splitlines()[5:])
-                self.assertEqual(update_banner(after, candidate, path), after,
-                                 "rebinding an already matching artifact must be idempotent")
-                migrated = update_banner(retained, candidate, path)
-                self.assertEqual(retained.splitlines()[5:], migrated.splitlines()[5:])
-
-    def test_rebinding_rejects_stale_or_ambiguous_pending_template(self):
-        candidate = {**CANDIDATE, "release": "2026.10.11.11"}
-        original = (ROOT / "qa/PWA_PHYSICAL_DEVICE_2026.10.11.11.md").read_text()
-        lines = original.splitlines(keepends=True)
-        indices = [i for i, line in enumerate(lines[:12])
-                   if line.startswith("> **RETAINED ")]
-        self.assertEqual(len(indices), 1)
-        lines[indices[0]] = "> **PENDING 2026.10.11.11 synthetic unit-test fixture:** not approved." + chr(10)
+    def test_pending_release_packet_accepts_only_exact_retain_identity(self):
+        current = copy.deepcopy(CANDIDATE)
+        current["release"] = "2026.10.20.2"
+        path = "qa/BOOK_SME_REVIEW_2026.10.20.2.md"
+        source = (ROOT / path).read_text(encoding="utf-8")
+        # The canonical current packet legitimately transitions from PENDING
+        # to RETAINED after a producer artifact is verified. Build a pending
+        # fixture from either state instead of assuming the repository has
+        # never completed technical retention.
+        lines = source.splitlines(keepends=True)
+        active = [i for i, line in enumerate(lines[:12])
+                  if line.startswith(("> **PENDING ", "> **RETAINED "))]
+        self.assertEqual(len(active), 1)
+        if lines[active[0]].startswith("> **RETAINED "):
+            lines[active[0]] = ("> **PENDING 2026.10.20.2 TECHNICAL ARTIFACT — STOP FOR EXTERNAL REVIEW.** "
+                                "Candidate artifact pending; all independent reviews HOLD.\n")
         pending = "".join(lines)
+        self.assertIn("> **PENDING 2026.10.20.2 TECHNICAL ARTIFACT", pending)
+        rewritten = update_banner(pending, current, path)
+        self.assertIn("> **RETAINED 2026.10.20.2 TECHNICAL ARTIFACT", rewritten)
+        self.assertIn(current["sourceSha"], rewritten.splitlines()[4])
+        self.assertIn("STATUS: HOLD", rewritten)
+        self.assertEqual(rewritten.splitlines()[5:], pending.splitlines()[5:])
+        self.assertEqual(update_banner(rewritten, current, path), rewritten)
+
+        stale = pending.replace(
+            "> **PENDING 2026.10.20.2 TECHNICAL ARTIFACT",
+            "> **PENDING 2026.10.17.1 TECHNICAL ARTIFACT", 1,
+        )
         with self.assertRaises(SystemExit):
-            update_banner(pending.replace("PENDING 2026.10.11.11", "PENDING 2026.10.11.10"),
-                          candidate, "qa/PWA_PHYSICAL_DEVICE_2026.10.11.11.md")
+            update_banner(stale, current, path)
+
+        duplicate = pending.replace(
+            "> **PENDING 2026.10.20.2 TECHNICAL ARTIFACT",
+            "> **PENDING 2026.10.20.2 TECHNICAL ARTIFACT\n> **PENDING 2026.10.20.2 TECHNICAL ARTIFACT", 1,
+        )
         with self.assertRaises(SystemExit):
-            update_banner(pending.replace(chr(10) + "## Required independently reviewed evidence",
-                                          chr(10) + "> **PENDING 2026.10.11.11 duplicate**" + chr(10) + chr(10) + "## Required independently reviewed evidence"),
-                          candidate, "qa/PWA_PHYSICAL_DEVICE_2026.10.11.11.md")
+            update_banner(duplicate, current, path)
+
+    def test_previous_at_candidate_keeps_the_previous_release_identity(self):
+        previous = {"release": "2026.10.16.1"}
+        contract = {
+            "release": "2026.10.20.2",
+            "sourceSha": "a" * 40,
+            "runtimeFingerprint": "sha256:" + "b" * 64,
+        }
+        self.assertEqual(previous_at_candidate(previous, contract), {
+            "release": "2026.10.16.1",
+            "sourceSha": "a" * 40,
+            "runtimeFingerprint": "sha256:" + "b" * 64,
+        })
 
     def test_staging_handles_multiple_files_without_partial_write(self):
         with tempfile.TemporaryDirectory() as temp:

@@ -1,5 +1,11 @@
 # Unified MouldMaster audit and acceptance — 17 October 2026
 
+> **Archived snapshot — 17 October 2026; not current.** The release table, issue counts and follow-up text below preserve the state at that review date and must not be used as current release status.
+>
+> **Status checked 20 October 2026 (UTC):** protected `main` is `f896b988385b77c4190a7584db13b88748b7b106` and declares web release `2026.10.20.1`. The integrated Learn/Book draft stages successor release `2026.10.20.2`; its exact-source producer and fresh browser/visual review are pending. The prior main candidate is `2026.10.20.1`, bound to source `f896b988385b77c4190a7584db13b88748b7b106`, fingerprint `sha256:a208ca2c5fd94a00bde098f94232de14baf5625145ed2d7f2e6f09ce2caa20cf`, producer run `39368081782`, artifact `12240591156`, digest `sha256:59829f91d1cc0c1654fab81049bbe1d205c608c561964a05c0b16be63ea8444e`, expiry `2026-11-19T04:11:07Z`. It is historical for the integrated source and does not validate release `2026.10.20.2`; see [issue #619](https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/619). The candidate is non-publishing. Seven independent device, assistive-technology, SME, learner-outcome, Windows-signing and provider review workstreams remain HOLD; production authority stays advisory-only.
+>
+> Use the generated [governance status](../GOVERNANCE_STATUS.md), [Book governance status](../BOOK_GOVERNANCE_STATUS.md) and the latest candidate/evidence tracker [issue #619](https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/619) for current state. The first-read report's 850-word measure remains an editorial target, not an acceptance gate.
+
 **Single current audit tracker: [issue #632](https://github.com/connorth3-lgtm/Injection-moulding-app-/issues/632).** This document consolidates status; it does not merge different people's evidence or imply that an issue is closed. Each original issue retains its own history. The machine-readable issue map is in `qa/audit-issue-consolidation-v1.json` and is checked by the release documentation suite.
 
 ## Reviewed current release
