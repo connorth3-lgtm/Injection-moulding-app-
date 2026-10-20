@@ -79,7 +79,7 @@ for marker in (
     "if(androidSpeech){",
     "beginSpeech();",
     "waitForVoice(retry?700:1200).then(beginSpeech",
-    "Tap Listen again; check Android text-to-speech settings",
+    "Android voice has not confirmed playback yet",
 ):
     need(marker in runtime, f"Android tap-to-speak guard missing: {marker}")
 need("await waitForVoice" not in runtime, "Android speech start must not block on voice discovery")
