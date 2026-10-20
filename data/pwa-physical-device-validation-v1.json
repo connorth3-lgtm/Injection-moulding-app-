@@ -45,7 +45,7 @@
   "candidate": {
     "release": "2026.10.20.6",
     "sourceSha": "874249689137f6f25c47791496e13a7ba03f1e43",
-    "runtimeFingerprint": "sha256:f75f8e3cd685e6a6acbe93eae1fbcf5baefaaa5c5e9d8cec651a89b3f29d5a6b",
+    "runtimeFingerprint": "sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f",
     "candidateRunId": 39498822390,
     "candidateWorkflow": "Pre-merge Public Candidate",
     "artifactId": 12298154315,

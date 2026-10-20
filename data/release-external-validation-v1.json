@@ -5,7 +5,7 @@
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "pass",
-    "claim": "Successful exact-source candidate producer run 39498822390 retained artifact 12298154315 for 2026.10.20.6 source 874249689137f6f25c47791496e13a7ba03f1e43 (public-runtime fingerprint sha256:f75f8e3cd685e6a6acbe93eae1fbcf5baefaaa5c5e9d8cec651a89b3f29d5a6b). Read Aloud QA, Combined Learn Book QA, Mobile Browser QA, Question Quality 50-Pass and the physical-device contract QA passed. These software checks do not establish physical speaker output or any independent human/device/provider validation."
+    "claim": "Successful exact-source candidate producer run 39498822390 retained artifact 12298154315 for 2026.10.20.6 source 874249689137f6f25c47791496e13a7ba03f1e43 (public-runtime fingerprint sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f). Read Aloud QA, Combined Learn Book QA, Mobile Browser QA, Question Quality 50-Pass and the physical-device contract QA passed. These software checks do not establish physical speaker output or any independent human/device/provider validation."
   },
   "governance": {
     "status": "enforced",
@@ -25,7 +25,7 @@
     "candidate": {
       "release": "2026.10.20.6",
       "sourceSha": "874249689137f6f25c47791496e13a7ba03f1e43",
-      "runtimeFingerprint": "sha256:f75f8e3cd685e6a6acbe93eae1fbcf5baefaaa5c5e9d8cec651a89b3f29d5a6b"
+      "runtimeFingerprint": "sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f"
     },
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
     "previousCandidate": {
@@ -41,7 +41,7 @@
     "currentCandidate": {
       "release": "2026.10.20.6",
       "sourceSha": "874249689137f6f25c47791496e13a7ba03f1e43",
-      "runtimeFingerprint": "sha256:f75f8e3cd685e6a6acbe93eae1fbcf5baefaaa5c5e9d8cec651a89b3f29d5a6b",
+      "runtimeFingerprint": "sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f",
       "candidateRunId": 39498822390,
       "candidateWorkflow": "Pre-merge Public Candidate",
       "artifactId": 12298154315,
@@ -121,7 +121,7 @@
     "candidate": {
       "release": "2026.10.20.6",
       "sourceSha": "874249689137f6f25c47791496e13a7ba03f1e43",
-      "runtimeFingerprint": "sha256:f75f8e3cd685e6a6acbe93eae1fbcf5baefaaa5c5e9d8cec651a89b3f29d5a6b"
+      "runtimeFingerprint": "sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f"
     },
     "previousCandidate": {
       "release": "2026.10.16.1",
@@ -132,7 +132,7 @@
   "webCandidate": {
     "release": "2026.10.20.6",
     "sourceSha": "874249689137f6f25c47791496e13a7ba03f1e43",
-    "runtimeFingerprint": "sha256:f75f8e3cd685e6a6acbe93eae1fbcf5baefaaa5c5e9d8cec651a89b3f29d5a6b",
+    "runtimeFingerprint": "sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f",
     "candidateRunId": 39498822390,
     "candidateWorkflow": "Pre-merge Public Candidate",
     "artifactId": 12298154315,

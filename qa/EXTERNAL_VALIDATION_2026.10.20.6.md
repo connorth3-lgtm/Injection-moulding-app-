@@ -1,6 +1,6 @@
 # MouldMaster 2026.10.20.6 — preview-release external validation HOLD
 
-**STATUS: TECHNICAL CANDIDATE RETAINED / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** Exact-source producer run 39498822390 retained artifact 12298154315 from PR #661 source 874249689137f6f25c47791496e13a7ba03f1e43, with public-runtime fingerprint sha256:f75f8e3cd685e6a6acbe93eae1fbcf5baefaaa5c5e9d8cec651a89b3f29d5a6b, digest sha256:d87337c678c5dae801a3269519e31d718755dbd0fbab70760786d1fdae62592a, and expiry 2027-01-18T21:15:07Z. The automated checks passed on that source. This does not establish owner visual approval, audible physical-phone output or independent accessibility/SME/provider approval. The prior-release candidate and earlier test reports are historical only. The `preview` branch and its artifacts are non-publishing and do not deploy GitHub Pages.
+**STATUS: TECHNICAL CANDIDATE RETAINED / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** Exact-source producer run 39498822390 retained artifact 12298154315 from PR #661 source 874249689137f6f25c47791496e13a7ba03f1e43, with public-runtime fingerprint sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f, digest sha256:d87337c678c5dae801a3269519e31d718755dbd0fbab70760786d1fdae62592a, and expiry 2027-01-18T21:15:07Z. The automated checks passed on that source. This does not establish owner visual approval, audible physical-phone output or independent accessibility/SME/provider approval. The prior-release candidate and earlier test reports are historical only. The `preview` branch and its artifacts are non-publishing and do not deploy GitHub Pages.
 
 ## Seven independent release-specific HOLD packets
 
@@ -14,7 +14,7 @@
 
 ## Protected release acceptance
 
-1. Technical retention: source `874249689137f6f25c47791496e13a7ba03f1e43`, run `39498822390`, artifact `12298154315`, digest `sha256:d87337c678c5dae801a3269519e31d718755dbd0fbab70760786d1fdae62592a`, runtime fingerprint `sha256:f75f8e3cd685e6a6acbe93eae1fbcf5baefaaa5c5e9d8cec651a89b3f29d5a6b`, expiry `2027-01-18T21:15:07Z`. Technical automation is software-only; independent technical release acceptance and all seven external reviews remain on HOLD.
+1. Technical retention: source `874249689137f6f25c47791496e13a7ba03f1e43`, run `39498822390`, artifact `12298154315`, digest `sha256:d87337c678c5dae801a3269519e31d718755dbd0fbab70760786d1fdae62592a`, runtime fingerprint `sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f`, expiry `2027-01-18T21:15:07Z`. Technical automation is software-only; independent technical release acceptance and all seven external reviews remain on HOLD.
 2. Review genuine phone speaker sound, iOS/iPadOS and Android install/offline/update flows, human NVDA/VoiceOver outcomes, Book and curriculum SME review, learner pilot, signed Windows distribution and provider G1–G8 evidence against that candidate.
 3. Keep all seven external streams **HOLD**, software publication **BLOCKED** and production machine-control authority **NOT GRANTED**. The `preview` branch and its artifacts are not a live GitHub Pages deployment.
 
