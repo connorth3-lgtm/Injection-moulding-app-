@@ -82,21 +82,23 @@ def verify_current_tracker(issue: object, issue_number: int, candidate: dict) ->
     main_lines = re.findall(r"(?m)^\*\*Current protected-main release:\*\*\s*(.+)$", current)
     if len(active_lines) != 1:
         fail(f"NZQA tracker #{issue_number} needs one explicitly marked current technical candidate")
-    if len(main_lines) != 1:
-        fail(f"NZQA tracker #{issue_number} needs one separately marked protected-main release")
+    if len(main_lines) > 1:
+        fail(f"NZQA tracker #{issue_number} has multiple separately marked protected-main releases")
     active_line = active_lines[0]
-    main_line = main_lines[0]
+    main_line = main_lines[0] if main_lines else None
     release_pattern = r"\bRelease\s+\x60?([0-9]{4}\.[0-9]{2}\.[0-9]{2}\.[0-9]+)\x60?"
     active_releases = re.findall(release_pattern, active_line, flags=re.IGNORECASE)
-    main_releases = re.findall(release_pattern, main_line, flags=re.IGNORECASE)
-    if len(active_releases) != 1 or len(main_releases) != 1:
+    main_releases = re.findall(release_pattern, main_line, flags=re.IGNORECASE) if main_line else []
+    if len(active_releases) != 1 or (main_line is not None and len(main_releases) != 1):
         fail(f"NZQA tracker #{issue_number} release channel bindings are ambiguous")
 
+    selected_main = False
     if active_releases[0] == release:
         if not re.search(r"(?<![0-9.])" + re.escape(release) + r"(?![0-9.])", title):
-            fail(f"NZQA tracker #{issue_number} title does not name active release {release}")
+            fail(f"NZQA tracker #{issue_number} title does not name current release {release}")
         line = active_line
-    elif main_releases[0] == release:
+    elif main_releases == [release]:
+        selected_main = True
         active_release = active_releases[0]
         if not re.search(r"(?<![0-9.])" + re.escape(active_release) + r"(?![0-9.])", title):
             fail(f"NZQA tracker #{issue_number} title does not name active preview release {active_release}")
@@ -115,19 +117,25 @@ def verify_current_tracker(issue: object, issue_number: int, candidate: dict) ->
         ),
         "producer run": (r"/actions/runs/([1-9][0-9]*)\)", str(candidate["candidateRunId"])),
         "artifact id": (r"\bartifact\s+\x60?([1-9][0-9]*)\x60?(?![0-9])", str(candidate["artifactId"])),
-        "artifact digest": (r"\bdigest\s+\x60?(sha256:[0-9a-f]{64})\x60?(?![0-9a-f])", candidate["artifactDigest"]),
-        "artifact expiry": (
+    }
+    if "artifactDigest" in candidate:
+        expected["artifact digest"] = (
+            r"\bdigest\s+\x60?(sha256:[0-9a-f]{64})\x60?(?![0-9a-f])",
+            candidate["artifactDigest"],
+        )
+    if "artifactExpiresAt" in candidate:
+        expected["artifact expiry"] = (
             r"\bexpiry\s+\x60?([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z)\x60?",
             candidate["artifactExpiresAt"],
-        ),
-    }
+        )
     for label, (pattern, wanted) in expected.items():
         seen = re.findall(pattern, line, flags=re.IGNORECASE)
         if seen != [str(wanted)]:
-            fail(f"NZQA tracker #{issue_number} selected {label} mismatches retained candidate")
+            channel = "protected-main" if selected_main else "current"
+            fail(f"NZQA tracker #{issue_number} {channel} {label} mismatches retained candidate")
     if not re.search(r"\bG1\s*[–-]\s*G8\b", current) or "pending-external" not in current:
         fail(f"NZQA tracker #{issue_number} does not explicitly retain G1–G8 external HOLD")
-    if "all seven external review streams remain HOLD" not in current:
+    if selected_main and "all seven external review streams remain HOLD" not in current:
         fail(f"NZQA tracker #{issue_number} does not retain all seven external HOLDs")
 
 
