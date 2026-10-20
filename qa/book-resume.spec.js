@@ -229,7 +229,7 @@ test('Book reading bookmark survives immediate Contents exit and Listening scrol
     panel.className='mm-read-aloud';
     panel.innerHTML='<details><summary>Speech test adapter</summary><button type="button" data-mm-read="play">Play</button></details>';
     document.body.prepend(panel);
-    window.MMReadAloud={supported:true,stop(){},refresh(){}};
+    window.MMReadAloud={supported:true,stop(){},refresh(){},startBookFromGesture(){return true}};
     window.MMBook.startVerifiedListening();
   });
   await expect(page.locator('#mmBookView [data-mm-book-reader]')).toBeVisible();
@@ -347,7 +347,7 @@ test('Book listening return focuses the original Contents listening control',asy
     panel.className='mm-read-aloud';
     panel.innerHTML='<details><summary>Speech test adapter</summary><button type="button" data-mm-read="play">Play</button></details>';
     document.body.prepend(panel);
-    window.MMReadAloud={supported:true,stop(){},refresh(){}};
+    window.MMReadAloud={supported:true,stop(){},refresh(){},startBookFromGesture(){return true}};
   });
   await listen.focus();
   await page.keyboard.press('Enter');
