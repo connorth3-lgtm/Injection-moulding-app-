@@ -3,8 +3,8 @@
   "masterIssue": 632,
   "release": "2026.10.20.2",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "e841e470e651c9f9c8766f1941554e60d554523f",
-  "scope": "Release 2026.10.20.2 stages the integrated Android Learn and Practice plus Book/Listen source, including the Read Aloud completion fix. The exact retained candidate artifact, exact-source software QA and owner visual baseline approval are recorded; all seven independent external validation workstreams remain HOLD.",
+  "candidateSourceSha": "6d14b9d738f0cf04f182cecad6491e1830fc449c",
+  "scope": "Release 2026.10.20.2 stages the integrated Android Learn and Practice plus Book/Listen source, including the fix that lets the operating system choose a default speech voice when mobile browsers list none. The exact retained candidate artifact, exact-source software QA and visual baseline check are recorded; all seven independent external validation workstreams remain HOLD.",
   "approvalBoundary": "Exact-source technical automation PASS and visual-design approval are recorded for 2026.10.20.2. No physical-device, human assistive-technology/SME, learner-outcome, Windows signing or NZQA/provider acceptance is claimed; all seven independent external reviews remain HOLD. The candidate is non-publishing, production authority remains advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
