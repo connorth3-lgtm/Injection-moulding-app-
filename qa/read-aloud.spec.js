@@ -182,7 +182,8 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   expect(placement).not.toBeNull();
   expect(placement.parent).toBeTruthy();
   expect(placement.position).toBe('relative');
-  expect(placement.width).toBeGreaterThanOrEqual(160);\n  expect(placement.width).toBeLessThanOrEqual(176);
+  expect(placement.width).toBeGreaterThanOrEqual(160);
+  expect(placement.width).toBeLessThanOrEqual(176);
   expect(placement.height).toBeGreaterThanOrEqual(44);
 
   await host.locator('details').evaluate(el=>{el.open=true;});
