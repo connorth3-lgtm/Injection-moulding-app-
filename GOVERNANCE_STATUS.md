@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | Release 2026.10.20.2 integrated source has no successful exact-source producer, artifact or public runtime fingerprint; 2026.10.20.1 technical artifact is historical only; owner visual review and seven independent workstreams remain HOLD. |
-| Behavioral / browser | **fail** | Draft 2026.10.20.2 integrated Learn/Book source requires fresh exact-head Chromium/WebKit and mobile-browser results; the strict 52-screen visual comparison awaits owner approval. No approval bypass. |
+| Static / contract | **pass** | PASS: release 2026.10.20.2 exact retained candidate e841e470e651c9f9c8766f1941554e60d554523f, producer 39389190646, artifact 12248398761, GitHub ZIP digest sha256:9f5db7d8b3e898ff834b828b1590098944101c7f5734c0e215c73c1786e3a1b8, and runtime fingerprint sha256:abbe5ca24fcc7e2203436c75df21550264bd71d48fe983416eb6b6f87489bd4f were independently checked. This is static technical provenance only; it grants no human, device, provider, distribution or production approval. |
+| Behavioral / browser | **pass** | PASS: exact-source Mobile Browser QA 39389190627, Question Quality 50-Pass 39389190511, Combined Learn Book QA 39389190402 in Chromium and WebKit, and Read Aloud QA 39389190555 passed. The mobile run also passed the strict visual lock, cross-browser and reachability checks, and five 100-run reliability shards. Automated browser evidence does not replace real assistive-technology interaction, physical-device testing, independent SME/provider review, learner-outcome evidence or production validation. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
