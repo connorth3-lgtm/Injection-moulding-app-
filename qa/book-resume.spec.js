@@ -252,14 +252,16 @@ test('Book Contents returns keyboard focus to the originating reader and module 
   await boot(page);
   await page.evaluate(()=>window.MMBook.open());
   const chapter=page.locator('.mm-book-toc > li > button[data-mm-book-reader-chapter-open="r08"]');
+  const contents=page.locator('[data-mm-book-contents]');
   await expect(chapter).toBeVisible();
   await chapter.focus();
   await page.keyboard.press('Enter');
   await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
   const back=page.locator('[data-mm-book-reader] > button[data-mm-book-back]').first();
   await back.focus();
+  await expect(back).toBeFocused();
   await page.keyboard.press('Enter');
-  await expect(page.locator('[data-mm-book-contents]')).toBeVisible();
+  await expect(contents).toBeVisible();
   await expect(chapter).toBeFocused();
   await expect(chapter).toBeInViewport();
 
@@ -269,8 +271,11 @@ test('Book Contents returns keyboard focus to the originating reader and module 
   await moduleButton.focus();
   await page.keyboard.press('Enter');
   await expect(page.locator('[data-mm-book-reader] h2')).toBeVisible();
-  await page.locator('[data-mm-book-reader] > button[data-mm-book-back]').first().focus();
+  const moduleBack=page.locator('[data-mm-book-reader] > button[data-mm-book-back]').first();
+  await moduleBack.focus();
+  await expect(moduleBack).toBeFocused();
   await page.keyboard.press('Enter');
+  await expect(contents).toBeVisible();
   await expect(moduleButton).toBeFocused();
   await expect(moduleButton).toBeInViewport();
 });

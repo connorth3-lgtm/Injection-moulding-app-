@@ -757,11 +757,15 @@
   }
   function bookScrollTop(){const root=bookScrollRoot();return Math.max(0,isDocumentScrollRoot(root)?document.scrollingElement?.scrollTop||0:root.scrollTop||0);}
   function scrollBookReaderToTop(){
+    const reader=ui?.reader;
+    if(!reader||reader.hidden)return;
+    // Move focus as soon as the new reader is visible. Deferring focus until
+    // the scroll frame can steal focus from Back after keyboard navigation.
+    const heading=reader.querySelector('h2');
+    if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
     requestAnimationFrame(()=>{
-      if(!ui?.reader)return;
-      scrollBookBy(ui.reader.getBoundingClientRect().top-bookViewportTop());
-      const heading=ui.reader.querySelector('h2');
-      if(heading){heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}
+      if(!ui?.reader||ui.reader!==reader||reader.hidden||!reader.isConnected)return;
+      scrollBookBy(reader.getBoundingClientRect().top-bookViewportTop());
     });
   }
   function focusBookContents(){
