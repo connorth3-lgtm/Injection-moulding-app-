@@ -126,6 +126,41 @@ html.mm-ios-webkit body{min-height:100dvh;min-height:-webkit-fill-available;-web
 #mmBookView .mm-book-full-source-inline h5{margin-block:12px 6px;font-size:1rem}
 @media(max-width:700px){#mmBookView .mm-book-audio-setup{grid-template-columns:1fr}#mmBookView .mm-book-hero-actions button{width:100%}}
 
+/* Keep expanded Book Read Aloud controls inside narrow phone panels. The long
+   automatic voice label can otherwise set the flex row's min-content width,
+   pushing the Stop button and voice selector past the panel edge. */
+@media(max-width:700px){
+  .mm-read-aloud .mm-read-panel,
+  .mm-read-aloud .mm-read-controls,
+  .mm-read-aloud .mm-read-meta{min-width:0}
+  .mm-read-aloud .mm-read-controls{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .mm-read-aloud .mm-read-controls button{min-width:0;padding-inline:4px}
+  .mm-read-aloud .mm-read-meta{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;
+    justify-content:stretch;
+    gap:8px 12px;
+  }
+  .mm-read-aloud .mm-read-meta label{min-width:0}
+  .mm-read-aloud .mm-read-meta label:has([data-mm-read="speed"]){grid-column:1/-1;grid-row:2}
+  .mm-read-aloud .mm-read-meta label:has([data-mm-read="voice"]){
+    grid-column:1/-1;
+    grid-row:3;
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr);
+  }
+  .mm-read-aloud .mm-read-meta label select{
+    min-width:0;
+    max-width:100%;
+    box-sizing:border-box;
+  }
+  .mm-read-aloud .mm-read-meta .mm-read-status{grid-column:1;grid-row:1}
+  .mm-read-aloud .mm-read-meta [data-mm-read="position"]{grid-column:2;grid-row:1}
+  .mm-read-aloud .mm-read-meta label:has([data-mm-read="voice"]) select{width:100%}
+  .mm-read-aloud .mm-read-meta [data-mm-read="position"]{justify-self:end}
+}
+
 /* The two Book reading editions use unchanged governed module text. */
 #mmBookView .mm-book-reading-mode{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px 14px;margin:4px 0 18px;border:1px solid #3b5575;border-radius:10px;background:rgba(20,40,62,.58)}
 #mmBookView .mm-book-reading-mode button{min-height:44px}

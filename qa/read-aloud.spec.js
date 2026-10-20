@@ -145,6 +145,44 @@ test('mobile bottom sheet leaves scroll clearance for Book chapter text and cont
   expect(geometry.panelHeight).toBeLessThan(geometry.viewportHeight-75);
   expect(geometry.width).toBeLessThanOrEqual(geometry.viewportWidth+2);
 });
+test('expanded Book Read Aloud playback and voice controls fit narrow phone panels',async({page})=>{
+  await seedLearner(page);
+  for(const width of [360,412]){
+    await page.setViewportSize({width,height:900});
+    await page.goto(APP,{waitUntil:'domcontentloaded'});
+    await page.waitForFunction(()=>window.MMBook?.open&&window.MM_APP_SHELL_FINALIZED);
+    await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load();});
+    const details=page.locator('.mm-read-aloud details');
+    await details.evaluate(el=>{el.open=true});
+    const player=page.locator('.mm-read-aloud');
+    await expect(player.locator('[data-mm-read="stop"]')).toBeVisible();
+    await expect(player.locator('[data-mm-read="voice"]')).toBeVisible();
+    const metrics=await page.evaluate(()=>{
+      const details=document.querySelector('.mm-read-aloud details');
+      const panel=details.querySelector('.mm-read-panel');
+      const controls=details.querySelector('.mm-read-controls');
+      const meta=details.querySelector('.mm-read-meta');
+      const box=node=>{const r=node.getBoundingClientRect();return{left:r.left,right:r.right}};
+      return{
+        viewport:innerWidth,
+        document:document.documentElement.scrollWidth,
+        details:box(details),
+        panelClient:panel.clientWidth,panelScroll:panel.scrollWidth,
+        controlsClient:controls.clientWidth,controlsScroll:controls.scrollWidth,
+        metaClient:meta.clientWidth,metaScroll:meta.scrollWidth,
+        controlsRight:Math.max(...Array.from(controls.children,button=>box(button).right)),
+        voice:box(meta.querySelector('[data-mm-read="voice"]'))
+      };
+    });
+    expect(metrics.document).toBeLessThanOrEqual(metrics.viewport+2);
+    expect(metrics.panelScroll).toBeLessThanOrEqual(metrics.panelClient+1);
+    expect(metrics.controlsScroll).toBeLessThanOrEqual(metrics.controlsClient+1);
+    expect(metrics.metaScroll).toBeLessThanOrEqual(metrics.metaClient+1);
+    expect(metrics.controlsRight).toBeLessThanOrEqual(metrics.details.right+1);
+    expect(metrics.voice.left).toBeGreaterThanOrEqual(metrics.details.left-1);
+    expect(metrics.voice.right).toBeLessThanOrEqual(metrics.details.right+1);
+  }
+});
 test('public preview status is shown only for a preview URL, not local desktop paths', async ({page}) => {
   await seedLearner(page);
   await page.goto(APP);
