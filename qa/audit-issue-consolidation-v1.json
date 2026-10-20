@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.10.20.2",
+  "release": "2026.10.20.3",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "6d14b9d738f0cf04f182cecad6491e1830fc449c",
-  "scope": "Release 2026.10.20.2 stages the integrated Android Learn and Practice plus Book/Listen source, including the fix that lets the operating system choose a default speech voice when mobile browsers list none. The exact retained candidate artifact, exact-source software QA and visual baseline check are recorded; all seven independent external validation workstreams remain HOLD.",
-  "approvalBoundary": "Exact-source technical automation PASS and visual-design approval are recorded for 2026.10.20.2. No physical-device, human assistive-technology/SME, learner-outcome, Windows signing or NZQA/provider acceptance is claimed; all seven independent external reviews remain HOLD. The candidate is non-publishing, production authority remains advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": null,
+  "scope": "Release 2026.10.20.3 stages the mobile Read Aloud default voice fix. The exact-source candidate and software QA are pending; all seven independent external validation workstreams remain HOLD.",
+  "approvalBoundary": "Exact-source technical automation is pending for 2026.10.20.3; visual approval from the earlier release does not approve device behavior, accessibility, release or deployment. No physical-device, human assistive-technology/SME, learner-outcome, Windows signing or NZQA/provider acceptance is claimed; all seven independent external reviews remain HOLD. The candidate is non-publishing, production authority remains advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -45,8 +45,8 @@
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
   "lastReviewedDate": "2026-10-20",
   "previousVerifiedCandidate": {
-    "release": "2026.10.20.1",
-    "sourceSha": "f896b988385b77c4190a7584db13b88748b7b106",
-    "runtimeFingerprint": "sha256:a208ca2c5fd94a00bde098f94232de14baf5625145ed2d7f2e6f09ce2caa20cf"
+    "release": "2026.10.20.2",
+    "sourceSha": "6d14b9d738f0cf04f182cecad6491e1830fc449c",
+    "runtimeFingerprint": "sha256:a0c7d14eb405642c5ba60b9f1237d8e22affa4f6a5210b30b463432501ff745c"
   }
 }

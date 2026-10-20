@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.10.20.2';
+const CACHE_VERSION='2026.10.20.3';
 const CACHE_REVISION='read-aloud-default-voice-r1';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 

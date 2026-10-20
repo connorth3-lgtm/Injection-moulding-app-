@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "pass",
+    "technicalAutomation": "fail",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "pass",
-      "meaning": "Exact retained candidate verified for release 2026.10.20.2 source 6d14b9d738f0cf04f182cecad6491e1830fc449c, producer run 39407663327, artifact 12257897600, fingerprint sha256:a0c7d14eb405642c5ba60b9f1237d8e22affa4f6a5210b30b463432501ff745c. External human/device/provider evidence remains HOLD."
+      "status": "fail",
+      "meaning": "Exact-source retained candidate for release 2026.10.20.3 is pending producer and provenance verification; no current candidate is claimed."
     },
     "behavioralBrowser": {
-      "status": "pass",
-      "meaning": "Exact-source browser and speech regression coverage passed for release 2026.10.20.2 source 6d14b9d738f0cf04f182cecad6491e1830fc449c; Read Aloud QA run 39407663456 passed 45 Chromium tests, Mobile Browser QA run 39407663413 passed Chromium, WebKit, cross-browser, and all five reliability shards."
+      "status": "fail",
+      "meaning": "Exact-source browser and speech regression coverage for release 2026.10.20.3 is pending; results from a prior source do not transfer."
     },
     "externalHumanDevice": {
       "status": "hold",

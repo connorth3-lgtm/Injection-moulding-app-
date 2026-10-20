@@ -1,12 +1,12 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.20.2`**.
+Current governed web candidate: **`2026.10.20.3`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Exact retained candidate verified for release 2026.10.20.2 source 6d14b9d738f0cf04f182cecad6491e1830fc449c, producer run 39407663327, artifact 12257897600, fingerprint sha256:a0c7d14eb405642c5ba60b9f1237d8e22affa4f6a5210b30b463432501ff745c. External human/device/provider evidence remains HOLD. |
-| Behavioral / browser | **pass** | Exact-source browser and speech regression coverage passed for release 2026.10.20.2 source 6d14b9d738f0cf04f182cecad6491e1830fc449c; Read Aloud QA run 39407663456 passed 45 Chromium tests, Mobile Browser QA run 39407663413 passed Chromium, WebKit, cross-browser, and all five reliability shards. |
+| Static / contract | **fail** | Exact-source retained candidate for release 2026.10.20.3 is pending producer and provenance verification; no current candidate is claimed. |
+| Behavioral / browser | **fail** | Exact-source browser and speech regression coverage for release 2026.10.20.3 is pending; results from a prior source do not transfer. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
