@@ -44,4 +44,3 @@ Current release-external statuses:
 ## Current publication interpretation
 
 The Book is authorized as a **generic-evidence-governed-reference** with learner-facing assurance **Source evidence reviewed**. It is not independently human-SME approved. The earlier technical-review-only gate remains preserved for audit history and must not be presented as the current publication decision.
-
