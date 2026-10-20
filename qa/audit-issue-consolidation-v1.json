@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.10.20.4",
+  "release": "2026.10.20.5",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "264091fc0eabb309fba3d5b255bfc36c36730679",
-  "scope": "Release 2026.10.20.4 stages the mobile Read Aloud watchdog fix. The exact-source candidate and automated software QA passed; all seven independent external validation workstreams remain HOLD.",
-  "approvalBoundary": "Exact-source technical automation passed for release 2026.10.20.4, source 264091fc0eabb309fba3d5b255bfc36c36730679, fingerprint sha256:7f977664ddcf352f5bbed506ec26273c19ce50adcaf0e381f58caed052700425. This supports a non-production preview only; it does not claim physical-device audibility, human assistive-technology or SME review, learner outcomes, Windows signing, or NZQA/provider acceptance. All seven independent external reviews remain HOLD; production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": null,
+  "scope": "Release 2026.10.20.5 stages the Android Read Aloud idle-cancel fix. Its exact-source candidate has not yet been retained or cleared by exact-head QA; all seven independent external validation workstreams remain HOLD.",
+  "approvalBoundary": "Release 2026.10.20.5 is awaiting exact-source candidate production and exact-head software QA. No physical-device audibility, human assistive-technology or SME review, learner outcomes, Windows signing, or NZQA/provider acceptance is claimed. All seven independent external reviews remain HOLD; production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -45,8 +45,8 @@
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
   "lastReviewedDate": "2026-10-20",
   "previousVerifiedCandidate": {
-    "release": "2026.10.20.3",
-    "sourceSha": "9ea761d15597f15631565cf514e46dc163c9f2c5",
-    "runtimeFingerprint": "sha256:b9875512b44d9d5bfed5d6f21c9ab280950114f6d1e89e8dc3dd349d2d745eed"
+    "release": "2026.10.20.4",
+    "sourceSha": "264091fc0eabb309fba3d5b255bfc36c36730679",
+    "runtimeFingerprint": "sha256:7f977664ddcf352f5bbed506ec26273c19ce50adcaf0e381f58caed052700425"
   }
 }

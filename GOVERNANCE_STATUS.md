@@ -1,12 +1,12 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.20.4`**.
+Current governed web candidate: **`2026.10.20.5`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Exact-source candidate for release 2026.10.20.4: source 264091fc0eabb309fba3d5b255bfc36c36730679 was retained from Pre-merge Public Candidate run 39470451630 (success), artifact 12287815554, fingerprint sha256:7f977664ddcf352f5bbed506ec26273c19ce50adcaf0e381f58caed052700425. Static/contract QA passed on this candidate. No human, physical-device or production approval is implied. |
-| Behavioral / browser | **pass** | Read Aloud and mobile-browser regressions passed for release 2026.10.20.4 source 264091fc0eabb309fba3d5b255bfc36c36730679; active speech without onstart remains playing and reports Pause. This is browser evidence and does not substitute for human assistive-technology or physical-device testing. |
+| Static / contract | **fail** | Release 2026.10.20.5 has no retained exact-source candidate yet. The candidate producer and exact-head software quality gates must pass before technical automation can be marked pass; independent human/device/provider evidence remains HOLD. |
+| Behavioral / browser | **fail** | The Read Aloud idle-cancel change is staged for release 2026.10.20.5, but exact-head browser QA has not yet completed. Browser tests cannot establish audible speech on a physical phone. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
