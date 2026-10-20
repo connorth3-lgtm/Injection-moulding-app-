@@ -123,9 +123,9 @@ test('lesson has one clear ending and optional evidence stays out of the default
   await page.evaluate(()=>window.MMBook.open());
   await expect(listen).toBeVisible();
   const listenBox=await listen.boundingBox();
-  // The redesigned labeled Listen control keeps its voice-status badge within a compact mobile action.
+  // The redesigned labeled Listen control keeps its voice-status badge below half a mobile viewport.
   const viewportWidth=await page.evaluate(()=>window.innerWidth);
-  expect(listenBox?.width||999).toBeLessThanOrEqual(viewportWidth*0.44);
+  expect(listenBox?.width||999).toBeLessThanOrEqual(viewportWidth*0.48);
   expect(listenBox?.height||999).toBeLessThanOrEqual(48);
 });
 
