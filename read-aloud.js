@@ -5,7 +5,7 @@
 (function(){
   'use strict';
 
-  const VERSION='2026.10.20.5';
+  const VERSION='2026.10.20.6';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -314,15 +314,20 @@
         // Do not cut off audible speech just because a provider omitted onstart.
         // SpeechSynthesis.speaking is the fallback for that mobile behavior.
         if(deviceIsSpeaking()){markStarted();return;}
+        if(androidSpeech){
+          // Android can omit start/boundary events and report speaking=false
+          // while its provider is still initializing. Canceling here can cut
+          // off the first audible word, so keep the utterance active and let
+          // its late start/end or an explicit Stop settle it.
+          setStatus('Android voice has not confirmed playback yet. It may still start; press Stop if it stays silent.');
+          updateButtons();
+          return;
+        }
         // A platform may deliver a late onstart after timeout. Invalidate it
         // before canceling or retrying, including when cancel emits no error.
         speakToken+=1;
         cancelDeviceSpeech(true);starting=false;speaking=false;paused=false;
-        if(androidSpeech){
-          // Timer callbacks cannot recover a blocked mobile user gesture.
-          setStatus('Device voice did not start. Tap Listen again; check Android text-to-speech settings if it stays silent.');
-          updateButtons();
-        }else if(iosSpeech){
+        if(iosSpeech){
           setStatus('Device voice did not start. Tap Listen again; check iOS speech settings if it stays silent.');
           updateButtons();
         }else if(retry<1){
@@ -448,6 +453,13 @@
     timer=setTimeout(()=>{
       if(token!==speakToken||started)return;
       if(deviceIsSpeaking()){markStarted();return;}
+      if(androidSpeech){
+        // Match the playback watchdog: a false Android speaking flag does not
+        // prove that its TTS service has stopped initializing.
+        setStatus('Android voice has not confirmed sound yet. It may still start; press Stop if it stays silent.');
+        updateButtons();
+        return;
+      }
       stop('Phone voice did not start. Check text-to-speech settings and try again.');
     },6000);
     utterance.onstart=markStarted;
