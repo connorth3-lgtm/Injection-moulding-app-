@@ -207,7 +207,7 @@ test('Book on Android never cuts speech after onstart when optional learner book
   });
   await page.locator('#mmBookView [data-mm-book-mode="listen"]').click();
   const player=page.locator('.mm-read-aloud');
-  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(player.locator('.mm-read-status')).toHaveText('Speech request is active. Did you hear sound?');
   await expect(player.locator('[data-mm-read="play"]')).toHaveText('Pause');
   expect(await page.evaluate(()=>window.__mmMissingScopeSpeech.cancels)).toBe(0);
   expect(await page.evaluate(()=>window.__mmMissingScopeSpeech.utterances.length)).toBe(1);
@@ -218,7 +218,7 @@ test('Book on Android never cuts speech after onstart when optional learner book
   await page.evaluate(()=>window.__mmMissingScopeSpeech.utterances[0].onend?.());
   await expect.poll(()=>page.evaluate(()=>window.__mmMissingScopeSpeech.utterances.length)).toBe(2);
   expect(await page.evaluate(()=>window.__mmMissingScopeSpeech.cancels)).toBe(0);
-  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(player.locator('.mm-read-status')).toHaveText('Speech request is active. Did you hear sound?');
 
   // Explicit Stop must still cancel the active physical voice.
   await player.locator('[data-mm-read="stop"]').click();

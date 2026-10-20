@@ -21,8 +21,8 @@ version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
 package = json.loads((ROOT / "desktop/electron/package.json").read_text(encoding="utf-8"))
 integrity_generator = (ROOT / "desktop/electron/scripts/generate-integrity.cjs").read_text(encoding="utf-8")
 
-need(version.get("read_aloud_version") == "2026.10.20.6", "Read Aloud version marker mismatch")
-need("const VERSION='2026.10.20.6'" in runtime, "Read Aloud runtime version mismatch")
+need(version.get("read_aloud_version") == "2026.10.20.7", "Read Aloud version marker mismatch")
+need("const VERSION='2026.10.20.7'" in runtime, "Read Aloud runtime version mismatch")
 
 # The feature must be output-only: speech synthesis plus an explicitly tapped,
 # oscillator-only two-beep media routing test. Microphone capture, recognition,
@@ -59,6 +59,9 @@ for marker in (
 for marker in (
     'data-mm-read="prev"', 'data-mm-read="play"', 'data-mm-read="next"',
     'data-mm-read="stop"', 'data-mm-read="speed"', "0.75,1,1.25,1.5",
+    'data-mm-read="beeps-heard"', 'data-mm-read="beeps-silent"', 'data-mm-read="voice-heard"',
+    'data-mm-read="voice-silent"', 'data-mm-read="guidance"', "Text-to-speech output",
+    "The app cannot confirm whether sound reached your speaker or headphones",
     'role="status"', 'aria-live="polite"',
     "Read Aloud is not available in this browser/device.",
     "Device voice did not start. Check Windows speech voices, then try again.",

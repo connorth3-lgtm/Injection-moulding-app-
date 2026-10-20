@@ -1,11 +1,11 @@
-/* MouldMaster Read Aloud + Listening — 2026.10.20.6
+/* MouldMaster Read Aloud + Listening — 2026.10.20.7
  * Learner-controlled text-to-speech using the browser/device speech-synthesis service.
  * No microphone access, recording, speech recognition, network upload, or learner-content storage.
  */
 (function(){
   'use strict';
 
-  const VERSION='2026.10.20.6';
+  const VERSION='2026.10.20.7';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -35,6 +35,9 @@
   let previousView=null;
   let queuedBookStart=null;
   let bookChapterCache=[];
+  // Session-only learner reports; browser callbacks cannot detect speaker output.
+  let diagnosticBeepResult=null;
+  let diagnosticVoiceResult=null;
 
   function visible(el){
     if(!el||!el.isConnected||el.closest(EXCLUDED))return false;
@@ -326,7 +329,7 @@
         clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
         highlight(unit);
         if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-position',{detail:{chapterId:unit.bookChapterId,unitIndex:unit.bookSentenceIndex}}));
-        setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();
+        setStatus(playlistMode?'Listening session playing':'Speech request is active. Did you hear sound?');updateButtons();
       };
       startTimer=setTimeout(()=>{
         if(token!==speakToken||started)return;
@@ -473,7 +476,7 @@
       tone.onended=()=>{
         if(appAudioTestContext===context)appAudioTestContext=null;
         try{void Promise.resolve(context.close()).catch(()=>{})}catch(_){}
-        if(token===speakToken)setStatus('App audio test finished. Did you hear two beeps? If yes but narration is silent, the device speech service or its audio routing needs attention.');
+        if(token===speakToken)setStatus('App audio test finished. Did you hear two beeps? Choose a result above, then compare with the phone voice sample.');
       };
       tone.start(at);tone.stop(at+0.68);
       // resume() is initiated inside the real tap for mobile audio permission.
@@ -513,7 +516,7 @@
       if(token!==speakToken||started)return;
       clearTimeout(timer);
       started=true;starting=false;speaking=true;paused=false;
-      setStatus('Sound test started. If silent, turn up media volume and check the selected audio output.');
+      setStatus('Voice sample is playing. Choose the result you heard above.');
       updateButtons();
     };
     timer=setTimeout(()=>{
@@ -533,7 +536,7 @@
     utterance.onend=()=>{
       clearTimeout(timer);
       if(activeUtterance===utterance)activeUtterance=null;
-      if(token===speakToken)stop('Sound test finished. If you heard nothing, check media volume and your phone text-to-speech voice.');
+      if(token===speakToken)stop('Voice sample finished. Choose whether you heard speech above.');
     };
     utterance.onerror=event=>{
       clearTimeout(timer);
@@ -573,7 +576,7 @@
     if(starting){stop('Stopped');return;}
     if(paused){
       try{synth.resume()}catch(_){stop('Device voice could not resume. Start playback again.');return;}
-      paused=false;speaking=true;setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();return;
+      paused=false;speaking=true;setStatus(playlistMode?'Listening session playing':'Speech request is active. Did you hear sound?');updateButtons();return;
     }
     if(speaking){
       try{synth.pause()}catch(_){stop('Device voice could not pause. Start playback again.');return;}
@@ -738,6 +741,7 @@
       @media(max-width:700px){.mm-read-aloud details[open]{top:auto;right:8px;bottom:calc(var(--mm-mobile-nav-clearance,104px) + env(safe-area-inset-bottom) + 10px);width:calc(100vw - 16px)}.mm-read-controls{grid-template-columns:1fr 1fr 1fr 1fr}.mm-listening-controls{grid-template-columns:1fr 1fr}.mm-listening-controls .play{grid-column:1/-1;grid-row:1}.mm-listening-hero{padding:20px}}
       @media(prefers-reduced-motion:reduce){.mm-read-aloud *{scroll-behavior:auto!important}}
     `;
+    style.textContent+="\n      .mm-read-aloud details[open]{max-height:calc(100vh - 94px);overflow:auto;overscroll-behavior:contain;border-color:#2d6276;background:#091727}\n      .mm-read-aloud .mm-read-panel{padding:15px;gap:12px;background:linear-gradient(160deg,#0d1f32,#091522)}\n      .mm-read-heading{padding:14px 15px;border:1px solid rgba(85,214,190,.24);border-radius:14px;background:radial-gradient(circle at 90% 0%,rgba(85,214,190,.18),transparent 44%),linear-gradient(145deg,#122a40,#0d1b2d)}\n      .mm-read-kicker{display:block;margin-bottom:5px;color:#78e4d1;font-size:10px;font-weight:900;letter-spacing:.14em}\n      .mm-read-heading h2{margin:0 0 6px;color:#f4fbff;font-size:19px;line-height:1.2}\n      .mm-read-heading p{margin:0;color:#bbccdd;font-size:12px;line-height:1.45}\n      .mm-read-diagnostic{display:grid;gap:9px}\n      .mm-read-step{display:grid;gap:9px;padding:12px;border:1px solid #294762;border-radius:12px;background:#102238}\n      .mm-read-step-head{display:grid;grid-template-columns:28px minmax(0,1fr);gap:9px;align-items:start}\n      .mm-read-step-number{display:grid;width:26px;height:26px;place-items:center;border-radius:50%;background:#55d6be;color:#07131b;font-size:13px;font-weight:900}\n      .mm-read-step h3{margin:0 0 3px;color:#f2f8ff;font-size:13px}\n      .mm-read-step p{margin:0;color:#a9bdd2;font-size:11px;line-height:1.4}\n      .mm-read-test-button{width:100%;min-height:44px;border:1px solid #55d6be;border-radius:9px;background:#55d6be;color:#07131b;font-weight:850}\n      .mm-read-choice{display:grid;grid-template-columns:1fr 1fr;gap:7px}\n      .mm-read-choice button{min-height:40px;padding:7px;border:1px solid #3c5878;border-radius:9px;background:#162b46;color:#edf5ff;font-size:12px;font-weight:700}\n      .mm-read-choice button[aria-pressed=\"true\"]{border-color:#8cebdc;background:#193b4a;box-shadow:inset 0 0 0 1px #8cebdc}\n      .mm-read-guidance{padding:11px 12px;border-left:3px solid #55d6be;border-radius:8px;background:#112b3d;color:#def7f1;font-size:12px;line-height:1.5}\n      .mm-read-guidance[hidden]{display:none!important}\n      .mm-read-aloud .mm-read-controls{margin-top:2px}\n      .mm-read-aloud .mm-read-meta{display:grid;grid-template-columns:1fr 1fr auto;align-items:center}\n      .mm-read-aloud .mm-read-status{padding:9px 10px;border-radius:8px;background:#102238;color:#d5e3f2;font-size:12px}\n      .mm-read-test-button:focus-visible,.mm-read-choice button:focus-visible,.mm-read-controls button:focus-visible{outline:3px solid #a6f5e8;outline-offset:2px}\n      @media(max-width:700px){\n        .mm-read-aloud details[open]{max-height:calc(100dvh - var(--mm-mobile-nav-clearance,104px) - env(safe-area-inset-bottom) - 24px)}\n        .mm-read-aloud .mm-read-panel{padding:12px}\n        .mm-read-aloud .mm-read-meta{grid-template-columns:1fr 1fr}\n        .mm-read-aloud .mm-read-meta>[data-mm-read=\"position\"]{grid-column:1/-1}\n      }\n";
     document.head.appendChild(style);
   }
 
@@ -772,15 +776,45 @@
     renderListeningState();
   }
 
+  function diagnosticGuidance(){
+    if(diagnosticVoiceResult===true)return 'You confirmed that the phone voice is audible. Press Listen to read this chapter.';
+    if(diagnosticVoiceResult===false&&diagnosticBeepResult===true){
+      return androidSpeech
+        ? 'The beeps reached your selected output, but the voice sample did not. On Android, open Settings and search for “Text-to-speech output” (menu names vary by phone). Select an installed speech engine and voice, use its Play sample, then return and test again.'
+        : 'The beeps reached your selected output, but the voice sample did not. Check your device or browser text-to-speech settings, select an installed voice, then test again.';
+    }
+    if(diagnosticVoiceResult===false&&diagnosticBeepResult===false)return 'Both checks were silent. Raise media volume, check the selected output, and disconnect or reconnect Bluetooth or USB audio before running both checks again.';
+    if(diagnosticVoiceResult===false)return 'The voice sample was silent. Run the two-beep app audio check and compare the result to choose the next step.';
+    if(diagnosticBeepResult===false)return 'The two-beep test was silent. Raise media volume and check Bluetooth, USB headphones, or the selected speaker output. Then test the phone voice.';
+    if(diagnosticBeepResult===true)return 'You confirmed the app audio route is audible. Now play the phone voice sample and choose what you hear.';
+    return 'Play both checks, then select the result that matches what you heard.';
+  }
+
+  function recordDiagnosticResult(kind,heard){
+    if(kind==='beeps'){
+      diagnosticBeepResult=heard;
+      ui.host.querySelector('[data-mm-read="beeps-heard"]').setAttribute('aria-pressed',String(heard));
+      ui.host.querySelector('[data-mm-read="beeps-silent"]').setAttribute('aria-pressed',String(!heard));
+      setStatus(heard?'You heard both app beeps. Now test the phone voice.':'The app beeps were silent. Check media volume and selected output.');
+    }else{
+      diagnosticVoiceResult=heard;
+      ui.host.querySelector('[data-mm-read="voice-heard"]').setAttribute('aria-pressed',String(heard));
+      ui.host.querySelector('[data-mm-read="voice-silent"]').setAttribute('aria-pressed',String(!heard));
+      setStatus(heard?'You confirmed the phone voice is audible. Tap Listen to read.':'You reported that the phone voice is silent. Use the check results below.');
+    }
+    ui.guidance.textContent=diagnosticGuidance();
+    ui.guidance.hidden=false;
+  }
+
   function createUI(){
     if(document.querySelector('.mm-read-aloud'))return;
     addStyles();
     const host=document.createElement('aside');
     host.className='mm-read-aloud';host.setAttribute('aria-label','Read Aloud');host.dataset.version=VERSION;
-    host.innerHTML=`<details><summary title="Expand or collapse the Read Aloud controls"><b>🔊 Listen</b><span>${supported?'Device voice':'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><button type="button" class="mm-read-speed" data-mm-read="test">Test phone sound (voice)</button><button type="button" class="mm-read-speed" data-mm-read="audio-output">Test app audio (two beeps)</button><div class="mm-read-meta"><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><label>Voice <select class="mm-read-speed" data-mm-read="voice" aria-label="Narration voice"><option value="">Automatic device voice</option></select></label><span data-mm-read="position">0 / 0</span></div><div class="mm-book-audio-chapters" data-mm-book-audio-controls hidden><button type="button" data-mm-book-audio-prev aria-label="Previous Book chapter">⏮</button><label>Book chapter <select data-mm-book-audio-chapter aria-label="Book audio chapter"></select></label><button type="button" data-mm-book-audio-next aria-label="Next Book chapter">⏭</button><label class="mm-book-audio-follow"><input type="checkbox" data-mm-book-audio-follow checked> Follow text</label></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-note">Uses your device/browser speech-synthesis service. MouldMaster does not request microphone access or record audio. If the text advances silently, compare the spoken-voice test with the app-audio beeps. Only you can confirm whether sound came through your headphones.</p></div></details>`;
+    host.innerHTML=`<details><summary title="Expand or collapse the Read Aloud controls"><b>🔊 Listen</b><span>${supported?'Device voice':'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-heading"><span class="mm-read-kicker">BOOK AUDIO</span><h2>Listen to this chapter</h2><p>The app cannot confirm whether sound reached your speaker or headphones. Start reading here, or run both checks if you need help.</p></div><section class="mm-read-diagnostic" aria-label="Audio checks"><div class="mm-read-step"><div class="mm-read-step-head"><span class="mm-read-step-number">1</span><div><h3>Check app audio</h3><p>Two short tones check your media volume and selected output.</p></div></div><button type="button" class="mm-read-test-button" data-mm-read="audio-output">Play two beeps</button><div class="mm-read-choice" role="group" aria-label="Did you hear both beeps?"><button type="button" data-mm-read="beeps-heard" aria-pressed="false">Yes, both</button><button type="button" data-mm-read="beeps-silent" aria-pressed="false">No sound</button></div></div><div class="mm-read-step"><div class="mm-read-step-head"><span class="mm-read-step-number">2</span><div><h3>Check phone voice</h3><p>A short spoken sample checks the device speech service.</p></div></div><button type="button" class="mm-read-test-button" data-mm-read="test">Play voice sample</button><div class="mm-read-choice" role="group" aria-label="Did you hear the phone voice?"><button type="button" data-mm-read="voice-heard" aria-pressed="false">I heard speech</button><button type="button" data-mm-read="voice-silent" aria-pressed="false">Still silent</button></div></div><div class="mm-read-guidance" data-mm-read="guidance" aria-live="polite" hidden></div></section><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><div class="mm-read-meta"><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><label>Voice <select class="mm-read-speed" data-mm-read="voice" aria-label="Narration voice"><option value="">Automatic device voice</option></select></label><span data-mm-read="position">0 / 0</span></div><div class="mm-book-audio-chapters" data-mm-book-audio-controls hidden><button type="button" data-mm-book-audio-prev aria-label="Previous Book chapter">⏮</button><label>Book chapter <select data-mm-book-audio-chapter aria-label="Book audio chapter"></select></label><button type="button" data-mm-book-audio-next aria-label="Next Book chapter">⏭</button><label class="mm-book-audio-follow"><input type="checkbox" data-mm-book-audio-follow checked> Follow text</label></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><p class="mm-read-note">Voice uses your browser or phone speech service. The two-beep check is app-generated. MouldMaster does not use your microphone, record audio, or send lesson text for these checks.</p></div></details>`;
     const actions=document.querySelector('#app .top-actions,.top-actions');(actions||document.body).appendChild(host);
-    ui={host,play:host.querySelector('[data-mm-read="play"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),voice:host.querySelector('[data-mm-read="voice"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),current:host.querySelector('[data-mm-read="current"]'),bookNav:host.querySelector('[data-mm-book-audio-controls]'),bookChapter:host.querySelector('[data-mm-book-audio-chapter]'),bookPrev:host.querySelector('[data-mm-book-audio-prev]'),bookNext:host.querySelector('[data-mm-book-audio-next]'),follow:host.querySelector('[data-mm-book-audio-follow]')};
-    ui.play.addEventListener('click',toggle);host.querySelector('[data-mm-read="test"]').addEventListener('click',testDeviceSound);host.querySelector('[data-mm-read="audio-output"]').addEventListener('click',testAppAudioOutput);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
+    ui={host,play:host.querySelector('[data-mm-read="play"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),voice:host.querySelector('[data-mm-read="voice"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),guidance:host.querySelector('[data-mm-read="guidance"]'),current:host.querySelector('[data-mm-read="current"]'),bookNav:host.querySelector('[data-mm-book-audio-controls]'),bookChapter:host.querySelector('[data-mm-book-audio-chapter]'),bookPrev:host.querySelector('[data-mm-book-audio-prev]'),bookNext:host.querySelector('[data-mm-book-audio-next]'),follow:host.querySelector('[data-mm-book-audio-follow]')};
+    ui.play.addEventListener('click',toggle);host.querySelector('[data-mm-read="test"]').addEventListener('click',testDeviceSound);host.querySelector('[data-mm-read="audio-output"]').addEventListener('click',testAppAudioOutput);host.querySelector('[data-mm-read="beeps-heard"]').addEventListener('click',()=>recordDiagnosticResult('beeps',true));host.querySelector('[data-mm-read="beeps-silent"]').addEventListener('click',()=>recordDiagnosticResult('beeps',false));host.querySelector('[data-mm-read="voice-heard"]').addEventListener('click',()=>recordDiagnosticResult('voice',true));host.querySelector('[data-mm-read="voice-silent"]').addEventListener('click',()=>recordDiagnosticResult('voice',false));ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
     ui.speed.addEventListener('change',()=>changeSpeed(false));
     ui.voice.addEventListener('change',()=>{preferredVoiceId=ui.voice.value;refreshVoice();if(speaking&&!playlistMode)speakCurrent();});
     ui.bookChapter.addEventListener('change',()=>selectBookChapter(ui.bookChapter.value));
