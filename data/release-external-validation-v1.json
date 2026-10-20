@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.20.3",
-  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.20.3.md",
+  "release": "2026.10.20.4",
+  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.20.4.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "pass",
-    "claim": "Exact-source release 2026.10.20.3 candidate source 9ea761d15597f15631565cf514e46dc163c9f2c5 passed Pre-merge Public Candidate run 39410559794 with retained artifact 12259316379 and runtime fingerprint sha256:b9875512b44d9d5bfed5d6f21c9ab280950114f6d1e89e8dc3dd349d2d745eed; Mobile Browser QA run 39410559791, Question Quality 50-Pass run 39410560044, Read Aloud QA run 39410560202, Combined Learn Book QA run 39410559701, and Windows Listen package run 39410559812 all passed. These are automated software checks only; all seven independent human/device/provider streams remain HOLD."
+    "status": "fail",
+    "claim": "Release 2026.10.20.4 candidate artifact was retained from Pre-merge Public Candidate run 39469543774 for source d0f582cef71364fcd0fce3ce07f2a69731aebd8c. Exact-head automated checks are still being completed; this record does not claim a technical QA pass. All seven independent human/device/provider streams remain HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -21,36 +21,25 @@
   "accessibility": {
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
-    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.20.3.md",
+    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.20.4.md",
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
     "previousCandidate": {
-      "release": "2026.10.20.1",
-      "sourceSha": "f896b988385b77c4190a7584db13b88748b7b106",
-      "runtimeFingerprint": "sha256:a208ca2c5fd94a00bde098f94232de14baf5625145ed2d7f2e6f09ce2caa20cf"
-    },
-    "candidate": {
       "release": "2026.10.20.3",
       "sourceSha": "9ea761d15597f15631565cf514e46dc163c9f2c5",
       "runtimeFingerprint": "sha256:b9875512b44d9d5bfed5d6f21c9ab280950114f6d1e89e8dc3dd349d2d745eed"
+    },
+    "candidate": {
+      "release": "2026.10.20.4",
+      "sourceSha": "d0f582cef71364fcd0fce3ce07f2a69731aebd8c",
+      "runtimeFingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
     }
   },
   "pwaPhysicalDevices": {
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
-    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.20.3.md",
+    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.20.4.md",
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
     "previousCandidate": {
-      "release": "2026.10.20.1",
-      "sourceSha": "f896b988385b77c4190a7584db13b88748b7b106",
-      "runtimeFingerprint": "sha256:a208ca2c5fd94a00bde098f94232de14baf5625145ed2d7f2e6f09ce2caa20cf",
-      "candidateRunId": 39368081782,
-      "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 12240591156,
-      "artifactName": "physical-pwa-candidate-f896b988385b77c4190a7584db13b88748b7b106",
-      "artifactDigest": "sha256:59829f91d1cc0c1654fab81049bbe1d205c608c561964a05c0b16be63ea8444e",
-      "artifactExpiresAt": "2026-11-19T04:11:07Z"
-    },
-    "currentCandidate": {
       "release": "2026.10.20.3",
       "sourceSha": "9ea761d15597f15631565cf514e46dc163c9f2c5",
       "runtimeFingerprint": "sha256:b9875512b44d9d5bfed5d6f21c9ab280950114f6d1e89e8dc3dd349d2d745eed",
@@ -60,13 +49,24 @@
       "artifactName": "physical-pwa-candidate-9ea761d15597f15631565cf514e46dc163c9f2c5",
       "artifactDigest": "sha256:08abe9d8df03d3c6bf8075db86e51e00c9e289adb2f8c6667f248b2ea1268cbe",
       "artifactExpiresAt": "2027-01-18T10:48:45Z"
+    },
+    "currentCandidate": {
+      "release": "2026.10.20.4",
+      "sourceSha": "d0f582cef71364fcd0fce3ce07f2a69731aebd8c",
+      "runtimeFingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "candidateRunId": 39469543774,
+      "candidateWorkflow": "Pre-merge Public Candidate",
+      "artifactId": 12285498577,
+      "artifactName": "physical-pwa-candidate-d0f582cef71364fcd0fce3ce07f2a69731aebd8c",
+      "artifactDigest": "sha256:2f5d3dfac919a0f4c8a828064ea5ea4e12621201a1e924aaef230f18f25a4ef7",
+      "artifactExpiresAt": "2027-01-18T17:50:22Z"
     }
   },
   "windowsDistribution": {
     "status": "hold",
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
-    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.10.20.3.md",
+    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.10.20.4.md",
     "sourceSha": "7cfcf8285239411221fe05d5c356e29d39ade36c",
     "desktopRelease": "2026.09.29.1",
     "evidence": null,
@@ -80,20 +80,20 @@
   "bookSme": {
     "status": "hold",
     "evidenceContract": "data/book-sme-review-v1.json",
-    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.10.20.3.md",
+    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.10.20.4.md",
     "required": "Independent human SME approval of all 46 governed Book modules across the six required review dimensions; the 20 reader chapters are structural groupings only.",
     "contentRelease": "2026.10.06.5"
   },
   "curriculumSme": {
     "status": "hold",
     "evidenceContract": "qa/curriculum-semantic-review.json",
-    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.10.20.3.md",
+    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.10.20.4.md",
     "required": "Traceable human SME semantic approval of all 120 canonical lessons."
   },
   "learnerOutcomes": {
     "status": "hold",
     "pilotContract": "data/learner-pilot-v1.json",
-    "pilotPacket": "qa/LEARNER_PILOT_2026.10.20.3.md",
+    "pilotPacket": "qa/LEARNER_PILOT_2026.10.20.4.md",
     "evidence": null,
     "required": "Longitudinal real-learner outcome evidence before efficacy or genuine psychometric-validity claims."
   },
@@ -116,20 +116,36 @@
   "nzqaProvider": {
     "status": "hold",
     "evidenceContract": "data/nzqa-external-validation-v1.json",
-    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.20.3.md",
+    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.20.4.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "previousCandidate": {
-      "release": "2026.10.20.1",
-      "sourceSha": "f896b988385b77c4190a7584db13b88748b7b106",
-      "runtimeFingerprint": "sha256:a208ca2c5fd94a00bde098f94232de14baf5625145ed2d7f2e6f09ce2caa20cf"
-    },
-    "candidate": {
       "release": "2026.10.20.3",
       "sourceSha": "9ea761d15597f15631565cf514e46dc163c9f2c5",
       "runtimeFingerprint": "sha256:b9875512b44d9d5bfed5d6f21c9ab280950114f6d1e89e8dc3dd349d2d745eed"
+    },
+    "candidate": {
+      "release": "2026.10.20.4",
+      "sourceSha": "d0f582cef71364fcd0fce3ce07f2a69731aebd8c",
+      "runtimeFingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
     }
   },
   "webCandidate": {
+    "release": "2026.10.20.4",
+    "sourceSha": "d0f582cef71364fcd0fce3ce07f2a69731aebd8c",
+    "runtimeFingerprint": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "candidateRunId": 39469543774,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 12285498577,
+    "artifactName": "physical-pwa-candidate-d0f582cef71364fcd0fce3ce07f2a69731aebd8c",
+    "artifactDigest": "sha256:2f5d3dfac919a0f4c8a828064ea5ea4e12621201a1e924aaef230f18f25a4ef7",
+    "artifactExpiresAt": "2027-01-18T17:50:22Z"
+  },
+  "candidatePolicy": {
+    "previewBranchAuthoritative": false,
+    "evidenceAuthority": "retained-exact-head-artifact",
+    "rule": "External human/device/provider evidence must bind to the retained exact-head candidate artifact and runtime fingerprint, never to the mutable preview branch tip."
+  },
+  "previousCandidate": {
     "release": "2026.10.20.3",
     "sourceSha": "9ea761d15597f15631565cf514e46dc163c9f2c5",
     "runtimeFingerprint": "sha256:b9875512b44d9d5bfed5d6f21c9ab280950114f6d1e89e8dc3dd349d2d745eed",
@@ -140,12 +156,8 @@
     "artifactDigest": "sha256:08abe9d8df03d3c6bf8075db86e51e00c9e289adb2f8c6667f248b2ea1268cbe",
     "artifactExpiresAt": "2027-01-18T10:48:45Z"
   },
-  "candidatePolicy": {
-    "previewBranchAuthoritative": false,
-    "evidenceAuthority": "retained-exact-head-artifact",
-    "rule": "External human/device/provider evidence must bind to the retained exact-head candidate artifact and runtime fingerprint, never to the mutable preview branch tip."
-  },
-  "previousCandidate": {
+  "candidateStatus": "HOLD — exact-source candidate artifact retained; required automated checks are still being completed; all seven independent external review streams remain HOLD.",
+  "previousPreviousCandidate": {
     "release": "2026.10.20.2",
     "sourceSha": "6d14b9d738f0cf04f182cecad6491e1830fc449c",
     "runtimeFingerprint": "sha256:a0c7d14eb405642c5ba60b9f1237d8e22affa4f6a5210b30b463432501ff745c",
@@ -155,18 +167,6 @@
     "artifactName": "physical-pwa-candidate-6d14b9d738f0cf04f182cecad6491e1830fc449c",
     "artifactDigest": "sha256:5c87d76b97e78b8972694b0031e5a97166894a974fa9fc410eed83730853f09e",
     "artifactExpiresAt": "2027-01-18T10:24:02Z"
-  },
-  "candidateStatus": "HOLD \u2014 exact-source candidate producer and automated software QA passed; all seven independent external review streams remain HOLD.",
-  "previousPreviousCandidate": {
-    "release": "2026.10.20.2",
-    "sourceSha": "e841e470e651c9f9c8766f1941554e60d554523f",
-    "runtimeFingerprint": "sha256:abbe5ca24fcc7e2203436c75df21550264bd71d48fe983416eb6b6f87489bd4f",
-    "candidateRunId": 39389190646,
-    "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 12248398761,
-    "artifactName": "physical-pwa-candidate-e841e470e651c9f9c8766f1941554e60d554523f",
-    "artifactDigest": "sha256:9f5db7d8b3e898ff834b828b1590098944101c7f5734c0e215c73c1786e3a1b8",
-    "artifactExpiresAt": "2027-01-18T07:50:26Z"
   },
   "priorTechnicalCandidate": {
     "release": "2026.10.11.1",
