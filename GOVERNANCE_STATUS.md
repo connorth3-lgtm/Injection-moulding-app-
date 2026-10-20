@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Software-controlled release 2026.10.20.6 source 874249689137f6f25c47791496e13a7ba03f1e43 was retained by successful producer run 39498822390; artifact 12298154315 has fingerprint sha256:2225d9386d6f26f70866d6b82c4bf82a4eb0607fa8fe36fb18c2aa332479e37f. The current release-bound contracts identify this candidate. Automated checks do not establish physical speaker output or any independent human/device/provider validation. |
-| Behavioral / browser | **pass** | Behavioral browser checks passed for release 2026.10.20.6 source 874249689137f6f25c47791496e13a7ba03f1e43: exact-source Read Aloud QA, Combined Learn Book QA, Mobile Browser QA and Question Quality 50-Pass succeeded. Automated checks do not prove audible physical-phone output or real assistive-technology interaction. |
+| Static / contract | **pass** | Exact retained release 2026.10.20.7 candidate source ec3f46df3126e850132a90861299b3c089448d43, artifact 12306906235, producer run 39514093143, and public-runtime fingerprint sha256:d896fbc6aef16b5d1bb7bb711c9e7812e94d6b8a33d7ad98d2bcb4f638589c23 passed the candidate producer and static/contract software gates. Physical-device, signed-distribution and external human validation remain HOLD. |
+| Behavioral / browser | **pass** | Exact-source behavioral software QA passed for ec3f46df3126e850132a90861299b3c089448d43: Read Aloud QA run 39514093064, Mobile Browser QA run 39514093109 (Chromium and WebKit), Question Quality 50-Pass run 39514093078, and Combined Learn Book QA run 39514093137. Browser simulation does not establish audible output, physical-device behavior or human assistive-technology review. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

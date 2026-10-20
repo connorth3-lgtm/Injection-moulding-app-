@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.10.20.7",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "7facde32737f8f4c1334a5c08f2b2e19e4113b67",
-  "scope": "The 2026.10.20.7 preview candidate source is 7facde32737f8f4c1334a5c08f2b2e19e4113b67, with exact-source technical retention and exact-head browser/question-quality checks still pending. No successful producer run, retained artifact or current runtime fingerprint is asserted. All seven independent human/device/provider streams remain HOLD. The candidate belongs to PR #662 on the non-publishing preview branch; this branch does not deploy Pages.",
-  "approvalBoundary": "Technical automation is not yet passed for the current release. Final exact PR-head assurance remains required. All seven external human/device/provider acceptance lanes remain HOLD; advisory-only, no production authority or tester invitations.",
+  "candidateSourceSha": "ec3f46df3126e850132a90861299b3c089448d43",
+  "scope": "The 2026.10.20.7 preview candidate source is ec3f46df3126e850132a90861299b3c089448d43, with retained exact-source candidate run 39514093143, artifact 12306906235, fingerprint sha256:d896fbc6aef16b5d1bb7bb711c9e7812e94d6b8a33d7ad98d2bcb4f638589c23, and exact-head automated software QA passed (Pre-merge Public Candidate run 39514093143; Read Aloud QA run 39514093064; Mobile Browser QA run 39514093109; Question Quality 50-Pass run 39514093078; Combined Learn Book QA run 39514093137; Physical PWA Contract QA run 39514093301; Windows Listen package run 39514093097; Measured Learning Production Gate run 39514093086). All seven independent human/device/provider streams remain HOLD. The candidate belongs to PR #662 on the non-publishing preview branch; this branch does not deploy Pages.",
+  "approvalBoundary": "Technical automation passed for exact candidate ec3f46df3126e850132a90861299b3c089448d43; all seven external human/device/provider acceptance lanes remain HOLD. Preview is non-publishing; no Pages deployment, tester invitation, production release or production authority is authorized.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
