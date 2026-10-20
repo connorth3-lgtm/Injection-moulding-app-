@@ -207,8 +207,8 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load()});
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.20.4');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.20.4');
+  await expect(host).toHaveAttribute('data-version','2026.10.20.5');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.20.5');
   await expect(host.locator('summary')).toContainText('Listen');
 
   const placement=await page.evaluate(()=>{
@@ -296,7 +296,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.supported===true)).toBeTruthy();
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.20.4');
+  await expect(host).toHaveAttribute('data-version','2026.10.20.5');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {
@@ -1060,7 +1060,7 @@ for(const phone of ['Android','iPhone']){
       Object.defineProperty(navigator,'userAgent',{configurable:true,value:ua});
       class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.voice=null;this.onstart=null;this.onend=null;this.onerror=null;}}
       const synth={getVoices(){return[];},cancel(){this.cancels=(this.cancels||0)+1;},
-        speak(u){window.__phoneTestVoiceText=u.text;window.__phoneTestVoiceRate=u.rate;window.__phoneTestVoiceLang=u.lang;window.__phoneTestGesture=navigator.userActivation?.isActive??true;if(u.lang){queueMicrotask(()=>u.onerror?.({error:'synthesis-failed'}));return;}queueMicrotask(()=>{u.onstart?.();u.onend?.();});},
+        speak(u){window.__phoneTestCancelCountAtSpeak=this.cancels||0;window.__phoneTestVoiceText=u.text;window.__phoneTestVoiceRate=u.rate;window.__phoneTestVoiceLang=u.lang;window.__phoneTestGesture=navigator.userActivation?.isActive??true;if(u.lang){queueMicrotask(()=>u.onerror?.({error:'synthesis-failed'}));return;}queueMicrotask(()=>{u.onstart?.();u.onend?.();});},
         pause(){},resume(){},addEventListener(){},removeEventListener(){}};
       Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
       Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
@@ -1073,6 +1073,7 @@ for(const phone of ['Android','iPhone']){
     await page.locator('.mm-read-aloud [data-mm-read="test"]').click();
     await expect.poll(()=>page.evaluate(()=>window.__phoneTestVoiceText||'')).toBe('MouldMaster sound test. You should hear this sentence.');
     expect(await page.evaluate(()=>window.__phoneTestVoiceLang)).toBe('');
+    expect(await page.evaluate(()=>window.__phoneTestCancelCountAtSpeak)).toBe(0);
     await expect(page.locator('.mm-read-aloud .mm-read-status')).toContainText('Sound test finished');
     expect(await page.evaluate(()=>window.__phoneTestVoiceRate)).toBe(1);
   });
@@ -1136,13 +1137,77 @@ test('Book Listen advances when an Android speech provider omits onstart',async(
   await expect(player.locator('.mm-read-status')).toHaveText('Stopped');
 });
 
+test('Android sentence handoff does not cancel speech while the previous utterance is ending',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First Android sentence. Second Android sentence.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onboundary=null;this.onend=null;this.onerror=null;}}
+    const synth={speaking:false,cancels:0,cancelsAtSpeak:[],utterances:[],getVoices(){return[];},
+      speak(u){this.utterances.push(u);this.cancelsAtSpeak.push(this.cancels);this.speaking=true;},
+      cancel(){this.cancels++;this.speaking=false;},
+      pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__androidHandoffSpeech=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('summary').click();
+  await player.locator('[data-mm-read="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__androidHandoffSpeech.utterances.length)).toBe(1);
+  await page.evaluate(()=>{
+    // Android can still report the ending utterance as active while onend runs.
+    window.__androidHandoffSpeech.utterances[0].onstart?.();
+    window.__androidHandoffSpeech.utterances[0].onend?.();
+  });
+  await expect.poll(()=>page.evaluate(()=>window.__androidHandoffSpeech.utterances.length)).toBe(2);
+  expect(await page.evaluate(()=>window.__androidHandoffSpeech.cancelsAtSpeak)).toEqual([0,0]);
+  await player.locator('[data-mm-read="stop"]').click();
+  expect(await page.evaluate(()=>window.__androidHandoffSpeech.cancels)).toBe(1);
+});
+
+test('Android natural completion leaves completed speech uncanceled',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Final Android sentence.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onboundary=null;this.onend=null;this.onerror=null;}}
+    const synth={speaking:false,cancels:0,utterances:[],getVoices(){return[];},
+      speak(u){this.utterances.push(u);this.speaking=true;},
+      cancel(){this.cancels++;this.speaking=false;},
+      pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__androidNaturalEndSpeech=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('summary').click();
+  await player.locator('[data-mm-read="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__androidNaturalEndSpeech.utterances.length)).toBe(1);
+  await page.evaluate(()=>{
+    const utterance=window.__androidNaturalEndSpeech.utterances[0];
+    utterance.onstart?.();
+    utterance.onend?.();
+    // onend runs before the speech engine has fully returned to idle.
+    window.__androidNaturalEndSpeech.speaking=false;
+  });
+  await expect(player.locator('.mm-read-status')).toHaveText('Finished reading');
+  expect(await page.evaluate(()=>window.__androidNaturalEndSpeech.cancels)).toBe(0);
+
+  await player.locator('[data-mm-read="test"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__androidNaturalEndSpeech.utterances.length)).toBe(2);
+  await page.evaluate(()=>window.__androidNaturalEndSpeech.utterances[1].onend?.());
+  await expect(player.locator('.mm-read-status')).toContainText('Sound test finished');
+  expect(await page.evaluate(()=>window.__androidNaturalEndSpeech.cancels)).toBe(0);
+});
+
 test('Android watchdog keeps active speech when the provider omits onstart',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Speech remains active without an onstart event.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
     class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onboundary=null;this.onend=null;this.onerror=null;}}
-    const synth={speaking:false,cancels:0,current:null,getVoices(){return[];},
-      speak(u){this.current=u;this.speaking=true;},
+    const synth={speaking:false,cancels:0,cancelsAtSpeak:null,current:null,getVoices(){return[];},
+      speak(u){this.current=u;this.cancelsAtSpeak=this.cancels;this.speaking=true;},
       cancel(){this.cancels++;this.speaking=false;},
       pause(){},resume(){},addEventListener(){},removeEventListener(){}};
     window.__activeNoStartVoice=synth;
@@ -1157,5 +1222,8 @@ test('Android watchdog keeps active speech when the provider omits onstart',asyn
   await page.waitForTimeout(6200);
   await expect(player.locator('.mm-read-status')).toHaveText('Reading');
   await expect(player.locator('[data-mm-read="play"]')).toHaveText('Pause');
+  expect(await page.evaluate(()=>window.__activeNoStartVoice.cancelsAtSpeak)).toBe(0);
+  expect(await page.evaluate(()=>window.__activeNoStartVoice.cancels)).toBe(0);
+  await player.locator('[data-mm-read="stop"]').click();
   expect(await page.evaluate(()=>window.__activeNoStartVoice.cancels)).toBe(1);
 });

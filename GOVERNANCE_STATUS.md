@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.20.4`**.
+Current governed web candidate: **`2026.10.20.5`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Exact-source candidate for release 2026.10.20.4: source 264091fc0eabb309fba3d5b255bfc36c36730679 was retained from Pre-merge Public Candidate run 39470451630 (success), artifact 12287815554, fingerprint sha256:7f977664ddcf352f5bbed506ec26273c19ce50adcaf0e381f58caed052700425. Static/contract QA passed on this candidate. No human, physical-device or production approval is implied. |
-| Behavioral / browser | **pass** | Read Aloud and mobile-browser regressions passed for release 2026.10.20.4 source 264091fc0eabb309fba3d5b255bfc36c36730679; active speech without onstart remains playing and reports Pause. This is browser evidence and does not substitute for human assistive-technology or physical-device testing. |
+| Static / contract | **pass** | Exact-source public candidate for release 2026.10.20.5: source 2b757e45dcf9fda8b3d6b06cb8ee681714cbd1ad, retained from Pre-merge Public Candidate run 39483291565 (success), artifact 12291733543, fingerprint sha256:823228e414f98d0e74a3d2e1b3bb491d1d2a3f61d28339bedf40e2b13bb2f456. Exact-source static and contract QA passed. This is software-controlled evidence only; human, physical-device and production authorization remain separate. |
+| Behavioral / browser | **pass** | Read Aloud, Mobile Browser QA and Question Quality 50-Pass passed for exact-source release 2026.10.20.5, source 2b757e45dcf9fda8b3d6b06cb8ee681714cbd1ad. Android idle startup, sentence handoff, natural completion and explicit Stop regressions passed. Browser evidence cannot confirm audible playback on a physical phone; real-device and human review remain HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
