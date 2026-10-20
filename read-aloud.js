@@ -5,7 +5,7 @@
 (function(){
   'use strict';
 
-  const VERSION='2026.10.20.3';
+  const VERSION='2026.10.20.4';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -227,6 +227,10 @@
     renderListeningState();
   }
 
+  function deviceIsSpeaking(){
+    try{return synth.speaking===true}catch(_){return false}
+  }
+
   function cancelDeviceSpeech(){
     // Browser/OS voice providers may throw while being stopped. A failed
     // cancel must never prevent the app controls from resetting safely.
@@ -289,8 +293,22 @@
         return;
       }
       let started=false;
-      const startTimer=setTimeout(()=>{
+      let startTimer;
+      const markStarted=()=>{
         if(token!==speakToken||started)return;
+        // Some mobile providers begin output without dispatching onstart.
+        // Use the same visibility boundary for the event and active-state fallback.
+        if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
+        clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
+        highlight(unit);
+        if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-position',{detail:{chapterId:unit.bookChapterId,unitIndex:unit.bookSentenceIndex}}));
+        setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();
+      };
+      startTimer=setTimeout(()=>{
+        if(token!==speakToken||started)return;
+        // Do not cut off audible speech just because a provider omitted onstart.
+        // SpeechSynthesis.speaking is the fallback for that mobile behavior.
+        if(deviceIsSpeaking()){markStarted();return;}
         // A platform may deliver a late onstart after timeout. Invalidate it
         // before canceling or retrying, including when cancel emits no error.
         speakToken+=1;
@@ -308,16 +326,8 @@
           setStatus('Device voice did not start. Check Windows speech voices, then try again.');updateButtons();
         }
       },(androidSpeech||iosSpeech)?6000:2500);
-      utterance.onstart=()=>{
-        if(token!==speakToken)return;
-        // An OS voice can acknowledge a queued utterance after visibility
-        // changed. Invalidate the utterance rather than claiming playback.
-        if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
-        clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
-        highlight(unit);
-        if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-position',{detail:{chapterId:unit.bookChapterId,unitIndex:unit.bookSentenceIndex}}));
-        setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();
-      };
+      utterance.onstart=markStarted;
+      utterance.onboundary=markStarted;
       utterance.onend=()=>{
         clearTimeout(startTimer);
         // Some mobile speech providers complete an utterance without firing
@@ -422,17 +432,21 @@
       return;
     }
     let started=false;
-    const timer=setTimeout(()=>{
+    let timer;
+    const markStarted=()=>{
       if(token!==speakToken||started)return;
-      stop('Phone voice did not start. Check text-to-speech settings and try again.');
-    },6000);
-    utterance.onstart=()=>{
-      if(token!==speakToken)return;
       clearTimeout(timer);
       started=true;starting=false;speaking=true;paused=false;
       setStatus('Sound test started. If silent, turn up media volume and check the selected audio output.');
       updateButtons();
     };
+    timer=setTimeout(()=>{
+      if(token!==speakToken||started)return;
+      if(deviceIsSpeaking()){markStarted();return;}
+      stop('Phone voice did not start. Check text-to-speech settings and try again.');
+    },6000);
+    utterance.onstart=markStarted;
+    utterance.onboundary=markStarted;
     utterance.onend=()=>{
       clearTimeout(timer);
       if(token===speakToken)stop('Sound test finished. If you heard nothing, check media volume and your phone text-to-speech voice.');

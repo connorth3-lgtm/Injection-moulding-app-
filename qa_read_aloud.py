@@ -21,8 +21,8 @@ version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
 package = json.loads((ROOT / "desktop/electron/package.json").read_text(encoding="utf-8"))
 integrity_generator = (ROOT / "desktop/electron/scripts/generate-integrity.cjs").read_text(encoding="utf-8")
 
-need(version.get("read_aloud_version") == "2026.10.20.3", "Read Aloud version marker mismatch")
-need("const VERSION='2026.10.20.3'" in runtime, "Read Aloud runtime version mismatch")
+need(version.get("read_aloud_version") == "2026.10.20.4", "Read Aloud version marker mismatch")
+need("const VERSION='2026.10.20.4'" in runtime, "Read Aloud runtime version mismatch")
 need("function applyAvailableVoice(utterance)" in runtime and "if(!selectedVoice){utterance.lang='';return;}" in runtime,
      "unlisted mobile default voice must use the OS-selected language")
 
@@ -57,6 +57,15 @@ for marker in (
     "details[open]",
 ):
     need(marker in runtime, f"Read Aloud control/fallback missing: {marker}")
+
+# Some mobile providers omit onstart after output begins. The watchdog
+# must trust active speech and speech-boundary events before cancelling.
+for marker in (
+    "function deviceIsSpeaking(){",
+    "if(deviceIsSpeaking()){markStarted();return;}",
+    "utterance.onboundary=markStarted;",
+):
+    need(marker in runtime, f"active mobile speech watchdog guard missing: {marker}")
 
 # Android Chrome may advertise Web Speech with an empty device-voice list.
 # Playback MUST start in the original tap task instead of waiting on a timer.

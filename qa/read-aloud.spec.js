@@ -1135,3 +1135,27 @@ test('Book Listen advances when an Android speech provider omits onstart',async(
   await page.locator('.mm-read-aloud [data-mm-read="stop"]').click();
   await expect(player.locator('.mm-read-status')).toHaveText('Stopped');
 });
+
+test('Android watchdog keeps active speech when the provider omits onstart',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Speech remains active without an onstart event.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onboundary=null;this.onend=null;this.onerror=null;}}
+    const synth={speaking:false,cancels:0,current:null,getVoices(){return[];},
+      speak(u){this.current=u;this.speaking=true;},
+      cancel(){this.cancels++;this.speaking=false;},
+      pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__activeNoStartVoice=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('summary').click();
+  await player.locator('[data-mm-read="play"]').click();
+  await expect(player.locator('[data-mm-read="play"]')).toHaveText('Starting…');
+  await page.waitForTimeout(6200);
+  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(player.locator('[data-mm-read="play"]')).toHaveText('Pause');
+  expect(await page.evaluate(()=>window.__activeNoStartVoice.cancels)).toBe(1);
+});
