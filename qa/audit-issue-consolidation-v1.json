@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.10.19.1",
+  "release": "2026.10.20.6",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "4e8169602ca73fc78cfd2f2421a263632cfe84ea",
-  "scope": "Current 2026.10.19.1 producer run 39148051891 succeeded on exact source 4e8169602ca73fc78cfd2f2421a263632cfe84ea and retained artifact 12143923886 (runtime fingerprint sha256:1f498160634145407bd394bfe8c32ed70a1ce5f862834e8159d2f1e9fdd6cee9). The technical automation ledger remains FAIL; independent technical release acceptance is not granted. The preview branch has newer unmerged repair PR #649; its exact candidate publication has not been approved. All seven human/device/provider streams remain HOLD.",
-  "approvalBoundary": "Technical automation FAIL: retained technical artifact and passing feature checks are not current release signoff. Exact-head all-required CI, actual owner release decision and governed publication remain pending. All seven external human/device/provider acceptance lanes HOLD; advisory-only, no production authority or tester invitations.",
+  "candidateSourceSha": "874249689137f6f25c47791496e13a7ba03f1e43",
+  "scope": "Current 2026.10.20.6 producer run 39498822390 succeeded on exact source 874249689137f6f25c47791496e13a7ba03f1e43 and retained artifact 12298154315 (runtime fingerprint sha256:f75f8e3cd685e6a6acbe93eae1fbcf5baefaaa5c5e9d8cec651a89b3f29d5a6b; digest sha256:d87337c678c5dae801a3269519e31d718755dbd0fbab70760786d1fdae62592a). Exact-source Read Aloud QA, Combined Learn Book QA, Mobile Browser QA and Question Quality 50-Pass passed. The candidate belongs to PR #661 on the non-publishing preview branch; this branch does not deploy Pages. Technical automation is PASS; all seven independent human/device/provider streams remain HOLD.",
+  "approvalBoundary": "Technical automation PASS records software-controlled exact-source checks only, not public release signoff. Final exact PR-head assurance is still required. All seven external human/device/provider acceptance lanes remain HOLD; advisory-only, no production authority or tester invitations.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -43,9 +43,9 @@
   "productionAuthority": "advisory-only",
   "humanEvidenceStatus": "hold",
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
-  "lastReviewedDate": "2026-10-19",
+  "lastReviewedDate": "2026-10-20",
   "previousVerifiedCandidate": {
-    "release": "2026.10.16.1",
-    "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68"
+    "release": "2026.10.19.1",
+    "sourceSha": "4e8169602ca73fc78cfd2f2421a263632cfe84ea"
   }
 }

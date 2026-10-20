@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: release 2026.10.19.1 now has a source-bound, unexpired technical artifact 12143923886, producer 39148051891 and runtime fingerprint sha256:1f498160634145407bd394bfe8c32ed70a1ce5f862834e8159d2f1e9fdd6cee9. Exact-source automated gates passed, but independent technical acceptance and the seven external review streams remain HOLD. |
-| Behavioral / browser | **fail** | HOLD: exact-source Read Aloud, combined Book/Learn, full mobile browser, reliability and question-quality workflows passed on 4e8169602ca73fc78cfd2f2421a263632cfe84ea. These tests cannot prove actual phone speaker sound, independent assistive-technology review, SME approval or live public release. |
+| Static / contract | **pass** | Release 2026.10.20.6 source 874249689137f6f25c47791496e13a7ba03f1e43 and artifact 12298154315 were retained by successful exact-source producer run 39498822390. The current release-bound contracts are bound to the artifact. This does not imply any external human/device or production approval. |
+| Behavioral / browser | **pass** | Exact-source Read Aloud, Combined Learn Book, Mobile Browser, Question Quality 50-Pass and physical-device contract checks passed for 2026.10.20.6 source 874249689137f6f25c47791496e13a7ba03f1e43. Automated browser tests do not prove audible physical-phone output or real assistive-technology interaction. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
