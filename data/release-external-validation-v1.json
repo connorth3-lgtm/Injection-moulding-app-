@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.19.1",
-  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.19.1.md",
+  "release": "2026.10.20.6",
+  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.20.6.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "fail",
-    "claim": "Real 2026.10.19.1 candidate source 4e8169602ca73fc78cfd2f2421a263632cfe84ea was retained by successful producer run 39148051891 (artifact 12143923886) after exact-source Read Aloud, combined Book/Learn, mobile, reliability and question QA passed. Technical release acceptance and all real phone, accessibility, SME and provider reviews remain on HOLD."
+    "claim": "Release 2026.10.20.6 has no retained exact-source technical artifact yet. The preview candidate producer must complete on the exact source before technical automation can be reviewed. All independent review streams remain HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -21,12 +21,8 @@
   "accessibility": {
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
-    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.19.1.md",
-    "candidate": {
-      "release": "2026.10.19.1",
-      "sourceSha": "4e8169602ca73fc78cfd2f2421a263632cfe84ea",
-      "runtimeFingerprint": "sha256:1f498160634145407bd394bfe8c32ed70a1ce5f862834e8159d2f1e9fdd6cee9"
-    },
+    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.10.20.6.md",
+    "candidate": null,
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
     "previousCandidate": {
       "release": "2026.10.16.1",
@@ -37,18 +33,8 @@
   "pwaPhysicalDevices": {
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
-    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.19.1.md",
-    "currentCandidate": {
-      "release": "2026.10.19.1",
-      "sourceSha": "4e8169602ca73fc78cfd2f2421a263632cfe84ea",
-      "runtimeFingerprint": "sha256:1f498160634145407bd394bfe8c32ed70a1ce5f862834e8159d2f1e9fdd6cee9",
-      "candidateRunId": 39148051891,
-      "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 12143923886,
-      "artifactName": "physical-pwa-candidate-4e8169602ca73fc78cfd2f2421a263632cfe84ea",
-      "artifactDigest": "sha256:04a8e7f21d5256986d996911e20bb9051eb0ecd5373ab94537255644bbe7a224",
-      "artifactExpiresAt": "2027-01-16T17:06:33Z"
-    },
+    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.10.20.6.md",
+    "currentCandidate": null,
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
     "previousCandidate": {
       "release": "2026.10.16.1",
@@ -66,7 +52,7 @@
     "status": "hold",
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
-    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.10.19.1.md",
+    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.10.20.6.md",
     "sourceSha": "7cfcf8285239411221fe05d5c356e29d39ade36c",
     "desktopRelease": "2026.09.29.1",
     "evidence": null,
@@ -80,20 +66,20 @@
   "bookSme": {
     "status": "hold",
     "evidenceContract": "data/book-sme-review-v1.json",
-    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.10.19.1.md",
+    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.10.20.6.md",
     "required": "Independent human SME approval of all 46 governed Book modules across the six required review dimensions; the 20 reader chapters are structural groupings only.",
     "contentRelease": "2026.10.06.5"
   },
   "curriculumSme": {
     "status": "hold",
     "evidenceContract": "qa/curriculum-semantic-review.json",
-    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.10.19.1.md",
+    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.10.20.6.md",
     "required": "Traceable human SME semantic approval of all 120 canonical lessons."
   },
   "learnerOutcomes": {
     "status": "hold",
     "pilotContract": "data/learner-pilot-v1.json",
-    "pilotPacket": "qa/LEARNER_PILOT_2026.10.19.1.md",
+    "pilotPacket": "qa/LEARNER_PILOT_2026.10.20.6.md",
     "evidence": null,
     "required": "Longitudinal real-learner outcome evidence before efficacy or genuine psychometric-validity claims."
   },
@@ -116,20 +102,22 @@
   "nzqaProvider": {
     "status": "hold",
     "evidenceContract": "data/nzqa-external-validation-v1.json",
-    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.19.1.md",
+    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.20.6.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
-    "candidate": {
-      "release": "2026.10.19.1",
-      "sourceSha": "4e8169602ca73fc78cfd2f2421a263632cfe84ea",
-      "runtimeFingerprint": "sha256:1f498160634145407bd394bfe8c32ed70a1ce5f862834e8159d2f1e9fdd6cee9"
-    },
+    "candidate": null,
     "previousCandidate": {
       "release": "2026.10.16.1",
       "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
       "runtimeFingerprint": "sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27"
     }
   },
-  "webCandidate": {
+  "webCandidate": null,
+  "candidatePolicy": {
+    "previewBranchAuthoritative": false,
+    "evidenceAuthority": "retained-exact-head-artifact",
+    "rule": "External human/device/provider evidence must bind to the retained exact-head candidate artifact and runtime fingerprint, never to the mutable preview branch tip."
+  },
+  "previousCandidate": {
     "release": "2026.10.19.1",
     "sourceSha": "4e8169602ca73fc78cfd2f2421a263632cfe84ea",
     "runtimeFingerprint": "sha256:1f498160634145407bd394bfe8c32ed70a1ce5f862834e8159d2f1e9fdd6cee9",
@@ -140,12 +128,8 @@
     "artifactDigest": "sha256:04a8e7f21d5256986d996911e20bb9051eb0ecd5373ab94537255644bbe7a224",
     "artifactExpiresAt": "2027-01-16T17:06:33Z"
   },
-  "candidatePolicy": {
-    "previewBranchAuthoritative": false,
-    "evidenceAuthority": "retained-exact-head-artifact",
-    "rule": "External human/device/provider evidence must bind to the retained exact-head candidate artifact and runtime fingerprint, never to the mutable preview branch tip."
-  },
-  "previousCandidate": {
+  "candidateStatus": "HOLD — no exact-source 2026.10.20.6 technical artifact has been retained; all seven independent review streams remain HOLD.",
+  "previousPreviousCandidate": {
     "release": "2026.10.16.1",
     "sourceSha": "e336f656351afa4eeaaae0940969bea881ae9b68",
     "runtimeFingerprint": "sha256:3677de439e76c94b69ebeef13dd92904cd6b30818b88a5434fcbe3755529ec27",
@@ -155,18 +139,6 @@
     "artifactName": "physical-pwa-candidate-e336f656351afa4eeaaae0940969bea881ae9b68",
     "artifactDigest": "sha256:957f7a0b2e16aab3fd4b59fe86706b637a440593081152748fc18c8332cd32e7",
     "artifactExpiresAt": "2027-01-14T07:04:41Z"
-  },
-  "candidateStatus": "HOLD — producer successfully retained an exact-source technical candidate; independently approved release acceptance and all seven external streams remain HOLD.",
-  "previousPreviousCandidate": {
-    "release": "2026.10.15.2",
-    "sourceSha": "f9de4baaa6421184b61c40ea1932015743b6a503",
-    "runtimeFingerprint": "sha256:b55db63ab83a06a0225babb40152b81a77b1efa509b5baea7c79ebdd349eb536",
-    "candidateRunId": 38671000203,
-    "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 11943512723,
-    "artifactName": "physical-pwa-candidate-f9de4baaa6421184b61c40ea1932015743b6a503",
-    "artifactDigest": "sha256:8541bcabc5cbee8360e84c86c8b1f94ec965957c29b43ddc1f9bfaf1f967cc2d",
-    "artifactExpiresAt": "2027-01-13T02:26:33Z"
   },
   "priorTechnicalCandidate": {
     "release": "2026.10.11.1",
