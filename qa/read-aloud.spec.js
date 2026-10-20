@@ -207,8 +207,8 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load()});
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.20.2');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.20.2');
+  await expect(host).toHaveAttribute('data-version','2026.10.20.3');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.20.3');
   await expect(host.locator('summary')).toContainText('Listen');
 
   const placement=await page.evaluate(()=>{
@@ -296,7 +296,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.supported===true)).toBeTruthy();
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.20.2');
+  await expect(host).toHaveAttribute('data-version','2026.10.20.3');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {
@@ -358,6 +358,7 @@ test('Android empty voice list speaks within the original tap without waiting fo
         window.__mmAndroidSpoken=utterance.text;
         window.__mmAndroidSpeechInsideGesture=inGesture;
         window.__mmAndroidLanguage=utterance.lang;
+        if(utterance.lang){queueMicrotask(()=>utterance.onerror?.({error:'synthesis-failed'}));return;}
         queueMicrotask(()=>utterance.onstart?.());
       },
       cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}
@@ -373,7 +374,7 @@ test('Android empty voice list speaks within the original tap without waiting fo
   // The first-tap assertion must not require skipping the heading.
   await expect.poll(()=>page.evaluate(()=>window.__mmAndroidSpoken||'')).toBe('Android read aloud');
   expect(await page.evaluate(()=>window.__mmAndroidSpeechInsideGesture)).toBe(true);
-  expect(await page.evaluate(()=>window.__mmAndroidLanguage)).toBe('en');
+  expect(await page.evaluate(()=>window.__mmAndroidLanguage)).toBe('');
   await expect(host.locator('.mm-read-status')).toHaveText('Reading');
   await host.locator('[data-mm-read="stop"]').click();
 });
@@ -1059,7 +1060,7 @@ for(const phone of ['Android','iPhone']){
       Object.defineProperty(navigator,'userAgent',{configurable:true,value:ua});
       class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.voice=null;this.onstart=null;this.onend=null;this.onerror=null;}}
       const synth={getVoices(){return[];},cancel(){this.cancels=(this.cancels||0)+1;},
-        speak(u){window.__phoneTestVoiceText=u.text;window.__phoneTestVoiceRate=u.rate;window.__phoneTestGesture=navigator.userActivation?.isActive??true;queueMicrotask(()=>{u.onstart?.();u.onend?.();});},
+        speak(u){window.__phoneTestVoiceText=u.text;window.__phoneTestVoiceRate=u.rate;window.__phoneTestVoiceLang=u.lang;window.__phoneTestGesture=navigator.userActivation?.isActive??true;if(u.lang){queueMicrotask(()=>u.onerror?.({error:'synthesis-failed'}));return;}queueMicrotask(()=>{u.onstart?.();u.onend?.();});},
         pause(){},resume(){},addEventListener(){},removeEventListener(){}};
       Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
       Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
@@ -1071,6 +1072,7 @@ for(const phone of ['Android','iPhone']){
     await expect(page.locator('.mm-read-aloud details')).toHaveAttribute('open','');
     await page.locator('.mm-read-aloud [data-mm-read="test"]').click();
     await expect.poll(()=>page.evaluate(()=>window.__phoneTestVoiceText||'')).toBe('MouldMaster sound test. You should hear this sentence.');
+    expect(await page.evaluate(()=>window.__phoneTestVoiceLang)).toBe('');
     await expect(page.locator('.mm-read-aloud .mm-read-status')).toContainText('Sound test finished');
     expect(await page.evaluate(()=>window.__phoneTestVoiceRate)).toBe(1);
   });

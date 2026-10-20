@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.20.2",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.20.2.md",
-  "sourceSha": "e841e470e651c9f9c8766f1941554e60d554523f",
-  "runtimeFingerprint": "sha256:abbe5ca24fcc7e2203436c75df21550264bd71d48fe983416eb6b6f87489bd4f",
+  "release": "2026.10.20.3",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.20.3.md",
+  "sourceSha": "9ea761d15597f15631565cf514e46dc163c9f2c5",
+  "runtimeFingerprint": "sha256:b9875512b44d9d5bfed5d6f21c9ab280950114f6d1e89e8dc3dd349d2d745eed",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.20.2 is bound to exact retained learner-runtime candidate e841e470e651c9f9c8766f1941554e60d554523f; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.20.3 is bound to exact retained learner-runtime candidate 9ea761d15597f15631565cf514e46dc163c9f2c5; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -306,9 +306,9 @@
     "textZoom200Percent": true
   },
   "previousCandidate": {
-    "release": "2026.10.20.1",
-    "sourceSha": "f896b988385b77c4190a7584db13b88748b7b106",
-    "runtimeFingerprint": "sha256:a208ca2c5fd94a00bde098f94232de14baf5625145ed2d7f2e6f09ce2caa20cf"
+    "release": "2026.10.20.2",
+    "sourceSha": "6d14b9d738f0cf04f182cecad6491e1830fc449c",
+    "runtimeFingerprint": "sha256:a0c7d14eb405642c5ba60b9f1237d8e22affa4f6a5210b30b463432501ff745c"
   },
-  "technicalCandidateStatus": "pending-new-exact-source-producer"
+  "technicalCandidateStatus": "passed-exact-source-automated-qa"
 }
