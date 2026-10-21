@@ -21,8 +21,8 @@ version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
 package = json.loads((ROOT / "desktop/electron/package.json").read_text(encoding="utf-8"))
 integrity_generator = (ROOT / "desktop/electron/scripts/generate-integrity.cjs").read_text(encoding="utf-8")
 
-need(version.get("read_aloud_version") == "2026.10.21.1", "Read Aloud version marker mismatch")
-need("const VERSION='2026.10.21.1'" in runtime, "Read Aloud runtime version mismatch")
+need(version.get("read_aloud_version") == "2026.10.21.2", "Read Aloud version marker mismatch")
+need("const VERSION='2026.10.21.2'" in runtime, "Read Aloud runtime version mismatch")
 need("function cancelDeviceSpeech(force=false)" in runtime and "cancelDeviceSpeech(cancelActive)" in runtime and "cancelDeviceSpeech(true)" in runtime,
      "speech cancellation must be limited to active queues or explicit cleanup")
 need("function applyAvailableVoice(utterance)" in runtime and "if(!selectedVoice){utterance.lang='';return;}" in runtime,
