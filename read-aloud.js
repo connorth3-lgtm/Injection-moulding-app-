@@ -1,11 +1,11 @@
-/* MouldMaster Book Read Aloud — 2026.10.21.1
+/* MouldMaster Book Read Aloud — 2026.10.21.2
  * Learner-controlled text-to-speech using the browser/device speech-synthesis service.
  * No microphone access, recording, speech recognition, network upload, or learner-content storage.
  */
 (function(){
   'use strict';
 
-  const VERSION='2026.10.21.1';
+  const VERSION='2026.10.21.2';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -53,24 +53,35 @@
     return clean.match(/[^.!?]+(?:[.!?]+(?=\s|$)|$)/g)?.map(x=>x.trim()).filter(Boolean)||[clean];
   }
 
-  function chooseRoot(){
-    // Book is a custom view inside the app's main content, not an exam or
-    // scenario. Prioritise its visible reader before generic course widgets;
-    // otherwise Read Aloud can pick a scenario card and never read the Book.
+  function visibleBookView(){
     const book=document.getElementById('mmBookView');
-    if(book&&visible(book)){
-      const reader=book.querySelector('[data-mm-book-reader]');
-      if(reader&&visible(reader))return reader;
-      const contents=book.querySelector('[data-mm-book-contents]');
-      if(contents&&visible(contents))return contents;
-      return book;
+    return book&&visible(book)?book:null;
+  }
+
+  function syncBookScope(){
+    const inBook=!!visibleBookView();
+    if(ui?.host&&ui.host.hidden===inBook)ui.host.hidden=!inBook;
+    if(!inBook){
+      if(speaking||paused||starting||appAudioTimer)stop('Stopped after leaving Book');
+      if(activeRoot||units.length||bookChapterCache.length){
+        activeRoot=null;units=[];index=0;bookChapterCache=[];
+        refreshBookControls();
+        updateButtons();
+      }
     }
-    const candidates=['#lesson article.lesson-body','.exam-card','.scenario','.visual-wrap','.defect-card','main.main','.main','main'];
-    for(const selector of candidates){
-      const found=[...document.querySelectorAll(selector)].find(el=>visible(el)&&String(el.innerText||'').trim().length>20);
-      if(found)return found;
-    }
-    return document.body;
+    return inBook;
+  }
+
+  function chooseRoot(){
+    // Read Aloud is available only inside the visible Book. Lesson, exam,
+    // scenario and generic page text are never fallback narration sources.
+    const book=visibleBookView();
+    if(!book)return null;
+    const reader=book.querySelector('[data-mm-book-reader]');
+    if(reader&&visible(reader))return reader;
+    const contents=book.querySelector('[data-mm-book-contents]');
+    if(contents&&visible(contents))return contents;
+    return book;
   }
 
   function sourceFor(node,root){
@@ -84,6 +95,7 @@
   function buildUnits(){
     playlistMode=false;
     const root=chooseRoot();
+    if(!root){units=[];index=0;activeRoot=null;bookChapterCache=[];return units;}
     const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(node){
       const text=String(node.nodeValue||'').replace(/\s+/g,' ').trim();
       if(!text||text.length<2)return NodeFilter.FILTER_REJECT;
@@ -109,11 +121,9 @@
       if(!chapters.has(chapterId))chapters.set(chapterId,{id:chapterId,title:article.querySelector('h2')?.textContent?.trim()||chapterId});
     }
     bookChapterCache=[...chapters.values()];
-    // The source-reviewed Book's Listen mode spans 20 reader chapters.
-    // Applying the normal one-screen 1200-sentence bound silently cuts off
-    // later chapters. Keep a separate bounded Book capacity instead.
-    const bookReader=!!(root.closest?.('#mmBookView')||root.id==='mmBookView');
-    units=out.slice(0,bookReader?20000:1200);
+    // The Book reader can span all governed chapters, so keep one bounded
+    // Book-only queue rather than a generic screen or lesson queue.
+    units=out.slice(0,20000);
     index=Math.min(index,Math.max(0,units.length-1));
     return units;
   }
@@ -201,13 +211,15 @@
   }
 
   function updateButtons(){
+    const appAudioActive=!!appAudioTimer;
     if(ui){
-      ui.play.disabled=!supported;
+      ui.play.disabled=!supported||appAudioActive;
       ui.play.textContent=starting?'Starting…':paused?'Resume':speaking?'Pause':'Listen';
       ui.play.setAttribute('aria-label',starting?'Starting read aloud':paused?'Resume read aloud':speaking?'Pause read aloud':'Start read aloud');
+      ui.testAudio.disabled=appAudioActive;
       ui.prev.disabled=!supported||!units.length||index<=0;
       ui.next.disabled=!supported||!units.length||index>=units.length-1;
-      ui.stop.disabled=!supported||(!speaking&&!paused&&!starting);
+      ui.stop.disabled=(!supported&&!appAudioActive)||(!speaking&&!paused&&!starting&&!appAudioActive);
     }
     if(listeningUI){
       listeningUI.play.textContent=starting?'Starting…':paused?'Resume':speaking&&playlistMode?'Pause':'Play';
@@ -229,6 +241,13 @@
     renderListeningState();
   }
 
+  function resumePausedSpeechQueue(){
+    // SpeechSynthesis can remain globally paused after an interruption even
+    // when this player's own state is idle. New utterances then queue silently.
+    if(!supported||typeof synth.resume!=='function')return;
+    try{if(synth.paused===true)synth.resume()}catch(_){ }
+  }
+
   function deviceIsSpeaking(){
     try{return synth.speaking===true}catch(_){return false}
   }
@@ -247,7 +266,26 @@
   function closeAppAudio(){
     if(appAudioTimer){clearTimeout(appAudioTimer);appAudioTimer=null;}
     const context=appAudioContext;appAudioContext=null;
-    if(context&&context.state!=='closed'){try{context.close()}catch(_){}}
+    if(context&&context.state!=='closed'){try{context.close()}catch(_){ }}
+    if(ui)updateButtons();
+  }
+
+  function primeAudioOutput(){
+    const AudioContextType=window.AudioContext||window.webkitAudioContext;
+    if(typeof AudioContextType!=='function')return false;
+    try{
+      if(!appAudioContext||appAudioContext.state==='closed')appAudioContext=new AudioContextType();
+      const context=appAudioContext;
+      const resumed=context.state==='running'?Promise.resolve():context.resume();
+      if(appAudioTimer)clearTimeout(appAudioTimer);
+      appAudioTimer=setTimeout(closeAppAudio,2500);
+      Promise.resolve(resumed).then(()=>{
+        if(appAudioContext!==context)return;
+        if(appAudioTimer)clearTimeout(appAudioTimer);
+        appAudioTimer=setTimeout(closeAppAudio,1500);
+      }).catch(()=>{});
+      return true;
+    }catch(_){return false}
   }
 
   function stop(reason,cancelSpeech=true){
@@ -272,14 +310,14 @@
     ||(/Macintosh/i.test(navigator.userAgent||'')&&Number(navigator.maxTouchPoints||0)>1);
   function speakCurrent(retry=0,replaceCurrent=false){
     selectionPending=false;
+    if(playlistMode){setStatus('Book Read Aloud cannot start a lesson playlist.');updateButtons();return;}
+    if(!visibleBookView()){stop('Open the Book to use Read Aloud.');return;}
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');updateButtons();return;}
-    // Automatic sentence chaining also needs source validation. A lesson
-    // might rewrite its content while narration is running; continuing the
-    // cached queue would speak outdated, now-hidden or replaced text.
+    // Automatic sentence chaining must stop if the Book replaces or hides its source.
     if(!playlistMode&&units.length&&refreshStaleReading())return;
     if(!units.length)(playlistMode?buildPlaylist():buildUnits());
     const unit=currentUnit();
-    if(!unit){setStatus(playlistMode?'No lesson audio is available.':'No readable text is visible on this screen.');updateButtons();return;}
+    if(!unit){setStatus('No readable text is visible in the Book.');updateButtons();return;}
     const token=++speakToken;
     starting=true;speaking=false;paused=false;
     setStatus(refreshVoice()?'Starting device voice…':(androidSpeech||iosSpeech)?'Starting default device voice…':'Loading device voice…');
@@ -287,11 +325,12 @@
     const beginSpeech=()=>{
       if(token!==speakToken)return;
       // Windows voices may arrive after the initial tap. Never start
-      // single-screen Book/lesson speech when that tab has since hidden.
+      // Book speech must not start after the app tab has hidden.
       if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
       // Must run directly inside the original tap handler on Android, even
       // with an empty voice list. The platform can pick its default voice.
       if(replaceCurrent)cancelDeviceSpeech(true);
+      resumePausedSpeechQueue();
       let utterance;
       try{
         utterance=new SpeechSynthesisUtterance(unit.text);
@@ -419,6 +458,7 @@
   }
 
   function start(){
+    if(!visibleBookView()){stop('Open the Book to use Read Aloud.');return;}
     index=0;buildUnits();
     if(queuedBookStart){
       const wanted=queuedBookStart;
@@ -427,47 +467,57 @@
       else {const beginning=units.findIndex(u=>u.bookChapterId===wanted.chapterId);if(beginning>=0)index=beginning;}
       queuedBookStart=null;
     }
-    if(!units.length){setStatus('No readable text is visible on this screen.');updateButtons();return;}
+    if(!units.length){setStatus('No readable text is visible in the Book.');updateButtons();return;}
     speakCurrent();
   }
 
   function testAppAudio(){
+    if(!visibleBookView()){setStatus('Open the Book to test audio output.');return;}
     const AudioContextType=window.AudioContext||window.webkitAudioContext;
     if(typeof AudioContextType!=='function'){
-      setStatus('Browser app audio is unavailable. Press Listen to test Book speech.');
+      setStatus('Device audio output testing is unavailable in this browser.');
       return;
     }
-    stop('Testing app audio…');
+    stop('Testing phone sound…');
     let context;
     try{
       context=new AudioContextType();
       appAudioContext=context;
-      const first=context.currentTime+0.03;
-      const output=context.createGain();
-      output.gain.setValueAtTime(0.0001,first);
-      output.connect(context.destination);
-      [[880,first],[660,first+0.28]].forEach(([frequency,start])=>{
-        const oscillator=context.createOscillator();
-        oscillator.type='sine';
-        oscillator.frequency.setValueAtTime(frequency,start);
-        oscillator.connect(output);
-        output.gain.setValueAtTime(0.14,start);
-        output.gain.exponentialRampToValueAtTime(0.0001,start+0.18);
-        oscillator.start(start);
-        oscillator.stop(start+0.2);
-      });
-      const resumed=context.state==='suspended'?context.resume():Promise.resolve();
+      appAudioTimer=setTimeout(closeAppAudio,2500);
+      updateButtons();
+      const resumed=context.state==='running'?Promise.resolve():context.resume();
       Promise.resolve(resumed).then(()=>{
         if(appAudioContext!==context)return;
-        setStatus('Two tones sent to browser audio output. If silent, check media volume and selected headphone/Bluetooth output. Press Listen to test Book speech; if speech is silent, check device text-to-speech settings and selected voice.');
+        const first=context.currentTime+0.03;
+        const output=context.createGain();
+        output.gain.setValueAtTime(0.0001,first);
+        output.connect(context.destination);
+        [[880,first],[660,first+0.28]].forEach(([frequency,start])=>{
+          const oscillator=context.createOscillator();
+          oscillator.type='sine';
+          oscillator.frequency.setValueAtTime(frequency,start);
+          oscillator.connect(output);
+          output.gain.setValueAtTime(0.14,start);
+          output.gain.exponentialRampToValueAtTime(0.0001,start+0.18);
+          oscillator.start(start);
+          oscillator.stop(start+0.2);
+        });
+        if(appAudioTimer)clearTimeout(appAudioTimer);
+        appAudioTimer=setTimeout(closeAppAudio,900);
+        setStatus('Two tones sent through browser audio output. If tones are silent, check media volume and headphone/Bluetooth output. If tones sound but Book speech is silent, check device text-to-speech settings and selected voice.');
+        updateButtons();
       }).catch(()=>{
-        if(appAudioContext===context)setStatus('Browser audio could not start. Check media volume and selected headphone/Bluetooth output.');
+        if(appAudioContext===context){
+          setStatus('Browser audio could not start. Check media volume and headphone/Bluetooth output.');
+          closeAppAudio();
+        }
       });
-      appAudioTimer=setTimeout(closeAppAudio,1000);
     }catch(_){
       if(context&&context.state!=='closed'){try{context.close()}catch(__){}}
       appAudioContext=null;
-      setStatus('App audio test could not start. Check browser audio support and selected output.');
+      if(appAudioTimer){clearTimeout(appAudioTimer);appAudioTimer=null;}
+      setStatus('Phone sound check could not start. Check browser audio support and selected output.');
+      updateButtons();
     }
   }
 
@@ -479,6 +529,7 @@
   }
 
   function toggle(){
+    if(!visibleBookView()){setStatus('Open the Book to use Read Aloud.');updateButtons();return;}
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');return;}
     const wasActive=starting||speaking||paused;
     // A stopped Book Listen tap may replace a previous Contents queue with a
@@ -490,7 +541,7 @@
       if(wasActive)return;
       // A stale cued sentence has been replaced with the current source.
       // Use that rebuilt queue immediately instead of traversing it again.
-      if(!units.length){setStatus('No readable text is visible on this screen.');updateButtons();return;}
+      if(!units.length){setStatus('No readable text is visible in the Book.');updateButtons();return;}
       speakCurrent();return;
     }
     if(starting){stop('Stopped');return;}
@@ -502,6 +553,7 @@
       try{synth.pause()}catch(_){stop('Device voice could not pause. Start playback again.');return;}
       paused=true;speaking=false;setStatus('Paused');updateButtons();return;
     }
+    primeAudioOutput();
     if(selectionPending&&!playlistMode){speakCurrent();return;}
     start();
   }
@@ -570,14 +622,15 @@
     ui.bookPrev.disabled=pos<=0;ui.bookNext.disabled=pos<0||pos===bookChapterCache.length-1;
   }
   function startBookFromGesture(){
-    if(!supported)return false;
+    if(!supported||!visibleBookView())return false;
+    primeAudioOutput();
     // Called directly from the Book's real Listen tap, not a synthetic
     // HTMLElement.click(). This is critical for mobile speech permissions.
     start();
     return units.length>0;
   }
   function selectBookChapter(id){
-    if(!units.length||!bookChapterCache.some(c=>c.id===id))return false;
+    if(!visibleBookView()||!units.length||!bookChapterCache.some(c=>c.id===id))return false;
     const at=units.findIndex(u=>u.bookChapterId===id);
     if(at<0)return false;
     selectUnit(at);return true;
@@ -656,7 +709,7 @@
     const style=document.createElement('style');
     style.id='mmReadAloudStyles';
     style.textContent=`
-      .mm-book-audio-chapters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px;border:1px solid #3c5878;border-radius:9px}.mm-book-audio-chapters[hidden]{display:none}.mm-book-audio-chapters label{display:flex;align-items:center;gap:6px;flex:1 1 160px}.mm-book-audio-chapters select{min-width:0;max-width:100%;background:#162b46;color:#f5f9ff;padding:8px;border:1px solid #3c5878;border-radius:7px}.mm-book-audio-chapters button{min-height:40px;min-width:44px;border-radius:8px;background:#162b46;color:#fff;border:1px solid #3c5878}.mm-book-audio-chapters .mm-book-audio-follow{flex:0 0 auto}.mm-read-aloud{position:relative;z-index:9;width:auto;font:14px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;color:#edf5ff}.mm-read-aloud details{border:1px solid #3b5575;border-radius:12px;background:#0c1929;box-shadow:none;overflow:hidden}.mm-read-aloud details:not([open]){width:44px;height:44px;margin:0}.mm-read-aloud summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:8px 10px;cursor:pointer;font-weight:800;background:#12243a}.mm-read-aloud details:not([open]) summary{width:44px;min-width:44px;height:44px;min-height:44px;padding:0;justify-content:center;border-radius:12px}.mm-read-aloud details:not([open]) summary b{font-size:0}.mm-read-aloud details:not([open]) summary b::before{content:'🔊';font-size:18px;line-height:1}.mm-read-aloud details:not([open]) summary span{display:none}.mm-read-aloud details[open]{position:fixed;right:12px;top:72px;z-index:2147482000;width:min(360px,calc(100vw - 24px));box-shadow:0 12px 36px rgba(0,0,0,.35)}.mm-read-aloud summary::-webkit-details-marker{display:none}.mm-read-aloud summary span{color:#a9bdd6;font-size:12px;font-weight:600}.mm-read-panel{padding:12px;display:grid;gap:10px}.mm-read-controls{display:grid;grid-template-columns:1fr 1.35fr 1fr 1fr;gap:7px}.mm-read-controls button,.mm-read-speed{min-height:44px;border:1px solid #3c5878;border-radius:9px;background:#162b46;color:#f5f9ff;padding:8px}.mm-read-controls button:disabled{opacity:.45;cursor:not-allowed}.mm-read-play{background:#55d6be!important;color:#07131b!important;border-color:#55d6be!important;font-weight:850}.mm-read-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#b8c9dd;font-size:12px}.mm-read-meta label{display:flex;align-items:center;gap:6px;color:#b8c9dd}.mm-read-speed{width:auto;min-height:38px;padding:6px 8px;margin:0}.mm-read-status{margin:0;color:#cbd8e7}.mm-read-current{margin:0;padding:9px 10px;border-radius:9px;background:#192f4b;color:#fff;border-left:3px solid #55d6be;max-height:92px;overflow:auto}.mm-read-source-active{outline:3px solid #55d6be!important;outline-offset:4px!important;border-radius:4px}.mm-read-note{margin:0;color:#95abc4;font-size:11px}
+      .mm-book-audio-chapters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px;border:1px solid #3c5878;border-radius:9px}.mm-book-audio-chapters[hidden]{display:none}.mm-book-audio-chapters label{display:flex;align-items:center;gap:6px;flex:1 1 160px}.mm-book-audio-chapters select{min-width:0;max-width:100%;background:#162b46;color:#f5f9ff;padding:8px;border:1px solid #3c5878;border-radius:7px}.mm-book-audio-chapters button{min-height:40px;min-width:44px;border-radius:8px;background:#162b46;color:#fff;border:1px solid #3c5878}.mm-book-audio-chapters .mm-book-audio-follow{flex:0 0 auto}.mm-read-aloud{position:relative;z-index:9;width:auto;font:14px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;color:#edf5ff}.mm-read-aloud details{border:1px solid #3b5575;border-radius:12px;background:#0c1929;box-shadow:none;overflow:hidden}.mm-read-aloud details:not([open]){width:44px;height:44px;margin:0}.mm-read-aloud summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:8px 10px;cursor:pointer;font-weight:800;background:#12243a}.mm-read-aloud details:not([open]) summary{width:44px;min-width:44px;height:44px;min-height:44px;padding:0;justify-content:center;border-radius:12px}.mm-read-aloud details:not([open]) summary b{font-size:0}.mm-read-aloud details:not([open]) summary b::before{content:'🔊';font-size:18px;line-height:1}.mm-read-aloud details:not([open]) summary span{display:none}.mm-read-aloud details[open]{position:fixed;right:12px;top:72px;z-index:2147482000;width:min(360px,calc(100vw - 24px));box-shadow:0 12px 36px rgba(0,0,0,.35)}.mm-read-aloud summary::-webkit-details-marker{display:none}.mm-read-aloud summary span{color:#a9bdd6;font-size:12px;font-weight:600} .mm-read-panel{padding:12px;display:grid;gap:10px}.mm-read-audio-tests{display:grid;grid-template-columns:1fr 1fr;gap:7px}.mm-read-audio-tests button{width:100%;font-size:13px}.mm-read-controls{display:grid;grid-template-columns:1fr 1.35fr 1fr 1fr;gap:7px}.mm-read-controls button,.mm-read-speed{min-height:44px;border:1px solid #3c5878;border-radius:9px;background:#162b46;color:#f5f9ff;padding:8px}.mm-read-controls button:disabled{opacity:.45;cursor:not-allowed}.mm-read-play{background:#55d6be!important;color:#07131b!important;border-color:#55d6be!important;font-weight:850}.mm-read-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#b8c9dd;font-size:12px}.mm-read-meta label{display:flex;align-items:center;gap:6px;color:#b8c9dd}.mm-read-speed{width:auto;min-height:38px;padding:6px 8px;margin:0}.mm-read-status{margin:0;color:#cbd8e7}.mm-read-current{margin:0;padding:9px 10px;border-radius:9px;background:#192f4b;color:#fff;border-left:3px solid #55d6be;max-height:92px;overflow:auto}.mm-read-source-active{outline:3px solid #55d6be!important;outline-offset:4px!important;border-radius:4px}.mm-read-note{margin:0;color:#95abc4;font-size:11px}
       .mm-listening-view{display:grid;gap:16px}.mm-listening-hero{padding:26px;background:radial-gradient(circle at 88% 0%,rgba(85,214,190,.18),transparent 36%),linear-gradient(145deg,#12243a,#0d1b2d)}.mm-listening-hero h2{margin:7px 0 8px;font-size:30px}.mm-listening-hero p{color:#b9cbe0;line-height:1.6;max-width:820px}.mm-listening-player{padding:22px;display:grid;gap:16px}.mm-listening-now{padding:18px;border-radius:14px;background:#0b1728;border:1px solid #304b69}.mm-listening-now h3{margin:4px 0 10px}.mm-listening-current{color:#dce8f6;line-height:1.65;min-height:52px}.mm-listening-controls{display:grid;grid-template-columns:1fr 1fr 1.4fr 1fr 1fr;gap:8px}.mm-listening-controls button{min-height:48px;border-radius:10px;border:1px solid #3b5879;background:#162b46;color:#f5f9ff}.mm-listening-controls .play{background:#55d6be;color:#07131b;font-weight:850;border-color:#55d6be}.mm-listening-options{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.mm-listening-options label{display:flex;align-items:center;gap:8px}.mm-listening-progress{height:8px;background:#21324a;border-radius:999px;overflow:hidden}.mm-listening-progress span{display:block;height:100%;background:linear-gradient(90deg,#55d6be,#69a8ff);width:0}.mm-listening-privacy{padding:14px 16px;border-left:4px solid #55d6be;background:#10263a;border-radius:10px;color:#d5ece7;line-height:1.55}
       @media(max-width:700px){.mm-read-aloud details[open]{top:auto;right:8px;bottom:calc(var(--mm-mobile-nav-clearance,104px) + env(safe-area-inset-bottom) + 10px);width:calc(100vw - 16px)}.mm-read-controls{grid-template-columns:1fr 1fr 1fr 1fr}.mm-listening-controls{grid-template-columns:1fr 1fr}.mm-listening-controls .play{grid-column:1/-1;grid-row:1}.mm-listening-hero{padding:20px}}
       @media(prefers-reduced-motion:reduce){.mm-read-aloud *{scroll-behavior:auto!important}}
@@ -702,15 +755,15 @@
     host.className='mm-read-aloud';host.setAttribute('aria-label','Read Aloud');host.dataset.version=VERSION;
     host.innerHTML=`<details><summary title="Expand or collapse the Read Aloud controls"><b>🔊 Listen</b><span>${supported?'Device voice':'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><button type="button" class="mm-read-speed" data-mm-read="test" aria-label="Test browser audio output with two short tones" title="Send two tones to the browser-selected audio output">Test phone sound</button><div class="mm-read-meta"><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><label>Voice <select class="mm-read-speed" data-mm-read="voice" aria-label="Narration voice"><option value="">Automatic device voice</option></select></label><span data-mm-read="position">0 / 0</span></div><div class="mm-book-audio-chapters" data-mm-book-audio-controls hidden><button type="button" data-mm-book-audio-prev aria-label="Previous Book chapter">⏮</button><label>Book chapter <select data-mm-book-audio-chapter aria-label="Book audio chapter"></select></label><button type="button" data-mm-book-audio-next aria-label="Next Book chapter">⏭</button><label class="mm-book-audio-follow"><input type="checkbox" data-mm-book-audio-follow checked> Follow text</label></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-note">Uses your device/browser speech-synthesis service. MouldMaster does not request microphone access or record audio.</p></div></details>`;
     const actions=document.querySelector('#app .top-actions,.top-actions');(actions||document.body).appendChild(host);
-    ui={host,play:host.querySelector('[data-mm-read="play"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),voice:host.querySelector('[data-mm-read="voice"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),current:host.querySelector('[data-mm-read="current"]'),bookNav:host.querySelector('[data-mm-book-audio-controls]'),bookChapter:host.querySelector('[data-mm-book-audio-chapter]'),bookPrev:host.querySelector('[data-mm-book-audio-prev]'),bookNext:host.querySelector('[data-mm-book-audio-next]'),follow:host.querySelector('[data-mm-book-audio-follow]')};
-    ui.play.addEventListener('click',toggle);host.querySelector('[data-mm-read="test"]').addEventListener('click',testAppAudio);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
+    ui={host,play:host.querySelector('[data-mm-read="play"]'),testAudio:host.querySelector('[data-mm-read="test"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),voice:host.querySelector('[data-mm-read="voice"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),current:host.querySelector('[data-mm-read="current"]'),bookNav:host.querySelector('[data-mm-book-audio-controls]'),bookChapter:host.querySelector('[data-mm-book-audio-chapter]'),bookPrev:host.querySelector('[data-mm-book-audio-prev]'),bookNext:host.querySelector('[data-mm-book-audio-next]'),follow:host.querySelector('[data-mm-book-audio-follow]')};
+    ui.play.addEventListener('click',toggle);ui.testAudio.addEventListener('click',testAppAudio);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
     ui.speed.addEventListener('change',()=>changeSpeed(false));
     ui.voice.addEventListener('change',()=>{preferredVoiceId=ui.voice.value;refreshVoice();if(speaking&&!playlistMode)speakCurrent(0,true);});
     ui.bookChapter.addEventListener('change',()=>selectBookChapter(ui.bookChapter.value));
     ui.bookPrev.addEventListener('click',()=>jumpBookChapter(-1));
     ui.bookNext.addEventListener('click',()=>jumpBookChapter(1));
     host.querySelector('details').addEventListener('toggle',event=>{if(event.target.open&&!starting&&!speaking&&!paused){buildUnits();setStatus(supported?'Ready':'Read Aloud is not available in this browser/device.');updateButtons();}});
-    refreshVoice();if(supported&&!selectedVoice)setStatus('Device voice will load when playback starts.');updateButtons();
+    refreshVoice();if(supported&&!selectedVoice)setStatus('Device voice will load when playback starts.');updateButtons();syncBookScope();
   }
 
   if(supported){try{synth.addEventListener?.('voiceschanged',()=>{if(refreshVoice()&&ui&&!starting&&!speaking&&!paused){setStatus('Ready');updateButtons();}})}catch(_){ }}
@@ -737,8 +790,12 @@
     paused=true;speaking=false;setStatus('Paused while app is hidden');updateButtons();
   });
 
-  const observer=new MutationObserver(()=>{if((speaking||paused)&&activeRoot&&!activeRoot.isConnected&&!playlistMode)stop('Stopped after screen changed');});
-  observer.observe(document.documentElement,{subtree:true,childList:true});
+  const observer=new MutationObserver(()=>{
+    syncBookScope();
+    if((speaking||paused)&&activeRoot&&!activeRoot.isConnected&&!playlistMode)stop('Stopped after screen changed');
+  });
+  observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,
+    attributeFilter:['class','style','hidden','aria-hidden']});
 
   window.MMReadAloud={version:VERSION,supported,stop:()=>stop('Stopped'),refresh:()=>buildUnits(),
     queueBookStart:({chapterId,unitIndex=0}={})=>{if(!/^r(?:0[1-9]|1[0-9]|20)$/.test(String(chapterId||'')))return false;queuedBookStart={chapterId,unitIndex:Math.max(0,Math.min(20000,Math.floor(Number(unitIndex)||0)))};return true;},

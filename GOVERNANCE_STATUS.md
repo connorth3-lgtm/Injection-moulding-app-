@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.21.1`**.
+Current governed web candidate: **`2026.10.21.2`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: Exact-source candidate for release 2026.10.21.1, source 82ba7b14909b89191cd9bc15f25440a9728f475f, retained from Pre-merge Public Candidate run 39546516253 (success), artifact 12320969604, fingerprint sha256:5e45262087ffb404469ed82c16ba76e6d1cb97b5356e568a030f01233d031484. Exact-source static and contract QA passed. This is software-controlled evidence only; human, physical-device and production authorization remain separate. |
-| Behavioral / browser | **pass** | PASS: Book-only Read Aloud QA, Mobile Browser QA and Question Quality 50-Pass passed for release 2026.10.21.1, source 82ba7b14909b89191cd9bc15f25440a9728f475f. Android delayed startup, sentence handoff, natural completion and explicit Stop regressions passed. Browser automation cannot confirm audible output through physical headphones; real-device and human review remain HOLD. |
+| Static / contract | **pass** | Exact retained public runtime for release 2026.10.21.2 is source fdf41db87889509ff8f5c6d413abbe22ef13da80, fingerprint sha256:6d7db4fc14495110cdbd5478f692f132d24d0069b7371b2fcfa2cd5c39fdbb4e; successful producer run 39561155553 owns retained artifact 12327523532. Automated contract checks confirm the source and artifact identity; no human/device or production approval is implied. |
+| Behavioral / browser | **pass** | For release 2026.10.21.2, exact-source Read Aloud QA 39561155743, Mobile Browser QA 39561155654, and Question Quality 50-Pass 39561155711 passed on source fdf41db87889509ff8f5c6d413abbe22ef13da80. Book-only speech and browser output priming are automated software evidence; audible physical headphone/Bluetooth routing remains unverified and all external human/device review remains HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

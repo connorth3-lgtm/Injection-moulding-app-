@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.10.21.1",
+  "release": "2026.10.21.2",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "82ba7b14909b89191cd9bc15f25440a9728f475f",
-  "scope": "Release 2026.10.21.1 keeps Read Aloud on the Book only and removes the lesson Listening route, playlist and public lesson playback API. The exact-source software candidate is retained and the Book Read Aloud, Mobile Browser and Question Quality 50-Pass checks passed. Physical headphone output remains unconfirmed; all seven independent external validation workstreams remain HOLD.",
-  "approvalBoundary": "The retained 2026.10.21.1 candidate 82ba7b14909b89191cd9bc15f25440a9728f475f and automated software QA pass do not confirm audible physical headphone output or real-device behavior. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": "fdf41db87889509ff8f5c6d413abbe22ef13da80",
+  "scope": "Release 2026.10.21.2 keeps Read Aloud strictly on the Book, primes browser speech output on the original Book Listen tap, and recovers a paused speech queue. The exact-source software candidate is retained and the Read Aloud, Mobile Browser and Question Quality 50-Pass checks passed. Physical headphone output remains unconfirmed; all seven independent external validation workstreams remain HOLD.",
+  "approvalBoundary": "The retained 2026.10.21.2 candidate fdf41db87889509ff8f5c6d413abbe22ef13da80 and automated software QA confirm only the exact public runtime and browser speech behavior. They do not confirm audible output through physical headphones or real-device routing. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -45,8 +45,8 @@
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
   "lastReviewedDate": "2026-10-21",
   "previousVerifiedCandidate": {
-    "release": "2026.10.20.5",
-    "sourceSha": "2b757e45dcf9fda8b3d6b06cb8ee681714cbd1ad",
-    "runtimeFingerprint": "sha256:823228e414f98d0e74a3d2e1b3bb491d1d2a3f61d28339bedf40e2b13bb2f456"
+    "release": "2026.10.21.1",
+    "sourceSha": "82ba7b14909b89191cd9bc15f25440a9728f475f",
+    "runtimeFingerprint": "sha256:5e45262087ffb404469ed82c16ba76e6d1cb97b5356e568a030f01233d031484"
   }
 }

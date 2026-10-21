@@ -1,9 +1,9 @@
 # MouldMaster Academy — private preview tester quick start
 
-> **Tester publication HOLD:** This is a draft handoff for release candidate 2026.10.21.1; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
+> **Tester publication HOLD:** This is a draft handoff for release candidate 2026.10.21.2; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
 
 
-**Non-production learning preview · web release candidate 2026.10.21.1 · not a machine-control tool**
+**Non-production learning preview · web release candidate 2026.10.21.2 · not a machine-control tool**
 
 Thanks for helping test MouldMaster. You are reviewing the *learning experience*, not approving machine settings, certifications, qualifications, professional competence, or production procedures. The preview is not an externally validated public release.
 
@@ -27,7 +27,7 @@ Look for the persistent **“Non-production preview”** notice. If it is absent
 
 1. **First impression:** Open the preview. Is it clear what you can do? Can you create/select a local learner profile without entering personal information?
 2. **Learn:** Open a lesson, continue it, find the objective, and return to the Home view. Check that a beginner can understand the explanation and the “what to do next” cue.
-3. **Book:** Find a reference relevant to a familiar defect or process question. Does it make the limits of generic advice understandable? Read Aloud is Book-only: tap **Test phone sound** and then **Listen** to test headphones. Note tone and speech audibility separately; the app cannot detect what you hear.
+3. **Book:** Find a reference relevant to a familiar defect or process question. Does it make the limits of generic advice understandable? Read Aloud is Book-only: tap **Test phone sound** to check browser output, then **Test Book voice** and **Listen** to check speech. If tones are silent, check media volume and headphone/Bluetooth output; if tones work but speech does not, check device text-to-speech settings and selected voice. The app cannot detect what you hear.
 4. **Practice:** Try a diagnostic/scenario question. Check the question, answer feedback and explanation; do not judge quality solely by whether you guessed correctly.
 5. **Mission Control:** Start a fictional mission, note evidence and try advancing stages. If you create two local learners, switch between them and check that a mission from learner A never appears for learner B.
 6. **Your device:** Check text size, navigation, keyboard/touch targets and readability. If you use a screen reader, describe any difficulty—this is feedback, **not** formal assistive-technology validation.
