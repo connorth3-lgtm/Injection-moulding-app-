@@ -7,7 +7,7 @@
 if(window.MM_LEARNER_UI_POLISH)return;
 const VERSION='2026.10.20.7';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
-const STYLE_REV='2026.10.19.1-mobile-material-book-fixes';
+const STYLE_REV='2026.10.21.1-read-aloud-lesson-entry';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;

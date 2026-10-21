@@ -1797,21 +1797,24 @@ html.mm-reference-photo-ready .mm-reference-photo>.mm-reference-picture{
   }
 }
 
-/* Audio controls are a Book reader feature, not global app navigation.
+/* Audio controls belong on lesson and Book screens, not global app navigation.
    Keep the native speech engine and Book's 'Listen to verified Book' action.
-   Hide the old header reader across Home, Learn, Materials, Practice, More,
-   and other learner views, then reveal only while Book is the active view.
-   No display:none on the Book reader itself; preserve its screen-reader text.
+   Hide the header reader across Home, Materials, Practice, More,
+   and other learner views; reveal it when a lesson or Book is active.
+   Keep lesson and Book text available to assistive technology.
    CSS :has() is supported by the Chrome/WebKit browser QA targets. */
 body .top-actions > .mm-read-aloud{display:none!important}
+body:has(#lesson:not(.hidden)) .top-actions > .mm-read-aloud,
 body:has(#mmBookView:not(.hidden)) .top-actions > .mm-read-aloud{display:block!important}
 /* The Book's single audio trigger remains a full touch target on mobile.
    Legacy 40px compact-header constraints must not shrink it below 44px. */
+body:has(#lesson:not(.hidden)) #app .top-actions > .mm-read-aloud details:not([open]),
 body:has(#mmBookView:not(.hidden)) #app .top-actions > .mm-read-aloud details:not([open]){
   box-sizing:border-box!important;
   width:44px!important;min-width:44px!important;
   height:44px!important;min-height:44px!important;
 }
+body:has(#lesson:not(.hidden)) #app .top-actions > .mm-read-aloud details:not([open]) > summary,
 body:has(#mmBookView:not(.hidden)) #app .top-actions > .mm-read-aloud details:not([open]) > summary{
   box-sizing:border-box!important;
   width:44px!important;min-width:44px!important;
