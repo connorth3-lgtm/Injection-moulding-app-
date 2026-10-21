@@ -175,8 +175,8 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load()});
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.21.1');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.21.1');
+  await expect(host).toHaveAttribute('data-version','2026.10.21.2');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.21.2');
   await expect(page.locator('#nav [data-mm-listening-tab]')).toHaveCount(0);
   await expect(page.locator('#mmListeningView')).toHaveCount(0);
   expect(await page.evaluate(()=>typeof window.MMReadAloud?.openListening)).toBe('undefined');
@@ -280,6 +280,57 @@ test('Book Listen resumes a globally paused speech queue before speaking', async
   });
 });
 
+test('Book Listen primes browser audio output on the same tap before speech', async ({page}) => {
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book audio route fixture.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    const events=[];
+    class FakeContext{constructor(){this.state='suspended';this.currentTime=0;this.destination={};}
+      resume(){this.state='running';events.push('audio-resume');return Promise.resolve();}
+      close(){this.state='closed';return Promise.resolve();}}
+    class FakeUtterance{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={speaking:false,paused:false,pending:false,getVoices(){return[];},
+      speak(utterance){events.push('speech-speak');this.last=utterance;},cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__mmAudioPrime={events,synth};
+    Object.defineProperty(window,'AudioContext',{configurable:true,value:FakeContext});
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:FakeUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const host=page.locator('.mm-read-aloud');
+  await host.locator('details').evaluate(el=>{el.open=true;});
+  await host.locator('[data-mm-read="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmAudioPrime.events.includes('speech-speak'))).toBeTruthy();
+  expect(await page.evaluate(()=>window.__mmAudioPrime.events.slice(0,2))).toEqual(['audio-resume','speech-speak']);
+});
+
+test('Book exposes an independent phone sound check through browser audio output', async ({page}) => {
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book output check fixture.</p></main></body></html>');
+  await page.evaluate(()=>{
+    const events=[];
+    class FakeContext{constructor(){this.state='suspended';this.currentTime=1;this.destination={};
+      this.gain={setValueAtTime(){},exponentialRampToValueAtTime(){}};
+    }
+      createGain(){return{gain:this.gain,connect(){}};}
+      createOscillator(){const item={type:'',frequency:{setValueAtTime(value){events.push({type:'tone',value});}},connect(){},start(){},stop(){}};return item;}
+      resume(){this.state='running';events.push({type:'resume'});return Promise.resolve();}
+      close(){this.state='closed';return Promise.resolve();}}
+    class FakeUtterance{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={speaks:0,getVoices(){return[];},speak(){this.speaks++;},cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__mmPhoneSound={events,synth};
+    Object.defineProperty(window,'AudioContext',{configurable:true,value:FakeContext});
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:FakeUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const host=page.locator('.mm-read-aloud');
+  await host.locator('details').evaluate(el=>{el.open=true;});
+  await host.locator('[data-mm-read="test-audio"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmPhoneSound.events.filter(event=>event.type==='tone').length)).toBe(2);
+  await expect(host.locator('.mm-read-status')).toContainText('Two tones sent through browser audio output');
+  expect(await page.evaluate(()=>window.__mmPhoneSound.synth.speaks)).toBe(0);
+});
+
 test('Book voice test uses the same device speech service and resumes a paused queue', async ({page}) => {
   await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book audio test fixture.</p></main></body></html>');
   await page.evaluate(()=>{
@@ -324,7 +375,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.supported===true)).toBeTruthy();
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.21.1');
+  await expect(host).toHaveAttribute('data-version','2026.10.21.2');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {

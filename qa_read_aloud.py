@@ -101,9 +101,10 @@ need("createListeningTab();" not in runtime, "lesson Listening navigation must n
 need("startPlaylist,openListening" not in runtime, "lesson playlist/open APIs must not be exported")
 need("currentLessonId:" not in runtime, "lesson-specific Read Aloud API must not be exported")
 need("data-mm-listening-tab" not in runtime, "lesson Listening tab marker must not be installed")
-for marker in ("function resumePausedSpeechQueue()", "function testBookVoice()", "resumePausedSpeechQueue();", "utterance.volume=1"):
-    need(marker in runtime, f"Book voice output recovery missing: {marker}")
+for marker in ("function resumePausedSpeechQueue()", "function primeAudioOutput()", "function testAppAudio()", "function testBookVoice()", "resumePausedSpeechQueue();", "utterance.volume=1"):
+    need(marker in runtime, f"Book voice/output recovery missing: {marker}")
 need("Test Book voice" in runtime and "This is a test of Book audio." in runtime, "Book speech test control missing")
+need("Test phone sound" in runtime and 'data-mm-read="test-audio"' in runtime, "separate device audio output test control missing")
 # Book audio is chapter-aware, learner-scoped cursor events are emitted without
 # storage inside the voice engine, and presentation modes remain source-governed.
 for marker in (

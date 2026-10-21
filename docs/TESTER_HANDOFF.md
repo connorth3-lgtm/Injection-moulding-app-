@@ -1,9 +1,9 @@
 # MouldMaster — controlled tester handoff
 
-> **Tester publication HOLD:** This is a draft handoff for release candidate 2026.10.21.1; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
+> **Tester publication HOLD:** This is a draft handoff for release candidate 2026.10.21.2; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
 
 
-**Release candidate:** `2026.10.21.1`
+**Release candidate:** `2026.10.21.2`
 **Status:** HOLD, **not cleared to circulate** until the protected-main hosted preview and human checks below are verified.
 
 This is an owner-facing rollout playbook for a **small, voluntary, non-production usability cohort**. It is **not** production-root launch approval, physical-device authorization, formal real-AT testing, a learner-outcomes study, NZQA/provider approval or machine-control authorisation.
@@ -40,7 +40,7 @@ Use a fresh personal browser profile (no production/customer information). At le
 - [ ] A fictional mission and its evidence survive reload for the same local learner; switching A→B→A never reveals the wrong learner's title, evidence or progress.
 - [ ] The Support and Privacy pages load from `/preview/support.html` and `/preview/privacy.html`; the safe diagnostic copy and learner-problem report link are discoverable.
 - [ ] Text scaling and mobile navigation do not make core actions inaccessible; capture only *non-sensitive* reproduction descriptions.
-- [ ] In the Book only, tap **Test phone sound** and then **Listen** with the intended headphones connected. Record tone and speech audibility separately; a browser check does not confirm physical output. Read Aloud is not provided on lessons.
+- [ ] In the Book only, tap **Test phone sound**, then **Test Book voice** and **Listen** with the intended headphones connected. Record tone and speech audibility separately; a browser check does not confirm physical output. Read Aloud is not provided on lessons.
 - [ ] If inviting installed-PWA testers, test first online load, install (where supported), offline reopening and update recovery with disposable local data. Do not claim formal physical-device validation from this informal check.
 - [ ] Issue template and a **private fallback reply route to the inviter** are workable, including for people without GitHub accounts.
 - [ ] The contact/invitation wording explicitly forbids real production data, private backups and training-as-production usage.
