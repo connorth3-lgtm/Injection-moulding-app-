@@ -1,12 +1,12 @@
 # MouldMaster 2026.10.21.1 — Book-only Read Aloud and headphone audio diagnostic
 
-**STATUS: SUCCESSOR RELEASE STAGED / EXACT-SOURCE CANDIDATE PENDING / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** This release keeps Read Aloud on the Book, removes the lesson Listening route, and adds a two-tone browser audio check beside the Book voice test. A current candidate has not yet been produced or verified. Audible output through physical headphones remains unconfirmed.
+**STATUS: EXACT-SOURCE TECHNICAL CANDIDATE RETAINED / SOFTWARE QA PASS / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** This release keeps Read Aloud on the Book only, removes the lesson Listening route, playlist and public lesson playback API, and provides a two-tone browser output check. Browser checks cannot confirm audible output through physical headphones.
 
 ## Candidate status and technical evidence
 
-No 2026.10.21.1 exact-source candidate artifact is retained yet. The prior 2026.10.20.5 artifact is historical evidence only; it does not establish successor-release software QA, audible output, real-device behavior or human review. The candidate workflow must produce an artifact for the successor source, and the exact-head software checks must pass before technical automation can be marked PASS.
+The exact-source 2026.10.21.1 candidate is retained from [Pre-merge Public Candidate run 39546516253](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39546516253). Artifact **12320969604** (physical-pwa-candidate-82ba7b14909b89191cd9bc15f25440a9728f475f) has digest sha256:6731a7888bd71d3e01331d3970fbfc6b02620903c72677f5a92098ed6f2d39da, expires 2027-01-19T04:53:39Z, and public-runtime fingerprint sha256:5e45262087ffb404469ed82c16ba76e6d1cb97b5356e568a030f01233d031484. Exact-source static/contract, Read Aloud, Mobile Browser QA and Question Quality 50-Pass checks passed. These automated checks cannot confirm audible output through physical headphones, real-device behavior or human review.
 
-No tester invitation is authorized while the exact-source candidate is pending. The app's two-tone check can send audio to the browser-selected output, but it cannot detect whether a learner hears it.
+No tester invitation is authorized from this technical candidate. The Book player's **Test phone sound** control sends two tones to the browser-selected output; **Listen** tests Book speech through the device text-to-speech service. MouldMaster cannot detect whether a learner hears either. Real-device headphone output remains pending.
 
 ## Seven independent release-specific HOLD packets
 

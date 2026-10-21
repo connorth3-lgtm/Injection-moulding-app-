@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.10.21.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
-  "scope": "Release 2026.10.21.1 stages a Book-only Read Aloud fix and two-tone browser audio diagnostic. The successor exact-source candidate and its automated QA are pending; no physical headphone output is confirmed. All seven independent external validation workstreams remain HOLD.",
-  "approvalBoundary": "Release 2026.10.21.1 has no retained exact-source artifact or passing successor-candidate software QA yet. The previous 2026.10.20.5 candidate is historical evidence only; no human, physical-device, audible headphone, SME, learner-outcome, Windows signing or NZQA/provider validation is implied. Production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": "82ba7b14909b89191cd9bc15f25440a9728f475f",
+  "scope": "Release 2026.10.21.1 keeps Read Aloud on the Book only and removes the lesson Listening route, playlist and public lesson playback API. The exact-source software candidate is retained and the Book Read Aloud, Mobile Browser and Question Quality 50-Pass checks passed. Physical headphone output remains unconfirmed; all seven independent external validation workstreams remain HOLD.",
+  "approvalBoundary": "The retained 2026.10.21.1 candidate 82ba7b14909b89191cd9bc15f25440a9728f475f and automated software QA pass do not confirm audible physical headphone output or real-device behavior. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,

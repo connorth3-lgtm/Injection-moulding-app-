@@ -4,8 +4,8 @@
   "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.21.1.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "fail",
-    "claim": "Release 2026.10.21.1 is staged without a retained exact-source candidate. Automated software QA must pass against the successor candidate before this status can pass; all seven independent human/device/provider streams remain HOLD."
+    "status": "pass",
+    "claim": "Release 2026.10.21.1 exact-source technical candidate source 82ba7b14909b89191cd9bc15f25440a9728f475f was produced by Pre-merge Public Candidate run 39546516253 (success), retaining artifact 12320969604 with runtime fingerprint sha256:5e45262087ffb404469ed82c16ba76e6d1cb97b5356e568a030f01233d031484. Read Aloud QA, Mobile Browser QA and Question Quality 50-Pass passed for the exact-source candidate. This is software-controlled evidence only; all seven independent human/device/provider streams remain HOLD, and physical headphone audibility is unconfirmed."
   },
   "governance": {
     "status": "enforced",
@@ -28,7 +28,11 @@
       "sourceSha": "2b757e45dcf9fda8b3d6b06cb8ee681714cbd1ad",
       "runtimeFingerprint": "sha256:823228e414f98d0e74a3d2e1b3bb491d1d2a3f61d28339bedf40e2b13bb2f456"
     },
-    "candidate": null
+    "candidate": {
+      "release": "2026.10.21.1",
+      "sourceSha": "82ba7b14909b89191cd9bc15f25440a9728f475f",
+      "runtimeFingerprint": "sha256:5e45262087ffb404469ed82c16ba76e6d1cb97b5356e568a030f01233d031484"
+    }
   },
   "pwaPhysicalDevices": {
     "status": "hold",
@@ -46,7 +50,17 @@
       "artifactDigest": "sha256:622f40906dd99d40f100800786095cf336314f516d1b9f80e5bbfa94aa77a9d2",
       "artifactExpiresAt": "2027-01-18T19:25:11Z"
     },
-    "currentCandidate": null
+    "currentCandidate": {
+      "release": "2026.10.21.1",
+      "sourceSha": "82ba7b14909b89191cd9bc15f25440a9728f475f",
+      "runtimeFingerprint": "sha256:5e45262087ffb404469ed82c16ba76e6d1cb97b5356e568a030f01233d031484",
+      "candidateRunId": 39546516253,
+      "candidateWorkflow": "Pre-merge Public Candidate",
+      "artifactId": 12320969604,
+      "artifactName": "physical-pwa-candidate-82ba7b14909b89191cd9bc15f25440a9728f475f",
+      "artifactDigest": "sha256:6731a7888bd71d3e01331d3970fbfc6b02620903c72677f5a92098ed6f2d39da",
+      "artifactExpiresAt": "2027-01-19T04:53:39Z"
+    }
   },
   "windowsDistribution": {
     "status": "hold",
@@ -109,9 +123,23 @@
       "sourceSha": "2b757e45dcf9fda8b3d6b06cb8ee681714cbd1ad",
       "runtimeFingerprint": "sha256:823228e414f98d0e74a3d2e1b3bb491d1d2a3f61d28339bedf40e2b13bb2f456"
     },
-    "candidate": null
+    "candidate": {
+      "release": "2026.10.21.1",
+      "sourceSha": "82ba7b14909b89191cd9bc15f25440a9728f475f",
+      "runtimeFingerprint": "sha256:5e45262087ffb404469ed82c16ba76e6d1cb97b5356e568a030f01233d031484"
+    }
   },
-  "webCandidate": null,
+  "webCandidate": {
+    "release": "2026.10.21.1",
+    "sourceSha": "82ba7b14909b89191cd9bc15f25440a9728f475f",
+    "runtimeFingerprint": "sha256:5e45262087ffb404469ed82c16ba76e6d1cb97b5356e568a030f01233d031484",
+    "candidateRunId": 39546516253,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 12320969604,
+    "artifactName": "physical-pwa-candidate-82ba7b14909b89191cd9bc15f25440a9728f475f",
+    "artifactDigest": "sha256:6731a7888bd71d3e01331d3970fbfc6b02620903c72677f5a92098ed6f2d39da",
+    "artifactExpiresAt": "2027-01-19T04:53:39Z"
+  },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
     "evidenceAuthority": "retained-exact-head-artifact",
@@ -128,7 +156,7 @@
     "artifactDigest": "sha256:622f40906dd99d40f100800786095cf336314f516d1b9f80e5bbfa94aa77a9d2",
     "artifactExpiresAt": "2027-01-18T19:25:11Z"
   },
-  "candidateStatus": "HOLD — release 2026.10.21.1 candidate pending; no current candidate artifact or exact-head software pass is recorded; all seven independent external review streams remain HOLD.",
+  "candidateStatus": "PASS — exact-source technical candidate 82ba7b14909b89191cd9bc15f25440a9728f475f retained with producer run 39546516253, artifact 12320969604 and fingerprint sha256:5e45262087ffb404469ed82c16ba76e6d1cb97b5356e568a030f01233d031484; all seven independent external review streams remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.10.20.3",
     "sourceSha": "9ea761d15597f15631565cf514e46dc163c9f2c5",
