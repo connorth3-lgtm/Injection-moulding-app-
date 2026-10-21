@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.10.20.5';
+const CACHE_VERSION='2026.10.21.1';
 const CACHE_REVISION='read-aloud-android-late-start-r1';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
