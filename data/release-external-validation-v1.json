@@ -4,8 +4,8 @@
   "validationIndex": "qa/EXTERNAL_VALIDATION_2026.10.21.2.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "fail",
-    "claim": "New candidate metadata staged, but producer success and exact-head quality remain unverified. Independent validation is HOLD."
+    "status": "pass",
+    "claim": "Exact-source public runtime fdf41db87889509ff8f5c6d413abbe22ef13da80 passed producer run 39561155553, Read Aloud QA 39561155743, Mobile Browser QA 39561155654 and Question Quality 50-Pass 39561155711. External human/device review remains HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:6731a7888bd71d3e01331d3970fbfc6b02620903c72677f5a92098ed6f2d39da",
     "artifactExpiresAt": "2027-01-19T04:53:39Z"
   },
-  "candidateStatus": "HOLD \u2014 new candidate producer success NOT independently verified; seven external streams remain HOLD.",
+  "candidateStatus": "PASS \u2014 exact-source technical candidate fdf41db87889509ff8f5c6d413abbe22ef13da80 retained with producer run 39561155553, artifact 12327523532 and fingerprint sha256:6d7db4fc14495110cdbd5478f692f132d24d0069b7371b2fcfa2cd5c39fdbb4e; all seven independent external review streams remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.10.20.3",
     "sourceSha": "9ea761d15597f15631565cf514e46dc163c9f2c5",

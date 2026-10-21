@@ -1,12 +1,17 @@
-# MouldMaster 2026.10.21.2 — Book-only Read Aloud and headphone audio diagnostic
+# MouldMaster 2026.10.21.2 — Book-only Read Aloud and audio output diagnostic
 
-**STATUS: CANDIDATE PENDING / SOFTWARE QA IN PROGRESS / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** This release keeps Read Aloud on the Book only, removes the lesson Listening route, playlist and public lesson playback API, and provides a two-tone browser output check. Browser checks cannot confirm audible output through physical headphones.
+**STATUS: EXACT-SOURCE SOFTWARE CANDIDATE VERIFIED / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** Read Aloud is available in the Book only; lessons, exams and generic page text are not narration sources. The existing **Test phone sound** control sends two short tones to check browser audio output. Use **Book Listen** to check speech. Browser tests cannot confirm audible output through physical headphones or Bluetooth.
 
-## Candidate status and technical evidence
+## Retained exact-source technical candidate
 
-The exact-source 2026.10.21.2 candidate artifact is pending. The pre-merge candidate workflow will record its source, runtime fingerprint and artifact before software verification; all seven external reviews remain HOLD.
+- Source SHA: `fdf41db87889509ff8f5c6d413abbe22ef13da80`
+- Public-runtime fingerprint: `sha256:6d7db4fc14495110cdbd5478f692f132d24d0069b7371b2fcfa2cd5c39fdbb4e`
+- Producer: [Pre-merge Public Candidate run 39561155553](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39561155553)
+- Retained artifact: `12327523532`, digest `sha256:b729728047b4dd95bbf335a765b9dfbf6de81b18b224a89b24b43baa7a265a25`, expires `2027-01-19T07:19:19Z`
 
-No tester invitation is authorized from this technical candidate. The Book player's **Test Book voice** control speaks a short sample through the same device speech service used by Listen; **Listen** tests Book speech through the device text-to-speech service. MouldMaster cannot detect whether a learner hears either. Real-device headphone output remains pending.
+The exact-source [Read Aloud QA 39561155743](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39561155743), [Mobile Browser QA 39561155654](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39561155654), and [Question Quality 50-Pass 39561155711](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39561155711) passed. These checks confirm Book-only speech behavior and browser audio calls. They do not verify that a person can hear audio on physical headphones.
+
+No tester invitation is authorized from this technical candidate. All seven external reviews remain HOLD.
 
 ## Seven independent release-specific HOLD packets
 
