@@ -95,8 +95,13 @@ for marker in (
     "selectionPending=units.length>0;",
     "Tap Listen to retry this sentence.",
     "ui.current.textContent=unit.text;ui.current.hidden=false;",
+    "function reportBookPosition(unit)",
+    "reportBookPosition(unit);",
+    "Some Android engines can emit audible output without onstart.",
 ):
     need(marker in runtime, f"speech-provider failure recovery missing: {marker}")
+need(runtime.count("reportBookPosition(unit);") >= 2,
+     "Book position must be saved both when speech starts and when a provider fails without onstart")
 
 # Only the visible Book may supply speech. Lessons and generic page content
 # are not fallback sources, and the Book queue keeps the governed chapter bound.
@@ -127,8 +132,8 @@ need("Test Book voice" not in runtime and "This is a test of Book audio." not in
 browser = (ROOT / "qa/read-aloud.spec.js").read_text(encoding="utf-8")
 need("Book-only scope keeps lesson text silent" in browser and "startBookFromGesture()" in browser,
      "browser regression must prove that lessons cannot be narrated")
-need("Android synthesis failure after speech starts explains recovery and retries the same Book sentence" in browser,
-     "browser regression must cover a partial-start Android synthesis failure and same-sentence retry")
+need("Android synthesis failure without onstart saves and retries the same Book sentence" in browser,
+     "browser regression must cover an Android synthesis failure without onstart, retain its cursor and retry the same sentence")
 # Book audio is chapter-aware, learner-scoped cursor events are emitted without
 # storage inside the voice engine, and presentation modes remain source-governed.
 for marker in (

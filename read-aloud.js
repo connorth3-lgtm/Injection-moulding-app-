@@ -158,6 +158,9 @@
 
   function currentUnit(){return units[index]||null}
   function currentLessonUnit(){const unit=currentUnit();return unit?.lessonId==null?null:unit}
+  function reportBookPosition(unit){
+    if(unit?.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-position',{detail:{chapterId:unit.bookChapterId,unitIndex:unit.bookSentenceIndex}}));
+  }
 
   function setStatus(text){
     if(ui){ui.status.textContent=text;ui.position.textContent=units.length?`${Math.min(index+1,units.length)} / ${units.length}`:'0 / 0';}
@@ -354,7 +357,7 @@
         if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
         clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
         highlight(unit);
-        if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-position',{detail:{chapterId:unit.bookChapterId,unitIndex:unit.bookSentenceIndex}}));
+        reportBookPosition(unit);
         setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();
       };
       startTimer=setTimeout(()=>{
@@ -424,6 +427,9 @@
         }else{
           message=`Speech playback could not continue${code?`: ${code}`:''}. Tap Listen to retry this sentence.`;
         }
+        // Some Android engines can emit audible output without onstart. Save
+        // the failed Book sentence even when the provider never confirmed start.
+        reportBookPosition(unit);
         starting=false;
         stop(message);
         selectionPending=units.length>0;

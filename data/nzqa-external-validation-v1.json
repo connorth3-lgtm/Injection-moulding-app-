@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.21.2",
+  "release": "2026.10.21.3",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.21.2.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.21.3.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
   "candidate": {
-    "release": "2026.10.21.2",
-    "sourceSha": "fdf41db87889509ff8f5c6d413abbe22ef13da80",
-    "runtimeFingerprint": "sha256:6d7db4fc14495110cdbd5478f692f132d24d0069b7371b2fcfa2cd5c39fdbb4e"
+    "release": "2026.10.21.3",
+    "sourceSha": "cc3700bfa90348305cbf390babb8cf8f3d715493",
+    "runtimeFingerprint": "sha256:e126eeb5a329cad4a21cb604f3ef532116c57de9bca54aaae1359baac6306c08"
   },
-  "boundary": "Release 2026.10.21.2 technical candidate fdf41db87889509ff8f5c6d413abbe22ef13da80 does not establish any of NZQA/provider G1\u2013G8 external gates or assessment/accreditation authority.",
+  "boundary": "Release 2026.10.21.3 technical candidate cc3700bfa90348305cbf390babb8cf8f3d715493 does not establish any of NZQA/provider G1\u2013G8 external gates or assessment/accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",

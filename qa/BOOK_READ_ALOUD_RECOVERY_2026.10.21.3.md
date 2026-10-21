@@ -11,11 +11,11 @@ The Book path already selects the visible reader, starts device speech from the 
 
 ## Change in this candidate
 
-- A speech error now leaves the failed sentence selected and visible, with its position retained. The next Listen tap retries that sentence instead of resetting the Book to the first sentence.
+- A speech error now leaves the failed sentence selected and visible, saves its Book cursor even when Android omits `onstart`, and retries that sentence on the next Listen tap instead of resetting to the first sentence.
 - Android `synthesis-failed` now explains how to retry and how to open Text-to-speech output settings to choose an engine and download/select a voice.
 - Unavailable voice/language errors suggest Automatic device voice or another installed voice.
 - The player does not automatically replay a partial utterance, which could repeat words the learner already heard.
-- A regression test simulates a successful first sentence, then a voice that starts the second sentence and fails; it asserts the failure guidance, cursor position, and same-sentence retry.
+- A regression test simulates a successful first sentence, then a voice that emits a failure for the second sentence without `onstart`; it asserts the failure guidance, saved cursor, and same-sentence retry.
 
 Book content, the 20 chapter boundaries, the 46-module source edition, worked examples, streamlined edition, source disclosures, learner scoping, and privacy boundary are unchanged. No remote voice service, learner audio recording, or content upload was added.
 

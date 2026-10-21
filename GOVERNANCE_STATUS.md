@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Exact retained public runtime for release 2026.10.21.2 is source fdf41db87889509ff8f5c6d413abbe22ef13da80, fingerprint sha256:6d7db4fc14495110cdbd5478f692f132d24d0069b7371b2fcfa2cd5c39fdbb4e; successful producer run 39561155553 owns retained artifact 12327523532. Automated contract checks confirm the source and artifact identity; no human/device or production approval is implied. |
-| Behavioral / browser | **pass** | For release 2026.10.21.2, exact-source Read Aloud QA 39561155743, Mobile Browser QA 39561155654, and Question Quality 50-Pass 39561155711 passed on source fdf41db87889509ff8f5c6d413abbe22ef13da80. Book-only speech and browser output priming are automated software evidence; audible physical headphone/Bluetooth routing remains unverified and all external human/device review remains HOLD. |
+| Static / contract | **fail** | HOLD: release 2026.10.21.3 source cc3700bfa90348305cbf390babb8cf8f3d715493 artifact 12364230865 and producer 39638785407 are staged as technical metadata only; producer success and quality are NOT independently verified. No source, human, device or production approval is implied. |
+| Behavioral / browser | **fail** | HOLD: browser and question gates for release 2026.10.21.3 source cc3700bfa90348305cbf390babb8cf8f3d715493 must be independently verified on the staged candidate; prior green workflows do not transfer to a different exact source. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

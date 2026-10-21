@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.10.21.2",
+  "release": "2026.10.21.3",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "fdf41db87889509ff8f5c6d413abbe22ef13da80",
-  "scope": "Release 2026.10.21.2 keeps Read Aloud strictly on the Book, primes browser speech output on the original Book Listen tap, and recovers a paused speech queue. The exact-source software candidate is retained and the Read Aloud, Mobile Browser and Question Quality 50-Pass checks passed. Physical headphone output remains unconfirmed; all seven independent external validation workstreams remain HOLD.",
-  "approvalBoundary": "The retained 2026.10.21.2 candidate fdf41db87889509ff8f5c6d413abbe22ef13da80 and automated software QA confirm only the exact public runtime and browser speech behavior. They do not confirm audible output through physical headphones or real-device routing. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": "cc3700bfa90348305cbf390babb8cf8f3d715493",
+  "scope": "Release 2026.10.21.3 addresses Android Book speech-provider failure recovery: preserve/retry the failed sentence, disclose device Text-to-speech settings, and retain the existing Book-only/privacy boundary. Exact-head software quality and independent review status remain separately governed.",
+  "approvalBoundary": "The retained 2026.10.21.3 candidate source cc3700bfa90348305cbf390babb8cf8f3d715493 and runtime fingerprint sha256:e126eeb5a329cad4a21cb604f3ef532116c57de9bca54aaae1359baac6306c08 are technical identity only. Automated browser tests do not confirm audible output through physical headphones or real Android voice-engine reliability. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -45,8 +45,8 @@
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
   "lastReviewedDate": "2026-10-21",
   "previousVerifiedCandidate": {
-    "release": "2026.10.21.1",
-    "sourceSha": "82ba7b14909b89191cd9bc15f25440a9728f475f",
-    "runtimeFingerprint": "sha256:5e45262087ffb404469ed82c16ba76e6d1cb97b5356e568a030f01233d031484"
+    "release": "2026.10.21.2",
+    "sourceSha": "fdf41db87889509ff8f5c6d413abbe22ef13da80",
+    "runtimeFingerprint": "sha256:6d7db4fc14495110cdbd5478f692f132d24d0069b7371b2fcfa2cd5c39fdbb4e"
   }
 }
