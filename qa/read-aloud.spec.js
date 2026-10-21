@@ -1282,7 +1282,7 @@ test('Read Aloud audio check records what the learner heard and gives a useful A
   await page.addScriptTag({path:'read-aloud.js'});
   const host=page.locator('.mm-read-aloud');
   await host.locator('details').evaluate(el=>{el.open=true;});
-  await expect(host.locator('h2')).toHaveText('Listen to the current page');
+  await expect(host.locator('h2')).toHaveText('Listen to this chapter');
   await host.locator('[data-mm-read="beeps-heard"]').click();
   await expect(host.locator('[data-mm-read="guidance"]')).toContainText('Now play the phone voice sample');
   await host.locator('[data-mm-read="test"]').click();

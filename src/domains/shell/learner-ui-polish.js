@@ -1,13 +1,13 @@
-/* MouldMaster learner UI polish — 2026.10.21.1
+/* MouldMaster learner UI polish — 2026.10.20.7
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.10.21.1';
+const VERSION='2026.10.20.7';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
-const STYLE_REV='2026.10.21.1-read-aloud-lesson-entry';
+const STYLE_REV='2026.10.19.1-mobile-material-book-fixes';
 const DESKTOP_QUERY='(min-width:1101px)';
 const WIDE_QUERY='(min-width:701px)';
 let queued=false;
