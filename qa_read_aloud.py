@@ -22,8 +22,8 @@ version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
 package = json.loads((ROOT / "desktop/electron/package.json").read_text(encoding="utf-8"))
 integrity_generator = (ROOT / "desktop/electron/scripts/generate-integrity.cjs").read_text(encoding="utf-8")
 
-need(version.get("read_aloud_version") == "2026.10.20.7", "Read Aloud version marker mismatch")
-need("const VERSION='2026.10.20.7'" in runtime, "Read Aloud runtime version mismatch")
+need(version.get("read_aloud_version") == "2026.10.21.1", "Read Aloud version marker mismatch")
+need("const VERSION='2026.10.21.1'" in runtime, "Read Aloud runtime version mismatch")
 
 # The feature must be output-only: speech synthesis plus an explicitly tapped,
 # oscillator-only two-beep media routing test. Microphone capture, recognition,
