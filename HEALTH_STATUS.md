@@ -27,7 +27,7 @@ Current block reason: Native main governance is enforced. Release promotion stil
 
 ## Current release contract
 
-Current learner-facing web release: **2026.10.21.2**
+- Current learner-facing web release: **2026.10.21.2**.
 - Current release promotion is governed by the declared fast/deep CI tiers and exact-head protected workflows; the historical PR count above is not presented as current-release evidence.
 - Native main governance: **enforced**. Live main ruleset matches the canonical solo-maintainer policy; promotion still requires exact-head protected checks.
 - Current external-validation boundary: **HOLD** until genuine release-bound human/device/platform evidence satisfies the governed exit conditions.
