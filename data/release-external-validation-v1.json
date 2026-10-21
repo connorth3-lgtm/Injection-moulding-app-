@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:6731a7888bd71d3e01331d3970fbfc6b02620903c72677f5a92098ed6f2d39da",
     "artifactExpiresAt": "2027-01-19T04:53:39Z"
   },
-  "candidateStatus": "HOLD — release 2026.10.21.2 candidate pending; seven independent external review streams remain HOLD.",
+  "candidateStatus": "HOLD — release 2026.10.21.2 candidate producer pending; exact source and technical artifact are not yet independently verified; seven external review streams remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.10.20.3",
     "sourceSha": "9ea761d15597f15631565cf514e46dc163c9f2c5",
