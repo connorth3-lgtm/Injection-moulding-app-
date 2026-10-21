@@ -846,7 +846,8 @@ test('Unavailable speech provider disables Book speech while app audio remains i
   const compact=page.locator('.mm-read-aloud');
   await expect(compact.locator('[data-mm-read="play"]')).toBeDisabled();
   await expect(compact.locator('summary')).toContainText('Unavailable');
-  await expect(compact.locator('[data-mm-read="test"]')).toBeEnabled();
+  await expect(compact.locator('[data-mm-read="test-audio"]')).toBeEnabled();
+  await expect(compact.locator('[data-mm-read="test"]')).toBeDisabled();
   await expect(page.locator('#nav [data-mm-listening-tab]')).toHaveCount(0);
   await expect(page.locator('#mmListeningView')).toHaveCount(0);
 });
