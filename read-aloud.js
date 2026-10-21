@@ -31,7 +31,6 @@
   let previousView=null;
   let queuedBookStart=null;
   let bookChapterCache=[];
-  let voiceTestActive=false;
   let appAudioContext=null;
   let appAudioTimer=null;
 
@@ -54,24 +53,35 @@
     return clean.match(/[^.!?]+(?:[.!?]+(?=\s|$)|$)/g)?.map(x=>x.trim()).filter(Boolean)||[clean];
   }
 
-  function chooseRoot(){
-    // Book is a custom view inside the app's main content, not an exam or
-    // scenario. Prioritise its visible reader before generic course widgets;
-    // otherwise Read Aloud can pick a scenario card and never read the Book.
+  function visibleBookView(){
     const book=document.getElementById('mmBookView');
-    if(book&&visible(book)){
-      const reader=book.querySelector('[data-mm-book-reader]');
-      if(reader&&visible(reader))return reader;
-      const contents=book.querySelector('[data-mm-book-contents]');
-      if(contents&&visible(contents))return contents;
-      return book;
+    return book&&visible(book)?book:null;
+  }
+
+  function syncBookScope(){
+    const inBook=!!visibleBookView();
+    if(ui?.host&&ui.host.hidden===inBook)ui.host.hidden=!inBook;
+    if(!inBook){
+      if(speaking||paused||starting||appAudioTimer)stop('Stopped after leaving Book');
+      if(activeRoot||units.length||bookChapterCache.length){
+        activeRoot=null;units=[];index=0;bookChapterCache=[];
+        refreshBookControls();
+        updateButtons();
+      }
     }
-    const candidates=['#lesson article.lesson-body','.exam-card','.scenario','.visual-wrap','.defect-card','main.main','.main','main'];
-    for(const selector of candidates){
-      const found=[...document.querySelectorAll(selector)].find(el=>visible(el)&&String(el.innerText||'').trim().length>20);
-      if(found)return found;
-    }
-    return document.body;
+    return inBook;
+  }
+
+  function chooseRoot(){
+    // Read Aloud is available only inside the visible Book. Lesson, exam,
+    // scenario and generic page text are never fallback narration sources.
+    const book=visibleBookView();
+    if(!book)return null;
+    const reader=book.querySelector('[data-mm-book-reader]');
+    if(reader&&visible(reader))return reader;
+    const contents=book.querySelector('[data-mm-book-contents]');
+    if(contents&&visible(contents))return contents;
+    return book;
   }
 
   function sourceFor(node,root){
@@ -85,6 +95,7 @@
   function buildUnits(){
     playlistMode=false;
     const root=chooseRoot();
+    if(!root){units=[];index=0;activeRoot=null;bookChapterCache=[];return units;}
     const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode(node){
       const text=String(node.nodeValue||'').replace(/\s+/g,' ').trim();
       if(!text||text.length<2)return NodeFilter.FILTER_REJECT;
@@ -110,11 +121,9 @@
       if(!chapters.has(chapterId))chapters.set(chapterId,{id:chapterId,title:article.querySelector('h2')?.textContent?.trim()||chapterId});
     }
     bookChapterCache=[...chapters.values()];
-    // The source-reviewed Book's Listen mode spans 20 reader chapters.
-    // Applying the normal one-screen 1200-sentence bound silently cuts off
-    // later chapters. Keep a separate bounded Book capacity instead.
-    const bookReader=!!(root.closest?.('#mmBookView')||root.id==='mmBookView');
-    units=out.slice(0,bookReader?20000:1200);
+    // The Book reader can span all governed chapters, so keep one bounded
+    // Book-only queue rather than a generic screen or lesson queue.
+    units=out.slice(0,20000);
     index=Math.min(index,Math.max(0,units.length-1));
     return units;
   }
@@ -204,19 +213,18 @@
   function updateButtons(){
     const appAudioActive=!!appAudioTimer;
     if(ui){
-      ui.play.disabled=!supported||voiceTestActive||appAudioActive;
-      ui.play.textContent=voiceTestActive?'Testing voice…':starting?'Starting…':paused?'Resume':speaking?'Pause':'Listen';
-      ui.play.setAttribute('aria-label',voiceTestActive?'Testing Book voice':starting?'Starting read aloud':paused?'Resume read aloud':speaking?'Pause read aloud':'Start read aloud');
-      ui.test.disabled=!supported||voiceTestActive||appAudioActive;
-      ui.testAudio.disabled=voiceTestActive||appAudioActive;
+      ui.play.disabled=!supported||appAudioActive;
+      ui.play.textContent=starting?'Starting…':paused?'Resume':speaking?'Pause':'Listen';
+      ui.play.setAttribute('aria-label',starting?'Starting read aloud':paused?'Resume read aloud':speaking?'Pause read aloud':'Start read aloud');
+      ui.testAudio.disabled=appAudioActive;
       ui.prev.disabled=!supported||!units.length||index<=0;
       ui.next.disabled=!supported||!units.length||index>=units.length-1;
-      ui.stop.disabled=(!supported&&!appAudioActive)||(!speaking&&!paused&&!starting&&!voiceTestActive&&!appAudioActive);
+      ui.stop.disabled=(!supported&&!appAudioActive)||(!speaking&&!paused&&!starting&&!appAudioActive);
     }
     if(listeningUI){
       listeningUI.play.textContent=starting?'Starting…':paused?'Resume':speaking&&playlistMode?'Pause':'Play';
-      listeningUI.play.disabled=!supported||voiceTestActive;
-      listeningUI.stop.disabled=!supported||(!speaking&&!paused&&!starting&&!voiceTestActive);
+      listeningUI.play.disabled=!supported;
+      listeningUI.stop.disabled=!supported||(!speaking&&!paused&&!starting);
     }
   }
 
@@ -284,11 +292,11 @@
     closeAppAudio();
     // Invalidate active callbacks before cancel: some device voices dispatch
     // a synchronous cancellation error from synth.cancel().
-    const cancelActive=starting||speaking||paused||voiceTestActive;
+    const cancelActive=starting||speaking||paused;
     speakToken+=1;
     if(cancelSpeech)cancelDeviceSpeech(cancelActive);
     selectionPending=false;
-    starting=false;speaking=false;paused=false;voiceTestActive=false;
+    starting=false;speaking=false;paused=false;
     clearHighlight();
     if(ui)ui.current.hidden=true;
     setStatus(reason||'Stopped');
@@ -302,14 +310,14 @@
     ||(/Macintosh/i.test(navigator.userAgent||'')&&Number(navigator.maxTouchPoints||0)>1);
   function speakCurrent(retry=0,replaceCurrent=false){
     selectionPending=false;
+    if(playlistMode){setStatus('Book Read Aloud cannot start a lesson playlist.');updateButtons();return;}
+    if(!visibleBookView()){stop('Open the Book to use Read Aloud.');return;}
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');updateButtons();return;}
-    // Automatic sentence chaining also needs source validation. A lesson
-    // might rewrite its content while narration is running; continuing the
-    // cached queue would speak outdated, now-hidden or replaced text.
+    // Automatic sentence chaining must stop if the Book replaces or hides its source.
     if(!playlistMode&&units.length&&refreshStaleReading())return;
     if(!units.length)(playlistMode?buildPlaylist():buildUnits());
     const unit=currentUnit();
-    if(!unit){setStatus(playlistMode?'No lesson audio is available.':'No readable text is visible on this screen.');updateButtons();return;}
+    if(!unit){setStatus('No readable text is visible in the Book.');updateButtons();return;}
     const token=++speakToken;
     starting=true;speaking=false;paused=false;
     setStatus(refreshVoice()?'Starting device voice…':(androidSpeech||iosSpeech)?'Starting default device voice…':'Loading device voice…');
@@ -317,7 +325,7 @@
     const beginSpeech=()=>{
       if(token!==speakToken)return;
       // Windows voices may arrive after the initial tap. Never start
-      // single-screen Book/lesson speech when that tab has since hidden.
+      // Book speech must not start after the app tab has hidden.
       if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
       // Must run directly inside the original tap handler on Android, even
       // with an empty voice list. The platform can pick its default voice.
@@ -450,6 +458,7 @@
   }
 
   function start(){
+    if(!visibleBookView()){stop('Open the Book to use Read Aloud.');return;}
     index=0;buildUnits();
     if(queuedBookStart){
       const wanted=queuedBookStart;
@@ -458,11 +467,12 @@
       else {const beginning=units.findIndex(u=>u.bookChapterId===wanted.chapterId);if(beginning>=0)index=beginning;}
       queuedBookStart=null;
     }
-    if(!units.length){setStatus('No readable text is visible on this screen.');updateButtons();return;}
+    if(!units.length){setStatus('No readable text is visible in the Book.');updateButtons();return;}
     speakCurrent();
   }
 
   function testAppAudio(){
+    if(!visibleBookView()){setStatus('Open the Book to test audio output.');return;}
     const AudioContextType=window.AudioContext||window.webkitAudioContext;
     if(typeof AudioContextType!=='function'){
       setStatus('Device audio output testing is unavailable in this browser.');
@@ -511,61 +521,6 @@
     }
   }
 
-  function testBookVoice(){
-    if(!supported){setStatus('Read Aloud is not available in this browser/device.');return;}
-    // Test the same device speech service used by Book Listen, not a separate
-    // tone generator that could sound while narration remains silent.
-    stop('Testing Book voice…');
-    primeAudioOutput();
-    const token=speakToken;
-    voiceTestActive=true;
-    updateButtons();
-    let utterance;
-    try{
-      utterance=new SpeechSynthesisUtterance('This is a test of Book audio.');
-      applyAvailableVoice(utterance);
-      utterance.rate=Number(ui?.speed?.value||1);
-      utterance.volume=1;
-    }catch(err){
-      voiceTestActive=false;
-      setStatus('Book voice test could not be prepared. Check device text-to-speech settings.');
-      updateButtons();
-      console.error('MouldMaster Book voice test:',err);
-      return;
-    }
-    let timer=null,finished=false;
-    const finish=message=>{
-      if(token!==speakToken||finished)return;
-      finished=true;
-      clearTimeout(timer);
-      voiceTestActive=false;
-      setStatus(message);
-      updateButtons();
-    };
-    utterance.onstart=()=>{if(token===speakToken)setStatus('Book voice test is speaking.');};
-    utterance.onend=()=>finish('Book voice test finished. Tap Listen to read the Book.');
-    utterance.onerror=event=>finish('Book voice test could not continue'+(event?.error?': '+event.error:'.'));
-    try{
-      resumePausedSpeechQueue();
-      synth.speak(utterance);
-    }catch(err){
-      finish('Book voice test could not start. Check device text-to-speech settings.');
-      console.error('MouldMaster Book voice test:',err);
-      return;
-    }
-    timer=setTimeout(()=>{
-      if(token!==speakToken||finished)return;
-      if(deviceIsSpeaking()){
-        setStatus('Book voice is still starting. If silent, press Stop and check device speech settings and media output.');
-        updateButtons();
-        return;
-      }
-      finish('Book voice did not start. Check device text-to-speech settings and media output.');
-    },(androidSpeech||iosSpeech)?6000:2500);
-    setStatus('Testing Book voice. If silent, check device speech settings and system audio output.');
-    updateButtons();
-  }
-
   function startPlaylist(startLessonId){
     stop('Ready');
     buildPlaylist(startLessonId);
@@ -574,8 +529,8 @@
   }
 
   function toggle(){
+    if(!visibleBookView()){setStatus('Open the Book to use Read Aloud.');updateButtons();return;}
     if(!supported){setStatus('Read Aloud is not available in this browser/device.');return;}
-    if(voiceTestActive)return;
     const wasActive=starting||speaking||paused;
     // A stopped Book Listen tap may replace a previous Contents queue with a
     // 20-chapter reader. Revalidating that idle queue, then calling start(),
@@ -586,7 +541,7 @@
       if(wasActive)return;
       // A stale cued sentence has been replaced with the current source.
       // Use that rebuilt queue immediately instead of traversing it again.
-      if(!units.length){setStatus('No readable text is visible on this screen.');updateButtons();return;}
+      if(!units.length){setStatus('No readable text is visible in the Book.');updateButtons();return;}
       speakCurrent();return;
     }
     if(starting){stop('Stopped');return;}
@@ -667,7 +622,7 @@
     ui.bookPrev.disabled=pos<=0;ui.bookNext.disabled=pos<0||pos===bookChapterCache.length-1;
   }
   function startBookFromGesture(){
-    if(!supported)return false;
+    if(!supported||!visibleBookView())return false;
     primeAudioOutput();
     // Called directly from the Book's real Listen tap, not a synthetic
     // HTMLElement.click(). This is critical for mobile speech permissions.
@@ -675,7 +630,7 @@
     return units.length>0;
   }
   function selectBookChapter(id){
-    if(!units.length||!bookChapterCache.some(c=>c.id===id))return false;
+    if(!visibleBookView()||!units.length||!bookChapterCache.some(c=>c.id===id))return false;
     const at=units.findIndex(u=>u.bookChapterId===id);
     if(at<0)return false;
     selectUnit(at);return true;
@@ -798,17 +753,17 @@
     addStyles();
     const host=document.createElement('aside');
     host.className='mm-read-aloud';host.setAttribute('aria-label','Read Aloud');host.dataset.version=VERSION;
-    host.innerHTML=`<details><summary title="Expand or collapse the Read Aloud controls"><b>🔊 Listen</b><span>${supported?'Device voice':'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><div class="mm-read-audio-tests"><button type="button" class="mm-read-speed" data-mm-read="test-audio" aria-label="Test phone sound through browser audio output" title="Play two short tones through the device audio output">Test phone sound</button><button type="button" class="mm-read-speed" data-mm-read="test" aria-label="Test the Book voice with a short sample" title="Speak a short sample through the Book narration voice">Test Book voice</button></div><div class="mm-read-meta"><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><label>Voice <select class="mm-read-speed" data-mm-read="voice" aria-label="Narration voice"><option value="">Automatic device voice</option></select></label><span data-mm-read="position">0 / 0</span></div><div class="mm-book-audio-chapters" data-mm-book-audio-controls hidden><button type="button" data-mm-book-audio-prev aria-label="Previous Book chapter">⏮</button><label>Book chapter <select data-mm-book-audio-chapter aria-label="Book audio chapter"></select></label><button type="button" data-mm-book-audio-next aria-label="Next Book chapter">⏭</button><label class="mm-book-audio-follow"><input type="checkbox" data-mm-book-audio-follow checked> Follow text</label></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-note">Uses your device/browser speech-synthesis service. MouldMaster does not request microphone access or record audio.</p></div></details>`;
+    host.innerHTML=`<details><summary title="Expand or collapse the Read Aloud controls"><b>🔊 Listen</b><span>${supported?'Device voice':'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><button type="button" class="mm-read-speed" data-mm-read="test" aria-label="Test browser audio output with two short tones" title="Send two tones to the browser-selected audio output">Test phone sound</button><div class="mm-read-meta"><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><label>Voice <select class="mm-read-speed" data-mm-read="voice" aria-label="Narration voice"><option value="">Automatic device voice</option></select></label><span data-mm-read="position">0 / 0</span></div><div class="mm-book-audio-chapters" data-mm-book-audio-controls hidden><button type="button" data-mm-book-audio-prev aria-label="Previous Book chapter">⏮</button><label>Book chapter <select data-mm-book-audio-chapter aria-label="Book audio chapter"></select></label><button type="button" data-mm-book-audio-next aria-label="Next Book chapter">⏭</button><label class="mm-book-audio-follow"><input type="checkbox" data-mm-book-audio-follow checked> Follow text</label></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-note">Uses your device/browser speech-synthesis service. MouldMaster does not request microphone access or record audio.</p></div></details>`;
     const actions=document.querySelector('#app .top-actions,.top-actions');(actions||document.body).appendChild(host);
-    ui={host,play:host.querySelector('[data-mm-read="play"]'),test:host.querySelector('[data-mm-read="test"]'),testAudio:host.querySelector('[data-mm-read="test-audio"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),voice:host.querySelector('[data-mm-read="voice"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),current:host.querySelector('[data-mm-read="current"]'),bookNav:host.querySelector('[data-mm-book-audio-controls]'),bookChapter:host.querySelector('[data-mm-book-audio-chapter]'),bookPrev:host.querySelector('[data-mm-book-audio-prev]'),bookNext:host.querySelector('[data-mm-book-audio-next]'),follow:host.querySelector('[data-mm-book-audio-follow]')};
-    ui.play.addEventListener('click',toggle);ui.test.addEventListener('click',testBookVoice);ui.testAudio.addEventListener('click',testAppAudio);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
+    ui={host,play:host.querySelector('[data-mm-read="play"]'),testAudio:host.querySelector('[data-mm-read="test"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),voice:host.querySelector('[data-mm-read="voice"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),current:host.querySelector('[data-mm-read="current"]'),bookNav:host.querySelector('[data-mm-book-audio-controls]'),bookChapter:host.querySelector('[data-mm-book-audio-chapter]'),bookPrev:host.querySelector('[data-mm-book-audio-prev]'),bookNext:host.querySelector('[data-mm-book-audio-next]'),follow:host.querySelector('[data-mm-book-audio-follow]')};
+    ui.play.addEventListener('click',toggle);ui.testAudio.addEventListener('click',testAppAudio);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
     ui.speed.addEventListener('change',()=>changeSpeed(false));
     ui.voice.addEventListener('change',()=>{preferredVoiceId=ui.voice.value;refreshVoice();if(speaking&&!playlistMode)speakCurrent(0,true);});
     ui.bookChapter.addEventListener('change',()=>selectBookChapter(ui.bookChapter.value));
     ui.bookPrev.addEventListener('click',()=>jumpBookChapter(-1));
     ui.bookNext.addEventListener('click',()=>jumpBookChapter(1));
     host.querySelector('details').addEventListener('toggle',event=>{if(event.target.open&&!starting&&!speaking&&!paused){buildUnits();setStatus(supported?'Ready':'Read Aloud is not available in this browser/device.');updateButtons();}});
-    refreshVoice();if(supported&&!selectedVoice)setStatus('Device voice will load when playback starts.');updateButtons();
+    refreshVoice();if(supported&&!selectedVoice)setStatus('Device voice will load when playback starts.');updateButtons();syncBookScope();
   }
 
   if(supported){try{synth.addEventListener?.('voiceschanged',()=>{if(refreshVoice()&&ui&&!starting&&!speaking&&!paused){setStatus('Ready');updateButtons();}})}catch(_){ }}
@@ -835,8 +790,12 @@
     paused=true;speaking=false;setStatus('Paused while app is hidden');updateButtons();
   });
 
-  const observer=new MutationObserver(()=>{if((speaking||paused)&&activeRoot&&!activeRoot.isConnected&&!playlistMode)stop('Stopped after screen changed');});
-  observer.observe(document.documentElement,{subtree:true,childList:true});
+  const observer=new MutationObserver(()=>{
+    syncBookScope();
+    if((speaking||paused)&&activeRoot&&!activeRoot.isConnected&&!playlistMode)stop('Stopped after screen changed');
+  });
+  observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,
+    attributeFilter:['class','style','hidden','aria-hidden']});
 
   window.MMReadAloud={version:VERSION,supported,stop:()=>stop('Stopped'),refresh:()=>buildUnits(),
     queueBookStart:({chapterId,unitIndex=0}={})=>{if(!/^r(?:0[1-9]|1[0-9]|20)$/.test(String(chapterId||'')))return false;queuedBookStart={chapterId,unitIndex:Math.max(0,Math.min(20000,Math.floor(Number(unitIndex)||0)))};return true;},

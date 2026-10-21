@@ -12,8 +12,17 @@ async function seedLearner(page){
   });
 }
 
+async function setBookFixture(page,html,...options){
+  const source=String(html);
+  if(/id=["']mmBookView["']/i.test(source))return page.setContent(source,...options);
+  const wrapped=source.replace(/<body\b[^>]*>/i,
+    match=>match+'<div id="mmBookView"><section data-mm-book-contents>')
+    .replace(/<\/body\s*>/i,'</section></div></body>');
+  return page.setContent(wrapped,...options);
+}
+
 test('Delayed one-screen speech cannot start after the tab hides', async ({page}) => {
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Private visible lesson narration must not start later in a hidden tab.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Private visible lesson narration must not start later in a hidden tab.</p></main></body></html>');
   await page.evaluate(()=>{
     class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
     const speech={starts:0,cancels:0,getVoices(){return[];},speak(){this.starts++;},
@@ -39,7 +48,7 @@ test('Delayed one-screen speech cannot start after the tab hides', async ({page}
 });
 
 test('Late OS onstart after the tab hides cancels single-screen speech', async ({page}) => {
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>One-screen speech cannot become audible after its page has hidden.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>One-screen speech cannot become audible after its page has hidden.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
     class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
@@ -252,8 +261,46 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   expect(await page.evaluate(()=>typeof window.MMReadAloud?.openListening)).toBe('undefined');
 });
 
+test('Book-only scope keeps lesson text silent and starts only visible Book prose',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><article id="lesson"><p>Lesson-only sentinel must never be spoken.</p></article></main></body></html>');
+  await page.evaluate(()=>{
+    class QaBookUtterance{constructor(text=''){this.text=String(text);this.lang='';this.voice=null;this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const voice={voiceURI:'qa-book-voice',name:'QA Book Voice',lang:'en-US',default:true};
+    const synth={spoken:[],paused:false,speaking:false,pending:false,getVoices(){return[voice];},
+      speak(utterance){this.spoken.push(utterance.text);this.last=utterance;this.speaking=true;queueMicrotask(()=>utterance.onstart?.());},
+      cancel(){this.speaking=false;this.pending=false;},pause(){this.paused=true;},resume(){this.paused=false;},
+      addEventListener(){},removeEventListener(){}};
+    window.__bookScopeSpeech=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:QaBookUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const host=page.locator('.mm-read-aloud');
+  await expect(host).toBeHidden();
+  const outside=await page.evaluate(()=>({units:window.MMReadAloud.refresh().map(unit=>unit.text),
+    started:window.MMReadAloud.startBookFromGesture(),spoken:window.__bookScopeSpeech.spoken}));
+  expect(outside.units).toEqual([]);
+  expect(outside.started).toBeFalsy();
+  expect(outside.spoken).toEqual([]);
+
+  await page.evaluate(()=>{
+    const book=document.createElement('div');book.id='mmBookView';
+    book.innerHTML='<section data-mm-book-contents><p>Book-only sentence must be spoken.</p></section>';
+    document.body.append(book);
+  });
+  await expect(host).toBeVisible();
+  const bookUnits=await page.evaluate(()=>window.MMReadAloud.refresh().map(unit=>unit.text));
+  expect(bookUnits.some(text=>text.includes('Book-only sentence'))).toBeTruthy();
+  expect(bookUnits.some(text=>text.includes('Lesson-only sentinel'))).toBeFalsy();
+  expect(await page.evaluate(()=>window.MMReadAloud.startBookFromGesture())).toBeTruthy();
+  await expect.poll(()=>page.evaluate(()=>window.__bookScopeSpeech.spoken.length)).toBe(1);
+  const spoken=await page.evaluate(()=>window.__bookScopeSpeech.spoken[0]);
+  expect(spoken).toContain('Book-only sentence');
+  expect(spoken).not.toContain('Lesson-only sentinel');
+});
+
 test('Book Listen resumes a globally paused speech queue before speaking', async ({page}) => {
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book speech test fixture.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book speech test fixture.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
     const events=[];
@@ -281,7 +328,7 @@ test('Book Listen resumes a globally paused speech queue before speaking', async
 });
 
 test('Book Listen primes browser audio output on the same tap before speech', async ({page}) => {
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book audio route fixture.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book audio route fixture.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
     const events=[];
@@ -305,7 +352,7 @@ test('Book Listen primes browser audio output on the same tap before speech', as
 });
 
 test('Book exposes an independent phone sound check through browser audio output', async ({page}) => {
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book output check fixture.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book output check fixture.</p></main></body></html>');
   await page.evaluate(()=>{
     const events=[];
     class FakeContext{constructor(){this.state='suspended';this.currentTime=1;this.destination={};
@@ -325,44 +372,14 @@ test('Book exposes an independent phone sound check through browser audio output
   await page.addScriptTag({path:'read-aloud.js'});
   const host=page.locator('.mm-read-aloud');
   await host.locator('details').evaluate(el=>{el.open=true;});
-  await host.locator('[data-mm-read="test-audio"]').click();
+  await host.locator('[data-mm-read="test"]').click();
   await expect.poll(()=>page.evaluate(()=>window.__mmPhoneSound.events.filter(event=>event.type==='tone').length)).toBe(2);
   await expect(host.locator('.mm-read-status')).toContainText('Two tones sent through browser audio output');
   expect(await page.evaluate(()=>window.__mmPhoneSound.synth.speaks)).toBe(0);
 });
 
-test('Book voice test uses the same device speech service and resumes a paused queue', async ({page}) => {
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book audio test fixture.</p></main></body></html>');
-  await page.evaluate(()=>{
-    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
-    const events=[];
-    class FakeUtterance{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
-    const synth={paused:true,speaking:false,pending:false,resumeCalls:0,last:null,getVoices(){return[];},
-      resume(){this.resumeCalls++;this.paused=false;events.push('resume');},
-      speak(utterance){this.last=utterance;events.push('speak');},
-      cancel(){this.speaking=false;this.pending=false;},addEventListener(){},removeEventListener(){}};
-    window.__mmBookVoiceTest={synth,events};
-    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:FakeUtterance});
-    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
-  });
-  await page.addScriptTag({path:'read-aloud.js'});
-  const host=page.locator('.mm-read-aloud');
-  await host.locator('details').evaluate(el=>{el.open=true;});
-  await host.locator('[data-mm-read="test"]').click();
-  await expect(host.locator('[data-mm-read="test"]')).toHaveAccessibleName('Test the Book voice with a short sample');
-  await expect.poll(()=>page.evaluate(()=>window.__mmBookVoiceTest.synth.resumeCalls)).toBe(1);
-  expect(await page.evaluate(()=>window.__mmBookVoiceTest.events)).toEqual(['resume','speak']);
-  expect(await page.evaluate(()=>window.__mmBookVoiceTest.synth.last.text)).toBe('This is a test of Book audio.');
-  await page.evaluate(()=>{
-    const utterance=window.__mmBookVoiceTest.synth.last;
-    utterance.onstart?.();
-    utterance.onend?.();
-  });
-  await expect(host.locator('.mm-read-status')).toContainText('Book voice test finished');
-});
-
 test('Read Aloud supported-path controls execute the exact product runtime in a deterministic speech harness', async ({ page }) => {
-  await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Read Aloud QA</title></head><body><main class="main"><h1>Read Aloud harness</h1><p id="mmQaVisibleSpeech">Read aloud visible sentinel sentence.</p><p id="mmQaHiddenSpeech" hidden>Read aloud hidden sentinel sentence.</p></main></body></html>`);
+  await setBookFixture(page,`<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Read Aloud QA</title></head><body><main class="main"><h1>Read Aloud harness</h1><p id="mmQaVisibleSpeech">Read aloud visible sentinel sentence.</p><p id="mmQaHiddenSpeech" hidden>Read aloud hidden sentinel sentence.</p></main></body></html>`);
 
   await page.evaluate(() => {
     class QaSpeechSynthesisUtterance {constructor(text=''){this.text=String(text);this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
@@ -402,7 +419,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
 });
 
 test('Read Aloud waits for delayed Windows voices and selects the device voice before speaking', async ({ page }) => {
-  await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><main class="main"><p>Delayed Windows voice sentinel.</p></main></body></html>`);
+  await setBookFixture(page,`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><main class="main"><p>Delayed Windows voice sentinel.</p></main></body></html>`);
   await page.evaluate(() => {
     class QaSpeechSynthesisUtterance {constructor(text=''){this.text=String(text);this.lang='';this.voice=null;this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
     const listeners=new Set();let ready=false;const voice={name:'Windows QA Voice',lang:'en-NZ',default:true};
@@ -421,7 +438,7 @@ test('Read Aloud waits for delayed Windows voices and selects the device voice b
 });
 
 test('Android empty voice list speaks within the original tap without waiting for voiceschanged', async ({ page }) => {
-  await page.setContent('<!doctype html><html lang="en"><body><main class="main"><h1>Android read aloud</h1><p>Android default voice starts on the first tap.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><main class="main"><h1>Android read aloud</h1><p>Android default voice starts on the first tap.</p></main></body></html>');
   await page.evaluate(() => {
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
     class QaSpeechSynthesisUtterance {constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
@@ -459,7 +476,7 @@ test('Android empty voice list speaks within the original tap without waiting fo
 });
 
 test('iOS empty voice list starts speech within the original tap task',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div class="top-actions"></div><main class="main"><p>iOS device voice starts from this lesson sentence.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div class="top-actions"></div><main class="main"><p>iOS device voice starts from this lesson sentence.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:
       'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile Safari/604.1'});
@@ -491,8 +508,8 @@ test('iOS empty voice list starts speech within the original tap task',async({pa
   await expect(player.locator('.mm-read-status')).toHaveText('Reading');
 });
 
-test('Automatic sentence chaining stops when the lesson rewrites its visible text',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p id="lessonText">First continuing sentence. Outdated follow-up sentence.</p></main></body></html>');
+test('Automatic sentence chaining stops when Book prose rewrites its visible text',async({page})=>{
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p id="lessonText">First continuing sentence. Outdated follow-up sentence.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:
       'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
@@ -522,7 +539,7 @@ test('Automatic sentence chaining stops when the lesson rewrites its visible tex
 });
 
 test('Hidden child text never remains a playable sentence under a visible parent',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Visible intro sentence. <span id="oldText">Old section sentence.</span><span id="newText" hidden>New visible section sentence.</span></p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Visible intro sentence. <span id="oldText">Old section sentence.</span><span id="newText" hidden>New visible section sentence.</span></p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:
       'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
@@ -550,7 +567,7 @@ test('Hidden child text never remains a playable sentence under a visible parent
 });
 
 test('In-place lesson text updates refresh the next sentence without replaying old text',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p id="lessonText">Unchanged heading sentence. Old second sentence.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p id="lessonText">Unchanged heading sentence. Old second sentence.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:
       'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
@@ -577,7 +594,7 @@ test('In-place lesson text updates refresh the next sentence without replaying o
 });
 
 test('Throwing speech-utterance constructor leaves a restartable device player',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Recover after a device utterance failure.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Recover after a device utterance failure.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:
       'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
@@ -606,7 +623,7 @@ test('Throwing speech-utterance constructor leaves a restartable device player',
 });
 
 test('Switching screens after Stop refreshes the sentence queue before navigation and Play',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><section id="readingA"><p>Old page first sentence. Old page second sentence.</p></section><section id="readingB" hidden><p>New page first sentence. New page second sentence.</p></section></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><section id="readingA"><p>Old page first sentence. Old page second sentence.</p></section><section id="readingB" hidden><p>New page first sentence. New page second sentence.</p></section></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:
       'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
@@ -635,7 +652,7 @@ test('Switching screens after Stop refreshes the sentence queue before navigatio
 });
 
 test('Sentence navigation while paused cues audio without restarting it until Listen',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First navigation sentence. Second navigation sentence. Third navigation sentence.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First navigation sentence. Second navigation sentence. Third navigation sentence.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:
       'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
@@ -669,7 +686,7 @@ test('Sentence navigation while paused cues audio without restarting it until Li
 });
 
 test('Changing narration speed while paused never resumes speech without Play',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First spoken sentence. Second spoken sentence.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First spoken sentence. Second spoken sentence.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:
       'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
@@ -705,7 +722,7 @@ test('Changing narration speed while paused never resumes speech without Play',a
 });
 
 test('Throwing OS pause and resume recover to restartable narration controls',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Device pause and resume failure recovery.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Device pause and resume failure recovery.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:
       'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
@@ -752,7 +769,7 @@ test('Throwing OS pause and resume recover to restartable narration controls',as
 });
 
 test('Throwing device cancellation and voice discovery cannot strand Read Aloud controls',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div class="top-actions"></div><main class="main"><p>Safe reading after a device voice error.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div class="top-actions"></div><main class="main"><p>Safe reading after a device voice error.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:
       'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
@@ -781,7 +798,7 @@ test('Throwing device cancellation and voice discovery cannot strand Read Aloud 
 });
 
 test('Completing a single-screen reading never claims the whole lesson library finished',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>One finished reading sentence.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>One finished reading sentence.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:
       'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
@@ -806,7 +823,7 @@ test('Completing a single-screen reading never claims the whole lesson library f
 });
 
 test('Speech interruption exits stale playing state and Stop ignores synchronous cancel errors',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div class="top-actions"></div><main class="main"><p>Read aloud interruption recovery sentence.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div class="top-actions"></div><main class="main"><p>Read aloud interruption recovery sentence.</p></main></body></html>');
   await page.evaluate(()=>{
     class QaUtterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
     const synth={
@@ -837,7 +854,7 @@ test('Speech interruption exits stale playing state and Stop ignores synchronous
 });
 
 test('Unavailable speech provider disables Book speech while app audio remains independent',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div id="app"><nav id="nav"><button data-view="path">Path</button></nav><main id="mainContent" class="main"><section id="path" class="view"><p>Ordinary lesson content.</p></section><div class="top-actions"></div></main></div></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div id="app"><nav id="nav"><button data-view="path">Path</button></nav><main id="mainContent" class="main"><section id="path" class="view"><p>Ordinary lesson content.</p></section><div class="top-actions"></div></main></div></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(window,'speechSynthesis',{configurable:true,value:null});
     Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:null});
@@ -846,8 +863,8 @@ test('Unavailable speech provider disables Book speech while app audio remains i
   const compact=page.locator('.mm-read-aloud');
   await expect(compact.locator('[data-mm-read="play"]')).toBeDisabled();
   await expect(compact.locator('summary')).toContainText('Unavailable');
-  await expect(compact.locator('[data-mm-read="test-audio"]')).toBeEnabled();
-  await expect(compact.locator('[data-mm-read="test"]')).toBeDisabled();
+  await expect(compact.locator('[data-mm-read="test"]')).toBeEnabled();
+  await expect(compact.locator('[data-mm-read="test-audio"]')).toHaveCount(0);
   await expect(page.locator('#nav [data-mm-listening-tab]')).toHaveCount(0);
   await expect(page.locator('#mmListeningView')).toHaveCount(0);
 });
@@ -913,7 +930,7 @@ test('Book verified listening starts Android device speech in the original tap a
 
 
 test('Book audio speaks Book chapter prose instead of a visible scenario or exam card',async({page})=>{
-  await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body>
+  await setBookFixture(page,`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body>
     <div class="top-actions"></div><main class="main">
       <section class="exam-card"><p>Wrong exam prompt must never be spoken.</p></section>
       <section class="scenario"><p>Wrong scenario panel must never be spoken.</p></section>
@@ -956,7 +973,7 @@ test('Book audio speaks Book chapter prose instead of a visible scenario or exam
 });
 
 test('Book continuous listening retains late chapters beyond the generic 1200 sentence limit',async({page})=>{
-  await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body>
+  await setBookFixture(page,`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body>
     <div class="top-actions"></div><main class="main">
       <section id="mmBookView" class="view"><section data-mm-book-contents hidden></section>
         <section data-mm-book-reader><article class="mm-book-reader-chapter" id="bookAudioLong"></article></section>
@@ -981,7 +998,7 @@ test('Book continuous listening retains late chapters beyond the generic 1200 se
 });
 
 test('Book Contents narration does not pick an unrelated screen when the reader is hidden',async({page})=>{
-  await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body>
+  await setBookFixture(page,`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body>
     <div class="top-actions"></div><main class="main">
       <section class="scenario"><p>Wrong training screen should be ignored.</p></section>
       <section id="mmBookView" class="view"><section data-mm-book-contents>
@@ -997,7 +1014,7 @@ test('Book Contents narration does not pick an unrelated screen when the reader 
 
 for(const phone of ['Android','iPhone']){
   test(`Book playback starts speech on the original ${phone} tap`,async({page})=>{
-    await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book voice diagnostic does not need a narration queue.</p></main></body></html>');
+    await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book voice diagnostic does not need a narration queue.</p></main></body></html>');
     await page.evaluate(phone=>{
       const ua=phone==='Android'?'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/130.0 Mobile Safari/537.36':'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1';
       Object.defineProperty(navigator,'userAgent',{configurable:true,value:ua});
@@ -1023,7 +1040,7 @@ for(const phone of ['Android','iPhone']){
 }
 
 test('Android voice completion advances sentences when onstart is omitted',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First device sentence. Second device sentence.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First device sentence. Second device sentence.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
     class Utterance{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
@@ -1081,7 +1098,7 @@ test('Book Listen advances when an Android speech provider omits onstart',async(
 });
 
 test('Android sentence handoff does not cancel speech while the previous utterance is ending',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First Android sentence. Second Android sentence.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First Android sentence. Second Android sentence.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
     class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onboundary=null;this.onend=null;this.onerror=null;}}
@@ -1110,7 +1127,7 @@ test('Android sentence handoff does not cancel speech while the previous utteran
 });
 
 test('Android natural completion leaves completed speech uncanceled',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Final Android sentence.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Final Android sentence.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
     class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onboundary=null;this.onend=null;this.onerror=null;}}
@@ -1140,7 +1157,7 @@ test('Android natural completion leaves completed speech uncanceled',async({page
 });
 
 test('Android watchdog keeps active speech when the provider omits onstart',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Speech remains active without an onstart event.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Speech remains active without an onstart event.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
     class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onboundary=null;this.onend=null;this.onerror=null;}}
@@ -1167,7 +1184,7 @@ test('Android watchdog keeps active speech when the provider omits onstart',asyn
 });
 
 test('Android late start is not canceled when the watchdog sees no active speech',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Android TTS may start after its speaking flag stays false.</p></main></body></html>');
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Android TTS may start after its speaking flag stays false.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
     const nativeSetTimeout=window.setTimeout.bind(window);

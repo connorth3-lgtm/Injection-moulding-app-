@@ -44,7 +44,8 @@ for forbidden in (
 for marker in (
     "getComputedStyle", "getBoundingClientRect", "[hidden]", "[aria-hidden=\"true\"]",
     ".hidden", "pagehide", "visibilitychange", "Stopped after navigation",
-    "mm-read-source-active", "No readable text is visible on this screen.",
+    "mm-read-source-active", "Open the Book to use Read Aloud.",
+    "No readable text is visible in the Book.",
 ):
     need(marker in runtime, f"visible-content/navigation guard missing: {marker}")
 
@@ -84,27 +85,35 @@ for marker in (
     need(marker in runtime, f"Android tap-to-speak guard missing: {marker}")
 need("await waitForVoice" not in runtime, "Android speech start must not block on voice discovery")
 
-# Book is a custom view alongside the course/exam cards. Its visible reader
-# must win over generic selectors, and long Book sessions cannot inherit the
-# ordinary 1200-segment limit. Neither guarantee is established by button-only
-# browser smoke tests; actual spoken text is covered by read-aloud.spec.js.
+# Only the visible Book may supply speech. Lessons and generic page content
+# are not fallback sources, and the Book queue keeps the governed chapter bound.
 for marker in (
-    "document.getElementById('mmBookView')",
+    "function visibleBookView(){",
+    "function syncBookScope(){",
+    "const book=document.getElementById('mmBookView');",
     "book.querySelector('[data-mm-book-reader]')",
     "book.querySelector('[data-mm-book-contents]')",
-    "bookReader?20000:1200",
+    "if(!root){units=[];index=0;activeRoot=null;bookChapterCache=[];return units;}",
+    "units=out.slice(0,20000);",
+    "if(playlistMode){setStatus('Book Read Aloud cannot start a lesson playlist.');",
 ):
-    need(marker in runtime, f"Book voice-target/late-chapter regression guard missing: {marker}")
+    need(marker in runtime, f"Book-only speech boundary missing: {marker}")
+need("const candidates=['#lesson" not in runtime and "return document.body;" not in runtime,
+     "lesson and generic-page narration fallbacks must not exist")
 
 # Book-only scope: lesson playlists have no installed navigation or public API.
 need("createListeningTab();" not in runtime, "lesson Listening navigation must not be installed")
 need("startPlaylist,openListening" not in runtime, "lesson playlist/open APIs must not be exported")
 need("currentLessonId:" not in runtime, "lesson-specific Read Aloud API must not be exported")
 need("data-mm-listening-tab" not in runtime, "lesson Listening tab marker must not be installed")
-for marker in ("function resumePausedSpeechQueue()", "function primeAudioOutput()", "function testAppAudio()", "function testBookVoice()", "resumePausedSpeechQueue();", "utterance.volume=1"):
+for marker in ("function resumePausedSpeechQueue()", "function primeAudioOutput()", "function testAppAudio()", "resumePausedSpeechQueue();"):
     need(marker in runtime, f"Book voice/output recovery missing: {marker}")
-need("Test Book voice" in runtime and "This is a test of Book audio." in runtime, "Book speech test control missing")
-need("Test phone sound" in runtime and 'data-mm-read="test-audio"' in runtime, "separate device audio output test control missing")
+need("Test phone sound" in runtime and 'data-mm-read="test"' in runtime, "device audio output test control missing")
+need("Test Book voice" not in runtime and "This is a test of Book audio." not in runtime,
+     "redundant speech-test control must not alter the locked Book player layout")
+browser = (ROOT / "qa/read-aloud.spec.js").read_text(encoding="utf-8")
+need("Book-only scope keeps lesson text silent" in browser and "startBookFromGesture()" in browser,
+     "browser regression must prove that lessons cannot be narrated")
 # Book audio is chapter-aware, learner-scoped cursor events are emitted without
 # storage inside the voice engine, and presentation modes remain source-governed.
 for marker in (
@@ -142,7 +151,7 @@ need("'read-aloud.js'" in integrity_generator, "Read Aloud missing from desktop 
 for marker in (
     "<h2>Read Aloud</h2>", "does not request microphone access", "browser or operating system",
     "controlled by that browser, operating system and selected voice", "Book-only text-to-speech",
-    "Test Book voice control speaks a short sample through the same device speech service used by Listen", "Before speaking, the player resumes the browser speech queue if it was left paused", "MouldMaster cannot detect whether you hear the sample or Book speech",
+    "Press Listen to check Book speech", "Before speaking, the player resumes the browser speech queue if it was left paused", "MouldMaster cannot detect whether you hear the sample or Book speech",
 ):
     need(marker in privacy, f"Read Aloud privacy disclosure missing: {marker}")
 need("entirely on-device" in privacy, "voice-processing limitation disclosure missing")
