@@ -27,7 +27,7 @@ Look for the persistent **“Non-production preview”** notice. If it is absent
 
 1. **First impression:** Open the preview. Is it clear what you can do? Can you create/select a local learner profile without entering personal information?
 2. **Learn:** Open a lesson, continue it, find the objective, and return to the Home view. Check that a beginner can understand the explanation and the “what to do next” cue.
-3. **Book:** Find a reference relevant to a familiar defect or process question. Does it make the limits of generic advice understandable? Read Aloud is Book-only: tap **Test phone sound** and then **Listen** to test headphones. Note tone and speech audibility separately; the app cannot detect what you hear.
+3. **Book:** Find a reference relevant to a familiar defect or process question. Does it make the limits of generic advice understandable? Read Aloud is Book-only: tap **Test Book voice** and then **Listen** to test Book narration through the same device speech service. If either is silent, check the device's text-to-speech settings and system-selected audio output; the app cannot detect what you hear.
 4. **Practice:** Try a diagnostic/scenario question. Check the question, answer feedback and explanation; do not judge quality solely by whether you guessed correctly.
 5. **Mission Control:** Start a fictional mission, note evidence and try advancing stages. If you create two local learners, switch between them and check that a mission from learner A never appears for learner B.
 6. **Your device:** Check text size, navigation, keyboard/touch targets and readability. If you use a screen reader, describe any difficulty—this is feedback, **not** formal assistive-technology validation.
