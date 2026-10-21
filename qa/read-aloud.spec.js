@@ -63,49 +63,17 @@ test('Late OS onstart after the tab hides cancels single-screen speech', async (
   expect(await page.evaluate(()=>window.__lateStartVoice.cancels)).toBeGreaterThan(0);
 });
 
-test('Leaving Listening via navigation or core programmatic hide cancels its lesson audio', async ({page}) => {
-  await page.setContent('<!doctype html><html lang="en"><body><div id="app"><nav id="nav"><button data-view="path">Learn</button></nav><div class="top-actions"></div><main id="mainContent" class="main"><section id="path" class="view"><p>Other lesson index.</p></section></main></div></body></html>');
-  await page.evaluate(()=>{
-    window.MM_DATA={lessons:[{id:1,title:'Moulding basics',intro:'Learner-initiated long session audio.'}]};
-    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
-    class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
-    const speech={starts:0,cancels:0,getVoices(){return[];},speak(u){this.starts++;queueMicrotask(()=>u.onstart?.());},
-      cancel(){this.cancels++;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
-    window.__leaveListeningSynth=speech;
-    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Voice});
-    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:speech});
-  });
-  await page.addScriptTag({path:'read-aloud.js'});
-  const tab=page.locator('[data-mm-listening-tab]');
-  const listen=page.locator('#mmListeningView');
-  await tab.click();
-  await listen.locator('[data-mm-listening="play"]').click();
-  await expect(listen.locator('[data-mm-listening="play"]')).toHaveText('Pause');
-  const firstCancels=await page.evaluate(()=>window.__leaveListeningSynth.cancels);
-  await page.locator('#nav button[data-view="path"]').click();
-  // Minimal harness has no canonical .hidden stylesheet; assert route class.
-  await expect(listen).toHaveClass(/hidden/);
-  await expect(listen.locator('[data-mm-listening-status]')).toHaveText('Stopped after leaving Listening');
-  expect(await page.evaluate(()=>window.__leaveListeningSynth.cancels)).toBeGreaterThan(firstCancels);
-  await tab.click();
-  await listen.locator('[data-mm-listening="play"]').click();
-  await expect(listen.locator('[data-mm-listening="play"]')).toHaveText('Pause');
-  const prior=await page.evaluate(()=>window.__leaveListeningSynth.cancels);
-  await page.evaluate(()=>document.getElementById('mmListeningView').classList.add('hidden'));
-  await expect(listen.locator('[data-mm-listening-status]')).toHaveText('Stopped after leaving Listening');
-  expect(await page.evaluate(()=>window.__leaveListeningSynth.cancels)).toBeGreaterThan(prior);
-});
-
-test('privacy notice distinguishes Book screen reading from continuous background Listening', async ({page}) => {
+test('privacy notice limits Read Aloud to the Book and explains the separate app audio test', async ({page}) => {
   await page.goto('http://127.0.0.1:4173/privacy.html');
   const text=await page.locator('body').innerText();
-  expect(text).toContain('Book\'s one-screen Read Aloud');
-  expect(text).toContain('complete canonical lesson library');
-  expect(text).toContain('may continue speaking when this app is in the background');
-  expect(text).toContain('Last updated: 15 October 2026');
-  expect(text).toContain('Leaving the continuous Listening screen for another section of MouldMaster stops its active playlist.');
-  expect(text).toContain('Use Pause or Stop');
-  expect(text).not.toContain('Playback stops on app navigation and is paused when the app is hidden.');
+  expect(text).toContain('Book-only text-to-speech');
+  expect(text).toContain('Test phone sound check sends two short tones');
+  expect(text).toContain('Press Listen to check Book speech');
+  expect(text).toContain('MouldMaster cannot detect whether you hear the tones or speech');
+  expect(text).toContain('Last updated: 21 October 2026');
+  expect(text).toContain('check media volume and the selected headphone or Bluetooth output');
+  expect(text).not.toContain('complete canonical lesson library');
+  expect(text).not.toContain('continuous Listening mode');
 });
 test('expanded tablet Book speech controls occupy layout instead of overlaying reading', async ({page}) => {
   await seedLearner(page);
@@ -207,8 +175,12 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load()});
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.20.5');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.20.5');
+  await expect(host).toHaveAttribute('data-version','2026.10.21.1');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.21.1');
+  await expect(page.locator('#nav [data-mm-listening-tab]')).toHaveCount(0);
+  await expect(page.locator('#mmListeningView')).toHaveCount(0);
+  expect(await page.evaluate(()=>typeof window.MMReadAloud?.openListening)).toBe('undefined');
+  expect(await page.evaluate(()=>typeof window.MMReadAloud?.startPlaylist)).toBe('undefined');
   await expect(host.locator('summary')).toContainText('Listen');
 
   const placement=await page.evaluate(()=>{
@@ -273,13 +245,41 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
     await expect(status).toHaveText('Read Aloud is not available in this browser/device.');
     await expect(host.locator('[data-mm-read="play"]')).toBeDisabled();
   }
-  // The deployed stylesheet, not an unapproved inline style, provides the
-  // actual high-contrast focus marker for Listening route arrival.
-  await page.evaluate(()=>window.MMReadAloud.openListening());
-  const heading=page.locator('#mmListeningView .mm-listening-hero h2');
-  await expect(heading).toBeVisible();
-  await expect(heading).toBeFocused();
-  await expect(heading).toHaveCSS('outline-style','solid');
+  // Switching to a lesson keeps the player hidden and offers no lesson API.
+  await page.evaluate(()=>window.switchView('path'));
+  await expect(host).toBeHidden();
+  await expect(page.locator('#nav [data-mm-listening-tab]')).toHaveCount(0);
+  expect(await page.evaluate(()=>typeof window.MMReadAloud?.openListening)).toBe('undefined');
+});
+
+test('Book player app audio diagnostic sends two tones without using speech synthesis', async ({page}) => {
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book audio test fixture.</p></main></body></html>');
+  await page.evaluate(()=>{
+    const frequencies=[];
+    window.__mmAudioFrequencies=frequencies;
+    class FakeAudioContext{
+      constructor(){this.currentTime=0;this.destination={};this.state='running';}
+      createGain(){return {gain:{setValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){}};}
+      createOscillator(){return {type:'',frequency:{setValueAtTime(value){frequencies.push(value);}},connect(){},start(){},stop(){}};}
+      resume(){return Promise.resolve();}
+      close(){this.state='closed';return Promise.resolve();}
+    }
+    Object.defineProperty(window,'AudioContext',{configurable:true,value:FakeAudioContext});
+    class FakeUtterance{constructor(text=''){this.text=text;}}
+    const synth={calls:0,speak(){this.calls++;},cancel(){},getVoices(){return[];},addEventListener(){}};
+    window.__mmAudioSpeech=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:FakeUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const host=page.locator('.mm-read-aloud');
+  await host.locator('details').evaluate(el=>{el.open=true;});
+  await host.locator('[data-mm-read="test"]').click();
+  await expect(host.locator('[data-mm-read="test"]')).toHaveAccessibleName('Test browser audio output with two short tones');
+  await expect.poll(()=>page.evaluate(()=>window.__mmAudioFrequencies.length)).toBe(2);
+  expect(await page.evaluate(()=>window.__mmAudioFrequencies)).toEqual([880,660]);
+  expect(await page.evaluate(()=>window.__mmAudioSpeech.calls)).toBe(0);
+  await expect(host.locator('.mm-read-status')).toContainText('Two tones sent to browser audio output');
 });
 
 test('Read Aloud supported-path controls execute the exact product runtime in a deterministic speech harness', async ({ page }) => {
@@ -296,7 +296,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.supported===true)).toBeTruthy();
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.20.5');
+  await expect(host).toHaveAttribute('data-version','2026.10.21.1');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {
@@ -589,79 +589,6 @@ test('Sentence navigation while paused cues audio without restarting it until Li
   await expect.poll(()=>page.evaluate(()=>window.__mmNavVoice.started)).toBe(2);
 });
 
-test('Entering Listening stops active single-screen audio without autoplaying a lesson',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div id="app"><nav id="nav"><button data-view="path">Learn</button></nav><main id="mainContent" class="main"><section id="path" class="view"><p>Current Book paragraph is speaking from the compact reader.</p></section><div class="top-actions"></div></main></div></body></html>');
-  await page.evaluate(()=>{
-    window.MM_DATA={lessons:[
-      {id:1,title:'First handoff lesson',intro:'First learner lesson.'},
-      {id:2,title:'Second handoff lesson',intro:'Second learner lesson.'}
-    ]};
-    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
-      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
-    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
-    const synth={started:0,canceled:0,current:null,getVoices(){return[];},
-      speak(u){this.current=u;this.started++;window.__mmHandoffLastSpoken=u.text;queueMicrotask(()=>u.onstart?.());},
-      cancel(){this.canceled++;this.current=null;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
-    window.__mmHandoffSynth=synth;
-    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
-    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
-  });
-  await page.addScriptTag({path:'read-aloud.js'});
-  const compact=page.locator('.mm-read-aloud');
-  await compact.locator('details').evaluate(el=>{el.open=true});
-  const listen=compact.locator('[data-mm-read="play"]');
-  await listen.click();
-  await expect(listen).toHaveText('Pause');
-  await expect.poll(()=>page.evaluate(()=>window.__mmHandoffLastSpoken)).toContain('Current Book paragraph');
-  const countBefore=await page.evaluate(()=>window.__mmHandoffSynth.started);
-  await page.locator('[data-mm-listening-tab]').click();
-  await expect(page.locator('#mmListeningView')).toBeVisible();
-  await expect(listen).toHaveText('Listen');
-  await expect.poll(()=>page.evaluate(()=>window.__mmHandoffSynth.current===null)).toBeTruthy();
-  await page.locator('#mmListeningView [data-mm-listening="next-lesson"]').click();
-  await expect(page.locator('#mmListeningView [data-mm-listening-lesson]')).toContainText('Second handoff lesson');
-  expect(await page.evaluate(()=>window.__mmHandoffSynth.started)).toBe(countBefore);
-  await page.locator('#mmListeningView [data-mm-listening="play"]').click();
-  await expect.poll(()=>page.evaluate(()=>window.__mmHandoffLastSpoken)).toContain('Second handoff lesson');
-  expect(await page.evaluate(()=>window.__mmHandoffSynth.started)).toBe(countBefore+1);
-});
-
-test('Listening navigation while stopped is silent and Play starts selected lesson',async({page})=>{
-  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><nav id="nav"><button data-view="path">Learn</button></nav><main id="mainContent" class="main"><section id="path" class="view">Learn</section></main></body></html>');
-  await page.evaluate(()=>{
-    window.MM_DATA={lessons:[
-      {id:1,title:'First lesson',intro:'First lesson detail.'},
-      {id:2,title:'Second lesson',intro:'Second lesson detail.'}
-    ]};
-    Object.defineProperty(navigator,'userAgent',{configurable:true,value:
-      'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/129.0 Mobile Safari/537.36'});
-    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
-    const voice={started:0,getVoices(){return[];},
-      speak(u){this.started++;window.__mmJumpSpeech=u.text;queueMicrotask(()=>u.onstart?.());},
-      cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
-    window.__mmJumpVoice=voice;
-    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
-    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:voice});
-  });
-  await page.addScriptTag({path:'read-aloud.js'});
-  await page.locator('[data-mm-listening-tab]').click();
-  const player=page.locator('#mmListeningView');
-  await player.locator('[data-mm-listening="next-lesson"]').click();
-  await expect(player.locator('[data-mm-listening-lesson]')).toContainText('Lesson 2');
-  expect(await page.evaluate(()=>window.__mmJumpVoice.started)).toBe(0);
-  await expect(player.locator('[data-mm-listening-status]')).toHaveText('Lesson or sentence selected. Press Play to listen.');
-  await player.locator('[data-mm-listening="play"]').click();
-  await expect.poll(()=>page.evaluate(()=>window.__mmJumpSpeech)).toContain('Second lesson');
-  expect(await page.evaluate(()=>window.__mmJumpVoice.started)).toBe(1);
-  await player.locator('[data-mm-listening="stop"]').click();
-  await player.locator('[data-mm-listening="prev-lesson"]').click();
-  expect(await page.evaluate(()=>window.__mmJumpVoice.started)).toBe(1);
-  await expect(player.locator('[data-mm-listening-lesson]')).toContainText('Lesson 1');
-  await player.locator('[data-mm-listening="play"]').click();
-  await expect.poll(()=>page.evaluate(()=>window.__mmJumpSpeech)).toContain('First lesson');
-  expect(await page.evaluate(()=>window.__mmJumpVoice.started)).toBe(2);
-});
-
 test('Changing narration speed while paused never resumes speech without Play',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First spoken sentence. Second spoken sentence.</p></main></body></html>');
   await page.evaluate(()=>{
@@ -830,7 +757,7 @@ test('Speech interruption exits stale playing state and Stop ignores synchronous
   await expect(play).toHaveText('Listen');
 });
 
-test('Unavailable speech provider disables both playback launchers without offering a broken action',async({page})=>{
+test('Unavailable speech provider disables Book speech while app audio remains independent',async({page})=>{
   await page.setContent('<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div id="app"><nav id="nav"><button data-view="path">Path</button></nav><main id="mainContent" class="main"><section id="path" class="view"><p>Ordinary lesson content.</p></section><div class="top-actions"></div></main></div></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(window,'speechSynthesis',{configurable:true,value:null});
@@ -840,74 +767,10 @@ test('Unavailable speech provider disables both playback launchers without offer
   const compact=page.locator('.mm-read-aloud');
   await expect(compact.locator('[data-mm-read="play"]')).toBeDisabled();
   await expect(compact.locator('summary')).toContainText('Unavailable');
-  await page.locator('[data-mm-listening-tab]').click();
-  const listening=page.locator('#mmListeningView');
-  await expect(listening.locator('[data-mm-listening="play"]')).toBeDisabled();
-  await expect(listening.locator('[data-mm-listening-status]')).toHaveText('Speech synthesis is unavailable');
+  await expect(compact.locator('[data-mm-read="test"]')).toBeEnabled();
+  await expect(page.locator('#nav [data-mm-listening-tab]')).toHaveCount(0);
+  await expect(page.locator('#mmListeningView')).toHaveCount(0);
 });
-
-test('Listening tab builds a continuous lesson playlist and exposes long-session controls', async ({ page }) => {
-  await page.setContent(`<!doctype html><html lang="en"><head><meta charset="utf-8"></head><body><div id="app"><aside><nav id="nav"><button data-view="path">Path</button></nav></aside><main id="mainContent" class="main"><section id="path" class="view"><p>Path content</p></section><header><div class="top-actions"></div></header></main></div></body></html>`);
-  await page.evaluate(() => {
-    window.MM_DATA={lessons:[
-      {id:1,title:'Moulding basics',intro:'Injection moulding starts with controlled material preparation.',summary:'Control the process window.',objectives:['Recognise the cycle.'],keypoints:['Record evidence.'],exercise:'Observe one cycle.'},
-      {id:2,title:'Material preparation',intro:'Drying depends on the material.',summary:'Use supplier evidence.',objectives:['Check drying requirements.'],keypoints:['Avoid assumptions.'],exercise:'Review a material sheet.'}
-    ]};
-    class QaSpeechSynthesisUtterance {constructor(text=''){this.text=String(text);this.lang='';this.voice=null;this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
-    const synth={getVoices(){return[{name:'QA Voice',lang:'en-NZ',default:true}];},speak(utterance){window.__mmListeningSpeakCount=(window.__mmListeningSpeakCount||0)+1;window.__mmListeningSpoken=utterance.text;window.__mmListeningRate=utterance.rate;queueMicrotask(()=>utterance.onstart?.());},cancel(){},pause(){window.__mmListeningPaused=true;},resume(){window.__mmListeningResumed=true;},addEventListener(){},removeEventListener(){}};
-    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,writable:true,value:QaSpeechSynthesisUtterance});
-    Object.defineProperty(window,'speechSynthesis',{configurable:true,writable:true,value:synth});
-  });
-  await page.addScriptTag({path:'read-aloud.js'});
-  const tab=page.locator('[data-mm-listening-tab]');
-  await expect(tab).toBeVisible();
-  await tab.click();
-  const view=page.locator('#mmListeningView');
-  await expect(view).toBeVisible();
-  await expect(view).toContainText('Listen through MouldMaster lessons continuously');
-  await expect(view.locator('.mm-listening-hero h2')).toBeFocused();
-  await view.locator('[data-mm-listening="play"]').click();
-  await expect.poll(()=>page.evaluate(()=>window.__mmListeningSpoken||'')).toContain('Moulding basics');
-  await expect(view.locator('[data-mm-listening-lesson]')).toContainText('Lesson 1');
-  await view.locator('[data-mm-listening-speed]').selectOption('1.25');
-  await expect.poll(()=>page.evaluate(()=>window.__mmListeningRate)).toBe(1.25);
-  await view.locator('[data-mm-listening="next-lesson"]').click();
-  await expect(view.locator('[data-mm-listening-lesson]')).toContainText('Lesson 2');
-  // Long-session speed controls follow the same paused-user-intent rule.
-  const beforeSpeedEdit=await page.evaluate(()=>window.__mmListeningSpeakCount);
-  await view.locator('[data-mm-listening="play"]').click();
-  await expect(view.locator('[data-mm-listening="play"]')).toHaveText('Resume');
-  await view.locator('[data-mm-listening-speed]').selectOption('1.5');
-  await expect(view.locator('[data-mm-listening="play"]')).toHaveText('Resume');
-  await expect(view.locator('[data-mm-listening-status]')).toHaveText('Paused. Updated speed applies to the next sentence.');
-  expect(await page.evaluate(()=>window.__mmListeningSpeakCount)).toBe(beforeSpeedEdit);
-  await view.locator('[data-mm-listening="play"]').click();
-  await expect(view.locator('[data-mm-listening="play"]')).toHaveText('Pause');
-  await view.locator('[data-mm-listening="stop"]').click();
-  await expect(view.locator('[data-mm-listening-status]')).toHaveText('Stopped');
-  // Stopping must not turn Play into one-screen narration of the controls.
-  // Restart the selected lesson from the canonical course playlist.
-  await page.evaluate(()=>{window.__mmListeningSpoken='';});
-  await view.locator('[data-mm-listening="play"]').click();
-  await expect.poll(()=>page.evaluate(()=>window.__mmListeningSpoken||'')).toContain('Material preparation');
-  await expect(view.locator('[data-mm-listening-lesson]')).toContainText('Lesson 2');
-  await expect(view.locator('[data-mm-listening-status]')).toHaveText('Listening session playing');
-  // A programmatic core view switch can hide the custom Listening screen
-  // without a nav click. Reopening must restore the real visible view,
-  // active tab and keyboard focus instead of trusting a stale boolean.
-  await page.evaluate(()=>{
-    document.getElementById('mmListeningView').classList.add('hidden');
-    document.getElementById('path').classList.remove('hidden');
-    document.querySelector('[data-mm-listening-tab]').classList.remove('active');
-  });
-  await tab.focus();
-  await tab.press('Enter');
-  await expect(view).toBeVisible();
-  await expect(view.locator('.mm-listening-hero h2')).toBeFocused();
-  await expect(tab).toHaveClass(/active/);
-  await expect(page.locator('#path')).toHaveClass(/hidden/);
-});
-
 
 test('Book verified listening starts Android device speech in the original tap and stops on Contents',async({page})=>{
   await seedLearner(page);
@@ -1053,8 +916,8 @@ test('Book Contents narration does not pick an unrelated screen when the reader 
 });
 
 for(const phone of ['Android','iPhone']){
-  test(`Phone sound diagnostic starts its short TTS sample on the original ${phone} tap`,async({page})=>{
-    await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Phone sound diagnostic does not need a Book content queue.</p></main></body></html>');
+  test(`Book playback starts speech on the original ${phone} tap`,async({page})=>{
+    await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book voice diagnostic does not need a narration queue.</p></main></body></html>');
     await page.evaluate(phone=>{
       const ua=phone==='Android'?'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/130.0 Mobile Safari/537.36':'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1';
       Object.defineProperty(navigator,'userAgent',{configurable:true,value:ua});
@@ -1067,14 +930,14 @@ for(const phone of ['Android','iPhone']){
     },phone);
     await page.addScriptTag({path:'read-aloud.js'});
     // Phone player is collapsed until the learner opens the Listen panel.
-    // The sound test is inside that panel and must be visibly actionable.
+    // Book playback is the speech test; Test phone sound is a separate app-output check.
     await page.locator('.mm-read-aloud summary').click();
     await expect(page.locator('.mm-read-aloud details')).toHaveAttribute('open','');
-    await page.locator('.mm-read-aloud [data-mm-read="test"]').click();
-    await expect.poll(()=>page.evaluate(()=>window.__phoneTestVoiceText||'')).toBe('MouldMaster sound test. You should hear this sentence.');
+    await page.locator('.mm-read-aloud [data-mm-read="play"]').click();
+    await expect.poll(()=>page.evaluate(()=>window.__phoneTestVoiceText||'')).toBe('Book voice diagnostic does not need a narration queue.');
     expect(await page.evaluate(()=>window.__phoneTestVoiceLang)).toBe('');
     expect(await page.evaluate(()=>window.__phoneTestCancelCountAtSpeak)).toBe(0);
-    await expect(page.locator('.mm-read-aloud .mm-read-status')).toContainText('Sound test finished');
+    await expect(page.locator('.mm-read-aloud .mm-read-status')).toHaveText('Finished reading');
     expect(await page.evaluate(()=>window.__phoneTestVoiceRate)).toBe(1);
   });
 }
@@ -1194,11 +1057,6 @@ test('Android natural completion leaves completed speech uncanceled',async({page
   await expect(player.locator('.mm-read-status')).toHaveText('Finished reading');
   expect(await page.evaluate(()=>window.__androidNaturalEndSpeech.cancels)).toBe(0);
 
-  await player.locator('[data-mm-read="test"]').click();
-  await expect.poll(()=>page.evaluate(()=>window.__androidNaturalEndSpeech.utterances.length)).toBe(2);
-  await page.evaluate(()=>window.__androidNaturalEndSpeech.utterances[1].onend?.());
-  await expect(player.locator('.mm-read-status')).toContainText('Sound test finished');
-  expect(await page.evaluate(()=>window.__androidNaturalEndSpeech.cancels)).toBe(0);
 });
 
 test('Android watchdog keeps active speech when the provider omits onstart',async({page})=>{
@@ -1226,4 +1084,36 @@ test('Android watchdog keeps active speech when the provider omits onstart',asyn
   expect(await page.evaluate(()=>window.__activeNoStartVoice.cancels)).toBe(0);
   await player.locator('[data-mm-read="stop"]').click();
   expect(await page.evaluate(()=>window.__activeNoStartVoice.cancels)).toBe(1);
+});
+
+test('Android late start is not canceled when the watchdog sees no active speech',async({page})=>{
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Android TTS may start after its speaking flag stays false.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    const nativeSetTimeout=window.setTimeout.bind(window);
+    window.__androidWatchdogCallbacks=[];
+    window.setTimeout=(fn,delay,...args)=>{
+      if(delay===6000){window.__androidWatchdogCallbacks.push(()=>fn(...args));return 600000+window.__androidWatchdogCallbacks.length;}
+      return nativeSetTimeout(fn,delay,...args);
+    };
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onboundary=null;this.onend=null;this.onerror=null;}}
+    const synth={cancels:0,current:null,getVoices(){return[];},speak(u){this.current=u;},
+      cancel(){this.cancels++;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__lateAndroidVoice=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('summary').click();
+  await player.locator('[data-mm-read="play"]').click();
+  await page.evaluate(()=>window.__androidWatchdogCallbacks[0]());
+  await expect(player.locator('.mm-read-status')).toHaveText('Android voice has not confirmed playback yet. It may still start; press Stop if it stays silent.');
+  expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(0);
+  await page.evaluate(()=>window.__lateAndroidVoice.current.onstart?.());
+  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(0);
+  await player.locator('[data-mm-read="stop"]').click();
+  expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(1);
+
 });

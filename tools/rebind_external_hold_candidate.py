@@ -24,11 +24,11 @@ def need(cond,msg):
     if not cond:raise SystemExit(msg)
 
 def previous_at_candidate(previous, at):
-    """Preserve the old accessibility source under its actual old release key."""
+    """Preserve the prior accessibility source under its actual release key."""
     return {
         "release": previous.get("release"),
-        "sourceSha": at["sourceSha"],
-        "runtimeFingerprint": at["runtimeFingerprint"],
+        "sourceSha": previous.get("sourceSha") or at.get("sourceSha"),
+        "runtimeFingerprint": previous.get("runtimeFingerprint") or at.get("runtimeFingerprint"),
     }
 
 
@@ -187,14 +187,14 @@ def main():
                "artifactDigest":a.artifact_digest,"artifactExpiresAt":a.artifact_expires_at}
 
     previous=ledger.get("webCandidate")
+    prior_record=previous if isinstance(previous,dict) else ledger.get("previousCandidate")
     changed=previous!=candidate
     if not a.check and changed:
-        if isinstance(previous,dict) and previous.get("sourceSha"):
-            ledger["previousCandidate"]=copy.deepcopy(previous)
-            if pwa.get("candidate"):pwa["previousCandidate"]=copy.deepcopy(pwa["candidate"])
-            if nzqa.get("candidate"):nzqa["previousCandidate"]=copy.deepcopy(nzqa["candidate"])
-            if at.get("sourceSha") and at.get("runtimeFingerprint"):
-                at["previousCandidate"]=previous_at_candidate(previous,at)
+        if isinstance(prior_record,dict) and prior_record.get("sourceSha"):
+            ledger["previousCandidate"]=copy.deepcopy(prior_record)
+            pwa["previousCandidate"]=copy.deepcopy(prior_record)
+            nzqa["previousCandidate"]=copy.deepcopy(prior_record)
+            at["previousCandidate"]=previous_at_candidate(prior_record,at)
         # An unverified new artifact must not inherit its predecessor's PASS.
         ledger["technicalAutomation"]={
             "status":"fail",

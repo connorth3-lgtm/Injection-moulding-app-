@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fail-closed QA for MouldMaster Read Aloud and long-session Listening runtime."""
+"""Fail-closed QA for MouldMaster Book-only Read Aloud and app audio runtime."""
 from __future__ import annotations
 
 import json
@@ -21,8 +21,8 @@ version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
 package = json.loads((ROOT / "desktop/electron/package.json").read_text(encoding="utf-8"))
 integrity_generator = (ROOT / "desktop/electron/scripts/generate-integrity.cjs").read_text(encoding="utf-8")
 
-need(version.get("read_aloud_version") == "2026.10.20.5", "Read Aloud version marker mismatch")
-need("const VERSION='2026.10.20.5'" in runtime, "Read Aloud runtime version mismatch")
+need(version.get("read_aloud_version") == "2026.10.21.1", "Read Aloud version marker mismatch")
+need("const VERSION='2026.10.21.1'" in runtime, "Read Aloud runtime version mismatch")
 need("function cancelDeviceSpeech(force=false)" in runtime and "cancelDeviceSpeech(cancelActive)" in runtime and "cancelDeviceSpeech(true)" in runtime,
      "speech cancellation must be limited to active queues or explicit cleanup")
 need("function applyAvailableVoice(utterance)" in runtime and "if(!selectedVoice){utterance.lang='';return;}" in runtime,
@@ -34,7 +34,7 @@ for marker in ("speechSynthesis", "SpeechSynthesisUtterance", "Intl.Segmenter"):
     need(marker in runtime, f"required speech/readability capability missing: {marker}")
 for forbidden in (
     "getUserMedia", "mediaDevices", "MediaRecorder", "SpeechRecognition",
-    "webkitSpeechRecognition", "AudioContext", "webkitAudioContext", "fetch(",
+    "webkitSpeechRecognition", "fetch(",
     "XMLHttpRequest", "sendBeacon", "WebSocket", "EventSource", "localStorage",
     "sessionStorage", "indexedDB",
 ):
@@ -54,7 +54,7 @@ for marker in (
     'data-mm-read="stop"', 'data-mm-read="speed"', "0.75,1,1.25,1.5",
     'role="status"', 'aria-live="polite"',
     "Read Aloud is not available in this browser/device.",
-    "Device voice did not start. Check Windows speech voices, then try again.",
+    "Book voice did not start. Check device text-to-speech settings, then try again.",
     "voiceschanged", "getVoices", "🔊 Listen", "#app .top-actions,.top-actions",
     "details[open]",
 ):
@@ -79,7 +79,7 @@ for marker in (
     "if(androidSpeech){",
     "beginSpeech();",
     "waitForVoice(retry?700:1200).then(beginSpeech",
-    "Tap Listen again; check Android text-to-speech settings",
+    "Android voice has not confirmed playback yet",
 ):
     need(marker in runtime, f"Android tap-to-speak guard missing: {marker}")
 need("await waitForVoice" not in runtime, "Android speech start must not block on voice discovery")
@@ -96,30 +96,14 @@ for marker in (
 ):
     need(marker in runtime, f"Book voice-target/late-chapter regression guard missing: {marker}")
 
-# Dedicated long-session Listening mode must reuse the same speech-synthesis runtime,
-# consume authored lesson content only, provide durable playback controls, and avoid
-# implying that every browser/OS voice is processed entirely on-device.
-for marker in (
-    "Long-session audio learning",
-    "continuous listening",
-    "buildPlaylist",
-    "lessonText",
-    "window.MM_DATA?.lessons",
-    'data-mm-listening="play"',
-    'data-mm-listening="prev-lesson"',
-    'data-mm-listening="next-lesson"',
-    'data-mm-listening="stop"',
-    "data-mm-listening-speed",
-    "jumpLesson",
-    "playlistMode",
-    "!playlistMode",
-    "continues when this app tab is in the background",
-    "browser or operating-system speech service",
-    "voice-provider processing depends on your device, browser and selected voice",
-):
-    need(marker in runtime, f"Listening mode contract missing: {marker}")
-need("same local device voice" not in runtime, "Listening privacy copy must not imply all voice processing is local")
-
+# Book-only scope: lesson playlists have no installed navigation or public API.
+need("createListeningTab();" not in runtime, "lesson Listening navigation must not be installed")
+need("startPlaylist,openListening" not in runtime, "lesson playlist/open APIs must not be exported")
+need("currentLessonId:" not in runtime, "lesson-specific Read Aloud API must not be exported")
+need("data-mm-listening-tab" not in runtime, "lesson Listening tab marker must not be installed")
+for marker in ("AudioContext", "webkitAudioContext", "createOscillator", "Two tones sent to browser audio output"):
+    need(marker in runtime, f"independent app audio diagnostic missing: {marker}")
+need("Test phone sound" in runtime and "Test browser audio output with two short tones" in runtime, "Book audio output diagnostic control missing")
 # Book audio is chapter-aware, learner-scoped cursor events are emitted without
 # storage inside the voice engine, and presentation modes remain source-governed.
 for marker in (
@@ -156,9 +140,10 @@ need("'read-aloud.js'" in integrity_generator, "Read Aloud missing from desktop 
 # Privacy language must avoid claiming every OS/browser voice is offline.
 for marker in (
     "<h2>Read Aloud</h2>", "does not request microphone access", "browser or operating system",
-    "controlled by that browser, operating system and selected voice",
+    "controlled by that browser, operating system and selected voice", "Book-only text-to-speech",
+    "Test phone sound check sends two short tones", "Press Listen to check Book speech", "MouldMaster cannot detect whether you hear the tones or speech",
 ):
     need(marker in privacy, f"Read Aloud privacy disclosure missing: {marker}")
 need("entirely on-device" in privacy, "voice-processing limitation disclosure missing")
 
-print("MouldMaster Read Aloud QA passed: speech-synthesis-only, Android first-tap/desktop delayed-voice aware, long-session Listening enabled, offline/desktop-integrity wired, and privacy disclosed.")
+print("MouldMaster Book Read Aloud QA passed: Book-only speech-synthesis playback, independent two-tone output check, Android first-tap/desktop delayed-voice aware, offline/desktop-integrity wired, and privacy disclosed.")
