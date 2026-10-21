@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: Exact-source candidate for release 2026.10.21.1, source 82ba7b14909b89191cd9bc15f25440a9728f475f, retained from Pre-merge Public Candidate run 39546516253 (success), artifact 12320969604, fingerprint sha256:5e45262087ffb404469ed82c16ba76e6d1cb97b5356e568a030f01233d031484. Exact-source static and contract QA passed. This is software-controlled evidence only; human, physical-device and production authorization remain separate. |
-| Behavioral / browser | **pass** | PASS: Book-only Read Aloud QA, Mobile Browser QA and Question Quality 50-Pass passed for release 2026.10.21.1, source 82ba7b14909b89191cd9bc15f25440a9728f475f. Android delayed startup, sentence handoff, natural completion and explicit Stop regressions passed. Browser automation cannot confirm audible output through physical headphones; real-device and human review remain HOLD. |
+| Static / contract | **fail** | HOLD: release 2026.10.21.2 exact-source candidate and static/contract QA are not yet verified. No current technical PASS is asserted; external human/device evidence remains separately on HOLD. |
+| Behavioral / browser | **fail** | HOLD: release 2026.10.21.2 exact-source browser and question-quality checks are not yet verified. Physical headphone audibility cannot be established by automated browser QA; external review remains on HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
