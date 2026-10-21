@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "release": "2026.10.21.2",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.21.1.md",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.21.2.md",
   "sourceSha": "82ba7b14909b89191cd9bc15f25440a9728f475f",
   "runtimeFingerprint": "sha256:5e45262087ffb404469ed82c16ba76e6d1cb97b5356e568a030f01233d031484",
   "status": "pending-real-at-validation",
