@@ -78,7 +78,7 @@ test('privacy notice limits Read Aloud to the Book and explains the separate app
   expect(text).toContain('Book-only text-to-speech');
   expect(text).toContain('Test phone sound check sends two short tones');
   expect(text).toContain('Press Listen to check Book speech');
-  expect(text).toContain('MouldMaster cannot detect whether you hear the tones or speech');
+  expect(text).toContain('MouldMaster cannot detect whether you hear the tone sample or Book speech');
   expect(text).toContain('Last updated: 21 October 2026');
   expect(text).toContain('check media volume and the selected headphone or Bluetooth output');
   expect(text).not.toContain('complete canonical lesson library');
