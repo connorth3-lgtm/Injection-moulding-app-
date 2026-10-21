@@ -1,11 +1,11 @@
-/* MouldMaster Book Read Aloud — 2026.10.21.1
+/* MouldMaster Book Read Aloud — 2026.10.21.2
  * Learner-controlled text-to-speech using the browser/device speech-synthesis service.
  * No microphone access, recording, speech recognition, network upload, or learner-content storage.
  */
 (function(){
   'use strict';
 
-  const VERSION='2026.10.21.1';
+  const VERSION='2026.10.21.2';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -229,6 +229,13 @@
     renderListeningState();
   }
 
+  function resumePausedSpeechQueue(){
+    // SpeechSynthesis can remain globally paused after an interruption even
+    // when this player's own state is idle. New utterances then queue silently.
+    if(!supported||typeof synth.resume!=='function')return;
+    try{if(synth.paused===true)synth.resume()}catch(_){ }
+  }
+
   function deviceIsSpeaking(){
     try{return synth.speaking===true}catch(_){return false}
   }
@@ -292,6 +299,7 @@
       // Must run directly inside the original tap handler on Android, even
       // with an empty voice list. The platform can pick its default voice.
       if(replaceCurrent)cancelDeviceSpeech(true);
+      resumePausedSpeechQueue();
       let utterance;
       try{
         utterance=new SpeechSynthesisUtterance(unit.text);
