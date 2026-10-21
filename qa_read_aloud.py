@@ -103,7 +103,7 @@ need("currentLessonId:" not in runtime, "lesson-specific Read Aloud API must not
 need("data-mm-listening-tab" not in runtime, "lesson Listening tab marker must not be installed")
 for marker in ("AudioContext", "webkitAudioContext", "createOscillator", "Two tones sent to browser audio output"):
     need(marker in runtime, f"independent app audio diagnostic missing: {marker}")
-need("Test app audio (two beeps)" in runtime and "Test Book voice" in runtime, "Book audio diagnostic controls missing")
+need("Test phone sound" in runtime and "Test browser audio output with two short tones" in runtime, "Book audio output diagnostic control missing")
 # Book audio is chapter-aware, learner-scoped cursor events are emitted without
 # storage inside the voice engine, and presentation modes remain source-governed.
 for marker in (
@@ -141,9 +141,9 @@ need("'read-aloud.js'" in integrity_generator, "Read Aloud missing from desktop 
 for marker in (
     "<h2>Read Aloud</h2>", "does not request microphone access", "browser or operating system",
     "controlled by that browser, operating system and selected voice", "Book-only text-to-speech",
-    "Test app audio", "two short tones", "Test Book voice",
+    "Test phone sound check sends two short tones", "Press Listen to check Book speech", "MouldMaster cannot detect whether you hear the tones or speech",
 ):
     need(marker in privacy, f"Read Aloud privacy disclosure missing: {marker}")
 need("entirely on-device" in privacy, "voice-processing limitation disclosure missing")
 
-print("MouldMaster Book Read Aloud QA passed: speech-synthesis-only, independent app-audio output test, Android first-tap/desktop delayed-voice aware, offline/desktop-integrity wired, and privacy disclosed.")
+print("MouldMaster Book Read Aloud QA passed: Book-only speech-synthesis playback, independent two-tone output check, Android first-tap/desktop delayed-voice aware, offline/desktop-integrity wired, and privacy disclosed.")

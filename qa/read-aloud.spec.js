@@ -67,8 +67,9 @@ test('privacy notice limits Read Aloud to the Book and explains the separate app
   await page.goto('http://127.0.0.1:4173/privacy.html');
   const text=await page.locator('body').innerText();
   expect(text).toContain('Book-only text-to-speech');
-  expect(text).toContain('Test app audio sends two short tones');
-  expect(text).toContain('Test Book voice uses the device speech service');
+  expect(text).toContain('Test phone sound check sends two short tones');
+  expect(text).toContain('Press Listen to check Book speech');
+  expect(text).toContain('MouldMaster cannot detect whether you hear the tones or speech');
   expect(text).toContain('Last updated: 21 October 2026');
   expect(text).toContain('check media volume and the selected headphone or Bluetooth output');
   expect(text).not.toContain('complete canonical lesson library');
@@ -273,7 +274,8 @@ test('Book player app audio diagnostic sends two tones without using speech synt
   await page.addScriptTag({path:'read-aloud.js'});
   const host=page.locator('.mm-read-aloud');
   await host.locator('details').evaluate(el=>{el.open=true;});
-  await host.locator('[data-mm-read="test-app-audio"]').click();
+  await host.locator('[data-mm-read="test"]').click();
+  await expect(host.locator('[data-mm-read="test"]')).toHaveAccessibleName('Test browser audio output with two short tones');
   await expect.poll(()=>page.evaluate(()=>window.__mmAudioFrequencies.length)).toBe(2);
   expect(await page.evaluate(()=>window.__mmAudioFrequencies)).toEqual([880,660]);
   expect(await page.evaluate(()=>window.__mmAudioSpeech.calls)).toBe(0);
@@ -765,8 +767,7 @@ test('Unavailable speech provider disables Book speech while app audio remains i
   const compact=page.locator('.mm-read-aloud');
   await expect(compact.locator('[data-mm-read="play"]')).toBeDisabled();
   await expect(compact.locator('summary')).toContainText('Unavailable');
-  await expect(compact.locator('[data-mm-read="test-voice"]')).toBeEnabled();
-  await expect(compact.locator('[data-mm-read="test-app-audio"]')).toBeEnabled();
+  await expect(compact.locator('[data-mm-read="test"]')).toBeEnabled();
   await expect(page.locator('#nav [data-mm-listening-tab]')).toHaveCount(0);
   await expect(page.locator('#mmListeningView')).toHaveCount(0);
 });
@@ -915,7 +916,7 @@ test('Book Contents narration does not pick an unrelated screen when the reader 
 });
 
 for(const phone of ['Android','iPhone']){
-  test(`Book voice diagnostic starts its short TTS sample on the original ${phone} tap`,async({page})=>{
+  test(`Book playback starts speech on the original ${phone} tap`,async({page})=>{
     await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book voice diagnostic does not need a narration queue.</p></main></body></html>');
     await page.evaluate(phone=>{
       const ua=phone==='Android'?'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/130.0 Mobile Safari/537.36':'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1';
@@ -929,14 +930,14 @@ for(const phone of ['Android','iPhone']){
     },phone);
     await page.addScriptTag({path:'read-aloud.js'});
     // Phone player is collapsed until the learner opens the Listen panel.
-    // The sound test is inside that panel and must be visibly actionable.
+    // Book playback is the speech test; Test phone sound is a separate app-output check.
     await page.locator('.mm-read-aloud summary').click();
     await expect(page.locator('.mm-read-aloud details')).toHaveAttribute('open','');
-    await page.locator('.mm-read-aloud [data-mm-read="test-voice"]').click();
-    await expect.poll(()=>page.evaluate(()=>window.__phoneTestVoiceText||'')).toBe('MouldMaster Book voice test. If silent, check device text-to-speech settings and selected voice.');
+    await page.locator('.mm-read-aloud [data-mm-read="play"]').click();
+    await expect.poll(()=>page.evaluate(()=>window.__phoneTestVoiceText||'')).toBe('Book voice diagnostic does not need a narration queue.');
     expect(await page.evaluate(()=>window.__phoneTestVoiceLang)).toBe('');
     expect(await page.evaluate(()=>window.__phoneTestCancelCountAtSpeak)).toBe(0);
-    await expect(page.locator('.mm-read-aloud .mm-read-status')).toContainText('Book voice test finished');
+    await expect(page.locator('.mm-read-aloud .mm-read-status')).toHaveText('Finished reading');
     expect(await page.evaluate(()=>window.__phoneTestVoiceRate)).toBe(1);
   });
 }
@@ -1056,11 +1057,6 @@ test('Android natural completion leaves completed speech uncanceled',async({page
   await expect(player.locator('.mm-read-status')).toHaveText('Finished reading');
   expect(await page.evaluate(()=>window.__androidNaturalEndSpeech.cancels)).toBe(0);
 
-  await player.locator('[data-mm-read="test-voice"]').click();
-  await expect.poll(()=>page.evaluate(()=>window.__androidNaturalEndSpeech.utterances.length)).toBe(2);
-  await page.evaluate(()=>window.__androidNaturalEndSpeech.utterances[1].onend?.());
-  await expect(player.locator('.mm-read-status')).toContainText('Book voice test finished');
-  expect(await page.evaluate(()=>window.__androidNaturalEndSpeech.cancels)).toBe(0);
 });
 
 test('Android watchdog keeps active speech when the provider omits onstart',async({page})=>{
@@ -1120,12 +1116,4 @@ test('Android late start is not canceled when the watchdog sees no active speech
   await player.locator('[data-mm-read="stop"]').click();
   expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(1);
 
-  await player.locator('[data-mm-read="test-voice"]').click();
-  await page.evaluate(()=>window.__androidWatchdogCallbacks[window.__androidWatchdogCallbacks.length-1]());
-  await expect(player.locator('.mm-read-status')).toHaveText('Android voice has not confirmed sound yet. It may still start; press Stop if it stays silent.');
-  expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(1);
-  await page.evaluate(()=>window.__lateAndroidVoice.current.onstart?.());
-  await expect(player.locator('.mm-read-status')).toHaveText('Book voice started. If two tones work but speech is silent, check device text-to-speech settings and selected voice.');
-  expect(await page.evaluate(()=>window.__lateAndroidVoice.cancels)).toBe(1);
-  await player.locator('[data-mm-read="stop"]').click();
 });
