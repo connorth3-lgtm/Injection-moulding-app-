@@ -252,6 +252,34 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   expect(await page.evaluate(()=>typeof window.MMReadAloud?.openListening)).toBe('undefined');
 });
 
+test('Book Listen resumes a globally paused speech queue before speaking', async ({page}) => {
+  await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book speech test fixture.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    const events=[];
+    class FakeUtterance{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={paused:true,speaking:false,pending:false,resumeCalls:0,last:null,getVoices(){return[];},
+      resume(){this.resumeCalls++;this.paused=false;events.push('resume');},
+      speak(utterance){this.last=utterance;events.push('speak');},
+      cancel(){this.speaking=false;this.pending=false;},addEventListener(){},removeEventListener(){}};
+    window.__mmPausedSpeech={synth,events};
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:FakeUtterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const host=page.locator('.mm-read-aloud');
+  await host.locator('details').evaluate(el=>{el.open=true;});
+  await host.locator('[data-mm-read="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmPausedSpeech.synth.resumeCalls)).toBe(1);
+  await expect.poll(()=>page.evaluate(()=>window.__mmPausedSpeech.events)).toEqual(['resume','speak']);
+  expect(await page.evaluate(()=>window.__mmPausedSpeech.synth.paused)).toBe(false);
+  await page.evaluate(()=>{
+    const utterance=window.__mmPausedSpeech.synth.last;
+    utterance.onstart?.();
+    utterance.onend?.();
+  });
+});
+
 test('Book player app audio diagnostic sends two tones without using speech synthesis', async ({page}) => {
   await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book audio test fixture.</p></main></body></html>');
   await page.evaluate(()=>{
