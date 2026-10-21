@@ -21,12 +21,12 @@ async function setBookFixture(page,html,...options){
   return page.setContent(wrapped,...options);
 }
 
-test('Delayed one-screen speech cannot start after the tab hides', async ({page}) => {
-  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Private visible lesson narration must not start later in a hidden tab.</p></main></body></html>');
+test('Delayed device speech can start after the page hides for screen-off listening', async ({page}) => {
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Screen-off Book narration can begin while the app is hidden.</p></main></body></html>');
   await page.evaluate(()=>{
     class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
-    const speech={starts:0,cancels:0,getVoices(){return[];},speak(){this.starts++;},
-      cancel(){this.cancels++;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    const speech={starts:0,cancels:0,pauses:0,last:null,getVoices(){return[];},speak(u){this.starts++;this.last=u;},
+      cancel(){this.cancels++;},pause(){this.pauses++;},resume(){},addEventListener(){},removeEventListener(){}};
     window.__hiddenStartVoice=speech;
     Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Voice});
     Object.defineProperty(window,'speechSynthesis',{configurable:true,value:speech});
@@ -40,20 +40,24 @@ test('Delayed one-screen speech cannot start after the tab hides', async ({page}
     Object.defineProperty(document,'hidden',{configurable:true,value:true});
     document.dispatchEvent(new Event('visibilitychange'));
   });
-  await expect(host.locator('.mm-read-status')).toHaveText('Stopped because the app was hidden before speech started');
-  await expect(host.locator('[data-mm-read="play"]')).toHaveText('Listen');
-  // The original voiceschanged/timeout continuation must remain invalidated.
+  await expect(host.locator('.mm-read-status')).toHaveText('Loading device voice…');
+  await expect(host.locator('[data-mm-read="play"]')).toHaveText('Starting…');
+  // The delayed voice lookup must still start from the original Listen action.
   await page.waitForTimeout(1300);
-  expect(await page.evaluate(()=>window.__hiddenStartVoice.starts)).toBe(0);
+  expect(await page.evaluate(()=>window.__hiddenStartVoice.starts)).toBe(1);
+  await page.evaluate(()=>window.__hiddenStartVoice.last.onstart?.());
+  await expect(host.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(host.locator('[data-mm-read="play"]')).toHaveText('Pause');
+  expect(await page.evaluate(()=>({cancels:window.__hiddenStartVoice.cancels,pauses:window.__hiddenStartVoice.pauses}))).toEqual({cancels:0,pauses:0});
 });
 
-test('Late OS onstart after the tab hides cancels single-screen speech', async ({page}) => {
-  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>One-screen speech cannot become audible after its page has hidden.</p></main></body></html>');
+test('Late OS onstart and sentence chaining continue after the page hides', async ({page}) => {
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First screen-off sentence. Second screen-off sentence.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
     class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
-    const speech={starts:0,cancels:0,getVoices(){return[];},speak(u){this.starts++;this.last=u;},
-      cancel(){this.cancels++;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    const speech={starts:0,cancels:0,pauses:0,utterances:[],getVoices(){return[];},speak(u){this.starts++;this.last=u;this.utterances.push(u);},
+      cancel(){this.cancels++;},pause(){this.pauses++;},resume(){},addEventListener(){},removeEventListener(){}};
     window.__lateStartVoice=speech;
     Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Voice});
     Object.defineProperty(window,'speechSynthesis',{configurable:true,value:speech});
@@ -65,11 +69,49 @@ test('Late OS onstart after the tab hides cancels single-screen speech', async (
   await expect(host.locator('[data-mm-read="play"]')).toHaveText('Starting…');
   await page.evaluate(()=>{
     Object.defineProperty(document,'hidden',{configurable:true,value:true});
-    window.__lateStartVoice.last.onstart?.();
+    document.dispatchEvent(new Event('visibilitychange'));
+    window.__lateStartVoice.utterances[0].onstart?.();
   });
-  await expect(host.locator('[data-mm-read="play"]')).toHaveText('Listen');
-  await expect(host.locator('.mm-read-status')).toHaveText('Stopped because the app was hidden before speech started');
-  expect(await page.evaluate(()=>window.__lateStartVoice.cancels)).toBeGreaterThan(0);
+  await expect(host.locator('[data-mm-read="play"]')).toHaveText('Pause');
+  await expect(host.locator('.mm-read-status')).toHaveText('Reading');
+  await page.evaluate(()=>window.__lateStartVoice.utterances[0].onend?.());
+  await expect.poll(()=>page.evaluate(()=>window.__lateStartVoice.starts)).toBe(2);
+  await page.evaluate(()=>window.__lateStartVoice.utterances[1].onstart?.());
+  await expect(host.locator('.mm-read-status')).toHaveText('Reading');
+  expect(await page.evaluate(()=>({cancels:window.__lateStartVoice.cancels,pauses:window.__lateStartVoice.pauses}))).toEqual({cancels:0,pauses:0});
+});
+
+test('Background speech is left alone and a device-paused queue resumes when visible', async ({page}) => {
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Continue this Book sentence after the screen turns off.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const speech={paused:false,pauses:0,resumes:0,getVoices(){return[];},speak(u){this.last=u;queueMicrotask(()=>u.onstart?.());},
+      cancel(){},pause(){this.pauses++;this.paused=true;},resume(){this.resumes++;this.paused=false;},addEventListener(){},removeEventListener(){}};
+    window.__screenOffResumeVoice=speech;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Voice});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:speech});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('details').evaluate(el=>{el.open=true});
+  const play=player.locator('[data-mm-read="play"]');
+  await play.click();
+  await expect(play).toHaveText('Pause');
+  await page.evaluate(()=>{
+    Object.defineProperty(document,'hidden',{configurable:true,value:true});
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  expect(await page.evaluate(()=>window.__screenOffResumeVoice.pauses)).toBe(0);
+  await page.evaluate(()=>{
+    // Model a speech engine that pauses itself while the phone is locked.
+    window.__screenOffResumeVoice.paused=true;
+    Object.defineProperty(document,'hidden',{configurable:true,value:false});
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(play).toHaveText('Pause');
+  expect(await page.evaluate(()=>window.__screenOffResumeVoice.resumes)).toBe(1);
 });
 
 test('privacy notice limits Read Aloud to the Book and explains the separate app audio test', async ({page}) => {
@@ -79,7 +121,8 @@ test('privacy notice limits Read Aloud to the Book and explains the separate app
   expect(text).toContain('Test phone sound check sends two short tones');
   expect(text).toContain('Press Listen to check Book speech');
   expect(text).toContain('MouldMaster cannot detect whether you hear the tone sample or Book speech');
-  expect(text).toContain('Last updated: 21 October 2026');
+  expect(text).toContain('Last updated: 22 October 2026');
+  expect(text).toContain('screen-off listening is best effort');
   expect(text).toContain('check media volume and the selected headphone or Bluetooth output');
   expect(text).not.toContain('complete canonical lesson library');
   expect(text).not.toContain('continuous Listening mode');
@@ -758,14 +801,6 @@ test('Throwing OS pause and resume recover to restartable narration controls',as
   await expect(player.locator('.mm-read-status')).toHaveText('Device voice could not resume. Start playback again.');
   await play.click();
   await expect(play).toHaveText('Pause');
-  // A background switch must also fail closed when the device refuses Pause.
-  await page.evaluate(()=>{
-    window.__mmFailPause=true;
-    Object.defineProperty(document,'hidden',{configurable:true,value:true});
-    document.dispatchEvent(new Event('visibilitychange'));
-  });
-  await expect(play).toHaveText('Listen');
-  await expect(player.locator('.mm-read-status')).toHaveText('Device voice could not pause while hidden. Start playback again.');
 });
 
 test('Throwing device cancellation and voice discovery cannot strand Read Aloud controls',async({page})=>{
