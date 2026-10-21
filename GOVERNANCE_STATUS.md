@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: release 2026.10.21.2 exact-source candidate and static/contract QA are not yet verified. No current technical PASS is asserted; external human/device evidence remains separately on HOLD. |
-| Behavioral / browser | **fail** | HOLD: release 2026.10.21.2 exact-source browser and question-quality checks are not yet verified. Physical headphone audibility cannot be established by automated browser QA; external review remains on HOLD. |
+| Static / contract | **fail** | HOLD: release 2026.10.21.2 source fdf41db87889509ff8f5c6d413abbe22ef13da80 artifact 12327523532 and producer 39561155553 are staged as technical metadata only; producer success and quality are NOT independently verified. No source, human, device or production approval is implied. |
+| Behavioral / browser | **fail** | HOLD: browser and question gates for release 2026.10.21.2 source fdf41db87889509ff8f5c6d413abbe22ef13da80 must be independently verified on the staged candidate; prior green workflows do not transfer to a different exact source. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

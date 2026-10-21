@@ -6,8 +6,12 @@
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "candidate": null,
-  "boundary": "Release 2026.10.21.2 has no retained exact-source technical candidate yet and does not establish any NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
+  "candidate": {
+    "release": "2026.10.21.2",
+    "sourceSha": "fdf41db87889509ff8f5c6d413abbe22ef13da80",
+    "runtimeFingerprint": "sha256:6d7db4fc14495110cdbd5478f692f132d24d0069b7371b2fcfa2cd5c39fdbb4e"
+  },
+  "boundary": "Release 2026.10.21.2 technical candidate fdf41db87889509ff8f5c6d413abbe22ef13da80 does not establish any of NZQA/provider G1\u2013G8 external gates or assessment/accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -55,7 +59,13 @@
   "previousCandidate": {
     "release": "2026.10.21.1",
     "sourceSha": "82ba7b14909b89191cd9bc15f25440a9728f475f",
-    "runtimeFingerprint": "sha256:5e45262087ffb404469ed82c16ba76e6d1cb97b5356e568a030f01233d031484"
+    "runtimeFingerprint": "sha256:5e45262087ffb404469ed82c16ba76e6d1cb97b5356e568a030f01233d031484",
+    "candidateRunId": 39546516253,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 12320969604,
+    "artifactName": "physical-pwa-candidate-82ba7b14909b89191cd9bc15f25440a9728f475f",
+    "artifactDigest": "sha256:6731a7888bd71d3e01331d3970fbfc6b02620903c72677f5a92098ed6f2d39da",
+    "artifactExpiresAt": "2027-01-19T04:53:39Z"
   },
   "previousIssueNumber": 379
 }
