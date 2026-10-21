@@ -1,11 +1,11 @@
-/* MouldMaster Book Read Aloud — 2026.10.21.2
+/* MouldMaster Book Read Aloud — 2026.10.21.3
  * Learner-controlled text-to-speech using the browser/device speech-synthesis service.
  * No microphone access, recording, speech recognition, network upload, or learner-content storage.
  */
 (function(){
   'use strict';
 
-  const VERSION='2026.10.21.2';
+  const VERSION='2026.10.21.3';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -408,14 +408,27 @@
         if(token!==speakToken)return;
         // When this is the CURRENT utterance, interruption is a real
         // device failure, not a cancellation from our own Stop button.
-        // Leave the player restartable instead of stuck displaying Pause.
+        // Keep its sentence selected so a retry continues where the device
+        // stopped instead of silently jumping back to the beginning.
         const interrupted=event?.error==='canceled'||event?.error==='interrupted';
+        const code=String(event?.error||'');
+        let message;
+        if(interrupted){
+          message=playlistMode?'Device interrupted playback. Press Play to restart.':'Device interrupted playback. Press Listen to restart this sentence.';
+        }else if(androidSpeech&&code==='not-allowed'){
+          message='Android blocked voice playback. Tap Listen to start audio.';
+        }else if(androidSpeech&&code==='synthesis-failed'){
+          message='Android text-to-speech stopped after it began. Tap Listen to retry this sentence. If it stops again, open Settings > Accessibility > Text-to-speech output, choose an engine, then download or select a voice.';
+        }else if(code==='voice-unavailable'||code==='language-unavailable'){
+          message='The selected device voice or language is unavailable. Choose Automatic device voice or another installed voice, then tap Listen to retry this sentence.';
+        }else{
+          message=`Speech playback could not continue${code?`: ${code}`:''}. Tap Listen to retry this sentence.`;
+        }
         starting=false;
-        stop(interrupted
-          ? (playlistMode?'Device interrupted playback. Press Play to restart.':'Device interrupted playback. Press Listen to restart.')
-          : androidSpeech&&event?.error==='not-allowed'
-          ? 'Android blocked voice playback. Tap Listen to start audio.'
-          : `Speech playback could not continue${event?.error?`: ${event.error}`:''}.`);
+        stop(message);
+        selectionPending=units.length>0;
+        if(ui&&unit){ui.current.textContent=unit.text;ui.current.hidden=false;}
+        updateButtons();
       };
       try{synth.speak(utterance)}catch(err){
         clearTimeout(startTimer);starting=false;

@@ -844,13 +844,60 @@ test('Speech interruption exits stale playing state and Stop ignores synchronous
   await play.click();
   await expect(play).toHaveText('Pause');
   await page.evaluate(()=>window.__mmQaSpeech.current?.onerror?.({error:'interrupted'}));
-  await expect(player.locator('.mm-read-status')).toHaveText('Device interrupted playback. Press Listen to restart.');
+  await expect(player.locator('.mm-read-status')).toHaveText('Device interrupted playback. Press Listen to restart this sentence.');
   await expect(play).toHaveText('Listen');
   await play.click();
   await expect(play).toHaveText('Pause');
   await player.locator('[data-mm-read="stop"]').click();
   await expect(player.locator('.mm-read-status')).toHaveText('Stopped');
   await expect(play).toHaveText('Listen');
+});
+
+test('Android synthesis failure after speech starts explains recovery and retries the same Book sentence',async({page})=>{
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>First sentence finishes normally.</p><p>Second sentence is where the Android voice stops.</p></main></body></html>');
+  await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel) AppleWebKit/537.36 Chrome/130.0 Mobile Safari/537.36'});
+    class Utterance{constructor(text=''){this.text=text;this.lang='';this.rate=1;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={
+      calls:[],current:null,getVoices(){return[];},
+      speak(utterance){this.current=utterance;this.calls.push(utterance.text);},
+      cancel(){this.current=null;},pause(){},resume(){},addEventListener(){},removeEventListener(){}
+    };
+    window.__mmAndroidFailureSpeech=synth;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Utterance});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('details').evaluate(el=>{el.open=true;});
+  const play=player.locator('[data-mm-read="play"]');
+  await play.click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmAndroidFailureSpeech.calls.length)).toBe(1);
+  await page.evaluate(()=>{
+    const first=window.__mmAndroidFailureSpeech.current;
+    first.onstart?.();
+    first.onend?.();
+  });
+  await expect.poll(()=>page.evaluate(()=>window.__mmAndroidFailureSpeech.calls.length)).toBe(2);
+  expect(await page.evaluate(()=>window.__mmAndroidFailureSpeech.calls[1])).toBe('Second sentence is where the Android voice stops.');
+  await page.evaluate(()=>{
+    const failed=window.__mmAndroidFailureSpeech.current;
+    failed.onstart?.(); // The provider began output before the partial-word failure.
+    failed.onerror?.({error:'synthesis-failed'});
+  });
+  await expect(player.locator('.mm-read-status')).toContainText('Android text-to-speech stopped after it began.');
+  await expect(player.locator('.mm-read-status')).toContainText('Tap Listen to retry this sentence.');
+  await expect(player.locator('.mm-read-status')).toContainText('Settings > Accessibility > Text-to-speech output');
+  await expect(player.locator('[data-mm-read="position"]')).toHaveText('2 / 2');
+  await expect(play).toHaveText('Listen');
+  await expect(player.locator('[data-mm-read="current"]')).toContainText('Second sentence is where the Android voice stops.');
+
+  await play.click();
+  await expect.poll(()=>page.evaluate(()=>window.__mmAndroidFailureSpeech.calls.length)).toBe(3);
+  expect(await page.evaluate(()=>window.__mmAndroidFailureSpeech.calls[2])).toBe('Second sentence is where the Android voice stops.');
+  await page.evaluate(()=>window.__mmAndroidFailureSpeech.current.onstart?.());
+  await expect(player.locator('.mm-read-status')).toHaveText('Reading');
+  await expect(player.locator('[data-mm-read="position"]')).toHaveText('2 / 2');
 });
 
 test('Unavailable speech provider disables Book speech while app audio remains independent',async({page})=>{
