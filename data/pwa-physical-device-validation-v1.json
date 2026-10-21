@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "No exact-source technical candidate artifact is currently retained for release 2026.10.21.2. This contract is NOT evidence of physical iOS/iPadOS or Android installation, offline/reboot/update behavior, or audible output through headphones. Real device install, offline restart, reboot, update, storage-pressure, zoom and audible Book speech remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
+  "boundary": "No exact-source technical candidate artifact is currently retained for release 2026.10.21.2. This contract is NOT evidence of physical iOS/iPadOS and Android devices, installation, offline/reboot/update behavior, or audible output through headphones. Real device installation, offline restart, reboot, update, storage-pressure, zoom and audible Book speech remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
