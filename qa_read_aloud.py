@@ -17,12 +17,13 @@ runtime = (ROOT / "read-aloud.js").read_text(encoding="utf-8")
 reading_patch = (ROOT / "reading-patch.js").read_text(encoding="utf-8")
 service_worker = (ROOT / "service-worker.js").read_text(encoding="utf-8")
 privacy = (ROOT / "privacy.html").read_text(encoding="utf-8")
+polish_css = (ROOT / "src/domains/shell/learner-ui-polish.css").read_text(encoding="utf-8")
 version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
 package = json.loads((ROOT / "desktop/electron/package.json").read_text(encoding="utf-8"))
 integrity_generator = (ROOT / "desktop/electron/scripts/generate-integrity.cjs").read_text(encoding="utf-8")
 
-need(version.get("read_aloud_version") == "2026.10.20.7", "Read Aloud version marker mismatch")
-need("const VERSION='2026.10.20.7'" in runtime, "Read Aloud runtime version mismatch")
+need(version.get("read_aloud_version") == "2026.10.21.1", "Read Aloud version marker mismatch")
+need("const VERSION='2026.10.21.1'" in runtime, "Read Aloud runtime version mismatch")
 
 # The feature must be output-only: speech synthesis plus an explicitly tapped,
 # oscillator-only two-beep media routing test. Microphone capture, recognition,
@@ -66,7 +67,7 @@ for marker in (
     "Read Aloud is not available in this browser/device.",
     "Device voice did not start. Check Windows speech voices, then try again.",
     "voiceschanged", "getVoices", "🔊 Listen", "#app .top-actions,.top-actions",
-    "details[open]",
+    "details[open]", "READ ALOUD", "Listen to the current page",
 ):
     need(marker in runtime, f"Read Aloud control/fallback missing: {marker}")
 
@@ -84,6 +85,14 @@ for marker in (
 ):
     need(marker in runtime, f"Android tap-to-speak guard missing: {marker}")
 need("await waitForVoice" not in runtime, "Android speech start must not block on voice discovery")
+
+# Read Aloud entry point is available on lessons as well as the Book.
+need("body:has(#lesson:not(.hidden)) .top-actions > .mm-read-aloud" in polish_css,
+     "Read Aloud entry point is hidden on lesson pages")
+need("body:has(#mmBookView:not(.hidden)) .top-actions > .mm-read-aloud" in polish_css,
+     "Read Aloud entry point is hidden in the Book")
+need("document.getElementById('lesson')" in runtime,
+     "lesson content is not selected as the Read Aloud source")
 
 # Book is a custom view alongside the course/exam cards. Its visible reader
 # must win over generic selectors, and long Book sessions cannot inherit the
