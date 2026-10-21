@@ -21,8 +21,8 @@ version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
 package = json.loads((ROOT / "desktop/electron/package.json").read_text(encoding="utf-8"))
 integrity_generator = (ROOT / "desktop/electron/scripts/generate-integrity.cjs").read_text(encoding="utf-8")
 
-need(version.get("read_aloud_version") == "2026.10.21.2", "Read Aloud version marker mismatch")
-need("const VERSION='2026.10.21.2'" in runtime, "Read Aloud runtime version mismatch")
+need(version.get("read_aloud_version") == version.get("web_release"), "Read Aloud version must match the governed web release")
+need(f"const VERSION='{version['web_release']}'" in runtime, "Read Aloud runtime version mismatch")
 need("function cancelDeviceSpeech(force=false)" in runtime and "cancelDeviceSpeech(cancelActive)" in runtime and "cancelDeviceSpeech(true)" in runtime,
      "speech cancellation must be limited to active queues or explicit cleanup")
 need("function applyAvailableVoice(utterance)" in runtime and "if(!selectedVoice){utterance.lang='';return;}" in runtime,
@@ -85,6 +85,24 @@ for marker in (
     need(marker in runtime, f"Android tap-to-speak guard missing: {marker}")
 need("await waitForVoice" not in runtime, "Android speech start must not block on voice discovery")
 
+# A provider may start speech and then fail mid-utterance. Preserve the exact
+# sentence and explain Android engine/voice recovery without auto-replaying a
+# potentially audible partial word.
+for marker in (
+    "code==='synthesis-failed'",
+    "Android text-to-speech stopped after it began.",
+    "Settings > Accessibility > Text-to-speech output",
+    "selectionPending=units.length>0;",
+    "Tap Listen to retry this sentence.",
+    "ui.current.textContent=unit.text;ui.current.hidden=false;",
+    "function reportBookPosition(unit)",
+    "reportBookPosition(unit);",
+    "Some Android engines can emit audible output without onstart.",
+):
+    need(marker in runtime, f"speech-provider failure recovery missing: {marker}")
+need(runtime.count("reportBookPosition(unit);") >= 2,
+     "Book position must be saved both when speech starts and when a provider fails without onstart")
+
 # Only the visible Book may supply speech. Lessons and generic page content
 # are not fallback sources, and the Book queue keeps the governed chapter bound.
 for marker in (
@@ -114,6 +132,8 @@ need("Test Book voice" not in runtime and "This is a test of Book audio." not in
 browser = (ROOT / "qa/read-aloud.spec.js").read_text(encoding="utf-8")
 need("Book-only scope keeps lesson text silent" in browser and "startBookFromGesture()" in browser,
      "browser regression must prove that lessons cannot be narrated")
+need("Android synthesis failure without onstart saves and retries the same Book sentence" in browser,
+     "browser regression must cover an Android synthesis failure without onstart, retain its cursor and retry the same sentence")
 # Book audio is chapter-aware, learner-scoped cursor events are emitted without
 # storage inside the voice engine, and presentation modes remain source-governed.
 for marker in (

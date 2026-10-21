@@ -1,11 +1,11 @@
-/* MouldMaster Book Read Aloud — 2026.10.21.2
+/* MouldMaster Book Read Aloud — 2026.10.21.3
  * Learner-controlled text-to-speech using the browser/device speech-synthesis service.
  * No microphone access, recording, speech recognition, network upload, or learner-content storage.
  */
 (function(){
   'use strict';
 
-  const VERSION='2026.10.21.2';
+  const VERSION='2026.10.21.3';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -158,6 +158,9 @@
 
   function currentUnit(){return units[index]||null}
   function currentLessonUnit(){const unit=currentUnit();return unit?.lessonId==null?null:unit}
+  function reportBookPosition(unit){
+    if(unit?.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-position',{detail:{chapterId:unit.bookChapterId,unitIndex:unit.bookSentenceIndex}}));
+  }
 
   function setStatus(text){
     if(ui){ui.status.textContent=text;ui.position.textContent=units.length?`${Math.min(index+1,units.length)} / ${units.length}`:'0 / 0';}
@@ -354,7 +357,7 @@
         if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
         clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
         highlight(unit);
-        if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-position',{detail:{chapterId:unit.bookChapterId,unitIndex:unit.bookSentenceIndex}}));
+        reportBookPosition(unit);
         setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();
       };
       startTimer=setTimeout(()=>{
@@ -408,14 +411,30 @@
         if(token!==speakToken)return;
         // When this is the CURRENT utterance, interruption is a real
         // device failure, not a cancellation from our own Stop button.
-        // Leave the player restartable instead of stuck displaying Pause.
+        // Keep its sentence selected so a retry continues where the device
+        // stopped instead of silently jumping back to the beginning.
         const interrupted=event?.error==='canceled'||event?.error==='interrupted';
+        const code=String(event?.error||'');
+        let message;
+        if(interrupted){
+          message=playlistMode?'Device interrupted playback. Press Play to restart.':'Device interrupted playback. Press Listen to restart this sentence.';
+        }else if(androidSpeech&&code==='not-allowed'){
+          message='Android blocked voice playback. Tap Listen to start audio.';
+        }else if(androidSpeech&&code==='synthesis-failed'){
+          message='Android text-to-speech stopped after it began. Tap Listen to retry this sentence. If it stops again, open Settings > Accessibility > Text-to-speech output, choose an engine, then download or select a voice.';
+        }else if(code==='voice-unavailable'||code==='language-unavailable'){
+          message='The selected device voice or language is unavailable. Choose Automatic device voice or another installed voice, then tap Listen to retry this sentence.';
+        }else{
+          message=`Speech playback could not continue${code?`: ${code}`:''}. Tap Listen to retry this sentence.`;
+        }
+        // Some Android engines can emit audible output without onstart. Save
+        // the failed Book sentence even when the provider never confirmed start.
+        reportBookPosition(unit);
         starting=false;
-        stop(interrupted
-          ? (playlistMode?'Device interrupted playback. Press Play to restart.':'Device interrupted playback. Press Listen to restart.')
-          : androidSpeech&&event?.error==='not-allowed'
-          ? 'Android blocked voice playback. Tap Listen to start audio.'
-          : `Speech playback could not continue${event?.error?`: ${event.error}`:''}.`);
+        stop(message);
+        selectionPending=units.length>0;
+        if(ui&&unit){ui.current.textContent=unit.text;ui.current.hidden=false;}
+        updateButtons();
       };
       try{synth.speak(utterance)}catch(err){
         clearTimeout(startTimer);starting=false;

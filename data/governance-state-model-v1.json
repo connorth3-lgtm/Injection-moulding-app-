@@ -346,11 +346,11 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "Exact retained public runtime for release 2026.10.21.2 is source fdf41db87889509ff8f5c6d413abbe22ef13da80, fingerprint sha256:6d7db4fc14495110cdbd5478f692f132d24d0069b7371b2fcfa2cd5c39fdbb4e; successful producer run 39561155553 owns retained artifact 12327523532. Automated contract checks confirm the source and artifact identity; no human/device or production approval is implied."
+      "meaning": "Exact retained technical artifact for release 2026.10.21.3 source d41c633ccddecd3a0c2b51a53d43c2eb3e345517 was produced by run 39641015654 and retained as artifact 12364559971 with fingerprint sha256:1256759b71ceddc4089425bdc5f55950399e795913388e3766048baeddf19ea3. The candidate identity is source-bound; this does not imply human, physical-device or production approval."
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "For release 2026.10.21.2, exact-source Read Aloud QA 39561155743, Mobile Browser QA 39561155654, and Question Quality 50-Pass 39561155711 passed on source fdf41db87889509ff8f5c6d413abbe22ef13da80. Book-only speech and browser output priming are automated software evidence; audible physical headphone/Bluetooth routing remains unverified and all external human/device review remains HOLD."
+      "meaning": "Automated software evidence passed for release 2026.10.21.3 source d41c633ccddecd3a0c2b51a53d43c2eb3e345517: Read Aloud QA run 39641015852 (50 tests), Mobile Browser QA run 39641015779, Question Quality 50-Pass run 39641015590, and Combined Learn/Book QA run 39641015644. Actual Android voice-engine reliability and audible output through physical headphones/Bluetooth remain unverified; external human/device review remains HOLD."
     },
     "externalHumanDevice": {
       "status": "hold",
