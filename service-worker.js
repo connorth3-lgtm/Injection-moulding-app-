@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.10.21.3';
+const CACHE_VERSION='2026.10.22.1';
 const CACHE_REVISION='read-aloud-audio-route-r2';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 

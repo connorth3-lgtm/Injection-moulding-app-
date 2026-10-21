@@ -1,11 +1,11 @@
-/* MouldMaster Book Read Aloud — 2026.10.21.3
+/* MouldMaster Book Read Aloud — 2026.10.22.1
  * Learner-controlled text-to-speech using the browser/device speech-synthesis service.
  * No microphone access, recording, speech recognition, network upload, or learner-content storage.
  */
 (function(){
   'use strict';
 
-  const VERSION='2026.10.21.3';
+  const VERSION='2026.10.22.1';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -327,9 +327,8 @@
     updateButtons();
     const beginSpeech=()=>{
       if(token!==speakToken)return;
-      // Windows voices may arrive after the initial tap. Never start
-      // Book speech must not start after the app tab has hidden.
-      if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
+      // Windows voices may arrive after the initial tap. A hidden page may
+      // still begin speech from the learner's original playback action.
       // Must run directly inside the original tap handler on Android, even
       // with an empty voice list. The platform can pick its default voice.
       if(replaceCurrent)cancelDeviceSpeech(true);
@@ -353,8 +352,6 @@
       const markStarted=()=>{
         if(token!==speakToken||started)return;
         // Some mobile providers begin output without dispatching onstart.
-        // Use the same visibility boundary for the event and active-state fallback.
-        if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
         clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
         highlight(unit);
         reportBookPosition(unit);
@@ -397,7 +394,6 @@
         // newer utterance.
         if(token!==speakToken||(!speaking&&!starting))return;
         if(!started){
-          if(document.hidden&&!playlistMode){stop('Stopped because the app was hidden before speech started');return;}
           starting=false;
         }
         if(index<units.length-1){index+=1;speakCurrent();}
@@ -797,16 +793,23 @@
   window.addEventListener('popstate',()=>{if(!playlistMode)stop('Stopped after navigation')});
   window.addEventListener('pagehide',()=>stop('Stopped'));
   document.addEventListener('visibilitychange',()=>{
-    if(!document.hidden||!supported||playlistMode)return;
-    // A desktop voice can be waiting for a voiceschanged callback; the
-    // previous speaking-only guard missed this delayed-start privacy race.
-    if(starting){stop('Stopped because the app was hidden before speech started');return;}
-    if(!speaking)return;
-    try{synth.pause()}catch(_){
-      stop('Device voice could not pause while hidden. Start playback again.');
-      return;
+    if(document.hidden||!supported||playlistMode||(!starting&&!speaking)||paused)return;
+    // Do not pause speech when the learner locks the phone or puts the app
+    // in the background. If the browser reports that it suspended the queue,
+    // try to resume it when the page returns to the foreground.
+    let devicePaused=false;
+    try{devicePaused=synth.paused===true}catch(_){return;}
+    if(!devicePaused)return;
+    try{
+      synth.resume();
+      if(synth.paused===true){
+        starting=false;speaking=false;paused=true;
+        setStatus('Device voice is paused. Tap Resume to continue.');updateButtons();
+      }else if(speaking){setStatus('Reading');updateButtons();}
+    }catch(_){
+      starting=false;speaking=false;paused=true;
+      setStatus('Device voice paused while the app was in the background. Tap Resume to continue.');updateButtons();
     }
-    paused=true;speaking=false;setStatus('Paused while app is hidden');updateButtons();
   });
 
   const observer=new MutationObserver(()=>{

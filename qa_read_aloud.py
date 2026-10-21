@@ -85,6 +85,18 @@ for marker in (
     need(marker in runtime, f"Android tap-to-speak guard missing: {marker}")
 need("await waitForVoice" not in runtime, "Android speech start must not block on voice discovery")
 
+# Hiding or locking the phone must not make the app pause/cancel speech. If
+# the browser reports that the queue paused itself, retry resume on foreground.
+visibility_handler = runtime.split("document.addEventListener('visibilitychange',()=>{", 1)[1].split("\n\n  const observer", 1)[0]
+need("if(document.hidden||!supported||playlistMode" in visibility_handler,
+     "background visibility must be ignored; foreground recovery is the only visibility action")
+need("synth.pause()" not in visibility_handler and "synth.resume()" in visibility_handler,
+     "visibility lifecycle must never pause speech and must resume a device-paused queue")
+need("Device voice is paused. Tap Resume to continue." in visibility_handler,
+     "screen-off pause recovery must leave narration restartable")
+need("Stopped because the app was hidden before speech started" not in runtime,
+     "a hidden page must not invalidate delayed, user-started Book speech")
+
 # A provider may start speech and then fail mid-utterance. Preserve the exact
 # sentence and explain Android engine/voice recovery without auto-replaying a
 # potentially audible partial word.
@@ -134,6 +146,12 @@ need("Book-only scope keeps lesson text silent" in browser and "startBookFromGes
      "browser regression must prove that lessons cannot be narrated")
 need("Android synthesis failure without onstart saves and retries the same Book sentence" in browser,
      "browser regression must cover an Android synthesis failure without onstart, retain its cursor and retry the same sentence")
+for marker in (
+    "Delayed device speech can start after the page hides for screen-off listening",
+    "Late OS onstart and sentence chaining continue after the page hides",
+    "Background speech is left alone and a device-paused queue resumes when visible",
+):
+    need(marker in browser, f"screen-off speech regression missing: {marker}")
 # Book audio is chapter-aware, learner-scoped cursor events are emitted without
 # storage inside the voice engine, and presentation modes remain source-governed.
 for marker in (
@@ -172,6 +190,8 @@ for marker in (
     "<h2>Read Aloud</h2>", "does not request microphone access", "browser or operating system",
     "controlled by that browser, operating system and selected voice", "Book-only text-to-speech",
     "Press Listen to check Book speech", "Before speaking, the player resumes the browser speech queue if it was left paused", "MouldMaster cannot detect whether you hear the tone sample or Book speech",
+    "Hiding the page does not make MouldMaster pause speech", "screen-off listening is best effort",
+    "unlock the phone and tap Resume",
 ):
     need(marker in privacy, f"Read Aloud privacy disclosure missing: {marker}")
 need("entirely on-device" in privacy, "voice-processing limitation disclosure missing")

@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.21.3`**.
+Current governed web candidate: **`2026.10.22.1`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Exact retained technical artifact for release 2026.10.21.3 source d41c633ccddecd3a0c2b51a53d43c2eb3e345517 was produced by run 39641015654 and retained as artifact 12364559971 with fingerprint sha256:1256759b71ceddc4089425bdc5f55950399e795913388e3766048baeddf19ea3. The candidate identity is source-bound; this does not imply human, physical-device or production approval. |
-| Behavioral / browser | **pass** | Automated software evidence passed for release 2026.10.21.3 source d41c633ccddecd3a0c2b51a53d43c2eb3e345517: Read Aloud QA run 39641015852 (50 tests), Mobile Browser QA run 39641015779, Question Quality 50-Pass run 39641015590, and Combined Learn/Book QA run 39641015644. Actual Android voice-engine reliability and audible output through physical headphones/Bluetooth remain unverified; external human/device review remains HOLD. |
+| Static / contract | **pass** | Exact retained technical artifact for release 2026.10.22.1 source b511ca1f8d9407df7fafc292ff1fb36334b3a114 was produced by run 39651883205 and retained as artifact 12369292973 with fingerprint sha256:2a7b3cbb95ca106cf7c765ad036f6767fa0fc58a75ae9a1d4e1289bb296d877f. The candidate identity is source-bound; this does not imply human, physical-device or production approval. |
+| Behavioral / browser | **pass** | Automated software evidence passed for release 2026.10.22.1 source b511ca1f8d9407df7fafc292ff1fb36334b3a114: Read Aloud QA run 39651883188 (51 tests), Mobile Browser QA run 39651883306 (Chromium, WebKit, cross-browser, and all five 100-run reliability shards), Question Quality 50-Pass run 39651883459, and Combined Learn/Book QA run 39651883133. These tests do not establish actual speech on a locked physical phone; external human/device review remains HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

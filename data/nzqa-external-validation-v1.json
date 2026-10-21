@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.21.3",
+  "release": "2026.10.22.1",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.21.3.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.22.1.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
   "candidate": {
-    "release": "2026.10.21.3",
-    "sourceSha": "d41c633ccddecd3a0c2b51a53d43c2eb3e345517",
-    "runtimeFingerprint": "sha256:1256759b71ceddc4089425bdc5f55950399e795913388e3766048baeddf19ea3"
+    "release": "2026.10.22.1",
+    "sourceSha": "b511ca1f8d9407df7fafc292ff1fb36334b3a114",
+    "runtimeFingerprint": "sha256:2a7b3cbb95ca106cf7c765ad036f6767fa0fc58a75ae9a1d4e1289bb296d877f"
   },
-  "boundary": "Release 2026.10.21.3 technical candidate d41c633ccddecd3a0c2b51a53d43c2eb3e345517 does not establish any of NZQA/provider G1\u2013G8 external gates or assessment/accreditation authority.",
+  "boundary": "Release 2026.10.22.1 technical candidate b511ca1f8d9407df7fafc292ff1fb36334b3a114 does not establish any of NZQA/provider G1\u2013G8 external gates or assessment/accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -58,14 +58,14 @@
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
     "release": "2026.10.21.3",
-    "sourceSha": "cc3700bfa90348305cbf390babb8cf8f3d715493",
-    "runtimeFingerprint": "sha256:e126eeb5a329cad4a21cb604f3ef532116c57de9bca54aaae1359baac6306c08",
-    "candidateRunId": 39638785407,
+    "sourceSha": "d41c633ccddecd3a0c2b51a53d43c2eb3e345517",
+    "runtimeFingerprint": "sha256:1256759b71ceddc4089425bdc5f55950399e795913388e3766048baeddf19ea3",
+    "candidateRunId": 39641015654,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 12364230865,
-    "artifactName": "physical-pwa-candidate-cc3700bfa90348305cbf390babb8cf8f3d715493",
-    "artifactDigest": "sha256:e5d672359453ae9b7e154bd53c40b5c59f4359f2f3ea23b3b72a33f93c70fafa",
-    "artifactExpiresAt": "2027-01-19T16:53:10Z"
+    "artifactId": 12364559971,
+    "artifactName": "physical-pwa-candidate-d41c633ccddecd3a0c2b51a53d43c2eb3e345517",
+    "artifactDigest": "sha256:0107743e97bf85be0c6e70feacc2aa53766de9d9e7afd30233c38c370e17aa07",
+    "artifactExpiresAt": "2027-01-19T17:20:46Z"
   },
   "previousIssueNumber": 379
 }

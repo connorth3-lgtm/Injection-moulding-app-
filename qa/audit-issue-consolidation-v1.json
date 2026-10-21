@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.10.21.3",
+  "release": "2026.10.22.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "d41c633ccddecd3a0c2b51a53d43c2eb3e345517",
-  "scope": "Release 2026.10.21.3 addresses Android Book speech-provider failure recovery: preserve/retry the failed sentence, disclose device Text-to-speech settings, and retain the existing Book-only/privacy boundary. Exact-head software quality and independent review status remain separately governed.",
-  "approvalBoundary": "The retained 2026.10.21.3 candidate source d41c633ccddecd3a0c2b51a53d43c2eb3e345517 and runtime fingerprint sha256:1256759b71ceddc4089425bdc5f55950399e795913388e3766048baeddf19ea3 are technical identity only. Exact-source automated Read Aloud, mobile browser, question-quality and Learn/Book integration checks passed; they do not confirm audible output through physical headphones or real Android voice-engine reliability. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": "b511ca1f8d9407df7fafc292ff1fb36334b3a114",
+  "scope": "Release 2026.10.22.1 updates Book Read Aloud so learner-started playback is not paused or cancelled when the page becomes hidden; delayed voice startup, sentence chaining and best-effort device-pause recovery remain available. Exact-source software quality is verified; actual physical-phone screen-off audio remains a separate HOLD.",
+  "approvalBoundary": "The retained 2026.10.22.1 candidate source b511ca1f8d9407df7fafc292ff1fb36334b3a114 and runtime fingerprint sha256:2a7b3cbb95ca106cf7c765ad036f6767fa0fc58a75ae9a1d4e1289bb296d877f are technical identity only. Exact-source Read Aloud (51 tests), Mobile Browser, Question Quality 50-Pass and Combined Learn/Book checks passed; they do not confirm audible output on a phone with the screen locked or in a pocket. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -45,8 +45,8 @@
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
   "lastReviewedDate": "2026-10-21",
   "previousVerifiedCandidate": {
-    "release": "2026.10.21.2",
-    "sourceSha": "fdf41db87889509ff8f5c6d413abbe22ef13da80",
-    "runtimeFingerprint": "sha256:6d7db4fc14495110cdbd5478f692f132d24d0069b7371b2fcfa2cd5c39fdbb4e"
+    "release": "2026.10.21.3",
+    "sourceSha": "d41c633ccddecd3a0c2b51a53d43c2eb3e345517",
+    "runtimeFingerprint": "sha256:1256759b71ceddc4089425bdc5f55950399e795913388e3766048baeddf19ea3"
   }
 }
