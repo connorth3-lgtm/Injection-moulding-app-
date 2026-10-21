@@ -280,22 +280,17 @@ test('Book Listen resumes a globally paused speech queue before speaking', async
   });
 });
 
-test('Book player app audio diagnostic sends two tones without using speech synthesis', async ({page}) => {
+test('Book voice test uses the same device speech service and resumes a paused queue', async ({page}) => {
   await page.setContent('<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Book audio test fixture.</p></main></body></html>');
   await page.evaluate(()=>{
-    const frequencies=[];
-    window.__mmAudioFrequencies=frequencies;
-    class FakeAudioContext{
-      constructor(){this.currentTime=0;this.destination={};this.state='running';}
-      createGain(){return {gain:{setValueAtTime(){},exponentialRampToValueAtTime(){}},connect(){}};}
-      createOscillator(){return {type:'',frequency:{setValueAtTime(value){frequencies.push(value);}},connect(){},start(){},stop(){}};}
-      resume(){return Promise.resolve();}
-      close(){this.state='closed';return Promise.resolve();}
-    }
-    Object.defineProperty(window,'AudioContext',{configurable:true,value:FakeAudioContext});
-    class FakeUtterance{constructor(text=''){this.text=text;}}
-    const synth={calls:0,speak(){this.calls++;},cancel(){},getVoices(){return[];},addEventListener(){}};
-    window.__mmAudioSpeech=synth;
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
+    const events=[];
+    class FakeUtterance{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const synth={paused:true,speaking:false,pending:false,resumeCalls:0,last:null,getVoices(){return[];},
+      resume(){this.resumeCalls++;this.paused=false;events.push('resume');},
+      speak(utterance){this.last=utterance;events.push('speak');},
+      cancel(){this.speaking=false;this.pending=false;},addEventListener(){},removeEventListener(){}};
+    window.__mmBookVoiceTest={synth,events};
     Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:FakeUtterance});
     Object.defineProperty(window,'speechSynthesis',{configurable:true,value:synth});
   });
@@ -303,11 +298,16 @@ test('Book player app audio diagnostic sends two tones without using speech synt
   const host=page.locator('.mm-read-aloud');
   await host.locator('details').evaluate(el=>{el.open=true;});
   await host.locator('[data-mm-read="test"]').click();
-  await expect(host.locator('[data-mm-read="test"]')).toHaveAccessibleName('Test browser audio output with two short tones');
-  await expect.poll(()=>page.evaluate(()=>window.__mmAudioFrequencies.length)).toBe(2);
-  expect(await page.evaluate(()=>window.__mmAudioFrequencies)).toEqual([880,660]);
-  expect(await page.evaluate(()=>window.__mmAudioSpeech.calls)).toBe(0);
-  await expect(host.locator('.mm-read-status')).toContainText('Two tones sent to browser audio output');
+  await expect(host.locator('[data-mm-read="test"]')).toHaveAccessibleName('Test the Book voice with a short sample');
+  await expect.poll(()=>page.evaluate(()=>window.__mmBookVoiceTest.synth.resumeCalls)).toBe(1);
+  expect(await page.evaluate(()=>window.__mmBookVoiceTest.events)).toEqual(['resume','speak']);
+  expect(await page.evaluate(()=>window.__mmBookVoiceTest.synth.last.text)).toBe('This is a test of Book audio.');
+  await page.evaluate(()=>{
+    const utterance=window.__mmBookVoiceTest.synth.last;
+    utterance.onstart?.();
+    utterance.onend?.();
+  });
+  await expect(host.locator('.mm-read-status')).toContainText('Book voice test finished');
 });
 
 test('Read Aloud supported-path controls execute the exact product runtime in a deterministic speech harness', async ({ page }) => {
