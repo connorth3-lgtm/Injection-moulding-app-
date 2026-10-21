@@ -101,9 +101,9 @@ need("createListeningTab();" not in runtime, "lesson Listening navigation must n
 need("startPlaylist,openListening" not in runtime, "lesson playlist/open APIs must not be exported")
 need("currentLessonId:" not in runtime, "lesson-specific Read Aloud API must not be exported")
 need("data-mm-listening-tab" not in runtime, "lesson Listening tab marker must not be installed")
-for marker in ("AudioContext", "webkitAudioContext", "createOscillator", "Two tones sent to browser audio output"):
-    need(marker in runtime, f"independent app audio diagnostic missing: {marker}")
-need("Test phone sound" in runtime and "Test browser audio output with two short tones" in runtime, "Book audio output diagnostic control missing")
+for marker in ("function resumePausedSpeechQueue()", "function testBookVoice()", "resumePausedSpeechQueue();", "utterance.volume=1"):
+    need(marker in runtime, f"Book voice output recovery missing: {marker}")
+need("Test Book voice" in runtime and "This is a test of Book audio." in runtime, "Book speech test control missing")
 # Book audio is chapter-aware, learner-scoped cursor events are emitted without
 # storage inside the voice engine, and presentation modes remain source-governed.
 for marker in (
@@ -141,9 +141,9 @@ need("'read-aloud.js'" in integrity_generator, "Read Aloud missing from desktop 
 for marker in (
     "<h2>Read Aloud</h2>", "does not request microphone access", "browser or operating system",
     "controlled by that browser, operating system and selected voice", "Book-only text-to-speech",
-    "Test phone sound check sends two short tones", "Press Listen to check Book speech", "MouldMaster cannot detect whether you hear the tones or speech",
+    "Test Book voice control speaks a short sample through the same device speech service used by Listen", "Before speaking, the player resumes the browser speech queue if it was left paused", "MouldMaster cannot detect whether you hear the sample or Book speech",
 ):
     need(marker in privacy, f"Read Aloud privacy disclosure missing: {marker}")
 need("entirely on-device" in privacy, "voice-processing limitation disclosure missing")
 
-print("MouldMaster Book Read Aloud QA passed: Book-only speech-synthesis playback, independent two-tone output check, Android first-tap/desktop delayed-voice aware, offline/desktop-integrity wired, and privacy disclosed.")
+print("MouldMaster Book Read Aloud QA passed: Book-only speech-synthesis playback, same-engine Book voice test, Android first-tap/desktop delayed-voice aware, offline/desktop-integrity wired, and privacy disclosed.")
