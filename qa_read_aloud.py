@@ -151,7 +151,7 @@ need("'read-aloud.js'" in integrity_generator, "Read Aloud missing from desktop 
 for marker in (
     "<h2>Read Aloud</h2>", "does not request microphone access", "browser or operating system",
     "controlled by that browser, operating system and selected voice", "Book-only text-to-speech",
-    "Press Listen to check Book speech", "Before speaking, the player resumes the browser speech queue if it was left paused", "MouldMaster cannot detect whether you hear the sample or Book speech",
+    "Press Listen to check Book speech", "Before speaking, the player resumes the browser speech queue if it was left paused", "MouldMaster cannot detect whether you hear the tone sample or Book speech",
 ):
     need(marker in privacy, f"Read Aloud privacy disclosure missing: {marker}")
 need("entirely on-device" in privacy, "voice-processing limitation disclosure missing")
