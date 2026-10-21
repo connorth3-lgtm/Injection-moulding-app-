@@ -272,6 +272,7 @@ test('Book player app audio diagnostic sends two tones without using speech synt
   });
   await page.addScriptTag({path:'read-aloud.js'});
   const host=page.locator('.mm-read-aloud');
+  await host.locator('details').evaluate(el=>{el.open=true;});
   await host.locator('[data-mm-read="test-app-audio"]').click();
   await expect.poll(()=>page.evaluate(()=>window.__mmAudioFrequencies.length)).toBe(2);
   expect(await page.evaluate(()=>window.__mmAudioFrequencies)).toEqual([880,660]);

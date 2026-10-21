@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.10.21.1 has no retained candidate and no physical iOS/iPadOS or Android install, offline, update or audible headphone output has been verified. Real device install, offline restart, reboot, update, storage-pressure, zoom and audible Book speech remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
+  "boundary": "Release 2026.10.21.1 has no retained candidate. No physical iOS/iPadOS and Android devices have been used to verify install, offline behavior, updates or audible headphone output. Real device install, offline restart, reboot, update, storage-pressure, zoom and audible Book speech remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
