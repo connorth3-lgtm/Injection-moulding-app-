@@ -1,17 +1,22 @@
 # MouldMaster 2026.10.21.3 — Book-only Read Aloud and audio output diagnostic
 
-**STATUS: RETAINED TECHNICAL CANDIDATE / EXACT-HEAD QUALITY CHECKS PENDING / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** Read Aloud is available in the Book only; lessons, exams and generic page text are not narration sources. The existing **Test phone sound** control sends two short tones to check browser audio output. Use **Book Listen** to check speech. Browser tests cannot confirm audible output through physical headphones or Bluetooth.
+**STATUS: EXACT-SOURCE SOFTWARE CANDIDATE VERIFIED / ALL SEVEN INDEPENDENT EXTERNAL REVIEWS HOLD.** Read Aloud is available in the Book only; lessons, exams and generic page text are not narration sources. The **Test phone sound** control sends two short tones to check browser audio output. Use **Book Listen** to check speech. Browser checks cannot confirm audible output through physical headphones or Bluetooth.
 
 ## Retained exact-source technical candidate
 
-- Source SHA: `cc3700bfa90348305cbf390babb8cf8f3d715493`
-- Public-runtime fingerprint: `sha256:e126eeb5a329cad4a21cb604f3ef532116c57de9bca54aaae1359baac6306c08`
-- Producer: [Pre-merge Public Candidate run 39638785407](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39638785407)
-- Retained artifact: `12364230865`, digest `sha256:e5d672359453ae9b7e154bd53c40b5c59f4359f2f3ea23b3b72a33f93c70fafa`, expires `2027-01-19T16:53:10Z`
+- Source SHA: `d41c633ccddecd3a0c2b51a53d43c2eb3e345517`
+- Public-runtime fingerprint: `sha256:1256759b71ceddc4089425bdc5f55950399e795913388e3766048baeddf19ea3`
+- Producer: [Pre-merge Public Candidate run 39641015654](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39641015654)
+- Retained artifact: `12364559971`, digest `sha256:0107743e97bf85be0c6e70feacc2aa53766de9d9e7afd30233c38c370e17aa07`, expires `2027-01-19T17:20:46Z`
 
-The exact-source [Read Aloud QA 39561155743](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39561155743), [Mobile Browser QA 39561155654](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39561155654), and [Question Quality 50-Pass 39561155711](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39561155711) passed. These checks confirm Book-only speech behavior and browser audio calls. They do not verify that a person can hear audio on physical headphones.
+Exact-source software quality checks passed:
 
-No tester invitation is authorized from this technical candidate. All seven external reviews remain HOLD.
+- [Read Aloud QA run 39641015852](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39641015852) — 50 tests passed, including Android `synthesis-failed` without `onstart`, cursor retention and same-sentence retry.
+- [Mobile Browser QA run 39641015779](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39641015779) — required Chromium, WebKit, cross-browser, visual/reachability and five 100-run reliability shards passed.
+- [Question Quality 50-Pass run 39641015590](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39641015590) passed.
+- [Combined Learn and Book QA run 39641015644](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39641015644) passed in Chromium and WebKit.
+
+These checks verify automated software behavior on source `d41c633ccddecd3a0c2b51a53d43c2eb3e345517`. They do not verify actual Android speech-engine reliability or that a person can hear Book narration on a physical phone, headphones or Bluetooth. No tester invitation is authorized from this technical candidate.
 
 ## Seven independent release-specific HOLD packets
 

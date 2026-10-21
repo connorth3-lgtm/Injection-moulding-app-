@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: release 2026.10.21.3 source cc3700bfa90348305cbf390babb8cf8f3d715493 artifact 12364230865 and producer 39638785407 are staged as technical metadata only; producer success and quality are NOT independently verified. No source, human, device or production approval is implied. |
-| Behavioral / browser | **fail** | HOLD: browser and question gates for release 2026.10.21.3 source cc3700bfa90348305cbf390babb8cf8f3d715493 must be independently verified on the staged candidate; prior green workflows do not transfer to a different exact source. |
+| Static / contract | **pass** | Exact retained technical artifact for release 2026.10.21.3 source d41c633ccddecd3a0c2b51a53d43c2eb3e345517 was produced by run 39641015654 and retained as artifact 12364559971 with fingerprint sha256:1256759b71ceddc4089425bdc5f55950399e795913388e3766048baeddf19ea3. The candidate identity is source-bound; this does not imply human, physical-device or production approval. |
+| Behavioral / browser | **pass** | Automated software evidence passed for release 2026.10.21.3 source d41c633ccddecd3a0c2b51a53d43c2eb3e345517: Read Aloud QA run 39641015852 (50 tests), Mobile Browser QA run 39641015779, Question Quality 50-Pass run 39641015590, and Combined Learn/Book QA run 39641015644. Actual Android voice-engine reliability and audible output through physical headphones/Bluetooth remain unverified; external human/device review remains HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
