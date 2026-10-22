@@ -8,7 +8,7 @@
   "reviewBoundary": "Repository-controlled technical/source review only. It confirms that added explanatory prose remains within existing governed claim scope; it is not independent human SME validation and cannot create machine-, mould-, grade-, product- or site-specific production authority.",
   "readerArchitecture": {
     "path": "data/book-reader-architecture-v2.json",
-    "gitBlobSha1": "4f1a849ad98bcd66edb1030da0fdaec1300e9041",
+    "gitBlobSha1": "07f5bb704219dcef870aab982422af987be68493",
     "conclusion": "structural-only-no-new-technical-claims"
   },
   "reviewedModules": [
@@ -711,7 +711,7 @@
     },
     "addedSectionCount": 14,
     "conclusion": "Added a plain-language opening section to each of the 14 modules in the first five reader chapters and simplified chapter titles, learning objectives, checks and application prompts. The content remains within existing governed claim scope; no claim IDs, numeric recipes or grade-specific process windows were added.",
-    "rationale": "This pass keeps the prior explanatory depth and gives first-time learners a familiar starting picture before technical detail. It defines key words at first use, uses short concrete explanations and preserves machine, material, mould, product and site boundaries. Automated checks do not establish learner comprehension or replace human review. Key first-use definitions were checked for terms that appear later, including plasticising, gate, transfer, pressure, nozzle, morphology, datasheet properties, process window and anisotropy.",
+    "rationale": "This pass keeps the prior explanatory depth and gives first-time learners a familiar starting picture before technical detail. It defines key words at first use, uses short concrete explanations and preserves machine, material, mould, product and site boundaries. Automated checks do not establish learner comprehension or replace human review. Key first-use definitions were checked for terms that appear later, including plasticising, gate, transfer, pressure, nozzle, morphology, datasheet properties, process window and anisotropy. The guided-reading note and chapter-depth explanation were also rewritten so a beginner understands what the labels mean and where to find definitions.",
     "materialChapterEmphasis": "r03 now begins with plain explanations of polymer chains, amorphous and semi-crystalline structure, exact grades, property data, fibres and additives. r04 and r05 also define flow, moisture, heat history, plasticising, shot, cushion and machine signals before the detailed explanations.",
     "independentSmeStatus": "hold",
     "humanDeviceValidationStatus": "hold",

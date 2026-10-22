@@ -67,7 +67,7 @@ for reader_id in ("r03","r11","r19"):
     assert row.get("scenarioPrompt"), f"reader reasoning scenario missing: {reader_id}"
 assert any(len(row.get("learningObjectives") or []) > 2 for row in readers), "reader objectives remain mechanically uniform"
 assert any(len(row.get("checkQuestions") or []) > 3 for row in readers), "reader knowledge checks remain mechanically uniform"
-assert "not a strictly monotonic learner progression" in reader.get("depthBandMeaning",""), "reader depth-band meaning must prevent ladder interpretation"
+assert "not a test of who can read a chapter" in reader.get("depthBandMeaning",""), "reader depth-band meaning must be clear to beginners"
 assert "progressive disclosure" in reader.get("firstReadPolicy",""), "reader first-read policy must preserve progressive disclosure"
 assert "navigation labels" in reader.get("firstReadPolicy",""), "reader key terms must remain non-authoritative navigation labels"
 assert len(covered)==46 and len(set(covered))==46 and set(covered)==set(module_ids)
