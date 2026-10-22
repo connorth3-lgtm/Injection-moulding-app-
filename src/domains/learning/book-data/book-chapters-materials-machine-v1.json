@@ -37,6 +37,22 @@
         {
           "title": "Cooling gives the material a local structural history",
           "text": "The material does not experience one uniform cooling event. The mould surface removes heat from the outside while the interior cools through the part's thickness, and flow can orient polymer structure or reinforcement along local paths. In semi-crystalline materials, the opportunity for ordered regions to develop also depends on the thermal history. Those local differences help explain why shrinkage and properties can vary by position or direction. A family label is a starting model; the actual grade, part geometry and measured response determine whether that model describes a real component."
+        },
+        {
+          "title": "Think of a polymer as chains with different freedom to move",
+          "text": "Thermoplastic polymers consist of long molecular chains. Their architecture, chain mobility and ability to pack into ordered regions influence how the material softens, flows and develops properties. In an amorphous grade, the chains do not form the same repeating crystalline regions found in a semi-crystalline material. A semi-crystalline grade contains both ordered regions and less-ordered material, so the local balance depends on formulation and thermal history. These categories explain broad tendencies; they do not describe every grade completely. Copolymers, molecular design, reinforcements and additives can shift the behaviour that matters to a particular moulding."
+        },
+        {
+          "title": "Glass transition and melting are different landmarks",
+          "text": "The glass-transition region describes a change in molecular mobility in amorphous portions of a polymer; it is not the same event as melting. Semi-crystalline materials also have ordered regions that can melt over a grade-dependent range. This distinction helps explain why material families can respond differently to heating and cooling, but it does not supply a processing temperature. A supplier's technical data may report several thermal properties measured by different methods. Read the test method, specimen condition and grade identity with each value, and do not use one reported transition to infer a universal barrel, mould or ejection setting."
+        },
+        {
+          "title": "Cooling produces gradients through the wall and across the part",
+          "text": "Heat leaves a moulding through its contact with the tool, while the interior cools through the part thickness. Geometry, local wall thickness, mould surface condition, circuit layout and local flow history mean that different regions need not experience the same thermal path. In a semi-crystalline grade, time and temperature also affect the opportunity for ordered regions to develop. In reinforced grades, flow can orient fibres differently from place to place. The final component can therefore contain local differences in structure and response even though it came from one shot of one grade. This is why a single average temperature or family description cannot fully explain a local dimensional result."
+        },
+        {
+          "title": "Read shrinkage and warpage as part-level outcomes",
+          "text": "Shrinkage describes a dimensional change relative to a defined mould or test reference; warpage describes a shape change that can arise when different areas or directions respond unequally. They are related outcomes, but they are not synonyms and neither is explained by polymer family alone. Material structure, formulation, flow orientation, local pressure and thermal history can all contribute. A useful investigation compares dimensions at defined locations and directions, records the part's measurement condition, and checks whether the pattern repeats across cavities and cycles. Use current grade data and the real part's acceptance requirements; a generic shrinkage value or a standard test specimen cannot guarantee the dimensions of a different production geometry."
         }
       ]
     },
@@ -71,6 +87,14 @@
         {
           "title": "Compare pressure only when the flow conditions are understood",
           "text": "A pressure trace is interpretable only alongside the rate of filling, material condition, thermal state and flow path that produced it. A higher pressure can accompany a higher flow demand, a more restrictive path, a different melt state or a combination of effects. First check whether the compared cycles used the same material and comparable mould state, and establish what the machine signal measures. Then compare the pressure pattern with achieved motion and part response. This creates a testable explanation without treating pressure as a direct viscosity measurement or a unique diagnosis."
+        },
+        {
+          "title": "Shear-thinning explains why flow rate changes pressure demand",
+          "text": "Many thermoplastic melts show shear-thinning behaviour: their apparent viscosity can fall as the rate of deformation increases. Injection flow is not uniform throughout the path, so different regions can experience different rates and temperatures at the same time. A viscosity number measured at one temperature and test rate is therefore not a complete description of what the melt will do in another gate or cavity. When filling behaviour changes, compare the exact grade and material condition, the rate actually achieved, the thermal state and the geometry. A family label or one flow index can help form a question, but cannot alone predict the pressure needed in a production mould."
+        },
+        {
+          "title": "Follow pressure through the path and identify the sensor",
+          "text": "Melt passes through a sequence that may include the screw tip, nozzle, sprue, runner, gate and cavity. Each section contributes to the system response, and the narrowest visible feature is not automatically the only source of pressure loss. A machine pressure sensor describes pressure at its own location and can include losses downstream; it is not a direct cavity-pressure measurement. Cavity sensors, where installed, answer a different question and are also location-specific. Before comparing traces, name the sensor, timing and control phase, then relate the signal to achieved motion and the part result. This keeps pressure useful as evidence without treating it as a unique diagnosis."
         }
       ]
     },
@@ -111,6 +135,14 @@
         {
           "title": "Follow conditioned material from the container to the feed throat",
           "text": "A drying record describes only part of the material's journey. The grade and lot, container opening history, dryer status, conveying route, hopper exposure and point of sampling all affect whether a moisture result represents the pellets entering the machine. A measurement taken before a long or exposed transfer may not describe the material at the feed throat. When symptoms change between lots or after interruptions, compare the material-handling history as well as the dryer display. Use the supplier's current method and grade-specific limit; this chapter does not supply a universal target."
+        },
+        {
+          "title": "Distinguish absorbed moisture from a wet material surface",
+          "text": "Some polymers take up moisture within the material, while moisture can also reach pellets through exposed storage, condensation or handling. The process consequence depends on the polymer chemistry and grade. In a hydrolysis-sensitive polymer, moisture present at melt temperature can damage the polymer; in other situations, water or another volatile may mainly affect appearance or plasticising stability. The symptom alone does not tell which condition is present. Identify the exact grade, review the current supplier limits and handling guidance, and use the specified measurement approach where applicable. This avoids applying a drying response to a problem that has another cause."
+        },
+        {
+          "title": "A dryer display is not a material-condition measurement",
+          "text": "A controller may report air temperature or another dryer value, while the material entering the feed throat has a separate moisture condition. Loading, airflow, residence, exposure after drying, conveying route, leaks and sampling point can all affect how representative the record is. The relevant evidence is the actual grade requirement, the equipment record and a credible observation or measurement of the material at the appropriate point. Do not infer that pellets are within specification simply because the dryer is on or has reached a displayed setpoint. Exact dryer requirements and test methods come from the current grade-specific supplier guidance."
         }
       ]
     },
@@ -146,6 +178,14 @@
         {
           "title": "Treat temperature and residence as a path through the equipment",
           "text": "The barrel display is one part of the thermal record, not a direct reading of every portion of melt. Material moves through feed, screw, barrel, nozzle and, where present, heated runners, while recovery, shot size and interruptions change how long material remains in those regions. A process can therefore show the same setpoints while experiencing a different residence pattern. Compare the timeline of start-up, steady running, pauses and restart with the location and timing of any quality change, then check the grade-specific supplier limits before drawing a conclusion."
+        },
+        {
+          "title": "Trace the material path, not only the barrel settings",
+          "text": "The melt experiences a path through the screw, barrel, nozzle and, where present, a heated runner before it reaches the cavity. Material throughput, shot size, recovery, interruptions and retained melt can change how long portions of material remain in heated regions. The displayed barrel setpoints describe controller targets at particular zones; they do not by themselves establish the actual temperature or residence history of every part of the melt. When comparing good and poor production periods, align the process timeline with material identity, pauses, restart events, recovery behaviour and the location of any observed defect. Then check the exact grade's current supplier limits."
+        },
+        {
+          "title": "Use timing patterns to separate competing explanations",
+          "text": "A symptom that appears mainly after a stoppage, at start-up, or after a material change gives different evidence from a symptom present on every steady cycle. Discolouration, odour, deposits, black specks or a change in flow can be consistent with excessive thermal exposure, but contamination, material mix-up, moisture and equipment condition can produce overlapping signs. Record when the change begins and where it appears, then compare the process trace and material history that coincide with that change. A diagnosis becomes stronger when it explains the timing and predicts an observable response; one successful adjustment or purge is not, on its own, proof of cause."
         }
       ]
     },
@@ -193,6 +233,22 @@
         {
           "title": "Read a supplier property as bounded evidence",
           "text": "A published value belongs to an identified grade and the test method and conditions used to measure it. It can help screen or compare candidate materials when those bases match, but it does not directly guarantee a finished part's behaviour. Geometry, local flow direction, moulding history and the intended use can change the response that matters to the product. Keep the test basis with the value, use it to narrow the choice, and confirm the relevant part requirements through the applicable qualification process. If two values were measured on different bases, do not treat their numerical difference as a simple grade difference."
+        },
+        {
+          "title": "Recognize family names without treating them as complete identities",
+          "text": "Common shorthand includes PE for polyethylene, PP for polypropylene, PVC for polyvinyl chloride, ABS for acrylonitrile-butadiene-styrene, PA or nylon for polyamide, POM or acetal for polyoxymethylene, PBT for polybutylene terephthalate, PC for polycarbonate and TPU for thermoplastic polyurethane. These names are useful for finding the right supplier information. They do not identify one universal formulation or process window. The same family can include different copolymers, molecular designs, colour variants, impact modifiers, flame-retardant systems, lubricants, glass or mineral reinforcement. Record the complete manufacturer grade and suffixes before comparing data or transferring a process."
+        },
+        {
+          "title": "Read a property table with its test conditions attached",
+          "text": "A datasheet value is evidence about a named grade tested under stated conditions. For each value, check the method, specimen dimensions, direction, conditioning, temperature, rate and units where supplied. A tensile or impact result from a standard specimen is useful for screening and comparison when the test bases match; it is not a direct promise of the response of a complex moulded part. A part may have different wall thickness, flow orientation, weld-line location and thermal history from the test specimen. Keep the test basis beside the number in any comparison so a difference in method or condition is not misread as a difference between materials."
+        },
+        {
+          "title": "Start material selection from the part requirement",
+          "text": "First state what the component must do and where the evidence comes from: dimensional fit, impact response, stiffness, temperature exposure, chemical contact, appearance, electrical behaviour or another defined requirement. Then identify which grade-level data relate to that requirement and under what test conditions. Next check whether the supplier's processing guidance and the actual machine/mould system support a credible trial. Finally identify what must be measured on the production-like part to verify the choice. This sequence avoids selecting on one attractive datasheet number while overlooking a critical use condition, tool limitation, surface requirement or material-handling constraint."
+        },
+        {
+          "title": "Review a substitution as a new evidence question",
+          "text": "A material substitution is not established by matching only the family abbreviation or a single published property. Confirm the exact old and new grades, formulation suffixes, colour, revision and supplier guidance. Compare the properties that matter to the product on a like-for-like test basis, then identify which process observations and part characteristics could change. Decide in advance what evidence would support the substitution and what result would require further review. A controlled comparison may show that the new grade behaves acceptably in the intended system, but that result applies to the tested material, tool, machine, part and conditions. It does not create a transferable recipe for other grades or moulds."
         }
       ]
     },
@@ -228,6 +284,18 @@
         {
           "title": "Relate modifier effects to direction and position",
           "text": "In a reinforced grade, local flow can orient fibres differently around gates, turns, walls and meeting flow fronts. The resulting stiffness, strength and shrinkage can therefore depend on both where a feature sits and the direction in which it is measured. A single part-average measurement may hide a local or directional difference. When that distinction matters, identify the measurement location and direction, compare corresponding features across cavities, and use material- and part-specific analysis to decide whether orientation is a plausible explanation. Do not infer a fibre pattern from one machine setting alone."
+        },
+        {
+          "title": "Reinforcement can make response direction-dependent",
+          "text": "Short fibres tend to follow local melt flow, and the flow pattern can vary between the gate region, thin sections, turns, weld lines and the part surface. A reinforced moulding may therefore respond differently along the dominant flow direction and across it. The amount and direction of that difference depend on the exact formulation, geometry and moulding history. This is why a glass-filled grade cannot be treated as simply the unfilled grade with a higher stiffness value. Compare dimensions and mechanical requirements in the relevant directions and locations, and consult grade-specific data before interpreting a change in warpage or strength."
+        },
+        {
+          "title": "Modifiers create coupled trade-offs",
+          "text": "Glass fibre, mineral filler, impact modifier, flame retardant, lubricant and colour system can each alter more than one aspect of the material. A formulation change may affect flow, shrinkage, directional behaviour, appearance, wear or thermal response together. The direction and size of those effects are grade-specific, so the modifier name alone is not enough to predict a production outcome. Resolve the exact commercial grade and its current documentation, then compare the part characteristics relevant to the application. If the supplier changes a formulation or a colour system, treat that as a material identity question and verify whether the change matters to the product and process evidence."
+        },
+        {
+          "title": "Worked comparison: unfilled and reinforced candidates",
+          "text": "Imagine two candidate grades share the same base polymer, but one is unfilled and the other is glass-reinforced. The useful comparison begins with the part requirement, not the assumption that the reinforced option is automatically better. Identify which directions carry load, which dimensions control fit, where visible surfaces matter and whether the part has thin sections or divided flow. Match the supplier property tests and processing guidance to those questions. Then define what a production-like comparison must record: exact grade and lot, relevant process traces, cavity identity, part dimensions by location/direction, surface condition and the required mechanical check. The result can support a decision for that tested system; it cannot be copied as a universal setting or guarantee for another geometry."
         }
       ]
     },
@@ -275,6 +343,14 @@
         {
           "title": "A steady recovery trace does not prove an identical melt",
           "text": "Recovery time and final screw position describe useful parts of shot preparation, but they do not directly measure temperature uniformity, mixing or material condition. Compare them with feeding behaviour, the injection response, cushion trend, part mass and any relevant quality change. If recovery stays steady while delivered shot or part response changes, look for causes downstream or in the machine's delivery system as well as in plasticising. If the recovery pattern changes first, investigate the preparation stage using the machine and material documentation. The aim is to locate where evidence first diverges, not to infer a component fault from one signal."
+        },
+        {
+          "title": "Recovery meters a shot while preparing the next melt quantity",
+          "text": "During screw recovery, material is conveyed forward, heated, mixed and accumulated ahead of the screw as the screw retracts. These functions happen together, so a change in recovery behaviour can reflect more than one condition: material feed, screw/barrel configuration, thermal state, backflow at the non-return function or the control sequence. The next injection uses the material prepared during that recovery period. Compare recovery time, screw position, cushion, pressure and part response as linked observations, and use the grade-specific supplier and machine guidance for configuration limits. The Book does not prescribe a universal screw speed, back pressure or residence target."
+        },
+        {
+          "title": "Treat cushion as a repeatable signal with a defined reference",
+          "text": "Cushion is a screw-position observation at a particular point in the cycle, interpreted through that machine's position convention and control. A stable cushion trend can support the view that the measured end position is repeating, but it does not directly prove that the same melt mass entered every cavity. Part weight, recovery, transfer, the non-return function, sensor resolution and cavity balance can all affect the interpretation. Record where and when the signal is sampled, compare it across repeated cycles and relate it to cavity-specific part results. If cushion varies, investigate the whole shot-preparation and delivery path rather than declaring a worn valve from one signal alone."
         }
       ]
     },
@@ -306,6 +382,14 @@
         {
           "title": "Evaluate machine fit as a group of constraints",
           "text": "A machine can have enough nominal injection capacity and still be a poor fit for a particular material, shot and mould. Consider the actual screw movement used, the remaining cushion convention, how long material resides in the hot system, whether recovery completes consistently, and whether filling can be delivered within the machine's pressure and rate capability. These factors interact, so no single utilisation percentage can decide suitability. Use the machine manufacturer's limits and the material supplier's residence guidance, then verify the process response and part requirements over repeated cycles."
+        },
+        {
+          "title": "Nominal machine capacity is not the same as a suitable shot",
+          "text": "A machine's published maximum shot capacity is a rating under a defined basis; the process uses a particular material, shot size, screw configuration, cycle and hot-runner arrangement. Suitability depends on whether the machine can prepare and deliver the required shot repeatably within the relevant residence, recovery, pressure, rate and clamp constraints. A shot that occupies a very different portion of the available capacity can change how long material remains in the plasticising unit, but no single utilisation percentage is a universal acceptance rule. Confirm the rating basis and machine guidance, then assess the actual production configuration and measured response."
+        },
+        {
+          "title": "Use several signals to understand shot consistency",
+          "text": "Shot consistency is an inference from repeated evidence, not a property of one number. Compare screw position and cushion using the machine's reference convention, recovery time, achieved injection response, part mass and cavity-to-cavity variation. Keep the material grade and lot, mould condition and sampling method comparable. If one signal is stable while the parts vary, the signal may simply be blind to the source of variation. If several signals move together, the pattern can narrow the investigation but still needs to be checked against the physical process and product measurements."
         }
       ]
     },
@@ -341,6 +425,14 @@
         {
           "title": "Separate a pressure limit from a velocity setting",
           "text": "During velocity-controlled filling, the controller requests a screw-motion rate while the pressure limit constrains how much force the machine can apply. If the melt and flow path require more pressure than that limit permits, achieved motion can fall below the requested rate. Increasing the velocity command alone may then produce little change in actual filling. Read the velocity command, achieved response and pressure trace together, and check where each signal is measured. The trace can suggest whether filling is pressure-limited, but part or cavity evidence is still needed to judge the moulding outcome."
+        },
+        {
+          "title": "Commanded filling velocity and achieved motion can differ",
+          "text": "During velocity-controlled filling, the machine attempts to follow a motion command while pressure develops to overcome resistance through the system. The command, achieved screw motion and measured pressure describe different parts of that response. If the machine reaches a configured pressure limit, the achieved motion can fall below the requested motion. A trace that shows this interaction should be read with the material condition, flow path, sensor location and part outcome; it is not proof that the pressure limit or one process setting is the root cause. The exact control display and limit behaviour depend on the machine."
+        },
+        {
+          "title": "Transfer marks a change in control objective",
+          "text": "Fill-to-pack transfer changes what the control system is trying to govern as the cavity moves from filling toward post-fill pressure. Position, time, pressure or cavity-related criteria may be available depending on the machine and instrumentation, but their meaning depends on the actual moulding system. A copied transfer percentage is not evidence that the cavity is filled at the same point in another mould or grade. Compare the transfer signal with filling motion, pressure response and the resulting part across repeatable cycles. Use the machine's control definitions and the product/process limits that govern the application."
         }
       ]
     }

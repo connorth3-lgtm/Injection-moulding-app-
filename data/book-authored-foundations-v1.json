@@ -57,6 +57,14 @@
         {
           "title": "Build an evidence chain from the process to the part",
           "text": "A useful explanation connects what entered the process, what the machine and mould did, and what was measured on the part. Record the material identity and condition, relevant commands, actual process traces and the inspection result as separate evidence. Keep the comparison tied to the same mould, cavity and defined quality requirement where possible. If several inputs change together, the resulting part may improve without showing which change mattered. A process conclusion is stronger when it predicts an observable response and remains consistent across repeated cycles, rather than explaining one result after it is already known."
+        },
+        {
+          "title": "Follow the process as a chain of handoffs",
+          "text": "A part passes through a sequence of linked conditions: material is supplied to the machine, the screw prepares and meters a shot, the injection unit delivers melt through the feed path, the cavity is filled, post-fill pressure acts while the gate permits it, heat leaves the part, and the mould releases it. Each stage hands a different material state to the next. A later symptom can therefore have an earlier cause. A poor surface may be observed after ejection, for example, while the relevant evidence could include material condition, filling history, thermal exposure or mould response. The sequence is a map for investigation, not a promise that every machine uses identical phase names or timing."
+        },
+        {
+          "title": "Keep commands, signals and part results separate",
+          "text": "A controller command describes what the machine was asked to do. A process trace describes a measured machine response, such as screw position or pressure at a defined location. A part inspection describes the outcome that matters to the product. These are related but not interchangeable. A commanded speed does not prove the screw achieved that motion; a stable machine trace does not by itself prove every cavity produced conforming parts. Record each layer separately, identify what the sensor actually measures, and connect it to the same cycle, cavity and part sample. This makes a process explanation testable and prevents a screen value from being treated as a direct measurement of the finished component."
         }
       ]
     },
@@ -104,6 +112,18 @@
         {
           "title": "Read the cycle as a timed sequence of physical events",
           "text": "A controller phase name is useful only when it is connected to the event it represents. Follow when screw recovery begins, when the screw advances, when the control objective changes, how long pressure can influence the cavity, when cooling is complete enough for release, and when the next shot is ready. Some machine work overlaps: recovery may happen while the part cools. That overlap means a change in one displayed duration can affect material residence or the next cycle even when the mould is doing something else. Compare traces on a shared time basis and confirm the machine's signal definitions before interpreting a transition."
+        },
+        {
+          "title": "The stages interact across the cycle",
+          "text": "The cycle is not a row of independent settings. Screw recovery prepares material for a later shot while the current part may still be cooling; the exact overlap depends on the machine sequence. Filling creates a pressure and temperature history that affects what happens after transfer. Cooling then influences whether the part can be released and how it responds after ejection. A change made to shorten one phase can move demand into another phase or change the condition presented to it. When comparing cycles, note the full sequence and actual response rather than judging one timer or setpoint in isolation."
+        },
+        {
+          "title": "Trace an outcome back through the sequence",
+          "text": "Suppose a part is short at the end of a flow path. The observation identifies where the result is incomplete; it does not uniquely identify why. Compare the material identity and condition, the achieved filling motion, pressure development, transfer timing, flow-path state and cavity-specific outcome. Check whether the symptom is present from the first cycles, appears after an interruption, follows a material or tool change, or is limited to one cavity. Those patterns help distinguish competing explanations. The useful next question is what each explanation predicts in the trace or part measurement. Make a controlled comparison within the established safety and quality system, then keep the explanation only if the observed response supports it."
+        },
+        {
+          "title": "Judge repeatability across cycles and parts",
+          "text": "One acceptable part shows that one outcome occurred under one set of conditions. It does not describe normal variation across cycles, cavities, material lots or restarts. A useful baseline links repeated machine signals with repeated part measurements and identifies which variations matter to the product requirement. Keep the sampling method, measurement location and time window clear: changing those can make two records look different even when the process has not changed. The aim is not to collect every possible value. It is to keep enough consistent evidence to tell whether the process response and the part result remain aligned over the conditions that the process is expected to handle."
         }
       ]
     },
@@ -142,6 +162,14 @@
         {
           "title": "Check what a machine signal represents before using it",
           "text": "For every useful trace, establish whether it is a command, a measured response, an alarm threshold or a calculated value. Then check its units, sensor location, scaling and time basis in the machine documentation. A commanded screw speed describes the request; an achieved-speed trace describes the response. A pressure measured upstream of the nozzle includes effects from the path between that point and the cavity. Two controllers can use similar labels for different signals or control modes, so screen names alone are not a reliable physical definition."
+        },
+        {
+          "title": "Trace the functions, not just the component names",
+          "text": "The injection unit takes material from the feed region, transports and heats it in the barrel, uses the screw to prepare a measured melt quantity, and delivers that melt through the nozzle. The clamping unit holds the mould closed during the process, then opens it and coordinates the release sequence. The controller links commands, measured signals and machine sequencing. These functions form one machine, but their limits and measurements differ. When a symptom is reported, name the subsystem and the evidence point involved: a recovery issue, a nozzle-side restriction, a clamp response and a mould release problem are not interchangeable descriptions. The exact configuration varies, so the machine manual and local setup record remain the reference for the machine in front of you."
+        },
+        {
+          "title": "Read commanded and actual values as different evidence",
+          "text": "A screen can show a target value, an achieved value, a limit or a calculated value. Those labels describe different things. A target temperature is a controller request; an actual reading comes from a sensor at its installed location; neither is automatically the melt temperature throughout the screw, nozzle or mould. Similarly, a pressure reading belongs to a defined transducer and control system. Before interpreting a trace, identify its source, unit, sampling time and whether it is filtered or calculated. This prevents comparisons between unlike signals and keeps a sensor observation from being mistaken for a measurement at another point in the process."
         }
       ]
     },
@@ -180,6 +208,14 @@
         {
           "title": "Use location to connect a symptom to mould features",
           "text": "Record where a symptom appears: which cavity, which side of the part, how far from the gate, and whether it follows a parting surface, vent, insert or cooling region. A repeated location can narrow the feature map worth inspecting, while a symptom across all cavities may point toward a shared upstream condition. Neither pattern proves a cause. Location is a way to make the next comparison more discriminating, and the actual mould drawing and approved inspection method remain the authority for identifying tool features."
+        },
+        {
+          "title": "Treat the mould as a flow, heat and release system",
+          "text": "The mould defines the part surfaces, but it also carries the feed path, separates into moving and stationary sides, removes heat, guides movement and supports ejection. Inserts, slides, cores, parting surfaces, gates, vents, cooling circuits and ejectors each interact with the part in a different way. A mark on a part should therefore be located relative to the cavity, gate, flow path, parting line and ejection features before a cause is proposed. A mould drawing or approved tool record helps establish what feature is actually present; visual appearance alone may not reveal a hidden insert, circuit or local restriction. Use the identified tool configuration when comparing process and inspection evidence."
+        },
+        {
+          "title": "Tie observations to cavity and location",
+          "text": "In a multi-cavity or family mould, a single machine trace can represent several different local cavity outcomes. Record which cavity produced the measured part, where on that part the feature was found, and whether the same feature appears elsewhere. A defect fixed to one cavity suggests a different set of questions from a defect shared across all cavities, though neither pattern proves a cause. Tool condition, local flow and heat removal can vary by location. Keeping cavity identity and measurement location attached to a result makes later comparisons useful instead of averaging away a meaningful difference."
         }
       ]
     },
@@ -218,6 +254,14 @@
         {
           "title": "Choose evidence collection that stays within the safe boundary",
           "text": "A diagnostic question does not authorise a hazardous test. Start with information available from normal guarded operation, such as recorded traces, cycle history, external part measurements and observations made from an authorised position. If answering the question would require access to moving, hot, pressurised or stored-energy components, the work must move to the machine- and site-specific safe system, competent supervision and authorised task controls. This Book provides no isolation sequence and no permission to bypass a safeguard."
+        },
+        {
+          "title": "A stop, a fault and isolation are different states",
+          "text": "A stopped cycle or controller fault does not, by itself, establish that hazardous energy has been isolated or dissipated. The machine may retain stored, electrical, hydraulic, pneumatic, thermal or gravity-related hazards, and the applicable safeguards depend on the specific equipment and task. This Book helps learners recognize the boundary; it does not provide a generic isolation sequence or authorize access. Use the machine manufacturer's instructions, the site's risk controls and the role-specific authorization process. If the safe state is uncertain, the task stays within the site's escalation and isolation system rather than being inferred from the display."
+        },
+        {
+          "title": "Safety controls define the boundary of process work",
+          "text": "A process target never overrides guarding, interlocks, rated equipment limits or a site's safe-work controls. Do not treat a bypass, defeated safeguard or improvised access method as a troubleshooting step. Process evidence can be collected only through permitted observation points and approved methods. This also applies to material handling, purging, mould temperature equipment and ejection: the correct method depends on the machine, resin, tool and local procedure. The learner's responsibility is to recognize when a question has moved from process reasoning into an authorized safety task and to use the appropriate trained person and control system."
         }
       ]
     }

@@ -8,14 +8,14 @@
   "reviewBoundary": "Repository-controlled technical/source review only. It confirms that added explanatory prose remains within existing governed claim scope; it is not independent human SME validation and cannot create machine-, mould-, grade-, product- or site-specific production authority.",
   "readerArchitecture": {
     "path": "data/book-reader-architecture-v2.json",
-    "gitBlobSha1": "ccdfc16838ba73a012bd55a1d3c9a23926c699b4",
+    "gitBlobSha1": "f4d47a9df192e1eeb5419a10e25be585277dfaf6",
     "conclusion": "structural-only-no-new-technical-claims"
   },
   "reviewedModules": [
     {
       "moduleId": "what-injection-moulding-is",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "20348f9706ab4c8f77427393d169b6793fc0d972",
+      "authoredGitBlobSha1": "7b91debb67774275f94715087604442e881e38b3",
       "governedClaimIds": [
         "what-injection-moulding-is-01",
         "what-injection-moulding-is-02",
@@ -34,7 +34,7 @@
     {
       "moduleId": "cycle",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "20348f9706ab4c8f77427393d169b6793fc0d972",
+      "authoredGitBlobSha1": "7b91debb67774275f94715087604442e881e38b3",
       "governedClaimIds": [
         "cycle-01",
         "cycle-02",
@@ -54,7 +54,7 @@
     {
       "moduleId": "machine-anatomy",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "20348f9706ab4c8f77427393d169b6793fc0d972",
+      "authoredGitBlobSha1": "7b91debb67774275f94715087604442e881e38b3",
       "governedClaimIds": [
         "machine-anatomy-01",
         "machine-anatomy-02",
@@ -73,7 +73,7 @@
     {
       "moduleId": "mould-anatomy",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "20348f9706ab4c8f77427393d169b6793fc0d972",
+      "authoredGitBlobSha1": "7b91debb67774275f94715087604442e881e38b3",
       "governedClaimIds": [
         "mould-anatomy-01",
         "mould-anatomy-02",
@@ -92,7 +92,7 @@
     {
       "moduleId": "safety-foundations",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "20348f9706ab4c8f77427393d169b6793fc0d972",
+      "authoredGitBlobSha1": "7b91debb67774275f94715087604442e881e38b3",
       "governedClaimIds": [
         "safety-foundations-01",
         "safety-foundations-02",
@@ -110,7 +110,7 @@
     {
       "moduleId": "polymer-structure",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "c67568b4d3256d4dac3871c8ca69f0efb4a975c6",
+      "authoredGitBlobSha1": "dea82f3c7ba8dd646fc933e3ab77cf3065d7149e",
       "governedClaimIds": [
         "polymer-structure-01",
         "polymer-structure-02"
@@ -127,7 +127,7 @@
     {
       "moduleId": "rheology",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "c67568b4d3256d4dac3871c8ca69f0efb4a975c6",
+      "authoredGitBlobSha1": "dea82f3c7ba8dd646fc933e3ab77cf3065d7149e",
       "governedClaimIds": [
         "rheology-01",
         "rheology-02"
@@ -144,7 +144,7 @@
     {
       "moduleId": "moisture-drying",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "c67568b4d3256d4dac3871c8ca69f0efb4a975c6",
+      "authoredGitBlobSha1": "dea82f3c7ba8dd646fc933e3ab77cf3065d7149e",
       "governedClaimIds": [
         "moisture-drying-01",
         "moisture-drying-02",
@@ -162,7 +162,7 @@
     {
       "moduleId": "thermal-history",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "c67568b4d3256d4dac3871c8ca69f0efb4a975c6",
+      "authoredGitBlobSha1": "dea82f3c7ba8dd646fc933e3ab77cf3065d7149e",
       "governedClaimIds": [
         "thermal-history-01",
         "thermal-history-02"
@@ -179,7 +179,7 @@
     {
       "moduleId": "material-families",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "c67568b4d3256d4dac3871c8ca69f0efb4a975c6",
+      "authoredGitBlobSha1": "dea82f3c7ba8dd646fc933e3ab77cf3065d7149e",
       "governedClaimIds": [
         "material-families-01",
         "material-families-02"
@@ -196,7 +196,7 @@
     {
       "moduleId": "fillers-additives",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "c67568b4d3256d4dac3871c8ca69f0efb4a975c6",
+      "authoredGitBlobSha1": "dea82f3c7ba8dd646fc933e3ab77cf3065d7149e",
       "governedClaimIds": [
         "fillers-additives-01",
         "fillers-additives-02"
@@ -213,7 +213,7 @@
     {
       "moduleId": "plasticising-unit",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "c67568b4d3256d4dac3871c8ca69f0efb4a975c6",
+      "authoredGitBlobSha1": "dea82f3c7ba8dd646fc933e3ab77cf3065d7149e",
       "governedClaimIds": [
         "plasticising-unit-01",
         "plasticising-unit-02",
@@ -691,5 +691,30 @@
     "conclusion": "derived-presentation-only-no-new-technical-claims",
     "scope": "First-read chapter threads, key-term navigation, progressive disclosure of applicability/evidence and optional worked-example expansion.",
     "independentSmeStatus": "hold"
+  },
+  "latestRevision": {
+    "id": "first-five-depth-2026-10-23",
+    "date": "2026-10-23",
+    "scope": [
+      "r01",
+      "r02",
+      "r03",
+      "r04",
+      "r05"
+    ],
+    "firstReadVisibleWords": {
+      "r01": 1727,
+      "r02": 1933,
+      "r03": 2618,
+      "r04": 1953,
+      "r05": 1835
+    },
+    "addedSectionCount": 34,
+    "conclusion": "Additional explanatory prose remains within the mapped existing governed claims. No new claim IDs, numeric recipes or grade-specific process windows were introduced.",
+    "rationale": "The first five chapters intentionally exceed the 850–1400 word soft editorial range to provide the requested depth. Each added section gives a concrete mechanism, evidence boundary, comparison method or worked reasoning example rather than filler.",
+    "materialChapterEmphasis": "r03 adds substantial material detail on polymer structure, transition concepts, local cooling history, exact-grade identity, property-test interpretation, substitution review and reinforcement/modifier effects.",
+    "independentSmeStatus": "hold",
+    "humanDeviceValidationStatus": "hold",
+    "readerPromptsUpdated": true
   }
 }

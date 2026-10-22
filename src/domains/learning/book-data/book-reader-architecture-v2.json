@@ -30,7 +30,8 @@
       "checkQuestions": [
         "Why can a defect appear in one stage even when its cause began earlier?",
         "Why is one acceptable cycle not enough to prove a robust process?",
-        "Which observations describe what the process actually did rather than what was commanded?"
+        "Which observations describe what the process actually did rather than what was commanded?",
+        "Which record fields show the command, the measured machine response and the finished-part result separately?"
       ],
       "applyPrompt": "Take a familiar moulding cycle and identify one input, one process signal and one part output for each major stage.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
@@ -59,7 +60,8 @@
       "checkQuestions": [
         "Which hazards remain controlled by machine/site procedures rather than this Book?",
         "How can mould terminology reduce diagnostic ambiguity?",
-        "Why can tooling condition change the interpretation of a process symptom?"
+        "Why can tooling condition change the interpretation of a process symptom?",
+        "Why must a display value, a stopped state and a safe state be interpreted differently?"
       ],
       "applyPrompt": "Trace the physical path from material feed to ejection and mark where machine-, mould- and site-specific procedures control access or intervention.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
@@ -91,9 +93,11 @@
         "Why can two grades in the same family mould differently?",
         "How can reinforcement create directional behaviour?",
         "When must supplier grade documentation override generic family guidance?",
-        "What grade and measurement details make a material comparison meaningful?"
+        "What grade and measurement details make a material comparison meaningful?",
+        "What test conditions must accompany a supplier property value?",
+        "What part measurements would help judge a material substitution?"
       ],
-      "applyPrompt": "Compare two proposed grades by exact identity, formulation, relevant part requirements and the evidence needed to judge their flow, moisture response, shrinkage and directional behaviour.",
+      "applyPrompt": "Compare two exact grades against the part requirements. Record test methods and conditions, material and lot identity, relevant process evidence, cavity and measurement locations, and the acceptance criteria that must be met.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
       "scenarioPrompt": "Two exact grades from the same material family are proposed for the same mould. Without assuming interchangeability, list the grade documents and observed process/part evidence you would compare before deciding whether a transfer is defensible.",
       "readingThread": "Move from polymer structure to material families and then to modifiers, keeping exact-grade evidence separate from broad family labels.",
@@ -122,7 +126,8 @@
       "checkQuestions": [
         "Why is viscosity not a fixed material number?",
         "How can a dryer operate normally while material condition is still wrong?",
-        "What timing pattern could support a residence/degradation hypothesis?"
+        "What timing pattern could support a residence/degradation hypothesis?",
+        "How would you separate moisture, thermal-history and contamination explanations for a similar-looking defect?"
       ],
       "applyPrompt": "Build two competing explanations for a silver-streak symptom and state what observation would distinguish them.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
@@ -153,7 +158,8 @@
       "checkQuestions": [
         "What does a stable cushion trend support—and what does it not prove?",
         "Why can nominal shot capacity be an incomplete machine-suitability check?",
-        "How can a pressure limit change achieved filling velocity?"
+        "How can a pressure limit change achieved filling velocity?",
+        "What does a stable cushion trend support, and what part evidence is still needed?"
       ],
       "applyPrompt": "Review a hypothetical shot-delivery problem and identify which screw, recovery, pressure and part measurements would be most useful.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
