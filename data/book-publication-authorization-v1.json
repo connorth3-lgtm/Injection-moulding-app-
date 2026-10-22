@@ -33,7 +33,7 @@
       "book-authored-remaining-v1.json": "839159d93c61a47b1faa758cec95c7a63e27fa5f",
       "book-worked-engineering-cases-v1.json": "4f7b70e356a14ee53402e1b88a0a368721de4c98",
       "book-evidence-enrichment-v2.json": "ee89992aa90f7b0458ce6b9d1151635d63ed404a",
-      "book-material-grade-atlas-v1.json": "bd2fb844ba853987dc43ab536d04b6e8c0baa582",
+      "book-material-grade-atlas-v1.json": "d151325332c1dca620aced8750bc16b0d6dc9270",
       "book-material-regional-evidence-v1.json": "4a42fa97f737b13271518d63672d3c4a01421e14",
       "material-catalog-v1.json": "88ac789aef21314cf2fbef194937ea3dca180471",
       "book-engineering-diagrams-v1.json": "393843732811f176932010993c25d1da7403c4e4",
@@ -217,7 +217,7 @@
   "diagramAuthorization": {
     "status": "authorized-instructional-diagrams",
     "authorizedAt": "2026-10-06",
-    "release": "2026.10.06.5",
+    "release": "2026.10.22.1",
     "ledger": "data/book-engineering-diagrams-v1.json",
     "diagramCount": 25,
     "scope": "Twenty-five generic explanatory SVG diagrams bound to governed Book modules; each asset hash is recorded in the governed diagram ledger.",

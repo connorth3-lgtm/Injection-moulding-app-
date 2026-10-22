@@ -27,6 +27,10 @@ editorial=load(ROOT/"data/book-editorial-expansion-review-v1.json")
 auth=load(ROOT/"data/book-publication-authorization-v1.json")
 sme=load(ROOT/"data/book-sme-review-v1.json")
 runtime=(ROOT/"src/domains/learning/book-runtime.js").read_text(encoding="utf-8")
+runtime_version=runtime.split("const VERSION='",1)[1].split("';",1)[0]
+assert runtime_version==book_release, "Book reader runtime must match the governed content release"
+claim_trace=(ROOT/"src/domains/learning/book-claim-trace.js").read_text(encoding="utf-8")
+assert f"const VERSION='{book_release}'" in claim_trace, "Book claim trace must match the current Book release"
 sw=(ROOT/"service-worker.js").read_text(encoding="utf-8")
 
 assert (ROOT/"data/book-reader-architecture-v2.json").read_bytes()==(PACKAGED/"book-reader-architecture-v2.json").read_bytes()
