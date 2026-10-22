@@ -1,12 +1,12 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.22.1`**.
+Current governed web candidate: **`2026.10.22.2`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Exact retained technical artifact for release 2026.10.22.1 source b511ca1f8d9407df7fafc292ff1fb36334b3a114 was produced by run 39651883205 and retained as artifact 12369292973 with fingerprint sha256:2a7b3cbb95ca106cf7c765ad036f6767fa0fc58a75ae9a1d4e1289bb296d877f. The candidate identity is source-bound; this does not imply human, physical-device or production approval. |
-| Behavioral / browser | **pass** | Automated software evidence passed for release 2026.10.22.1 source b511ca1f8d9407df7fafc292ff1fb36334b3a114: Read Aloud QA run 39651883188 (51 tests), Mobile Browser QA run 39651883306 (Chromium, WebKit, cross-browser, and all five 100-run reliability shards), Question Quality 50-Pass run 39651883459, and Combined Learn/Book QA run 39651883133. These tests do not establish actual speech on a locked physical phone; external human/device review remains HOLD. |
+| Static / contract | **fail** | HOLD: release 2026.10.22.2 source 7476c0e068ae3f3d2de210748fea0e0a7d82d728 artifact 12400418301 and producer 39719967677 are staged as technical metadata only; producer success and quality are NOT independently verified. No source, human, device or production approval is implied. |
+| Behavioral / browser | **fail** | HOLD: browser and question gates for release 2026.10.22.2 source 7476c0e068ae3f3d2de210748fea0e0a7d82d728 must be independently verified on the staged candidate; prior green workflows do not transfer to a different exact source. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

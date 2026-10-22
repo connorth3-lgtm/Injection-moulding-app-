@@ -16,152 +16,167 @@
   "readerChapters": [
     {
       "id": "r01",
-      "title": "How Injection Moulding Works",
+      "title": "From Plastic Pellets to a Finished Part",
       "moduleIds": [
         "what-injection-moulding-is",
         "cycle"
       ],
-      "goal": "Build a mental model of the complete cycle before introducing machine settings.",
+      "goal": "Follow the journey from solid pellets to a finished part. Learn the difference between a machine command, what the machine actually did, and the part result.",
       "depthBand": "Foundation",
       "learningObjectives": [
-        "Explain the linked stages of the moulding cycle.",
-        "Separate commands, process signals and part outputs."
+        "Tell the main stages of one moulding cycle in everyday words.",
+        "Explain the difference between a command, a machine measurement and a finished-part result."
       ],
       "checkQuestions": [
-        "Why can a defect appear in one stage even when its cause began earlier?",
-        "Why is one acceptable cycle not enough to prove a robust process?",
-        "Which observations describe what the process actually did rather than what was commanded?"
+        "Why can a problem show up at the end even if it started earlier?",
+        "Why does one good part not prove the process will keep making good parts?",
+        "What is the difference between the value someone asked the machine to reach and a value the machine measured?",
+        "What information would help link a part back to the cycle that made it?"
       ],
-      "applyPrompt": "Take a familiar moulding cycle and identify one input, one process signal and one part output for each major stage.",
+      "applyPrompt": "Choose a familiar moulded object. Describe how pellets might become that part, then name one thing supplied to the process, one thing measured during the cycle and one thing checked on the part.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "readingThread": "Read the two modules as one story: first build the process model, then follow that model through one complete cycle.",
+      "readingThread": "Follow one part from pellets, through the machine and mould, to removal. Notice what each stage passes to the next.",
       "keyTerms": [
         "cycle",
-        "inputs",
-        "process signals",
-        "outputs"
+        "pellets",
+        "mould",
+        "cavity",
+        "machine command",
+        "measurement",
+        "part result"
       ]
     },
     {
       "id": "r02",
-      "title": "Machine, Mould and Safety Foundations",
+      "title": "The Machine, the Mould and Safety",
       "moduleIds": [
         "machine-anatomy",
         "mould-anatomy",
         "safety-foundations"
       ],
-      "goal": "Give learners the physical vocabulary and safety boundaries needed for every later chapter.",
+      "goal": "Understand the main jobs of the machine and mould, and recognise when workplace safety procedures control what happens next.",
       "depthBand": "Foundation",
       "learningObjectives": [
-        "Identify the main machine and mould subsystems.",
-        "Recognise safety boundaries that override generic process advice."
+        "Name the main jobs of the injection unit, clamping unit and mould.",
+        "Recognise that a stopped machine is not automatically safe to enter."
       ],
       "checkQuestions": [
-        "Which hazards remain controlled by machine/site procedures rather than this Book?",
-        "How can mould terminology reduce diagnostic ambiguity?",
-        "Why can tooling condition change the interpretation of a process symptom?"
+        "What does the injection unit do with the pellets?",
+        "What does the mould contribute besides the part shape?",
+        "Why does a stopped screen not prove that equipment is safe to enter?",
+        "Where should you find instructions for a specific machine or mould?"
       ],
-      "applyPrompt": "Trace the physical path from material feed to ejection and mark where machine-, mould- and site-specific procedures control access or intervention.",
+      "applyPrompt": "Trace the path from pellets to removed part. At each step, name the machine or mould part involved and whether the work stays within normal guarded operation.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "readingThread": "Use the machine and mould maps to establish vocabulary, then finish with the safety boundary that governs every later intervention.",
+      "readingThread": "First map what the machine does. Then map what the mould does. Finish with the safety rules that set the limits for every task.",
       "keyTerms": [
-        "plasticising unit",
+        "injection unit",
         "clamping unit",
         "mould",
-        "guarding",
-        "interlocks"
+        "cavity",
+        "guard",
+        "interlock"
       ]
     },
     {
       "id": "r03",
-      "title": "Polymer Structure and Material Families",
+      "title": "What Plastics Are Made Of—and Why Grades Differ",
       "moduleIds": [
         "polymer-structure",
         "material-families",
         "fillers-additives"
       ],
-      "goal": "Connect structure, family and modifiers to observable moulding behaviour without turning family descriptions into grade recipes.",
+      "goal": "Understand in plain language how plastic structure, broad material families and added ingredients can affect a part, and why the exact supplier grade matters.",
       "depthBand": "Foundation",
       "learningObjectives": [
-        "Relate polymer structure and modifiers to observable tendencies.",
-        "Avoid replacing exact-grade evidence with family averages."
+        "Describe how different plastic structures can respond differently as they cool.",
+        "Explain why a family name is not enough to identify a material or its production guidance.",
+        "Recognise how fibres and additives can change more than one part property."
       ],
       "checkQuestions": [
-        "Why can two grades in the same family mould differently?",
-        "How can reinforcement create directional behaviour?",
-        "When must supplier grade documentation override generic family guidance?"
+        "What is a polymer chain, in everyday words?",
+        "How are amorphous and semi-crystalline plastics different as they cool?",
+        "Why can two grades with the same family name behave differently?",
+        "What should be checked before comparing a supplier property value?",
+        "How can fibres make a part behave differently in different directions?"
       ],
-      "applyPrompt": "Choose one material family and list which process observations you would verify before transferring a process from another grade.",
+      "applyPrompt": "Imagine comparing two candidate plastics for one part. Write down what the part must do, the exact supplier grade for each candidate, the test conditions behind the data, and what would need to be checked on a moulded part.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
       "scenarioPrompt": "Two exact grades from the same material family are proposed for the same mould. Without assuming interchangeability, list the grade documents and observed process/part evidence you would compare before deciding whether a transfer is defensible.",
-      "readingThread": "Move from polymer structure to material families and then to modifiers, keeping exact-grade evidence separate from broad family labels.",
+      "readingThread": "Start with the long molecules that make up plastic. Then see how broad families differ, and how fibres or additives can change the material further.",
       "keyTerms": [
+        "polymer chain",
         "amorphous",
         "semi-crystalline",
-        "reinforcement",
-        "additives",
-        "grade"
+        "material family",
+        "grade",
+        "fibre reinforcement",
+        "additive"
       ]
     },
     {
       "id": "r04",
-      "title": "Rheology, Moisture and Thermal History",
+      "title": "How Melted Plastic Flows—and Why Moisture and Heat Matter",
       "moduleIds": [
         "rheology",
         "moisture-drying",
         "thermal-history"
       ],
-      "goal": "Explain why flow and degradation depend on temperature, shear, moisture and time.",
+      "goal": "Understand how melted plastic flows and how moisture, temperature and time can change the way it processes and the part it makes.",
       "depthBand": "Technician",
       "learningObjectives": [
-        "Explain how viscosity, moisture and thermal history interact with processing.",
-        "Use material-condition evidence instead of defect appearance alone."
+        "Explain viscosity as a material’s resistance to flow and why it changes with conditions.",
+        "Recognise why drying and heat exposure depend on the exact grade.",
+        "Use more than a surface defect to test a possible material explanation."
       ],
       "checkQuestions": [
-        "Why is viscosity not a fixed material number?",
-        "How can a dryer operate normally while material condition is still wrong?",
-        "What timing pattern could support a residence/degradation hypothesis?"
+        "What does viscosity mean in everyday language?",
+        "Why can a dryer display look normal while the plastic still needs checking?",
+        "How can time spent hot change the material?",
+        "What other evidence would help distinguish moisture from heat damage?"
       ],
-      "applyPrompt": "Build two competing explanations for a silver-streak symptom and state what observation would distinguish them.",
+      "applyPrompt": "Suppose a part has a silver-looking streak. List two possible explanations and one safe observation or record that could help tell them apart.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "readingThread": "Read rheology, material condition and thermal history together so a visible defect is not mistaken for a unique material diagnosis.",
+      "readingThread": "First learn what flow resistance means. Then follow moisture and heat through the material’s journey, and compare evidence before naming a cause.",
       "keyTerms": [
         "viscosity",
         "shear rate",
         "moisture",
+        "drying",
         "hydrolysis",
-        "residence time",
-        "thermal history"
+        "time at temperature"
       ]
     },
     {
       "id": "r05",
-      "title": "Plasticising and Machine Delivery",
+      "title": "How the Machine Prepares and Delivers Melt",
       "moduleIds": [
         "plasticising-unit",
         "shot-utilisation",
         "velocity-pressure"
       ],
-      "goal": "Explain how the machine prepares and delivers melt and which signals describe that delivery.",
+      "goal": "Follow how the machine turns pellets into a measured amount of melt and pushes it into the mould. Learn what machine signals can and cannot tell you.",
       "depthBand": "Technician",
       "learningObjectives": [
-        "Explain how the plasticising unit prepares and delivers a shot.",
-        "Distinguish commanded motion from achieved machine response."
+        "Describe how a screw-based injection unit prepares a shot.",
+        "Explain shot, cushion and pressure limit in simple terms.",
+        "Distinguish a speed request from the motion the machine actually achieved."
       ],
       "checkQuestions": [
-        "What does a stable cushion trend support—and what does it not prove?",
-        "Why can nominal shot capacity be an incomplete machine-suitability check?",
-        "How can a pressure limit change achieved filling velocity?"
+        "What is a shot in injection moulding?",
+        "What job does the non-return valve do?",
+        "What does cushion describe, and what does it not prove?",
+        "Why might actual filling speed be lower than the requested speed?"
       ],
-      "applyPrompt": "Review a hypothetical shot-delivery problem and identify which screw, recovery, pressure and part measurements would be most useful.",
+      "applyPrompt": "For a hypothetical inconsistent shot, list the machine records you would compare and the part observations you would connect to them. Keep a machine command separate from the measured response.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "readingThread": "Follow the shot from preparation to delivery: first how melt is prepared, then how much is used, then how commanded motion and pressure limits shape delivery.",
+      "readingThread": "Follow the pellets as the screw prepares a shot, then see how screw position, speed and pressure describe delivery into the mould.",
       "keyTerms": [
-        "screw recovery",
+        "screw",
+        "shot",
         "non-return valve",
         "cushion",
-        "shot utilisation",
-        "injection velocity",
+        "injection speed",
         "pressure limit"
       ]
     },
@@ -625,8 +640,8 @@
     "Are worked cases and diagrams placed where they teach interpretation rather than decorate the text?",
     "Can a beginner read chapters 1–10 sequentially and an experienced technician enter at chapters 11–20 without losing critical safety context?"
   ],
-  "release": "2026.10.06.5",
+  "release": "2026.10.22.1",
   "pedagogyPolicy": "Reader-level objectives, checks, application prompts, reading threads, key-term labels and optional reasoning scenarios are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority. Sequence prompts are reader-orientation scaffolds derived from existing governed module order; they add no independent technical authority. Key terms identify vocabulary to notice and do not act as standalone definitions.",
-  "depthBandMeaning": "Depth bands describe the technical complexity of each reader chapter, not a strictly monotonic learner progression. Adjacent chapters can move between Technician and Engineer depth where the subject demands it.",
-  "firstReadPolicy": "The default reader path prioritises core chapter prose. Applicability, evidence traces and worked examples stay available through progressive disclosure; reader key terms are navigation labels only, not independent definitions or technical claims."
+  "depthBandMeaning": "Depth labels describe how technical the ideas are; they are not a test of who can read a chapter and they are not a ladder you have to climb in order. The first five chapters start with plain-language explanations and build toward more specialist detail.",
+  "firstReadPolicy": "The guided reading starts with the main explanation. Notes about where ideas apply, source details and worked examples are available through progressive disclosure: open them when you want more detail. Key terms are navigation labels; the chapter text explains their meanings."
 }

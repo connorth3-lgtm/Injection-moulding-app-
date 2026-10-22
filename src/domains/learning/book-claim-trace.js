@@ -1,8 +1,8 @@
-/* MouldMaster Book complete claim/evidence trace — 2026.10.06.5 */
+/* MouldMaster Book complete claim/evidence trace — 2026.10.22.1 */
 (function(){
 'use strict';
 if(window.MM_BOOK_CLAIM_TRACE)return;
-const VERSION='2026.10.06.5';
+const VERSION='2026.10.22.1';
 const ROOT='./src/domains/learning/book-data/';
 const REVIEW_FILES=[
  'book-claim-review-foundations-materials-machine-v1.json',

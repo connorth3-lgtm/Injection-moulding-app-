@@ -164,7 +164,7 @@ test('phone Book narration starts directly from the original tap, not a syntheti
     play.click=()=>{window.__syntheticPlayAttempt=true;};
   });
   await page.locator('#mmBookView [data-mm-book-mode="listen"]').click();
-  await expect.poll(()=>page.evaluate(()=>window.__bookAudioLast||'')).toContain('Rheology, Moisture and Thermal History');
+  await expect.poll(()=>page.evaluate(()=>window.__bookAudioLast||'')).toContain('How Melted Plastic Flows—and Why Moisture and Heat Matter');
   expect(await page.evaluate(()=>window.__syntheticPlayAttempt===true)).toBe(false);
   await expect(page.locator('.mm-read-aloud [data-mm-book-audio-chapter]')).toHaveValue('r04');
 });

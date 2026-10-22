@@ -1,0 +1,12 @@
+# Independent Book SME review — 2026.10.22.2
+
+**STATUS: HOLD — release 2026.10.22.2 has no completed independent external review. Prior release evidence is historical; no human, device, learner, signing, SME or provider approval is implied.**
+
+> **RETAINED 2026.10.22.2 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 39719967677](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/39719967677) created artifact **12400418301**, source 7476c0e068ae3f3d2de210748fea0e0a7d82d728, digest sha256:34d881128b8a3f59bb0235e61dad090ee96d582c15005f38bede7d13ef50efd8, expiry 2027-01-20T04:00:42Z, and public-runtime fingerprint sha256:4767c50814cfe576891a3eb6f4de34a1d451378709c43a8988e2e57c540cf4c9. Producer quality must be independently verified. The retained artifact does not establish any human, real-device, Windows signing, provider, accreditation or production authorization.
+
+## Required independently reviewed evidence
+
+Independent review of 46 Book modules for mechanism, applicability, evidence and safety. A named reviewer must supply dated, actual source- and artifact-bound, privacy-safe validation after successful technical retention. All task results **PENDING**, no human/device/provider pass asserted.
+This content revision adds explanatory depth to reader chapters 1–5, with the largest expansion in the materials chapter. Please review the changed modules against their exact governed claims, sources, applicability limits and evidence boundaries; the full 46-module contract remains in scope.
+
+Educational/advisory use only. No machine-control, production recipe, learner competence, signed distribution, NZQA/accreditation or production-root authorisation is conferred by this staging packet.
