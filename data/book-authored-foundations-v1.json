@@ -53,6 +53,10 @@
         {
           "title": "The aim is repeatable conformance, not a perfect-looking single cycle",
           "text": "One good part does not establish a robust process. The practical objective is a documented operating region in which expected variation in material, machine, mould and environment still produces parts that meet defined requirements. That means the engineer must care about repeatability, measurement, traceability and evidence over time, not only the immediate response to a parameter change."
+        },
+        {
+          "title": "Build an evidence chain from the process to the part",
+          "text": "A useful explanation connects what entered the process, what the machine and mould did, and what was measured on the part. Record the material identity and condition, relevant commands, actual process traces and the inspection result as separate evidence. Keep the comparison tied to the same mould, cavity and defined quality requirement where possible. If several inputs change together, the resulting part may improve without showing which change mattered. A process conclusion is stronger when it predicts an observable response and remains consistent across repeated cycles, rather than explaining one result after it is already known."
         }
       ]
     },
@@ -96,6 +100,10 @@
         {
           "title": "Use traces to understand sequence and transition",
           "text": "Time-based signals can reveal whether a cycle is repeating the same sequence. Screw position, pressure, cavity pressure where available, cooling time, recovery time and mould-open events can help show when behaviour changed. The interpretation must stay tied to what each signal physically represents and where it is measured."
+        },
+        {
+          "title": "Read the cycle as a timed sequence of physical events",
+          "text": "A controller phase name is useful only when it is connected to the event it represents. Follow when screw recovery begins, when the screw advances, when the control objective changes, how long pressure can influence the cavity, when cooling is complete enough for release, and when the next shot is ready. Some machine work overlaps: recovery may happen while the part cools. That overlap means a change in one displayed duration can affect material residence or the next cycle even when the mould is doing something else. Compare traces on a shared time basis and confirm the machine's signal definitions before interpreting a transition."
         }
       ]
     },
@@ -130,6 +138,10 @@
         {
           "title": "Machine-specific documentation remains controlling",
           "text": "Generic anatomy supports communication, but actual limits, modes, calibration methods, interlocks and service procedures depend on the machine and controller. Before using a signal diagnostically, verify its units, scaling, sensor location and control mode in current equipment documentation. Transferable understanding should focus on physical function and evidence rather than memorised screen positions or assumptions that the same label means the same implementation on every machine."
+        },
+        {
+          "title": "Check what a machine signal represents before using it",
+          "text": "For every useful trace, establish whether it is a command, a measured response, an alarm threshold or a calculated value. Then check its units, sensor location, scaling and time basis in the machine documentation. A commanded screw speed describes the request; an achieved-speed trace describes the response. A pressure measured upstream of the nozzle includes effects from the path between that point and the cavity. Two controllers can use similar labels for different signals or control modes, so screen names alone are not a reliable physical definition."
         }
       ]
     },
@@ -164,6 +176,10 @@
         {
           "title": "Precise terminology improves diagnostic handover",
           "text": "Troubleshooting often crosses shifts and disciplines, so records should identify the exact cavity, insert, gate, vent, cooling circuit, parting feature or ejection element involved. That makes observations repeatable and reduces ambiguous instructions. Standard terminology supports communication, while the actual mould drawing, maintenance record and approved site controls remain authoritative for a specific tool."
+        },
+        {
+          "title": "Use location to connect a symptom to mould features",
+          "text": "Record where a symptom appears: which cavity, which side of the part, how far from the gate, and whether it follows a parting surface, vent, insert or cooling region. A repeated location can narrow the feature map worth inspecting, while a symptom across all cavities may point toward a shared upstream condition. Neither pattern proves a cause. Location is a way to make the next comparison more discriminating, and the actual mould drawing and approved inspection method remain the authority for identifying tool features."
         }
       ]
     },
@@ -198,6 +214,10 @@
         {
           "title": "Separate observation from intervention",
           "text": "Many useful diagnostic observations can be made without entering a hazard zone: controller traces, cycle timing, part inspection, external measurements and recorded process trends. Prefer those methods first. When a diagnosis genuinely requires physical access, maintenance, purging or tooling work, the task moves from generic troubleshooting into controlled site procedure. The Book can explain the evidence needed but cannot replace authorised risk assessment or equipment-specific instructions."
+        },
+        {
+          "title": "Choose evidence collection that stays within the safe boundary",
+          "text": "A diagnostic question does not authorise a hazardous test. Start with information available from normal guarded operation, such as recorded traces, cycle history, external part measurements and observations made from an authorised position. If answering the question would require access to moving, hot, pressurised or stored-energy components, the work must move to the machine- and site-specific safe system, competent supervision and authorised task controls. This Book provides no isolation sequence and no permission to bypass a safeguard."
         }
       ]
     }

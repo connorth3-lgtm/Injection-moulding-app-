@@ -1,21 +1,21 @@
 {
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
-  "release": "2026.10.06.5",
+  "release": "2026.10.22.1",
   "status": "repository-technical-review-complete",
   "reviewType": "editorial-expansion-claim-boundary-review",
-  "purpose": "Bind the 2026-10-06 instructional-depth expansion and 20-chapter reader consolidation to the existing governed claim inventory without manufacturing independent human SME approval.",
+  "purpose": "Bind the first-five-chapter depth revision and 20-chapter reader consolidation to the existing governed claim inventory without manufacturing independent human SME approval.",
   "reviewBoundary": "Repository-controlled technical/source review only. It confirms that added explanatory prose remains within existing governed claim scope; it is not independent human SME validation and cannot create machine-, mould-, grade-, product- or site-specific production authority.",
   "readerArchitecture": {
     "path": "data/book-reader-architecture-v2.json",
-    "gitBlobSha1": "de7d0d3647923675e44d8fdd2ea5f1915b1ce915",
+    "gitBlobSha1": "ccdfc16838ba73a012bd55a1d3c9a23926c699b4",
     "conclusion": "structural-only-no-new-technical-claims"
   },
   "reviewedModules": [
     {
       "moduleId": "what-injection-moulding-is",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "d2aa8528f5fd3fe67a54825f88bb14ddb7730777",
+      "authoredGitBlobSha1": "20348f9706ab4c8f77427393d169b6793fc0d972",
       "governedClaimIds": [
         "what-injection-moulding-is-01",
         "what-injection-moulding-is-02",
@@ -34,7 +34,7 @@
     {
       "moduleId": "cycle",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "d2aa8528f5fd3fe67a54825f88bb14ddb7730777",
+      "authoredGitBlobSha1": "20348f9706ab4c8f77427393d169b6793fc0d972",
       "governedClaimIds": [
         "cycle-01",
         "cycle-02",
@@ -54,7 +54,7 @@
     {
       "moduleId": "machine-anatomy",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "d2aa8528f5fd3fe67a54825f88bb14ddb7730777",
+      "authoredGitBlobSha1": "20348f9706ab4c8f77427393d169b6793fc0d972",
       "governedClaimIds": [
         "machine-anatomy-01",
         "machine-anatomy-02",
@@ -73,7 +73,7 @@
     {
       "moduleId": "mould-anatomy",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "d2aa8528f5fd3fe67a54825f88bb14ddb7730777",
+      "authoredGitBlobSha1": "20348f9706ab4c8f77427393d169b6793fc0d972",
       "governedClaimIds": [
         "mould-anatomy-01",
         "mould-anatomy-02",
@@ -92,7 +92,7 @@
     {
       "moduleId": "safety-foundations",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "d2aa8528f5fd3fe67a54825f88bb14ddb7730777",
+      "authoredGitBlobSha1": "20348f9706ab4c8f77427393d169b6793fc0d972",
       "governedClaimIds": [
         "safety-foundations-01",
         "safety-foundations-02",
@@ -110,7 +110,7 @@
     {
       "moduleId": "polymer-structure",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "2d8a8e95af5ea582361b9e8481e90bc1caabe9af",
+      "authoredGitBlobSha1": "c67568b4d3256d4dac3871c8ca69f0efb4a975c6",
       "governedClaimIds": [
         "polymer-structure-01",
         "polymer-structure-02"
@@ -127,7 +127,7 @@
     {
       "moduleId": "rheology",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "2d8a8e95af5ea582361b9e8481e90bc1caabe9af",
+      "authoredGitBlobSha1": "c67568b4d3256d4dac3871c8ca69f0efb4a975c6",
       "governedClaimIds": [
         "rheology-01",
         "rheology-02"
@@ -144,7 +144,7 @@
     {
       "moduleId": "moisture-drying",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "2d8a8e95af5ea582361b9e8481e90bc1caabe9af",
+      "authoredGitBlobSha1": "c67568b4d3256d4dac3871c8ca69f0efb4a975c6",
       "governedClaimIds": [
         "moisture-drying-01",
         "moisture-drying-02",
@@ -162,7 +162,7 @@
     {
       "moduleId": "thermal-history",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "2d8a8e95af5ea582361b9e8481e90bc1caabe9af",
+      "authoredGitBlobSha1": "c67568b4d3256d4dac3871c8ca69f0efb4a975c6",
       "governedClaimIds": [
         "thermal-history-01",
         "thermal-history-02"
@@ -179,7 +179,7 @@
     {
       "moduleId": "material-families",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "2d8a8e95af5ea582361b9e8481e90bc1caabe9af",
+      "authoredGitBlobSha1": "c67568b4d3256d4dac3871c8ca69f0efb4a975c6",
       "governedClaimIds": [
         "material-families-01",
         "material-families-02"
@@ -196,7 +196,7 @@
     {
       "moduleId": "fillers-additives",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "2d8a8e95af5ea582361b9e8481e90bc1caabe9af",
+      "authoredGitBlobSha1": "c67568b4d3256d4dac3871c8ca69f0efb4a975c6",
       "governedClaimIds": [
         "fillers-additives-01",
         "fillers-additives-02"
@@ -213,7 +213,7 @@
     {
       "moduleId": "plasticising-unit",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "authoredGitBlobSha1": "2d8a8e95af5ea582361b9e8481e90bc1caabe9af",
+      "authoredGitBlobSha1": "c67568b4d3256d4dac3871c8ca69f0efb4a975c6",
       "governedClaimIds": [
         "plasticising-unit-01",
         "plasticising-unit-02",

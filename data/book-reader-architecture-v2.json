@@ -84,14 +84,16 @@
       "depthBand": "Foundation",
       "learningObjectives": [
         "Relate polymer structure and modifiers to observable tendencies.",
-        "Avoid replacing exact-grade evidence with family averages."
+        "Avoid replacing exact-grade evidence with family averages.",
+        "Explain how material structure and modifiers can change flow, shrinkage and directional part behaviour."
       ],
       "checkQuestions": [
         "Why can two grades in the same family mould differently?",
         "How can reinforcement create directional behaviour?",
-        "When must supplier grade documentation override generic family guidance?"
+        "When must supplier grade documentation override generic family guidance?",
+        "What grade and measurement details make a material comparison meaningful?"
       ],
-      "applyPrompt": "Choose one material family and list which process observations you would verify before transferring a process from another grade.",
+      "applyPrompt": "Compare two proposed grades by exact identity, formulation, relevant part requirements and the evidence needed to judge their flow, moisture response, shrinkage and directional behaviour.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
       "scenarioPrompt": "Two exact grades from the same material family are proposed for the same mould. Without assuming interchangeability, list the grade documents and observed process/part evidence you would compare before deciding whether a transfer is defensible.",
       "readingThread": "Move from polymer structure to material families and then to modifiers, keeping exact-grade evidence separate from broad family labels.",
@@ -625,7 +627,7 @@
     "Are worked cases and diagrams placed where they teach interpretation rather than decorate the text?",
     "Can a beginner read chapters 1–10 sequentially and an experienced technician enter at chapters 11–20 without losing critical safety context?"
   ],
-  "release": "2026.10.06.5",
+  "release": "2026.10.22.1",
   "pedagogyPolicy": "Reader-level objectives, checks, application prompts, reading threads, key-term labels and optional reasoning scenarios are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority. Sequence prompts are reader-orientation scaffolds derived from existing governed module order; they add no independent technical authority. Key terms identify vocabulary to notice and do not act as standalone definitions.",
   "depthBandMeaning": "Depth bands describe the technical complexity of each reader chapter, not a strictly monotonic learner progression. Adjacent chapters can move between Technician and Engineer depth where the subject demands it.",
   "firstReadPolicy": "The default reader path prioritises core chapter prose. Applicability, evidence traces and worked examples stay available through progressive disclosure; reader key terms are navigation labels only, not independent definitions or technical claims."
