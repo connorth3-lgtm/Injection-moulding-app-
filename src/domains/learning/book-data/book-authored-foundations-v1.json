@@ -20,12 +20,16 @@
     {
       "id": "what-injection-moulding-is",
       "state": "technical-review",
-      "applicability": "General thermoplastic injection-moulding concepts only. Actual process windows depend on the material grade, machine, mould, part requirements and applicable site controls.",
+      "applicability": "General ideas about thermoplastic injection moulding. Actual settings depend on the exact plastic grade, machine, mould, part and site safety rules.",
       "sourceIds": [
         "ISO-294-1-2017",
         "ASTM-D3641-24"
       ],
       "sections": [
+        {
+          "title": "Start here: follow one part",
+          "text": "Imagine a small plastic part, such as a cap or a clip. It begins as solid plastic pellets: small pieces fed into a machine. Plastic is made from materials called polymers. When heat makes it soft enough to flow, it is called a melt. The machine pushes a measured amount of that melt into a strong reusable tool called a mould. Inside the mould is a hollow shape called the cavity. The plastic cools enough to hold that shape, the mould opens, and the part is removed. Then the steps repeat. That repeating journey is one cycle. The aim is to make parts that meet their requirements again and again, while the machine and people stay within their safety limits."
+        },
         {
           "title": "The process in one sentence",
           "text": "Injection moulding repeatedly prepares a polymer melt, drives a controlled quantity into a closed mould, allows the material to form and solidify sufficiently, and removes the moulded part so the cycle can repeat."
@@ -71,12 +75,16 @@
     {
       "id": "cycle",
       "state": "technical-review",
-      "applicability": "Conceptual cycle model. Controller names, available phases and transition methods vary by machine and process.",
+      "applicability": "The usual stages of a thermoplastic moulding cycle. Machine names and the order or overlap of stages vary.",
       "sourceIds": [
         "ISO-294-1-2017",
         "ASTM-D3641-24"
       ],
       "sections": [
+        {
+          "title": "Start here: the four main moves",
+          "text": "A moulding cycle is a repeating set of steps. First, the machine prepares a measured amount of softened plastic; that amount is called a shot. Next, it pushes the plastic through channels into the cavity, the hollow space that gives the part its shape. The machine then changes from filling to holding pressure, which can help feed material as it cools and contracts. Finally, the part cools enough to come out of the mould. The stages can overlap, and different machines may name them differently. Think of the cycle as one connected sequence, not a row of unrelated buttons."
+        },
         {
           "title": "Prepare the next shot",
           "text": "The plasticising unit rotates and retracts the screw to prepare a controlled quantity of melt for a later injection. Material preparation and thermal history continue to matter even when the mould is closed and cooling."
@@ -130,11 +138,15 @@
     {
       "id": "machine-anatomy",
       "state": "technical-review",
-      "applicability": "General injection-moulding-machine architecture. Exact guarding, drives, controls and component names depend on the machine manufacturer and configuration.",
+      "applicability": "A map of common machine parts. The exact layout, limits and controls depend on the machine; its manual and site procedures are authoritative.",
       "sourceIds": [
         "ISO-20430-2020"
       ],
       "sections": [
+        {
+          "title": "Start here: what the machine does",
+          "text": "A common injection moulding machine has two main jobs. The injection unit takes in pellets, heats and mixes them, measures a shot, and pushes it toward the mould. Its screw is a long rotating shaft that also moves backwards and forwards. The screw sits inside a heated tube called the barrel. A valve near the front helps stop melt flowing backwards during injection. The clamping unit holds the two sides of the mould together, then opens them so the part can be released. Controls coordinate these actions. The exact design differs by machine, so the manual for that machine defines its parts and limits."
+        },
         {
           "title": "Injection unit",
           "text": "The injection unit receives material, plasticises it, meters the shot and drives melt toward the mould. Common functional elements include the feed system, heated barrel, reciprocating screw, non-return function and nozzle, but their designs and control methods vary."
@@ -176,11 +188,15 @@
     {
       "id": "mould-anatomy",
       "state": "technical-review",
-      "applicability": "General mould-component concepts and terminology. Actual mould construction varies widely and may omit or add systems described here.",
+      "applicability": "Common mould parts and functions. Real moulds differ; use the tool drawing and site procedures for the actual tool.",
       "sourceIds": [
         "ISO-12165-2019"
       ],
       "sections": [
+        {
+          "title": "Start here: what the mould does",
+          "text": "The mould is the reusable tool that gives the plastic its shape. The cavity is the space the part fills. Melt travels from the machine through channels: the sprue is the main entry passage, a runner carries melt toward a cavity, and the gate is the smaller opening into it. The mould also removes heat, lines up its moving halves, and helps release the part. Ejectors are the parts that push a cooled moulding out. Some moulds have several cavities, so one cycle can make several parts. The drawing for the actual tool shows which features it has and where they are."
+        },
         {
           "title": "The mould creates the part-forming space",
           "text": "Core and cavity surfaces define the moulded geometry. The mould also has to receive melt, remove heat, separate in a controlled way and release the part without damaging the component or tooling."
@@ -222,11 +238,15 @@
     {
       "id": "safety-foundations",
       "state": "technical-review",
-      "applicability": "Awareness only. It is not a lockout/tagout procedure, machine-specific safe system of work, guarding instruction or authorisation to enter a hazardous area.",
+      "applicability": "Awareness only. This chapter does not give steps for entering guarded areas, isolating equipment, maintenance, purging or bypassing safeguards. Follow the machine and site procedures.",
       "sourceIds": [
         "ISO-20430-2020"
       ],
       "sections": [
+        {
+          "title": "Start here: safety comes first",
+          "text": "An injection moulding machine can move with great force, become very hot, and contain stored energy even when it looks still. Guards are barriers. Interlocks are safety devices that help prevent or stop hazardous movement when a guard or other condition is not safe. A stopped cycle or quiet screen does not prove that a machine is safe to enter. This chapter explains words and boundaries; it is not a procedure for entering, adjusting, cleaning, or repairing equipment. Use the approved instructions for the actual machine and workplace, and involve an authorised, trained person when a task reaches a safety boundary."
+        },
         {
           "title": "Safety is a system boundary",
           "text": "Injection-moulding equipment combines hazardous motion, hot surfaces and materials, pressure, electrical energy and other machine-dependent energy sources. Safe work depends on engineered safeguards, correct machine condition, authorised procedures and competent people."

@@ -8,12 +8,16 @@
   "chapters": [
     {
       "id": "polymer-structure",
-      "title": "Polymer structure: amorphous and semi-crystalline behaviour",
-      "applicability": "General thermoplastic injection-moulding concepts; individual grades may behave differently because of molecular architecture, additives, reinforcement and processing history.",
+      "title": "What plastic is made of: polymer structure and cooling",
+      "applicability": "General thermoplastic concepts. Exact material behaviour depends on the supplier grade and how it is processed.",
       "sourceIds": [
         "BASF-ULTRADUR-FAMILY"
       ],
       "sections": [
+        {
+          "title": "Start here: plastic is made of long chains",
+          "text": "Most plastics are made from very long molecules called polymer chains. A polymer is a material built from these repeating chain-like molecules. Picture a bowl of cooked spaghetti as a rough way to imagine long chains lying close together; real molecules are far smaller and do not behave exactly like food. When heated, the chains can move more freely, so the plastic can flow. Some plastics stay mostly disordered as they cool; these are called amorphous. Others form small ordered regions as they cool; these are called semi-crystalline. Glass transition means the chains become much less able to move; it is different from melting. Cooling can make a part get smaller, called shrinkage, or bend and twist, called warpage. These differences help explain why a part's shape and size can change."
+        },
         {
           "title": "Structure changes processing behaviour",
           "text": "Thermoplastics do not all solidify in the same way. Amorphous materials solidify primarily as molecular mobility falls through their glass-transition region, while semi-crystalline materials can additionally form ordered crystalline regions during cooling. This distinction affects shrinkage, dimensional response, cooling behaviour and the sensitivity of properties to mould temperature and cooling history."
@@ -58,12 +62,16 @@
     },
     {
       "id": "rheology",
-      "title": "Viscosity, shear rate, temperature and flow behaviour",
-      "applicability": "Conceptual polymer-flow guidance. Quantitative viscosity behaviour requires material-specific rheological data and the relevant temperature and shear-rate range.",
+      "title": "How melted plastic flows: viscosity and shear",
+      "applicability": "A plain-language introduction to melt flow. Exact measurements apply only at stated material, temperature and flow conditions.",
       "sourceIds": [
         "BASF-INJECTION-TROUBLESHOOTER"
       ],
       "sections": [
+        {
+          "title": "Start here: why melted plastic does not flow like water",
+          "text": "Viscosity is a word for how strongly a fluid resists flowing. Honey has more flow resistance than water, which is a helpful first comparison. Melted plastic is more complicated: its flow resistance can change with temperature and with how quickly it is being pushed. The rate at which nearby layers slide past each other is called shear rate. Many plastic melts become easier to move when pushed faster; this is called shear-thinning. The machine’s pressure reading reflects resistance across a route that may include the nozzle, channels and cavity. It is not automatically a direct measurement of pressure everywhere inside the part."
+        },
         {
           "title": "Flow resistance is not a single material number",
           "text": "The apparent viscosity of a polymer melt depends on conditions. Injection moulding commonly operates in shear-dependent flow, so changing filling rate, melt temperature, geometry or material condition can change the pressure required to produce a given flow. A viscosity value without temperature, shear-rate basis and material identity is therefore incomplete."
@@ -100,14 +108,18 @@
     },
     {
       "id": "moisture-drying",
-      "title": "Moisture, drying and hydrolysis without universal drying numbers",
-      "applicability": "Hygroscopic and moisture-sensitive thermoplastics. Exact allowable moisture, dryer type, temperature and time are grade-specific and must come from current supplier guidance.",
+      "title": "Moisture and drying",
+      "applicability": "General information about moisture-sensitive plastics. Drying conditions and allowed moisture levels are grade-specific; use current supplier instructions.",
       "sourceIds": [
         "BASF-ULTRAMID-PROCESSING",
         "BASF-ULTRASON-INJECTION",
         "BASF-ECOVIO-INJECTION"
       ],
       "sections": [
+        {
+          "title": "Start here: why some plastics need drying",
+          "text": "Some plastics take moisture into the material, even when their surface looks dry. A surface that was splashed is different from moisture absorbed into the plastic. Drying is a controlled way to remove absorbed moisture before processing, but the required method and target depend on the exact grade. In a moisture-sensitive plastic, water can react with the material while it is hot; this reaction is called hydrolysis and can weaken the long polymer chains. A dryer’s screen tells you about the dryer’s settings or readings. It does not, by itself, prove how much moisture is in the plastic that reaches the machine."
+        },
         {
           "title": "Moisture can affect appearance, processing and polymer integrity",
           "text": "Moisture effects depend on polymer chemistry. It can contribute to surface defects, foaming and unstable plasticising, and in hydrolysis-sensitive polymers moisture present at melt temperature can reduce molecular weight. Drying is therefore a material-control task, not merely a cosmetic adjustment."
@@ -148,13 +160,17 @@
     },
     {
       "id": "thermal-history",
-      "title": "Residence time, thermal history and degradation",
-      "applicability": "General thermoplastic processing mechanism; acceptable melt temperature and residence-time exposure are grade-specific.",
+      "title": "How heat and time affect plastic",
+      "applicability": "General ideas about how heat and time can affect plastic. Supplier limits depend on the grade.",
       "sourceIds": [
         "BASF-ULTRAMID-PROCESSING",
         "BASF-ELASTOLLAN-565"
       ],
       "sections": [
+        {
+          "title": "Start here: the plastic remembers its heat and time",
+          "text": "Thermal history means the heat and time the plastic has experienced along its journey. Pellets may wait in a container, move through a heated barrel, pause in a nozzle or hot runner, and then enter the mould. Time spent hot in the equipment is often called residence time. Too much heat exposure or too much time can damage some materials; this is one form of degradation. A colour change or a mark can have several causes, so appearance alone is not proof. The exact limits depend on the supplier’s grade guidance and the actual machine and mould path."
+        },
         {
           "title": "Time at temperature matters",
           "text": "A polymer's thermal history is determined by more than the barrel setpoints. Melt temperature, time in the plasticising unit, delays, shot utilisation, hot-runner residence and repeated heating all contribute to exposure. Manufacturer guidance for engineering polymers explicitly treats residence time as a quality factor."
@@ -191,13 +207,17 @@
     },
     {
       "id": "material-families",
-      "title": "Commodity, engineering and high-performance polymer families",
-      "applicability": "Orientation only. Family names do not replace grade-level TDS, processing guides, SDS or application qualification.",
+      "title": "Material families and exact grades",
+      "applicability": "An orientation to broad polymer groups. A family name never identifies the exact grade or sets its production conditions.",
       "sourceIds": [
         "BASF-ULTRADUR-FAMILY",
         "BASF-ULTRASON-FAMILY"
       ],
       "sections": [
+        {
+          "title": "Start here: family name versus exact grade",
+          "text": "A material family is like a broad category, such as nylon or polycarbonate. It gives a first clue about the plastic, but it does not tell you the full recipe. A grade is the exact product sold by a supplier, often including a brand, code and suffix. Two grades in one family can contain different amounts of fibre, colour or other ingredients, and can need different handling. A datasheet is a supplier’s record of measured properties and guidance. Its numbers only make sense with the test method and conditions that produced them. For real decisions, use the exact grade information and the requirements of the actual part."
+        },
         {
           "title": "Families are useful maps, not recipes",
           "text": "Polymer families help engineers anticipate broad differences in thermal behaviour, moisture sensitivity, stiffness, toughness, chemical resistance and processing demands. They are useful for asking better questions, but they do not define a production window."
@@ -254,13 +274,17 @@
     },
     {
       "id": "fillers-additives",
-      "title": "Glass fibre, mineral, flame retardants, colour and other modifiers",
-      "applicability": "General modifier effects; actual property and processing consequences are formulation- and grade-specific.",
+      "title": "Fibres, fillers and additives",
+      "applicability": "General ways that fibres and additives can change a plastic. Effects depend on the exact formulation and processing history.",
       "sourceIds": [
         "BASF-ULTRAMID-ADVANCED",
         "BASF-ULTRADUR-FAMILY"
       ],
       "sections": [
+        {
+          "title": "Start here: what added ingredients can change",
+          "text": "A supplier may blend extra ingredients into the basic plastic. Glass fibres or mineral particles can make it stiffer; colourants, flame retardants or impact modifiers can change other properties. These ingredients are often called fillers, fibres or additives. They can affect several things at once, including how the plastic flows and how the finished part shrinks. In fibre-filled plastic, fibres can line up with the flow, like short pieces carried along by moving material. The part can then behave differently along the flow direction and across it. The exact effect depends on the complete grade and the part shape."
+        },
         {
           "title": "Modifiers change the material system",
           "text": "Reinforcement and additives can change stiffness, flow, shrinkage, anisotropy, thermal behaviour, appearance and degradation sensitivity. Fibre orientation can make properties and shrinkage direction-dependent, which means gate location, flow pattern and part geometry can become strongly linked to warpage and dimensional behaviour."
@@ -301,13 +325,17 @@
     },
     {
       "id": "plasticising-unit",
-      "title": "Screw, barrel, non-return valve and plasticising",
-      "applicability": "Reciprocating-screw injection units. Screw geometry, non-return-valve design, allowable temperatures and wear limits are machine/material specific.",
+      "title": "How the machine melts and prepares plastic",
+      "applicability": "A map of a common screw-based injection unit. Screw and valve designs, materials and operating limits vary by machine and plastic.",
       "sourceIds": [
         "BASF-ULTRASON-INJECTION",
         "BASF-ELASTOLLAN-565"
       ],
       "sections": [
+        {
+          "title": "Start here: turning pellets into a measured shot",
+          "text": "In a common machine, pellets fall from a hopper into a heated barrel. A rotating screw carries them forward, mixes them and helps soften them. This preparation step is called plasticising. As the screw turns, it also moves backwards to make room for the amount needed for a part. That measured amount of melt is called the shot. The screw's backward movement while it prepares the next shot is often called screw recovery. When the machine pushes the screw forward, a non-return valve helps keep the melt from flowing back. At the end of the push, the remaining forward screw position is called the cushion; display conventions vary by machine. These signals describe machine behaviour, but they do not alone prove that every part is identical."
+        },
         {
           "title": "Plasticising prepares the next shot",
           "text": "During screw recovery, pellets are conveyed, heated, compressed and mixed into a melt while the screw moves rearward to accumulate the next shot. Barrel heating contributes energy, but mechanical work and material behaviour also influence the resulting melt condition."
@@ -356,13 +384,17 @@
     },
     {
       "id": "shot-utilisation",
-      "title": "Shot size, cushion, screw position and machine suitability",
-      "applicability": "General reciprocating-screw process reasoning. Machine manufacturer limits and material residence constraints control acceptable utilisation.",
+      "title": "Shot size and machine capacity",
+      "applicability": "Concepts for a screw-based machine. Machine capacity and supplier limits must be checked for the actual process.",
       "sourceIds": [
         "BASF-ULTRAMID-PROCESSING",
         "BASF-ELASTOLLAN-565"
       ],
       "sections": [
+        {
+          "title": "Start here: how much plastic the machine prepares",
+          "text": "A shot is the measured amount of melt used for one injection. It must cover the part and the mould's feed channels, where those channels are part of the shot. Screw position records where the screw is during preparation and injection. Cushion is the remaining screw position after the injection sequence; it can help show whether the shot is repeating consistently. Shot utilisation means how the shot size compares with the machine's capacity. Machine suitability is more than whether the shot seems big or small. The machine must also handle the material, prepare it consistently and meet the needs of the mould and part. There is no one percentage that proves a machine is suitable for every job."
+        },
         {
           "title": "Screw position is process evidence",
           "text": "The screw-position trace describes how the injection unit moves through dosing, filling, transfer and packing. Cushion is the remaining forward stroke position after the programmed injection/hold sequence, but its meaning depends on the machine's position convention and control architecture."
@@ -395,13 +427,17 @@
     },
     {
       "id": "velocity-pressure",
-      "title": "Injection velocity, pressure and machine control",
-      "applicability": "General filling-control concepts. Controller terminology, limits and transfer behaviour are machine-specific.",
+      "title": "How the machine controls filling speed and pressure",
+      "applicability": "General filling-control concepts. Controller names, measurements and limits vary by machine.",
       "sourceIds": [
         "BASF-INJECTION-TROUBLESHOOTER",
         "ASTM-D3641-24"
       ],
       "sections": [
+        {
+          "title": "Start here: the machine’s request and its response",
+          "text": "During filling, the machine asks the screw to move forward at a chosen speed. That request is the commanded speed. The measured screw movement is the achieved speed, and it may be lower if the machine reaches a pressure limit. Pressure is the push needed to move the melt through the machine and mould. A transfer is the point where the machine changes from filling to the next part of the cycle, often holding pressure. The exact controls and signal names vary by machine. To understand a cycle, compare what was requested with what actually happened and check where each pressure measurement comes from."
+        },
         {
           "title": "Velocity command and pressure demand are different quantities",
           "text": "During velocity-controlled filling, the machine attempts to move the screw according to the commanded velocity profile while pressure develops as required to overcome resistance, up to machine or programmed limits. If the available pressure is insufficient, the commanded velocity may not be achieved."
