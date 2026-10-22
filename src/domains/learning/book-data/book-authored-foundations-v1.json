@@ -83,7 +83,7 @@
       "sections": [
         {
           "title": "Start here: the four main moves",
-          "text": "A moulding cycle is a repeating set of steps. First, the machine prepares a measured amount of softened plastic; that amount is called a shot. Next, it pushes the plastic through channels into the cavity, the hollow space that gives the part its shape. The machine then changes from filling to holding pressure, which can help feed material as it cools and contracts. Finally, the part cools enough to come out of the mould. The stages can overlap, and different machines may name them differently. Think of the cycle as one connected sequence, not a row of unrelated buttons."
+          "text": "A moulding cycle is a repeating set of steps. First, the machine heats and mixes pellets until they can flow; this preparation is called plasticising. It prepares a measured amount called a shot. Next, the machine pushes the shot through channels and a small opening called the gate into the cavity. Pressure means the pushing force used to move the plastic. The machine changes from filling to holding pressure; this change is called transfer. Holding pressure, or packing, can feed material as it cools and shrinks. Finally, the part cools enough to come out of the mould. The stages can overlap, and different machines may name them differently. Think of the cycle as one connected sequence, not a row of unrelated buttons."
         },
         {
           "title": "Prepare the next shot",
@@ -145,7 +145,7 @@
       "sections": [
         {
           "title": "Start here: what the machine does",
-          "text": "A common injection moulding machine has two main jobs. The injection unit takes in pellets, heats and mixes them, measures a shot, and pushes it toward the mould. Its screw is a long rotating shaft that also moves backwards and forwards. The screw sits inside a heated tube called the barrel. A valve near the front helps stop melt flowing backwards during injection. The clamping unit holds the two sides of the mould together, then opens them so the part can be released. Controls coordinate these actions. The exact design differs by machine, so the manual for that machine defines its parts and limits."
+          "text": "A common injection moulding machine has two main jobs. The injection unit takes in pellets, heats and mixes them, measures a shot, and pushes it toward the mould. Its screw is a long rotating shaft that also moves backwards and forwards. The screw sits inside a heated tube called the barrel. At the front, the nozzle is the outlet that meets the mould. A valve near the front helps stop melt flowing backwards during injection. The clamping unit holds the two sides of the mould together, then opens them so the part can be released. Controls coordinate these actions. The exact design differs by machine, so the manual for that machine defines its parts and limits."
         },
         {
           "title": "Injection unit",

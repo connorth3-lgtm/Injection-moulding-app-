@@ -16,7 +16,7 @@
       "sections": [
         {
           "title": "Start here: plastic is made of long chains",
-          "text": "Most plastics are made from very long molecules called polymer chains. A polymer is a material built from these repeating chain-like molecules. Picture a bowl of cooked spaghetti as a rough way to imagine long chains lying close together; real molecules are far smaller and do not behave exactly like food. When heated, the chains can move more freely, so the plastic can flow. Some plastics stay mostly disordered as they cool; these are called amorphous. Others form small ordered regions as they cool; these are called semi-crystalline. Glass transition means the chains become much less able to move; it is different from melting. Cooling can make a part get smaller, called shrinkage, or bend and twist, called warpage. These differences help explain why a part's shape and size can change."
+          "text": "Most plastics are made from very long molecules called polymer chains. A polymer is a material built from these repeating chain-like molecules. Picture a bowl of cooked spaghetti as a rough way to imagine long chains lying close together; real molecules are far smaller and do not behave exactly like food. When heated, the chains can move more freely, so the plastic can flow. Some plastics stay mostly disordered as they cool; these are called amorphous. Others form small ordered regions as they cool; these are called semi-crystalline. Glass transition means the chains become much less able to move; it is different from melting. The word morphology describes how the molecules are arranged inside the material. Cooling can make a part get smaller, called shrinkage, or bend and twist, called warpage. These differences help explain why a part's shape and size can change."
         },
         {
           "title": "Structure changes processing behaviour",
@@ -216,7 +216,7 @@
       "sections": [
         {
           "title": "Start here: family name versus exact grade",
-          "text": "A material family is like a broad category, such as nylon or polycarbonate. It gives a first clue about the plastic, but it does not tell you the full recipe. A grade is the exact product sold by a supplier, often including a brand, code and suffix. Two grades in one family can contain different amounts of fibre, colour or other ingredients, and can need different handling. A datasheet is a supplier’s record of measured properties and guidance. Its numbers only make sense with the test method and conditions that produced them. For real decisions, use the exact grade information and the requirements of the actual part."
+          "text": "A material family is like a broad category, such as nylon or polycarbonate. It gives a first clue about the plastic, but it does not tell you the full recipe. A grade is the exact product sold by a supplier, often including a brand, code and suffix. Two grades in one family can contain different amounts of fibre, colour or other ingredients, and can need different handling. A property is a characteristic, such as stiffness, toughness or heat resistance. A datasheet is a supplier’s record of measured properties and guidance. Its numbers only make sense with the test method and conditions that produced them. A process window means the range of conditions that can make acceptable parts with a particular grade, machine and mould. For real decisions, use the exact grade information and the requirements of the actual part."
         },
         {
           "title": "Families are useful maps, not recipes",
@@ -283,7 +283,7 @@
       "sections": [
         {
           "title": "Start here: what added ingredients can change",
-          "text": "A supplier may blend extra ingredients into the basic plastic. Glass fibres or mineral particles can make it stiffer; colourants, flame retardants or impact modifiers can change other properties. These ingredients are often called fillers, fibres or additives. They can affect several things at once, including how the plastic flows and how the finished part shrinks. In fibre-filled plastic, fibres can line up with the flow, like short pieces carried along by moving material. The part can then behave differently along the flow direction and across it. The exact effect depends on the complete grade and the part shape."
+          "text": "A supplier may blend extra ingredients into the basic plastic. Glass fibres or mineral particles can make it stiffer; colourants, flame retardants or impact modifiers can change other properties. These ingredients are often called fillers, fibres or additives. They can affect several things at once, including how the plastic flows and how the finished part shrinks. In fibre-filled plastic, fibres can line up with the flow, like short pieces carried along by moving material. The part can then behave differently along the flow direction and across it. This difference between directions is called anisotropy. The exact effect depends on the complete grade and the part shape."
         },
         {
           "title": "Modifiers change the material system",
