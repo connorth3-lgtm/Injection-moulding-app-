@@ -8,10 +8,10 @@
   "issueNumber": 619,
   "candidate": {
     "release": "2026.10.22.2",
-    "sourceSha": null,
-    "runtimeFingerprint": null
+    "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
+    "runtimeFingerprint": "sha256:4767c50814cfe576891a3eb6f4de34a1d451378709c43a8988e2e57c540cf4c9"
   },
-  "boundary": "Release 2026.10.22.2 technical candidate retention is pending and does not establish any NZQA/provider G1–G8 external gates or accreditation authority.",
+  "boundary": "Release 2026.10.22.2 technical candidate 7476c0e068ae3f3d2de210748fea0e0a7d82d728 does not establish any of NZQA/provider G1\u2013G8 external gates or assessment/accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",

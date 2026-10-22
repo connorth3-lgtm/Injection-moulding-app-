@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.10.22.2 has no retained candidate artifact yet. Physical iOS/iPadOS/Android validation, including locked-screen Book speech, remains pending.",
+  "boundary": "Retained release 2026.10.22.2 candidate 7476c0e068ae3f3d2de210748fea0e0a7d82d728 and artifact 12400418301 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -44,8 +44,14 @@
   "release": "2026.10.22.2",
   "candidate": {
     "release": "2026.10.22.2",
-    "sourceSha": null,
-    "runtimeFingerprint": null
+    "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
+    "runtimeFingerprint": "sha256:4767c50814cfe576891a3eb6f4de34a1d451378709c43a8988e2e57c540cf4c9",
+    "candidateRunId": 39719967677,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 12400418301,
+    "artifactName": "physical-pwa-candidate-7476c0e068ae3f3d2de210748fea0e0a7d82d728",
+    "artifactDigest": "sha256:34d881128b8a3f59bb0235e61dad090ee96d582c15005f38bede7d13ef50efd8",
+    "artifactExpiresAt": "2027-01-20T04:00:42Z"
   },
   "previousCandidate": {
     "release": "2026.10.21.3",
