@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.10.22.1",
+  "release": "2026.10.22.2",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "b511ca1f8d9407df7fafc292ff1fb36334b3a114",
-  "scope": "Release 2026.10.22.1 updates Book Read Aloud so learner-started playback is not paused or cancelled when the page becomes hidden; delayed voice startup, sentence chaining and best-effort device-pause recovery remain available. Exact-source software quality is verified; actual physical-phone screen-off audio remains a separate HOLD.",
-  "approvalBoundary": "The retained 2026.10.22.1 candidate source b511ca1f8d9407df7fafc292ff1fb36334b3a114 and runtime fingerprint sha256:2a7b3cbb95ca106cf7c765ad036f6767fa0fc58a75ae9a1d4e1289bb296d877f are technical identity only. Exact-source Read Aloud (51 tests), Mobile Browser, Question Quality 50-Pass and Combined Learn/Book checks passed; they do not confirm audible output on a phone with the screen locked or in a pocket. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": null,
+  "scope": "Expanded the first five MouldMaster Book chapters, with added materials detail and learner-facing explanations. The current learner-runtime candidate remains unbound while exact-source browser, visual-baseline and producer evidence are completed. No human or external validation is inferred.",
+  "approvalBoundary": "Release 2026.10.22.2 currently has no retained exact-source candidate. The earlier artifact produced from an ancestor Book runtime is archived as superseded because its source and public-runtime fingerprint do not match the current learner runtime. A fresh candidate and exact-source software quality are still required. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -43,10 +43,10 @@
   "productionAuthority": "advisory-only",
   "humanEvidenceStatus": "hold",
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
-  "lastReviewedDate": "2026-10-21",
+  "lastReviewedDate": "2026-10-26",
   "previousVerifiedCandidate": {
-    "release": "2026.10.21.3",
-    "sourceSha": "d41c633ccddecd3a0c2b51a53d43c2eb3e345517",
-    "runtimeFingerprint": "sha256:1256759b71ceddc4089425bdc5f55950399e795913388e3766048baeddf19ea3"
+    "release": "2026.10.22.1",
+    "sourceSha": "b511ca1f8d9407df7fafc292ff1fb36334b3a114",
+    "runtimeFingerprint": "sha256:2a7b3cbb95ca106cf7c765ad036f6767fa0fc58a75ae9a1d4e1289bb296d877f"
   }
 }
