@@ -350,7 +350,7 @@
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "PASS on exact candidate source 0932c4790e2c3435f299e5372c8be0e9844667eb: Mobile Browser QA 40292321724, Question Quality 50-Pass 40292321732, Read Aloud QA 40292321904, and Combined Learn Book QA 40292321800 succeeded. Human/device/SME, learner-outcome and provider evidence remains HOLD."
+      "meaning": "PASS: release 2026.10.22.2 exact-source candidate source 0932c4790e2c3435f299e5372c8be0e9844667eb passed Mobile Browser QA 40292321724, Question Quality 50-Pass 40292321732, Read Aloud QA 40292321904, and Combined Learn Book QA 40292321800. Human/device/SME, learner-outcome and provider evidence remains HOLD."
     },
     "externalHumanDevice": {
       "status": "hold",

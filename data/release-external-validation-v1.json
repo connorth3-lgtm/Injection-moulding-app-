@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:c155973f62e388b88f20df6808d95294b0b460be7ad79bc25808f7131aee176b",
     "artifactExpiresAt": "2027-01-19T18:20:50Z"
   },
-  "candidateStatus": "PASS \u2014 technical candidate source 0932c4790e2c3435f299e5372c8be0e9844667eb and artifact 12636349278 are retained; exact-source software QA passed. All seven external review streams remain HOLD.",
+  "candidateStatus": "PASS \u2014 candidate producer run 40292321764 succeeded and retained artifact 12636349278; exact-source software QA passed. All seven external review streams remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.10.20.3",
     "sourceSha": "9ea761d15597f15631565cf514e46dc163c9f2c5",
