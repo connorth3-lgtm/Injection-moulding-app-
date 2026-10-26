@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: release 2026.10.22.2 has no retained exact-source candidate matching the current learner runtime. The earlier candidate artifact is archived as superseded and does not establish current-source identity or quality. |
-| Behavioral / browser | **fail** | HOLD: browser and question gates must pass against the current exact source and an approved visual baseline before a fresh candidate can be retained. Prior green workflows do not transfer to changed Book content. |
+| Static / contract | **pass** | PASS: release 2026.10.22.2 retains candidate source 0932c4790e2c3435f299e5372c8be0e9844667eb, public-runtime fingerprint sha256:289227bb2fb66e7fbe42f719f0c9dffd58ebebe84bec3e06b674524ce842d6d3, successful producer run 40292321764, and artifact 12636349278 with digest sha256:7379d2ac62d7564cda425ad0f53eb6a7c4cacbc10d3cfcd7051c8a5cb32a3bec. The retained technical candidate does not imply human, physical-device, provider, signing or production approval. |
+| Behavioral / browser | **pass** | PASS on exact candidate source 0932c4790e2c3435f299e5372c8be0e9844667eb: Mobile Browser QA 40292321724, Question Quality 50-Pass 40292321732, Read Aloud QA 40292321904, and Combined Learn Book QA 40292321800 succeeded. Human/device/SME, learner-outcome and provider evidence remains HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
