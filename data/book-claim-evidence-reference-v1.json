@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
-  "release": "2026.10.06.5",
+  "release": "2026.10.22.2",
   "status": "governed-reader-claim-evidence-index",
   "generatedFrom": [
     "data/book-claim-review-foundations-materials-machine-v1.json",
