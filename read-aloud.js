@@ -1,11 +1,11 @@
-/* MouldMaster Book Read Aloud — 2026.10.22.2
+/* MouldMaster Book Read Aloud — 2026.10.26.1
  * Learner-controlled text-to-speech using the browser/device speech-synthesis service.
  * No microphone access, recording, speech recognition, network upload, or learner-content storage.
  */
 (function(){
   'use strict';
 
-  const VERSION='2026.10.22.2';
+  const VERSION='2026.10.26.1';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -663,15 +663,6 @@
     }
     if(starting){stop('Stopped');return;}
     if(paused){
-      // A locked-screen speech provider may end the utterance rather than
-      // pause it. In that case Resume must synthesize the selected sentence
-      // again instead of calling resume() on an already-ended utterance.
-      if(selectionPending&&!playlistMode){
-        paused=false;
-        startBackgroundAudio();
-        speakCurrent(0,true);
-        return;
-      }
       try{synth.resume()}catch(_){stop('Device voice could not resume. Start playback again.');return;}
       startBackgroundAudio();
       paused=false;speaking=true;setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();return;
