@@ -663,6 +663,15 @@
     }
     if(starting){stop('Stopped');return;}
     if(paused){
+      // A locked-screen speech provider may end the utterance rather than
+      // pause it. In that case Resume must synthesize the selected sentence
+      // again instead of calling resume() on an already-ended utterance.
+      if(selectionPending&&!playlistMode){
+        paused=false;
+        startBackgroundAudio();
+        speakCurrent(0,true);
+        return;
+      }
       try{synth.resume()}catch(_){stop('Device voice could not resume. Start playback again.');return;}
       startBackgroundAudio();
       paused=false;speaking=true;setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();return;
