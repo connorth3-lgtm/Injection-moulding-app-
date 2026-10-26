@@ -640,7 +640,7 @@
     "Are worked cases and diagrams placed where they teach interpretation rather than decorate the text?",
     "Can a beginner read chapters 1–10 sequentially and an experienced technician enter at chapters 11–20 without losing critical safety context?"
   ],
-  "release": "2026.10.22.1",
+  "release": "2026.10.22.2",
   "pedagogyPolicy": "Reader-level objectives, checks, application prompts, reading threads, key-term labels and optional reasoning scenarios are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority. Sequence prompts are reader-orientation scaffolds derived from existing governed module order; they add no independent technical authority. Key terms identify vocabulary to notice and do not act as standalone definitions.",
   "depthBandMeaning": "Depth labels describe how technical the ideas are; they are not a test of who can read a chapter and they are not a ladder you have to climb in order. The first five chapters start with plain-language explanations and build toward more specialist detail.",
   "firstReadPolicy": "The guided reading starts with the main explanation. Notes about where ideas apply, source details and worked examples are available through progressive disclosure: open them when you want more detail. Key terms are navigation labels; the chapter text explains their meanings."

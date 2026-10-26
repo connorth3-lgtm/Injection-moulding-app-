@@ -5,7 +5,7 @@
 
 ## Verdict: not ready to merge
 
-The learner-friendly openings and prompts improve the first read. The current PR is still a draft, and its exact-head CI has release and visual failures. The corrections prepared locally must be published and rechecked; visual baselines still require a human review. Do not treat this desk review or the source list as external SME approval.
+The learner-friendly openings and prompts improve the first read. The current PR is still a draft. The pressure wording, Book content-release bindings, authored-source hashes and served-byte authorization hashes have been corrected in this branch. Local Book contract checks pass, but the release gate still lacks a retained exact-source candidate and the changed visual baselines remain unapproved. Do not treat this desk review or the source list as external SME approval.
 
 ## Findings
 
@@ -15,15 +15,15 @@ The original learner opening equated pressure with pushing force. That is inaccu
 
 ### P1 — Release and candidate identity
 
-The audit record named release `2026.10.22.1` while `version.json` named `2026.10.22.2`; the retained candidate also pointed at ancestor source `7476c0e…`, not the PR head `3363b53…`. The local correction changes the audit to `.22.2`, archives the ancestor candidate as superseded, and leaves the current candidate unbound until fresh exact-source evidence exists. This is the truthful fail-closed state; Release QA still needs a fresh source-matched candidate before it can pass.
+The Book audit and content artifacts named release `2026.10.22.1` while `version.json` and the external-validation record named `2026.10.22.2`. The Book content release, reader architecture, SME binding and web binding now consistently identify `.22.2`; the stale `7476c0e…` artifact remains archived as superseded and the current candidate remains unbound. Release QA therefore stays fail-closed until fresh exact-source evidence exists.
 
 ### P1 — Visual regression and merge gates
 
-Mobile Browser QA run `39855469385` at PR head `3363b53…` failed visual comparison. The downloaded artifact records 17 failed comparisons across Book materials, trace, contents and listening surfaces at phone/tablet/desktop sizes. The proposed content changes alter pixels, but each affected screen still needs visual inspection against the new source and explicit baseline approval. No baseline was promoted. Current-head CI also fails Pre-merge Public Candidate, Release External Validation Boundary, Fast feedback, Exact-head CI Risk Coverage, MouldMaster Release QA, Branch Release Assurance and Open Desktop Build. PR #667 remains a draft.
+Mobile Browser QA run `39855469385` at PR head `3363b53…` failed 17 of 52 screenshot comparisons across Book materials, trace, contents and listening surfaces at phone/tablet/desktop sizes. I inspected representative paired captures for mobile Book materials, tablet contents, desktop trace and mobile listening: the visible differences match added reader content, with no obvious clipping in those views. The captured run is still on an earlier source, the 17 diffs remain unapproved, and no baseline was promoted. Current-head workflows must pass against the corrected exact head before merge; PR #667 remains a draft.
 
 ### P2 — Readability and density
 
-The opening explanations and revised questions are easier to enter. The guided first five chapters still contain about 11,839 visible words, with chapter 3 at about 3,042. Several ideas recur across adjacent modules: command versus achieved response, signal versus part result, why settings do not transfer, and why one observation cannot identify a cause. Keep the safety and uncertainty reminders, but consolidate repeated explanations and check the result with a novice read-through before marking learner validation complete.
+The opening explanations and revised questions are easier to enter. The guided first five chapters still contain about 11,938 visible words, with chapter 3 at about 3,042. Several ideas recur across adjacent modules: command versus achieved response, signal versus part result, why settings do not transfer, and why one observation cannot identify a cause. Keep the safety and uncertainty reminders, but consolidate repeated explanations and check the result with a novice read-through before marking learner validation complete.
 
 ### P2 — Evidence coverage
 
@@ -99,6 +99,13 @@ The 50 entries below are 49 curated distinct references from the Book’s eviden
 48. **Seeing Gate Discharge with Sensors** — RJG, Inc. [Source](https://rjginc.com/tip/seeing-gate-discharge-with-sensors/). Describes a gate-seal study using part weight at different hold times and an alternative cavity-pressure-curve method; explicitly notes measurement and mould-behaviour limitations.
 49. **Machine Independent Variables white paper** — RJG / Medical Device OEM Consortium. [Source](https://rjginc.com/wp-content/uploads/2022/06/MIV-White-Paper-FINAL.pdf). Requires machine capability to cover acceptable shot capacity, melt preparation, volumetric injection rate and non-pressure-limited operation when transferring a process between machines. Used as corroborating capability evidence, not as a universal suitability percentage.
 50. **How to Prevent and Troubleshoot Short Shots** — RJG, Inc. [Source](https://rjginc.com/short-shots-whats-the-deal/). States that insufficient available injection pressure or an injection-pressure limit set too low can make a filling process pressure-limited so constant commanded velocity is not maintained as resistance changes. Used as process-control evidence, not as a universal pressure-setting source.
+
+
+## Verification snapshot
+
+- Passed locally: `qa_book_reader_architecture.py`, `qa_book_sme_release_binding.py`, `qa_book_material_grade_atlas.py`, `qa_book_engineering_diagrams.py`, `qa_book_release_integration.py`, and `tools/render_book_governance_status.py --check`.
+- `tools/verify_release_external_validation.py` remains **FAIL** by design: the canonical `webCandidate` binding is missing, so this branch has no fresh retained exact-source artifact.
+- The release integration audit reports 11,938 visible words across reader chapters 1–5; chapter 3 has 3,042. Independent human Book SME, physical-device and real assistive-technology validation remain **HOLD**.
 
 ## Merge recommendation
 
