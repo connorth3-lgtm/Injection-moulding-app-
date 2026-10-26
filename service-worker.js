@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.10.22.2';
+const CACHE_VERSION='2026.10.26.1';
 const CACHE_REVISION='book-depth-r1';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
