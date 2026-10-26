@@ -33,6 +33,10 @@
   let bookChapterCache=[];
   let appAudioContext=null;
   let appAudioTimer=null;
+  let backgroundAudio=null;
+  let backgroundAudioStopping=false;
+  let mediaSessionConfigured=false;
+  let backgroundRetryCount=0;
 
   function visible(el){
     if(!el||!el.isConnected||el.closest(EXCLUDED))return false;
@@ -291,8 +295,103 @@
     }catch(_){return false}
   }
 
+  const BACKGROUND_AUDIO_SRC='data:audio/wav;base64,UklGRmQGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YUAGAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
+
+  function setMediaSessionState(state){
+    try{if('mediaSession' in navigator)navigator.mediaSession.playbackState=state;}catch(_){}
+  }
+
+  function configureMediaSession(){
+    if(mediaSessionConfigured||!('mediaSession' in navigator))return;
+    mediaSessionConfigured=true;
+    const actions={
+      play:()=>{if(!speaking&&!starting)toggle();},
+      pause:()=>{if(speaking){try{synth.pause()}catch(_){};paused=true;speaking=false;pauseBackgroundAudio();setStatus('Paused');updateButtons();}},
+      stop:()=>stop('Stopped'),
+      nexttrack:()=>move(1),
+      previoustrack:()=>move(-1),
+    };
+    for(const [action,handler] of Object.entries(actions)){
+      try{navigator.mediaSession.setActionHandler(action,handler)}catch(_){}
+    }
+  }
+
+  function ensureBackgroundAudio(){
+    if(backgroundAudio)return backgroundAudio;
+    try{
+      const audio=document.createElement('audio');
+      audio.preload='auto';audio.loop=true;audio.playsInline=true;
+      audio.setAttribute('aria-hidden','true');
+      audio.setAttribute('tabindex','-1');
+      audio.src=BACKGROUND_AUDIO_SRC;
+      audio.volume=0.0001;
+      audio.style.display='none';
+      (document.body||document.documentElement).appendChild(audio);
+      audio.addEventListener('pause',()=>{
+        if(backgroundAudio!==audio||backgroundAudioStopping||(!starting&&!speaking)||!document.hidden)return;
+        setTimeout(()=>{
+          if(backgroundAudio===audio&&!backgroundAudioStopping&&(starting||speaking))startBackgroundAudio();
+        },250);
+      });
+      backgroundAudio=audio;
+    }catch(_){backgroundAudio=null;}
+    configureMediaSession();
+    return backgroundAudio;
+  }
+
+  function startBackgroundAudio(){
+    const audio=ensureBackgroundAudio();
+    if(!audio)return false;
+    backgroundAudioStopping=false;
+    try{
+      if(audio.paused)Promise.resolve(audio.play()).catch(()=>{});
+      setMediaSessionState('playing');
+      return true;
+    }catch(_){return false}
+  }
+
+  function pauseBackgroundAudio(){
+    const audio=backgroundAudio;
+    if(!audio){setMediaSessionState('paused');return;}
+    backgroundAudioStopping=true;
+    try{audio.pause()}catch(_){}
+    backgroundAudioStopping=false;
+    setMediaSessionState('paused');
+  }
+
+  function stopBackgroundAudio(){
+    const audio=backgroundAudio;
+    if(!audio){setMediaSessionState('none');return;}
+    backgroundAudioStopping=true;
+    try{audio.pause();audio.currentTime=0}catch(_){}
+    backgroundAudioStopping=false;
+    setMediaSessionState('none');
+  }
+
+  function retryHiddenSpeech(unit,token){
+    if(!document.hidden||playlistMode||(!starting&&!speaking))return false;
+    if(backgroundRetryCount>=3){
+      starting=false;speaking=false;paused=true;selectionPending=units.length>0;
+      stopBackgroundAudio();
+      setStatus('Device voice stopped while the phone was locked. Unlock the phone and tap Resume.');
+      updateButtons();
+      return true;
+    }
+    backgroundRetryCount+=1;
+    starting=false;speaking=false;paused=false;selectionPending=units.length>0;
+    setStatus('Device voice was interrupted while the phone was locked. Retrying…');
+    updateButtons();
+    setTimeout(()=>{
+      if(token!==speakToken||!document.hidden||!visibleBookView()||!selectionPending)return;
+      speakCurrent(0,true);
+    },400*backgroundRetryCount);
+    return true;
+  }
+
   function stop(reason,cancelSpeech=true){
     closeAppAudio();
+    stopBackgroundAudio();
+    backgroundRetryCount=0;
     // Invalidate active callbacks before cancel: some device voices dispatch
     // a synchronous cancellation error from synth.cancel().
     const cancelActive=starting||speaking||paused;
@@ -352,7 +451,8 @@
       const markStarted=()=>{
         if(token!==speakToken||started)return;
         // Some mobile providers begin output without dispatching onstart.
-        clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;
+        clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;backgroundRetryCount=0;
+        startBackgroundAudio();
         highlight(unit);
         reportBookPosition(unit);
         setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();
@@ -396,6 +496,7 @@
         if(!started){
           starting=false;
         }
+        backgroundRetryCount=0;
         if(index<units.length-1){index+=1;speakCurrent();}
         else {
           if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-complete'));
@@ -409,6 +510,7 @@
         // device failure, not a cancellation from our own Stop button.
         // Keep its sentence selected so a retry continues where the device
         // stopped instead of silently jumping back to the beginning.
+        if(retryHiddenSpeech(unit,token))return;
         const interrupted=event?.error==='canceled'||event?.error==='interrupted';
         const code=String(event?.error||'');
         let message;
@@ -432,7 +534,7 @@
         if(ui&&unit){ui.current.textContent=unit.text;ui.current.hidden=false;}
         updateButtons();
       };
-      try{synth.speak(utterance)}catch(err){
+      try{startBackgroundAudio();synth.speak(utterance)}catch(err){
         clearTimeout(startTimer);starting=false;
         stop(androidSpeech?'Android voice could not start. Tap Listen again.':'Device voice could not be started.');
         console.error('MouldMaster Read Aloud:',err);
@@ -562,13 +664,15 @@
     if(starting){stop('Stopped');return;}
     if(paused){
       try{synth.resume()}catch(_){stop('Device voice could not resume. Start playback again.');return;}
+      startBackgroundAudio();
       paused=false;speaking=true;setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();return;
     }
     if(speaking){
       try{synth.pause()}catch(_){stop('Device voice could not pause. Start playback again.');return;}
-      paused=true;speaking=false;setStatus('Paused');updateButtons();return;
+      paused=true;speaking=false;pauseBackgroundAudio();setStatus('Paused');updateButtons();return;
     }
     primeAudioOutput();
+    startBackgroundAudio();
     if(selectionPending&&!playlistMode){speakCurrent();return;}
     start();
   }
@@ -639,6 +743,7 @@
   function startBookFromGesture(){
     if(!supported||!visibleBookView())return false;
     primeAudioOutput();
+    startBackgroundAudio();
     // Called directly from the Book's real Listen tap, not a synthetic
     // HTMLElement.click(). This is critical for mobile speech permissions.
     start();
@@ -744,7 +849,7 @@
 
     const view=document.createElement('section');
     view.id='mmListeningView';view.className='view hidden mm-listening-view';
-    view.innerHTML=`<section class="card mm-listening-hero"><span class="eyebrow">Long-session audio learning</span><h2 tabindex="-1">Listen through MouldMaster lessons continuously</h2><p>Start once and move through the lesson library hands-free. Playback uses your browser or operating-system speech service. MouldMaster does not request microphone access, record audio, or upload lesson text through MouldMaster servers; voice-provider processing depends on your device, browser and selected voice.</p></section><section class="card mm-listening-player"><div class="mm-listening-now"><span class="eyebrow">Now listening</span><h3 data-mm-listening-lesson>Lesson library ready</h3><p class="mm-listening-current" data-mm-listening-current>Press Play to start continuous listening from the lesson library.</p></div><div class="mm-listening-controls"><button type="button" data-mm-listening="prev-lesson">⏮ Previous lesson</button><button type="button" data-mm-listening="back">◀ Sentence</button><button type="button" class="play" data-mm-listening="play">Play</button><button type="button" data-mm-listening="forward">Sentence ▶</button><button type="button" data-mm-listening="next-lesson">Next lesson ⏭</button></div><div class="mm-listening-options"><p class="mm-read-status" data-mm-listening-status role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-listening-speed aria-label="Listening speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><button type="button" class="ghost" data-mm-listening="stop">Stop</button><strong data-mm-listening-progress-text>0 lessons</strong></div><div class="mm-listening-progress" aria-hidden="true"><span data-mm-listening-bar></span></div><div class="mm-listening-privacy"><b>Designed for long sessions:</b> Listening mode continues when this app tab is in the background where the browser/device permits it. Normal one-screen Read Aloud still pauses when the app is hidden.</div></section>`;
+    view.innerHTML=`<section class="card mm-listening-hero"><span class="eyebrow">Long-session audio learning</span><h2 tabindex="-1">Listen through MouldMaster lessons continuously</h2><p>Start once and move through the lesson library hands-free. Playback uses your browser or operating-system speech service. MouldMaster does not request microphone access, record audio, or upload lesson text through MouldMaster servers; voice-provider processing depends on your device, browser and selected voice.</p></section><section class="card mm-listening-player"><div class="mm-listening-now"><span class="eyebrow">Now listening</span><h3 data-mm-listening-lesson>Lesson library ready</h3><p class="mm-listening-current" data-mm-listening-current>Press Play to start continuous listening from the lesson library.</p></div><div class="mm-listening-controls"><button type="button" data-mm-listening="prev-lesson">⏮ Previous lesson</button><button type="button" data-mm-listening="back">◀ Sentence</button><button type="button" class="play" data-mm-listening="play">Play</button><button type="button" data-mm-listening="forward">Sentence ▶</button><button type="button" data-mm-listening="next-lesson">Next lesson ⏭</button></div><div class="mm-listening-options"><p class="mm-read-status" data-mm-listening-status role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-listening-speed aria-label="Listening speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><button type="button" class="ghost" data-mm-listening="stop">Stop</button><strong data-mm-listening-progress-text>0 lessons</strong></div><div class="mm-listening-progress" aria-hidden="true"><span data-mm-listening-bar></span></div><div class="mm-listening-privacy"><b>Designed for long sessions:</b> Listening mode continues when this app tab is in the background where the browser/device permits it. Book Read Aloud keeps a short background audio session active while speaking where the browser/device permits it; browser/OS speech may still interrupt it.</div></section>`;
     main.appendChild(view);
     // Core routing can hide custom views without a nav click. Treat that
     // transition as leaving Listening so hidden queues never keep speaking.
@@ -793,6 +898,10 @@
   window.addEventListener('popstate',()=>{if(!playlistMode)stop('Stopped after navigation')});
   window.addEventListener('pagehide',()=>stop('Stopped'));
   document.addEventListener('visibilitychange',()=>{
+    if(document.hidden&&!playlistMode&&(starting||speaking)){
+      startBackgroundAudio();
+      resumePausedSpeechQueue();
+    }
     if(document.hidden||!supported||playlistMode||(!starting&&!speaking)||paused)return;
     // Do not pause speech when the learner locks the phone or puts the app
     // in the background. If the browser reports that it suspended the queue,
