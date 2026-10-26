@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "No current exact-source learner-runtime candidate is retained for release 2026.10.22.2. Do not begin physical iOS/iPadOS or Android testing until a fresh candidate source and served-byte identity are verified. Real device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
+  "boundary": "No current exact-source learner-runtime candidate is retained for release 2026.10.22.2. Do not begin testing on physical iOS/iPadOS and Android devices until a fresh candidate source and served-byte identity are verified. Real device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,

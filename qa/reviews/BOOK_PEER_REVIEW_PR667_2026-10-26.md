@@ -103,7 +103,7 @@ The 50 entries below are 49 curated distinct references from the Book’s eviden
 
 ## Verification snapshot
 
-- Passed locally: `qa_book_reader_architecture.py`, `qa_book_sme_release_binding.py`, `qa_book_material_grade_atlas.py`, `qa_book_engineering_diagrams.py`, `qa_book_release_integration.py`, and `tools/render_book_governance_status.py --check`.
+- Passed locally: `qa_book_reader_architecture.py`, `qa_book_sme_release_binding.py`, `qa_book_material_grade_atlas.py`, `qa_book_engineering_diagrams.py`, `qa_book_release_integration.py`, `qa_pwa_physical_device.py`, and `tools/render_book_governance_status.py --check`.
 - `tools/verify_release_external_validation.py` remains **FAIL** by design: the canonical `webCandidate` binding is missing, so this branch has no fresh retained exact-source artifact.
 - The release integration audit reports 11,938 visible words across reader chapters 1–5; chapter 3 has 3,042. Independent human Book SME, physical-device and real assistive-technology validation remain **HOLD**.
 
