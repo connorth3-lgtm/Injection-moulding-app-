@@ -33,7 +33,7 @@ The source ledger contains 52 IDs but two IDs point to the same BASF troubleshoo
 
 ## 50-source bibliography
 
-The first 49 entries below are drawn from the Book’s evidence catalogue after deduplication and scope curation. Entry 50 is the NIST SI guide recommended for the pressure definition. Standards are linked to official landing pages; consult the applicable full text and edition before using a normative requirement. Manufacturer sources are scoped to the named equipment, material or system.
+The 50 entries below are 49 curated distinct references from the Book’s evidence catalogue plus one NIST SI guide for the corrected pressure definition; the NIST guide appears in the standards group. Standards are linked to official landing pages; consult the applicable full text and edition before using a normative requirement. Manufacturer sources are scoped to the named equipment, material or system.
 
 ### Standards and measurement
 
