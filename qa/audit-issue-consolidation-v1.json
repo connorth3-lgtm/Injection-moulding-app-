@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.10.26.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "71b631ae374e9e2a0eaab1152ee169f582dfd1b5",
-  "scope": "Expanded the first five MouldMaster Book chapters, with added materials detail and learner-facing explanations. Release 2026.10.26.1 retains a technical candidate from source 71b631ae374e9e2a0eaab1152ee169f582dfd1b5; exact-source browser, question, Read Aloud and Combined Learn/Book QA passed. No human or external validation is inferred.",
-  "approvalBoundary": "Release 2026.10.26.1 candidate producer run 40292321764 succeeded and retained artifact 12636349278 for source 71b631ae374e9e2a0eaab1152ee169f582dfd1b5. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": "5b67442b192dbc9ac0a97f91142e1eac29462686",
+  "scope": "Expanded the first five MouldMaster Book chapters, with added materials detail and learner-facing explanations. Release 2026.10.26.1 retains a technical candidate from source 5b67442b192dbc9ac0a97f91142e1eac29462686; exact-source browser, question, Read Aloud and Combined Learn/Book QA passed. No human or external validation is inferred.",
+  "approvalBoundary": "Release 2026.10.26.1 candidate producer run 40385223161 succeeded and retained artifact 12680038242 for source 5b67442b192dbc9ac0a97f91142e1eac29462686. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,

@@ -8,10 +8,10 @@
   "issueNumber": 619,
   "candidate": {
     "release": "2026.10.26.1",
-    "sourceSha": "71b631ae374e9e2a0eaab1152ee169f582dfd1b5",
+    "sourceSha": "5b67442b192dbc9ac0a97f91142e1eac29462686",
     "runtimeFingerprint": "sha256:7e15643191849197ba5339bb18982459e982b39f0083e7a8a40c456e1c1f2295"
   },
-  "boundary": "Release 2026.10.26.1 technical candidate 71b631ae374e9e2a0eaab1152ee169f582dfd1b5 does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
+  "boundary": "Release 2026.10.26.1 technical candidate 5b67442b192dbc9ac0a97f91142e1eac29462686 does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -57,9 +57,9 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.10.22.2",
-    "sourceSha": "0932c4790e2c3435f299e5372c8be0e9844667eb",
-    "runtimeFingerprint": "sha256:289227bb2fb66e7fbe42f719f0c9dffd58ebebe84bec3e06b674524ce842d6d3"
+    "release": "2026.10.26.1",
+    "sourceSha": "71b631ae374e9e2a0eaab1152ee169f582dfd1b5",
+    "runtimeFingerprint": "sha256:7e15643191849197ba5339bb18982459e982b39f0083e7a8a40c456e1c1f2295"
   },
   "previousIssueNumber": 379,
   "supersededCandidate": {

@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: release 2026.10.26.1 source 71b631ae374e9e2a0eaab1152ee169f582dfd1b5 artifact 12678379124 and producer 40383224097 are staged as technical metadata only; producer success and quality are NOT independently verified. No source, human, device or production approval is implied. |
-| Behavioral / browser | **fail** | HOLD: browser and question gates for release 2026.10.26.1 source 71b631ae374e9e2a0eaab1152ee169f582dfd1b5 must be independently verified on the staged candidate; prior green workflows do not transfer to a different exact source. |
+| Static / contract | **pass** | PASS: release 2026.10.26.1 retains exact learner-runtime candidate source 5b67442b192dbc9ac0a97f91142e1eac29462686, artifact 12680038242, producer run 40385223161, with matching public-runtime fingerprint sha256:7e15643191849197ba5339bb18982459e982b39f0083e7a8a40c456e1c1f2295; exact-source browser, question-quality, Read Aloud and Combined Learn/Book QA passed. This is technical evidence only; all seven independent external review streams remain HOLD. |
+| Behavioral / browser | **pass** | PASS: exact-source browser and question gates passed for release 2026.10.26.1 source 5b67442b192dbc9ac0a97f91142e1eac29462686; Mobile Browser QA 40385223290, Question Quality 50-Pass 40385223214, Read Aloud QA 40385223314, and Combined Learn/Book QA 40385223227 all succeeded. This is technical evidence only; external human/device/SME evidence remains HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
