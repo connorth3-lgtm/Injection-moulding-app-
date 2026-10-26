@@ -391,6 +391,7 @@
   function stop(reason,cancelSpeech=true){
     closeAppAudio();
     stopBackgroundAudio();
+    backgroundRetryCount=0;
     // Invalidate active callbacks before cancel: some device voices dispatch
     // a synchronous cancellation error from synth.cancel().
     const cancelActive=starting||speaking||paused;
