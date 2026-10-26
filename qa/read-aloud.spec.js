@@ -227,8 +227,8 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load()});
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.22.2');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.22.2');
+  await expect(host).toHaveAttribute('data-version','2026.10.26.1');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.26.1');
   await expect(page.locator('#nav [data-mm-listening-tab]')).toHaveCount(0);
   await expect(page.locator('#mmListeningView')).toHaveCount(0);
   expect(await page.evaluate(()=>typeof window.MMReadAloud?.openListening)).toBe('undefined');
@@ -435,7 +435,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.supported===true)).toBeTruthy();
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.22.2');
+  await expect(host).toHaveAttribute('data-version','2026.10.26.1');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {
