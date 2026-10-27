@@ -37,6 +37,8 @@
   let backgroundAudioStopping=false;
   let mediaSessionConfigured=false;
   let backgroundRetryCount=0;
+  let backgroundWatchTimer=null;
+  let backgroundSpeechGapStartedAt=0;
 
   function visible(el){
     if(!el||!el.isConnected||el.closest(EXCLUDED))return false;
@@ -295,10 +297,44 @@
     }catch(_){return false}
   }
 
-  const BACKGROUND_AUDIO_SRC='data:audio/wav;base64,UklGRmQGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YUAGAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA';
+
+  // Android Chrome only promotes a media session to lock-screen playback when
+  // it has a real, non-silent track with a duration of at least several
+  // seconds. The former 0.2-second all-zero WAV was treated as silence and
+  // did not keep the page's speech service alive. Build a barely audible
+  // carrier in memory so the session is genuine without adding an asset.
+  function createBackgroundAudioSrc(){
+    const sampleRate=8000;
+    const dataSize=sampleRate*6;
+    const bytes=new Uint8Array(44+dataSize);
+    const view=new DataView(bytes.buffer);
+    const ascii=(offset,value)=>{for(let i=0;i<value.length;i++)bytes[offset+i]=value.charCodeAt(i)};
+    ascii(0,'RIFF');view.setUint32(4,36+dataSize,true);ascii(8,'WAVE');ascii(12,'fmt ');
+    view.setUint32(16,16,true);view.setUint16(20,1,true);view.setUint16(22,1,true);
+    view.setUint32(24,sampleRate,true);view.setUint32(28,sampleRate,true);
+    view.setUint16(32,1,true);view.setUint16(34,8,true);ascii(36,'data');view.setUint32(40,dataSize,true);
+    const carrier=[126,128,130,128,127,128,129,128];
+    for(let i=0;i<dataSize;i++)bytes[44+i]=carrier[i%carrier.length];
+    if(typeof window.btoa!=='function')return '';
+    let binary='';
+    for(let i=0;i<bytes.length;i+=0x8000)binary+=String.fromCharCode(...bytes.subarray(i,Math.min(i+0x8000,bytes.length)));
+    return `data:audio/wav;base64,${window.btoa(binary)}`;
+  }
 
   function setMediaSessionState(state){
     try{if('mediaSession' in navigator)navigator.mediaSession.playbackState=state;}catch(_){}
+  }
+
+  function setMediaSessionMetadata(unit=currentUnit()){
+    try{
+      if(!('mediaSession' in navigator)||typeof window.MediaMetadata!=='function')return;
+      navigator.mediaSession.metadata=new MediaMetadata({
+        title:'MouldMaster Book Read Aloud',
+        artist:'MouldMaster Academy',
+        album:'Injection moulding learning',
+        chapterInfo:unit?.text?String(unit.text).slice(0,160):''
+      });
+    }catch(_){}
   }
 
   function configureMediaSession(){
@@ -323,9 +359,13 @@
       audio.preload='auto';audio.loop=true;audio.playsInline=true;
       audio.setAttribute('aria-hidden','true');
       audio.setAttribute('tabindex','-1');
-      audio.src=BACKGROUND_AUDIO_SRC;
-      audio.volume=0.0001;
-      audio.style.display='none';
+      audio.src=createBackgroundAudioSrc();
+      audio.volume=0.02;
+      // Keep the media element rendered but visually and interactively out of
+      // the learner UI. display:none/zero-length media can lose Android audio
+      // focus even when play() was called from the learner's tap.
+      audio.style.cssText='position:fixed;left:-10000px;top:-10000px;width:1px;height:1px;opacity:0.01;pointer-events:none';
+      audio.dataset.mmScreenOffCarrier='true';
       (document.body||document.documentElement).appendChild(audio);
       audio.addEventListener('pause',()=>{
         if(backgroundAudio!==audio||backgroundAudioStopping||(!starting&&!speaking)||!document.hidden)return;
@@ -333,6 +373,9 @@
           if(backgroundAudio===audio&&!backgroundAudioStopping&&(starting||speaking))startBackgroundAudio();
         },250);
       });
+      audio.addEventListener('playing',()=>{setMediaSessionState('playing');startBackgroundWatch();});
+      audio.addEventListener('timeupdate',monitorHiddenSpeech);
+      audio.addEventListener('ended',()=>{if(starting||speaking)startBackgroundAudio();});
       backgroundAudio=audio;
     }catch(_){backgroundAudio=null;}
     configureMediaSession();
@@ -344,8 +387,10 @@
     if(!audio)return false;
     backgroundAudioStopping=false;
     try{
-      if(audio.paused)Promise.resolve(audio.play()).catch(()=>{});
+      if(audio.paused||audio.ended){audio.currentTime=0;Promise.resolve(audio.play()).catch(()=>{});}
+      setMediaSessionMetadata();
       setMediaSessionState('playing');
+      startBackgroundWatch();
       return true;
     }catch(_){return false}
   }
@@ -356,6 +401,7 @@
     backgroundAudioStopping=true;
     try{audio.pause()}catch(_){}
     backgroundAudioStopping=false;
+    stopBackgroundWatch();
     setMediaSessionState('paused');
   }
 
@@ -365,7 +411,35 @@
     backgroundAudioStopping=true;
     try{audio.pause();audio.currentTime=0}catch(_){}
     backgroundAudioStopping=false;
+    stopBackgroundWatch();
     setMediaSessionState('none');
+  }
+
+  function monitorHiddenSpeech(){
+    if(!document.hidden||playlistMode||paused||(!starting&&!speaking))return;
+    const audio=backgroundAudio;
+    if(audio?.paused){startBackgroundAudio();return;}
+    let active=false,pending=false;
+    try{active=synth.speaking===true;pending=synth.pending===true}catch(_){return;}
+    if(active||pending){backgroundSpeechGapStartedAt=0;return;}
+    const now=Date.now();
+    if(!backgroundSpeechGapStartedAt){backgroundSpeechGapStartedAt=now;return;}
+    // Allow a provider a short initialization gap before treating an idle
+    // hidden queue as a silent lock-screen interruption.
+    if(now-backgroundSpeechGapStartedAt<2400)return;
+    const unit=currentUnit();
+    if(unit)retryHiddenSpeech(unit,speakToken);
+  }
+
+  function startBackgroundWatch(){
+    if(backgroundWatchTimer)return;
+    backgroundSpeechGapStartedAt=0;
+    backgroundWatchTimer=setInterval(monitorHiddenSpeech,1000);
+  }
+
+  function stopBackgroundWatch(){
+    if(backgroundWatchTimer){clearInterval(backgroundWatchTimer);backgroundWatchTimer=null;}
+    backgroundSpeechGapStartedAt=0;
   }
 
   function retryHiddenSpeech(unit,token){
@@ -451,7 +525,8 @@
       const markStarted=()=>{
         if(token!==speakToken||started)return;
         // Some mobile providers begin output without dispatching onstart.
-        clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;backgroundRetryCount=0;
+        clearTimeout(startTimer);started=true;starting=false;speaking=true;paused=false;backgroundRetryCount=0;backgroundSpeechGapStartedAt=0;
+        setMediaSessionMetadata(unit);
         startBackgroundAudio();
         highlight(unit);
         reportBookPosition(unit);
@@ -496,7 +571,7 @@
         if(!started){
           starting=false;
         }
-        backgroundRetryCount=0;
+        backgroundRetryCount=0;backgroundSpeechGapStartedAt=0;
         if(index<units.length-1){index+=1;speakCurrent();}
         else {
           if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-complete'));
@@ -896,11 +971,27 @@
   },true);
   window.addEventListener('hashchange',()=>{if(!playlistMode)stop('Stopped after navigation')});
   window.addEventListener('popstate',()=>{if(!playlistMode)stop('Stopped after navigation')});
-  window.addEventListener('pagehide',()=>stop('Stopped'));
+  window.addEventListener('pagehide',event=>{
+    // Android can emit pagehide while locking the screen. Cancelling speech
+    // here destroys the queue before the media session has a chance to keep it
+    // alive. Internal navigation already calls stop() explicitly; leave a
+    // hidden active session alone and let the browser tear it down on unload.
+    if((starting||speaking)&&!playlistMode&&(document.hidden||event.persisted)){
+      startBackgroundAudio();
+      resumePausedSpeechQueue();
+    }
+  });
+  window.addEventListener('pageshow',()=>{
+    if((starting||speaking)&&!playlistMode){startBackgroundAudio();resumePausedSpeechQueue();}
+  });
+  window.addEventListener('freeze',()=>{
+    if((starting||speaking)&&!playlistMode)startBackgroundAudio();
+  });
   document.addEventListener('visibilitychange',()=>{
     if(document.hidden&&!playlistMode&&(starting||speaking)){
       startBackgroundAudio();
       resumePausedSpeechQueue();
+      startBackgroundWatch();
     }
     if(document.hidden||!supported||playlistMode||(!starting&&!speaking)||paused)return;
     // Do not pause speech when the learner locks the phone or puts the app
