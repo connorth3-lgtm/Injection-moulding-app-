@@ -2,7 +2,7 @@
 
 **STATUS: TECHNICAL CANDIDATE PASS — all seven independent external review streams remain HOLD.**
 
-The exact learner-runtime candidate is source `5b67442b192dbc9ac0a97f91142e1eac29462686` with public-runtime fingerprint `sha256:7e15643191849197ba5339bb18982459e982b39f0083e7a8a40c456e1c1f2295`. Successful [Pre-merge Public Candidate run 40385223161](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40385223161) retained artifact **12680038242**, digest `sha256:600052749d25188c6f956ac50af8a017bb95b28a8fcf6bf23f70d63dc36978fa`, expiry `2027-01-24T19:16:15Z`. The artifact is a technical candidate and does not establish external validation or production authority.
+The exact learner-runtime candidate is source `123655fb47fd675acd1655cef6be076070884531` with public-runtime fingerprint `sha256:7832de453664be543b8014515b1e9d514f7a64f10bd83530391578bbcf98710c`. Successful [Pre-merge Public Candidate run 40456366934](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40456366934) retained artifact **12712870428**, digest `sha256:cb34596b0cb5818be1a23ec27c1a12632152cf886411bbf7abd9bcca36aa1837`, expiry `2027-01-25T05:37:24Z`. The artifact is a technical candidate and does not establish external validation or production authority.
 
 ## Exact-source software checks
 

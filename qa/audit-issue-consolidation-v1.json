@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.10.27.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "5b67442b192dbc9ac0a97f91142e1eac29462686",
-  "scope": "Expanded the first five MouldMaster Book chapters, with added materials detail and learner-facing explanations. Release 2026.10.27.1 stages a corrected Read Aloud runtime candidate; exact-source browser, question, Read Aloud and Combined Learn/Book QA remain required before promotion. No human or external validation is inferred.",
-  "approvalBoundary": "Release 2026.10.27.1 must retain a successful exact-head candidate producer artifact before release promotion. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": "123655fb47fd675acd1655cef6be076070884531",
+  "scope": "Expanded the first five MouldMaster Book chapters, with added materials detail and learner-facing explanations. Release 2026.10.27.1 stages a corrected Read Aloud runtime candidate from exact source 123655fb47fd675acd1655cef6be076070884531; exact-source browser, question, Read Aloud and Combined Learn/Book QA remain required before promotion. No human or external validation is inferred.",
+  "approvalBoundary": "Release 2026.10.27.1 exact candidate producer run 40456366934 created artifact 12712870428 for source 123655fb47fd675acd1655cef6be076070884531. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
