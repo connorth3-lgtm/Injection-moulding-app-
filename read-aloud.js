@@ -356,7 +356,7 @@
     if(backgroundAudio)return backgroundAudio;
     try{
       const audio=document.createElement('audio');
-      audio.preload='auto';audio.loop=true;audio.playsInline=true;
+      audio.preload='auto';audio.loop=true;audio.playsInline=true;audio.controls=true;
       audio.setAttribute('aria-hidden','true');
       audio.setAttribute('tabindex','-1');
       audio.src=createBackgroundAudioSrc();
