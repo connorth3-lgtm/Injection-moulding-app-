@@ -1109,8 +1109,8 @@ function learnHubMarkup(){
     <nav class="mm-learn-jump" aria-label="Learn section shortcuts"><a href="#mmLearnArena">Troubleshooting</a><a href="#mmLearnQuestions">Questions</a><a href="#mmLearnCourses">All lessons</a></nav>
     <section class="mm-learn-courses" id="mmLearnCourses" aria-label="Search and browse all lessons">${lessonCatalog.markup()}</section>
     <section class="mm-learn-master-lesson" aria-labelledby="mmLearnMasterHeading">
-      <header class="mm-learn-studio-head mm-learn-master-intro"><span class="eyebrow">One complete interactive lesson</span><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>One connected lesson in three stages: diagnose a real-world situation, practise your decisions, and understand why the answer fits the evidence.</p><div class="mm-learn-master-meta">3 connected stages · 169 governed prompts · 32 optional questions inside their relevant core lessons</div></header>
-      <div class="mm-learn-studio" aria-label="Three stages of the combined lesson">
+      <header class="mm-learn-studio-head mm-learn-master-intro"><span class="eyebrow">One complete interactive lesson</span><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>One connected lesson in two stages: investigate a real-world situation, then practise decisions and reflect on what the evidence supports.</p><div class="mm-learn-master-meta">2 connected stages · 169 governed prompts · 32 optional questions inside their relevant core lessons</div></header>
+      <div class="mm-learn-studio" aria-label="Two stages of the combined lesson">
       <section class="mm-learn-step mm-learn-step-arena" aria-labelledby="mmLearnArenaStep">
         <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">01</span><div><span class="eyebrow">Investigate</span><h3 id="mmLearnArenaStep">Read the evidence</h3></div></div>
       <article class="mm-learn-arena mm-primary-hub-card" id="mmLearnArena" aria-labelledby="mmLearnArenaTitle">
@@ -1119,14 +1119,11 @@ function learnHubMarkup(){
         <div class="mm-learn-arena-actions"><button type="button" class="primary mm-learn-boss" data-mm-hub-action="boss-round">♛ Start 3-scenario boss round</button><button type="button" class="secondary mm-learn-scenarios" data-mm-hub-action="learn-scenarios">Explore all 40 scenarios →</button></div>
       </article>
       </section>
-      <section class="mm-learn-step mm-learn-step-questions" aria-labelledby="mmLearnQuestionStep">
-        <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">02</span><div><span class="eyebrow">Practise</span><h3 id="mmLearnQuestionStep">Make the strongest decision</h3></div></div>
+      <section class="mm-learn-step mm-learn-step-practice" aria-labelledby="mmLearnPracticeStep">
+        <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">02</span><div><span class="eyebrow">Practise &amp; reflect</span><h3 id="mmLearnPracticeStep">Make the strongest decision</h3></div></div>
         <section id="mmLearnQuestions" class="mm-learn-question-centre mm-primary-hub-card mm-question-centre-card" aria-label="Five governed question modes in one continuous lesson">
           ${questionCentreMarkup(true)}
         </section>
-      </section>
-      <section class="mm-learn-step mm-learn-step-reasoning" aria-labelledby="mmLearnReasoningStep">
-        <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">03</span><div><span class="eyebrow">Reflect</span><h3 id="mmLearnReasoningStep">Explain your reasoning</h3></div></div>
         <!-- The 32 optional teaching checks live in their matching core lessons; this is the separate unscored capstone. -->
       <section class="mm-learn-capstone" id="mmLearnCapstone" aria-labelledby="mmLearnCapstoneTitle"><header><span class="eyebrow">Final case · unscored</span><h3 id="mmLearnCapstoneTitle">One case. Four evidence checkpoints.</h3><p>A new polymer lot arrives. Silver streaks and variable cushion appear during trial shots. Work through this hypothetical case before choosing another activity.</p></header><div class="mm-learn-capstone-steps">
 <details><summary><span>01</span><b>Characterise the change</b><small>What is known versus suspected?</small></summary><p>Separate observed streaks and shot variability from assumptions about wet resin. Compare cavity-labelled parts, timestamps and a suitable known-good baseline.</p></details>
