@@ -34,6 +34,9 @@
   let appAudioContext=null;
   let appAudioTimer=null;
   let backgroundAudio=null;
+  let backgroundAudioContext=null;
+  let backgroundCarrierSource=null;
+  let backgroundCarrierGain=null;
   let backgroundAudioStopping=false;
   let mediaSessionConfigured=false;
   let backgroundRetryCount=0;
@@ -279,6 +282,49 @@
     if(ui)updateButtons();
   }
 
+  // Keep a real, extremely quiet Web Audio graph alive for the duration of
+  // the Book session.  Android Chrome can suspend speech synthesis when a
+  // page has only a short looping media element; an active audio graph keeps
+  // the browser's audio service engaged after the display locks.  The graph
+  // is created from the learner's Listen gesture and is torn down on pause,
+  // Stop, completion or navigation.
+  function startBackgroundWebAudio(){
+    const AudioContextType=window.AudioContext||window.webkitAudioContext;
+    if(typeof AudioContextType!=='function')return false;
+    try{
+      if(!backgroundAudioContext||backgroundAudioContext.state==='closed'){
+        backgroundAudioContext=new AudioContextType();
+        const context=backgroundAudioContext;
+        const gain=context.createGain();
+        // A 19 kHz carrier at -74 dBFS is below ordinary speech/listening
+        // levels while remaining non-zero to the media/audio service.
+        gain.gain.value=0.0002;
+        const oscillator=context.createOscillator();
+        oscillator.type='sine';
+        oscillator.frequency.value=19000;
+        oscillator.connect(gain);
+        gain.connect(context.destination);
+        oscillator.start();
+        backgroundCarrierSource=oscillator;
+        backgroundCarrierGain=gain;
+      }
+      if(backgroundAudioContext.state==='suspended'){
+        Promise.resolve(backgroundAudioContext.resume()).catch(()=>{});
+      }
+      return true;
+    }catch(_){return false}
+  }
+
+  function stopBackgroundWebAudio(){
+    const source=backgroundCarrierSource,gain=backgroundCarrierGain,context=backgroundAudioContext;
+    backgroundCarrierSource=null;backgroundCarrierGain=null;backgroundAudioContext=null;
+    try{source?.stop()}catch(_){}
+    try{source?.disconnect()}catch(_){}
+    try{gain?.disconnect()}catch(_){}
+    if(context&&context.state!=='closed'){try{context.close()}catch(_){}
+    }
+  }
+
   function primeAudioOutput(){
     const AudioContextType=window.AudioContext||window.webkitAudioContext;
     if(typeof AudioContextType!=='function')return false;
@@ -387,6 +433,7 @@
     if(!audio)return false;
     backgroundAudioStopping=false;
     try{
+      startBackgroundWebAudio();
       if(audio.paused||audio.ended){audio.currentTime=0;Promise.resolve(audio.play()).catch(()=>{});}
       setMediaSessionMetadata();
       setMediaSessionState('playing');
@@ -397,20 +444,24 @@
 
   function pauseBackgroundAudio(){
     const audio=backgroundAudio;
-    if(!audio){setMediaSessionState('paused');return;}
-    backgroundAudioStopping=true;
-    try{audio.pause()}catch(_){}
-    backgroundAudioStopping=false;
+    if(audio){
+      backgroundAudioStopping=true;
+      try{audio.pause()}catch(_){}
+      backgroundAudioStopping=false;
+    }
+    stopBackgroundWebAudio();
     stopBackgroundWatch();
     setMediaSessionState('paused');
   }
 
   function stopBackgroundAudio(){
     const audio=backgroundAudio;
-    if(!audio){setMediaSessionState('none');return;}
-    backgroundAudioStopping=true;
-    try{audio.pause();audio.currentTime=0}catch(_){}
-    backgroundAudioStopping=false;
+    if(audio){
+      backgroundAudioStopping=true;
+      try{audio.pause();audio.currentTime=0}catch(_){}
+      backgroundAudioStopping=false;
+    }
+    stopBackgroundWebAudio();
     stopBackgroundWatch();
     setMediaSessionState('none');
   }
