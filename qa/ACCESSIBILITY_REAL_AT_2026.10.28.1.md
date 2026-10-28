@@ -1,8 +1,8 @@
-# Real assistive technology — 2026.10.27.1
+# Real assistive technology — 2026.10.28.1
 
-**STATUS: HOLD — release 2026.10.27.1 has no completed independent external review. Prior release evidence is historical; no human, device, learner, signing, SME or provider approval is implied.**
+**STATUS: HOLD — release 2026.10.28.1 has no completed independent external review. Prior release evidence is historical; no human, device, learner, signing, SME or provider approval is implied.**
 
-> **RETAINED 2026.10.27.1 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 40639986301](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40639986301) created artifact **12795475194**, source 5b9fa9017aea7b709cee45371934cc778766dcf3, digest sha256:3465b7b3181265c8c787d78a93b75b360ab554f4f46415bb80b269e9c3c6f29c, expiry 2027-01-26T05:47:02Z, and public-runtime fingerprint sha256:cf025b78498c9721ae9b63a9776ad92a42a73353077701239bf1aaf9b048ae4a. Producer quality must be independently verified. The retained artifact does not establish any human, real-device, Windows signing, provider, accreditation or production authorization.
+> **RETAINED 2026.10.28.1 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 40654072293](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40654072293) created artifact **12800439613**, source d804c0bf934c663e20fa2d67e8095acbc892c2ad, digest sha256:a83cb7a63ed7dd0077ffb8e018abe8d0ffcafd0f652b295f211de93b1c340c1f, expiry 2027-01-26T08:03:14Z, and public-runtime fingerprint sha256:93c890e757d7b1ac80528ab80258e2245b0d6ddfc133501689fc4eeec252242c. Producer quality must be independently verified. The retained artifact does not establish any human, real-device, Windows signing, provider, accreditation or production authorization.
 
 ## Required independently reviewed evidence
 

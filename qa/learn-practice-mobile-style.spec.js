@@ -405,8 +405,14 @@ for(const width of [360,412]){
   await expect(learn.locator('.mm-learn-reasoning-item, .mm-learn-reasoning-chapter')).toHaveCount(0);
   const master=learn.locator('.mm-learn-master-lesson');
   await expect(master).toContainText('32 optional questions inside their relevant core lessons');
-  await expect(master.locator('.mm-learn-studio > .mm-learn-step')).toHaveCount(3);
-  await expect(master.locator('.mm-learn-studio > .mm-learn-step-reasoning #mmLearnCapstone')).toHaveCount(1);
+  await expect(master.locator('.mm-learn-studio > .mm-learn-step')).toHaveCount(2);
+  const practiceReflect=master.locator('.mm-learn-studio > .mm-learn-step-practice');
+  await expect(practiceReflect).toHaveCount(1);
+  await expect(practiceReflect.locator('.mm-learn-step-num')).toHaveText('02');
+  await expect(practiceReflect.locator('.mm-learn-step-head')).toContainText('Practise & reflect');
+  await expect(practiceReflect.locator('#mmLearnQuestions')).toHaveCount(1);
+  await expect(practiceReflect.locator('#mmLearnCapstone')).toHaveCount(1);
+  await expect(master.locator('.mm-learn-step-reasoning')).toHaveCount(0);
   await expect(master.locator('.mm-learn-capstone-steps > details')).toHaveCount(4);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-group]')).toHaveCount(22);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-item]')).toHaveCount(176);

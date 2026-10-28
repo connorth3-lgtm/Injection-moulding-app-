@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.27.1`**.
+Current governed web candidate: **`2026.10.28.1`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.10.27.1 retains exact learner-runtime candidate source 5b9fa9017aea7b709cee45371934cc778766dcf3, artifact 12795475194, producer run 40639986301, with matching public-runtime fingerprint sha256:cf025b78498c9721ae9b63a9776ad92a42a73353077701239bf1aaf9b048ae4a; exact-source browser, question-quality, Read Aloud and Combined Learn/Book QA passed. This is technical evidence only; all seven independent external review streams remain HOLD. |
-| Behavioral / browser | **pass** | PASS: exact-source browser and question gates passed for release 2026.10.27.1 source 5b9fa9017aea7b709cee45371934cc778766dcf3; the current exact-head candidate carries the corrected screen-off Read Aloud runtime. This is technical evidence only; external human/device/SME evidence remains HOLD. |
+| Static / contract | **pass** | PASS: release 2026.10.28.1 source d804c0bf934c663e20fa2d67e8095acbc892c2ad run 40654072293 artifact 12800439613 fingerprint sha256:93c890e757d7b1ac80528ab80258e2245b0d6ddfc133501689fc4eeec252242c identifies the retained exact-source software candidate; human, device and production authorization remain HOLD. |
+| Behavioral / browser | **pass** | PASS: release 2026.10.28.1 source d804c0bf934c663e20fa2d67e8095acbc892c2ad passed Mobile Browser QA and Question Quality 50-Pass on the exact candidate source. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

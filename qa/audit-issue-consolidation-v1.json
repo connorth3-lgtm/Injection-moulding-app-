@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.10.27.1",
+  "release": "2026.10.28.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "5b9fa9017aea7b709cee45371934cc778766dcf3",
+  "candidateSourceSha": "d804c0bf934c663e20fa2d67e8095acbc892c2ad",
   "scope": "Expanded the first five MouldMaster Book chapters, with added materials detail and learner-facing explanations. Release 2026.10.27.1 stages a corrected Read Aloud runtime candidate from exact source 5b9fa9017aea7b709cee45371934cc778766dcf3; Mobile Browser QA 40639986384, Question Quality 50-Pass 40639986406, Read Aloud QA 40639986409, and Combined Learn/Book QA 40639986351 passed on that candidate. No human or external validation is inferred.",
   "approvalBoundary": "Release 2026.10.27.1 exact candidate producer run 40639986301 created artifact 12795475194 for source 5b9fa9017aea7b709cee45371934cc778766dcf3. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
@@ -45,8 +45,8 @@
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
   "lastReviewedDate": "2026-10-28",
   "previousVerifiedCandidate": {
-    "release": "2026.10.22.1",
-    "sourceSha": "b511ca1f8d9407df7fafc292ff1fb36334b3a114",
-    "runtimeFingerprint": "sha256:2a7b3cbb95ca106cf7c765ad036f6767fa0fc58a75ae9a1d4e1289bb296d877f"
+    "release": "2026.10.27.1",
+    "sourceSha": "5b9fa9017aea7b709cee45371934cc778766dcf3",
+    "runtimeFingerprint": "sha256:cf025b78498c9721ae9b63a9776ad92a42a73353077701239bf1aaf9b048ae4a"
   }
 }
