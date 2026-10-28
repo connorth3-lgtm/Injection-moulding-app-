@@ -660,7 +660,7 @@
         if(ui&&unit){ui.current.textContent=unit.text;ui.current.hidden=false;}
         updateButtons();
       };
-      try{startBackgroundAudio();synth.speak(utterance)}catch(err){
+      try{synth.speak(utterance);startBackgroundAudio()}catch(err){
         clearTimeout(startTimer);starting=false;
         stop(androidSpeech?'Android voice could not start. Tap Listen again.':'Device voice could not be started.');
         console.error('MouldMaster Read Aloud:',err);
