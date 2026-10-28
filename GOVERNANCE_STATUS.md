@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.10.27.1 retains exact learner-runtime candidate source 5b9fa9017aea7b709cee45371934cc778766dcf3, artifact 12795475194, producer run 40639986301, with matching public-runtime fingerprint sha256:cf025b78498c9721ae9b63a9776ad92a42a73353077701239bf1aaf9b048ae4a; exact-source browser, question-quality, Read Aloud and Combined Learn/Book QA passed. This is technical evidence only; all seven independent external review streams remain HOLD. |
-| Behavioral / browser | **pass** | PASS: exact-source browser and question gates passed for release 2026.10.27.1 source 5b9fa9017aea7b709cee45371934cc778766dcf3; the current exact-head candidate carries the corrected screen-off Read Aloud runtime. This is technical evidence only; external human/device/SME evidence remains HOLD. |
+| Static / contract | **fail** | HOLD: release 2026.10.28.1 has no accepted exact-source candidate artifact yet. Prior release evidence does not transfer; external review remains HOLD. |
+| Behavioral / browser | **fail** | HOLD: browser and question-quality gates for release 2026.10.28.1 must pass on its exact-source candidate before technical automation can be marked PASS. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
