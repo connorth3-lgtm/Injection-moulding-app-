@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "reviewedAt": "2026-10-20",
-  "reviewBy": "2026-10-28",
+  "reviewedAt": "2026-10-28",
+  "reviewBy": "2026-11-28",
   "owner": "repository-maintainer",
   "policy": "Critical runtime/build support status must be re-reviewed from authoritative upstream sources before reviewBy. EOL components fail maintenance QA and require an explicit protected upgrade or a time-bounded owned exception that cannot disable required gates.",
   "components": [
@@ -25,20 +25,20 @@
     },
     {
       "id": "electron-desktop",
-      "declared": "44.9.0",
+      "declared": "45.0.0",
       "statusAtReview": "supported-stable",
-      "eol": "2027-03-02",
+      "eol": "2027-04-27",
       "owner": "repository-maintainer",
-      "rationale": "Security boundary and runtime for the open Windows desktop wrapper.",
+      "rationale": "Security boundary and runtime for the open Windows desktop wrapper; Electron 45.0.0 was reviewed against its supported platform boundary and current upstream release schedule.",
       "authoritativeSource": "https://releases.electronjs.org/schedule"
     },
     {
       "id": "electron-builder",
-      "declared": "26.17.0",
+      "declared": "26.18.0",
       "statusAtReview": "pinned-build-tool",
       "reviewRequired": true,
       "owner": "repository-maintainer",
-      "rationale": "Creates portable/NSIS/MSIX desktop artifacts; changes affect package and signing behavior.",
+      "rationale": "Creates portable/NSIS/MSIX desktop artifacts; exact-pinned builder updates are checked by desktop release, lock and packaging validation.",
       "evidenceSource": "desktop/electron/package.json"
     },
     {

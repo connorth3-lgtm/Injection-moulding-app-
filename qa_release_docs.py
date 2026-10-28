@@ -74,29 +74,43 @@ need(pkg.get('version')=='.'.join(release_parts[:3]),'desktop package version mu
 need(str(pkg.get('build',{}).get('buildNumber'))==release_parts[3],'desktop buildNumber must match desktop_release fourth component')
 need(pkg.get('build',{}).get('buildVersion')=='.'.join(release_parts),'desktop buildVersion must match desktop_release')
 
-# Electron 44 is an explicit supported-platform decision, not just a package bump.
-need(pkg.get('devDependencies',{}).get('electron')=='44.9.0','desktop runtime must remain pinned to reviewed Electron 44.9.0')
-need(lock.get('packages',{}).get('',{}).get('devDependencies',{}).get('electron')=='44.9.0','desktop lock must resolve reviewed Electron 44.9.0')
-electron_support=text('desktop/electron/ELECTRON_44_SUPPORT.md')
+# Electron 45 is an explicit supported-platform decision, not just a package bump.
+need(pkg.get('devDependencies',{}).get('electron')=='45.0.0','desktop runtime must remain pinned to reviewed Electron 45.0.0')
+need(lock.get('packages',{}).get('',{}).get('devDependencies',{}).get('electron')=='45.0.0','desktop lock must resolve reviewed Electron 45.0.0')
+electron_support=text('desktop/electron/ELECTRON_45_SUPPORT.md')
 for marker in [
- 'Electron `44.9.0`',
+ 'Electron `45.0.0`',
  'Windows 10/11, 64-bit only',
  'GitHub portable/NSIS validation lane is x64',
  'Microsoft Store MSIX lane packages x64 and arm64',
  'Windows ia32 is not a supported MouldMaster target',
- 'clipboard',
- 'net.request',
- 'select-client-certificate',
- 'setLoginItemSettings',
- 'ANGLE is statically linked',
- 'https://www.electronjs.org/blog/electron-44-0',
- 'https://releases.electronjs.org/release/v44.9.0',
+ 'sandboxed preload scripts',
+ 'display-capture',
+ 'setPermissionRequestHandler',
+ 'setWindowOpenHandler',
+ 'https://www.electronjs.org/blog/electron-45-0',
+ 'https://releases.electronjs.org/release/v45.0.0',
+ 'https://releases.electronjs.org/schedule',
 ]:
-    need(marker in electron_support,f'Electron 44 support policy missing marker: {marker}')
+    need(marker in electron_support,f'Electron 45 support policy missing marker: {marker}')
 
 desktop_readme=text('desktop/electron/README.md')
-for marker in ['Electron 44.9.0','Windows 10/11 64-bit','ELECTRON_44_SUPPORT.md','127.0.0.1:43139']:
-    need(marker in desktop_readme,f'desktop README Electron 44/stable-origin marker missing: {marker}')
+for marker in ['Electron 45.0.0','Windows 10/11 64-bit','ELECTRON_45_SUPPORT.md','127.0.0.1:43139']:
+    need(marker in desktop_readme,f'desktop README Electron 45/stable-origin marker missing: {marker}')
+
+privileged_parts=[]
+for folder in [ROOT/'desktop/electron/src', ROOT/'desktop/electron/scripts']:
+    for path in sorted(folder.rglob('*')):
+        if path.is_file() and path.suffix in {'.cjs','.js'}:
+            privileged_parts.append(path.read_text(encoding='utf-8'))
+privileged_code='\n'.join(privileged_parts)
+for token in ['clipboard', 'net.request', 'select-client-certificate', 'setLoginItemSettings',
+              'Buffer', 'setImmediate', 'clearImmediate', "require('events')", 'require("events")',
+              "require('timers')", 'require("timers")', "require('url')", 'require("url")']:
+    need(token not in privileged_code,f'Electron 45 affected API introduced without compatibility review: {token}')
+store_workflow=text('.github/workflows/microsoft-store-msix.yml')
+need('node scripts/run-msix-builder.cjs --win msix --x64 --arm64' in store_workflow,'Store MSIX lane must preserve x64+arm64 Electron 45 targets')
+need('--ia32' not in store_workflow,'Store MSIX lane must not reintroduce removed Electron 45 ia32 targeting')
 
 # The manual retirement guide is release evidence too. Keep its human test target
 # tied to version.json so a desktop release bump cannot leave operators testing stale bytes.

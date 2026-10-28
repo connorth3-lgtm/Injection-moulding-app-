@@ -6,7 +6,7 @@ This directory contains the normal open-source Windows desktop implementation fo
 
 - Current desktop release: `2026.09.29.1`
 - Source licence: Apache-2.0
-- Desktop runtime: Electron 44.9.0
+- Desktop runtime: Electron 45.0.0
 - Supported OS/architecture: Windows 10/11 64-bit
 - Packaging: electron-builder
 - Targets: portable EXE, NSIS installer, MSIX / Microsoft Store upload package
@@ -19,7 +19,7 @@ This directory contains the normal open-source Windows desktop implementation fo
 - Renderer permissions: denied by default
 - External HTTPS links: opened in the user's normal browser
 
-The Electron 44 supported-platform decision and breaking-change review are recorded in `ELECTRON_44_SUPPORT.md`. The GitHub portable/NSIS validation lane is x64; the Microsoft Store MSIX lane packages x64 and arm64. Windows ia32 is not a supported MouldMaster target.
+The Electron 45 supported-platform decision and breaking-change review are recorded in `ELECTRON_45_SUPPORT.md`. The GitHub portable/NSIS validation lane is x64; the Microsoft Store MSIX lane packages x64 and arm64. Windows ia32 is not a supported MouldMaster target.
 
 The legacy Windows executable is frozen as a recovery-only compatibility component. It is not the normal Windows release and must not be represented as fully open source. See `LEGACY_MIGRATION.md` and `REAL_WINDOWS_VALIDATION.md` for the final real-machine backup/import and persistence evidence required before deleting that frozen legacy component.
 
