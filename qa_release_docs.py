@@ -98,20 +98,6 @@ desktop_readme=text('desktop/electron/README.md')
 for marker in ['Electron 45.0.0','Windows 10/11 64-bit','ELECTRON_45_SUPPORT.md','127.0.0.1:43139']:
     need(marker in desktop_readme,f'desktop README Electron 45/stable-origin marker missing: {marker}')
 
-privileged_parts=[]
-for folder in [ROOT/'desktop/electron/src', ROOT/'desktop/electron/scripts']:
-    for path in sorted(folder.rglob('*')):
-        if path.is_file() and path.suffix in {'.cjs','.js'}:
-            privileged_parts.append(path.read_text(encoding='utf-8'))
-privileged_code='\n'.join(privileged_parts)
-for token in ['clipboard', 'net.request', 'select-client-certificate', 'setLoginItemSettings',
-              'Buffer', 'setImmediate', 'clearImmediate', "require('events')", 'require("events")',
-              "require('timers')", 'require("timers")', "require('url')", 'require("url")']:
-    need(token not in privileged_code,f'Electron 45 affected API introduced without compatibility review: {token}')
-store_workflow=text('.github/workflows/microsoft-store-msix.yml')
-need('node scripts/run-msix-builder.cjs --win msix --x64 --arm64' in store_workflow,'Store MSIX lane must preserve x64+arm64 Electron 45 targets')
-need('--ia32' not in store_workflow,'Store MSIX lane must not reintroduce removed Electron 45 ia32 targeting')
-
 # The manual retirement guide is release evidence too. Keep its human test target
 # tied to version.json so a desktop release bump cannot leave operators testing stale bytes.
 real_windows_validation=text('desktop/electron/REAL_WINDOWS_VALIDATION.md')
@@ -130,11 +116,14 @@ for folder in [ROOT/'desktop/electron/src', ROOT/'desktop/electron/scripts']:
         if path.is_file() and path.suffix in {'.cjs','.js'}:
             privileged_parts.append(path.read_text(encoding='utf-8'))
 privileged_code='\n'.join(privileged_parts)
-for token in ['clipboard', 'net.request', 'select-client-certificate', 'setLoginItemSettings']:
-    need(token not in privileged_code,f'Electron 44 affected API introduced without compatibility review: {token}')
+for token in ['clipboard', 'net.request', 'select-client-certificate', 'setLoginItemSettings',
+              'setImmediate', 'clearImmediate', "require('events')", 'require("events")',
+              "require('timers')", 'require("timers")', "require('url')", 'require("url")']:
+    need(token not in privileged_code,f'Electron 45 affected API introduced without compatibility review: {token}')
+need(re.search(r'\bBuffer\b',privileged_code) is None,'Electron 45 removed sandboxed-preload Buffer global introduced without compatibility review')
 store_workflow=text('.github/workflows/microsoft-store-msix.yml')
-need('node scripts/run-msix-builder.cjs --win msix --x64 --arm64' in store_workflow,'Store MSIX lane must preserve x64+arm64 Electron 44 targets')
-need('--ia32' not in store_workflow,'Store MSIX lane must not reintroduce removed Electron 44 ia32 targeting')
+need('node scripts/run-msix-builder.cjs --win msix --x64 --arm64' in store_workflow,'Store MSIX lane must preserve x64+arm64 Electron 45 targets')
+need('--ia32' not in store_workflow,'Store MSIX lane must not reintroduce removed Electron 45 ia32 targeting')
 
 android=text('ANDROID_INSTALL_README.txt')
 for marker in [
