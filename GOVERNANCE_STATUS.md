@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: release 2026.10.28.1 has no accepted exact-source candidate artifact yet. Prior release evidence does not transfer; external review remains HOLD. |
-| Behavioral / browser | **fail** | HOLD: browser and question-quality gates for release 2026.10.28.1 must pass on its exact-source candidate before technical automation can be marked PASS. |
+| Static / contract | **pass** | PASS: release 2026.10.28.1 source d804c0bf934c663e20fa2d67e8095acbc892c2ad run 40654072293 artifact 12800439613 fingerprint sha256:93c890e757d7b1ac80528ab80258e2245b0d6ddfc133501689fc4eeec252242c identifies the retained exact-source software candidate; human, device and production authorization remain HOLD. |
+| Behavioral / browser | **pass** | PASS: release 2026.10.28.1 source d804c0bf934c663e20fa2d67e8095acbc892c2ad passed Mobile Browser QA and Question Quality 50-Pass on the exact candidate source. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
