@@ -114,6 +114,39 @@ test('Background speech is left alone and a device-paused queue resumes when vis
   expect(await page.evaluate(()=>window.__screenOffResumeVoice.resumes)).toBe(1);
 });
 
+test('screen-off playback uses a real multi-second carrier and pagehide does not cancel it', async ({page}) => {
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Keep this Book sentence alive while the phone is locked.</p></main></body></html>');
+  await page.evaluate(()=>{
+    class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
+    const speech={speaking:true,pending:false,cancels:0,getVoices(){return[];},speak(u){this.last=u;queueMicrotask(()=>u.onstart?.());},cancel(){this.cancels++;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__carrierVoice=speech;
+    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Voice});
+    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:speech});
+  });
+  await page.addScriptTag({path:'read-aloud.js'});
+  const player=page.locator('.mm-read-aloud');
+  await player.locator('details').evaluate(el=>{el.open=true});
+  await player.locator('[data-mm-read="play"]').click();
+  const carrier=await page.evaluate(async()=>{
+    const audio=document.querySelector('audio[data-mm-screen-off-carrier]');
+    const bytes=new Uint8Array(await (await fetch(audio.src)).arrayBuffer());
+    const view=new DataView(bytes.buffer);
+    let nonSilent=0;
+    for(let i=44;i<bytes.length;i++)if(bytes[i]!==128){nonSilent++;break;}
+    return {duration:view.getUint32(40,true)/(view.getUint32(24,true)*view.getUint16(22,true)),nonSilent,display:getComputedStyle(audio).display,volume:audio.volume};
+  });
+  expect(carrier.duration).toBeGreaterThanOrEqual(5);
+  expect(carrier.nonSilent).toBe(1);
+  expect(carrier.display).not.toBe('none');
+  expect(carrier.volume).toBeGreaterThan(0);
+  await page.evaluate(()=>{
+    Object.defineProperty(document,'hidden',{configurable:true,value:true});
+    document.dispatchEvent(new Event('visibilitychange'));
+    const event=new Event('pagehide');Object.defineProperty(event,'persisted',{value:false});window.dispatchEvent(event);
+  });
+  expect(await page.evaluate(()=>window.__carrierVoice.cancels)).toBe(0);
+});
+
 test('privacy notice limits Read Aloud to the Book and explains the separate app audio test', async ({page}) => {
   await page.goto('http://127.0.0.1:4173/privacy.html');
   const text=await page.locator('body').innerText();
@@ -227,8 +260,8 @@ test('Read Aloud integrates with the real shell, docks in the header without cov
   await page.evaluate(async()=>{await window.MMBook.ready;window.MMBook.open();await window.MMBook.load()});
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.26.1');
-  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.26.1');
+  await expect(host).toHaveAttribute('data-version','2026.10.27.1');
+  await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.version||'')).toBe('2026.10.27.1');
   await expect(page.locator('#nav [data-mm-listening-tab]')).toHaveCount(0);
   await expect(page.locator('#mmListeningView')).toHaveCount(0);
   expect(await page.evaluate(()=>typeof window.MMReadAloud?.openListening)).toBe('undefined');
@@ -435,7 +468,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.supported===true)).toBeTruthy();
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.10.26.1');
+  await expect(host).toHaveAttribute('data-version','2026.10.27.1');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {

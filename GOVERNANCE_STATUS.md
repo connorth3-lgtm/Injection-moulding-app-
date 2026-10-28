@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.26.1`**.
+Current governed web candidate: **`2026.10.27.1`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.10.26.1 retains exact learner-runtime candidate source 5b67442b192dbc9ac0a97f91142e1eac29462686, artifact 12680038242, producer run 40385223161, with matching public-runtime fingerprint sha256:7e15643191849197ba5339bb18982459e982b39f0083e7a8a40c456e1c1f2295; exact-source browser, question-quality, Read Aloud and Combined Learn/Book QA passed. This is technical evidence only; all seven independent external review streams remain HOLD. |
-| Behavioral / browser | **pass** | PASS: exact-source browser and question gates passed for release 2026.10.26.1 source 5b67442b192dbc9ac0a97f91142e1eac29462686; Mobile Browser QA 40385223290, Question Quality 50-Pass 40385223214, Read Aloud QA 40385223314, and Combined Learn/Book QA 40385223227 all succeeded. This is technical evidence only; external human/device/SME evidence remains HOLD. |
+| Static / contract | **pass** | PASS: release 2026.10.27.1 retains exact learner-runtime candidate source 5b9fa9017aea7b709cee45371934cc778766dcf3, artifact 12795475194, producer run 40639986301, with matching public-runtime fingerprint sha256:cf025b78498c9721ae9b63a9776ad92a42a73353077701239bf1aaf9b048ae4a; exact-source browser, question-quality, Read Aloud and Combined Learn/Book QA passed. This is technical evidence only; all seven independent external review streams remain HOLD. |
+| Behavioral / browser | **pass** | PASS: exact-source browser and question gates passed for release 2026.10.27.1 source 5b9fa9017aea7b709cee45371934cc778766dcf3; the current exact-head candidate carries the corrected screen-off Read Aloud runtime. This is technical evidence only; external human/device/SME evidence remains HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
