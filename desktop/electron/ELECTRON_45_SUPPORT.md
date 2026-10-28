@@ -24,7 +24,7 @@ Renderer-created windows remain denied by `setWindowOpenHandler`; allowed HTTPS 
 
 Electron's release schedule lists Electron 45 end of life as 27 April 2027 (tentative). The dependency-maintenance inventory records that date and is reviewed on a monthly cadence.
 
-The runtime is exact-pinned in `desktop/electron/package.json` and resolved by its committed npm lockfile. The portable/NSIS builder is separately pinned to `electron-builder 26.18.0`; the isolated MSIX builder remains on its separately locked prerelease until its own compatibility checks pass. Exact-head release QA, dependency-lock QA, open-desktop QA, Mobile Browser QA, and Windows package build checks must pass before merge.
+The runtime is exact-pinned in `desktop/electron/package.json` and resolved by its committed npm lockfile. The portable/NSIS builder is separately pinned to `electron-builder 26.18.0`; the isolated MSIX builder is exact-pinned to `electron-builder 27.0.0-alpha.11` in its own committed lockfile, and its version guard is checked by desktop dependency-lock and Store QA. Exact-head release QA, dependency-lock QA, open-desktop QA, Mobile Browser QA, and Windows package build checks must pass before merge.
 
 Upstream references:
 
