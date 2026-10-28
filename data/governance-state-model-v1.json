@@ -346,11 +346,11 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "PASS: release 2026.10.27.1 retains exact learner-runtime candidate source 123655fb47fd675acd1655cef6be076070884531, artifact 12712870428, producer run 40456366934, with matching public-runtime fingerprint sha256:7832de453664be543b8014515b1e9d514f7a64f10bd83530391578bbcf98710c; exact-source browser, question-quality, Read Aloud and Combined Learn/Book QA passed. This is technical evidence only; all seven independent external review streams remain HOLD."
+      "meaning": "PASS: release 2026.10.27.1 retains exact learner-runtime candidate source 5b9fa9017aea7b709cee45371934cc778766dcf3, artifact 12795475194, producer run 40639986301, with matching public-runtime fingerprint sha256:cf025b78498c9721ae9b63a9776ad92a42a73353077701239bf1aaf9b048ae4a; exact-source browser, question-quality, Read Aloud and Combined Learn/Book QA passed. This is technical evidence only; all seven independent external review streams remain HOLD."
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "PASS: exact-source browser and question gates passed for release 2026.10.27.1 source 123655fb47fd675acd1655cef6be076070884531; the current exact-head candidate carries the corrected screen-off Read Aloud runtime. This is technical evidence only; external human/device/SME evidence remains HOLD."
+      "meaning": "PASS: exact-source browser and question gates passed for release 2026.10.27.1 source 5b9fa9017aea7b709cee45371934cc778766dcf3; the current exact-head candidate carries the corrected screen-off Read Aloud runtime. This is technical evidence only; external human/device/SME evidence remains HOLD."
     },
     "externalHumanDevice": {
       "status": "hold",

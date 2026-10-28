@@ -2,14 +2,14 @@
 
 **STATUS: TECHNICAL CANDIDATE PASS — all seven independent external review streams remain HOLD.**
 
-The exact learner-runtime candidate is source `123655fb47fd675acd1655cef6be076070884531` with public-runtime fingerprint `sha256:7832de453664be543b8014515b1e9d514f7a64f10bd83530391578bbcf98710c`. Successful [Pre-merge Public Candidate run 40456366934](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40456366934) retained artifact **12712870428**, digest `sha256:cb34596b0cb5818be1a23ec27c1a12632152cf886411bbf7abd9bcca36aa1837`, expiry `2027-01-25T05:37:24Z`. The artifact is a technical candidate and does not establish external validation or production authority.
+The exact learner-runtime candidate is source `5b9fa9017aea7b709cee45371934cc778766dcf3` with public-runtime fingerprint `sha256:cf025b78498c9721ae9b63a9776ad92a42a73353077701239bf1aaf9b048ae4a`. Successful [Pre-merge Public Candidate run 40639986301](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40639986301) retained artifact **12795475194**, digest `sha256:3465b7b3181265c8c787d78a93b75b360ab554f4f46415bb80b269e9c3c6f29c`, expiry `2027-01-26T05:47:02Z`. The artifact is a technical candidate and does not establish external validation or production authority.
 
 ## Exact-source software checks
 
-- [Mobile Browser QA 40385223290](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40385223290) — passed Chromium visual regression on the approved baseline, substantive Chromium, WebKit, cross-browser and five 100-run reliability shards.
-- [Question Quality 50-Pass 40385223214](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40385223214) — passed.
-- [Read Aloud QA 40385223314](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40385223314) — passed.
-- [Combined Learn Book QA 40385223227](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40385223227) — passed in Chromium and WebKit.
+- [Mobile Browser QA 40639986384](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40639986384) — passed Chromium visual regression on the approved baseline, substantive Chromium, WebKit, cross-browser and five 100-run reliability shards.
+- [Question Quality 50-Pass 40639986406](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40639986406) — passed.
+- [Read Aloud QA 40639986409](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40639986409) — passed.
+- [Combined Learn Book QA 40639986351](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40639986351) — passed in Chromium and WebKit.
 
 ## Release-bound external reviews — all HOLD
 
