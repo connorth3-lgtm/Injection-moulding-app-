@@ -141,19 +141,19 @@
       "id": "BASF-INJECTION-PROBLEMS",
       "type": "manufacturer-technical-guide",
       "issuer": "BASF",
-      "title": "Injection Molding Troubleshooter",
-      "url": "https://plastics-rubber.basf.com/emea/en/performance_polymers/services/product_support_troubleshooting/injection_moulding_troubleshooter",
+      "title": "Injection-Molding Problems in Engineering Thermoplastics — Causes and Solutions",
+      "url": "https://download.basf.com/p1/8a8082587fd4b608017fd6631d5a24b1/en/Injection-Molding_Problems_in_Engineering_Thermoplastics_-_Causes_and_Solutions_Brochure_English.pdf?view=",
       "scope": "Manufacturer troubleshooting examples covering demoulding, cooling, venting and related process/tool interactions; recommendations are non-binding and application-dependent.",
-      "checked": "2026-09-14",
-      "currentState": "current-public-manufacturer-page"
+      "checked": "2026-10-29",
+      "currentState": "current-public-manufacturer-document"
     },
     {
       "id": "BASF-INJECTION-TROUBLESHOOTER",
       "type": "manufacturer-troubleshooting-guide",
       "issuer": "BASF",
-      "title": "Injection Molding Troubleshooter",
-      "url": "https://plastics-rubber.basf.com/emea/en/performance_polymers/services/product_support_troubleshooting/injection_moulding_troubleshooter",
-      "checked": "2026-09-14",
+      "title": "Injection-Molding Problems in Engineering Thermoplastics — Causes and Solutions",
+      "url": "https://download.basf.com/p1/8a8082587fd4b608017fd6631d5a24b1/en/Injection-Molding_Problems_in_Engineering_Thermoplastics_-_Causes_and_Solutions_Brochure_English.pdf?view=",
+      "checked": "2026-10-29",
       "state": "current-public",
       "scope": "Initial, non-binding troubleshooting guidance covering short shot, flash, sink marks, voids, moisture streaks, burning, weld lines, warpage and black specks."
     },
