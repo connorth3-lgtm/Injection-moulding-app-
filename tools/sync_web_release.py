@@ -74,6 +74,20 @@ def desired_files() -> dict[Path, str]:
         "pwa-shell RELEASE",
     )
 
+    read_aloud_path = ROOT / "read-aloud.js"
+    read_aloud = replace_once(
+        read_aloud_path.read_text(encoding="utf-8"),
+        r"^(\/\* MouldMaster Book Read Aloud — )\d{4}\.\d{2}\.\d{2}\.\d+$",
+        rf"\g<1>{web_release}",
+        "Read Aloud release header",
+    )
+    read_aloud = replace_once(
+        read_aloud,
+        r"^  const VERSION='[^']+';$",
+        f"  const VERSION='{web_release}';",
+        "Read Aloud VERSION",
+    )
+
     release_qa_path = ROOT / "qa_release.py"
     release_qa = replace_once(
         release_qa_path.read_text(encoding="utf-8"),
@@ -182,6 +196,7 @@ def desired_files() -> dict[Path, str]:
         worker_path: worker,
         index_path: index,
         shell_path: shell,
+        read_aloud_path: read_aloud,
         release_qa_path: release_qa,
         release_docs_qa_path: release_docs_qa,
         readme_path: readme,
