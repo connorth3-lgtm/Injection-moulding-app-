@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Retained release 2026.10.29.1 candidate ce0eb02ee1384a1c1f82f53a1592f7b4e32a3605 and artifact 12881515500 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom review remain pending.",
+  "boundary": "Retained release 2026.10.29.1 candidate ce0eb02ee1384a1c1f82f53a1592f7b4e32a3605 and artifact 12881515500 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom review remain pending. Real assistive-technology validation is tracked separately in data/accessibility-real-at-validation-v1.json and is not asserted by this contract.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,

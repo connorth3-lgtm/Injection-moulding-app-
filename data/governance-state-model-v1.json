@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "pass",
+    "technicalAutomation": "fail",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "pass",
-      "meaning": "PASS: release 2026.10.28.1 source d804c0bf934c663e20fa2d67e8095acbc892c2ad run 40654072293 artifact 12800439613 fingerprint sha256:93c890e757d7b1ac80528ab80258e2245b0d6ddfc133501689fc4eeec252242c identifies the retained exact-source software candidate; human, device and production authorization remain HOLD."
+      "status": "fail",
+      "meaning": "FAIL CLOSED: release 2026.10.29.1 candidate source ce0eb02ee1384a1c1f82f53a1592f7b4e32a3605, run 40836704510, artifact 12881515500, runtime fingerprint sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9 is retained, but exact-head technical quality gates have not passed. Human, device and production authorization remain HOLD."
     },
     "behavioralBrowser": {
-      "status": "pass",
-      "meaning": "PASS: release 2026.10.28.1 source d804c0bf934c663e20fa2d67e8095acbc892c2ad passed Mobile Browser QA and Question Quality 50-Pass on the exact candidate source."
+      "status": "fail",
+      "meaning": "FAIL CLOSED: release 2026.10.29.1 candidate source ce0eb02ee1384a1c1f82f53a1592f7b4e32a3605, run 40836704510, artifact 12881515500, runtime fingerprint sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9 is retained, but exact-head mobile and release quality gates have not passed. Human, device and production authorization remain HOLD."
     },
     "externalHumanDevice": {
       "status": "hold",
