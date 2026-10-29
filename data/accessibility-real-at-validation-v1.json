@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.28.1",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.28.1.md",
-  "sourceSha": "d804c0bf934c663e20fa2d67e8095acbc892c2ad",
-  "runtimeFingerprint": "sha256:93c890e757d7b1ac80528ab80258e2245b0d6ddfc133501689fc4eeec252242c",
+  "release": "2026.10.29.1",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.29.1.md",
+  "sourceSha": "ce0eb02ee1384a1c1f82f53a1592f7b4e32a3605",
+  "runtimeFingerprint": "sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.28.1 is bound to exact retained learner-runtime candidate d804c0bf934c663e20fa2d67e8095acbc892c2ad; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.29.1 is bound to retained learner-runtime candidate ce0eb02ee1384a1c1f82f53a1592f7b4e32a3605; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -310,11 +310,11 @@
     "sourceSha": "5b9fa9017aea7b709cee45371934cc778766dcf3",
     "runtimeFingerprint": "sha256:cf025b78498c9721ae9b63a9776ad92a42a73353077701239bf1aaf9b048ae4a"
   },
-  "technicalCandidateStatus": "pending-current-release-candidate",
+  "technicalCandidateStatus": "PENDING — exact-source candidate artifact 12881515500 is retained; exact-head quality gates are being re-run. Real NVDA and VoiceOver tasks remain pending.",
   "candidate": {
-    "release": "2026.10.28.1",
-    "sourceSha": "d804c0bf934c663e20fa2d67e8095acbc892c2ad",
-    "runtimeFingerprint": "sha256:93c890e757d7b1ac80528ab80258e2245b0d6ddfc133501689fc4eeec252242c"
+    "release": "2026.10.29.1",
+    "sourceSha": "ce0eb02ee1384a1c1f82f53a1592f7b4e32a3605",
+    "runtimeFingerprint": "sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9"
   },
   "supersededCandidate": {
     "release": "2026.10.22.2",
