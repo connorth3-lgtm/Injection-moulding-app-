@@ -175,7 +175,10 @@ sw_assets=set(re.findall(r"['\"](\./[^'\"]+)['\"]",sw))
 explicit_root={a[2:] for a in sw_assets if '/' not in a[2:]}
 packaged_root={Path(x[6:]).name for x in from_paths if isinstance(x,str) and x.startswith('../../') and '/' not in x[6:]}
 desktop_exclusions={'MouldMaster_Core_App.html'}
-missing_root=sorted(explicit_root-packaged_root-desktop_exclusions)
+# Pages deployment.json and pages-manifest.json are public provenance metadata fetched network-only; they are not desktop package resources.
+network_only_root={'deployment.json','pages-manifest.json'}
+require(network_only_root.issubset(explicit_root), 'desktop QA must see network-only Pages provenance assets in the worker contract')
+missing_root=sorted(explicit_root-network_only_root-packaged_root-desktop_exclusions)
 require(not missing_root,f"desktop extraResources missing service-worker root asset(s): {missing_root}")
 require(desktop_exclusions.isdisjoint(packaged_root),'legacy assembly routes must remain excluded from desktop resources')
 require('repair.html' in packaged_root,"repair.html must be integrity-packaged so the desktop server can fail closed while redirecting it to index.html")

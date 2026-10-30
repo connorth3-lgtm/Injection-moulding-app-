@@ -1,4 +1,4 @@
-# MouldMaster 2026.10.29.1 — combined Learn stages
+# MouldMaster 2026.10.30.1 — combined Learn stages
 
 **STATUS: TECHNICAL AUTOMATION PASS — the exact-source public artifact is retained; all seven independent external review streams remain HOLD.**
 
@@ -6,12 +6,12 @@ The retained exact-source software artifact is source fc16b59316464b5fc3f5b85d6c
 
 ## Exact-release review packets
 
-- Accessibility / real assistive technology: qa/ACCESSIBILITY_REAL_AT_2026.10.29.1.md — HOLD
-- Physical iOS/iPadOS and Android PWA: qa/PWA_PHYSICAL_DEVICE_2026.10.29.1.md — HOLD
-- Windows distribution: certification/WINDOWS_SIGNING_READINESS_2026.10.29.1.md — HOLD
-- Book SME: qa/BOOK_SME_REVIEW_2026.10.29.1.md — HOLD
-- Curriculum SME: qa/CURRICULUM_SME_REVIEW_2026.10.29.1.md — HOLD
-- Learner outcomes: qa/LEARNER_PILOT_2026.10.29.1.md — HOLD
-- NZQA/provider: qa/NZQA_EXTERNAL_VALIDATION_2026.10.29.1.md — HOLD
+- Accessibility / real assistive technology: qa/ACCESSIBILITY_REAL_AT_2026.10.30.1.md — HOLD
+- Physical iOS/iPadOS and Android PWA: qa/PWA_PHYSICAL_DEVICE_2026.10.30.1.md — HOLD
+- Windows distribution: certification/WINDOWS_SIGNING_READINESS_2026.10.30.1.md — HOLD
+- Book SME: qa/BOOK_SME_REVIEW_2026.10.30.1.md — HOLD
+- Curriculum SME: qa/CURRICULUM_SME_REVIEW_2026.10.30.1.md — HOLD
+- Learner outcomes: qa/LEARNER_PILOT_2026.10.30.1.md — HOLD
+- NZQA/provider: qa/NZQA_EXTERNAL_VALIDATION_2026.10.30.1.md — HOLD
 
 A non-production preview and successful software checks do not substitute for independent human, device, learner, SME, provider or production-site evidence.

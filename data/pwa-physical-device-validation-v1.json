@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Retained release 2026.10.29.1 candidate fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4 and artifact 12880769390 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom review remain pending. Real assistive-technology validation is tracked separately in data/accessibility-real-at-validation-v1.json and is not asserted by this contract.",
+  "boundary": "Retained release 2026.10.30.1 candidate fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4 and artifact 12880769390 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom review remain pending. Real assistive-technology validation is tracked separately in data/accessibility-real-at-validation-v1.json and is not asserted by this contract.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -41,9 +41,9 @@
     }
   },
   "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier.",
-  "release": "2026.10.29.1",
+  "release": "2026.10.30.1",
   "candidate": {
-    "release": "2026.10.29.1",
+    "release": "2026.10.30.1",
     "sourceSha": "fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4",
     "runtimeFingerprint": "sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9",
     "candidateRunId": 40838248759,
@@ -65,7 +65,7 @@
     "artifactExpiresAt": "2027-01-26T05:47:02Z"
   },
   "currentCandidate": null,
-  "packet": "qa/PWA_PHYSICAL_DEVICE_2026.10.29.1.md",
+  "packet": "qa/PWA_PHYSICAL_DEVICE_2026.10.30.1.md",
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
