@@ -346,11 +346,11 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "PASS: release 2026.10.28.1 source d804c0bf934c663e20fa2d67e8095acbc892c2ad run 40654072293 artifact 12800439613 fingerprint sha256:93c890e757d7b1ac80528ab80258e2245b0d6ddfc133501689fc4eeec252242c identifies the retained exact-source software candidate; human, device and production authorization remain HOLD."
+      "meaning": "PASS: release 2026.10.29.1 source fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4 run 40838248759 artifact 12880769390 fingerprint sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9 identifies the retained exact-source software candidate; human, device and production authorization remain HOLD."
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "PASS: release 2026.10.28.1 source d804c0bf934c663e20fa2d67e8095acbc892c2ad passed Mobile Browser QA and Question Quality 50-Pass on the exact candidate source."
+      "meaning": "PASS: release 2026.10.29.1 source fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4 passed Mobile Browser QA and Question Quality 50-Pass on the exact candidate source."
     },
     "externalHumanDevice": {
       "status": "hold",

@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.28.1",
+  "release": "2026.10.29.1",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.28.1.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.29.1.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
   "candidate": {
-    "release": "2026.10.28.1",
-    "sourceSha": "d804c0bf934c663e20fa2d67e8095acbc892c2ad",
-    "runtimeFingerprint": "sha256:93c890e757d7b1ac80528ab80258e2245b0d6ddfc133501689fc4eeec252242c"
+    "release": "2026.10.29.1",
+    "sourceSha": "fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4",
+    "runtimeFingerprint": "sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9"
   },
-  "boundary": "Release 2026.10.28.1 technical candidate d804c0bf934c663e20fa2d67e8095acbc892c2ad does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
+  "boundary": "Candidate fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4 and public-runtime fingerprint sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9 identify the current release artifact only. They do not establish provider approval, NZQA accreditation, consent-to-assess or moderation evidence. All provider gates remain HOLD.",
   "requiredGates": [
     {
       "id": "G1-provider",

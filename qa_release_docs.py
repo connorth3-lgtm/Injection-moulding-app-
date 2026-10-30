@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
-  'web_release':'2026.10.28.1',
+  'web_release':'2026.10.29.1',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -289,7 +289,7 @@ need('human' in accessibility_contract.get('boundary','').lower(),
 # Sharing the hosted preview is a separate fail-closed release operation.
 # The local check is fast and offline; the live URL check is operator-only.
 # Exercise the missing/malformed/stale candidate distinctions before the live
-# handoff contract (which correctly remains red while webCandidate is unbound).
+# handoff contract (which now verifies the retained exact-source webCandidate).
 subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'tests',
                 '-p', 'test_tester_handoff_candidate_boundaries.py', '-v'],
                cwd=ROOT, check=True)
