@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Retained release 2026.10.30.2 candidate 82cdf5dba09ae7781d19d2d92821ba63de8cdae0 and artifact 12962507967 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom review remain pending. Real assistive-technology validation is tracked separately in data/accessibility-real-at-validation-v1.json and is not asserted by this contract.",
+  "boundary": "Retained release 2026.10.30.2 candidate 11855c919abafd23bf7ba1ec4f9bca9b77550fe1 and artifact 12965302230 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom review remain pending. Real assistive-technology validation is tracked separately in data/accessibility-real-at-validation-v1.json and is not asserted by this contract.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -44,14 +44,14 @@
   "release": "2026.10.30.2",
   "candidate": {
     "release": "2026.10.30.2",
-    "sourceSha": "82cdf5dba09ae7781d19d2d92821ba63de8cdae0",
+    "sourceSha": "11855c919abafd23bf7ba1ec4f9bca9b77550fe1",
     "runtimeFingerprint": "sha256:23d621f253cb888064e366f67c606771632b2ebd546fdcf5cf9bc1603cea17f8",
-    "candidateRunId": 41023659190,
+    "candidateRunId": 41030274355,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 12962507967,
-    "artifactName": "physical-pwa-candidate-82cdf5dba09ae7781d19d2d92821ba63de8cdae0",
-    "artifactDigest": "sha256:9d141e201eb03779abaa03ff1965f42e3e6e5641dcdc4aac4ed3966e79fc210b",
-    "artifactExpiresAt": "2027-01-28T08:01:13Z"
+    "artifactId": 12965302230,
+    "artifactName": "physical-pwa-candidate-11855c919abafd23bf7ba1ec4f9bca9b77550fe1",
+    "artifactDigest": "sha256:d2d5ab3262b22f0ea3ffbafadf8b2a4e473177fa0c7353b62d6b6ff00db3da03",
+    "artifactExpiresAt": "2027-01-28T09:00:28Z"
   },
   "previousCandidate": {
     "release": "2026.10.29.1",
