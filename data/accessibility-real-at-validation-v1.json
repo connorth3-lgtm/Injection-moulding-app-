@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.30.1",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.30.1.md",
-  "sourceSha": "71994a3747bb34c67af3e5d8a0c6d024a131a4cd",
-  "runtimeFingerprint": "sha256:d46705fd1fbbed0ffc6168f78893a1ef719d4cf86f06fb11e1484cb415bb350a",
+  "release": "2026.10.30.2",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.10.30.2.md",
+  "sourceSha": "11855c919abafd23bf7ba1ec4f9bca9b77550fe1",
+  "runtimeFingerprint": "sha256:23d621f253cb888064e366f67c606771632b2ebd546fdcf5cf9bc1603cea17f8",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.30.1 is bound to retained learner-runtime candidate 71994a3747bb34c67af3e5d8a0c6d024a131a4cd; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.10.30.2 is bound to retained learner-runtime candidate 11855c919abafd23bf7ba1ec4f9bca9b77550fe1; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -310,11 +310,11 @@
     "sourceSha": "fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4",
     "runtimeFingerprint": "sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9"
   },
-  "technicalCandidateStatus": "PASS — exact-source candidate run 41013734586, artifact 12958289607, and runtime fingerprint sha256:d46705fd1fbbed0ffc6168f78893a1ef719d4cf86f06fb11e1484cb415bb350a passed exact-head quality gates. Real NVDA and VoiceOver tasks remain pending.",
+  "technicalCandidateStatus": "PASS — exact-source candidate run 41030274355, artifact 12965302230, and runtime fingerprint sha256:23d621f253cb888064e366f67c606771632b2ebd546fdcf5cf9bc1603cea17f8 passed exact-head quality gates. Real NVDA and VoiceOver tasks remain pending.",
   "candidate": {
-    "release": "2026.10.30.1",
-    "sourceSha": "71994a3747bb34c67af3e5d8a0c6d024a131a4cd",
-    "runtimeFingerprint": "sha256:d46705fd1fbbed0ffc6168f78893a1ef719d4cf86f06fb11e1484cb415bb350a"
+    "release": "2026.10.30.2",
+    "sourceSha": "11855c919abafd23bf7ba1ec4f9bca9b77550fe1",
+    "runtimeFingerprint": "sha256:23d621f253cb888064e366f67c606771632b2ebd546fdcf5cf9bc1603cea17f8"
   },
   "supersededCandidate": {
     "release": "2026.10.22.2",

@@ -101,7 +101,7 @@ test('family-first Materials groups all PP grades in one illustrated folder with
   await expect(familyCards).toHaveCount(counts.names.length);
   await expect(root.locator('[data-mm-all-material-family]')).toHaveValue('');
   await root.locator('[data-mm-material-all-records]').click();
-  await expect(root.locator('[data-mm-all-material-status]')).toContainText('341 matching material records');
+  await expect(root.locator('[data-mm-all-material-status]')).toContainText('349 matching material records');
   await expect(results.locator('[data-mm-material-index-result]')).not.toHaveCount(0);
   await root.locator('[data-mm-material-family-back]').click();
   await root.locator('[data-mm-all-material-query]').fill('GP5206F');

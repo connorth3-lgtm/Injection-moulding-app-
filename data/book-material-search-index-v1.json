@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.04.3",
+  "release": "2026.10.30.2",
   "purpose": "lightweight Book material search routing only; technical values remain in governed catalogue/regional evidence",
   "sourceCounts": {
-    "canonicalExactGrades": 260,
+    "canonicalExactGrades": 268,
     "regionalEvidenceRows": 284,
-    "total": 544
+    "total": 552
   },
   "entries": [
     {
@@ -1306,6 +1306,46 @@
     {
       "id": "mat-victrex-peek-450gl30",
       "search": "victrex victrex peek 450gl30 peek",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-e700",
+      "search": "hyosung chemical poketone e700 polyketone",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-m330",
+      "search": "hyosung chemical poketone m330 m330f polyketone",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-m410",
+      "search": "hyosung chemical poketone m410 m410f s m410fs polyketone",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-m630",
+      "search": "hyosung chemical poketone m630 m630f polyketone",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-m640",
+      "search": "hyosung chemical poketone m640 m640a polyketone",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-m710",
+      "search": "hyosung chemical poketone m710 m710f polyketone",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-m730",
+      "search": "hyosung chemical poketone m730 m730f polyketone",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-m930",
+      "search": "hyosung chemical poketone m930 m930f polyketone",
       "kind": "canonical"
     },
     {

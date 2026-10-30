@@ -23925,16 +23925,767 @@
         "reviewer": "primary-source-web-review",
         "notes": "Current Victrex exact-grade data reviewed. Shrinkage remains context-only for comparison because part/tool/process dependence is explicitly emphasized; only fully conditioned MFR is comparison-ready."
       }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-hyosung-poketone-e700",
+      "manufacturer": {
+        "id": "mfr-hyosung-chemical",
+        "name": "Hyosung Chemical",
+        "country": "South Korea",
+        "website": "https://www.hyosungchemical.com/"
+      },
+      "brand": "POKETONE",
+      "grade": "E700",
+      "aliases": [],
+      "polymer": {
+        "family": "polyketone",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Barrier-film grade for EVOH blend; the grade-level TDS publishes MFI at 220°C/2.16 kg and melting temperature."
+      },
+      "properties": [
+        {
+          "id": "obs-hyosung-poketone-e700-density-tds",
+          "property": "Density",
+          "value": 1.18,
+          "unit": "g/cm³",
+          "testMethod": "ISO 1183",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-e700-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Hyosung exact-grade typical value; not a specification."
+        },
+        {
+          "id": "obs-hyosung-poketone-e700-mfi-tds",
+          "property": "Melt Flow Rate",
+          "value": 6,
+          "unit": "g/10 min",
+          "testMethod": "ASTM D1238 (Melt flow index 220°C/2.16 kg)",
+          "temperatureC": 220,
+          "loadKg": 2.16,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-e700-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": true,
+          "limitations": "Hyosung exact-grade typical value; compare only with the same 220°C/2.16 kg condition."
+        },
+        {
+          "id": "obs-hyosung-poketone-e700-melting-tds",
+          "property": "Melting Temperature",
+          "value": 197,
+          "unit": "°C",
+          "testMethod": "ASTM D3418 / ISO 11357",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-e700-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Material thermal property, not a processing setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-hyosung-poketone-e700-tds-20261030",
+          "publisher": "Hyosung Chemical",
+          "title": "POKETONE® E700 Technical Data Sheet",
+          "url": "https://www.hyosungchemical.com/resources/front/files/pok_tds/E700_TDS.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": "2022-10-19",
+          "retrievedAt": "2026-10-30"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-10-30T00:00:00Z",
+        "reviewedAt": "2026-10-30T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Hyosung Chemical grade-level TDS reviewed at https://www.hyosungchemical.com/resources/front/files/pok_tds/E700_TDS.pdf. Exact MFI test condition is captured; no generic production recipe is inferred. Portfolio context remains in the earlier staging lineage dataset."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-hyosung-poketone-m330",
+      "manufacturer": {
+        "id": "mfr-hyosung-chemical",
+        "name": "Hyosung Chemical",
+        "country": "South Korea",
+        "website": "https://www.hyosungchemical.com/"
+      },
+      "brand": "POKETONE",
+      "grade": "M330",
+      "aliases": [
+        "M330F"
+      ],
+      "polymer": {
+        "family": "polyketone",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "High-flow injection-moulding grade; the grade-level TDS publishes MFI at 240°C/2.16 kg and melting temperature."
+      },
+      "properties": [
+        {
+          "id": "obs-hyosung-poketone-m330-density-tds",
+          "property": "Density",
+          "value": 1.24,
+          "unit": "g/cm³",
+          "testMethod": "ISO 1183",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m330-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Hyosung exact-grade typical value; not a specification."
+        },
+        {
+          "id": "obs-hyosung-poketone-m330-mfi-tds",
+          "property": "Melt Flow Rate",
+          "value": 60,
+          "unit": "g/10 min",
+          "testMethod": "ASTM D1238 (Melt flow index 240°C/2.16 kg)",
+          "temperatureC": 240,
+          "loadKg": 2.16,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m330-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": true,
+          "limitations": "Hyosung exact-grade typical value; compare only with the same 240°C/2.16 kg condition."
+        },
+        {
+          "id": "obs-hyosung-poketone-m330-melting-tds",
+          "property": "Melting Temperature",
+          "value": 222,
+          "unit": "°C",
+          "testMethod": "ASTM D3418 / ISO 11357",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m330-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Material thermal property, not a processing setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-hyosung-poketone-m330-tds-20261030",
+          "publisher": "Hyosung Chemical",
+          "title": "POKETONE® M330F Technical Data Sheet",
+          "url": "https://www.hyosungchemical.com/resources/front/files/pok_tds/M330F_TDS.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": "2022-10-19",
+          "retrievedAt": "2026-10-30"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-10-30T00:00:00Z",
+        "reviewedAt": "2026-10-30T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Hyosung Chemical grade-level TDS reviewed at https://www.hyosungchemical.com/resources/front/files/pok_tds/M330F_TDS.pdf. Exact MFI test condition is captured; no generic production recipe is inferred. Portfolio context remains in the earlier staging lineage dataset."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-hyosung-poketone-m410",
+      "manufacturer": {
+        "id": "mfr-hyosung-chemical",
+        "name": "Hyosung Chemical",
+        "country": "South Korea",
+        "website": "https://www.hyosungchemical.com/"
+      },
+      "brand": "POKETONE",
+      "grade": "M410",
+      "aliases": [
+        "M410F-S",
+        "M410FS"
+      ],
+      "polymer": {
+        "family": "polyketone",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Medium-flow injection-moulding/monofilament extrusion grade; the grade-level TDS publishes MFI at 220°C/2.16 kg and melting temperature."
+      },
+      "properties": [
+        {
+          "id": "obs-hyosung-poketone-m410-density-tds",
+          "property": "Density",
+          "value": 1.22,
+          "unit": "g/cm³",
+          "testMethod": "ISO 1183",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m410-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Hyosung exact-grade typical value; not a specification."
+        },
+        {
+          "id": "obs-hyosung-poketone-m410-mfi-tds",
+          "property": "Melt Flow Rate",
+          "value": 35,
+          "unit": "g/10 min",
+          "testMethod": "ASTM D1238 (Melt flow index 220°C/2.16 kg)",
+          "temperatureC": 220,
+          "loadKg": 2.16,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m410-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": true,
+          "limitations": "Hyosung exact-grade typical value; compare only with the same 220°C/2.16 kg condition."
+        },
+        {
+          "id": "obs-hyosung-poketone-m410-melting-tds",
+          "property": "Melting Temperature",
+          "value": 197,
+          "unit": "°C",
+          "testMethod": "ASTM D3418 / ISO 11357",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m410-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Material thermal property, not a processing setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-hyosung-poketone-m410-tds-20261030",
+          "publisher": "Hyosung Chemical",
+          "title": "POKETONE® M410F-S Technical Data Sheet",
+          "url": "https://www.hyosungchemical.com/resources/front/files/pok_tds/M410FS_TDS.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": "2022-10-19",
+          "retrievedAt": "2026-10-30"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-10-30T00:00:00Z",
+        "reviewedAt": "2026-10-30T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Hyosung Chemical grade-level TDS reviewed at https://www.hyosungchemical.com/resources/front/files/pok_tds/M410FS_TDS.pdf. Exact MFI test condition is captured; no generic production recipe is inferred. Portfolio context remains in the earlier staging lineage dataset."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-hyosung-poketone-m630",
+      "manufacturer": {
+        "id": "mfr-hyosung-chemical",
+        "name": "Hyosung Chemical",
+        "country": "South Korea",
+        "website": "https://www.hyosungchemical.com/"
+      },
+      "brand": "POKETONE",
+      "grade": "M630",
+      "aliases": [
+        "M630F"
+      ],
+      "polymer": {
+        "family": "polyketone",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "General-purpose/high-impact injection-moulding grade; the grade-level TDS publishes MFI at 240°C/2.16 kg and melting temperature."
+      },
+      "properties": [
+        {
+          "id": "obs-hyosung-poketone-m630-density-tds",
+          "property": "Density",
+          "value": 1.24,
+          "unit": "g/cm³",
+          "testMethod": "ISO 1183",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m630-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Hyosung exact-grade typical value; not a specification."
+        },
+        {
+          "id": "obs-hyosung-poketone-m630-mfi-tds",
+          "property": "Melt Flow Rate",
+          "value": 6,
+          "unit": "g/10 min",
+          "testMethod": "ASTM D1238 (Melt flow index 240°C/2.16 kg)",
+          "temperatureC": 240,
+          "loadKg": 2.16,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m630-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": true,
+          "limitations": "Hyosung exact-grade typical value; compare only with the same 240°C/2.16 kg condition."
+        },
+        {
+          "id": "obs-hyosung-poketone-m630-melting-tds",
+          "property": "Melting Temperature",
+          "value": 222,
+          "unit": "°C",
+          "testMethod": "ASTM D3418 / ISO 11357",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m630-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Material thermal property, not a processing setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-hyosung-poketone-m630-tds-20261030",
+          "publisher": "Hyosung Chemical",
+          "title": "POKETONE® M630F Technical Data Sheet",
+          "url": "https://www.hyosungchemical.com/resources/front/files/pok_tds/M630F_TDS.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": "2022-10-19",
+          "retrievedAt": "2026-10-30"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-10-30T00:00:00Z",
+        "reviewedAt": "2026-10-30T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Hyosung Chemical grade-level TDS reviewed at https://www.hyosungchemical.com/resources/front/files/pok_tds/M630F_TDS.pdf. Exact MFI test condition is captured; no generic production recipe is inferred. Portfolio context remains in the earlier staging lineage dataset."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-hyosung-poketone-m640",
+      "manufacturer": {
+        "id": "mfr-hyosung-chemical",
+        "name": "Hyosung Chemical",
+        "country": "South Korea",
+        "website": "https://www.hyosungchemical.com/"
+      },
+      "brand": "POKETONE",
+      "grade": "M640",
+      "aliases": [
+        "M640A"
+      ],
+      "polymer": {
+        "family": "polyketone",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Thermal-resistant/high-HDT extrusion/injection grade; the grade-level TDS publishes MFI at 255°C/2.16 kg and melting temperature."
+      },
+      "properties": [
+        {
+          "id": "obs-hyosung-poketone-m640-density-tds",
+          "property": "Density",
+          "value": 1.24,
+          "unit": "g/cm³",
+          "testMethod": "ISO 1183",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m640-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Hyosung exact-grade typical value; not a specification."
+        },
+        {
+          "id": "obs-hyosung-poketone-m640-mfi-tds",
+          "property": "Melt Flow Rate",
+          "value": 6,
+          "unit": "g/10 min",
+          "testMethod": "ASTM D1238 (Melt flow index 255°C/2.16 kg)",
+          "temperatureC": 255,
+          "loadKg": 2.16,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m640-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": true,
+          "limitations": "Hyosung exact-grade typical value; compare only with the same 255°C/2.16 kg condition."
+        },
+        {
+          "id": "obs-hyosung-poketone-m640-melting-tds",
+          "property": "Melting Temperature",
+          "value": 235,
+          "unit": "°C",
+          "testMethod": "ASTM D3418 / ISO 11357",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m640-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Material thermal property, not a processing setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-hyosung-poketone-m640-tds-20261030",
+          "publisher": "Hyosung Chemical",
+          "title": "POKETONE® M640A Technical Data Sheet",
+          "url": "https://www.hyosungchemical.com/resources/front/files/pok_tds/M640A_TDS.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": "2022-12-28",
+          "retrievedAt": "2026-10-30"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-10-30T00:00:00Z",
+        "reviewedAt": "2026-10-30T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Hyosung Chemical grade-level TDS reviewed at https://www.hyosungchemical.com/resources/front/files/pok_tds/M640A_TDS.pdf. Exact MFI test condition is captured; no generic production recipe is inferred. Portfolio context remains in the earlier staging lineage dataset."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-hyosung-poketone-m710",
+      "manufacturer": {
+        "id": "mfr-hyosung-chemical",
+        "name": "Hyosung Chemical",
+        "country": "South Korea",
+        "website": "https://www.hyosungchemical.com/"
+      },
+      "brand": "POKETONE",
+      "grade": "M710",
+      "aliases": [
+        "M710F"
+      ],
+      "polymer": {
+        "family": "polyketone",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Low-flow, low-melting-point extrusion grade; the grade-level TDS publishes MFI at 220°C/2.16 kg and melting temperature."
+      },
+      "properties": [
+        {
+          "id": "obs-hyosung-poketone-m710-density-tds",
+          "property": "Density",
+          "value": 1.22,
+          "unit": "g/cm³",
+          "testMethod": "ISO 1183",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m710-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Hyosung exact-grade typical value; not a specification."
+        },
+        {
+          "id": "obs-hyosung-poketone-m710-mfi-tds",
+          "property": "Melt Flow Rate",
+          "value": 3,
+          "unit": "g/10 min",
+          "testMethod": "ASTM D1238 (Melt flow index 220°C/2.16 kg)",
+          "temperatureC": 220,
+          "loadKg": 2.16,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m710-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": true,
+          "limitations": "Hyosung exact-grade typical value; compare only with the same 220°C/2.16 kg condition."
+        },
+        {
+          "id": "obs-hyosung-poketone-m710-melting-tds",
+          "property": "Melting Temperature",
+          "value": 197,
+          "unit": "°C",
+          "testMethod": "ASTM D3418 / ISO 11357",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m710-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Material thermal property, not a processing setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-hyosung-poketone-m710-tds-20261030",
+          "publisher": "Hyosung Chemical",
+          "title": "POKETONE® M710F Technical Data Sheet",
+          "url": "https://www.hyosungchemical.com/resources/front/files/pok_tds/M710F_TDS.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": "2022-10-19",
+          "retrievedAt": "2026-10-30"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-10-30T00:00:00Z",
+        "reviewedAt": "2026-10-30T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Hyosung Chemical grade-level TDS reviewed at https://www.hyosungchemical.com/resources/front/files/pok_tds/M710F_TDS.pdf. Exact MFI test condition is captured; no generic production recipe is inferred. Portfolio context remains in the earlier staging lineage dataset."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-hyosung-poketone-m730",
+      "manufacturer": {
+        "id": "mfr-hyosung-chemical",
+        "name": "Hyosung Chemical",
+        "country": "South Korea",
+        "website": "https://www.hyosungchemical.com/"
+      },
+      "brand": "POKETONE",
+      "grade": "M730",
+      "aliases": [
+        "M730F"
+      ],
+      "polymer": {
+        "family": "polyketone",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Low-flow extrusion grade; the grade-level TDS publishes MFI at 240°C/2.16 kg and melting temperature."
+      },
+      "properties": [
+        {
+          "id": "obs-hyosung-poketone-m730-density-tds",
+          "property": "Density",
+          "value": 1.24,
+          "unit": "g/cm³",
+          "testMethod": "ISO 1183",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m730-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Hyosung exact-grade typical value; not a specification."
+        },
+        {
+          "id": "obs-hyosung-poketone-m730-mfi-tds",
+          "property": "Melt Flow Rate",
+          "value": 3,
+          "unit": "g/10 min",
+          "testMethod": "ASTM D1238 (Melt flow index 240°C/2.16 kg)",
+          "temperatureC": 240,
+          "loadKg": 2.16,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m730-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": true,
+          "limitations": "Hyosung exact-grade typical value; compare only with the same 240°C/2.16 kg condition."
+        },
+        {
+          "id": "obs-hyosung-poketone-m730-melting-tds",
+          "property": "Melting Temperature",
+          "value": 222,
+          "unit": "°C",
+          "testMethod": "ASTM D3418 / ISO 11357",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m730-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Material thermal property, not a processing setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-hyosung-poketone-m730-tds-20261030",
+          "publisher": "Hyosung Chemical",
+          "title": "POKETONE® M730F Technical Data Sheet",
+          "url": "https://www.hyosungchemical.com/resources/front/files/pok_tds/M730F_TDS.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": "2022-10-19",
+          "retrievedAt": "2026-10-30"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-10-30T00:00:00Z",
+        "reviewedAt": "2026-10-30T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Hyosung Chemical grade-level TDS reviewed at https://www.hyosungchemical.com/resources/front/files/pok_tds/M730F_TDS.pdf. Exact MFI test condition is captured; no generic production recipe is inferred. Portfolio context remains in the earlier staging lineage dataset."
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "id": "mat-hyosung-poketone-m930",
+      "manufacturer": {
+        "id": "mfr-hyosung-chemical",
+        "name": "Hyosung Chemical",
+        "country": "South Korea",
+        "website": "https://www.hyosungchemical.com/"
+      },
+      "brand": "POKETONE",
+      "grade": "M930",
+      "aliases": [
+        "M930F"
+      ],
+      "polymer": {
+        "family": "polyketone",
+        "morphology": "semi-crystalline"
+      },
+      "composition": {
+        "notes": "Advanced high-flow injection-moulding grade; the grade-level TDS publishes MFI at 240°C/2.16 kg and melting temperature."
+      },
+      "properties": [
+        {
+          "id": "obs-hyosung-poketone-m930-density-tds",
+          "property": "Density",
+          "value": 1.24,
+          "unit": "g/cm³",
+          "testMethod": "ISO 1183",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m930-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Hyosung exact-grade typical value; not a specification."
+        },
+        {
+          "id": "obs-hyosung-poketone-m930-mfi-tds",
+          "property": "Melt Flow Rate",
+          "value": 200,
+          "unit": "g/10 min",
+          "testMethod": "ASTM D1238 (Melt flow index 240°C/2.16 kg)",
+          "temperatureC": 240,
+          "loadKg": 2.16,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m930-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": true,
+          "limitations": "Hyosung exact-grade typical value; compare only with the same 240°C/2.16 kg condition."
+        },
+        {
+          "id": "obs-hyosung-poketone-m930-melting-tds",
+          "property": "Melting Temperature",
+          "value": 222,
+          "unit": "°C",
+          "testMethod": "ASTM D3418 / ISO 11357",
+          "temperatureC": null,
+          "loadKg": null,
+          "specimen": null,
+          "direction": "not-applicable",
+          "sourceId": "src-hyosung-poketone-m930-tds-20261030",
+          "sourcePage": "grade-level technical data",
+          "comparisonReady": false,
+          "limitations": "Material thermal property, not a processing setpoint."
+        }
+      ],
+      "processing": [],
+      "approvals": [],
+      "lifecycle": {
+        "status": "unknown",
+        "checkedAt": "2026-09-29"
+      },
+      "sources": [
+        {
+          "id": "src-hyosung-poketone-m930-tds-20261030",
+          "publisher": "Hyosung Chemical",
+          "title": "POKETONE® M930F Technical Data Sheet",
+          "url": "https://www.hyosungchemical.com/resources/front/files/pok_tds/M930F_TDS.pdf",
+          "kind": "manufacturer-datasheet",
+          "revision": null,
+          "documentDate": "2022-10-19",
+          "retrievedAt": "2026-10-30"
+        }
+      ],
+      "provenance": {
+        "stage": "validated",
+        "ingestedAt": "2026-10-30T00:00:00Z",
+        "reviewedAt": "2026-10-30T00:00:00Z",
+        "reviewer": "primary-source-web-review",
+        "notes": "Current Hyosung Chemical grade-level TDS reviewed at https://www.hyosungchemical.com/resources/front/files/pok_tds/M930F_TDS.pdf. Exact MFI test condition is captured; no generic production recipe is inferred. Portfolio context remains in the earlier staging lineage dataset."
+      }
     }
   ],
   "statistics": {
-    "exactGrades": 260,
+    "exactGrades": 268,
     "manufacturers": 28,
     "countries": 13,
-    "polymerFamilies": 32,
-    "propertyObservations": 536,
-    "comparisonReadyObservations": 201,
+    "polymerFamilies": 33,
+    "propertyObservations": 560,
+    "comparisonReadyObservations": 209,
     "processingObservations": 225,
-    "primarySourceGrades": 256
+    "primarySourceGrades": 264
   }
 }
