@@ -444,7 +444,7 @@ test('Book Materials chapter exposes the complete governed material datasets wit
   const atlas=page.locator('[data-mm-book-material-atlas]');
   await expect(atlas).toBeVisible();
   await expect(atlas).toContainText('Complete Material Data Atlas');
-  await expect(atlas).toContainText('260 canonical exact grades');
+  await expect(atlas).toContainText('268 canonical exact grades');
   await expect(atlas).toContainText('all 284 Asia/Australia/New Zealand evidence rows');
   await expect(atlas).toContainText('excluded from source-reviewed listen-all');
 
@@ -456,7 +456,7 @@ test('Book Materials chapter exposes the complete governed material datasets wit
   await canonical.locator(':scope > summary').click();
   await expect(canonical.locator('[data-mm-book-catalog-grade]')).toHaveCount(24);
   const canonicalMore=canonical.locator('[data-mm-book-material-more="catalog"]');
-  await expect(canonicalMore).toContainText('24/260 shown');
+  await expect(canonicalMore).toContainText('24/268 shown');
   await canonicalMore.click();
   await expect(canonical.locator('[data-mm-book-catalog-grade]')).toHaveCount(48);
   const firstGrade=canonical.locator('[data-mm-book-catalog-grade]').first();

@@ -274,13 +274,13 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     atlas = fetch_json(candidate, MATERIAL_ATLAS)
     if atlas.get("schemaVersion") != 2 or atlas.get("bookId") != "mouldmaster-book" or atlas.get("status") != "technical-review-material-atlas":
         raise AssertionError("live Book material atlas identity mismatch")
-    if (atlas.get("canonicalCatalog") or {}).get("gradeCount") != 260:
-        raise AssertionError("live Book material atlas must declare all 260 canonical grades")
+    if (atlas.get("canonicalCatalog") or {}).get("gradeCount") != 268:
+        raise AssertionError("live Book material atlas must declare all 268 canonical grades")
     if (atlas.get("regionalEvidence") or {}).get("recordCount") != 284:
         raise AssertionError("live Book material atlas must declare all 284 regional evidence rows")
     catalog = fetch_json(candidate, MATERIAL_CATALOG)
     grades = catalog.get("grades")
-    if catalog.get("status") != "validated" or not isinstance(grades, list) or len(grades) != 260:
+    if catalog.get("status") != "validated" or not isinstance(grades, list) or len(grades) != 268:
         raise AssertionError("live canonical material catalogue coverage mismatch")
     regional = fetch_json(candidate, MATERIAL_REGIONAL)
     rows = regional.get("records")
@@ -297,7 +297,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
     atlas_auth = auth.get("materialAtlasAuthorization")
     if not isinstance(atlas_auth, dict) or atlas_auth.get("status") != "authorized-technical-review-appendix":
         raise AssertionError("live Book material atlas authorization is missing")
-    if atlas_auth.get("canonicalGradeCount") != 260 or atlas_auth.get("regionalEvidenceRowCount") != 284 or atlas_auth.get("independentSmeStatus") != "hold":
+    if atlas_auth.get("canonicalGradeCount") != 268 or atlas_auth.get("regionalEvidenceRowCount") != 284 or atlas_auth.get("independentSmeStatus") != "hold":
         raise AssertionError("live Book material atlas authorization counts/boundary drifted")
 
     sme = fetch_json(candidate, SME)
@@ -384,7 +384,7 @@ def verify_once(base_url: str, candidate_path: str, expected_release: str | None
         "8 parts / 46 chapters; authorization 116 supported / 21 scoped-qualified / 0 hold / 0 conflict; "
         f"Book content release {worked_release}; independent SME contract status={sme_status!r}, approved={sme_approved}/{sme_total}; "
         "27 byte-authorized worked cases, 25 governed engineering diagrams and 14 enrichment sections are covered by the SME HOLD; "
-        "the technical-review material reference exposes 260 canonical grades plus all 284 regional evidence rows and is excluded from listen-all; "
+        "the technical-review material reference exposes 268 canonical grades plus all 284 regional evidence rows and is excluded from listen-all; "
         "authored drafts remain non-self-promoting; Read/Listen shared-runtime markers are present."
     )
 

@@ -151,8 +151,8 @@ need('./src/domains/learning/book-data/book-material-search-index-v1.json' in sw
 material_catalog = json.loads(MATERIAL_CATALOG_SOURCE.read_text(encoding='utf-8'))
 material_regional = json.loads(MATERIAL_REGIONAL_SOURCE.read_text(encoding='utf-8'))
 material_search_index = json.loads(MATERIAL_SEARCH_INDEX_SOURCE.read_text(encoding='utf-8'))
-need(material_search_index.get('schemaVersion') == 1 and material_search_index.get('release') == '2026.10.04.3', 'Book material search index identity drift')
-need(material_search_index.get('sourceCounts') == {'canonicalExactGrades':260,'regionalEvidenceRows':284,'total':544}, 'Book material search index source-count drift')
+need(material_search_index.get('schemaVersion') == 1 and material_search_index.get('release') == '2026.10.30.2', 'Book material search index identity drift')
+need(material_search_index.get('sourceCounts') == {'canonicalExactGrades':268,'regionalEvidenceRows':284,'total':552}, 'Book material search index source-count drift')
 expected_search_entries = []
 for grade in material_catalog.get('grades', []):
     expected_search_entries.append({
@@ -179,7 +179,7 @@ for index, row in enumerate(material_regional.get('records', []), start=1):
         ] if x)),
         'kind': 'regional',
     })
-need(len(expected_search_entries) == 544, 'Book material search source coverage drift')
+need(len(expected_search_entries) == 552, 'Book material search source coverage drift')
 need(material_search_index.get('entries') == expected_search_entries, 'Book material search index drifted from canonical catalogue/regional evidence sources')
 byte_contract = authorization.get('runtimeIntegrity') or {}
 need(byte_contract.get('algorithm') == 'git-blob-sha1', 'Book runtime integrity algorithm missing')
@@ -215,7 +215,7 @@ need("void ensureManifest().catch(()=>{})" in book_runtime, 'Book open must cons
 need("retry.dataset.mmBookRetry='1'" in book_runtime and "Retry governed Book load" in book_runtime and "void ensureManifest().catch(()=>{}).finally" in book_runtime, 'Book fail-closed state must offer a governed retry that re-runs exact manifest/authorization verification')
 need("async function coldMaterialSearchTerms()" in book_runtime and "verifiedJson(MATERIAL_SEARCH_INDEX_PATH,MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1)" in book_runtime, 'Book cold material discovery must use the exact-byte-pinned lightweight search index')
 need("async function coldMaterialHit(query)" in book_runtime, 'Book global search must support cold canonical and regional material discovery')
-need("counts.canonicalExactGrades!==260" in book_runtime and "counts.regionalEvidenceRows!==284" in book_runtime and "counts.total!==544" in book_runtime, 'Book cold search index must fail closed on coverage drift')
+need("counts.canonicalExactGrades!==268" in book_runtime and "counts.regionalEvidenceRows!==284" in book_runtime and "counts.total!==552" in book_runtime, 'Book cold search index must fail closed on coverage drift')
 need("String(input.value||'').trim().toLowerCase()!==q" in book_runtime, 'Book async global search must reject stale query results')
 need("function bindBookSearchInput()" in book_runtime and "event.target?.id==='globalSearch'" in book_runtime, 'Book global search must use delegated input integration that survives late doSearch replacement')
 need("window.__MM_BOOK_SEARCH_INPUT_BOUND__=VERSION" in book_runtime, 'Book delegated global-search binding must be idempotent')
