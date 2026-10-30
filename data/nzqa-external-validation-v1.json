@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.29.1",
+  "release": "2026.10.30.1",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.29.1.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.10.30.1.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
   "candidate": {
-    "release": "2026.10.29.1",
-    "sourceSha": "fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4",
-    "runtimeFingerprint": "sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9"
+    "release": "2026.10.30.1",
+    "sourceSha": "71994a3747bb34c67af3e5d8a0c6d024a131a4cd",
+    "runtimeFingerprint": "sha256:d46705fd1fbbed0ffc6168f78893a1ef719d4cf86f06fb11e1484cb415bb350a"
   },
-  "boundary": "Candidate fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4 and public-runtime fingerprint sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9 identify the current release artifact only. They do not establish provider approval, NZQA accreditation, consent-to-assess or moderation evidence. All provider gates remain HOLD.",
+  "boundary": "Candidate 71994a3747bb34c67af3e5d8a0c6d024a131a4cd and public-runtime fingerprint sha256:d46705fd1fbbed0ffc6168f78893a1ef719d4cf86f06fb11e1484cb415bb350a identify the current release artifact only. They do not establish provider approval, NZQA accreditation, consent-to-assess or moderation evidence. All provider gates remain HOLD.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -57,9 +57,9 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.10.27.1",
-    "sourceSha": "5b9fa9017aea7b709cee45371934cc778766dcf3",
-    "runtimeFingerprint": "sha256:cf025b78498c9721ae9b63a9776ad92a42a73353077701239bf1aaf9b048ae4a"
+    "release": "2026.10.29.1",
+    "sourceSha": "fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4",
+    "runtimeFingerprint": "sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9"
   },
   "previousIssueNumber": 379,
   "supersededCandidate": {

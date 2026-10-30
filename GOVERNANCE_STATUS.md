@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.10.29.1`**.
+Current governed web candidate: **`2026.10.30.1`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.10.29.1 source fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4 run 40838248759 artifact 12880769390 fingerprint sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9 identifies the retained exact-source software candidate; human, device and production authorization remain HOLD. |
-| Behavioral / browser | **pass** | PASS: release 2026.10.29.1 source fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4 passed Mobile Browser QA and Question Quality 50-Pass on the exact candidate source. |
+| Static / contract | **pass** | PASS: release 2026.10.30.1 source 71994a3747bb34c67af3e5d8a0c6d024a131a4cd run 41013734586 artifact 12958289607 fingerprint sha256:d46705fd1fbbed0ffc6168f78893a1ef719d4cf86f06fb11e1484cb415bb350a identifies the retained exact-source software candidate; human, device and production authorization remain HOLD. |
+| Behavioral / browser | **pass** | PASS: release 2026.10.30.1 source 71994a3747bb34c67af3e5d8a0c6d024a131a4cd passed Mobile Browser QA and Question Quality 50-Pass on the exact candidate source. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |

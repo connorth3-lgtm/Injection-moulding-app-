@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.10.29.1';
+const CACHE_VERSION='2026.10.30.1';
 const CACHE_REVISION='book-depth-r1';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
@@ -171,6 +171,12 @@ const OPTIONAL=[
 const RELEASE_ASSETS=[...new Set([...CORE,...OPTIONAL])];
 const RELEASE_PATHS=new Set(RELEASE_ASSETS.map(asset=>new URL(asset,self.registration.scope).pathname));
 const LEGACY_CORE_PATH=new URL('./MouldMaster_Core_App.html',self.registration.scope).pathname;
+// Public provenance files are network-only so health checks cannot read stale learner-runtime cache bytes.
+const PUBLIC_METADATA_PATHS=new Set([
+  new URL('./deployment.json',self.registration.scope).pathname,
+  new URL('./pages-manifest.json',self.registration.scope).pathname,
+  new URL('./service-worker.js',self.registration.scope).pathname
+]);
 
 async function cacheAsset(cache,url){
   const request=new Request(url,{cache:'reload'});
@@ -263,6 +269,15 @@ self.addEventListener('fetch',event=>{
     event.respondWith((async()=>{
       const cached=await releaseCacheMatch(event.request);
       if(cached)return cached;
+      return criticalOfflineResponse(url);
+    })());
+    return;
+  }
+
+  if(PUBLIC_METADATA_PATHS.has(url.pathname)){
+    event.respondWith((async()=>{
+      const response=await fetchNetwork(event);
+      if(response&&response.ok)return response;
       return criticalOfflineResponse(url);
     })());
     return;
