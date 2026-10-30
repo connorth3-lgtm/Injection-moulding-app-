@@ -5,7 +5,7 @@
 
 Live tracker binding: issue #619 is open and names this exact technical candidate; provider G1–G8 remain pending-external.
 
-The retained exact-source software artifact is source 71994a3747bb34c67af3e5d8a0c6d024a131a4cd, produced by [Pre-merge Public Candidate run 41013734586](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/41013734586) with artifact 12958289607, digest sha256:1bd693650b029ed7c374fb665b7d7aee85419b239170e930d139cf541c0b8c65, expiry 2027-01-28T06:22:51Z, and public-runtime fingerprint sha256:23d621f253cb888064e366f67c606771632b2ebd546fdcf5cf9bc1603cea17f8. Exact-head quality gates passed on this release binding. All seven independent external reviews remain HOLD; the artifact and software checks do not authorize production, physical-device use, machine control, learner competence, provider approval or accreditation.
+The retained exact-source software artifact is source 82cdf5dba09ae7781d19d2d92821ba63de8cdae0, produced by [Pre-merge Public Candidate run 41023659190](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/41023659190) with artifact 12962507967, digest sha256:9d141e201eb03779abaa03ff1965f42e3e6e5641dcdc4aac4ed3966e79fc210b, expiry 2027-01-28T08:01:13Z, and public-runtime fingerprint sha256:23d621f253cb888064e366f67c606771632b2ebd546fdcf5cf9bc1603cea17f8. Exact-head quality gates passed on this release binding. All seven independent external reviews remain HOLD; the artifact and software checks do not authorize production, physical-device use, machine control, learner competence, provider approval or accreditation.
 
 ## Exact-release review packets
 

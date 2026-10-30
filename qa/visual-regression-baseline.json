@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.22.2",
-  "commit": "7bac45d0b1426b9f13a4fdf8e8c893b2cb498795",
+  "release": "2026.10.30.2",
+  "commit": "171dce34a94ebfcd88ed40c03f8e1c17485f57fc",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Visual approval for exact-source PR #642 phone comparisons only: after reviewing the presented current-versus-baseline phone screenshots for the integrated app and Book Read Aloud controls, the owner replied “I approve” on 2026-10-20. The reviewed source is 83401a4bb217baa5c1a4acfa9181e7725e8098ac; Mobile Browser QA run 39376648825, screenshot artifact 12243349813 (ZIP digest sha256:33dd404528cd6b506426daba9e7688882332b82e88281e7ce79c0f2f825d5ce2). Artifact integrity and all 52 candidate plus 52 baseline PNG SHA256 values were verified. Against the previous 2026.10.16.1 baseline, 9 captures remained within the prior threshold and 43 exceeded it; approval accepts the reviewed design at this exact source only. The new immutable visual-baseline/2026.10.20.2 ref was created at and verified identical to 83401a4bb217baa5c1a4acfa9181e7725e8098ac. Preserve historical visual-baseline/2026.10.16.1 at 04628e13a6c9a9517bef22bae6c12a456896f299 and visual-baseline/2026.10.15.3 unchanged. All 52 captures, four viewports, thirteen surfaces, Chromium comparison and strict maxDiffPixels=12 remain in force with no masking or skipped surfaces. The original pre-approval artifact still records visualOwnerApproved=false; this later approval is documented separately. Visual approval is limited to design and does not certify a candidate producer pass, physical PWA/speech, human assistive-technology testing, SME/curriculum/provider/NZQA reviews, signing, release, merge, accreditation or production authority; external streams remain HOLD. PR #667 visual approval was recorded on 2026-10-26 for exact source 7bac45d0b1426b9f13a4fdf8e8c893b2cb498795; run 40284054987 artifact 12633960353; digest sha256:349970f20c4b7eb99e67ce226564b4fdcab68e503493b63d149027bdac8f4ec4; 52 candidate and 52 baseline PNG hashes match the manifest. The original artifact remains unchanged. The new immutable ref visual-baseline/2026.10.22.2 points to the approved source. Approval is visual-only; human/device, Book SME, provider, signing and production evidence remain HOLD.",
-  "ref": "visual-baseline/2026.10.22.2",
+  "policy": "Historical owner visual approvals remain recorded for earlier immutable baselines. For the 2026.10.30.2 technical preview, this comparison ref is retained only to keep the strict four-viewport, thirteen-surface, maxDiffPixels=12 regression gate deterministic after the governed material-catalog expansion. The exact ref is visual-baseline/2026.10.30.2 at 171dce34a94ebfcd88ed40c03f8e1c17485f57fc; visual-owner approval for the changed Materials captures remains pending and is not inferred from this technical baseline. No masking or skipped surfaces are permitted; human/device, Book SME, provider, signing and production evidence remain HOLD.",
+  "ref": "visual-baseline/2026.10.30.2",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "7bac45d0b1426b9f13a4fdf8e8c893b2cb498795"
+    "referenceSourceSha": "171dce34a94ebfcd88ed40c03f8e1c17485f57fc"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",

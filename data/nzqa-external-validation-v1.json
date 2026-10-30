@@ -8,10 +8,10 @@
   "issueNumber": 619,
   "candidate": {
     "release": "2026.10.30.2",
-    "sourceSha": "71994a3747bb34c67af3e5d8a0c6d024a131a4cd",
+    "sourceSha": "82cdf5dba09ae7781d19d2d92821ba63de8cdae0",
     "runtimeFingerprint": "sha256:23d621f253cb888064e366f67c606771632b2ebd546fdcf5cf9bc1603cea17f8"
   },
-  "boundary": "Candidate 71994a3747bb34c67af3e5d8a0c6d024a131a4cd and public-runtime fingerprint sha256:23d621f253cb888064e366f67c606771632b2ebd546fdcf5cf9bc1603cea17f8 identify the current release artifact only. They do not establish provider approval, NZQA accreditation, consent-to-assess or moderation evidence. All provider gates remain HOLD.",
+  "boundary": "Candidate 82cdf5dba09ae7781d19d2d92821ba63de8cdae0 and public-runtime fingerprint sha256:23d621f253cb888064e366f67c606771632b2ebd546fdcf5cf9bc1603cea17f8 identify the current release artifact only. They do not establish provider approval, NZQA accreditation, consent-to-assess or moderation evidence. All provider gates remain HOLD.",
   "requiredGates": [
     {
       "id": "G1-provider",
