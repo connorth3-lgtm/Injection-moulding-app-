@@ -2,7 +2,7 @@
 
 **STATUS: TECHNICAL AUTOMATION PASS — the exact-source public artifact is retained; all seven independent external review streams remain HOLD.**
 
-The retained exact-source software artifact is source fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4, produced by [Pre-merge Public Candidate run 40838248759](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/40838248759) with artifact 12880769390, digest sha256:e0152160bd4413cab644d1be1bdee33281514fc34d68d57bbe2208052107195a, expiry 2027-01-27T07:52:41Z, and public-runtime fingerprint sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9. Exact-head quality gates passed on this release binding. All seven independent external reviews remain HOLD; the artifact and software checks do not authorize production, physical-device use, machine control, learner competence, provider approval or accreditation.
+The retained exact-source software artifact is source 71994a3747bb34c67af3e5d8a0c6d024a131a4cd, produced by [Pre-merge Public Candidate run 41013734586](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/41013734586) with artifact 12958289607, digest sha256:1bd693650b029ed7c374fb665b7d7aee85419b239170e930d139cf541c0b8c65, expiry 2027-01-28T06:22:51Z, and public-runtime fingerprint sha256:d46705fd1fbbed0ffc6168f78893a1ef719d4cf86f06fb11e1484cb415bb350a. Exact-head quality gates passed on this release binding. All seven independent external reviews remain HOLD; the artifact and software checks do not authorize production, physical-device use, machine control, learner competence, provider approval or accreditation.
 
 ## Exact-release review packets
 

@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.10.30.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4",
-  "scope": "Updated the governed BASF troubleshooting source pointer and synchronized the browser release identity. Release 2026.10.30.1 exact-source candidate from source fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4 passed Mobile Browser QA, Question Quality 50-Pass, Read Aloud QA, Pages candidate retention and exact-head quality gates. No human or external validation is inferred.",
-  "approvalBoundary": "Release 2026.10.30.1 exact candidate producer run 40838248759 created artifact 12880769390 for source fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": "71994a3747bb34c67af3e5d8a0c6d024a131a4cd",
+  "scope": "Updated the governed BASF troubleshooting source pointer and fixed live preview provenance health checks. Release 2026.10.30.1 exact-source candidate from source 71994a3747bb34c67af3e5d8a0c6d024a131a4cd passed Mobile Browser QA, Question Quality 50-Pass, Read Aloud QA, Pages candidate retention and exact-head quality gates. No human or external validation is inferred.",
+  "approvalBoundary": "Release 2026.10.30.1 exact candidate producer run 41013734586 created artifact 12958289607 for source 71994a3747bb34c67af3e5d8a0c6d024a131a4cd. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
