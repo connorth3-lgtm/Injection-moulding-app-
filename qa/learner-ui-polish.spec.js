@@ -448,7 +448,7 @@ test('Book Materials chapter exposes the complete governed material datasets wit
   await expect(atlas).toContainText('all 284 Asia/Australia/New Zealand evidence rows');
   await expect(atlas).toContainText('excluded from source-reviewed listen-all');
 
-  expect(await page.evaluate(()=>window.MMBook.getMaterialCatalog().grades.length)).toBe(260);
+  expect(await page.evaluate(()=>window.MMBook.getMaterialCatalog().grades.length)).toBe(268);
   expect(await page.evaluate(()=>window.MMBook.getMaterialRegionalEvidence().records.length)).toBe(284);
   expect(await page.evaluate(()=>window.MMBook.getMaterialAtlas().regionalProfileIndex.profileCount)).toBe(89);
 
