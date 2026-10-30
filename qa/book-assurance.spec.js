@@ -289,7 +289,7 @@ test('Material Atlas final keyboard pagination leaves focus on a newly loaded re
   }
   await expect(more).toHaveCount(0);
   await expect(catalog.locator('[data-mm-book-catalog-grade]')).toHaveCount(268);
-  await expect(catalog.locator('[data-mm-book-catalog-grade]').nth(240).locator('summary')).toBeFocused();
+  await expect(catalog.locator('[data-mm-book-catalog-grade]').nth(264).locator('summary')).toBeFocused();
 });
 
 
