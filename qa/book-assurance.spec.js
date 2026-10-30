@@ -282,7 +282,7 @@ test('Material Atlas final keyboard pagination leaves focus on a newly loaded re
   const catalog=page.locator('[data-mm-book-canonical-catalog]');
   await catalog.locator(':scope > summary').click();
   const more=page.locator('[data-mm-book-material-more="catalog"]');
-  for(let batch=0;batch<10;batch++){
+  for(let batch=0;batch<11;batch++){
     await expect(more).toHaveCount(1);
     await more.focus();
     await page.keyboard.press('Enter');
