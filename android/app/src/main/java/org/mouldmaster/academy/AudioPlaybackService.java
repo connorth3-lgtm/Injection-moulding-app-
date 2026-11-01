@@ -106,16 +106,6 @@ public final class AudioPlaybackService extends Service {
         }
     }
 
-    private final Handler mainHandler = new Handler(Looper.getMainLooper());
-    private final Runnable delayedShutdown = () -> {
-        if (activeId == null && (speechQueue == null || speechQueue.isEmpty())) {
-            stopForeground(true);
-            foregroundStarted = false;
-            lastNotificationText = null;
-            stopSelf();
-        }
-    };
-
     private TextToSpeech textToSpeech;
     private AudioManager audioManager;
     private AudioFocusRequest audioFocusRequest;
@@ -133,6 +123,16 @@ public final class AudioPlaybackService extends Service {
     private boolean stopping;
     private boolean foregroundStarted;
     private String lastNotificationText;
+
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final Runnable delayedShutdown = () -> {
+        if (activeId == null && (speechQueue == null || speechQueue.isEmpty())) {
+            stopForeground(true);
+            foregroundStarted = false;
+            lastNotificationText = null;
+            stopSelf();
+        }
+    };
 
     @Override
     public void onCreate() {
@@ -392,7 +392,6 @@ public final class AudioPlaybackService extends Service {
                 .setCategory(Notification.CATEGORY_TRANSPORT)
                 .setVisibility(Notification.VISIBILITY_PUBLIC)
                 .setShowWhen(false);
-        if (Build.VERSION.SDK_INT >= 26) builder.setSilent(true);
         if (mediaSession != null) {
             builder.setStyle(new Notification.MediaStyle()
                     .setMediaSession(mediaSession.getSessionToken()));
