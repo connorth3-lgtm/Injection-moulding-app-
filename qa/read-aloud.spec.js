@@ -121,6 +121,7 @@ test('A device-paused browser queue waits for an explicit Resume tap', async ({p
 test('browser Read Aloud clears media notifications and never retries hidden interruptions', async ({page}) => {
   await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Keep this Book sentence selected after an interruption.</p></main></body></html>');
   await page.evaluate(()=>{
+    Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
     const media={playbackState:'playing',metadata:{title:'Legacy preview'},actions:{play:()=>{},pause:()=>{},stop:()=>{},nexttrack:()=>{},previoustrack:()=>{}},
       setActionHandler(action,handler){this.actions[action]=handler;}};
     Object.defineProperty(navigator,'mediaSession',{configurable:true,value:media});
@@ -161,7 +162,7 @@ test('privacy notice limits Read Aloud to the Book and explains the separate app
   expect(text).toContain('Press Listen to check Book speech');
   expect(text).toContain('MouldMaster cannot detect whether you hear the tone sample or Book speech');
   expect(text).toContain('Last updated: 2 November 2026');
-  expect(text).toContain('screen-off listening is best effort');
+  expect(text).toContain('Screen-off listening is best effort');
   expect(text).toContain('check media volume and the selected headphone or Bluetooth output');
   expect(text).not.toContain('complete canonical lesson library');
   expect(text).not.toContain('continuous Listening mode');
