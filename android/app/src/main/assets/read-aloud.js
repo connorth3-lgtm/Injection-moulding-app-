@@ -215,7 +215,7 @@
     flush(units.length-1);
     return chunks.map((chunk,offset)=>({
       ...chunk,
-      id:\`mm-native-\${stamp}-\${++nativeRequestSeq}\`,
+      id:`mm-native-${stamp}-${++nativeRequestSeq}`,
       last:offset===chunks.length-1
     }));
   }
@@ -622,7 +622,7 @@
       const rate=Number((playlistMode?listeningUI?.speed:ui?.speed)?.value||1);
       const queue=nativeQueueSupported
         ? buildNativeQueue()
-        : [{id:\`mm-native-\${Date.now()}-\${++nativeRequestSeq}\`,text:unit.text,startIndex:index,endIndex:index,last:true}];
+        : [{id:`mm-native-${Date.now()}-${++nativeRequestSeq}`,text:unit.text,startIndex:index,endIndex:index,last:true}];
       if(!queue.length){stop('No readable text is available.');return;}
       queue.forEach(item=>{
         nativeHandlers.set(item.id,event=>{
