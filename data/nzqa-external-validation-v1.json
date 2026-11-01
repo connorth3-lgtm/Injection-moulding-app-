@@ -9,9 +9,9 @@
   "candidate": {
     "release": "2026.11.02.2",
     "sourceSha": "17ae5aa2e73929aabd9f3dc1fd0415867e27e6be",
-    "runtimeFingerprint": "sha256:56e23efc0bd88140b2fce2c6bb12408a3e8204eec5521ad07eccad12b138149f"
+    "runtimeFingerprint": "sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913"
   },
-  "boundary": "Candidate 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be and public-runtime fingerprint sha256:56e23efc0bd88140b2fce2c6bb12408a3e8204eec5521ad07eccad12b138149f identify the retained 2026.11.02.2 technical-preview artifact only. They do not establish provider approval, NZQA accreditation, consent-to-assess or moderation evidence. All provider gates remain HOLD.",
+  "boundary": "Candidate 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be and public-runtime fingerprint sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913 identify the retained 2026.11.02.2 technical-preview artifact only. They do not establish provider approval, NZQA accreditation, consent-to-assess or moderation evidence. All provider gates remain HOLD.",
   "requiredGates": [
     {
       "id": "G1-provider",

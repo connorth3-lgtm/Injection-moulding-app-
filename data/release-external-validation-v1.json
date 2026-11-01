@@ -31,7 +31,7 @@
     "candidate": {
       "release": "2026.11.02.2",
       "sourceSha": "17ae5aa2e73929aabd9f3dc1fd0415867e27e6be",
-      "runtimeFingerprint": "sha256:56e23efc0bd88140b2fce2c6bb12408a3e8204eec5521ad07eccad12b138149f"
+      "runtimeFingerprint": "sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913"
     }
   },
   "pwaPhysicalDevices": {
@@ -53,7 +53,7 @@
     "currentCandidate": {
       "release": "2026.11.02.2",
       "sourceSha": "17ae5aa2e73929aabd9f3dc1fd0415867e27e6be",
-      "runtimeFingerprint": "sha256:56e23efc0bd88140b2fce2c6bb12408a3e8204eec5521ad07eccad12b138149f",
+      "runtimeFingerprint": "sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913",
       "candidateRunId": 41334499139,
       "candidateWorkflow": "Pre-merge Public Candidate",
       "artifactId": 13095275054,
@@ -126,13 +126,13 @@
     "candidate": {
       "release": "2026.11.02.2",
       "sourceSha": "17ae5aa2e73929aabd9f3dc1fd0415867e27e6be",
-      "runtimeFingerprint": "sha256:56e23efc0bd88140b2fce2c6bb12408a3e8204eec5521ad07eccad12b138149f"
+      "runtimeFingerprint": "sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913"
     }
   },
   "webCandidate": {
     "release": "2026.11.02.2",
     "sourceSha": "17ae5aa2e73929aabd9f3dc1fd0415867e27e6be",
-    "runtimeFingerprint": "sha256:56e23efc0bd88140b2fce2c6bb12408a3e8204eec5521ad07eccad12b138149f",
+    "runtimeFingerprint": "sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913",
     "candidateRunId": 41334499139,
     "candidateWorkflow": "Pre-merge Public Candidate",
     "artifactId": 13095275054,
@@ -156,7 +156,7 @@
     "artifactDigest": "sha256:a67d0b25498e5aca4af31a6e0e339dab6d2fe70d8b2b96a3ad2272695b54ca18",
     "artifactExpiresAt": "2027-01-30T16:17:36Z"
   },
-  "candidateStatus": "PASS — exact-source candidate producer run 41334499139 succeeded and retained artifact 13095275054 for release 2026.11.02.2, source 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be, runtime fingerprint sha256:56e23efc0bd88140b2fce2c6bb12408a3e8204eec5521ad07eccad12b138149f. Exact-head software quality gates passed. All seven independent external review streams remain HOLD; no external, device or production authorization is asserted.",
+  "candidateStatus": "PASS — exact-source candidate producer run 41334499139 succeeded and retained artifact 13095275054 for release 2026.11.02.2, source 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be, runtime fingerprint sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913. Exact-head software quality gates passed. All seven independent external review streams remain HOLD; no external, device or production authorization is asserted.",
   "previousPreviousCandidate": {
     "release": "2026.10.27.1",
     "sourceSha": "5b9fa9017aea7b709cee45371934cc778766dcf3",

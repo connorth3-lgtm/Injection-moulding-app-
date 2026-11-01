@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Retained software candidate 2026.11.02.2, source 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be, artifact 13095275054, runtime fingerprint sha256:56e23efc0bd88140b2fce2c6bb12408a3e8204eec5521ad07eccad12b138149f is a technical preview only. This contract covers physical iOS/iPadOS and Android devices; no physical install, update, offline, reboot or audible playback test is asserted. Real assistive-technology validation is tracked separately in data/accessibility-real-at-validation-v1.json.",
+  "boundary": "Retained software candidate 2026.11.02.2, source 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be, artifact 13095275054, runtime fingerprint sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913 is a technical preview only. This contract covers physical iOS/iPadOS and Android devices; no physical install, update, offline, reboot or audible playback test is asserted. Real assistive-technology validation is tracked separately in data/accessibility-real-at-validation-v1.json.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -45,7 +45,7 @@
   "candidate": {
     "release": "2026.11.02.2",
     "sourceSha": "17ae5aa2e73929aabd9f3dc1fd0415867e27e6be",
-    "runtimeFingerprint": "sha256:56e23efc0bd88140b2fce2c6bb12408a3e8204eec5521ad07eccad12b138149f",
+    "runtimeFingerprint": "sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913",
     "candidateRunId": 41334499139,
     "candidateWorkflow": "Pre-merge Public Candidate",
     "artifactId": 13095275054,
@@ -67,7 +67,7 @@
   "currentCandidate": {
     "release": "2026.11.02.2",
     "sourceSha": "17ae5aa2e73929aabd9f3dc1fd0415867e27e6be",
-    "runtimeFingerprint": "sha256:56e23efc0bd88140b2fce2c6bb12408a3e8204eec5521ad07eccad12b138149f",
+    "runtimeFingerprint": "sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913",
     "candidateRunId": 41334499139,
     "candidateWorkflow": "Pre-merge Public Candidate",
     "artifactId": 13095275054,

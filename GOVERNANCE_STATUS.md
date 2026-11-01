@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.11.02.2 source 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be run 41334499139 artifact 13095275054 fingerprint sha256:56e23efc0bd88140b2fce2c6bb12408a3e8204eec5521ad07eccad12b138149f identifies the retained exact-source software candidate; human, device and production authorization remain HOLD. |
+| Static / contract | **pass** | PASS: release 2026.11.02.2 source 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be run 41334499139 artifact 13095275054 fingerprint sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913 identifies the retained exact-source software candidate; human, device and production authorization remain HOLD. |
 | Behavioral / browser | **pass** | PASS: release 2026.11.02.2 source 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be passed Mobile Browser QA run 41334498987 and Question Quality 50-Pass run 41334498796 on the exact candidate source; human/device validation remains HOLD. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
