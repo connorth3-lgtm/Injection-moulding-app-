@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Physical iOS/iPadOS and Android device validation remains pending for release 2026.11.02.2; the prior 2026.11.02.1 candidate is historical and no physical-device or audible playback test is asserted. Real assistive-technology validation is tracked separately in data/accessibility-real-at-validation-v1.json.",
+  "boundary": "This contract covers physical iOS/iPadOS and Android devices for release 2026.11.02.2. The prior 2026.11.02.1 candidate is historical and no current physical-device or audible playback test is asserted. Real assistive-technology validation is tracked separately in data/accessibility-real-at-validation-v1.json.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
