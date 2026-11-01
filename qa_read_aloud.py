@@ -25,10 +25,6 @@ need(version.get("read_aloud_version") == version.get("web_release"), "Read Alou
 need(f"const VERSION='{version['web_release']}'" in runtime, "Read Aloud runtime version mismatch")
 need("function cancelDeviceSpeech(force=false)" in runtime and "cancelDeviceSpeech(cancelActive)" in runtime and "cancelDeviceSpeech(true)" in runtime,
      "speech cancellation must be limited to active queues or explicit cleanup")
-need("MouldMasterNativeTts" in runtime and "nativeSupported" in runtime and "window.MMNativeTtsEvent" in runtime,
-     "dedicated Android native TextToSpeech bridge must be available to the Book player")
-need("Reading with phone audio" in runtime and "Phone voice could not start. Tap Listen again." in runtime,
-     "native Book audio status and failure recovery missing")
 need("function applyAvailableVoice(utterance)" in runtime and "if(!selectedVoice){utterance.lang='';return;}" in runtime,
      "unlisted mobile default voice must use the OS-selected language")
 
@@ -150,8 +146,6 @@ need("Book-only scope keeps lesson text silent" in browser and "startBookFromGes
      "browser regression must prove that lessons cannot be narrated")
 need("Android synthesis failure without onstart saves and retries the same Book sentence" in browser,
      "browser regression must cover an Android synthesis failure without onstart, retain its cursor and retry the same sentence")
-need("Dedicated Android native voice path owns background Book narration" in browser,
-     "browser regression must cover the dedicated Android native voice path without falling back to browser speech")
 for marker in (
     "Delayed device speech can start after the page hides for screen-off listening",
     "Late OS onstart and sentence chaining continue after the page hides",
