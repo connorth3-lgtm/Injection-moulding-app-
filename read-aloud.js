@@ -1,11 +1,11 @@
-/* MouldMaster Book Read Aloud — 2026.10.30.2
+/* MouldMaster Book Read Aloud — 2026.11.02.1
  * Learner-controlled text-to-speech using the browser/device speech-synthesis service.
  * No microphone access, recording, speech recognition, network upload, or learner-content storage.
  */
 (function(){
   'use strict';
 
-  const VERSION='2026.10.30.2';
+  const VERSION='2026.11.02.1';
   const synth=window.speechSynthesis;
   const supported=!!(synth&&window.SpeechSynthesisUtterance);
   const SPEEDS=[0.75,1,1.25,1.5];
@@ -42,6 +42,10 @@
   let backgroundRetryCount=0;
   let backgroundWatchTimer=null;
   let backgroundSpeechGapStartedAt=0;
+  // Browser media controls are a single lock-screen session. Avoid rewriting
+  // the notification metadata/state for every sentence in the Book queue.
+  let mediaSessionMetadataKey='';
+  let mediaSessionPlaybackState='';
 
   function visible(el){
     if(!el||!el.isConnected||el.closest(EXCLUDED))return false;
@@ -368,18 +372,30 @@
   }
 
   function setMediaSessionState(state){
-    try{if('mediaSession' in navigator)navigator.mediaSession.playbackState=state;}catch(_){}
+    try{
+      if(!('mediaSession' in navigator)||mediaSessionPlaybackState===state)return;
+      navigator.mediaSession.playbackState=state;
+      mediaSessionPlaybackState=state;
+    }catch(_){}
   }
 
   function setMediaSessionMetadata(unit=currentUnit()){
     try{
       if(!('mediaSession' in navigator)||typeof window.MediaMetadata!=='function')return;
+      const chapter=unit?.bookChapterId
+        ?bookChapterCache.find(item=>item.id===unit.bookChapterId)?.title
+        :'Book read-aloud';
+      const chapterInfo=String(chapter||'Book read-aloud').slice(0,160);
+      // Keep the browser's media notification stable across sentence handoffs.
+      // Only a real Book-chapter change gets a metadata update.
+      if(mediaSessionMetadataKey===chapterInfo)return;
       navigator.mediaSession.metadata=new MediaMetadata({
         title:'MouldMaster Book Read Aloud',
         artist:'MouldMaster Academy',
         album:'Injection moulding learning',
-        chapterInfo:unit?.text?String(unit.text).slice(0,160):''
+        chapterInfo
       });
+      mediaSessionMetadataKey=chapterInfo;
     }catch(_){}
   }
 
@@ -435,7 +451,7 @@
     try{
       startBackgroundWebAudio();
       if(audio.paused||audio.ended){audio.currentTime=0;Promise.resolve(audio.play()).catch(()=>{});}
-      setMediaSessionMetadata();
+      setMediaSessionMetadata(currentUnit());
       setMediaSessionState('playing');
       startBackgroundWatch();
       return true;
