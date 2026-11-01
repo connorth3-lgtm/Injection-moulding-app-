@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MouldMaster Academy</string>
+    <string name="audio_channel_name">Book narration</string>
+    <string name="audio_notification_title">MouldMaster Book</string>
+    <string name="audio_notification_text">Book narration is playing</string>
+</resources>
