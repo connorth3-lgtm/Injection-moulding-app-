@@ -322,9 +322,9 @@ public final class AudioPlaybackService extends Service {
         WebView webView = webViewRef.get();
         if (webView == null || id == null) return;
         try {
-            String json = "{\\"id\\":" + JSONObject.quote(id)
-                    + ",\\"type\\":" + JSONObject.quote(type)
-                    + (message == null ? "" : ",\\"message\\":" + JSONObject.quote(message))
+            String json = "{\"id\":" + JSONObject.quote(id)
+                    + ",\"type\":" + JSONObject.quote(type)
+                    + (message == null ? "" : ",\"message\":" + JSONObject.quote(message))
                     + "}";
             webView.post(() -> webView.evaluateJavascript(
                     "(function(){if(window.MMNativeTtsEvent)window.MMNativeTtsEvent(" + json + ");})()",
