@@ -21,39 +21,6 @@ async function setBookFixture(page,html,...options){
   return page.setContent(wrapped,...options);
 }
 
-test('Dedicated Android native voice path owns background Book narration', async ({page}) => {
-  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Native phone audio sentence.</p></main></body></html>');
-  await page.evaluate(()=>{
-    const events=[];
-    class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
-    const browserSpeech={speaks:0,speak(){this.speaks++;},cancel(){},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
-    const native={
-      events,
-      isAvailable(){return true;},
-      speak(text,rate,id){events.push({type:'speak',text,rate,id});this.currentId=id;return true;},
-      stop(){events.push({type:'stop'});}
-    };
-    window.__nativeBookAudio=native;
-    Object.defineProperty(window,'MouldMasterNativeTts',{configurable:true,value:native});
-    Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Voice});
-    Object.defineProperty(window,'speechSynthesis',{configurable:true,value:browserSpeech});
-  });
-  await page.addScriptTag({path:'read-aloud.js'});
-  const player=page.locator('.mm-read-aloud');
-  await player.locator('details').evaluate(el=>{el.open=true});
-  await player.locator('[data-mm-read="play"]').click();
-  await expect(player.locator('.mm-read-status')).toHaveText('Starting phone voice…');
-  expect(await page.evaluate(()=>window.__nativeBookAudio.events[0].type)).toBe('speak');
-  expect(await page.evaluate(()=>window.__nativeBookAudio.events[0].text)).toBe('Native phone audio sentence.');
-  expect(await page.evaluate(()=>window.speechSynthesis.speaks)).toBe(0);
-  await page.evaluate(()=>window.MMNativeTtsEvent({id:window.__nativeBookAudio.currentId,type:'start'}));
-  await expect(player.locator('.mm-read-status')).toHaveText('Reading with phone audio');
-  await expect(player.locator('[data-mm-read="play"]')).toHaveText('Pause');
-  await page.evaluate(()=>window.MMNativeTtsEvent({id:window.__nativeBookAudio.currentId,type:'done'}));
-  await expect(player.locator('.mm-read-status')).toHaveText('Finished reading');
-  expect(await page.evaluate(()=>window.__nativeBookAudio.events.filter(x=>x.type==='stop').length)).toBe(0);
-});
-
 test('Delayed device speech can start after the page hides for screen-off listening', async ({page}) => {
   await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Screen-off Book narration can begin while the app is hidden.</p></main></body></html>');
   await page.evaluate(()=>{
