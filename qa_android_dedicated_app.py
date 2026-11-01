@@ -29,7 +29,7 @@ for marker in (
     "read-aloud.js",
 ):
     need(marker in activity, f"WebView native-runtime interception missing: {marker}")
-for marker in ("@JavascriptInterface", "isAvailable", "speak", "stop"):
+for marker in ("@JavascriptInterface", "isAvailable", "speak", "speakQueue", "stop"):
     need(marker in bridge, f"native TTS bridge method missing: {marker}")
 for marker in (
     "TextToSpeech",
@@ -39,9 +39,14 @@ for marker in (
     "PARTIAL_WAKE_LOCK",
     "MouldMaster:BookAudio",
     "UtteranceProgressListener",
+    "ACTION_SPEAK_QUEUE",
+    "speechQueue",
+    "IDLE_SHUTDOWN_DELAY_MS",
+    "setOnlyAlertOnce",
+    "enableVibration(false)",
 ):
     need(marker in service, f"foreground native audio service contract missing: {marker}")
-for marker in ("MouldMasterNativeTts", "window.MMNativeTtsEvent", "Reading with phone audio"):
+for marker in ("MouldMasterNativeTts", "window.MMNativeTtsEvent", "nativeQueueSupported", "buildNativeQueue", "speakQueue", "if(nativeSupported)return false", "Reading with phone audio"):
     need(marker in runtime, f"bundled native-aware Read Aloud runtime missing: {marker}")
 need("compileSdk 35" in gradle and "targetSdk 35" in gradle, "Android SDK target must be explicit")
 need("gradle -p android assembleDebug" in workflow, "Android build workflow missing")

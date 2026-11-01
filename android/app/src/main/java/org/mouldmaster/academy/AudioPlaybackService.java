@@ -15,7 +15,9 @@ import android.media.MediaMetadata;
 import android.media.session.MediaSession;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
@@ -24,31 +26,42 @@ import android.webkit.WebView;
 import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class AudioPlaybackService extends Service {
     static final String ACTION_SPEAK = "org.mouldmaster.academy.action.SPEAK";
-    static final String ACTION_STOP = "org.mouldmaster.academy.action.STOP";
+    private static final String ACTION_SPEAK_QUEUE = "org.mouldmaster.academy.action.SPEAK_QUEUE";
+    private static final String ACTION_STOP = "org.mouldmaster.academy.action.STOP";
     private static final String CHANNEL_ID = "mouldmaster-book-audio";
     private static final int NOTIFICATION_ID = 4102;
+    private static final long IDLE_SHUTDOWN_DELAY_MS = 1800L;
 
     private static WeakReference<WebView> webViewRef = new WeakReference<>(null);
+    private static final Object REQUEST_LOCK = new Object();
+    private static ArrayDeque<SpeechItem> requestedQueue = new ArrayDeque<>();
+    private static float requestedRate = 1f;
 
-    private TextToSpeech textToSpeech;
-    private AudioManager audioManager;
-    private AudioFocusRequest audioFocusRequest;
-    private final AudioManager.OnAudioFocusChangeListener audioFocusListener = change -> {
-        if (change == AudioManager.AUDIOFOCUS_LOSS || change == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-            stopCurrent(true, "Phone audio focus was lost. Tap Listen to retry.");
+    static final class SpeechItem {
+        final String id;
+        final String text;
+
+        SpeechItem(String id, String text) {
+            this.id = id;
+            this.text = text;
         }
-    };
-    private MediaSession mediaSession;
-    private PowerManager.WakeLock wakeLock;
-    private String pendingText;
-    private float pendingRate = 1f;
-    private String pendingId;
-    private String activeId;
-    private boolean ttsReady;
-    private boolean stopping;
+    }
+
+    private static final class QueueRequest {
+        final ArrayDeque<SpeechItem> items;
+        final float rate;
+
+        QueueRequest(ArrayDeque<SpeechItem> items, float rate) {
+            this.items = items;
+            this.rate = rate;
+        }
+    }
 
     static void attachWebView(WebView webView) {
         if (webView != null) webViewRef = new WeakReference<>(webView);
@@ -60,11 +73,19 @@ public final class AudioPlaybackService extends Service {
     }
 
     static void startSpeech(Context context, String text, float rate, String requestId) {
+        ArrayList<SpeechItem> items = new ArrayList<>();
+        items.add(new SpeechItem(requestId, text));
+        startSpeechQueue(context, items, rate);
+    }
+
+    static void startSpeechQueue(Context context, List<SpeechItem> items, float rate) {
+        if (items == null || items.isEmpty()) return;
+        synchronized (REQUEST_LOCK) {
+            requestedQueue = new ArrayDeque<>(items);
+            requestedRate = Math.max(0.5f, Math.min(2f, rate));
+        }
         Intent intent = new Intent(context, AudioPlaybackService.class)
-                .setAction(ACTION_SPEAK)
-                .putExtra("text", text)
-                .putExtra("rate", rate)
-                .putExtra("requestId", requestId);
+                .setAction(ACTION_SPEAK_QUEUE);
         if (Build.VERSION.SDK_INT >= 26) {
             context.startForegroundService(intent);
         } else {
@@ -75,6 +96,43 @@ public final class AudioPlaybackService extends Service {
     static void stopSpeech(Context context) {
         context.startService(new Intent(context, AudioPlaybackService.class).setAction(ACTION_STOP));
     }
+
+    private static QueueRequest takeRequestedQueue() {
+        synchronized (REQUEST_LOCK) {
+            if (requestedQueue.isEmpty()) return null;
+            QueueRequest request = new QueueRequest(new ArrayDeque<>(requestedQueue), requestedRate);
+            requestedQueue.clear();
+            return request;
+        }
+    }
+
+    private TextToSpeech textToSpeech;
+    private AudioManager audioManager;
+    private AudioFocusRequest audioFocusRequest;
+    private final AudioManager.OnAudioFocusChangeListener audioFocusListener = change -> {
+        if (change == AudioManager.AUDIOFOCUS_LOSS || change == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+            stopCurrent(true, "Phone audio focus was lost. Tap Listen to retry.");
+        }
+    };
+    private MediaSession mediaSession;
+    private PowerManager.WakeLock wakeLock;
+    private ArrayDeque<SpeechItem> speechQueue;
+    private float pendingRate = 1f;
+    private String activeId;
+    private boolean ttsReady;
+    private boolean stopping;
+    private boolean foregroundStarted;
+    private String lastNotificationText;
+
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final Runnable delayedShutdown = () -> {
+        if (activeId == null && (speechQueue == null || speechQueue.isEmpty())) {
+            stopForeground(true);
+            foregroundStarted = false;
+            lastNotificationText = null;
+            stopSelf();
+        }
+    };
 
     @Override
     public void onCreate() {
@@ -132,6 +190,7 @@ public final class AudioPlaybackService extends Service {
                     public void onError(String utteranceId) {
                         if (isCurrent(utteranceId)) {
                             emit(utteranceId, "error", "Android text-to-speech failed.");
+                            speechQueue = null;
                             finishCurrent();
                         }
                     }
@@ -140,14 +199,16 @@ public final class AudioPlaybackService extends Service {
                     public void onError(String utteranceId, int errorCode) {
                         if (isCurrent(utteranceId)) {
                             emit(utteranceId, "error", "Android text-to-speech failed (" + errorCode + ").");
+                            speechQueue = null;
                             finishCurrent();
                         }
                     }
                 });
-                speakPending();
+                speakNextQueued();
             } else {
-                emit(pendingId, "error", "Android text-to-speech is unavailable. Install or enable a system voice.");
-                stopSelf();
+                emit(activeId, "error", "Android text-to-speech is unavailable. Install or enable a system voice.");
+                speechQueue = null;
+                finishCurrent();
             }
         });
     }
@@ -160,33 +221,64 @@ public final class AudioPlaybackService extends Service {
             stopCurrent(false, null);
             return START_NOT_STICKY;
         }
-        if (!ACTION_SPEAK.equals(action)) return START_NOT_STICKY;
+        if (!ACTION_SPEAK_QUEUE.equals(action) && !ACTION_SPEAK.equals(action)) {
+            return START_NOT_STICKY;
+        }
 
-        pendingText = intent.getStringExtra("text");
-        pendingRate = Math.max(0.5f, Math.min(2f, intent.getFloatExtra("rate", 1f)));
-        pendingId = intent.getStringExtra("requestId");
+        QueueRequest request;
+        if (ACTION_SPEAK.equals(action)) {
+            String text = intent.getStringExtra("text");
+            String requestId = intent.getStringExtra("requestId");
+            ArrayDeque<SpeechItem> single = new ArrayDeque<>();
+            if (text == null || requestId == null) return START_NOT_STICKY;
+            single.add(new SpeechItem(requestId, text));
+            request = new QueueRequest(single,
+                    intent.getFloatExtra("rate", 1f));
+        } else {
+            request = takeRequestedQueue();
+            if (request == null || request.items.isEmpty()) return START_NOT_STICKY;
+        }
+
+        cancelDelayedShutdown();
+        replaceQueue(request.items, request.rate);
         startForegroundSafe(buildNotification("Starting Book narration"));
-        if (ttsReady) speakPending();
+        if (ttsReady) speakNextQueued();
         return START_STICKY;
     }
 
-    private void speakPending() {
-        if (!ttsReady || pendingText == null || pendingId == null) return;
-        clearCurrentForReplacement();
-        activeId = pendingId;
-        String text = pendingText;
-        pendingText = null;
-        pendingId = null;
+    private void replaceQueue(ArrayDeque<SpeechItem> nextQueue, float rate) {
+        stopping = true;
+        if (textToSpeech != null) {
+            try { textToSpeech.stop(); } catch (Exception ignored) { }
+        }
+        activeId = null;
+        releaseAudioFocus();
+        releaseWakeLock();
+        speechQueue = nextQueue;
+        pendingRate = Math.max(0.5f, Math.min(2f, rate));
+        stopping = false;
+    }
 
+    private void speakNextQueued() {
+        if (!ttsReady || stopping || activeId != null) return;
+        if (speechQueue == null || speechQueue.isEmpty()) {
+            finishCurrent();
+            return;
+        }
+
+        cancelDelayedShutdown();
+        SpeechItem item = speechQueue.removeFirst();
+        activeId = item.id;
         acquireAudioFocus();
         acquireWakeLock();
         updateNotification("Book narration is playing");
         textToSpeech.setSpeechRate(pendingRate);
         Bundle params = new Bundle();
         params.putString(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, activeId);
-        int result = textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, params, activeId);
+        int result = textToSpeech.speak(item.text, TextToSpeech.QUEUE_FLUSH, params, activeId);
         if (result == TextToSpeech.ERROR) {
             emit(activeId, "error", "Android text-to-speech rejected the sentence.");
+            speechQueue = null;
             finishCurrent();
         }
     }
@@ -195,20 +287,9 @@ public final class AudioPlaybackService extends Service {
         return id != null && id.equals(activeId) && !stopping;
     }
 
-    private void clearCurrentForReplacement() {
-        stopping = true;
-        if (textToSpeech != null) {
-            try { textToSpeech.stop(); } catch (Exception ignored) { }
-        }
-        activeId = null;
-        releaseAudioFocus();
-        releaseWakeLock();
-        updateNotification(null);
-        stopping = false;
-    }
-
     private void stopCurrent(boolean notify, String message) {
-        String id = activeId != null ? activeId : pendingId;
+        cancelDelayedShutdown();
+        String id = activeId;
         stopping = true;
         if (textToSpeech != null) {
             try { textToSpeech.stop(); } catch (Exception ignored) { }
@@ -217,12 +298,13 @@ public final class AudioPlaybackService extends Service {
             emit(id, "error", message == null ? "Book narration stopped." : message);
         }
         activeId = null;
-        pendingText = null;
-        pendingId = null;
+        speechQueue = null;
         releaseAudioFocus();
         releaseWakeLock();
         updateNotification(null);
         stopForeground(true);
+        foregroundStarted = false;
+        lastNotificationText = null;
         stopSelf();
         stopping = false;
     }
@@ -230,10 +312,22 @@ public final class AudioPlaybackService extends Service {
     private void finishCurrent() {
         releaseAudioFocus();
         releaseWakeLock();
-        updateNotification(null);
         activeId = null;
-        stopForeground(true);
-        stopSelf();
+        if (speechQueue != null && !speechQueue.isEmpty()) {
+            speakNextQueued();
+            return;
+        }
+        speechQueue = null;
+        scheduleDelayedShutdown();
+    }
+
+    private void scheduleDelayedShutdown() {
+        cancelDelayedShutdown();
+        mainHandler.postDelayed(delayedShutdown, IDLE_SHUTDOWN_DELAY_MS);
+    }
+
+    private void cancelDelayedShutdown() {
+        mainHandler.removeCallbacks(delayedShutdown);
     }
 
     private void acquireAudioFocus() {
@@ -272,8 +366,11 @@ public final class AudioPlaybackService extends Service {
         if (Build.VERSION.SDK_INT >= 26) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID, getString(R.string.audio_channel_name), NotificationManager.IMPORTANCE_LOW);
-            channel.setDescription("Controls for Book narration while the screen is off.");
+            channel.setDescription("One quiet control notification for Book narration while the screen is off.");
             channel.setSound(null, null);
+            channel.enableVibration(false);
+            channel.enableLights(false);
+            channel.setShowBadge(false);
             ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).createNotificationChannel(channel);
         }
     }
@@ -293,7 +390,8 @@ public final class AudioPlaybackService extends Service {
                 .setOngoing(text != null)
                 .setOnlyAlertOnce(true)
                 .setCategory(Notification.CATEGORY_TRANSPORT)
-                .setVisibility(Notification.VISIBILITY_PUBLIC);
+                .setVisibility(Notification.VISIBILITY_PUBLIC)
+                .setShowWhen(false);
         if (mediaSession != null) {
             builder.setStyle(new Notification.MediaStyle()
                     .setMediaSession(mediaSession.getSessionToken()));
@@ -302,20 +400,27 @@ public final class AudioPlaybackService extends Service {
     }
 
     private void startForegroundSafe(Notification notification) {
+        if (foregroundStarted) return;
         if (Build.VERSION.SDK_INT >= 29) {
             startForeground(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);
         } else {
             startForeground(NOTIFICATION_ID, notification);
         }
+        foregroundStarted = true;
+        lastNotificationText = notification.extras == null
+                ? null : notification.extras.getString(Notification.EXTRA_TEXT);
     }
 
     private void updateNotification(String text) {
         NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (text == null) {
             manager.cancel(NOTIFICATION_ID);
-        } else {
-            manager.notify(NOTIFICATION_ID, buildNotification(text));
+            lastNotificationText = null;
+            return;
         }
+        if (!foregroundStarted || text.equals(lastNotificationText)) return;
+        lastNotificationText = text;
+        manager.notify(NOTIFICATION_ID, buildNotification(text));
     }
 
     private static void emit(String id, String type, String message) {
@@ -340,6 +445,7 @@ public final class AudioPlaybackService extends Service {
 
     @Override
     public void onDestroy() {
+        cancelDelayedShutdown();
         stopCurrent(false, null);
         if (textToSpeech != null) {
             try { textToSpeech.shutdown(); } catch (Exception ignored) { }
