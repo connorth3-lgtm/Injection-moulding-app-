@@ -94,18 +94,18 @@ need("Close important evidence gaps" in registry_runtime, "material change assis
 need(catalog.get("schemaVersion") == 1, "material catalog schema version drift")
 need(catalog.get("catalogVersion") == "generated", "material catalog must use the compiler-owned generated version marker")
 stats = catalog.get("statistics") or {}
-need(stats.get("exactGrades") == len(catalog.get("grades") or []) == 260, "catalog exact-grade statistics drift")
+need(stats.get("exactGrades") == len(catalog.get("grades") or []) == 268, "catalog exact-grade statistics drift")
 need(stats.get("manufacturers") == len(catalog.get("manufacturers") or []) == 28, "catalog manufacturer statistics drift")
 catalog_countries = {m.get("country") for m in catalog.get("manufacturers") or [] if m.get("country")}
 catalog_families = {(g.get("polymer") or {}).get("family") for g in catalog.get("grades") or [] if (g.get("polymer") or {}).get("family")}
 catalog_properties = [obs for g in catalog.get("grades") or [] for obs in g.get("properties") or []]
 catalog_processing = [obs for g in catalog.get("grades") or [] for obs in g.get("processing") or []]
 need(stats.get("countries") == len(catalog_countries) == 13, "catalog country statistics drift")
-need(stats.get("polymerFamilies") == len(catalog_families) == 32, "catalog family statistics drift")
-need(stats.get("propertyObservations") == len(catalog_properties) == 536, "catalog property-observation statistics drift")
-need(stats.get("comparisonReadyObservations") == sum(1 for obs in catalog_properties if obs.get("comparisonReady") is True) == 201, "catalog comparison-ready statistics drift")
+need(stats.get("polymerFamilies") == len(catalog_families) == 33, "catalog family statistics drift")
+need(stats.get("propertyObservations") == len(catalog_properties) == 560, "catalog property-observation statistics drift")
+need(stats.get("comparisonReadyObservations") == sum(1 for obs in catalog_properties if obs.get("comparisonReady") is True) == 209, "catalog comparison-ready statistics drift")
 need(stats.get("processingObservations") == len(catalog_processing) == 225, "catalog processing-observation statistics drift")
-need(stats.get("primarySourceGrades") == sum(1 for g in catalog.get("grades") or [] if any(str(s.get("kind") or "").startswith("manufacturer-") for s in g.get("sources") or [])) == 256, "catalog primary-source statistics drift")
+need(stats.get("primarySourceGrades") == sum(1 for g in catalog.get("grades") or [] if any(str(s.get("kind") or "").startswith("manufacturer-") for s in g.get("sources") or [])) == 264, "catalog primary-source statistics drift")
 need("variant/revision/production identity differs" in str(catalog.get("boundary") or ""), "material catalog boundary does not describe variant-safe identity")
 catalog_manufacturer_ids = {m.get("id") for m in catalog.get("manufacturers") or []}
 runtime_manufacturer_ids = {(g.get("manufacturer") or {}).get("id") for g in catalog.get("grades") or []}
@@ -131,7 +131,7 @@ for staging_path in sorted(STAGING.glob("*.json")):
                 staged_grade_ids.add(gid)
 runtime_grade_ids = {grade.get("id") for grade in catalog.get("grades") or []}
 need(staged_grade_ids == runtime_grade_ids, f"runtime/staging material drift: staged={sorted(staged_grade_ids)} runtime={sorted(runtime_grade_ids)}")
-need(len(runtime_grade_ids) == 260, "runtime exact-grade count must include the original Korean pilot, waves through wave22, the 70-grade Vietnam PP / Korea EPS mega wave, and two conditioned Polyplastics POM grades")
+need(len(runtime_grade_ids) == 268, "runtime exact-grade count must include the original Korean pilot, waves through wave22, the 70-grade Vietnam PP / Korea EPS mega wave, two conditioned Polyplastics POM grades, and the eight Hyosung POKETONE TDS promotions")
 pipeline_status = acquisition_status()
 need(pipeline_status.get("validatedOrPublishedIds") == len(runtime_grade_ids), "acquisition pipeline validated/runtime reconciliation drift")
 need(pipeline_status.get("stagingOnlyIds", 0) >= 370, "mega expansion staged-only acquisition unexpectedly shrank")
@@ -365,9 +365,10 @@ need(all(obs.get("comparisonReady") is False for g in global18 for obs in g.get(
 need(all(obs.get("productionRecipe") is False for g in global18 for obs in g.get("processing") or []), "Korea Samyang wave18 supplier guidance became a production recipe")
 
 
-# Korea Hyosung continuation: current POKETONE and PP identities are staged
-# conservatively. POKETONE portfolio MI remains context-only until full test
-# temperature/load conditions are captured; HJ541CP has no promoted numeric data.
+# Korea Hyosung continuation: the original portfolio-only wave remains in the
+# staging lineage, while its eight POKETONE identities are promoted by the
+# grade-level TDS wave below. HJ541CP remains staged because its reviewed page
+# confirms identity/application without comparison-ready numeric data.
 global_wave19 = load_json(STAGING / "global-material-expansion-20260929-v19.json")
 need((global_wave19.get("summary") or {}).get("validatedGrades") == 0, "Korea Hyosung wave must remain staging")
 need((global_wave19.get("summary") or {}).get("sourceReviewedStagingGrades") == 9, "Korea Hyosung staging count drift")
@@ -375,11 +376,31 @@ need((global_wave19.get("summary") or {}).get("countryFocus") == "South Korea", 
 global19 = [g for m in global_wave19.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
 need(len(global19) == 9, "Korea Hyosung exact-grade staging set drift")
 need(all((g.get("provenance") or {}).get("stage") == "staging" for g in global19), "Korea Hyosung identities must remain staging")
-need(all(g.get("id") not in runtime_grade_ids for g in global19), "Korea Hyosung staging identities leaked into runtime")
 need({(g.get("polymer") or {}).get("family") for g in global19} == {"polyketone", "PP"}, "Korea Hyosung family drift")
 need(all((g.get("manufacturer") or {}).get("country") == "South Korea" for g in global19), "Korea Hyosung staging lost country identity")
 need(all(obs.get("comparisonReady") is False for g in global19 for obs in g.get("properties") or []), "Under-conditioned Hyosung numeric data must remain context-only")
+hyosung_poketone_ids = {g.get("id") for g in global19 if (g.get("polymer") or {}).get("family") == "polyketone"}
+need(len(hyosung_poketone_ids) == 8 and hyosung_poketone_ids.issubset(runtime_grade_ids), "Korea Hyosung POKETONE TDS promotions missing from runtime")
+need({g.get("id") for g in global19 if (g.get("polymer") or {}).get("family") == "PP"}.isdisjoint(runtime_grade_ids), "Korea Hyosung HJ541CP staging identity leaked into runtime")
 need((global_wave19.get("governance") or {}).get("runtimePromotionBlocked") is True, "Korea Hyosung promotion boundary drift")
+
+
+# Korea Hyosung wave 28: eight POKETONE records now carry grade-level
+# manufacturer TDS evidence with exact melt-flow test conditions. The runtime
+# promotion is limited to these eight records; HJ541CP remains in wave 19.
+global_wave28 = load_json(STAGING / "global-material-expansion-20261030-v28.json")
+need((global_wave28.get("summary") or {}).get("validatedGrades") == 8, "Korea Hyosung wave28 validated-grade count drift")
+need((global_wave28.get("summary") or {}).get("sourceReviewedStagingGrades") == 0, "Korea Hyosung wave28 staging count drift")
+need((global_wave28.get("summary") or {}).get("countryFocus") == "South Korea", "Korea Hyosung wave28 country focus drift")
+global28 = [g for m in global_wave28.get("manufacturers") or [] for g in m.get("gradeRecords") or []]
+need(len(global28) == 8 and all(g.get("id") in runtime_grade_ids for g in global28), "Korea Hyosung wave28 grades are not fully published")
+need({g.get("id") for g in global28} == hyosung_poketone_ids, "Korea Hyosung wave28 promotion set drift")
+need(all((g.get("provenance") or {}).get("stage") == "validated" for g in global28), "Korea Hyosung wave28 contains non-validated grade")
+need({(g.get("polymer") or {}).get("family") for g in global28} == {"polyketone"}, "Korea Hyosung wave28 family drift")
+need(all(any(obs.get("property") == "Melt Flow Rate" and obs.get("testMethod", "").startswith("ASTM D1238") and obs.get("temperatureC") in {220, 240, 255} and obs.get("loadKg") == 2.16 and obs.get("comparisonReady") is True for obs in g.get("properties") or []) for g in global28), "Korea Hyosung wave28 conditioned MFI contract drift")
+need(all(obs.get("comparisonReady") is False for g in global28 for obs in g.get("properties") or [] if obs.get("property") in {"Density", "Melting Temperature"}), "Korea Hyosung wave28 context properties became directly comparable")
+need(all(not g.get("processing") for g in global28), "Korea Hyosung wave28 must not infer processing recipes")
+need((global_wave28.get("governance") or {}).get("runtimePromotionBlocked") is False, "Korea Hyosung wave28 promotion boundary drift")
 
 
 # Korea Hanwha continuation: BI800 is current manufacturer-controlled exact

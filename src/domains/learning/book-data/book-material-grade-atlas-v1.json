@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "bookId": "mouldmaster-book",
-  "atlasVersion": "2026.10.01.2",
+  "atlasVersion": "2026.10.30.2",
   "bookRuntimeCompatibility": "2026.10.22.2",
   "status": "technical-review-material-atlas",
   "title": "Complete Material Data Atlas",
@@ -11,7 +11,7 @@
     "catalogVersion": "generated",
     "status": "validated",
     "manufacturerCount": 28,
-    "gradeCount": 260,
+    "gradeCount": 268,
     "boundary": "Compiled only from staged exact-grade records whose provenance stage is validated/published and which pass semantic QA. Internal staging/schema files are not part of the public runtime artifact. Commercial grade names may legitimately coexist when variant/revision/production identity differs."
   },
   "regionalEvidence": {
@@ -41,7 +41,7 @@
     "role": "Reconciliation/enrichment view only; it does not define complete Book material coverage."
   },
   "coverage": {
-    "canonicalExactGrades": 260,
+    "canonicalExactGrades": 268,
     "regionalEvidenceRows": 284,
     "regionalExactProfiles": 89,
     "completeDefinition": "All canonical public exact-grade records plus every row in the governed Asia/Australia/New Zealand evidence wave."
