@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.02.1",
+  "release": "2026.10.30.2",
   "purpose": "lightweight Book material search routing only; technical values remain in governed catalogue/regional evidence",
   "sourceCounts": {
     "canonicalExactGrades": 268,

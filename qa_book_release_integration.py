@@ -151,7 +151,7 @@ need('./src/domains/learning/book-data/book-material-search-index-v1.json' in sw
 material_catalog = json.loads(MATERIAL_CATALOG_SOURCE.read_text(encoding='utf-8'))
 material_regional = json.loads(MATERIAL_REGIONAL_SOURCE.read_text(encoding='utf-8'))
 material_search_index = json.loads(MATERIAL_SEARCH_INDEX_SOURCE.read_text(encoding='utf-8'))
-need(material_search_index.get('schemaVersion') == 1 and material_search_index.get('release') == '2026.11.02.1', 'Book material search index identity drift')
+need(material_search_index.get('schemaVersion') == 1 and material_search_index.get('release') == '2026.10.30.2', 'Book material search index identity drift')
 need(material_search_index.get('sourceCounts') == {'canonicalExactGrades':268,'regionalEvidenceRows':284,'total':552}, 'Book material search index source-count drift')
 expected_search_entries = []
 for grade in material_catalog.get('grades', []):

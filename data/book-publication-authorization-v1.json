@@ -190,7 +190,7 @@
   "materialAtlasAuthorization": {
     "status": "authorized-technical-review-appendix",
     "authorizedAt": "2026-10-01",
-    "atlasVersion": "2026.11.02.1",
+    "atlasVersion": "2026.10.30.2",
     "ledger": "data/book-material-grade-atlas-v1.json",
     "canonicalCatalog": "material-catalog-v1.json",
     "canonicalCatalogStatus": "validated",
