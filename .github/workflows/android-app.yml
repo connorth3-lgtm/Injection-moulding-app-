@@ -27,6 +27,8 @@ jobs:
       - uses: android-actions/setup-android@v3
       - name: Install Android SDK
         run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+      - name: Run dedicated Android contract QA
+        run: python3 qa_android_dedicated_app.py
       - name: Assemble debug APK
         run: gradle -p android assembleDebug --no-daemon
       - uses: actions/upload-artifact@v4
