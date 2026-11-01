@@ -10,6 +10,7 @@
   // this file loads. Browser/PWA builds keep the existing speech-synthesis path.
   const nativeTts=window.MouldMasterNativeTts||null;
   const nativeSupported=(()=>{try{return !!nativeTts&&typeof nativeTts.isAvailable==='function'&&nativeTts.isAvailable()===true&&typeof nativeTts.speak==='function'}catch(_){return false}})();
+  const nativeQueueSupported=(()=>{try{return nativeSupported&&typeof nativeTts.speakQueue==='function'}catch(_){return false}})();
   const synth=window.speechSynthesis;
   const browserSupported=!!(synth&&window.SpeechSynthesisUtterance);
   const supported=nativeSupported||browserSupported;
@@ -184,6 +185,40 @@
 
   function currentUnit(){return units[index]||null}
   function currentLessonUnit(){const unit=currentUnit();return unit?.lessonId==null?null:unit}
+
+  // The native Android service owns this queue so audio can continue while the
+  // WebView is backgrounded or the display is locked. Chunks stay below the
+  // Android TTS engine input limit while preserving enough metadata to restore
+  // Book position and highlighting when the WebView wakes again.
+  function buildNativeQueue(){
+    const maxChars=2800;
+    const stamp=Date.now();
+    const chunks=[];
+    let parts=[];
+    let chars=0;
+    let startIndex=index;
+    const flush=(endIndex)=>{
+      if(!parts.length)return;
+      chunks.push({text:parts.join(' '),startIndex,endIndex});
+      parts=[];chars=0;
+    };
+    for(let i=index;i<units.length;i++){
+      const text=String(units[i]?.text||'').trim();
+      if(!text)continue;
+      if(parts.length&&chars+text.length+1>maxChars){
+        flush(i-1);
+        startIndex=i;
+      }
+      parts.push(text);
+      chars+=text.length+(parts.length>1?1:0);
+    }
+    flush(units.length-1);
+    return chunks.map((chunk,offset)=>({
+      ...chunk,
+      id:\`mm-native-\${stamp}-\${++nativeRequestSeq}\`,
+      last:offset===chunks.length-1
+    }));
+  }
   function reportBookPosition(unit){
     if(unit?.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-position',{detail:{chapterId:unit.bookChapterId,unitIndex:unit.bookSentenceIndex}}));
   }
@@ -458,6 +493,10 @@
   }
 
   function startBackgroundAudio(){
+    // The native Android foreground service is the only media owner in the
+    // dedicated app. A hidden WebView carrier would create a second media
+    // notification and can compete with the phone's lock-screen audio focus.
+    if(nativeSupported)return false;
     const audio=ensureBackgroundAudio();
     if(!audio)return false;
     backgroundAudioStopping=false;
@@ -544,7 +583,8 @@
 
   function stop(reason,cancelSpeech=true){
     closeAppAudio();
-    stopBackgroundAudio();
+    if(!nativeSupported)stopBackgroundAudio();
+    else nativeHandlers.clear();
     backgroundRetryCount=0;
     // Invalidate active callbacks before cancel: some device voices dispatch
     // a synchronous cancellation error from synth.cancel().
@@ -579,46 +619,61 @@
     setStatus(refreshVoice()?'Starting device voice…':(androidSpeech||iosSpeech)?'Starting default device voice…':'Loading device voice…');
     updateButtons();
     if(nativeSupported){
-      const requestId=`mm-native-${Date.now()}-${++nativeRequestSeq}`;
-      nativeHandlers.set(requestId,event=>{
-        if(token!==speakToken)return;
-        const type=String(event?.type||'');
-        if(type==='start'){
-          starting=false;speaking=true;paused=false;nativeSpeaking=true;
-          backgroundRetryCount=0;backgroundSpeechGapStartedAt=0;
-          setMediaSessionMetadata(unit);startBackgroundAudio();highlight(unit);reportBookPosition(unit);
-          setStatus('Reading with phone audio');updateButtons();
-          return;
-        }
-        nativeSpeaking=false;
-        if(type==='done'){
-          starting=false;speaking=false;paused=false;
-          backgroundRetryCount=0;backgroundSpeechGapStartedAt=0;
-          if(index<units.length-1){index+=1;speakCurrent();}
-          else {
-            if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-complete'));
-            stop('Finished reading',false);
+      const rate=Number((playlistMode?listeningUI?.speed:ui?.speed)?.value||1);
+      const queue=nativeQueueSupported
+        ? buildNativeQueue()
+        : [{id:\`mm-native-\${Date.now()}-\${++nativeRequestSeq}\`,text:unit.text,startIndex:index,endIndex:index,last:true}];
+      if(!queue.length){stop('No readable text is available.');return;}
+      queue.forEach(item=>{
+        nativeHandlers.set(item.id,event=>{
+          if(token!==speakToken)return;
+          const type=String(event?.type||'');
+          const activeUnit=units[Math.max(0,Math.min(units.length-1,item.startIndex))]||unit;
+          if(type==='start'){
+            index=item.startIndex;
+            starting=false;speaking=true;paused=false;nativeSpeaking=true;
+            backgroundRetryCount=0;backgroundSpeechGapStartedAt=0;
+            highlight(activeUnit);reportBookPosition(activeUnit);
+            setStatus('Reading with phone audio');updateButtons();
+            return;
           }
-          return;
-        }
-        if(type==='error'||type==='stopped'){
-          if(type==='stopped'&&paused)return;
-          reportBookPosition(unit);
-          starting=false;speaking=false;
-          stop(event?.message||'Phone voice stopped. Tap Listen to retry this sentence.',false);
-          selectionPending=units.length>0;
-          if(ui&&unit){ui.current.textContent=unit.text;ui.current.hidden=false;}
-          updateButtons();
-        }
+          if(type==='done'){
+            index=Math.min(item.endIndex+1,Math.max(0,units.length-1));
+            if(item.last){
+              nativeSpeaking=false;starting=false;speaking=false;paused=false;
+              backgroundRetryCount=0;backgroundSpeechGapStartedAt=0;
+              if(activeUnit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-complete'));
+              nativeHandlers.clear();
+              stop('Finished reading',false);
+            }else{
+              // The service immediately starts the next queued chunk. Keep the
+              // player active even if this WebView callback is delayed while
+              // the phone is locked.
+              nativeSpeaking=true;starting=false;speaking=true;paused=false;
+              setStatus('Reading with phone audio');updateButtons();
+            }
+            return;
+          }
+          if(type==='error'||type==='stopped'){
+            if(type==='stopped'&&paused)return;
+            reportBookPosition(activeUnit);
+            nativeSpeaking=false;starting=false;speaking=false;
+            nativeHandlers.clear();
+            stop(event?.message||'Phone voice stopped. Tap Listen to retry this sentence.',false);
+            selectionPending=units.length>0;
+            if(ui&&activeUnit){ui.current.textContent=activeUnit.text;ui.current.hidden=false;}
+            updateButtons();
+          }
+        });
       });
       setStatus('Starting phone voice…');updateButtons();
       try{
-        startBackgroundAudio();
-        const rate=Number((playlistMode?listeningUI?.speed:ui?.speed)?.value||1);
-        const accepted=nativeTts.speak(unit.text,rate,requestId);
+        const accepted=nativeQueueSupported
+          ? nativeTts.speakQueue(JSON.stringify(queue.map(item=>({id:item.id,text:item.text}))),rate)
+          : nativeTts.speak(queue[0].text,rate,queue[0].id);
         if(accepted===false)throw new Error('native speech rejected');
       }catch(err){
-        nativeHandlers.delete(requestId);nativeSpeaking=false;starting=false;
+        nativeHandlers.clear();nativeSpeaking=false;starting=false;
         stop('Phone voice could not start. Tap Listen again.',false);
         console.error('MouldMaster native Read Aloud:',err);
       }
