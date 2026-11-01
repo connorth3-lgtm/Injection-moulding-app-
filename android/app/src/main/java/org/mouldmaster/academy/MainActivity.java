@@ -1,9 +1,7 @@
 package org.mouldmaster.academy;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -37,7 +35,7 @@ public final class MainActivity extends Activity {
         settings.setBuiltInZoomControls(false);
         settings.setDisplayZoomControls(false);
         settings.setSupportZoom(false);
-        settings.setUserAgentString(settings.getUserAgentString() + " MouldMasterAndroid/2026.11.01");
+        settings.setUserAgentString(settings.getUserAgentString() + " MouldMasterAndroid/2026.11.02");
         webView.setWebViewClient(new PreviewWebViewClient());
         if (Build.VERSION.SDK_INT >= 24) {
             ServiceWorkerController.getInstance().setServiceWorkerClient(new ServiceWorkerClient() {
@@ -52,10 +50,6 @@ public final class MainActivity extends Activity {
         webView.addJavascriptInterface(new NativeTtsBridge(this, webView), "MouldMasterNativeTts");
         webView.loadUrl(BuildConfig.WEB_URL);
 
-        if (Build.VERSION.SDK_INT >= 33
-                && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 4101);
-        }
     }
 
     @Override
