@@ -81,7 +81,7 @@ test('Late OS onstart and sentence chaining continue after the page hides', asyn
   expect(await page.evaluate(()=>({cancels:window.__lateStartVoice.cancels,pauses:window.__lateStartVoice.pauses}))).toEqual({cancels:0,pauses:0});
 });
 
-test('Background speech is left alone and a device-paused queue resumes when visible', async ({page}) => {
+test('A device-paused browser queue waits for an explicit Resume tap', async ({page}) => {
   await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Continue this Book sentence after the screen turns off.</p></main></body></html>');
   await page.evaluate(()=>{
     Object.defineProperty(navigator,'userAgent',{configurable:true,value:'Mozilla/5.0 (Linux; Android 15; Pixel)'});
@@ -109,17 +109,25 @@ test('Background speech is left alone and a device-paused queue resumes when vis
     Object.defineProperty(document,'hidden',{configurable:true,value:false});
     document.dispatchEvent(new Event('visibilitychange'));
   });
+  await expect(player.locator('.mm-read-status')).toHaveText('Device voice paused while the page was hidden. Tap Resume to continue.');
+  await expect(play).toHaveText('Resume');
+  expect(await page.evaluate(()=>window.__screenOffResumeVoice.resumes)).toBe(0);
+  await play.click();
   await expect(player.locator('.mm-read-status')).toHaveText('Reading');
   await expect(play).toHaveText('Pause');
   expect(await page.evaluate(()=>window.__screenOffResumeVoice.resumes)).toBe(1);
 });
 
-test('screen-off playback uses a real multi-second carrier and pagehide does not cancel it', async ({page}) => {
-  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Keep this Book sentence alive while the phone is locked.</p></main></body></html>');
+test('browser Read Aloud clears media notifications and never retries hidden interruptions', async ({page}) => {
+  await setBookFixture(page,'<!doctype html><html lang="en"><body><div class="top-actions"></div><main class="main"><p>Keep this Book sentence selected after an interruption.</p></main></body></html>');
   await page.evaluate(()=>{
+    const media={playbackState:'playing',metadata:{title:'Legacy preview'},actions:{play:()=>{},pause:()=>{},stop:()=>{},nexttrack:()=>{},previoustrack:()=>{}},
+      setActionHandler(action,handler){this.actions[action]=handler;}};
+    Object.defineProperty(navigator,'mediaSession',{configurable:true,value:media});
+    const stale=document.createElement('audio');stale.dataset.mmScreenOffCarrier='true';stale.src='data:audio/wav;base64,AAAA';document.body.append(stale);
     class Voice{constructor(text=''){this.text=text;this.onstart=null;this.onend=null;this.onerror=null;}}
-    const speech={speaking:true,pending:false,cancels:0,getVoices(){return[];},speak(u){this.last=u;queueMicrotask(()=>u.onstart?.());},cancel(){this.cancels++;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
-    window.__carrierVoice=speech;
+    const speech={starts:0,cancels:0,last:null,getVoices(){return[];},speak(u){this.starts++;this.last=u;queueMicrotask(()=>u.onstart?.());},cancel(){this.cancels++;},pause(){},resume(){},addEventListener(){},removeEventListener(){}};
+    window.__notificationVoice=speech;
     Object.defineProperty(window,'SpeechSynthesisUtterance',{configurable:true,value:Voice});
     Object.defineProperty(window,'speechSynthesis',{configurable:true,value:speech});
   });
@@ -127,24 +135,22 @@ test('screen-off playback uses a real multi-second carrier and pagehide does not
   const player=page.locator('.mm-read-aloud');
   await player.locator('details').evaluate(el=>{el.open=true});
   await player.locator('[data-mm-read="play"]').click();
-  const carrier=await page.evaluate(async()=>{
-    const audio=document.querySelector('audio[data-mm-screen-off-carrier]');
-    const bytes=new Uint8Array(await (await fetch(audio.src)).arrayBuffer());
-    const view=new DataView(bytes.buffer);
-    let nonSilent=0;
-    for(let i=44;i<bytes.length;i++)if(bytes[i]!==128){nonSilent++;break;}
-    return {duration:view.getUint32(40,true)/(view.getUint32(24,true)*view.getUint16(22,true)),nonSilent,display:getComputedStyle(audio).display,volume:audio.volume};
-  });
-  expect(carrier.duration).toBeGreaterThanOrEqual(5);
-  expect(carrier.nonSilent).toBe(1);
-  expect(carrier.display).not.toBe('none');
-  expect(carrier.volume).toBeGreaterThan(0);
+  expect(await page.evaluate(()=>({
+    carriers:document.querySelectorAll('audio[data-mm-screen-off-carrier]').length,
+    state:navigator.mediaSession.playbackState,
+    metadata:navigator.mediaSession.metadata,
+    actions:Object.values(navigator.mediaSession.actions).some(Boolean)
+  }))).toEqual({carriers:0,state:'none',metadata:null,actions:false});
   await page.evaluate(()=>{
     Object.defineProperty(document,'hidden',{configurable:true,value:true});
     document.dispatchEvent(new Event('visibilitychange'));
-    const event=new Event('pagehide');Object.defineProperty(event,'persisted',{value:false});window.dispatchEvent(event);
+    window.__notificationVoice.last.onerror?.({error:'interrupted'});
   });
-  expect(await page.evaluate(()=>window.__carrierVoice.cancels)).toBe(0);
+  await expect(player.locator('.mm-read-status')).toHaveText('Device interrupted playback. Press Listen to restart this sentence.');
+  await page.waitForTimeout(600);
+  expect(await page.evaluate(()=>window.__notificationVoice.starts)).toBe(1);
+  await player.locator('[data-mm-read="play"]').click();
+  await expect.poll(()=>page.evaluate(()=>window.__notificationVoice.starts)).toBe(2);
 });
 
 test('privacy notice limits Read Aloud to the Book and explains the separate app audio test', async ({page}) => {
@@ -154,7 +160,7 @@ test('privacy notice limits Read Aloud to the Book and explains the separate app
   expect(text).toContain('Test phone sound check sends two short tones');
   expect(text).toContain('Press Listen to check Book speech');
   expect(text).toContain('MouldMaster cannot detect whether you hear the tone sample or Book speech');
-  expect(text).toContain('Last updated: 22 October 2026');
+  expect(text).toContain('Last updated: 2 November 2026');
   expect(text).toContain('screen-off listening is best effort');
   expect(text).toContain('check media volume and the selected headphone or Bluetooth output');
   expect(text).not.toContain('complete canonical lesson library');
