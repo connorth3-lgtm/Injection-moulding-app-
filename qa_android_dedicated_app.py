@@ -35,7 +35,6 @@ for marker in (
     "TextToSpeech",
     "startForeground",
     "AudioFocusRequest",
-    "MediaSession",
     "PARTIAL_WAKE_LOCK",
     "MouldMaster:BookAudio",
     "UtteranceProgressListener",
@@ -44,6 +43,7 @@ for marker in (
     "IDLE_SHUTDOWN_DELAY_MS",
     "setOnlyAlertOnce",
     "enableVibration(false)",
+    "Notification.CATEGORY_SERVICE",
 ):
     need(marker in service, f"foreground native audio service contract missing: {marker}")
 for marker in ("MouldMasterNativeTts", "window.MMNativeTtsEvent", "nativeQueueSupported", "buildNativeQueue", "speakQueue", "if(nativeSupported)return false", "Reading with phone audio"):
@@ -51,4 +51,8 @@ for marker in ("MouldMasterNativeTts", "window.MMNativeTtsEvent", "nativeQueueSu
 need("compileSdk 35" in gradle and "targetSdk 35" in gradle, "Android SDK target must be explicit")
 need("gradle -p android assembleDebug" in workflow, "Android build workflow missing")
 
-print("Dedicated Android Book audio QA passed: WebView bridge, bundled native-aware reader, foreground TTS service, media session and wake-lock contracts present.")
+need("android.permission.POST_NOTIFICATIONS" not in manifest, "Android app must not request notification permission for background playback")
+need("requestPermissions(" not in activity, "Android app must not prompt for notification permission")
+need("MediaSession" not in service, "Native narration must not create a second media-session notification")
+
+print("Dedicated Android Book audio QA passed: WebView bridge, bundled native-aware reader, quiet foreground TTS service and wake-lock contracts present.")

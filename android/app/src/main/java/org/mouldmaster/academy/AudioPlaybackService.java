@@ -11,8 +11,6 @@ import android.content.pm.ServiceInfo;
 import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
-import android.media.MediaMetadata;
-import android.media.session.MediaSession;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -114,7 +112,6 @@ public final class AudioPlaybackService extends Service {
             stopCurrent(true, "Phone audio focus was lost. Tap Listen to retry.");
         }
     };
-    private MediaSession mediaSession;
     private PowerManager.WakeLock wakeLock;
     private ArrayDeque<SpeechItem> speechQueue;
     private float pendingRate = 1f;
@@ -144,29 +141,11 @@ public final class AudioPlaybackService extends Service {
                 .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                 .build();
         if (Build.VERSION.SDK_INT >= 26) {
-            audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+            audioFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
                     .setAudioAttributes(attributes)
                     .setOnAudioFocusChangeListener(audioFocusListener)
                     .build();
         }
-
-        mediaSession = new MediaSession(this, "MouldMasterBook");
-        mediaSession.setCallback(new MediaSession.Callback() {
-            @Override
-            public void onPause() {
-                stopCurrent(true, "Paused from the phone controls. Tap Listen to resume.");
-            }
-
-            @Override
-            public void onStop() {
-                stopCurrent(true, "Stopped from the phone controls.");
-            }
-        });
-        mediaSession.setMetadata(new MediaMetadata.Builder()
-                .putString(MediaMetadata.METADATA_KEY_TITLE, "MouldMaster Book")
-                .putString(MediaMetadata.METADATA_KEY_ARTIST, "MouldMaster Academy")
-                .build());
-        mediaSession.setActive(true);
 
         textToSpeech = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
@@ -336,7 +315,7 @@ public final class AudioPlaybackService extends Service {
             audioManager.requestAudioFocus(audioFocusRequest);
         } else {
             audioManager.requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC,
-                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+                    AudioManager.AUDIOFOCUS_GAIN);
         }
     }
 
@@ -366,7 +345,7 @@ public final class AudioPlaybackService extends Service {
         if (Build.VERSION.SDK_INT >= 26) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID, getString(R.string.audio_channel_name), NotificationManager.IMPORTANCE_LOW);
-            channel.setDescription("One quiet control notification for Book narration while the screen is off.");
+            channel.setDescription("One silent foreground notification while Book narration plays.");
             channel.setSound(null, null);
             channel.enableVibration(false);
             channel.enableLights(false);
@@ -389,13 +368,9 @@ public final class AudioPlaybackService extends Service {
                 .setContentIntent(open)
                 .setOngoing(text != null)
                 .setOnlyAlertOnce(true)
-                .setCategory(Notification.CATEGORY_TRANSPORT)
-                .setVisibility(Notification.VISIBILITY_PUBLIC)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .setVisibility(Notification.VISIBILITY_PRIVATE)
                 .setShowWhen(false);
-        if (mediaSession != null) {
-            builder.setStyle(new Notification.MediaStyle()
-                    .setMediaSession(mediaSession.getSessionToken()));
-        }
         return builder.build();
     }
 
@@ -450,11 +425,6 @@ public final class AudioPlaybackService extends Service {
         if (textToSpeech != null) {
             try { textToSpeech.shutdown(); } catch (Exception ignored) { }
             textToSpeech = null;
-        }
-        if (mediaSession != null) {
-            mediaSession.setActive(false);
-            mediaSession.release();
-            mediaSession = null;
         }
         super.onDestroy();
     }
