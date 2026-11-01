@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "pass",
+    "technicalAutomation": "fail",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "pass",
-      "meaning": "PASS: release 2026.11.02.1 source 77bdec076f7ddb73555d6509642f6b46169008a9 run 41325574413 artifact 13089959457 fingerprint sha256:387fd33a7fa8b9c6a14c94e2ec582bf60ab95e744feaccdb7f71d68e6108d565 identifies the retained exact-source software candidate; human, device and production authorization remain HOLD."
+      "status": "fail",
+      "meaning": "HOLD: release 2026.11.02.2 candidate provenance is not yet retained; external, device and production authorization remain HOLD."
     },
     "behavioralBrowser": {
-      "status": "pass",
-      "meaning": "PASS: release 2026.11.02.1 source 77bdec076f7ddb73555d6509642f6b46169008a9 passed Mobile Browser QA and Question Quality 50-Pass on the exact candidate source."
+      "status": "fail",
+      "meaning": "HOLD: exact-head mobile-browser and question-quality gates for release 2026.11.02.2 are not yet recorded."
     },
     "externalHumanDevice": {
       "status": "hold",

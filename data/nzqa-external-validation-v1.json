@@ -1,16 +1,12 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.02.1",
+  "release": "2026.11.02.2",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.02.1.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.02.2.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "candidate": {
-    "release": "2026.11.02.1",
-    "sourceSha": "77bdec076f7ddb73555d6509642f6b46169008a9",
-    "runtimeFingerprint": "sha256:387fd33a7fa8b9c6a14c94e2ec582bf60ab95e744feaccdb7f71d68e6108d565"
-  },
+  "candidate": null,
   "boundary": "Candidate 77bdec076f7ddb73555d6509642f6b46169008a9 and public-runtime fingerprint sha256:387fd33a7fa8b9c6a14c94e2ec582bf60ab95e744feaccdb7f71d68e6108d565 identify the current release artifact only. They do not establish provider approval, NZQA accreditation, consent-to-assess or moderation evidence. All provider gates remain HOLD.",
   "requiredGates": [
     {
@@ -57,9 +53,9 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.10.29.1",
-    "sourceSha": "fc16b59316464b5fc3f5b85d6ca1a5142d5cc1d4",
-    "runtimeFingerprint": "sha256:f566a738295633a18a1638aff3ac702c91f460e0074c3ddc6ca99d47b93c3eb9"
+    "release": "2026.11.02.1",
+    "sourceSha": "77bdec076f7ddb73555d6509642f6b46169008a9",
+    "runtimeFingerprint": "sha256:387fd33a7fa8b9c6a14c94e2ec582bf60ab95e744feaccdb7f71d68e6108d565"
   },
   "previousIssueNumber": 379,
   "supersededCandidate": {

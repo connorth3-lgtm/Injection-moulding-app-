@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.11.02.1 source 77bdec076f7ddb73555d6509642f6b46169008a9 run 41325574413 artifact 13089959457 fingerprint sha256:387fd33a7fa8b9c6a14c94e2ec582bf60ab95e744feaccdb7f71d68e6108d565 identifies the retained exact-source software candidate; human, device and production authorization remain HOLD. |
-| Behavioral / browser | **pass** | PASS: release 2026.11.02.1 source 77bdec076f7ddb73555d6509642f6b46169008a9 passed Mobile Browser QA and Question Quality 50-Pass on the exact candidate source. |
+| Static / contract | **fail** | HOLD: release 2026.11.02.2 candidate provenance is not yet retained; external, device and production authorization remain HOLD. |n 41325574413 artifact 13089959457 fingerprint sha256:387fd33a7fa8b9c6a14c94e2ec582bf60ab95e744feaccdb7f71d68e6108d565 identifies the retained exact-source software candidate; human, device and production authorization remain HOLD. |
+| Behavioral / browser | **fail** | HOLD: exact-head mobile-browser and question-quality gates for release 2026.11.02.2 are not yet recorded. |nd Question Quality 50-Pass on the exact candidate source. |
 | External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
