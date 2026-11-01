@@ -6,8 +6,13 @@
   'use strict';
 
   const VERSION='2026.10.30.2';
+  // The dedicated Android wrapper injects a native TextToSpeech bridge before
+  // this file loads. Browser/PWA builds keep the existing speech-synthesis path.
+  const nativeTts=window.MouldMasterNativeTts||null;
+  const nativeSupported=(()=>{try{return !!nativeTts&&typeof nativeTts.isAvailable==='function'&&nativeTts.isAvailable()===true&&typeof nativeTts.speak==='function'}catch(_){return false}})();
   const synth=window.speechSynthesis;
-  const supported=!!(synth&&window.SpeechSynthesisUtterance);
+  const browserSupported=!!(synth&&window.SpeechSynthesisUtterance);
+  const supported=nativeSupported||browserSupported;
   const SPEEDS=[0.75,1,1.25,1.5];
   const EXCLUDED='script,style,noscript,template,svg,canvas,nav,form,input,textarea,select,option,button,[hidden],[aria-hidden="true"],.hidden,.mm-read-aloud,.mm-read-marker,.mm-reading-guide';
   const SOURCE_SELECTOR='p,li,h1,h2,h3,h4,h5,h6,label,blockquote,figcaption,td,th,.question,.feedback,.callout,.eyebrow';
@@ -42,6 +47,18 @@
   let backgroundRetryCount=0;
   let backgroundWatchTimer=null;
   let backgroundSpeechGapStartedAt=0;
+  let nativeRequestSeq=0;
+  let nativeSpeaking=false;
+  const nativeHandlers=new Map();
+  if(nativeSupported){
+    window.MMNativeTtsEvent=event=>{
+      const id=String(event?.id||'');
+      const handler=nativeHandlers.get(id);
+      if(!handler)return;
+      handler(event);
+      if(['done','error','stopped'].includes(String(event?.type||'')))nativeHandlers.delete(id);
+    };
+  }
 
   function visible(el){
     if(!el||!el.isConnected||el.closest(EXCLUDED))return false;
@@ -179,6 +196,11 @@
   }
 
   function refreshVoice(){
+    if(nativeSupported){
+      selectedVoice=null;
+      if(ui?.voice){ui.voice.disabled=true;ui.voice.title='The Android app uses the phone system voice';}
+      return null;
+    }
     if(!supported||typeof synth.getVoices!=='function'){selectedVoice=null;return null;}
     let voices=[];
     try{voices=synth.getVoices()||[]}catch(_){selectedVoice=null;return null;}
@@ -254,6 +276,7 @@
   }
 
   function resumePausedSpeechQueue(){
+    if(nativeSupported)return;
     // SpeechSynthesis can remain globally paused after an interruption even
     // when this player's own state is idle. New utterances then queue silently.
     if(!supported||typeof synth.resume!=='function')return;
@@ -261,6 +284,7 @@
   }
 
   function deviceIsSpeaking(){
+    if(nativeSupported)return nativeSpeaking;
     try{return synth.speaking===true}catch(_){return false}
   }
 
@@ -268,6 +292,11 @@
     // Some mobile providers mishandle cancel() immediately before a new
     // utterance. Clear a device queue only when it is active, or when an
     // explicit stop/failed-start must invalidate the current request.
+    if(nativeSupported){
+      try{if(force||nativeSpeaking||starting)nativeTts.stop()}catch(_){}
+      nativeSpeaking=false;
+      return;
+    }
     if(!supported)return;
     if(!force){
       try{if(synth.speaking!==true&&synth.pending!==true)return}catch(_){return}
@@ -467,7 +496,7 @@
   }
 
   function monitorHiddenSpeech(){
-    if(!document.hidden||playlistMode||paused||(!starting&&!speaking))return;
+    if(nativeSupported||!document.hidden||playlistMode||paused||(!starting&&!speaking))return;
     const audio=backgroundAudio;
     if(audio?.paused){startBackgroundAudio();return;}
     let active=false,pending=false;
@@ -549,6 +578,52 @@
     starting=true;speaking=false;paused=false;
     setStatus(refreshVoice()?'Starting device voice…':(androidSpeech||iosSpeech)?'Starting default device voice…':'Loading device voice…');
     updateButtons();
+    if(nativeSupported){
+      const requestId=`mm-native-${Date.now()}-${++nativeRequestSeq}`;
+      nativeHandlers.set(requestId,event=>{
+        if(token!==speakToken)return;
+        const type=String(event?.type||'');
+        if(type==='start'){
+          starting=false;speaking=true;paused=false;nativeSpeaking=true;
+          backgroundRetryCount=0;backgroundSpeechGapStartedAt=0;
+          setMediaSessionMetadata(unit);startBackgroundAudio();highlight(unit);reportBookPosition(unit);
+          setStatus('Reading with phone audio');updateButtons();
+          return;
+        }
+        nativeSpeaking=false;
+        if(type==='done'){
+          starting=false;speaking=false;paused=false;
+          backgroundRetryCount=0;backgroundSpeechGapStartedAt=0;
+          if(index<units.length-1){index+=1;speakCurrent();}
+          else {
+            if(unit.bookChapterId)window.dispatchEvent(new CustomEvent('mm:book-audio-complete'));
+            stop('Finished reading',false);
+          }
+          return;
+        }
+        if(type==='error'||type==='stopped'){
+          if(type==='stopped'&&paused)return;
+          reportBookPosition(unit);
+          starting=false;speaking=false;
+          stop(event?.message||'Phone voice stopped. Tap Listen to retry this sentence.',false);
+          selectionPending=units.length>0;
+          if(ui&&unit){ui.current.textContent=unit.text;ui.current.hidden=false;}
+          updateButtons();
+        }
+      });
+      setStatus('Starting phone voice…');updateButtons();
+      try{
+        startBackgroundAudio();
+        const rate=Number((playlistMode?listeningUI?.speed:ui?.speed)?.value||1);
+        const accepted=nativeTts.speak(unit.text,rate,requestId);
+        if(accepted===false)throw new Error('native speech rejected');
+      }catch(err){
+        nativeHandlers.delete(requestId);nativeSpeaking=false;starting=false;
+        stop('Phone voice could not start. Tap Listen again.',false);
+        console.error('MouldMaster native Read Aloud:',err);
+      }
+      return;
+    }
     const beginSpeech=()=>{
       if(token!==speakToken)return;
       // Windows voices may arrive after the initial tap. A hidden page may
@@ -789,11 +864,16 @@
     }
     if(starting){stop('Stopped');return;}
     if(paused){
+      if(nativeSupported){paused=false;speakCurrent();return;}
       try{synth.resume()}catch(_){stop('Device voice could not resume. Start playback again.');return;}
       startBackgroundAudio();
       paused=false;speaking=true;setStatus(playlistMode?'Listening session playing':'Reading');updateButtons();return;
     }
     if(speaking){
+      if(nativeSupported){
+        try{nativeTts.stop()}catch(_){stop('Phone voice could not pause. Start playback again.');return;}
+        nativeSpeaking=false;paused=true;speaking=false;pauseBackgroundAudio();setStatus('Paused');updateButtons();return;
+      }
       try{synth.pause()}catch(_){stop('Device voice could not pause. Start playback again.');return;}
       paused=true;speaking=false;pauseBackgroundAudio();setStatus('Paused');updateButtons();return;
     }
@@ -999,7 +1079,7 @@
     addStyles();
     const host=document.createElement('aside');
     host.className='mm-read-aloud';host.setAttribute('aria-label','Read Aloud');host.dataset.version=VERSION;
-    host.innerHTML=`<details><summary title="Expand or collapse the Read Aloud controls"><b>🔊 Listen</b><span>${supported?'Device voice':'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><button type="button" class="mm-read-speed" data-mm-read="test" aria-label="Test browser audio output with two short tones" title="Send two tones to the browser-selected audio output">Test phone sound</button><div class="mm-read-meta"><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><label>Voice <select class="mm-read-speed" data-mm-read="voice" aria-label="Narration voice"><option value="">Automatic device voice</option></select></label><span data-mm-read="position">0 / 0</span></div><div class="mm-book-audio-chapters" data-mm-book-audio-controls hidden><button type="button" data-mm-book-audio-prev aria-label="Previous Book chapter">⏮</button><label>Book chapter <select data-mm-book-audio-chapter aria-label="Book audio chapter"></select></label><button type="button" data-mm-book-audio-next aria-label="Next Book chapter">⏭</button><label class="mm-book-audio-follow"><input type="checkbox" data-mm-book-audio-follow checked> Follow text</label></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-note">Uses your device/browser speech-synthesis service. MouldMaster does not request microphone access or record audio.</p></div></details>`;
+    host.innerHTML=`<details><summary title="Expand or collapse the Read Aloud controls"><b>🔊 Listen</b><span>${supported?(nativeSupported?'Phone voice':'Device voice'):'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><button type="button" class="mm-read-speed" data-mm-read="test" aria-label="Test browser audio output with two short tones" title="Send two tones to the browser-selected audio output">Test phone sound</button><div class="mm-read-meta"><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><label>Voice <select class="mm-read-speed" data-mm-read="voice" aria-label="Narration voice"><option value="">Automatic device voice</option></select></label><span data-mm-read="position">0 / 0</span></div><div class="mm-book-audio-chapters" data-mm-book-audio-controls hidden><button type="button" data-mm-book-audio-prev aria-label="Previous Book chapter">⏮</button><label>Book chapter <select data-mm-book-audio-chapter aria-label="Book audio chapter"></select></label><button type="button" data-mm-book-audio-next aria-label="Next Book chapter">⏭</button><label class="mm-book-audio-follow"><input type="checkbox" data-mm-book-audio-follow checked> Follow text</label></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-note">Uses your device/browser speech-synthesis service. MouldMaster does not request microphone access or record audio.</p></div></details>`;
     const actions=document.querySelector('#app .top-actions,.top-actions');(actions||document.body).appendChild(host);
     ui={host,play:host.querySelector('[data-mm-read="play"]'),testAudio:host.querySelector('[data-mm-read="test"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),voice:host.querySelector('[data-mm-read="voice"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),current:host.querySelector('[data-mm-read="current"]'),bookNav:host.querySelector('[data-mm-book-audio-controls]'),bookChapter:host.querySelector('[data-mm-book-audio-chapter]'),bookPrev:host.querySelector('[data-mm-book-audio-prev]'),bookNext:host.querySelector('[data-mm-book-audio-next]'),follow:host.querySelector('[data-mm-book-audio-follow]')};
     ui.play.addEventListener('click',toggle);ui.testAudio.addEventListener('click',testAppAudio);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
@@ -1070,7 +1150,7 @@
   observer.observe(document.documentElement,{subtree:true,childList:true,attributes:true,
     attributeFilter:['class','style','hidden','aria-hidden']});
 
-  window.MMReadAloud={version:VERSION,supported,stop:()=>stop('Stopped'),refresh:()=>buildUnits(),
+  window.MMReadAloud={version:VERSION,supported,nativeSupported,stop:()=>stop('Stopped'),refresh:()=>buildUnits(),
     queueBookStart:({chapterId,unitIndex=0}={})=>{if(!/^r(?:0[1-9]|1[0-9]|20)$/.test(String(chapterId||'')))return false;queuedBookStart={chapterId,unitIndex:Math.max(0,Math.min(20000,Math.floor(Number(unitIndex)||0)))};return true;},
     selectBookChapter,startBookFromGesture};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',createUI,{once:true});else createUI();
