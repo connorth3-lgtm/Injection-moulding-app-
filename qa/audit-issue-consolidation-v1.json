@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.02.1",
+  "release": "2026.11.02.2",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "77bdec076f7ddb73555d6509642f6b46169008a9",
-  "scope": "Adjusted browser Book read-aloud media-session metadata so the lock-screen media notification stays stable across sentence handoffs. Browser and device screen-off behavior remains platform-dependent. Release 2026.11.02.1 exact-source candidate 77bdec076f7ddb73555d6509642f6b46169008a9 passed automated preview quality gates. No human or external validation is inferred.",
-  "approvalBoundary": "Release 2026.11.02.1 exact candidate producer run 41325574413 created artifact 13089959457 for source 77bdec076f7ddb73555d6509642f6b46169008a9, with runtime fingerprint sha256:387fd33a7fa8b9c6a14c94e2ec582bf60ab95e744feaccdb7f71d68e6108d565. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": "17ae5aa2e73929aabd9f3dc1fd0415867e27e6be",
+  "scope": "Removed the hidden audio carrier and Android MediaSession that created persistent notifications, and stopped automatic hidden-page speech retries. Interrupted browser speech requires an explicit Resume tap; screen-off playback remains platform-dependent. Release 2026.11.02.2 exact-source candidate 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be passed automated preview quality gates. No human or external validation is inferred.",
+  "approvalBoundary": "Release 2026.11.02.2 exact candidate producer run 41334499139 created artifact 13095275054 for source 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be, with runtime fingerprint sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -43,10 +43,10 @@
   "productionAuthority": "advisory-only",
   "humanEvidenceStatus": "hold",
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
-  "lastReviewedDate": "2026-10-29",
+  "lastReviewedDate": "2026-11-01",
   "previousVerifiedCandidate": {
-    "release": "2026.10.28.1",
-    "sourceSha": "d804c0bf934c663e20fa2d67e8095acbc892c2ad",
-    "runtimeFingerprint": "sha256:93c890e757d7b1ac80528ab80258e2245b0d6ddfc133501689fc4eeec252242c"
+    "release": "2026.11.02.1",
+    "sourceSha": "77bdec076f7ddb73555d6509642f6b46169008a9",
+    "runtimeFingerprint": "sha256:387fd33a7fa8b9c6a14c94e2ec582bf60ab95e744feaccdb7f71d68e6108d565"
   }
 }
