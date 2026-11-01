@@ -43,7 +43,7 @@ REQUIRED_IGNORE_MARKERS = frozenset({
 
 TOP_DIRS = frozenset({
     ".github", "assets", "audit", "certification", "credentials",
-    "data", "desktop", "docs", "machine-research", "qa", "research",
+    "android", "data", "desktop", "docs", "machine-research", "qa", "research",
     "sources", "src", "tests", "tools",
 })
 
