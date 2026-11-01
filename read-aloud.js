@@ -820,6 +820,12 @@
   },true);
   window.addEventListener('hashchange',()=>{if(!playlistMode)stop('Stopped after navigation')});
   window.addEventListener('popstate',()=>{if(!playlistMode)stop('Stopped after navigation')});
+  window.addEventListener('pagehide',()=>{
+    // Do not create a new session or resume speech during page transitions.
+    // Clear only stale preview media controls; the active utterance is left alone.
+    if(starting||speaking||paused)clearLegacyBrowserMedia();
+  });
+
   document.addEventListener('visibilitychange',()=>{
     if(document.hidden||!supported||playlistMode||(!starting&&!speaking)||paused)return;
     let devicePaused=false;

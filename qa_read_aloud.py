@@ -85,15 +85,15 @@ for marker in (
     need(marker in runtime, f"Android tap-to-speak guard missing: {marker}")
 need("await waitForVoice" not in runtime, "Android speech start must not block on voice discovery")
 
-# Hiding or locking the phone must not make the app pause/cancel speech. If
-# the browser reports that the queue paused itself, retry resume on foreground.
+# Hidden-page speech can be interrupted by the browser. Leave recovery to the
+# learner so the app does not restart speech or refresh persistent media UI.
 visibility_handler = runtime.split("document.addEventListener('visibilitychange',()=>{", 1)[1].split("\n\n  const observer", 1)[0]
 need("if(document.hidden||!supported||playlistMode" in visibility_handler,
      "background visibility must be ignored; foreground recovery is the only visibility action")
-need("synth.pause()" not in visibility_handler and "synth.resume()" in visibility_handler,
-     "visibility lifecycle must never pause speech and must resume a device-paused queue")
-need("Device voice is paused. Tap Resume to continue." in visibility_handler,
-     "screen-off pause recovery must leave narration restartable")
+need("synth.pause()" not in visibility_handler and "synth.resume()" not in visibility_handler,
+     "visibility lifecycle must never pause or automatically resume speech")
+need("Device voice paused while the page was hidden. Tap Resume to continue." in visibility_handler,
+     "screen-off interruption must leave narration restartable by an explicit tap")
 need("Stopped because the app was hidden before speech started" not in runtime,
      "a hidden page must not invalidate delayed, user-started Book speech")
 
