@@ -4,7 +4,7 @@
 
 The materials expansion changes the Materials surface because the canonical catalogue grows from 260 to 268 exact grades. The strict four-viewport / thirteen-surface Chromium comparison remains enabled at `maxDiffPixels: 12` with no masking or skipped surfaces.
 
-- Candidate source: `11855c919abafd23bf7ba1ec4f9bca9b77550fe1`
+- Candidate source: `77bdec076f7ddb73555d6509642f6b46169008a9`
 - Technical comparison ref: `visual-baseline/2026.11.02.1`
 - Technical baseline commit: `171dce34a94ebfcd88ed40c03f8e1c17485f57fc`
 - Changed surface: Materials (expected grade-count/content drift)

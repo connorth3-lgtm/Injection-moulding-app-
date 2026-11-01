@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.11.02.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "11855c919abafd23bf7ba1ec4f9bca9b77550fe1",
-  "scope": "Updated the governed BASF troubleshooting source pointer and fixed live preview provenance health checks. Release 2026.11.02.1 exact-source candidate from source 11855c919abafd23bf7ba1ec4f9bca9b77550fe1 passed Mobile Browser QA, Question Quality 50-Pass, Read Aloud QA, Pages candidate retention and exact-head quality gates. No human or external validation is inferred.",
-  "approvalBoundary": "Release 2026.11.02.1 exact candidate producer run 41030274355 created artifact 12965302230 for source 11855c919abafd23bf7ba1ec4f9bca9b77550fe1. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": "77bdec076f7ddb73555d6509642f6b46169008a9",
+  "scope": "Adjusted browser Book read-aloud media-session metadata so the lock-screen media notification stays stable across sentence handoffs. Browser and device screen-off behavior remains platform-dependent. Release 2026.11.02.1 exact-source candidate 77bdec076f7ddb73555d6509642f6b46169008a9 passed automated preview quality gates. No human or external validation is inferred.",
+  "approvalBoundary": "Release 2026.11.02.1 exact candidate producer run 41325574413 created artifact 13089959457 for source 77bdec076f7ddb73555d6509642f6b46169008a9, with runtime fingerprint sha256:387fd33a7fa8b9c6a14c94e2ec582bf60ab95e744feaccdb7f71d68e6108d565. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
