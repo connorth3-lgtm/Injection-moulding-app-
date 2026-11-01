@@ -7,8 +7,11 @@ native TextToSpeech service and a foreground media-playback service.
 ## What changes
 
 - Book Read Aloud calls Android native TextToSpeech instead of browser speechSynthesis.
-- A foreground media service holds audio focus, a media-session notification and a partial
-  wake lock while a sentence is speaking, so narration can continue when the display locks.
+- A foreground service holds sustained audio focus and a partial wake lock while narration
+  runs, so playback does not depend on the WebView staying awake.
+- The service posts one low-priority, silent notification while narration runs. The app does
+  not request notification permission; Android 13+ can keep the service notice out of the
+  notification drawer while still showing the active service in system controls.
 - The Android WebView replaces the hosted read-aloud.js request with the bundled native-aware
   runtime, while the public browser/PWA bytes remain unchanged.
 - Learner progress stays in the WebView profile. The native bridge does not upload Book text.
@@ -23,7 +26,9 @@ From a machine with Android Studio or Gradle and Android SDK 35:
 
 Open the app once online. It loads the current governed preview and retains the WebView's
 normal origin/service-worker cache for subsequent offline starts where supported. On Android
-13+, allow the Book narration notification permission.
+8–12, Android shows the single silent foreground-service notification during playback. On
+Android 13+, the app does not request notification permission, so the service notice is
+normally kept out of the notification drawer while remaining visible in Android's Task Manager.
 
 ## Validation boundary
 
