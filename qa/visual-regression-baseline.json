@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.30.2",
+  "release": "2026.11.02.1",
   "commit": "171dce34a94ebfcd88ed40c03f8e1c17485f57fc",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
@@ -41,8 +41,8 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Historical owner visual approvals remain recorded for earlier immutable baselines. For the 2026.10.30.2 technical preview, this comparison ref is retained only to keep the strict four-viewport, thirteen-surface, maxDiffPixels=12 regression gate deterministic after the governed material-catalog expansion. The exact ref is visual-baseline/2026.10.30.2 at 171dce34a94ebfcd88ed40c03f8e1c17485f57fc; visual-owner approval for the changed Materials captures remains pending and is not inferred from this technical baseline. No masking or skipped surfaces are permitted; human/device, Book SME, provider, signing and production evidence remain HOLD.",
-  "ref": "visual-baseline/2026.10.30.2",
+  "policy": "Historical owner visual approvals remain recorded for earlier immutable baselines. For the 2026.11.02.1 technical preview, this comparison ref is retained only to keep the strict four-viewport, thirteen-surface, maxDiffPixels=12 regression gate deterministic after the governed material-catalog expansion. The exact ref is visual-baseline/2026.11.02.1 at 171dce34a94ebfcd88ed40c03f8e1c17485f57fc; visual-owner approval for the changed Materials captures remains pending and is not inferred from this technical baseline. No masking or skipped surfaces are permitted; human/device, Book SME, provider, signing and production evidence remain HOLD.",
+  "ref": "visual-baseline/2026.11.02.1",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",

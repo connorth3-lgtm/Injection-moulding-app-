@@ -26,7 +26,7 @@ def norm(value):
 
 need(ATLAS.get('schemaVersion')==2 and ATLAS.get('bookId')=='mouldmaster-book','Book material atlas identity mismatch')
 need(ATLAS.get('status')=='technical-review-material-atlas','Book material atlas must remain technical review')
-need(ATLAS.get('atlasVersion')=='2026.10.30.2','Book material atlas version mismatch')
+need(ATLAS.get('atlasVersion')=='2026.11.02.1','Book material atlas version mismatch')
 BOOK_BINDING=json.loads((ROOT/'data/book-sme-release-binding-v1.json').read_text(encoding='utf-8'))
 BOOK_RUNTIME=(ROOT/'src/domains/learning/book-runtime.js').read_text(encoding='utf-8')
 RUNTIME_VERSION=re.search(r"const VERSION='([^']+)'",BOOK_RUNTIME)
@@ -64,7 +64,7 @@ need('does not define complete Book material coverage' in profile.get('role','')
 
 search_counts=SEARCH_INDEX.get('sourceCounts') or {}
 search_entries=SEARCH_INDEX.get('entries') or []
-need(SEARCH_INDEX.get('schemaVersion')==1 and SEARCH_INDEX.get('release')=='2026.10.30.2','Book material search index identity mismatch')
+need(SEARCH_INDEX.get('schemaVersion')==1 and SEARCH_INDEX.get('release')=='2026.11.02.1','Book material search index identity mismatch')
 need(search_counts=={'canonicalExactGrades':268,'regionalEvidenceRows':284,'total':552},'Book material search index source counts drifted')
 need(len(search_entries)==552,'Book material search index must cover all 552 governed material rows')
 expected_canonical=[

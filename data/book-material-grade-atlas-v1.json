@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "bookId": "mouldmaster-book",
-  "atlasVersion": "2026.10.30.2",
+  "atlasVersion": "2026.11.02.1",
   "bookRuntimeCompatibility": "2026.10.22.2",
   "status": "technical-review-material-atlas",
   "title": "Complete Material Data Atlas",

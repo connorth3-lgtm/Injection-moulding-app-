@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
-  'web_release':'2026.10.30.2',
+  'web_release':'2026.11.02.1',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -345,13 +345,13 @@ need(approved_capture == {
      'owner-approved current screenshot capture provenance missing/stale')
 need(visual.get('browser') == "chromium via @playwright/test 1.64.1",
      'owner-approved current screenshot toolchain label was rewritten')
-if visual.get('release')=='2026.10.30.2':
+if visual.get('release')=='2026.11.02.1':
     # The material-catalog expansion intentionally changes the Materials
     # screenshots. Keep the strict comparison active against a separate
     # immutable technical ref, while recording the visual-owner decision as
     # an explicit HOLD rather than manufacturing approval.
-    review_current=text('qa/VISUAL_REVIEW_2026.10.30.2_PR676.md')
-    need(visual.get('ref')=='visual-baseline/2026.10.30.2'
+    review_current=text('qa/VISUAL_REVIEW_2026.11.02.1_PR676.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.02.1'
          and visual.get('commit')=='171dce34a94ebfcd88ed40c03f8e1c17485f57fc'
          and visual.get('maxDiffPixels')==12
          and [v.get('name') for v in visual.get('viewports',[])]==[
