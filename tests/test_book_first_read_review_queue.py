@@ -8,12 +8,12 @@ class FirstReadReviewQueueTests(unittest.TestCase):
     def test_source_derived_queue_covers_all_and_prioritizes_requested_chapters(self):
         rows, modules, omissions = audit()
         packet = editorial_review_packet(rows, modules, omissions)
-        self.assertEqual(packet["readerChapterCount"], 20)
+        self.assertEqual(packet["readerChapterCount"], 21)
         self.assertEqual(packet["governedModuleCount"], 46)
         self.assertEqual(packet["omittedSourceSectionCount"], 53)
         self.assertEqual(packet["chaptersBelowSoftTarget"], sum(r["belowTarget"] for r in rows))
         self.assertEqual({r["readerId"] for r in packet["chapters"]},
-                         {f"r{i:02d}" for i in range(1, 21)})
+                         {f"r{i:02d}" for i in range(1, 21)} | {"r03a"})
         self.assertEqual({r["readerId"] for r in packet["chapters"] if r["priority"] == "first-review"},
                          {"r07", "r10", "r11", "r15"})
         self.assertTrue(all(r["reviewerFindings"] is None and r["independentSmeStatus"] == "UNREVIEWED"
