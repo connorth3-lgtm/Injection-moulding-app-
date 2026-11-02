@@ -1236,7 +1236,7 @@
     attributeFilter:['class','style','hidden','aria-hidden']});
 
   window.MMReadAloud={version:VERSION,supported,nativeSupported,stop:()=>stop('Stopped'),refresh:()=>buildUnits(),
-    queueBookStart:({chapterId,unitIndex=0}={})=>{if(!/^r(?:0[1-9]|1[0-9]|20)$/.test(String(chapterId||'')))return false;queuedBookStart={chapterId,unitIndex:Math.max(0,Math.min(20000,Math.floor(Number(unitIndex)||0)))};return true;},
+    queueBookStart:({chapterId,unitIndex=0}={})=>{if(!/^r(?:0[1-9]|1[0-9]|20|03a)$/.test(String(chapterId||'')))return false;queuedBookStart={chapterId,unitIndex:Math.max(0,Math.min(20000,Math.floor(Number(unitIndex)||0)))};return true;},
     selectBookChapter,startBookFromGesture};
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',createUI,{once:true});else createUI();
 })();
