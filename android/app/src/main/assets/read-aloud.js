@@ -191,7 +191,8 @@
   // Android TTS engine input limit while preserving enough metadata to restore
   // Book position and highlighting when the WebView wakes again.
   function buildNativeQueue(){
-    const maxChars=2800;
+    // Use shorter native utterances so Android can advance the foreground queue frequently while locked.
+    const maxChars=900;
     const stamp=Date.now();
     const chunks=[];
     let parts=[];
