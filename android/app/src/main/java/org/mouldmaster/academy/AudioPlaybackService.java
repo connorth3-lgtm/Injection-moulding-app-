@@ -27,6 +27,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public final class AudioPlaybackService extends Service {
     static final String ACTION_SPEAK = "org.mouldmaster.academy.action.SPEAK";
@@ -35,6 +36,7 @@ public final class AudioPlaybackService extends Service {
     private static final String CHANNEL_ID = "mouldmaster-book-audio";
     private static final int NOTIFICATION_ID = 4102;
     private static final long IDLE_SHUTDOWN_DELAY_MS = 1800L;
+    private static final long TTS_INIT_TIMEOUT_MS = 12000L;
 
     private static WeakReference<WebView> webViewRef = new WeakReference<>(null);
     private static final Object REQUEST_LOCK = new Object();
@@ -117,6 +119,8 @@ public final class AudioPlaybackService extends Service {
     private float pendingRate = 1f;
     private String activeId;
     private boolean ttsReady;
+    private boolean ttsInitFinished;
+    private String ttsInitError;
     private boolean stopping;
     private boolean foregroundStarted;
     private String lastNotificationText;
@@ -147,49 +151,109 @@ public final class AudioPlaybackService extends Service {
                     .build();
         }
 
-        textToSpeech = new TextToSpeech(this, status -> {
-            if (status == TextToSpeech.SUCCESS) {
-                ttsReady = true;
-                textToSpeech.setAudioAttributes(attributes);
-                textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-                    @Override
-                    public void onStart(String utteranceId) {
-                        if (isCurrent(utteranceId)) emit(utteranceId, "start", null);
-                    }
+        ttsInitFinished = false;
+        ttsInitError = null;
+        textToSpeech = new TextToSpeech(this, status -> initializeTextToSpeech(status, attributes));
+        mainHandler.postDelayed(ttsInitTimeout, TTS_INIT_TIMEOUT_MS);
+    }
 
-                    @Override
-                    public void onDone(String utteranceId) {
-                        if (isCurrent(utteranceId)) {
-                            emit(utteranceId, "done", null);
-                            finishCurrent();
-                        }
-                    }
+    private final Runnable ttsInitTimeout = () -> {
+        if (ttsInitFinished) return;
+        ttsInitFinished = true;
+        ttsInitError = "Android text-to-speech did not respond. Check that a speech engine is installed, then tap Listen again.";
+        failQueuedSpeech(ttsInitError);
+    };
 
-                    @Override
-                    public void onError(String utteranceId) {
-                        if (isCurrent(utteranceId)) {
-                            emit(utteranceId, "error", "Android text-to-speech failed.");
-                            speechQueue = null;
-                            finishCurrent();
-                        }
-                    }
+    private void initializeTextToSpeech(int status, AudioAttributes attributes) {
+        if (ttsInitFinished) return;
+        ttsInitFinished = true;
+        mainHandler.removeCallbacks(ttsInitTimeout);
+        if (status != TextToSpeech.SUCCESS) {
+            ttsReady = false;
+            ttsInitError = "Android text-to-speech could not start. Open Settings > Accessibility > Text-to-speech output, choose an engine, and install an English voice.";
+            failQueuedSpeech(ttsInitError);
+            return;
+        }
 
-                    @Override
-                    public void onError(String utteranceId, int errorCode) {
-                        if (isCurrent(utteranceId)) {
-                            emit(utteranceId, "error", "Android text-to-speech failed (" + errorCode + ").");
-                            speechQueue = null;
-                            finishCurrent();
-                        }
-                    }
-                });
-                speakNextQueued();
-            } else {
-                emit(activeId, "error", "Android text-to-speech is unavailable. Install or enable a system voice.");
-                speechQueue = null;
-                finishCurrent();
+        try {
+            textToSpeech.setAudioAttributes(attributes);
+            int languageStatus = textToSpeech.setLanguage(Locale.getDefault());
+            if (languageStatus < TextToSpeech.LANG_AVAILABLE) {
+                languageStatus = textToSpeech.setLanguage(Locale.ENGLISH);
             }
-        });
+            if (languageStatus < TextToSpeech.LANG_AVAILABLE) {
+                ttsReady = false;
+                ttsInitError = "No usable English voice is installed. Open Settings > Accessibility > Text-to-speech output and download an English voice.";
+                failQueuedSpeech(ttsInitError);
+                return;
+            }
+
+            textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                @Override
+                public void onStart(String utteranceId) {
+                    if (isCurrent(utteranceId)) emit(utteranceId, "start", null);
+                }
+
+                @Override
+                public void onDone(String utteranceId) {
+                    if (isCurrent(utteranceId)) {
+                        emit(utteranceId, "done", null);
+                        finishCurrent();
+                    }
+                }
+
+                @Override
+                public void onError(String utteranceId) {
+                    if (isCurrent(utteranceId)) {
+                        emit(utteranceId, "error", "Android text-to-speech failed. Check the selected engine and downloaded voice.");
+                        speechQueue = null;
+                        finishCurrent();
+                    }
+                }
+
+                @Override
+                public void onError(String utteranceId, int errorCode) {
+                    if (isCurrent(utteranceId)) {
+                        emit(utteranceId, "error", "Android text-to-speech failed (" + errorCode + "). Check the selected engine and downloaded voice.");
+                        speechQueue = null;
+                        finishCurrent();
+                    }
+                }
+            });
+            ttsReady = true;
+            ttsInitError = null;
+            speakNextQueued();
+        } catch (Exception error) {
+            ttsReady = false;
+            ttsInitError = "Android text-to-speech could not initialize. Check Settings > Accessibility > Text-to-speech output.";
+            failQueuedSpeech(ttsInitError);
+        }
+    }
+
+    private void failQueuedSpeech(String message) {
+        ttsInitError = message;
+        SpeechItem firstPending = speechQueue == null ? null : speechQueue.peekFirst();
+        String id = activeId != null ? activeId : firstPending == null ? null : firstPending.id;
+        if (id == null) return;
+
+        cancelDelayedShutdown();
+        stopping = true;
+        if (textToSpeech != null) {
+            try { textToSpeech.stop(); } catch (Exception ignored) { }
+        }
+        emit(id, "error", message);
+        activeId = null;
+        speechQueue = null;
+        releaseAudioFocus();
+        releaseWakeLock();
+        if (foregroundStarted) {
+            stopForeground(true);
+        } else {
+            ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).cancel(NOTIFICATION_ID);
+        }
+        foregroundStarted = false;
+        lastNotificationText = null;
+        stopSelf();
     }
 
     @Override
@@ -221,6 +285,10 @@ public final class AudioPlaybackService extends Service {
         cancelDelayedShutdown();
         replaceQueue(request.items, request.rate);
         startForegroundSafe(buildNotification("Starting Book narration"));
+        if (ttsInitError != null) {
+            failQueuedSpeech(ttsInitError);
+            return START_NOT_STICKY;
+        }
         if (ttsReady) speakNextQueued();
         return START_STICKY;
     }
@@ -420,6 +488,7 @@ public final class AudioPlaybackService extends Service {
 
     @Override
     public void onDestroy() {
+        mainHandler.removeCallbacks(ttsInitTimeout);
         cancelDelayedShutdown();
         stopCurrent(false, null);
         if (textToSpeech != null) {

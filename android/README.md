@@ -14,6 +14,8 @@ native TextToSpeech service and a foreground media-playback service.
   notification drawer while still showing the active service in system controls.
 - The Android WebView replaces the hosted read-aloud.js request with the bundled native-aware
   runtime, while the public browser/PWA bytes remain unchanged.
+- The Android Book panel's voice test speaks through the same native service as Read Aloud,
+  so it checks the installed TTS engine and voice rather than only checking browser tones.
 - Learner progress stays in the WebView profile. The native bridge does not upload Book text.
 - Browser/PWA and Windows desktop builds keep their existing paths.
 
@@ -29,6 +31,10 @@ normal origin/service-worker cache for subsequent offline starts where supported
 8–12, Android shows the single silent foreground-service notification during playback. On
 Android 13+, the app does not request notification permission, so the service notice is
 normally kept out of the notification drawer while remaining visible in Android's Task Manager.
+
+If Listen reports a speech engine or voice problem, open Android Settings > Accessibility >
+Text-to-speech output, select an installed engine, and download an English voice. Return to
+the app and tap Listen again; the app now reports setup failures instead of waiting silently.
 
 ## Validation boundary
 
