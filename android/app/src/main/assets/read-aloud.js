@@ -1,11 +1,11 @@
-/* MouldMaster Book Read Aloud — 2026.10.30.2
+/* MouldMaster Book Read Aloud — 2026.11.03
  * Learner-controlled text-to-speech using the browser/device speech-synthesis service.
  * No microphone access, recording, speech recognition, network upload, or learner-content storage.
  */
 (function(){
   'use strict';
 
-  const VERSION='2026.10.30.2';
+  const VERSION='2026.11.03';
   // The dedicated Android wrapper injects a native TextToSpeech bridge before
   // this file loads. Browser/PWA builds keep the existing speech-synthesis path.
   const nativeTts=window.MouldMasterNativeTts||null;
@@ -846,6 +846,29 @@
 
   function testAppAudio(){
     if(!visibleBookView()){setStatus('Open the Book to test audio output.');return;}
+    if(nativeSupported){
+      stop('Testing phone voice…');
+      const requestId='mm-native-test-'+Date.now()+'-'+(++nativeRequestSeq);
+      nativeHandlers.set(requestId,event=>{
+        const type=String(event?.type||'');
+        if(type==='start'){setStatus('Testing phone voice…');updateButtons();return;}
+        if(type==='done'){nativeHandlers.delete(requestId);setStatus('Phone voice test finished.');updateButtons();return;}
+        if(type==='error'||type==='stopped'){
+          nativeHandlers.delete(requestId);
+          setStatus(event?.message||'Phone voice test failed. Check Android text-to-speech settings.');
+          updateButtons();
+        }
+      });
+      try{
+        const accepted=nativeTts.speak("This is a test of the phone's text to speech voice.",1,requestId);
+        if(accepted===false)throw new Error('native speech rejected');
+      }catch(_){
+        nativeHandlers.delete(requestId);
+        setStatus('Phone voice could not start. Check the selected text-to-speech engine and installed voice.');
+        updateButtons();
+      }
+      return;
+    }
     const AudioContextType=window.AudioContext||window.webkitAudioContext;
     if(typeof AudioContextType!=='function'){
       setStatus('Device audio output testing is unavailable in this browser.');
@@ -1134,7 +1157,7 @@
     addStyles();
     const host=document.createElement('aside');
     host.className='mm-read-aloud';host.setAttribute('aria-label','Read Aloud');host.dataset.version=VERSION;
-    host.innerHTML=`<details><summary title="Expand or collapse the Read Aloud controls"><b>🔊 Listen</b><span>${supported?(nativeSupported?'Phone voice':'Device voice'):'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><button type="button" class="mm-read-speed" data-mm-read="test" aria-label="Test browser audio output with two short tones" title="Send two tones to the browser-selected audio output">Test phone sound</button><div class="mm-read-meta"><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><label>Voice <select class="mm-read-speed" data-mm-read="voice" aria-label="Narration voice"><option value="">Automatic device voice</option></select></label><span data-mm-read="position">0 / 0</span></div><div class="mm-book-audio-chapters" data-mm-book-audio-controls hidden><button type="button" data-mm-book-audio-prev aria-label="Previous Book chapter">⏮</button><label>Book chapter <select data-mm-book-audio-chapter aria-label="Book audio chapter"></select></label><button type="button" data-mm-book-audio-next aria-label="Next Book chapter">⏭</button><label class="mm-book-audio-follow"><input type="checkbox" data-mm-book-audio-follow checked> Follow text</label></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-note">Uses your device/browser speech-synthesis service. MouldMaster does not request microphone access or record audio.</p></div></details>`;
+    host.innerHTML=`<details><summary title="Expand or collapse the Read Aloud controls"><b>🔊 Listen</b><span>${supported?(nativeSupported?'Phone voice':'Device voice'):'Unavailable'}</span></summary><div class="mm-read-panel"><div class="mm-read-controls"><button type="button" data-mm-read="prev" aria-label="Previous sentence">◀</button><button type="button" class="mm-read-play" data-mm-read="play">Listen</button><button type="button" data-mm-read="next" aria-label="Next sentence">▶</button><button type="button" data-mm-read="stop">Stop</button></div><button type="button" class="mm-read-speed" data-mm-read="test" aria-label="${nativeSupported?'Test the phone voice with Android text-to-speech':'Test browser audio output with two short tones'}" title="${nativeSupported?'Speak a short test using Android text-to-speech':'Send two tones to the browser-selected audio output'}">${nativeSupported?'Test phone voice':'Test phone sound'}</button><div class="mm-read-meta"><p class="mm-read-status" role="status" aria-live="polite">${supported?'Ready':'Speech synthesis is unavailable'}</p><label>Speed <select class="mm-read-speed" data-mm-read="speed" aria-label="Read aloud speed">${SPEEDS.map(v=>`<option value="${v}"${v===1?' selected':''}>${v}×</option>`).join('')}</select></label><label>Voice <select class="mm-read-speed" data-mm-read="voice" aria-label="Narration voice"><option value="">Automatic device voice</option></select></label><span data-mm-read="position">0 / 0</span></div><div class="mm-book-audio-chapters" data-mm-book-audio-controls hidden><button type="button" data-mm-book-audio-prev aria-label="Previous Book chapter">⏮</button><label>Book chapter <select data-mm-book-audio-chapter aria-label="Book audio chapter"></select></label><button type="button" data-mm-book-audio-next aria-label="Next Book chapter">⏭</button><label class="mm-book-audio-follow"><input type="checkbox" data-mm-book-audio-follow checked> Follow text</label></div><p class="mm-read-current" data-mm-read="current" aria-live="off" hidden></p><p class="mm-read-note">Uses your device/browser speech-synthesis service. MouldMaster does not request microphone access or record audio.</p></div></details>`;
     const actions=document.querySelector('#app .top-actions,.top-actions');(actions||document.body).appendChild(host);
     ui={host,play:host.querySelector('[data-mm-read="play"]'),testAudio:host.querySelector('[data-mm-read="test"]'),prev:host.querySelector('[data-mm-read="prev"]'),next:host.querySelector('[data-mm-read="next"]'),stop:host.querySelector('[data-mm-read="stop"]'),speed:host.querySelector('[data-mm-read="speed"]'),voice:host.querySelector('[data-mm-read="voice"]'),status:host.querySelector('.mm-read-status'),position:host.querySelector('[data-mm-read="position"]'),current:host.querySelector('[data-mm-read="current"]'),bookNav:host.querySelector('[data-mm-book-audio-controls]'),bookChapter:host.querySelector('[data-mm-book-audio-chapter]'),bookPrev:host.querySelector('[data-mm-book-audio-prev]'),bookNext:host.querySelector('[data-mm-book-audio-next]'),follow:host.querySelector('[data-mm-book-audio-follow]')};
     ui.play.addEventListener('click',toggle);ui.testAudio.addEventListener('click',testAppAudio);ui.prev.addEventListener('click',()=>move(-1));ui.next.addEventListener('click',()=>move(1));ui.stop.addEventListener('click',()=>stop('Stopped'));
