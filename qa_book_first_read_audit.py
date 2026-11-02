@@ -120,8 +120,8 @@ def audit() -> tuple[list[dict], int, int]:
             "omittedEvidence": source_evidence,
             "belowTarget": visible < SOFT_WORD_TARGET,
         })
-    if len(rows) != 20 or len(all_seen) != 46 or len(set(all_seen)) != 46:
-        raise AssertionError("reader path must cover each of 46 authored modules once in 20 chapters")
+    if len(rows) != 21 or len(all_seen) != 46 or len(set(all_seen)) != 46:
+        raise AssertionError("reader path must cover each of 46 authored modules once in 21 chapters")
     if suppressed != 53:
         raise AssertionError(f"review changed the original 53 first-read omissions: {suppressed}")
     if any("sme" not in str(architecture.get("governanceBoundary", "")).lower() for _ in [0]):
@@ -182,7 +182,7 @@ def main() -> None:
         # More (or fewer) visible words can reflect legitimate author edits;
         # audit() already checks all 20 groups, 46 modules and 53 source
         # disclosures. Human review remains an independent HOLD.
-        if len(rows) != 20 or modules != 46 or omissions != 53:
+        if len(rows) != 21 or modules != 46 or omissions != 53:
             raise AssertionError("governed reader coverage changed")
     if args.report_json:
         args.report_json.parent.mkdir(parents=True, exist_ok=True)
