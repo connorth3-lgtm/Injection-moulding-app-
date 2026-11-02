@@ -30,6 +30,10 @@ normal origin/service-worker cache for subsequent offline starts where supported
 Android 13+, the app does not request notification permission, so the service notice is
 normally kept out of the notification drawer while remaining visible in Android's Task Manager.
 
+If Listen reports a speech engine or voice problem, open Android Settings > Accessibility >
+Text-to-speech output, select an installed engine, and download an English voice. Return to
+the app and tap Listen again; the app now reports setup failures instead of waiting silently.
+
 ## Validation boundary
 
 The native Android project is a technical preview integration. It still requires a real
