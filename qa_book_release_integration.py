@@ -253,9 +253,9 @@ need(r'function readerListeningModuleHtml\s*\(' in live_pages_verifier and r'fun
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('independentSmeStatus') == 'hold', 'evidence-enrichment authorization must preserve SME HOLD')
 
 claim_auth=authorization.get('claimEvidenceReferenceAuthorization') or {}
-need(claim_auth.get('status')=='authorized-derived-evidence-index' and claim_auth.get('release')==claim_evidence.get('release') and claim_auth.get('ledger')=='data/book-claim-evidence-reference-v1.json' and claim_auth.get('chapterCount')==46 and claim_auth.get('sourceCount')==52 and claim_auth.get('claimCount')==137 and claim_auth.get('noNewClaims') is True and claim_auth.get('independentSmeStatus')=='hold', 'claim-evidence reference authorization boundary drift')
+need(claim_auth.get('status')=='authorized-derived-evidence-index' and claim_auth.get('release')==claim_evidence.get('release') and claim_auth.get('ledger')=='data/book-claim-evidence-reference-v1.json' and claim_auth.get('chapterCount')==46 and claim_auth.get('sourceCount')==55 and claim_auth.get('claimCount')==137 and claim_auth.get('noNewClaims') is True and claim_auth.get('independentSmeStatus')=='hold', 'claim-evidence reference authorization boundary drift')
 need(claim_evidence.get('schemaVersion')==1 and claim_evidence.get('bookId')=='mouldmaster-book' and claim_evidence.get('status')=='governed-reader-claim-evidence-index', 'claim-evidence reference identity drift')
-need(claim_evidence.get('release')==book_sme.get('release') and claim_evidence.get('chapterCount')==46 and claim_evidence.get('sourceCount')==52 and claim_evidence.get('claimCount')==137, 'claim-evidence reference release/coverage drift')
+need(claim_evidence.get('release')==book_sme.get('release') and claim_evidence.get('chapterCount')==46 and claim_evidence.get('sourceCount')==55 and claim_evidence.get('claimCount')==137, 'claim-evidence reference release/coverage drift')
 claim_review_paths=[
     ROOT / 'data/book-claim-review-foundations-materials-machine-v1.json',
     ROOT / 'data/book-claim-review-process-tooling-v1.json',
@@ -315,7 +315,7 @@ need(actual_claim_rows==expected_claim_rows, 'reader claim-level evidence trace 
 need(actual_claim_evidence==expected_claim_evidence, 'reader claim-evidence index drifted from final governed review/resolution state')
 expected_source_ids={source_id for ids in expected_claim_evidence.values() for source_id in ids}
 actual_source_ids={source.get('id') for source in claim_evidence.get('sourceSeeds', [])}
-need(len(expected_source_ids)==52 and actual_source_ids==expected_source_ids, 'reader final claim-evidence source coverage drift')
+need(len(expected_source_ids)==55 and actual_source_ids==expected_source_ids, 'reader final claim-evidence source coverage drift')
 need(all(source.get('title') and source.get('url') and source.get('scope') for source in claim_evidence.get('sourceSeeds', [])), 'reader claim-evidence source metadata incomplete')
 hot=actual_claim_evidence.get('hot-runners') or []
 need({'HUSKY-SCVG-HOT-SPRUE-SERVICE-2024','MOLD-MASTERS-HOT-RUNNER-USER-MANUAL-2020','BASF-ULTRAMID-PROCESSING'} <= set(hot), 'hot-runner final governed evidence disappeared from reader references')
@@ -341,7 +341,7 @@ need("ids=[...new Set([...(chapter.sourceIds||[]),...claimEvidenceIds(chapter.id
 for marker in ('EVIDENCE_IDENTITIES','BASF-INJECTION-PROBLEMS','NIST-SEMATECH-DOE','NIST-SEMATECH-CAPABILITY','PARIZS-2023-IN-MOLD-SENSORS-WORKED','getEvidenceIdentity'):
     need(marker in book_runtime, f'evidence alias/family normalization missing from Book runtime: {marker}')
 need('getEvidenceIdentity' in claim_trace_runtime and 'Evidence family:' in claim_trace_runtime, 'complete claim trace must explain evidence-family relationships')
-need('data.sourceSeeds.length!==52' in book_runtime, 'Book runtime must require all 52 final governed claim-evidence source records')
+need('data.sourceSeeds.length!==55' in book_runtime, 'Book runtime must require all 55 final governed claim-evidence source records')
 need("window.addEventListener('mm:book-manifest-ready',onManifestReady)" in claim_trace_runtime, 'complete claim trace must wait for the governed Book manifest-ready event')
 need('await window.MMBook?.load?.()' not in claim_trace_runtime, 'complete claim trace must not eagerly demand-load the governed Book at startup')
 need("window.dispatchEvent(new CustomEvent('mm:book-manifest-ready'" in book_runtime, 'Book runtime must announce exact governed manifest readiness after genuine demand')
