@@ -682,7 +682,7 @@
   },
   "readerPresentationReview": {
     "conclusion": "derived-presentation-only-no-new-technical-claims",
-    "scope": "First-read chapter threads, key-term navigation, progressive disclosure, and optional worked-example expansion. This revision adds a longer beginner materials path and a distinct advanced follow-up using existing governed modules and claim IDs.",
+    "scope": "First-read chapter threads, key-term navigation, progressive disclosure, and clearly labelled hypothetical worked examples. This revision adds a longer beginner materials path and a distinct advanced follow-up using existing governed modules and claim IDs.",
     "independentSmeStatus": "hold"
   },
   "latestRevision": {
