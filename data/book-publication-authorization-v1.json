@@ -29,24 +29,24 @@
       "book-claim-resolution-high-risk-v1.json": "84d007a72c16b60e01ba392f9ca6e0f6d487cc85",
       "book-authored-foundations-v1.json": "980be45918c8754713b888832dfe27c8b2f124f0",
       "book-evidence-registry-v1.json": "30ac109c576d256f3e316463f832c77e6606a1e5",
-      "book-authored-remaining-v1.json": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "book-authored-remaining-v1.json": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "book-worked-engineering-cases-v1.json": "e66b2c6a77bfc2135b404013e3838fa537178e86",
       "book-evidence-enrichment-v2.json": "bef9c879cd387c3e74a4df8dd37adccb1558a0a7",
       "book-material-grade-atlas-v1.json": "f2a5f171cbb92ee4d25c0e2f1930764493ffb5d5",
       "book-material-regional-evidence-v1.json": "4a42fa97f737b13271518d63672d3c4a01421e14",
       "material-catalog-v1.json": "7e32663e0f65ded1fd0ed3c1ae5a69c9cd0796fa",
       "book-engineering-diagrams-v1.json": "b4e0265cc5e78c861c68b4a6caefcddedfe3ba10",
-      "book-reader-architecture-v2.json": "2c63d039b4a2d98651fd5af08c706c6637d38f8c",
-      "book-editorial-expansion-review-v1.json": "5bcd774ba976010d146ab2c37626cfa46fb00b40",
-      "book-claim-evidence-reference-v1.json": "7fa99b032c5ca5878509ccdc8a5f00430abb67d8",
-      "book-claim-review-foundations-materials-machine-v1.json": "7d5c2ffa6d3b609c1766bc50923b2896998ff77c",
+      "book-reader-architecture-v2.json": "cbbb5cc9ee09fcfb010772213e4abe536b81b341",
+      "book-editorial-expansion-review-v1.json": "3f6c178d642ccd9557cb80d5ef80d5b7c3663a0d",
+      "book-claim-evidence-reference-v1.json": "4c3c1e5dc1c49189572ab6f2067c01ab32ae9e8f",
+      "book-claim-review-foundations-materials-machine-v1.json": "14b4374356b7df2f729c1668ebfa616fd3266807",
       "book-claim-review-process-tooling-v1.json": "525a946af21ea069ab7c3c003c5d7a6963d01707",
       "book-claim-review-troubleshooting-v1.json": "6689c3d697631e3cc0a3da5edf2ee49029e1489a",
       "book-claim-review-engineering-advanced-v1.json": "9e5ce1202dc7bf88dafa54a837e778624b65120d",
       "book-claim-review-high-risk-v1.json": "ba46cdf63811e4df1bd274df240756586380b406",
       "book-claim-resolution-high-risk-v2.json": "bbced00a8b699809fb1c4e55132d2265021bb278",
       "book-claim-resolution-all-v1.json": "1f3e6495947727f9ca73e3cf13b550aa24b38764",
-      "book-chapters-materials-machine-v1.json": "f562b556868f023c4ee290368149bc4fc3a95079"
+      "book-chapters-materials-machine-v1.json": "9083c83adfd2bf35f51cee371e42ab31578444ce"
     }
   },
   "canonicalAcademicEvidenceUrls": {
@@ -54,7 +54,9 @@
     "BIELENBERG-2025-SWITCHOVER-REVIEW": "https://doi.org/10.3390/polym17081096",
     "ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW": "https://doi.org/10.1007/s00170-022-08859-0",
     "PARIZS-2023-IN-MOLD-SENSORS": "https://doi.org/10.3390/s23031735",
-    "LI-2024-WELD-LINE-REVIEW": "https://doi.org/10.1007/s00170-024-13607-7"
+    "LI-2024-WELD-LINE-REVIEW": "https://doi.org/10.1007/s00170-024-13607-7",
+    "POLYM-LDPE-MICROSTRUCTURE-RHEOLOGY-2021": "https://doi.org/10.1039/D1RA03749H",
+    "POLYM-PP-COOLING-RATE-CRYSTALLIZATION-2022": "https://doi.org/10.3390/polym14173646"
   },
   "governanceSnapshot": {
     "manifestVersion": "2026.09.14.1",
@@ -258,7 +260,7 @@
     "release": "2026.10.22.2",
     "ledger": "data/book-claim-evidence-reference-v1.json",
     "chapterCount": 46,
-    "sourceCount": 52,
+    "sourceCount": 55,
     "noNewClaims": true,
     "independentSmeStatus": "hold",
     "authorityBoundary": "Presentation/traceability index only; it exposes the final governed evidence state for all 137 claims after technical review, evidence-resolution and retained-qualification overlays across all 46 modules, without changing claim conclusions, evidence status, production authority or independent human SME status.",
