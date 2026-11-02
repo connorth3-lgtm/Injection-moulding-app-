@@ -108,7 +108,7 @@ test('Book open fails closed and governed retry can recover from a transient man
   await retry.click();
   await page.waitForFunction(()=>Boolean(window.MMBook.getManifest()?.parts?.length));
   await expect(page.locator('[data-mm-book-failure]')).toHaveCount(0);
-  await expect(page.locator('[data-mm-book-summary]')).toContainText('20 reader chapters');
+  await expect(page.locator('[data-mm-book-summary]')).toContainText('21 reader chapters');
   expect(manifestAttempts).toBeGreaterThanOrEqual(2);
   const succeeded=await page.evaluate(()=>window.MMBook.openChapter('diagnostic-method'));
   expect(succeeded).toBe(true);
