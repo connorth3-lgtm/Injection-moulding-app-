@@ -19,6 +19,7 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.speech.tts.Voice;
 import android.webkit.WebView;
 
 import org.json.JSONObject;
@@ -28,6 +29,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public final class AudioPlaybackService extends Service {
     static final String ACTION_SPEAK = "org.mouldmaster.academy.action.SPEAK";
@@ -184,9 +186,14 @@ public final class AudioPlaybackService extends Service {
 
         try {
             textToSpeech.setAudioAttributes(attributes);
-            int languageStatus = textToSpeech.setLanguage(Locale.getDefault());
+            Locale speechLocale = Locale.getDefault();
+            if (!"en".equalsIgnoreCase(speechLocale.getLanguage())) {
+                speechLocale = Locale.ENGLISH;
+            }
+            int languageStatus = textToSpeech.setLanguage(speechLocale);
             if (languageStatus < TextToSpeech.LANG_AVAILABLE) {
-                languageStatus = textToSpeech.setLanguage(Locale.ENGLISH);
+                speechLocale = Locale.ENGLISH;
+                languageStatus = textToSpeech.setLanguage(speechLocale);
             }
             if (languageStatus < TextToSpeech.LANG_AVAILABLE) {
                 ttsReady = false;
@@ -195,6 +202,7 @@ public final class AudioPlaybackService extends Service {
                 return;
             }
 
+            preferBestInstalledEnglishVoice(speechLocale);
             textToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
                 @Override
                 public void onStart(String utteranceId) {
@@ -257,6 +265,48 @@ public final class AudioPlaybackService extends Service {
             ttsInitError = "Android text-to-speech could not initialize. Check Settings > Accessibility > Text-to-speech output.";
             failQueuedSpeech(ttsInitError);
         }
+    }
+
+    private void preferBestInstalledEnglishVoice(Locale preferredLocale) {
+        if (textToSpeech == null) return;
+        try {
+            Set<Voice> voices = textToSpeech.getVoices();
+            if (voices == null || voices.isEmpty()) return;
+
+            Voice best = null;
+            for (Voice voice : voices) {
+                Locale voiceLocale = voice.getLocale();
+                if (voiceLocale == null || !"en".equalsIgnoreCase(voiceLocale.getLanguage())) continue;
+                if (voice.isNetworkConnectionRequired()) continue;
+
+                Set<String> features = voice.getFeatures();
+                if (features == null
+                        || features.contains(TextToSpeech.Engine.KEY_FEATURE_NOT_INSTALLED)) {
+                    continue;
+                }
+                if (best == null || isBetterEnglishVoice(voice, best, preferredLocale)) {
+                    best = voice;
+                }
+            }
+
+            // Prefer the best already-installed offline voice so playback sounds
+            // natural without depending on network synthesis while the screen is off.
+            if (best != null) textToSpeech.setVoice(best);
+        } catch (Exception ignored) {
+            // Keep the TTS engine's language-selected default voice on any engine-specific issue.
+        }
+    }
+
+    private boolean isBetterEnglishVoice(Voice candidate, Voice current, Locale preferredLocale) {
+        if (candidate.getQuality() != current.getQuality()) {
+            return candidate.getQuality() > current.getQuality();
+        }
+        boolean candidateMatchesRegion = candidate.getLocale().getCountry()
+                .equalsIgnoreCase(preferredLocale.getCountry());
+        boolean currentMatchesRegion = current.getLocale().getCountry()
+                .equalsIgnoreCase(preferredLocale.getCountry());
+        if (candidateMatchesRegion != currentMatchesRegion) return candidateMatchesRegion;
+        return candidate.getLatency() < current.getLatency();
     }
 
     private void failQueuedSpeech(String message) {
