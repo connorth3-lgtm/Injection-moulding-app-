@@ -239,7 +239,7 @@ need(authorization.get('revocationRules', {}).get('runtimeByteIntegrityMismatch'
 need(authorization.get('revocationRules', {}).get('evidenceEnrichmentLedgerOrEvidenceMismatch') == 'fail-closed-runtime', 'evidence-enrichment mismatch must fail closed at runtime')
 need(authorization.get('revocationRules', {}).get('diagramLedgerOrAssetMismatch') == 'fail-closed-runtime', 'diagram ledger/asset mismatch must fail closed at runtime')
 reader_auth=authorization.get('readerArchitectureAuthorization') or {}
-need(reader_auth.get('status')=='authorized-derived-structure' and reader_auth.get('readerChapterCount')==20 and reader_auth.get('governedModuleCount')==46 and reader_auth.get('noNewTechnicalClaims') is True and reader_auth.get('independentSmeStatus')=='hold', 'reader architecture authorization boundary drift')
+need(reader_auth.get('status')=='authorized-derived-structure' and reader_auth.get('readerChapterCount')==21 and reader_auth.get('governedModuleCount')==46 and reader_auth.get('noNewTechnicalClaims') is True and reader_auth.get('independentSmeStatus')=='hold', 'reader architecture authorization boundary drift')
 editorial_auth=authorization.get('editorialExpansionAuthorization') or {}
 need(editorial_auth.get('status')=='authorized-repository-technical-source-review' and editorial_auth.get('moduleCount')==37 and editorial_auth.get('noNewClaimIds') is True and editorial_auth.get('independentSmeStatus')=='hold', 'editorial expansion authorization boundary drift')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('release') == enrichment.get('release'), 'evidence-enrichment authorization must remain bound to the reviewed content release')
@@ -329,7 +329,7 @@ for source_id in shared_worked:
     need(worked_sources[source_id]==claim_sources[source_id], f'shared worked-case evidence metadata conflicts with final claim evidence: {source_id}')
 need('Conflicting worked-case source id' in book_runtime and "fields=['type','issuer','title','url','checked','state','scope','canonicalUrl']" in book_runtime, 'Book runtime must accept only metadata-identical shared worked-case evidence records')
 readers=reader_architecture.get('readerChapters', [])
-need(len(readers)==20, 'reader evidence transparency must cover 20 reader chapters')
+need(len(readers)==21, 'reader evidence transparency must cover 20 reader chapters')
 for reader in readers:
     governed=set()
     for module_id in reader.get('moduleIds', []):
