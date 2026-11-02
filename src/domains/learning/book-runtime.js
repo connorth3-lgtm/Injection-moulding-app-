@@ -21,7 +21,7 @@
   const MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1='7a45cc0da8a18282a04ddf437d802bc6377f15e3';
   const MATERIAL_PAGE_SIZE=24;
   const BATCH_PATHS=[`${BOOK_DATA}book-authored-foundations-v1.json`,`${BOOK_DATA}book-evidence-registry-v1.json`,`${BOOK_DATA}book-chapters-materials-machine-v1.json`,`${BOOK_DATA}book-authored-remaining-v1.json`];
-  const AUTH_GIT_BLOB_SHA1='55e3cc63b0926baa26f10bd8f467acface16718e';
+  const AUTH_GIT_BLOB_SHA1='06129c6ae17f9aab13a002e335bb28ab89f59235';
   const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-claim-resolution-high-risk-v2.json','book-claim-resolution-all-v1.json','book-claim-review-foundations-materials-machine-v1.json','book-claim-review-process-tooling-v1.json','book-claim-review-troubleshooting-v1.json','book-claim-review-engineering-advanced-v1.json','book-claim-review-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-engineering-diagrams-v1.json','book-evidence-enrichment-v2.json','book-claim-evidence-reference-v1.json','book-reader-architecture-v2.json','book-editorial-expansion-review-v1.json','book-material-grade-atlas-v1.json','book-material-regional-evidence-v1.json','material-catalog-v1.json'];
   const CANONICAL_SOURCE_URLS=Object.freeze({
     'OUBELLAOUCH-2024-FIBRE-ORIENTATION':'https://doi.org/10.1007/s00170-024-12990-5',
@@ -41,7 +41,7 @@
     'PARIZS-2023-IN-MOLD-SENSORS-WORKED':Object.freeze({family:'Parizs et al. 2023 in-mould sensor study',sameAs:'PARIZS-2023-IN-MOLD-SENSORS'})
   });
   // Reader-only editorial consolidation. The governed module payloads remain intact for
-  // audit/SME review; the linear 20-chapter reading path suppresses only sections that
+  // audit/SME review; the linear 21-chapter reading path suppresses only sections that
   // restate a stronger section in the same governed module.
   const READER_SECTION_OMISSIONS=Object.freeze({
     'process-baseline':Object.freeze(['Start inside known limits','Record what can reproduce the state','Stability before optimization','Baseline before optimisation']),
@@ -78,7 +78,7 @@
     const key=audioStorageKey();if(!key)return null;
     try{
       const row=JSON.parse(localStorage.getItem(key)||'null');
-      if(!row||row.schema!==1||row.bookRelease!==VERSION||!/^r(?:0[1-9]|1[0-9]|20)$/.test(row.chapterId)||!Number.isInteger(row.unitIndex)||row.unitIndex<0||row.unitIndex>20000||!['complete','streamlined','examples'].includes(row.mode))return null;
+      if(!row||row.schema!==1||row.bookRelease!==VERSION||!/^r(?:0[1-9]|1[0-9]|20|03a)$/.test(row.chapterId)||!Number.isInteger(row.unitIndex)||row.unitIndex<0||row.unitIndex>20000||!['complete','streamlined','examples'].includes(row.mode))return null;
       return row;
     }catch(_){return null}
   }
@@ -94,17 +94,22 @@
       refreshAudioContinue();return true;
     }catch(_){return false}
   }
+  function readerChapterOrdinal(id){
+    const index=allReaderChapters().findIndex(row=>row.id===id);
+    return index<0?null:index+1;
+  }
   function refreshAudioContinue(){
     if(!ui?.listenContinue)return;
-    const saved=readAudioResume();ui.listenContinue.hidden=!saved;
-    ui.listenContinue.disabled=!saved||!verifiedChapters().length;
-    if(saved){const ordinal=Number(saved.chapterId.slice(1));ui.listenContinue.textContent=`Continue listening · chapter ${ordinal} of 20`;}
+    const saved=readAudioResume(),ordinal=saved?readerChapterOrdinal(saved.chapterId):null;
+    ui.listenContinue.hidden=!saved||ordinal===null;
+    ui.listenContinue.disabled=!saved||ordinal===null||!verifiedChapters().length;
+    if(saved&&ordinal!==null)ui.listenContinue.textContent=`Continue listening · chapter ${ordinal} of 21`;
   }
   window.addEventListener('mm:book-audio-position',event=>{
     if(!open||!ui?.view||ui.view.classList.contains('hidden'))return;
     const d=event.detail||{},key=audioStorageKey();
     if(!key||key!==activeAudioScopeKey){window.MMReadAloud?.stop?.();return;}
-    if(!/^r(?:0[1-9]|1[0-9]|20)$/.test(String(d.chapterId||''))||!Number.isInteger(d.unitIndex)||d.unitIndex<0||d.unitIndex>20000)return;
+    if(!/^r(?:0[1-9]|1[0-9]|20|03a)$/.test(String(d.chapterId||''))||!Number.isInteger(d.unitIndex)||d.unitIndex<0||d.unitIndex>20000)return;
     const mode=ui.audioMode?.value||'complete';
     try{localStorage.setItem(key,JSON.stringify({schema:1,bookRelease:VERSION,chapterId:d.chapterId,unitIndex:d.unitIndex,mode}));refreshAudioContinue();}catch(_){}
   });
@@ -308,8 +313,8 @@
   }
   function validateReaderArchitecture(data,declared,auth){
     if(data?.schema!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='governed-derived-reader-map'||!Array.isArray(data.readerChapters)||!data?.depthBandMeaning||!data?.pedagogyPolicy||!data?.firstReadPolicy)throw new Error('Book reader architecture identity check failed');
-    const permit=auth?.readerArchitectureAuthorization;if(permit?.status!=='authorized-derived-structure'||permit?.release!==VERSION||permit?.ledger!=='data/book-reader-architecture-v2.json'||permit?.readerChapterCount!==20||permit?.governedModuleCount!==46||permit?.noNewTechnicalClaims!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book reader architecture authorization missing');
-    if(data.readerChapters.length!==20)throw new Error('Book reader chapter count mismatch');
+    const permit=auth?.readerArchitectureAuthorization;if(permit?.status!=='authorized-derived-structure'||permit?.release!==VERSION||permit?.ledger!=='data/book-reader-architecture-v2.json'||permit?.readerChapterCount!==21||permit?.governedModuleCount!==46||permit?.noNewTechnicalClaims!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book reader architecture authorization missing');
+    if(data.readerChapters.length!==21)throw new Error('Book reader chapter count mismatch');
     const readerIds=new Set(),moduleIds=[];
     for(const reader of data.readerChapters){
       if(!reader?.id||readerIds.has(reader.id)||!reader?.title||!reader?.goal||!reader?.readingThread||!Array.isArray(reader.keyTerms)||reader.keyTerms.length<3||reader.keyTerms.length>8||reader.keyTerms.some(x=>typeof x!=='string'||!x.trim())||!Array.isArray(reader.moduleIds)||!reader.moduleIds.length||!['Foundation','Technician','Engineer','Advanced'].includes(reader.depthBand)||!Array.isArray(reader.learningObjectives)||reader.learningObjectives.length<2||!Array.isArray(reader.checkQuestions)||reader.checkQuestions.length<3||!reader.applyPrompt||!reader.evidenceBoundary||(reader.scenarioPrompt!=null&&typeof reader.scenarioPrompt!=='string'))throw new Error('Invalid Book reader chapter');
@@ -691,7 +696,7 @@
     ui.summary.textContent=`${readers.length} reader chapters · ${allChapters().length} governed modules · ${review.length} modules in technical review · ${verified.length} source-reviewed modules`;
     if(ui.smeStatus)ui.smeStatus.textContent=smeStatusText();
     // Plain numbered contents. The full governed 46-module index and editorial
-    // notes remain accessible AFTER the 20 chapter titles, without badges.
+    // notes remain accessible AFTER the 21 chapter titles, without badges.
     const toc=`<ol class="mm-book-toc">${readers.map((reader,index)=>`<li>
       <button type="button" data-mm-book-reader-chapter-open="${esc(reader.id)}">
         <span class="mm-book-toc-number">${index+1}.</span><span>${esc(reader.title)}<small class="mm-book-toc-meta">${esc(reader.depthBand)} · ${reader.moduleIds.length} source module${reader.moduleIds.length===1?'':'s'} · ${reader.checkQuestions.length} review questions</small></span>
@@ -831,7 +836,7 @@
     const started=reader.startBookFromGesture();
     if(!started)ui.summary.textContent='No readable Book audio was found. Try the Test phone sound button or reload the Book.';
     emitBookRender('listening');}
-  function openBook(){if(!ui)return;if(open)flushReadingPosition({notify:true});clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingPosition=null;activeReadingScopeKey=null;bookIntentEpoch++;previousView=[...document.querySelectorAll('.view')].find(v=>!v.classList.contains('hidden')&&v!==ui.view)||previousView;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));ui.view.classList.remove('hidden');restoreBookChrome();open=true;setBookInstantScroll(true);document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));ui.nav.classList.add('active');const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');if(title)title.textContent='Book';if(subtitle)subtitle.textContent='Evidence-governed injection moulding reference — 20 reader chapters preserve 46 module-level claim and source boundaries.';contentsScrollY=0;contentsWindowScrollY=0;pendingContentsScroll=null;showContents({restoreScroll:false});scrollBookTo(0);emitBookRender('contents');if(!manifest){ui.summary.textContent='Loading governed Book content on demand…';ui.smeStatus.textContent='Independent human SME review status loads with the Book content.';void ensureManifest().catch(()=>{});}}
+  function openBook(){if(!ui)return;if(open)flushReadingPosition({notify:true});clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingPosition=null;activeReadingScopeKey=null;bookIntentEpoch++;previousView=[...document.querySelectorAll('.view')].find(v=>!v.classList.contains('hidden')&&v!==ui.view)||previousView;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));ui.view.classList.remove('hidden');restoreBookChrome();open=true;setBookInstantScroll(true);document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));ui.nav.classList.add('active');const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');if(title)title.textContent='Book';if(subtitle)subtitle.textContent='Evidence-governed injection moulding reference — 21 reader chapters preserve 46 module-level claim and source boundaries.';contentsScrollY=0;contentsWindowScrollY=0;pendingContentsScroll=null;showContents({restoreScroll:false});scrollBookTo(0);emitBookRender('contents');if(!manifest){ui.summary.textContent='Loading governed Book content on demand…';ui.smeStatus.textContent='Independent human SME review status loads with the Book content.';void ensureManifest().catch(()=>{});}}
   async function openChapter(id){
     openBook();
     const intent=bookIntentEpoch,learnerKey=resumeStorageKey();
