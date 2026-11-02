@@ -8,8 +8,8 @@
   "reviewBoundary": "Repository-controlled technical/source review only. It confirms that added explanatory prose remains within existing governed claim scope; it is not independent human SME validation and cannot create machine-, mould-, grade-, product- or site-specific production authority.",
   "readerArchitecture": {
     "path": "data/book-reader-architecture-v2.json",
-    "gitBlobSha1": "2c63d039b4a2d98651fd5af08c706c6637d38f8c",
-    "conclusion": "structural-only-no-new-technical-claims"
+    "gitBlobSha1": "cbbb5cc9ee09fcfb010772213e4abe536b81b341",
+    "conclusion": "derived-reader-scaffolding-without-new-technical-claims"
   },
   "reviewedModules": [
     {
@@ -121,7 +121,8 @@
         "No correlation or successful intervention is represented as proof of causation.",
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
-      ]
+      ],
+      "authoredGitBlobSha1": "9083c83adfd2bf35f51cee371e42ab31578444ce"
     },
     {
       "moduleId": "rheology",
@@ -137,7 +138,8 @@
         "No correlation or successful intervention is represented as proof of causation.",
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
-      ]
+      ],
+      "authoredGitBlobSha1": "9083c83adfd2bf35f51cee371e42ab31578444ce"
     },
     {
       "moduleId": "moisture-drying",
@@ -154,7 +156,8 @@
         "No correlation or successful intervention is represented as proof of causation.",
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
-      ]
+      ],
+      "authoredGitBlobSha1": "9083c83adfd2bf35f51cee371e42ab31578444ce"
     },
     {
       "moduleId": "thermal-history",
@@ -170,7 +173,8 @@
         "No correlation or successful intervention is represented as proof of causation.",
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
-      ]
+      ],
+      "authoredGitBlobSha1": "9083c83adfd2bf35f51cee371e42ab31578444ce"
     },
     {
       "moduleId": "material-families",
@@ -186,7 +190,8 @@
         "No correlation or successful intervention is represented as proof of causation.",
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
-      ]
+      ],
+      "authoredGitBlobSha1": "9083c83adfd2bf35f51cee371e42ab31578444ce"
     },
     {
       "moduleId": "fillers-additives",
@@ -202,7 +207,8 @@
         "No correlation or successful intervention is represented as proof of causation.",
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
-      ]
+      ],
+      "authoredGitBlobSha1": "9083c83adfd2bf35f51cee371e42ab31578444ce"
     },
     {
       "moduleId": "plasticising-unit",
@@ -219,12 +225,13 @@
         "No correlation or successful intervention is represented as proof of causation.",
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
-      ]
+      ],
+      "authoredGitBlobSha1": "9083c83adfd2bf35f51cee371e42ab31578444ce"
     },
     {
       "moduleId": "vp-transfer",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "vp-transfer-01",
         "vp-transfer-02",
@@ -242,7 +249,7 @@
     {
       "moduleId": "clamp",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "clamp-01",
         "clamp-02",
@@ -260,7 +267,7 @@
     {
       "moduleId": "cooling",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "cooling-01",
         "cooling-02",
@@ -278,7 +285,7 @@
     {
       "moduleId": "ejection-draft",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "ejection-draft-01",
         "ejection-draft-02",
@@ -296,7 +303,7 @@
     {
       "moduleId": "process-baseline",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "process-baseline-01",
         "process-baseline-02",
@@ -314,7 +321,7 @@
     {
       "moduleId": "documentation",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "documentation-01",
         "documentation-02",
@@ -332,7 +339,7 @@
     {
       "moduleId": "diagnostic-method",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "diagnostic-method-01",
         "diagnostic-method-02",
@@ -350,7 +357,7 @@
     {
       "moduleId": "short-shot",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "short-shot-01",
         "short-shot-02",
@@ -368,7 +375,7 @@
     {
       "moduleId": "flash",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "flash-01",
         "flash-02",
@@ -386,7 +393,7 @@
     {
       "moduleId": "sink-voids",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "sink-voids-01",
         "sink-voids-02",
@@ -404,7 +411,7 @@
     {
       "moduleId": "splay",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "splay-01",
         "splay-02",
@@ -422,7 +429,7 @@
     {
       "moduleId": "burns",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "burns-01",
         "burns-02",
@@ -440,7 +447,7 @@
     {
       "moduleId": "weld-lines",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "weld-lines-01",
         "weld-lines-02",
@@ -458,7 +465,7 @@
     {
       "moduleId": "warpage",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "warpage-01",
         "warpage-02",
@@ -476,7 +483,7 @@
     {
       "moduleId": "black-specks",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "black-specks-01",
         "black-specks-02",
@@ -494,7 +501,7 @@
     {
       "moduleId": "cavity-pressure",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "cavity-pressure-01",
         "cavity-pressure-02",
@@ -512,7 +519,7 @@
     {
       "moduleId": "doe",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "doe-01",
         "doe-02",
@@ -530,7 +537,7 @@
     {
       "moduleId": "capability",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "capability-01",
         "capability-02",
@@ -548,7 +555,7 @@
     {
       "moduleId": "process-monitoring",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "process-monitoring-01",
         "process-monitoring-02",
@@ -566,7 +573,7 @@
     {
       "moduleId": "dimensional-stability",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "dimensional-stability-01",
         "dimensional-stability-02",
@@ -584,7 +591,7 @@
     {
       "moduleId": "fibre-orientation",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "fibre-orientation-01",
         "fibre-orientation-02",
@@ -602,7 +609,7 @@
     {
       "moduleId": "thin-wall",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "thin-wall-01",
         "thin-wall-02",
@@ -620,7 +627,7 @@
     {
       "moduleId": "multi-cavity",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "multi-cavity-01",
         "multi-cavity-02",
@@ -638,7 +645,7 @@
     {
       "moduleId": "high-performance-polymers",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "high-performance-polymers-01",
         "high-performance-polymers-02",
@@ -656,7 +663,7 @@
     {
       "moduleId": "complex-diagnostics",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "888743f7a020af1d7cb0938ba97ce81d7766e75b",
+      "authoredGitBlobSha1": "02fec1b9e62424f3e0a599ecc6897425f494c4c1",
       "governedClaimIds": [
         "complex-diagnostics-01",
         "complex-diagnostics-02",
@@ -682,28 +689,26 @@
   },
   "readerPresentationReview": {
     "conclusion": "derived-presentation-only-no-new-technical-claims",
-    "scope": "First-read chapter threads, key-term navigation, progressive disclosure, and clearly labelled hypothetical worked examples. This revision adds a longer beginner materials path and a distinct advanced follow-up using existing governed modules and claim IDs.",
+    "scope": "First-read chapter threads, key-term navigation, progressive disclosure and clearly labelled hypothetical worked examples. This revision adds five polymer-science sections to the beginner materials path and six advanced sections across fibre orientation and high-performance polymers; it also expands the corresponding reader prompts. All content stays within existing governed module claims and evidence.",
     "independentSmeStatus": "hold"
   },
   "latestRevision": {
-    "id": "materials-progressive-reader-2026-11-02",
+    "id": "materials-polymer-science-advanced-depth-2026-11-02",
     "date": "2026-11-02",
     "scope": [
       "r03",
-      "r03a",
-      "r18",
-      "r19"
+      "r03a"
     ],
     "firstReadVisibleWords": {
-      "r03": 3626,
-      "r03a": 1195,
+      "r03": 4952,
+      "r03a": 2749,
       "r18": 473,
       "r19": 511
     },
-    "addedSectionCount": 3,
-    "conclusion": "Expanded the beginner polymer and exact-grade introductions and added one non-numeric material-comparison example. Added one explicitly hypothetical worked example to each advanced materials module. Split fibre orientation and high-performance polymers into an advanced follow-up immediately after the beginner chapter; every governed module remains present exactly once and no claim IDs or process recipes were added.",
-    "rationale": "The beginner chapter now explains the chain analogy and exact-grade identity in more detail, then walks through a fair comparison without relying on property values detached from their conditions. The follow-up uses hypothetical examples to apply existing evidence about directional fibre behaviour and exact-grade/system compatibility. These additions remain within the existing module claim scopes. The word counts are source-derived editorial information, not proof of learner comprehension or engineering approval.",
-    "materialChapterEmphasis": "r03 now gives a longer first-read explanation of polymer chains, family names, exact grades and a worked comparison. r03a follows immediately with advanced fibre-orientation and high-performance-polymer applications. r18 and r19 retain dimensional-stability and thin-wall/multi-cavity material without repeating the moved modules.",
+    "addedSectionCount": 11,
+    "conclusion": "Expanded r03 with five beginner-friendly polymer-science sections on repeat units, molecular-weight distributions, branching and entanglement, thermal transitions, cooling-rate evidence and polymer measurement methods. Expanded r03a with six advanced sections on spatial fibre-orientation fields, micro-CT/model comparison, directional measurement planning, grade/system compatibility, thermal history and supplier-document interpretation. Added three primary/standards evidence records to existing claim scopes; no claim IDs or process recipes were added.",
+    "rationale": "The beginner path now explains chain populations and molecular architecture, distinguishes glass transition, melting and crystallisation, and teaches what DSC and other measurements can establish. The advanced follow-up is more than twice its prior first-read length and develops evidence planning for both fibre-reinforced parts and demanding material changes. The LDPE, polypropylene and DSC examples are limited to the sources, samples and methods described; they do not establish generic machine settings or product acceptance.",
+    "materialChapterEmphasis": "r03 now builds from repeat units through molecular-weight distribution, branching, entanglement, thermal transitions, crystallisation and measurement limits before returning to grade identity and part evidence. r03a follows with deeper spatial orientation and material-system review. r18 and r19 retain their existing dimensional-stability and thin-wall/multi-cavity focus.",
     "independentSmeStatus": "hold",
     "humanDeviceValidationStatus": "hold",
     "readerPromptsUpdated": true
