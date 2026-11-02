@@ -46,10 +46,16 @@ public final class AudioPlaybackService extends Service {
     static final class SpeechItem {
         final String id;
         final String text;
+        final int retries;
 
         SpeechItem(String id, String text) {
+            this(id, text, 0);
+        }
+
+        SpeechItem(String id, String text, int retries) {
             this.id = id;
             this.text = text;
+            this.retries = retries;
         }
     }
 
@@ -118,6 +124,7 @@ public final class AudioPlaybackService extends Service {
     private ArrayDeque<SpeechItem> speechQueue;
     private float pendingRate = 1f;
     private String activeId;
+    private SpeechItem activeItem;
     private boolean ttsReady;
     private boolean ttsInitFinished;
     private String ttsInitError;
@@ -219,6 +226,28 @@ public final class AudioPlaybackService extends Service {
                         finishCurrent();
                     }
                 }
+
+                @Override
+                public void onStop(String utteranceId, boolean interrupted) {
+                    if (!isCurrent(utteranceId) || activeItem == null) return;
+                    SpeechItem stoppedItem = activeItem;
+                    if (stoppedItem.retries < 1) {
+                        activeId = null;
+                        activeItem = null;
+                        if (speechQueue == null) speechQueue = new ArrayDeque<>();
+                        speechQueue.addFirst(new SpeechItem(
+                                stoppedItem.id, stoppedItem.text, stoppedItem.retries + 1));
+                        mainHandler.postDelayed(() -> {
+                            if (!stopping && activeId == null) speakNextQueued();
+                        }, 350L);
+                        return;
+                    }
+
+                    emit(utteranceId, "error",
+                            "Phone voice stopped before the chapter finished. Tap Listen to retry.");
+                    speechQueue = null;
+                    finishCurrent();
+                }
             });
             ttsReady = true;
             ttsInitError = null;
@@ -243,6 +272,7 @@ public final class AudioPlaybackService extends Service {
         }
         emit(id, "error", message);
         activeId = null;
+        activeItem = null;
         speechQueue = null;
         releaseAudioFocus();
         releaseWakeLock();
@@ -299,6 +329,7 @@ public final class AudioPlaybackService extends Service {
             try { textToSpeech.stop(); } catch (Exception ignored) { }
         }
         activeId = null;
+        activeItem = null;
         releaseAudioFocus();
         releaseWakeLock();
         speechQueue = nextQueue;
@@ -315,6 +346,7 @@ public final class AudioPlaybackService extends Service {
 
         cancelDelayedShutdown();
         SpeechItem item = speechQueue.removeFirst();
+        activeItem = item;
         activeId = item.id;
         acquireAudioFocus();
         acquireWakeLock();
@@ -345,6 +377,7 @@ public final class AudioPlaybackService extends Service {
             emit(id, "error", message == null ? "Book narration stopped." : message);
         }
         activeId = null;
+        activeItem = null;
         speechQueue = null;
         releaseAudioFocus();
         releaseWakeLock();
@@ -357,14 +390,17 @@ public final class AudioPlaybackService extends Service {
     }
 
     private void finishCurrent() {
-        releaseAudioFocus();
-        releaseWakeLock();
         activeId = null;
+        activeItem = null;
         if (speechQueue != null && !speechQueue.isEmpty()) {
+            // Keep CPU awake and retain audio focus across utterance boundaries.
+            // The next native chunk starts immediately, while the screen may be off.
             speakNextQueued();
             return;
         }
         speechQueue = null;
+        releaseAudioFocus();
+        releaseWakeLock();
         scheduleDelayedShutdown();
     }
 
