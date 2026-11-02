@@ -122,8 +122,8 @@ def audit() -> tuple[list[dict], int, int]:
         })
     if len(rows) != 21 or len(all_seen) != 46 or len(set(all_seen)) != 46:
         raise AssertionError("reader path must cover each of 46 authored modules once in 21 chapters")
-    if suppressed != 53:
-        raise AssertionError(f"review changed the original 53 first-read omissions: {suppressed}")
+    if suppressed != 0:
+        raise AssertionError(f"redundant first-read sections remain hidden: {suppressed}")
     if any("sme" not in str(architecture.get("governanceBoundary", "")).lower() for _ in [0]):
         raise AssertionError("reader architecture lost its independent SME governance boundary")
     return rows, len(all_seen), suppressed
@@ -180,9 +180,9 @@ def main() -> None:
     if args.check:
         # A soft editorial goal must not become a hidden publication gate.
         # More (or fewer) visible words can reflect legitimate author edits;
-        # audit() already checks all 20 groups, 46 modules and 53 source
-        # disclosures. Human review remains an independent HOLD.
-        if len(rows) != 21 or modules != 46 or omissions != 53:
+        # audit() checks all reader chapters, 46 modules and zero hidden
+        # authored sections. Human review remains an independent HOLD.
+        if len(rows) != 21 or modules != 46 or omissions != 0:
             raise AssertionError("governed reader coverage changed")
     if args.report_json:
         args.report_json.parent.mkdir(parents=True, exist_ok=True)
