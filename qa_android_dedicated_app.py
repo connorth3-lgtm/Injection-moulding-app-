@@ -50,7 +50,7 @@ for marker in (
     "Locale.ENGLISH",
 ):
     need(marker in service, f"foreground native audio service contract missing: {marker}")
-for marker in ("MouldMasterNativeTts", "window.MMNativeTtsEvent", "nativeQueueSupported", "buildNativeQueue", "speakQueue", "if(nativeSupported)return false", "Reading with phone audio"):
+for marker in ("MouldMasterNativeTts", "window.MMNativeTtsEvent", "nativeQueueSupported", "buildNativeQueue", "speakQueue", "if(nativeSupported)return false", "nativeTts.speak(", "Test phone voice", "Reading with phone audio"):
     need(marker in runtime, f"bundled native-aware Read Aloud runtime missing: {marker}")
 need("compileSdk 35" in gradle and "targetSdk 35" in gradle, "Android SDK target must be explicit")
 need("gradle -p android assembleDebug" in workflow, "Android build workflow missing")
