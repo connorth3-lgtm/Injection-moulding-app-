@@ -86,32 +86,37 @@
         "material-families",
         "fillers-additives"
       ],
-      "goal": "Understand in plain language how plastic structure, broad material families and added ingredients can affect a part, and why the exact supplier grade matters.",
+      "goal": "Build a beginner’s mental model of polymers: how repeat units form chains, how chain populations and structure differ between grades, what changes during cooling, and why measurements and exact-grade evidence matter.",
       "depthBand": "Foundation",
       "learningObjectives": [
-        "Describe how different plastic structures can respond differently as they cool.",
-        "Explain why a family name is not enough to identify a material or its production guidance.",
-        "Recognise how fibres and additives can change more than one part property."
+        "Describe a polymer as a population of long chains made from repeating chemical units.",
+        "Explain how molecular-weight distribution, branching and entanglement can influence chain motion and measured melt behaviour, while keeping study results tied to the tested material.",
+        "Distinguish glass transition, melting and crystallisation as different thermal events.",
+        "Explain why DSC and other polymer measurements answer specific questions rather than describing a complete production part.",
+        "Use the exact commercial grade and test conditions when comparing supplier evidence."
       ],
       "checkQuestions": [
-        "What is a polymer chain, in everyday words?",
-        "How are amorphous and semi-crystalline plastics different as they cool?",
-        "Why can two grades with the same family name behave differently?",
-        "What should be checked before comparing a supplier property value?",
-        "How can fibres make a part behave differently in different directions?"
+        "What is a repeat unit, and why is a resin not usually made of identical chain lengths?",
+        "What does molecular-weight distribution tell you that one average cannot?",
+        "How are entanglement and chemical cross-links different?",
+        "How do glass transition, melting and crystallisation describe different events?",
+        "What can a DSC trace tell you, and what does it not directly map in a moulded part?",
+        "Why must a cooling-rate result stay linked to the exact polymer sample and test method?",
+        "What should be checked before comparing two supplier property values?"
       ],
-      "applyPrompt": "Imagine comparing two candidate plastics for one part. Write down what the part must do, the exact supplier grade for each candidate, the test conditions behind the data, and what would need to be checked on a moulded part.",
+      "applyPrompt": "Compare two hypothetical grades for one part. Record the exact grade identity, the polymer-structure features or measurements actually known, each property’s method and conditions, the part directions and requirements that matter, and what must be measured on a moulded part. Mark unknown information as unknown.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
       "scenarioPrompt": "Two exact grades from the same material family are proposed for the same mould. Without assuming interchangeability, list the grade documents and observed process/part evidence you would compare before deciding whether a transfer is defensible.",
-      "readingThread": "Start with the long molecules that make up plastic. Then see how broad families differ, and how fibres or additives can change the material further.",
+      "readingThread": "Begin with the repeating chemical units and long chains. Then follow how chain-size distributions and branching affect molecular motion, how amorphous and semi-crystalline materials respond to heat, and how measurement and grade documents turn those ideas into bounded evidence.",
       "keyTerms": [
         "polymer chain",
-        "amorphous",
-        "semi-crystalline",
-        "material family",
-        "grade",
-        "fibre reinforcement",
-        "additive"
+        "repeat unit",
+        "molecular-weight distribution",
+        "branching",
+        "entanglement",
+        "glass transition",
+        "crystallisation",
+        "differential scanning calorimetry (DSC)"
       ]
     },
     {
@@ -121,30 +126,35 @@
         "fibre-orientation",
         "high-performance-polymers"
       ],
-      "goal": "Build on the beginner materials chapter. Examine how short-fibre orientation can create directional behaviour and how advanced polymer choices require exact-grade and equipment-compatibility evidence.",
+      "goal": "Apply the beginner materials map to advanced engineering questions: how local fibre-orientation distributions relate to directional part behaviour, how physical measurements and simulations can be compared, and how a high-demand polymer must be reviewed against the whole material-handling and equipment system.",
       "depthBand": "Advanced",
       "learningObjectives": [
-        "Explain why fibre orientation can vary across one part and why a single direction may not describe its behaviour.",
-        "Separate a plausible orientation-based explanation from evidence that directly measures the part or material.",
-        "Prepare a grade-specific documentation and compatibility review for a proposed high-performance polymer."
+        "Explain fibre orientation as a local distribution that can vary across a part and through its thickness.",
+        "Separate global flow-path reasoning, local orientation measurements and part-level performance evidence.",
+        "Describe what micro-CT observations and simulation predictions can each contribute, and where their limits remain.",
+        "Plan directional measurements around product functions, features and cavity identity.",
+        "Prepare an exact-grade review covering supplier documents, equipment interfaces and the material’s thermal path."
       ],
       "checkQuestions": [
         "Why is one flow arrow across a whole part only a starting picture of fibre orientation?",
         "What does anisotropy mean when you compare dimensions or properties in different directions?",
+        "What does a micro-CT measurement tell you that a simulation prediction does not, and what can neither establish alone?",
+        "Why should measurement location, direction and cavity identity be preserved?",
         "Why can a family label such as “high-performance” not supply the conditions for an exact grade?",
-        "Which supplier documents and equipment interfaces belong in a material-change review?"
+        "Which supplier documents, equipment interfaces and thermal-history records belong in a material-change review?"
       ],
-      "applyPrompt": "Choose a hypothetical reinforced or high-temperature material. Make a review sheet with its exact grade identity, current supplier documents, the part directions or requirements that matter, equipment compatibility questions, and the physical evidence needed to evaluate the part. Leave unknown values blank; do not fill them with generic settings.",
+      "applyPrompt": "Choose a hypothetical reinforced or high-temperature material. Create two linked but separate review sheets: one for directional part evidence and one for exact-grade/system compatibility. Include grade identity, relevant supplier and equipment document revisions, part locations and directions, measurement methods and conditions, simulation assumptions if used, unresolved questions, and the physical evidence needed to evaluate the part. Leave unknown values blank; do not fill them with generic settings.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "readingThread": "This chapter follows the basic material map. It applies the same exact-grade discipline to two harder questions: how reinforcement behaves in different directions and how to assess a demanding material without guessing from its family label.",
+      "readingThread": "Start with orientation as a spatial distribution, then compare model predictions with physical observations and plan measurements in product-relevant directions. Next, treat a high-performance material as a system review: read the exact grade documents, map its thermal path and check every relevant equipment interface.",
       "keyTerms": [
         "fibre orientation",
-        "reinforcement",
+        "orientation distribution",
         "anisotropy",
-        "flow direction",
-        "high-performance polymer",
-        "equipment compatibility",
-        "exact grade"
+        "micro-CT",
+        "simulation validation",
+        "exact grade",
+        "thermal history",
+        "equipment compatibility"
       ],
       "scenarioPrompt": "A reinforced grade is proposed for a part with a dimension that changes by direction, and the same project is considering a high-temperature alternative. Separate the two reviews: list orientation evidence for the existing part, then list exact-grade supplier and equipment evidence for the proposed material. Mark hypotheses separately from measured facts."
     },
