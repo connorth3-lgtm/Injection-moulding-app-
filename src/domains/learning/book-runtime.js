@@ -21,7 +21,7 @@
   const MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1='7a45cc0da8a18282a04ddf437d802bc6377f15e3';
   const MATERIAL_PAGE_SIZE=24;
   const BATCH_PATHS=[`${BOOK_DATA}book-authored-foundations-v1.json`,`${BOOK_DATA}book-evidence-registry-v1.json`,`${BOOK_DATA}book-chapters-materials-machine-v1.json`,`${BOOK_DATA}book-authored-remaining-v1.json`];
-  const AUTH_GIT_BLOB_SHA1='73e8eeaaaa5ae4f9090944c53d08a1f910b7cbb5';
+  const AUTH_GIT_BLOB_SHA1='b6786e0cd9ed71814bc004141558fa53d7972117';
   const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-claim-resolution-high-risk-v2.json','book-claim-resolution-all-v1.json','book-claim-review-foundations-materials-machine-v1.json','book-claim-review-process-tooling-v1.json','book-claim-review-troubleshooting-v1.json','book-claim-review-engineering-advanced-v1.json','book-claim-review-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-engineering-diagrams-v1.json','book-evidence-enrichment-v2.json','book-claim-evidence-reference-v1.json','book-reader-architecture-v2.json','book-editorial-expansion-review-v1.json','book-material-grade-atlas-v1.json','book-material-regional-evidence-v1.json','material-catalog-v1.json'];
   const CANONICAL_SOURCE_URLS=Object.freeze({
     'OUBELLAOUCH-2024-FIBRE-ORIENTATION':'https://doi.org/10.1007/s00170-024-12990-5',
@@ -45,26 +45,7 @@
   // Reader-only editorial consolidation. The governed module payloads remain intact for
   // audit/SME review; the linear 21-chapter reading path suppresses only sections that
   // restate a stronger section in the same governed module.
-  const READER_SECTION_OMISSIONS=Object.freeze({
-    'process-baseline':Object.freeze(['Start inside known limits','Record what can reproduce the state','Stability before optimization','Baseline before optimisation']),
-    'documentation':Object.freeze(['Record the conditions that matter','Preserve context','Link changes to evidence']),
-    'diagnostic-method':Object.freeze(['Start with the symptom','Build competing mechanisms','Change to learn','Start with the symptom boundary','Write competing mechanisms and predicted evidence','Verify recovery and guard against coincidence']),
-    'short-shot':Object.freeze(['Use evidence','Locate where filling stops']),
-    'flash':Object.freeze(['Locate before correcting','Map flash before changing clamp or pressure']),
-    'splay':Object.freeze(['Appearance is not a unique diagnosis']),
-    'burns':Object.freeze(['Separate gas compression from degradation','Location and timing discriminate','Correct the mechanism']),
-    'weld-lines':Object.freeze(['How they form','Quality depends on the meeting conditions','Treat location as a design-process interaction','Evaluate both location and performance','Geometry can dominate where the line forms','Formation begins with divided flow']),
-    'cavity-pressure':Object.freeze(['Why measure in the cavity','Curve features need context','Use correlations carefully','Use the trace as evidence of sequence','Understand the measurement location']),
-    'cooling':Object.freeze(['Cooling drives repeatability','Setpoint is not surface temperature','Measure the system']),
-    'ejection-draft':Object.freeze(['Release is mechanical and thermal','Ejection evidence matters','Do not cure tooling problems blindly']),
-    'complex-diagnostics':Object.freeze(['Rank hypotheses by consequence as well as likelihood','Distinguish containment from root-cause correction']),
-    'polymer-structure':Object.freeze(['Structure changes processing behaviour','Do not turn the categories into absolutes']),
-    'rheology':Object.freeze(['Flow resistance is not a single material number']),
-    'vp-transfer':Object.freeze(['What transfer means','Why timing matters','How to establish it']),
-    'plasticising-unit':Object.freeze(['Plasticising prepares the next shot','The non-return valve matters during injection','Hardware suitability is material dependent']),
-    'sink-voids':Object.freeze(['Both arise from contraction','Surface sink and internal void are different outcomes','Test the pressure-and-cooling history']),
-    'black-specks':Object.freeze(['Separate continuous contamination from event-driven contamination'])
-  });
+  const READER_SECTION_OMISSIONS=Object.freeze({});
   const READER_SUPPLEMENT_SECTIONS=Object.freeze({});
   let manifest=null,manifestPromise=null,materialPromise=null,coldMaterialSearchPromise=null,publicationAuthorization=null,bookSmeReview=null,qualificationReview=null,highRiskReview=null,workedCaseLedger=null,workedCasesByChapter=new Map(),diagramLedger=null,diagramsByChapter=new Map(),evidenceEnrichmentLedger=null,claimEvidenceReference=null,claimEvidenceByChapter=new Map(),claimEvidenceClaimsByChapter=new Map(),readerArchitecture=null,editorialExpansionReview=null,materialAtlas=null,materialCatalog=null,materialRegionalEvidence=null,materialSearchIndex={catalog:[],regional:[]},integrityMap=null,ui=null,previousView=null,open=false,contentsScrollY=0,contentsWindowScrollY=0,pendingContentsScroll=null,contentsFocus=null,bookIntentEpoch=0,readerDisplayMode='guided';
   const BOOK_RESUME_PREFIX='mm_book_resume_v1::',LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1',BOOK_RESUME_SCHEMA=1;
