@@ -44,6 +44,10 @@ for marker in (
     "setOnlyAlertOnce",
     "enableVibration(false)",
     "Notification.CATEGORY_SERVICE",
+    "TTS_INIT_TIMEOUT_MS",
+    "initializeTextToSpeech",
+    "failQueuedSpeech",
+    "Locale.ENGLISH",
 ):
     need(marker in service, f"foreground native audio service contract missing: {marker}")
 for marker in ("MouldMasterNativeTts", "window.MMNativeTtsEvent", "nativeQueueSupported", "buildNativeQueue", "speakQueue", "if(nativeSupported)return false", "Reading with phone audio"):
@@ -54,5 +58,7 @@ need("gradle -p android assembleDebug" in workflow, "Android build workflow miss
 need("android.permission.POST_NOTIFICATIONS" not in manifest, "Android app must not request notification permission for background playback")
 need("requestPermissions(" not in activity, "Android app must not prompt for notification permission")
 need("MediaSession" not in service, "Native narration must not create a second media-session notification")
+need("No usable English voice is installed" in service, "TTS voice failures must be reported to the reader")
+need("ttsInitError != null" in service, "TTS initialization failure must be handled after the request queue arrives")
 
-print("Dedicated Android Book audio QA passed: WebView bridge, bundled native-aware reader, quiet foreground TTS service and wake-lock contracts present.")
+print("Dedicated Android Book audio QA passed: WebView bridge, native voice setup and failure reporting, quiet foreground TTS service, and wake-lock contracts present.")
