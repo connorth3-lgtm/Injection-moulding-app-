@@ -14,6 +14,8 @@ native TextToSpeech service and a foreground media-playback service.
   notification drawer while still showing the active service in system controls.
 - The Android WebView replaces the hosted read-aloud.js request with the bundled native-aware
   runtime, while the public browser/PWA bytes remain unchanged.
+- The Android Book panel's voice test speaks through the same native service as Read Aloud,
+  so it checks the installed TTS engine and voice rather than only checking browser tones.
 - Learner progress stays in the WebView profile. The native bridge does not upload Book text.
 - Browser/PWA and Windows desktop builds keep their existing paths.
 
