@@ -3,7 +3,7 @@
   "bookId": "mouldmaster-book",
   "version": "2026.10.07-reader-first-read-deep",
   "status": "governed-derived-reader-map",
-  "purpose": "Reader-facing consolidation of the 46 governed content modules into substantial book chapters while preserving module IDs for claim, source, SME and runtime traceability.",
+  "purpose": "Reader-facing consolidation of the 46 governed content modules into substantial book chapters while preserving module IDs for claim, source, SME and runtime traceability. The 21-chapter sequence separates a beginner materials path from its advanced follow-up.",
   "targetWordsPerReaderChapter": {
     "nominal": 1000,
     "range": [
@@ -113,6 +113,40 @@
         "fibre reinforcement",
         "additive"
       ]
+    },
+    {
+      "id": "r03a",
+      "title": "Advanced Materials: Fibre Orientation and High-Performance Polymers",
+      "moduleIds": [
+        "fibre-orientation",
+        "high-performance-polymers"
+      ],
+      "goal": "Build on the beginner materials chapter. Examine how short-fibre orientation can create directional behaviour and how advanced polymer choices require exact-grade and equipment-compatibility evidence.",
+      "depthBand": "Advanced",
+      "learningObjectives": [
+        "Explain why fibre orientation can vary across one part and why a single direction may not describe its behaviour.",
+        "Separate a plausible orientation-based explanation from evidence that directly measures the part or material.",
+        "Prepare a grade-specific documentation and compatibility review for a proposed high-performance polymer."
+      ],
+      "checkQuestions": [
+        "Why is one flow arrow across a whole part only a starting picture of fibre orientation?",
+        "What does anisotropy mean when you compare dimensions or properties in different directions?",
+        "Why can a family label such as “high-performance” not supply the conditions for an exact grade?",
+        "Which supplier documents and equipment interfaces belong in a material-change review?"
+      ],
+      "applyPrompt": "Choose a hypothetical reinforced or high-temperature material. Make a review sheet with its exact grade identity, current supplier documents, the part directions or requirements that matter, equipment compatibility questions, and the physical evidence needed to evaluate the part. Leave unknown values blank; do not fill them with generic settings.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "This chapter follows the basic material map. It applies the same exact-grade discipline to two harder questions: how reinforcement behaves in different directions and how to assess a demanding material without guessing from its family label.",
+      "keyTerms": [
+        "fibre orientation",
+        "reinforcement",
+        "anisotropy",
+        "flow direction",
+        "high-performance polymer",
+        "equipment compatibility",
+        "exact grade"
+      ],
+      "scenarioPrompt": "A reinforced grade is proposed for a part with a dimension that changes by direction, and the same project is considering a high-temperature alternative. Separate the two reviews: list orientation evidence for the existing part, then list exact-grade supplier and equipment evidence for the proposed material. Mark hypotheses separately from measured facts."
     },
     {
       "id": "r04",
@@ -542,63 +576,62 @@
     },
     {
       "id": "r18",
-      "title": "Dimensional Stability and Reinforced Materials",
+      "title": "Dimensional Stability and Measurement Conditions",
       "moduleIds": [
-        "dimensional-stability",
-        "fibre-orientation"
+        "dimensional-stability"
       ],
-      "goal": "Explain time-dependent dimensions, directional behaviour and anisotropy with explicit measurement conditions.",
+      "goal": "Explain why a dimension depends on when, where and how it is measured, and how controlled comparisons help separate competing causes.",
       "depthBand": "Engineer",
       "learningObjectives": [
-        "Control dimensional reference conditions.",
-        "Explain how reinforcement and orientation create directional response."
+        "Include conditioning, timing, environment and method in a dimensional result.",
+        "Use cavity, time and measurement-direction patterns to organise competing explanations."
       ],
       "checkQuestions": [
-        "Why must measurement timing be part of a dimensional result?",
-        "How can cavity pattern and directionality distinguish competing dimensional mechanisms?",
-        "Why should reinforced grades not use generic isotropic shrinkage assumptions?"
+        "Why must measurement timing and conditioning be part of a dimensional result?",
+        "How could a time trend differ from a cavity-specific pattern?",
+        "Why does a measurement help test a possible cause without automatically proving it?"
       ],
       "applyPrompt": "Plan a dimensional study that separates conditioning time, cavity identity and measurement direction.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "readingThread": "Read dimensional state and fibre orientation together because both make measurement direction, timing and conditioning part of the interpretation.",
+      "readingThread": "Define the measurement conditions first. Then use consistent measurements over time and across cavities to compare possible material, mould and process contributions.",
       "keyTerms": [
         "dimensional stability",
         "conditioning",
-        "fibre orientation",
-        "anisotropy",
-        "measurement timing"
+        "measurement timing",
+        "reference condition",
+        "post-mould change"
       ]
     },
     {
       "id": "r19",
-      "title": "Thin-Wall, Multi-Cavity and High-Performance Processing",
+      "title": "Thin-Wall and Multi-Cavity Processing",
       "moduleIds": [
         "thin-wall",
-        "multi-cavity",
-        "high-performance-polymers"
+        "multi-cavity"
       ],
-      "goal": "Cover advanced situations where machine, mould, material and supplier limits become especially important.",
+      "goal": "Study advanced moulding situations where machine capability, flow path and cavity-specific evidence become especially important.",
       "depthBand": "Advanced",
       "learningObjectives": [
-        "Recognise advanced cases where equipment, flow path and grade limits dominate.",
-        "Preserve cavity identity and supplier-specific boundaries."
+        "Recognise why thin-wall capability depends on more than one machine rating.",
+        "Preserve cavity identity when evaluating balance and part results."
       ],
       "checkQuestions": [
         "Why can thin-wall capability not be judged from pressure rating alone?",
-        "How can pooling cavities hide a systematic imbalance?",
-        "Why must high-performance polymer processing remain supplier-led?"
+        "How can pooling results from several cavities hide a repeated imbalance?",
+        "What evidence would help distinguish a cavity-specific issue from a whole-process change?"
       ],
-      "applyPrompt": "For a four-cavity thin-wall part, list which machine, mould, material and cavity-specific evidence you would preserve.",
+      "applyPrompt": "For a hypothetical four-cavity thin-wall part, list the machine, mould, flow-path and cavity-specific evidence you would preserve before drawing a conclusion.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "sequencePrompt": "Treat these advanced topics as boundary-heavy applications of the earlier method: preserve cavity identity, equipment capability, material-grade limits and measured response. Thin-wall, multi-cavity and high-performance processing become unsafe teaching topics when exact machine, mould or supplier constraints are replaced by generic recipes.",
-      "scenarioPrompt": "For a proposed high-performance grade, build a verification checklist covering the exact-grade documents, machine/mould/hot-runner interfaces and evidence you would need before treating the material as compatible with the existing system.",
-      "readingThread": "Use these advanced topics as examples of tighter process constraints, then compare which evidence becomes more important as geometry, balance and material demands increase.",
+      "sequencePrompt": "Carry the evidence method into demanding geometries: keep machine capability, flow path and individual cavity response connected to the part result.",
+      "scenarioPrompt": "A four-cavity mould shows a dimensional difference in one cavity while the pooled average still looks acceptable. List how you would keep cavity identity, machine measurements, mould condition and part measurements linked while investigating. Do not infer a cause from the average alone.",
+      "readingThread": "Use thin-wall and multi-cavity examples to see why equipment limits, flow path and cavity identity must stay visible in the evidence.",
       "keyTerms": [
         "thin wall",
         "multi-cavity balance",
-        "high-performance polymer",
         "pressure demand",
-        "thermal history"
+        "flow path",
+        "cavity identity",
+        "machine capability"
       ]
     },
     {
