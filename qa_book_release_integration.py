@@ -341,7 +341,7 @@ need("ids=[...new Set([...(chapter.sourceIds||[]),...(chapter.propertyGuide?.sou
 for marker in ('EVIDENCE_IDENTITIES','BASF-INJECTION-PROBLEMS','NIST-SEMATECH-DOE','NIST-SEMATECH-CAPABILITY','PARIZS-2023-IN-MOLD-SENSORS-WORKED','getEvidenceIdentity'):
     need(marker in book_runtime, f'evidence alias/family normalization missing from Book runtime: {marker}')
 need('getEvidenceIdentity' in claim_trace_runtime and 'Evidence family:' in claim_trace_runtime, 'complete claim trace must explain evidence-family relationships')
-need('data.sourceSeeds.length!==55' in book_runtime, 'Book runtime must require all 55 final governed claim-evidence source records')
+need('data.sourceSeeds.length!==58' in book_runtime, 'Book runtime must require all 58 final governed claim-evidence source records')
 need("window.addEventListener('mm:book-manifest-ready',onManifestReady)" in claim_trace_runtime, 'complete claim trace must wait for the governed Book manifest-ready event')
 need('await window.MMBook?.load?.()' not in claim_trace_runtime, 'complete claim trace must not eagerly demand-load the governed Book at startup')
 need("window.dispatchEvent(new CustomEvent('mm:book-manifest-ready'" in book_runtime, 'Book runtime must announce exact governed manifest readiness after genuine demand')

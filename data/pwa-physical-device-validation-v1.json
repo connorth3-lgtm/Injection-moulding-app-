@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.11.03.1 has no retained exact-source artifact and no physical iOS/iPadOS or Android device evidence. Installation, offline restart, update, reboot, storage-pressure and zoom checks remain pending; independent human and production authority remain HOLD.",
+  "boundary": "Release 2026.11.03.1 has no retained exact-source artifact and no physical-device validation yet. Real installation, offline restart, update, reboot, storage-pressure and zoom checks on physical iOS/iPadOS and Android devices remain pending. Real human NVDA/VoiceOver assistive-technology review is governed separately by data/accessibility-real-at-validation-v1.json; independent human and production authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
