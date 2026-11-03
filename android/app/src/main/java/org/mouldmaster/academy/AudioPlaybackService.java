@@ -39,6 +39,8 @@ public final class AudioPlaybackService extends Service {
     private static final int NOTIFICATION_ID = 4102;
     private static final long IDLE_SHUTDOWN_DELAY_MS = 1800L;
     private static final long TTS_INIT_TIMEOUT_MS = 12000L;
+    private static final long UTTERANCE_RETRY_DELAY_MS = 350L;
+    private static final int MAX_UTTERANCE_RETRIES = 2;
 
     private static WeakReference<WebView> webViewRef = new WeakReference<>(null);
     private static final Object REQUEST_LOCK = new Object();
@@ -118,8 +120,12 @@ public final class AudioPlaybackService extends Service {
     private AudioManager audioManager;
     private AudioFocusRequest audioFocusRequest;
     private final AudioManager.OnAudioFocusChangeListener audioFocusListener = change -> {
-        if (change == AudioManager.AUDIOFOCUS_LOSS || change == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+        if (change == AudioManager.AUDIOFOCUS_LOSS) {
             stopCurrent(true, "Phone audio focus was lost. Tap Listen to retry.");
+        } else if (change == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+            pauseForAudioFocus();
+        } else if (change == AudioManager.AUDIOFOCUS_GAIN) {
+            resumeAfterAudioFocus();
         }
     };
     private PowerManager.WakeLock wakeLock;
@@ -131,6 +137,7 @@ public final class AudioPlaybackService extends Service {
     private boolean ttsInitFinished;
     private String ttsInitError;
     private boolean stopping;
+    private boolean waitingForAudioFocus;
     private boolean foregroundStarted;
     private String lastNotificationText;
 
@@ -219,42 +226,20 @@ public final class AudioPlaybackService extends Service {
 
                 @Override
                 public void onError(String utteranceId) {
-                    if (isCurrent(utteranceId)) {
-                        emit(utteranceId, "error", "Android text-to-speech failed. Check the selected engine and downloaded voice.");
-                        speechQueue = null;
-                        finishCurrent();
-                    }
+                    retryOrFailCurrent(utteranceId,
+                            "Android text-to-speech repeatedly failed. Check the selected engine and downloaded voice, then tap Listen to retry.");
                 }
 
                 @Override
                 public void onError(String utteranceId, int errorCode) {
-                    if (isCurrent(utteranceId)) {
-                        emit(utteranceId, "error", "Android text-to-speech failed (" + errorCode + "). Check the selected engine and downloaded voice.");
-                        speechQueue = null;
-                        finishCurrent();
-                    }
+                    retryOrFailCurrent(utteranceId,
+                            "Android text-to-speech repeatedly failed (" + errorCode + "). Check the selected engine and downloaded voice, then tap Listen to retry.");
                 }
 
                 @Override
                 public void onStop(String utteranceId, boolean interrupted) {
-                    if (!isCurrent(utteranceId) || activeItem == null) return;
-                    SpeechItem stoppedItem = activeItem;
-                    if (stoppedItem.retries < 1) {
-                        activeId = null;
-                        activeItem = null;
-                        if (speechQueue == null) speechQueue = new ArrayDeque<>();
-                        speechQueue.addFirst(new SpeechItem(
-                                stoppedItem.id, stoppedItem.text, stoppedItem.retries + 1));
-                        mainHandler.postDelayed(() -> {
-                            if (!stopping && activeId == null) speakNextQueued();
-                        }, 350L);
-                        return;
-                    }
-
-                    emit(utteranceId, "error",
-                            "Phone voice stopped before the chapter finished. Tap Listen to retry.");
-                    speechQueue = null;
-                    finishCurrent();
+                    retryOrFailCurrent(utteranceId,
+                            "Phone voice repeatedly stopped before this section finished. Tap Listen to retry.");
                 }
             });
             ttsReady = true;
@@ -309,12 +294,68 @@ public final class AudioPlaybackService extends Service {
         return candidate.getLatency() < current.getLatency();
     }
 
+    private void retryOrFailCurrent(String utteranceId, String failureMessage) {
+        if (!isCurrent(utteranceId) || activeItem == null) return;
+
+        SpeechItem interruptedItem = activeItem;
+        if (interruptedItem.retries < MAX_UTTERANCE_RETRIES) {
+            activeId = null;
+            activeItem = null;
+            if (speechQueue == null) speechQueue = new ArrayDeque<>();
+            speechQueue.addFirst(new SpeechItem(
+                    interruptedItem.id, interruptedItem.text, interruptedItem.retries + 1));
+            long delay = UTTERANCE_RETRY_DELAY_MS * (1L << interruptedItem.retries);
+            mainHandler.postDelayed(() -> {
+                if (!stopping && !waitingForAudioFocus && activeId == null) speakNextQueued();
+            }, delay);
+            return;
+        }
+
+        emit(utteranceId, "error", failureMessage);
+        speechQueue = null;
+        finishCurrent();
+    }
+
+    private void pauseForAudioFocus() {
+        if (stopping || waitingForAudioFocus) return;
+        boolean hasPendingSpeech = activeItem != null || (speechQueue != null && !speechQueue.isEmpty());
+        if (!hasPendingSpeech) return;
+
+        stopping = true;
+        try {
+            if (textToSpeech != null) textToSpeech.stop();
+        } catch (Exception ignored) { }
+        if (activeItem != null) {
+            if (speechQueue == null) speechQueue = new ArrayDeque<>();
+            speechQueue.addFirst(activeItem);
+        }
+        activeId = null;
+        activeItem = null;
+        stopping = false;
+        waitingForAudioFocus = true;
+        releaseWakeLock();
+        updateNotification("Book narration paused for another app's audio");
+    }
+
+    private void resumeAfterAudioFocus() {
+        if (!waitingForAudioFocus) return;
+        waitingForAudioFocus = false;
+        if (speechQueue == null || speechQueue.isEmpty()) {
+            finishCurrent();
+            return;
+        }
+        cancelDelayedShutdown();
+        updateNotification("Book narration is playing");
+        speakNextQueued();
+    }
+
     private void failQueuedSpeech(String message) {
         ttsInitError = message;
         SpeechItem firstPending = speechQueue == null ? null : speechQueue.peekFirst();
         String id = activeId != null ? activeId : firstPending == null ? null : firstPending.id;
         if (id == null) return;
 
+        waitingForAudioFocus = false;
         cancelDelayedShutdown();
         stopping = true;
         if (textToSpeech != null) {
@@ -374,6 +415,7 @@ public final class AudioPlaybackService extends Service {
     }
 
     private void replaceQueue(ArrayDeque<SpeechItem> nextQueue, float rate) {
+        waitingForAudioFocus = false;
         stopping = true;
         if (textToSpeech != null) {
             try { textToSpeech.stop(); } catch (Exception ignored) { }
@@ -388,7 +430,7 @@ public final class AudioPlaybackService extends Service {
     }
 
     private void speakNextQueued() {
-        if (!ttsReady || stopping || activeId != null) return;
+        if (!ttsReady || stopping || waitingForAudioFocus || activeId != null) return;
         if (speechQueue == null || speechQueue.isEmpty()) {
             finishCurrent();
             return;
@@ -417,6 +459,7 @@ public final class AudioPlaybackService extends Service {
     }
 
     private void stopCurrent(boolean notify, String message) {
+        waitingForAudioFocus = false;
         cancelDelayedShutdown();
         String id = activeId;
         stopping = true;
@@ -449,6 +492,7 @@ public final class AudioPlaybackService extends Service {
             return;
         }
         speechQueue = null;
+        waitingForAudioFocus = false;
         releaseAudioFocus();
         releaseWakeLock();
         scheduleDelayedShutdown();
