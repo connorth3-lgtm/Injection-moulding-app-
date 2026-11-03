@@ -92,7 +92,7 @@ assert editorial.get("schemaVersion")==1 and editorial.get("bookId")=="mouldmast
 assert editorial.get("release")==book_release
 assert editorial.get("status")=="repository-technical-review-complete"
 reviews=editorial.get("reviewedModules") or []
-assert len(reviews)==37 and len({x.get("moduleId") for x in reviews})==37
+assert len(reviews)==39 and len({x.get("moduleId") for x in reviews})==39
 for row in reviews:
     mid=row["moduleId"]
     assert mid in set(module_ids)
@@ -122,7 +122,7 @@ assert first_read.get("keyTermsAreNavigationLabelsOnly") is True
 assert first_read.get("readingThreadsAreOrientationOnly") is True
 edit_permit=auth.get("editorialExpansionAuthorization") or {}
 assert edit_permit.get("status")=="authorized-repository-technical-source-review"
-assert edit_permit.get("release")==book_release and edit_permit.get("moduleCount")==37 and edit_permit.get("noNewClaimIds") is True
+assert edit_permit.get("release")==book_release and edit_permit.get("moduleCount")==39 and edit_permit.get("noNewClaimIds") is True
 hashes=auth.get("runtimeIntegrity",{}).get("gitBlobSha1ByFile",{})
 for name in ("book-reader-architecture-v2.json","book-editorial-expansion-review-v1.json"):
     assert hashes.get(name)==git_blob(PACKAGED/name), f"authorization hash drift for {name}"
@@ -134,4 +134,4 @@ for asset in ("./src/domains/learning/book-data/book-reader-architecture-v2.json
     assert asset in sw, f"reader governance asset missing from atomic cache: {asset}"
 
 print("PASS: 21 reader chapters derive exactly once from all 46 governed modules; no second claim/status authority was introduced.")
-print("PASS: expanded prose is exact-byte bound to the complete existing claim inventory for all 37 expanded modules; independent human SME remains HOLD.")
+print("PASS: expanded prose is exact-byte bound to the complete existing claim inventory for all 39 expanded modules; independent human SME remains HOLD.")
