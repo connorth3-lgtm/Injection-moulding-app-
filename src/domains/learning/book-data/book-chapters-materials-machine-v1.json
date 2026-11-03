@@ -206,7 +206,113 @@
           "title": "Review a substitution as a new evidence question",
           "text": "A material substitution is not established by matching only the family abbreviation or a single published property. Confirm the exact old and new grades, formulation suffixes, colour, revision and supplier guidance. Compare the properties that matter to the product on a like-for-like test basis, then identify which process observations and part characteristics could change. Decide in advance what evidence would support the substitution and what result would require further review. A controlled comparison may show that the new grade behaves acceptably in the intended system, but that result applies to the tested material, tool, machine, part and conditions. It does not create a transferable recipe for other grades or moulds."
         }
-      ]
+      ],
+      "propertyGuide": {
+        "schema": 1,
+        "summary": "Material property guide",
+        "title": "Quick guide to common material properties",
+        "intro": "Each value answers one test question under stated conditions. Compare the exact grade, method, specimen, conditioning, direction, temperature, rate or load, and units where reported. A datasheet value alone does not certify a moulded part.",
+        "sourceIds": [
+          "ISO-1133-1-2022",
+          "ISO-527-1-2019",
+          "ISO-527-2-2025",
+          "ISO-178-2019",
+          "ISO-179-1-2026",
+          "ISO-11357-1-2023",
+          "ISO-75-1-2020",
+          "ISO-75-2-2013",
+          "ISO-294-4-2018",
+          "ISO-1183-1-2025",
+          "ISO-62-2008",
+          "ISO-15512-2019"
+        ],
+        "rows": [
+          {
+            "property": "Melt flow (MFR / MVR)",
+            "meaning": "MFR reports the mass, and MVR the volume, of thermoplastic melt passing through a standard die during a timed test.",
+            "readAs": "Compare only with the same procedure, temperature, load and units. This is a test index, not a direct melt-viscosity measurement in the mould or a fill prediction.",
+            "standard": "ISO 1133-1:2022",
+            "sourceIds": [
+              "ISO-1133-1-2022"
+            ]
+          },
+          {
+            "property": "Tensile strength, modulus and elongation",
+            "meaning": "A specimen is pulled in tension. Strength, modulus and elongation describe different aspects of its response; modulus is stiffness in that test.",
+            "readAs": "Keep specimen, direction, conditioning, temperature and test rate beside the values. A standard specimen does not by itself establish a finished part’s performance.",
+            "standard": "ISO 527-1:2019; ISO 527-2:2025",
+            "sourceIds": [
+              "ISO-527-1-2019",
+              "ISO-527-2-2025"
+            ]
+          },
+          {
+            "property": "Flexural strength and modulus",
+            "meaning": "A specimen is bent to measure flexural response; flexural modulus describes stiffness in that bending test.",
+            "readAs": "Do not swap flexural values for tensile values without checking the product question. Compare specimen dimensions, support span, method and conditioning.",
+            "standard": "ISO 178:2019",
+            "sourceIds": [
+              "ISO-178-2019"
+            ]
+          },
+          {
+            "property": "Impact strength (Charpy)",
+            "meaning": "A rapid impact test records how a defined plastic specimen responds to a blow.",
+            "readAs": "Notch, specimen configuration, conditioning and temperature affect the result. It is not a universal toughness score or a complete prediction of part impact performance.",
+            "standard": "ISO 179-1:2026",
+            "sourceIds": [
+              "ISO-179-1-2026"
+            ]
+          },
+          {
+            "property": "Thermal transitions (DSC)",
+            "meaning": "Differential scanning calorimetry records heat-flow events in the tested sample, including glass-transition, melting and crystallisation events where applicable.",
+            "readAs": "Interpret the sample, scan and method. These events are not a temperature map of the moulded part or a single safe processing or service limit.",
+            "standard": "ISO 11357-1:2023",
+            "sourceIds": [
+              "ISO-11357-1-2023"
+            ]
+          },
+          {
+            "property": "Temperature of deflection under load (HDT)",
+            "meaning": "The test reports the temperature at which a specimen reaches a specified deflection under a specified flexural load.",
+            "readAs": "Record the stress and method. HDT is a test result, not a guaranteed continuous-use temperature for a component.",
+            "standard": "ISO 75-1:2020; ISO 75-2:2013",
+            "sourceIds": [
+              "ISO-75-1-2020",
+              "ISO-75-2-2013"
+            ]
+          },
+          {
+            "property": "Moulding shrinkage",
+            "meaning": "A standard injection-moulded specimen is measured to determine shrinkage under the method’s moulding and measurement conditions.",
+            "readAs": "Direction, elapsed time and conditioning matter. Test-specimen shrinkage does not guarantee a production part’s dimensions.",
+            "standard": "ISO 294-4:2018",
+            "sourceIds": [
+              "ISO-294-4-2018"
+            ]
+          },
+          {
+            "property": "Density",
+            "meaning": "Density is mass per unit volume of a non-cellular plastic specimen, determined by a stated method.",
+            "readAs": "Useful for comparing mass or composition evidence, but density alone does not describe stiffness, strength or impact behaviour.",
+            "standard": "ISO 1183-1:2025",
+            "sourceIds": [
+              "ISO-1183-1-2025"
+            ]
+          },
+          {
+            "property": "Water absorption and water content",
+            "meaning": "Water absorption measures uptake by a solid specimen during controlled exposure; water-content methods measure water in forms such as plastic granules.",
+            "readAs": "These are different measurements of different sample states. Neither result alone supplies a grade-specific drying setpoint.",
+            "standard": "ISO 62:2008; ISO 15512:2019",
+            "sourceIds": [
+              "ISO-62-2008",
+              "ISO-15512-2019"
+            ]
+          }
+        ]
+      }
     },
     {
       "id": "fillers-additives",

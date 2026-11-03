@@ -21,7 +21,7 @@
   const MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1='7a45cc0da8a18282a04ddf437d802bc6377f15e3';
   const MATERIAL_PAGE_SIZE=24;
   const BATCH_PATHS=[`${BOOK_DATA}book-authored-foundations-v1.json`,`${BOOK_DATA}book-evidence-registry-v1.json`,`${BOOK_DATA}book-chapters-materials-machine-v1.json`,`${BOOK_DATA}book-authored-remaining-v1.json`];
-  const AUTH_GIT_BLOB_SHA1='3ef6498ef6cd6a1f5d5ecb24adbc25507eba229b';
+  const AUTH_GIT_BLOB_SHA1='968f6234f588d4d7b525d5dc21f2475f32fc202e';
   const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-claim-resolution-high-risk-v2.json','book-claim-resolution-all-v1.json','book-claim-review-foundations-materials-machine-v1.json','book-claim-review-process-tooling-v1.json','book-claim-review-troubleshooting-v1.json','book-claim-review-engineering-advanced-v1.json','book-claim-review-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-engineering-diagrams-v1.json','book-evidence-enrichment-v2.json','book-claim-evidence-reference-v1.json','book-reader-architecture-v2.json','book-editorial-expansion-review-v1.json','book-material-grade-atlas-v1.json','book-material-regional-evidence-v1.json','material-catalog-v1.json'];
   const CANONICAL_SOURCE_URLS=Object.freeze({
     'OUBELLAOUCH-2024-FIBRE-ORIENTATION':'https://doi.org/10.1007/s00170-024-12990-5',
@@ -314,16 +314,27 @@
   }
   function validateEditorialExpansionReview(data,declared,auth){
     if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='repository-technical-review-complete'||!Array.isArray(data.reviewedModules))throw new Error('Book editorial expansion review identity check failed');
-    const permit=auth?.editorialExpansionAuthorization;if(permit?.status!=='authorized-repository-technical-source-review'||permit?.release!==VERSION||permit?.ledger!=='data/book-editorial-expansion-review-v1.json'||permit?.moduleCount!==37||permit?.noNewClaimIds!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion authorization missing');
-    if(data.reviewedModules.length!==37||data?.acceptanceRules?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion review coverage mismatch');
+    const permit=auth?.editorialExpansionAuthorization;if(permit?.status!=='authorized-repository-technical-source-review'||permit?.release!==VERSION||permit?.ledger!=='data/book-editorial-expansion-review-v1.json'||permit?.moduleCount!==39||permit?.noNewClaimIds!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion authorization missing');
+    if(data.reviewedModules.length!==39||data?.acceptanceRules?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion review coverage mismatch');
     const seen=new Set();
     for(const item of data.reviewedModules){
       if(!item?.moduleId||seen.has(item.moduleId)||!declared.has(item.moduleId)||!Array.isArray(item.governedClaimIds)||!item.governedClaimIds.length||item.conclusion!=='compatible-with-existing-governed-claim-scope')throw new Error('Invalid Book editorial expansion review record');
       seen.add(item.moduleId);
       const expected=integrityMap?.[fileName(item.authoredPath)];if(!expected||item.authoredGitBlobSha1!==expected)throw new Error(`Book editorial expansion byte mismatch: ${item.moduleId}`);
     }
-    if(data?.readerArchitecture?.gitBlobSha1!==integrityMap?.['book-reader-architecture-v2.json']||data?.readerArchitecture?.conclusion!=='structural-only-no-new-technical-claims')throw new Error('Book editorial review reader-architecture binding mismatch');
+    if(data?.readerArchitecture?.gitBlobSha1!==integrityMap?.['book-reader-architecture-v2.json']||data?.readerArchitecture?.conclusion!=='derived-reader-scaffolding-without-new-technical-claims')throw new Error('Book editorial review reader-architecture binding mismatch');
     return data;
+  }
+function validateMaterialPropertyGuide(guide,sourceMap,chapterId){
+    if(!guide)return;
+    if(guide.schema!==1||!guide.summary||!guide.title||!guide.intro||!Array.isArray(guide.sourceIds)||!Array.isArray(guide.rows)||guide.rows.length!==9)throw new Error(`Invalid material property guide in ${chapterId`);
+    const guideIds=new Set(guide.sourceIds);if(guideIds.size!==guide.sourceIds.length||!guideIds.size)throw new Error(`Invalid material property guide source list in ${chapterId`);
+    const rowIds=new Set();
+    for(const row of guide.rows){
+      if(!row?.property||!row?.meaning||!row?.readAs||!row?.standard||!Array.isArray(row.sourceIds)||!row.sourceIds.length)throw new Error(`Incomplete material property guide row in ${chapterId`);
+      for(const id of row.sourceIds){if(!guideIds.has(id)||!sourceMap.has(id))throw new Error(`Unresolved material property guide source ${id`);rowIds.add(id);}
+    }
+    if(rowIds.size!==guideIds.size||[...guideIds].some(id=>!rowIds.has(id)))throw new Error(`Material property guide source coverage mismatch in ${chapterId`);
   }
   function validateSmeReview(data,declared){
     if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||!Array.isArray(data.chapterIds)||!Array.isArray(data.reviews))throw new Error('Book SME review contract identity check failed');
@@ -512,6 +523,7 @@
     workedCaseLedger=validateWorkedCases(await verifiedJson(WORKED_CASES_PATH),declared,sourceMap,data,auth);workedCasesByChapter=new Map();for(const item of workedCaseLedger.cases){const rows=workedCasesByChapter.get(item.chapterId)||[];rows.push(item);workedCasesByChapter.set(item.chapterId,rows);}
     diagramLedger=validateEngineeringDiagrams(await verifiedJson(DIAGRAMS_PATH),declared,auth);diagramsByChapter=new Map();for(const item of diagramLedger.diagrams){const rows=diagramsByChapter.get(item.chapterId)||[];rows.push(item);diagramsByChapter.set(item.chapterId,rows);}
     evidenceEnrichmentLedger=validateEvidenceEnrichment(await verifiedJson(ENRICHMENT_PATH),declared,sourceMap,data,auth);
+    for(const chapter of declared.values())validateMaterialPropertyGuide(chapter.propertyGuide,sourceMap,chapter.id);
     bookSmeReview=validateSmeReview(await verifiedJson(SME_PATH),declared);
     applyPublicationAuthorization(data,declared,auth);return data;
   }
@@ -573,7 +585,7 @@
   function evidenceIdentity(id){const row=EVIDENCE_IDENTITIES[String(id)]||null;return row?{...row}:null;}
   function evidenceIdentityMeta(id){const row=evidenceIdentity(id);if(!row)return '';return [`Evidence family: ${row.family}`,row.sameAs&&row.sameAs!==String(id)?`Same underlying record as: ${row.sameAs}`:'' ].filter(Boolean).join(' · ');}
   function evidenceItem(id){const s=evidenceMap().get(id);if(!s)return `<code>${esc(id)}</code>`;const label=esc(s.title||s.id),meta=esc([s.issuer,s.scope].filter(Boolean).join(' — ')),identity=esc([`Evidence record: ${id}`,evidenceIdentityMeta(id)].filter(Boolean).join(' · ')),url=canonicalUrl(s);return url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer"><b>${label}</b></a>${meta?`<br><small>${meta}</small>`:''}${identity?`<br><small>${identity}</small>`:''}`:`<b>${label}</b>${meta?`<br><small>${meta}</small>`:''}${identity?`<br><small>${identity}</small>`:''}`;}
-  function sourceHtml(chapter){const map=evidenceMap(),ids=[...new Set([...(chapter.sourceIds||[]),...claimEvidenceIds(chapter.id)])],sources=ids.map(id=>map.get(id)).filter(Boolean);return sources.length?`<h4>Chapter evidence anchors</h4><ul>${sources.map(s=>{const url=canonicalUrl(s),identity=evidenceIdentityMeta(s.id);return `<li>${url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer"><b>${esc(s.title)}</b></a>`:`<b>${esc(s.title)}</b>`}<br><small>${esc([s.id,identity,s.scope].filter(Boolean).join(' — '))}</small></li>`}).join('')}</ul>`:'<p>No chapter source anchor has been attached.</p>';}
+  function sourceHtml(chapter){const map=evidenceMap(),ids=[...new Set([...(chapter.sourceIds||[]),...(chapter.propertyGuide?.sourceIds||[]),...claimEvidenceIds(chapter.id)])],sources=ids.map(id=>map.get(id)).filter(Boolean);return sources.length?'<h4>Chapter evidence anchors</h4><ul>'+sources.map(s=>{const url=canonicalUrl(s),identity=evidenceIdentityMeta(s.id);return '<li>'+(url?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer"><b>'+esc(s.title)+'</b></a>':'<b>'+esc(s.title)+'</b>')+'<br><small>'+esc([s.id,identity,s.scope].filter(Boolean).join(' — '))+'</small></li>';}).join('')+'</ul>':'<p>No chapter source anchor has been attached.</p>';}
   function claimTraceHtml(chapter){if(!qualificationReview)return '<p><small>Publication claim trace unavailable.</small></p>';const governed=claimEvidenceRows(chapter.id),prefix=`${chapter.id}-`,resolved=(qualificationReview.resolutions||[]).filter(x=>String(x.claimId||'').startsWith(prefix)),qualified=(qualificationReview.remainingQualifiedClaims||[]).filter(x=>String(x.claimId||'').startsWith(prefix));const governedRows=governed.map(x=>`<li><b>${esc(x.claimId)} — governed evidence</b><ul>${x.evidenceIds.map(id=>`<li>${evidenceItem(id)}</li>`).join('')}</ul></li>`).join(''),rows=resolved.map(x=>`<li><b>${esc(x.claimId)} — ${esc(x.newConclusion||'reviewed')}</b><p>${esc(x.reason||'')}</p>${(x.evidence||[]).length?`<ul>${x.evidence.map(id=>`<li>${evidenceItem(id)}</li>`).join('')}</ul>`:''}</li>`).join(''),qs=qualified.map(x=>`<li><b>${esc(x.claimId)} — scope-qualified</b><p>${esc(x.reason||'')}</p><small>${esc(x.qualificationType||'scope boundary')} · publication blocking: ${x.blockingPublication?'yes':'no'}</small></li>`).join('');return `<details class="mm-book-claim-trace"><summary><b>Publication claim trace</b> — evidence and publication decisions</summary><p>This trace exposes the governed claim-review evidence for every claim in the module, plus any later evidence upgrade or deliberate scope qualification. It supplements, rather than replaces, the chapter's source anchors.</p>${governedRows?`<h4>Governed claim evidence</h4><ul>${governedRows}</ul>`:''}${rows||qs?`<h4>Later publication decisions</h4><ul>${rows}${qs}</ul>`:''}</details>`;}
   function readerSections(chapter){
     const omitted=new Set(READER_SECTION_OMISSIONS[chapter.id]||[]),supplemental=new Set(READER_SUPPLEMENT_SECTIONS[chapter.id]||[]);
@@ -585,6 +597,12 @@
     const rows=(chapter.sections||[]).filter(section=>titles.has(section.title));
     if(!rows.length)return '';
     return `<details class="mm-book-reader-supplement"><summary><b>Additional context</b> — optional quality/evidence sidebar</summary><div>${rows.map((section,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:supplement:${index}">${esc(section.title)}</h4>${proseHtml(section.text)}</section>`).join('')}</div></details>`;
+  }
+function materialPropertyGuideHtml(chapter,options={}){
+    const guide=chapter?.propertyGuide;if(!guide)return '';
+    const rows=guide.rows||[];
+    const body=rows.map(row=>'<tr><th scope="row">'+esc(row.property)+'</th><td>'+esc(row.meaning)+'</td><td><p>'+esc(row.readAs)+'</p><small>Method reference: '+esc(row.standard)+'</small></td></tr>').join('');
+    return `<details class="mm-book-material-property-guide"${options.open===true?' open':''`><summary><b>${esc(guide.summary)`</b></summary><div class="mm-book-material-property-guide-body"><h4>${esc(guide.title)`</h4><p>${esc(guide.intro)`</p><div class="mm-book-property-guide-wrap"><table><thead><tr><th scope="col">Property</th><th scope="col">What the test reports</th><th scope="col">How to interpret it</th></tr></thead><tbody>${body`</tbody></table></div></div></details>`;
   }
   // The simplified first-read path keeps repeated source sections out of its
   // main prose. Expose the exact authored wording only in the optional notes,
@@ -610,12 +628,12 @@
     }).join('');
   }
   function readerModuleEvidenceHtml(chapter){
-    const sourceCount=new Set([...(chapter.sourceIds||[]),...claimEvidenceIds(chapter.id)]).size;
+    const sourceCount=new Set([...(chapter.sourceIds||[]),...(chapter.propertyGuide?.sourceIds||[]),...claimEvidenceIds(chapter.id)]).size;
     return `<details class="mm-book-inline-evidence"><summary><b>Module evidence</b> — ${sourceCount} record${sourceCount===1?'':'s'} plus claim trace</summary><div>${sourceHtml(chapter)}${chapter.state==='verified'?claimTraceHtml(chapter):''}</div></details>`;
   }
   function readerReferencesHtml(reader,modules){
     const ids=new Set();
-    for(const ch of modules){for(const id of ch.sourceIds||[])ids.add(id);for(const id of claimEvidenceIds(ch.id))ids.add(id);}
+    for(const ch of modules){for(const id of ch.sourceIds||[])ids.add(id);for(const id of ch.propertyGuide?.sourceIds||[])ids.add(id);for(const id of claimEvidenceIds(ch.id))ids.add(id);}
     for(const patch of evidenceEnrichmentLedger?.chapterPatches||[])if(reader.moduleIds.includes(patch.chapterId))for(const id of patch.sourceIds||[])ids.add(id);
     for(const item of workedCaseLedger?.cases||[])if(reader.moduleIds.includes(item.chapterId))for(const id of item.sourceIds||[])ids.add(id);
     if(!ids.size)return '';
@@ -643,7 +661,7 @@
     const caution=!verified?`<p class="mm-book-review-warning"><strong>${esc(stateLabel(chapter.state))} — independent technical approval not established.</strong></p>`:'';
     const boundary=!verified&&chapter.reviewBoundary?`<p><strong>Review boundary:</strong> ${esc(chapter.reviewBoundary)}</p>`:'';
     const scope=`<aside class="mm-book-scope-note"><p><strong>Applicability:</strong> ${esc(chapter.applicability||'See governed module scope.')}</p>${boundary}</aside>`;
-    return `<section class="mm-book-reader-module" data-mm-book-reader-module="${esc(chapter.id)}"><h3 data-mm-book-anchor="module:${esc(chapter.id)}">${esc(chapter.title)}</h3>${caution}${scope}${sections.map((s,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h4>${proseHtml(s.text)}</section>`).join('')}${options.complete===true?'':readerSupplementHtml(chapter)}${options.complete!==true&&(READER_SECTION_OMISSIONS[chapter.id]||[]).length?`<details class="mm-book-full-source-inline"><summary>Read all original source sections · ${(READER_SECTION_OMISSIONS[chapter.id]||[]).length} additional sections</summary>${readerOmittedSectionsHtml(chapter)}</details>`:''}${diagramHtml(chapter,{readerMode:true})}${workedCaseHtml(chapter,{readerMode:true,audioExpanded:options.priorityCases===true})}${chapter.id==='material-families'?materialAtlasHtml(chapter):''}</section>`;
+    return `<section class="mm-book-reader-module" data-mm-book-reader-module="${esc(chapter.id)}"><h3 data-mm-book-anchor="module:${esc(chapter.id)}">${esc(chapter.title)}</h3>${caution}${scope}${sections.map((s,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h4>${proseHtml(s.text)}</section>`).join('')}${options.complete===true?'':readerSupplementHtml(chapter)}${options.complete!==true&&(READER_SECTION_OMISSIONS[chapter.id]||[]).length?`<details class="mm-book-full-source-inline"><summary>Read all original source sections · ${(READER_SECTION_OMISSIONS[chapter.id]||[]).length} additional sections</summary>${readerOmittedSectionsHtml(chapter)}</details>`:''}${diagramHtml(chapter,{readerMode:true})}${workedCaseHtml(chapter,{readerMode:true,audioExpanded:options.priorityCases===true})}${chapter.id==='material-families'?materialAtlasHtml(chapter):''}${materialPropertyGuideHtml(chapter,{open:options.complete===true})}</section>`;
   }
   function readerPageTurn(reader){
     const rows=allReaderChapters(),index=rows.findIndex(row=>row.id===reader.id);
