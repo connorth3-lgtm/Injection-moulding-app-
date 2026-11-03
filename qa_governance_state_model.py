@@ -213,7 +213,7 @@ def main() -> None:
         if isinstance(row, dict)
         for value in row.get("moduleIds", [])
     ]
-    assert len(reader_rows) == 20, "Book reader architecture must expose 20 reader-facing chapters"
+    assert len(reader_rows) == 21, "Book reader architecture must expose 21 reader-facing chapters"
     assert len(reader_module_ids) == 46 and len(set(reader_module_ids)) == 46 and set(reader_module_ids) == set(module_ids), "Book reader architecture must cover every governed module exactly once"
     lifecycle = book_accuracy.get("recordLifecycle") or {}
     assert lifecycle.get("status") == "historical-prepublication-gate", "Book accuracy gate must remain explicitly historical"
