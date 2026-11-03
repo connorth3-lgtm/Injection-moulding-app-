@@ -32,7 +32,7 @@ This section resolves the Book current learner-facing publication state from the
 | Signal | Current meaning |
 | --- | --- |
 | Governed modules | **46/46 publication-authorized** as **Source evidence reviewed** |
-| Reader structure | **20 reader chapters** derived from **46 governed modules**; reader grouping adds no technical claim or SME approval. |
+| Reader structure | **21 reader chapters** derived from **46 governed modules**; reader grouping adds no technical claim or SME approval. |
 | Claim evidence | **116 supported · 21 qualified · 0 hold · 0 conflicting** |
 | Manifest workflow metadata | **46 source-review**; this is evidence/workflow metadata, not the learner-facing publication status. |
 | Historical accuracy gate | **technical-review-only** · lifecycle **historical-prepublication-gate** · superseded for current publication status by `data/book-publication-authorization-v1.json`. |
