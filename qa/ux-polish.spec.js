@@ -12,7 +12,7 @@ async function openBook(page){
     await page.locator('[data-mm-book-back]').click();
   }
   await expect(contents).toBeVisible();
-  const index=contents.locator('details.mm-book-governed-index');
+  const index=contents.locator('details.mm-book-governed-index:not(.mm-book-case-finder)');
   await expect(index.locator('summary')).toBeVisible();
   if(!(await index.evaluate(el=>el.open)))await index.locator('summary').click();
   await expect(contents.locator('[data-mm-book-chapter]').first()).toBeVisible();

@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
-  'web_release':'2026.11.02.2',
+  'web_release':'2026.11.03.1',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -385,6 +385,26 @@ elif visual.get('release')=='2026.11.02.2':
          and 'Human visual-owner decision: **PENDING**' in review_current
          and 'no masking or skipped surfaces' in review_current.lower(),
          '2026.11.02.2 technical preview baseline must retain strict coverage and an explicit owner HOLD')
+elif visual.get('release')=='2026.11.03.1':
+    # Release 2026.11.03.1 has a technical comparison reference for the larger
+    # Book edit. Keep the pixel comparison strict and do not infer owner visual
+    # approval from a CI-pinned baseline or from the requested code merge.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.03.1.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.03.1'
+         and visual.get('commit')=='71895bee35082cb1dfefb6189b5dd03f223ae701'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'visual-owner approval' in visual.get('policy','').lower()
+         and 'STATUS: VISUAL BASELINE HOLD' in review_current
+         and f"- Candidate source: `{current_candidate['sourceSha']}`" in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and 'no masking or skipped surfaces' in review_current.lower(),
+         '2026.11.03.1 technical visual baseline must retain strict coverage and explicit owner HOLD')
 elif visual.get('release')=='2026.10.22.2':
     # The 2026.10.22.2 Book comparison was separately reviewed by the owner
     # from source-linked screenshots. Lock this exact reviewed ref/source/artifact

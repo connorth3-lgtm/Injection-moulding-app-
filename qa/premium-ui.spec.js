@@ -77,7 +77,7 @@ test('Book reading and Practice both omit Mission Control strip without losing l
   await expect(mission).toBeHidden();
 });
 
-test('Book opens as 20 plain chapters with previous/next and optional end matter',async({page})=>{
+test('Book opens as 21 plain chapters with previous/next and optional end matter',async({page})=>{
   await page.setViewportSize({width:1280,height:860});
   await openApp(page);
   await page.waitForFunction(()=>Boolean(window.MMBook?.openReaderChapter));
@@ -105,7 +105,7 @@ test('Book opens as 20 plain chapters with previous/next and optional end matter
   await reader.locator('.mm-book-page-turn [data-mm-book-back]').click();
   await expect(page.locator('#mmBookView [data-mm-book-hero]')).toBeVisible();
   const contents=page.locator('#mmBookView [data-mm-book-contents]');
-  await expect(contents.locator('.mm-book-toc > li > button[data-mm-book-reader-chapter-open]')).toHaveCount(20);
+  await expect(contents.locator('.mm-book-toc > li > button[data-mm-book-reader-chapter-open]')).toHaveCount(21);
   await expect(contents.locator('.mm-book-toc > li').first()).toContainText('1.');
   await expect(contents.locator('.mm-book-contents-guide')).not.toHaveAttribute('open');
   await contents.locator('.mm-book-contents-guide > summary').click();

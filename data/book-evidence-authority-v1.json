@@ -20,7 +20,8 @@
       "meaning": "Peer-reviewed research or reviews used as scientific/engineering evidence; not controlling for exact manufacturer/site limits.",
       "sourceTypes": [
         "peer-reviewed",
-        "peer-reviewed-review"
+        "peer-reviewed-review",
+        "peer-reviewed-study"
       ]
     },
     "manufacturer-grade-specific": {
@@ -38,6 +39,7 @@
         "machine-manufacturer-technical-data",
         "machine-manufacturer-technical-documentation",
         "machine-manufacturer-technical-guidance",
+        "manufacturer-design-guide",
         "manufacturer-guide",
         "manufacturer-portfolio-guidance",
         "manufacturer-service-manual",

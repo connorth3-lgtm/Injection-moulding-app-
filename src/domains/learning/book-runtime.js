@@ -21,14 +21,18 @@
   const MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1='7a45cc0da8a18282a04ddf437d802bc6377f15e3';
   const MATERIAL_PAGE_SIZE=24;
   const BATCH_PATHS=[`${BOOK_DATA}book-authored-foundations-v1.json`,`${BOOK_DATA}book-evidence-registry-v1.json`,`${BOOK_DATA}book-chapters-materials-machine-v1.json`,`${BOOK_DATA}book-authored-remaining-v1.json`];
-  const AUTH_GIT_BLOB_SHA1='55e3cc63b0926baa26f10bd8f467acface16718e';
+  const AUTH_GIT_BLOB_SHA1='7b6de782820439562882be6b294b0029d85c6653';
   const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-claim-resolution-high-risk-v2.json','book-claim-resolution-all-v1.json','book-claim-review-foundations-materials-machine-v1.json','book-claim-review-process-tooling-v1.json','book-claim-review-troubleshooting-v1.json','book-claim-review-engineering-advanced-v1.json','book-claim-review-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-engineering-diagrams-v1.json','book-evidence-enrichment-v2.json','book-claim-evidence-reference-v1.json','book-reader-architecture-v2.json','book-editorial-expansion-review-v1.json','book-material-grade-atlas-v1.json','book-material-regional-evidence-v1.json','material-catalog-v1.json'];
   const CANONICAL_SOURCE_URLS=Object.freeze({
     'OUBELLAOUCH-2024-FIBRE-ORIENTATION':'https://doi.org/10.1007/s00170-024-12990-5',
     'BIELENBERG-2025-SWITCHOVER-REVIEW':'https://doi.org/10.3390/polym17081096',
     'ZHAO-2022-WARPAGE-SHRINKAGE-REVIEW':'https://doi.org/10.1007/s00170-022-08859-0',
     'PARIZS-2023-IN-MOLD-SENSORS':'https://doi.org/10.3390/s23031735',
-    'LI-2024-WELD-LINE-REVIEW':'https://doi.org/10.1007/s00170-024-13607-7'
+    'LI-2024-WELD-LINE-REVIEW':'https://doi.org/10.1007/s00170-024-13607-7',
+    'POLYM-LDPE-MICROSTRUCTURE-RHEOLOGY-2021':'https://doi.org/10.1039/D1RA03749H',
+    'POLYM-PP-RECYCLING-CYCLES-2021':'https://doi.org/10.3390/su131911085',
+    'PCR-HDPE-SEASONAL-BATCH-2025':'https://doi.org/10.3390/polym17131828',
+    'POLYM-PP-COOLING-RATE-CRYSTALLIZATION-2022':'https://doi.org/10.3390/polym14173646'
   });
   const EVIDENCE_IDENTITIES=Object.freeze({
     'BASF-INJECTION-PROBLEMS':Object.freeze({family:'BASF Injection Molding Troubleshooter',sameAs:'BASF-INJECTION-TROUBLESHOOTER'}),
@@ -41,28 +45,9 @@
     'PARIZS-2023-IN-MOLD-SENSORS-WORKED':Object.freeze({family:'Parizs et al. 2023 in-mould sensor study',sameAs:'PARIZS-2023-IN-MOLD-SENSORS'})
   });
   // Reader-only editorial consolidation. The governed module payloads remain intact for
-  // audit/SME review; the linear 20-chapter reading path suppresses only sections that
+  // audit/SME review; the linear 21-chapter reading path suppresses only sections that
   // restate a stronger section in the same governed module.
-  const READER_SECTION_OMISSIONS=Object.freeze({
-    'process-baseline':Object.freeze(['Start inside known limits','Record what can reproduce the state','Stability before optimization','Baseline before optimisation']),
-    'documentation':Object.freeze(['Record the conditions that matter','Preserve context','Link changes to evidence']),
-    'diagnostic-method':Object.freeze(['Start with the symptom','Build competing mechanisms','Change to learn','Start with the symptom boundary','Write competing mechanisms and predicted evidence','Verify recovery and guard against coincidence']),
-    'short-shot':Object.freeze(['Use evidence','Locate where filling stops']),
-    'flash':Object.freeze(['Locate before correcting','Map flash before changing clamp or pressure']),
-    'splay':Object.freeze(['Appearance is not a unique diagnosis']),
-    'burns':Object.freeze(['Separate gas compression from degradation','Location and timing discriminate','Correct the mechanism']),
-    'weld-lines':Object.freeze(['How they form','Quality depends on the meeting conditions','Treat location as a design-process interaction','Evaluate both location and performance','Geometry can dominate where the line forms','Formation begins with divided flow']),
-    'cavity-pressure':Object.freeze(['Why measure in the cavity','Curve features need context','Use correlations carefully','Use the trace as evidence of sequence','Understand the measurement location']),
-    'cooling':Object.freeze(['Cooling drives repeatability','Setpoint is not surface temperature','Measure the system']),
-    'ejection-draft':Object.freeze(['Release is mechanical and thermal','Ejection evidence matters','Do not cure tooling problems blindly']),
-    'complex-diagnostics':Object.freeze(['Rank hypotheses by consequence as well as likelihood','Distinguish containment from root-cause correction']),
-    'polymer-structure':Object.freeze(['Structure changes processing behaviour','Do not turn the categories into absolutes']),
-    'rheology':Object.freeze(['Flow resistance is not a single material number']),
-    'vp-transfer':Object.freeze(['What transfer means','Why timing matters','How to establish it']),
-    'plasticising-unit':Object.freeze(['Plasticising prepares the next shot','The non-return valve matters during injection','Hardware suitability is material dependent']),
-    'sink-voids':Object.freeze(['Both arise from contraction','Surface sink and internal void are different outcomes','Test the pressure-and-cooling history']),
-    'black-specks':Object.freeze(['Separate continuous contamination from event-driven contamination'])
-  });
+  const READER_SECTION_OMISSIONS=Object.freeze({});
   const READER_SUPPLEMENT_SECTIONS=Object.freeze({});
   let manifest=null,manifestPromise=null,materialPromise=null,coldMaterialSearchPromise=null,publicationAuthorization=null,bookSmeReview=null,qualificationReview=null,highRiskReview=null,workedCaseLedger=null,workedCasesByChapter=new Map(),diagramLedger=null,diagramsByChapter=new Map(),evidenceEnrichmentLedger=null,claimEvidenceReference=null,claimEvidenceByChapter=new Map(),claimEvidenceClaimsByChapter=new Map(),readerArchitecture=null,editorialExpansionReview=null,materialAtlas=null,materialCatalog=null,materialRegionalEvidence=null,materialSearchIndex={catalog:[],regional:[]},integrityMap=null,ui=null,previousView=null,open=false,contentsScrollY=0,contentsWindowScrollY=0,pendingContentsScroll=null,contentsFocus=null,bookIntentEpoch=0,readerDisplayMode='guided';
   const BOOK_RESUME_PREFIX='mm_book_resume_v1::',LEGACY_BOOK_RESUME_KEY='mouldmasterBookResume:v1',BOOK_RESUME_SCHEMA=1;
@@ -78,7 +63,7 @@
     const key=audioStorageKey();if(!key)return null;
     try{
       const row=JSON.parse(localStorage.getItem(key)||'null');
-      if(!row||row.schema!==1||row.bookRelease!==VERSION||!/^r(?:0[1-9]|1[0-9]|20)$/.test(row.chapterId)||!Number.isInteger(row.unitIndex)||row.unitIndex<0||row.unitIndex>20000||!['complete','streamlined','examples'].includes(row.mode))return null;
+      if(!row||row.schema!==1||row.bookRelease!==VERSION||!/^r(?:0[1-9]|1[0-9]|20|03a)$/.test(row.chapterId)||!Number.isInteger(row.unitIndex)||row.unitIndex<0||row.unitIndex>20000||!['complete','streamlined','examples'].includes(row.mode))return null;
       return row;
     }catch(_){return null}
   }
@@ -94,17 +79,22 @@
       refreshAudioContinue();return true;
     }catch(_){return false}
   }
+  function readerChapterOrdinal(id){
+    const index=allReaderChapters().findIndex(row=>row.id===id);
+    return index<0?null:index+1;
+  }
   function refreshAudioContinue(){
     if(!ui?.listenContinue)return;
-    const saved=readAudioResume();ui.listenContinue.hidden=!saved;
-    ui.listenContinue.disabled=!saved||!verifiedChapters().length;
-    if(saved){const ordinal=Number(saved.chapterId.slice(1));ui.listenContinue.textContent=`Continue listening · chapter ${ordinal} of 20`;}
+    const saved=readAudioResume(),ordinal=saved?readerChapterOrdinal(saved.chapterId):null;
+    ui.listenContinue.hidden=!saved||ordinal===null;
+    ui.listenContinue.disabled=!saved||ordinal===null||!verifiedChapters().length;
+    if(saved&&ordinal!==null)ui.listenContinue.textContent=`Continue listening · chapter ${ordinal} of 21`;
   }
   window.addEventListener('mm:book-audio-position',event=>{
     if(!open||!ui?.view||ui.view.classList.contains('hidden'))return;
     const d=event.detail||{},key=audioStorageKey();
     if(!key||key!==activeAudioScopeKey){window.MMReadAloud?.stop?.();return;}
-    if(!/^r(?:0[1-9]|1[0-9]|20)$/.test(String(d.chapterId||''))||!Number.isInteger(d.unitIndex)||d.unitIndex<0||d.unitIndex>20000)return;
+    if(!/^r(?:0[1-9]|1[0-9]|20|03a)$/.test(String(d.chapterId||''))||!Number.isInteger(d.unitIndex)||d.unitIndex<0||d.unitIndex>20000)return;
     const mode=ui.audioMode?.value||'complete';
     try{localStorage.setItem(key,JSON.stringify({schema:1,bookRelease:VERSION,chapterId:d.chapterId,unitIndex:d.unitIndex,mode}));refreshAudioContinue();}catch(_){}
   });
@@ -308,8 +298,12 @@
   }
   function validateReaderArchitecture(data,declared,auth){
     if(data?.schema!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='governed-derived-reader-map'||!Array.isArray(data.readerChapters)||!data?.depthBandMeaning||!data?.pedagogyPolicy||!data?.firstReadPolicy)throw new Error('Book reader architecture identity check failed');
-    const permit=auth?.readerArchitectureAuthorization;if(permit?.status!=='authorized-derived-structure'||permit?.release!==VERSION||permit?.ledger!=='data/book-reader-architecture-v2.json'||permit?.readerChapterCount!==20||permit?.governedModuleCount!==46||permit?.noNewTechnicalClaims!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book reader architecture authorization missing');
-    if(data.readerChapters.length!==20)throw new Error('Book reader chapter count mismatch');
+    const permit=auth?.readerArchitectureAuthorization;if(permit?.status!=='authorized-derived-structure'||permit?.release!==VERSION||permit?.ledger!=='data/book-reader-architecture-v2.json'||permit?.readerChapterCount!==21||permit?.governedModuleCount!==46||permit?.noNewTechnicalClaims!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book reader architecture authorization missing');
+    const finderPermit=permit?.caseFinderAuthorization,finder=data.caseFinder;
+    if(finderPermit?.status!=='authorized-derived-navigation'||finderPermit?.release!==VERSION||finderPermit?.ledger!=='data/book-reader-architecture-v2.json'||finderPermit?.caseCount!==27||finderPermit?.groupCount!==5||finderPermit?.noNewTechnicalClaims!==true||finderPermit?.independentSmeStatus!=='hold')throw new Error('Book case finder authorization missing');
+    const finderGroupOrder=['materials','process-development','defects','measurement','troubleshooting'];
+    if(finder?.schema!==1||finder?.title!=='Find a worked example'||!finder?.description||!Array.isArray(finder.groups)||finder.groups.length!==finderGroupOrder.length||finder.groups.some((group,index)=>group?.id!==finderGroupOrder[index]||!group.title||!group.description||!Array.isArray(group.caseIds)||!group.caseIds.length))throw new Error('Book case finder structure invalid');
+    if(data.readerChapters.length!==21)throw new Error('Book reader chapter count mismatch');
     const readerIds=new Set(),moduleIds=[];
     for(const reader of data.readerChapters){
       if(!reader?.id||readerIds.has(reader.id)||!reader?.title||!reader?.goal||!reader?.readingThread||!Array.isArray(reader.keyTerms)||reader.keyTerms.length<3||reader.keyTerms.length>8||reader.keyTerms.some(x=>typeof x!=='string'||!x.trim())||!Array.isArray(reader.moduleIds)||!reader.moduleIds.length||!['Foundation','Technician','Engineer','Advanced'].includes(reader.depthBand)||!Array.isArray(reader.learningObjectives)||reader.learningObjectives.length<2||!Array.isArray(reader.checkQuestions)||reader.checkQuestions.length<3||!reader.applyPrompt||!reader.evidenceBoundary||(reader.scenarioPrompt!=null&&typeof reader.scenarioPrompt!=='string'))throw new Error('Invalid Book reader chapter');
@@ -322,16 +316,33 @@
   }
   function validateEditorialExpansionReview(data,declared,auth){
     if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='repository-technical-review-complete'||!Array.isArray(data.reviewedModules))throw new Error('Book editorial expansion review identity check failed');
-    const permit=auth?.editorialExpansionAuthorization;if(permit?.status!=='authorized-repository-technical-source-review'||permit?.release!==VERSION||permit?.ledger!=='data/book-editorial-expansion-review-v1.json'||permit?.moduleCount!==37||permit?.noNewClaimIds!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion authorization missing');
-    if(data.reviewedModules.length!==37||data?.acceptanceRules?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion review coverage mismatch');
+    const permit=auth?.editorialExpansionAuthorization;if(permit?.status!=='authorized-repository-technical-source-review'||permit?.release!==VERSION||permit?.ledger!=='data/book-editorial-expansion-review-v1.json'||permit?.moduleCount!==39||permit?.noNewClaimIds!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion authorization missing');
+    if(data.reviewedModules.length!==39||data?.acceptanceRules?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion review coverage mismatch');
     const seen=new Set();
     for(const item of data.reviewedModules){
       if(!item?.moduleId||seen.has(item.moduleId)||!declared.has(item.moduleId)||!Array.isArray(item.governedClaimIds)||!item.governedClaimIds.length||item.conclusion!=='compatible-with-existing-governed-claim-scope')throw new Error('Invalid Book editorial expansion review record');
       seen.add(item.moduleId);
       const expected=integrityMap?.[fileName(item.authoredPath)];if(!expected||item.authoredGitBlobSha1!==expected)throw new Error(`Book editorial expansion byte mismatch: ${item.moduleId}`);
     }
-    if(data?.readerArchitecture?.gitBlobSha1!==integrityMap?.['book-reader-architecture-v2.json']||data?.readerArchitecture?.conclusion!=='structural-only-no-new-technical-claims')throw new Error('Book editorial review reader-architecture binding mismatch');
+    if(data?.readerArchitecture?.gitBlobSha1!==integrityMap?.['book-reader-architecture-v2.json']||data?.readerArchitecture?.conclusion!=='derived-reader-scaffolding-without-new-technical-claims')throw new Error('Book editorial review reader-architecture binding mismatch');
     return data;
+  }
+    function validateMaterialPropertyGuide(guide,sourceMap,chapterId){
+    if(!guide)return;
+    if(guide.schema!==1||!guide.summary||!guide.title||!guide.intro||!Array.isArray(guide.sourceIds)||!Array.isArray(guide.rows)||guide.rows.length!==28)throw new Error('Invalid material property guide in '+chapterId);
+    const guideIds=new Set(guide.sourceIds);if(guideIds.size!==guide.sourceIds.length||!guideIds.size)throw new Error('Invalid material property guide source list in '+chapterId);
+    const rowIds=new Set();
+    for(const row of guide.rows){
+      if(!row?.property||!row?.meaning||!row?.readAs||!row?.standard||!Array.isArray(row.sourceIds)||!row.sourceIds.length)throw new Error('Incomplete material property guide row in '+chapterId);
+      for(const id of row.sourceIds){if(!guideIds.has(id)||!sourceMap.has(id))throw new Error('Unresolved material property guide source '+id);rowIds.add(id);}
+    }
+    if(rowIds.size!==guideIds.size||[...guideIds].some(id=>!rowIds.has(id)))throw new Error('Material property guide source coverage mismatch in '+chapterId);
+    const example=guide.comparisonExample;
+    if(example?.schema!==1||example?.status!=='hypothetical-teaching-data'||!example.title||!example.intro||!example.gradeA||!example.gradeB||!Array.isArray(example.rows)||example.rows.length!==2||!example.takeaway||!example.boundary)throw new Error('Invalid hypothetical material comparison in '+chapterId);
+    for(const row of example.rows){
+      if(!row?.property||!row?.methodAndConditions||!row?.valueA||!row?.valueB||!row?.interpretation||!Array.isArray(row.sourceIds)||!row.sourceIds.length)throw new Error('Incomplete hypothetical material comparison row in '+chapterId);
+      for(const id of row.sourceIds)if(!guideIds.has(id)||!sourceMap.has(id))throw new Error('Unresolved hypothetical comparison source '+id);
+    }
   }
   function validateSmeReview(data,declared){
     if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||!Array.isArray(data.chapterIds)||!Array.isArray(data.reviews))throw new Error('Book SME review contract identity check failed');
@@ -361,6 +372,9 @@
       if(!Array.isArray(item.claims)||item.claims.length!==1)throw new Error(`Worked case must have one governed case claim: ${item.id}`);
       const claim=item.claims[0];if(!claim?.id||claimIds.has(claim.id)||claim.conclusion!=='supported-with-explicit-synthetic-scope'||!claim.statement)throw new Error(`Invalid worked-case claim: ${item.id}`);claimIds.add(claim.id);for(const id of claim.sourceIds||[])if(!sourceMap.has(id))throw new Error(`Unknown worked-case claim source ${id} in ${claim.id}`);
     }
+    const finder=readerArchitecture?.caseFinder,listedCaseIds=new Set();
+    for(const group of finder.groups)for(const id of group.caseIds){if(!caseIds.has(id))throw new Error('Unknown worked case in case finder: '+id);if(listedCaseIds.has(id))throw new Error('Duplicate worked case in case finder: '+id);listedCaseIds.add(id);}
+    if(listedCaseIds.size!==caseIds.size||[...caseIds].some(id=>!listedCaseIds.has(id)))throw new Error('Book case finder must cover all worked cases exactly once');
     const authority=data.authorityBoundary||{};if(authority.productionUse!=='advisory-only'||authority.validatedRecipeAuthority!==false||authority.automaticMachineControl!==false||authority.universalSetpoints!==false)throw new Error('Worked-case authority boundary weakened');
     return data;
   }
@@ -380,8 +394,8 @@
   }
   function validateClaimEvidenceReference(data,declared,sourceMap,manifestData,auth){
     if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='governed-reader-claim-evidence-index'||!Array.isArray(data.sourceSeeds)||!Array.isArray(data.chapters))throw new Error('Book claim-evidence reference identity check failed');
-    const permit=auth?.claimEvidenceReferenceAuthorization;if(permit?.status!=='authorized-derived-evidence-index'||permit?.release!==VERSION||permit?.ledger!=='data/book-claim-evidence-reference-v1.json'||permit?.chapterCount!==46||permit?.sourceCount!==52||permit?.claimCount!==137||permit?.noNewClaims!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book claim-evidence reference authorization missing');
-    if(data.chapterCount!==46||data.sourceCount!==52||data.claimCount!==137||data.sourceSeeds.length!==52||data.chapters.length!==46)throw new Error('Book claim-evidence reference coverage mismatch');
+    const permit=auth?.claimEvidenceReferenceAuthorization;if(permit?.status!=='authorized-derived-evidence-index'||permit?.release!==VERSION||permit?.ledger!=='data/book-claim-evidence-reference-v1.json'||permit?.chapterCount!==46||permit?.sourceCount!==58||permit?.claimCount!==137||permit?.noNewClaims!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book claim-evidence reference authorization missing');
+    if(data.chapterCount!==46||data.sourceCount!==58||data.claimCount!==137||data.sourceSeeds.length!==58||data.chapters.length!==46)throw new Error('Book claim-evidence reference coverage mismatch');
     const sourceIds=new Set();for(const source of data.sourceSeeds){if(!source?.id||!source?.title||!source?.url||!source?.scope||sourceIds.has(source.id))throw new Error('Invalid or duplicate claim-evidence source');sourceIds.add(source.id);if(!sourceMap.has(source.id)){sourceMap.set(source.id,source);manifestData.sourceSeeds.push(source);}}
     const chapterIds=new Set(),claimIds=new Set();let claimCount=0;for(const row of data.chapters){if(!row?.chapterId||chapterIds.has(row.chapterId)||!declared.has(row.chapterId)||!Array.isArray(row.evidenceIds)||!row.evidenceIds.length||!Array.isArray(row.claims)||!row.claims.length)throw new Error('Invalid claim-evidence chapter coverage');chapterIds.add(row.chapterId);if(new Set(row.evidenceIds).size!==row.evidenceIds.length)throw new Error(`Duplicate claim-evidence id in ${row.chapterId}`);for(const id of row.evidenceIds)if(!sourceMap.has(id))throw new Error(`Unknown claim-evidence source ${id} in ${row.chapterId}`);for(const claim of row.claims){if(!claim?.claimId||claimIds.has(claim.claimId)||!Array.isArray(claim.evidenceIds)||!claim.evidenceIds.length)throw new Error(`Invalid claim-evidence claim in ${row.chapterId}`);claimIds.add(claim.claimId);claimCount++;for(const id of claim.evidenceIds){if(!row.evidenceIds.includes(id)||!sourceMap.has(id))throw new Error(`Invalid claim-evidence source ${id} in ${claim.claimId}`);}}}
     if(chapterIds.size!==declared.size||[...declared.keys()].some(id=>!chapterIds.has(id))||claimCount!==137)throw new Error('Book claim-evidence chapter/claim coverage incomplete');
@@ -517,6 +531,7 @@
     workedCaseLedger=validateWorkedCases(await verifiedJson(WORKED_CASES_PATH),declared,sourceMap,data,auth);workedCasesByChapter=new Map();for(const item of workedCaseLedger.cases){const rows=workedCasesByChapter.get(item.chapterId)||[];rows.push(item);workedCasesByChapter.set(item.chapterId,rows);}
     diagramLedger=validateEngineeringDiagrams(await verifiedJson(DIAGRAMS_PATH),declared,auth);diagramsByChapter=new Map();for(const item of diagramLedger.diagrams){const rows=diagramsByChapter.get(item.chapterId)||[];rows.push(item);diagramsByChapter.set(item.chapterId,rows);}
     evidenceEnrichmentLedger=validateEvidenceEnrichment(await verifiedJson(ENRICHMENT_PATH),declared,sourceMap,data,auth);
+    for(const chapter of declared.values())validateMaterialPropertyGuide(chapter.propertyGuide,sourceMap,chapter.id);
     bookSmeReview=validateSmeReview(await verifiedJson(SME_PATH),declared);
     applyPublicationAuthorization(data,declared,auth);return data;
   }
@@ -578,7 +593,7 @@
   function evidenceIdentity(id){const row=EVIDENCE_IDENTITIES[String(id)]||null;return row?{...row}:null;}
   function evidenceIdentityMeta(id){const row=evidenceIdentity(id);if(!row)return '';return [`Evidence family: ${row.family}`,row.sameAs&&row.sameAs!==String(id)?`Same underlying record as: ${row.sameAs}`:'' ].filter(Boolean).join(' · ');}
   function evidenceItem(id){const s=evidenceMap().get(id);if(!s)return `<code>${esc(id)}</code>`;const label=esc(s.title||s.id),meta=esc([s.issuer,s.scope].filter(Boolean).join(' — ')),identity=esc([`Evidence record: ${id}`,evidenceIdentityMeta(id)].filter(Boolean).join(' · ')),url=canonicalUrl(s);return url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer"><b>${label}</b></a>${meta?`<br><small>${meta}</small>`:''}${identity?`<br><small>${identity}</small>`:''}`:`<b>${label}</b>${meta?`<br><small>${meta}</small>`:''}${identity?`<br><small>${identity}</small>`:''}`;}
-  function sourceHtml(chapter){const map=evidenceMap(),ids=[...new Set([...(chapter.sourceIds||[]),...claimEvidenceIds(chapter.id)])],sources=ids.map(id=>map.get(id)).filter(Boolean);return sources.length?`<h4>Chapter evidence anchors</h4><ul>${sources.map(s=>{const url=canonicalUrl(s),identity=evidenceIdentityMeta(s.id);return `<li>${url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer"><b>${esc(s.title)}</b></a>`:`<b>${esc(s.title)}</b>`}<br><small>${esc([s.id,identity,s.scope].filter(Boolean).join(' — '))}</small></li>`}).join('')}</ul>`:'<p>No chapter source anchor has been attached.</p>';}
+  function sourceHtml(chapter){const map=evidenceMap(),ids=[...new Set([...(chapter.sourceIds||[]),...(chapter.propertyGuide?.sourceIds||[]),...claimEvidenceIds(chapter.id)])],sources=ids.map(id=>map.get(id)).filter(Boolean);return sources.length?'<h4>Chapter evidence anchors</h4><ul>'+sources.map(s=>{const url=canonicalUrl(s),identity=evidenceIdentityMeta(s.id);return '<li>'+(url?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer"><b>'+esc(s.title)+'</b></a>':'<b>'+esc(s.title)+'</b>')+'<br><small>'+esc([s.id,identity,s.scope].filter(Boolean).join(' — '))+'</small></li>';}).join('')+'</ul>':'<p>No chapter source anchor has been attached.</p>';}
   function claimTraceHtml(chapter){if(!qualificationReview)return '<p><small>Publication claim trace unavailable.</small></p>';const governed=claimEvidenceRows(chapter.id),prefix=`${chapter.id}-`,resolved=(qualificationReview.resolutions||[]).filter(x=>String(x.claimId||'').startsWith(prefix)),qualified=(qualificationReview.remainingQualifiedClaims||[]).filter(x=>String(x.claimId||'').startsWith(prefix));const governedRows=governed.map(x=>`<li><b>${esc(x.claimId)} — governed evidence</b><ul>${x.evidenceIds.map(id=>`<li>${evidenceItem(id)}</li>`).join('')}</ul></li>`).join(''),rows=resolved.map(x=>`<li><b>${esc(x.claimId)} — ${esc(x.newConclusion||'reviewed')}</b><p>${esc(x.reason||'')}</p>${(x.evidence||[]).length?`<ul>${x.evidence.map(id=>`<li>${evidenceItem(id)}</li>`).join('')}</ul>`:''}</li>`).join(''),qs=qualified.map(x=>`<li><b>${esc(x.claimId)} — scope-qualified</b><p>${esc(x.reason||'')}</p><small>${esc(x.qualificationType||'scope boundary')} · publication blocking: ${x.blockingPublication?'yes':'no'}</small></li>`).join('');return `<details class="mm-book-claim-trace"><summary><b>Publication claim trace</b> — evidence and publication decisions</summary><p>This trace exposes the governed claim-review evidence for every claim in the module, plus any later evidence upgrade or deliberate scope qualification. It supplements, rather than replaces, the chapter's source anchors.</p>${governedRows?`<h4>Governed claim evidence</h4><ul>${governedRows}</ul>`:''}${rows||qs?`<h4>Later publication decisions</h4><ul>${rows}${qs}</ul>`:''}</details>`;}
   function readerSections(chapter){
     const omitted=new Set(READER_SECTION_OMISSIONS[chapter.id]||[]),supplemental=new Set(READER_SUPPLEMENT_SECTIONS[chapter.id]||[]);
@@ -591,7 +606,16 @@
     if(!rows.length)return '';
     return `<details class="mm-book-reader-supplement"><summary><b>Additional context</b> — optional quality/evidence sidebar</summary><div>${rows.map((section,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:supplement:${index}">${esc(section.title)}</h4>${proseHtml(section.text)}</section>`).join('')}</div></details>`;
   }
-  // The simplified first-read path keeps repeated source sections out of its
+    function materialPropertyGuideHtml(chapter,options={}){
+    const guide=chapter?.propertyGuide;if(!guide)return '';
+    const body=(guide.rows||[]).map(row=>'<tr><th scope="row">'+esc(row.property)+'</th><td>'+esc(row.meaning)+'</td><td><p>'+esc(row.readAs)+'</p><small>Method reference: '+esc(row.standard)+'</small></td></tr>').join('');
+    const example=guide.comparisonExample;
+    const comparisonRows=(example?.rows||[]).map(row=>'<tr><th scope="row">'+esc(row.property)+'</th><td>'+esc(row.methodAndConditions)+'</td><td>'+esc(row.valueA)+'</td><td>'+esc(row.valueB)+'</td></tr>').join('');
+    const interpretations=(example?.rows||[]).map(row=>'<li><strong>'+esc(row.property)+':</strong> '+esc(row.interpretation)+'</li>').join('');
+    const comparison=example?'<section class="mm-book-material-property-comparison"><h4>'+esc(example.title)+'</h4><p>'+esc(example.intro)+'</p><div class="mm-book-property-guide-wrap"><table><thead><tr><th scope="col">Property</th><th scope="col">Method and matched conditions</th><th scope="col">'+esc(example.gradeA)+'</th><th scope="col">'+esc(example.gradeB)+'</th></tr></thead><tbody>'+comparisonRows+'</tbody></table></div><ul>'+interpretations+'</ul><p><strong>Takeaway:</strong> '+esc(example.takeaway)+'</p><p><small>'+esc(example.boundary)+'</small></p></section>':'';
+    return '<details class="mm-book-material-property-guide"'+(options.open===true?' open':'')+'><summary><b>'+esc(guide.summary)+'</b></summary><div class="mm-book-material-property-guide-body"><h4>'+esc(guide.title)+'</h4><p>'+esc(guide.intro)+'</p><div class="mm-book-property-guide-wrap"><table><thead><tr><th scope="col">Property</th><th scope="col">What the test reports</th><th scope="col">How to interpret it</th></tr></thead><tbody>'+body+'</tbody></table></div>'+comparison+'</div></details>';
+  }
+  // The simplified first-read path// The simplified first-read path// The simplified first-read path keeps repeated source sections out of its
   // main prose. Expose the exact authored wording only in the optional notes,
   // so a reader can audit it without navigating away or claiming SME approval.
   function readerOmittedSectionsHtml(chapter){
@@ -615,12 +639,12 @@
     }).join('');
   }
   function readerModuleEvidenceHtml(chapter){
-    const sourceCount=new Set([...(chapter.sourceIds||[]),...claimEvidenceIds(chapter.id)]).size;
+    const sourceCount=new Set([...(chapter.sourceIds||[]),...(chapter.propertyGuide?.sourceIds||[]),...claimEvidenceIds(chapter.id)]).size;
     return `<details class="mm-book-inline-evidence"><summary><b>Module evidence</b> — ${sourceCount} record${sourceCount===1?'':'s'} plus claim trace</summary><div>${sourceHtml(chapter)}${chapter.state==='verified'?claimTraceHtml(chapter):''}</div></details>`;
   }
   function readerReferencesHtml(reader,modules){
     const ids=new Set();
-    for(const ch of modules){for(const id of ch.sourceIds||[])ids.add(id);for(const id of claimEvidenceIds(ch.id))ids.add(id);}
+    for(const ch of modules){for(const id of ch.sourceIds||[])ids.add(id);for(const id of ch.propertyGuide?.sourceIds||[])ids.add(id);for(const id of claimEvidenceIds(ch.id))ids.add(id);}
     for(const patch of evidenceEnrichmentLedger?.chapterPatches||[])if(reader.moduleIds.includes(patch.chapterId))for(const id of patch.sourceIds||[])ids.add(id);
     for(const item of workedCaseLedger?.cases||[])if(reader.moduleIds.includes(item.chapterId))for(const id of item.sourceIds||[])ids.add(id);
     if(!ids.size)return '';
@@ -648,7 +672,7 @@
     const caution=!verified?`<p class="mm-book-review-warning"><strong>${esc(stateLabel(chapter.state))} — independent technical approval not established.</strong></p>`:'';
     const boundary=!verified&&chapter.reviewBoundary?`<p><strong>Review boundary:</strong> ${esc(chapter.reviewBoundary)}</p>`:'';
     const scope=`<aside class="mm-book-scope-note"><p><strong>Applicability:</strong> ${esc(chapter.applicability||'See governed module scope.')}</p>${boundary}</aside>`;
-    return `<section class="mm-book-reader-module" data-mm-book-reader-module="${esc(chapter.id)}"><h3 data-mm-book-anchor="module:${esc(chapter.id)}">${esc(chapter.title)}</h3>${caution}${scope}${sections.map((s,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h4>${proseHtml(s.text)}</section>`).join('')}${options.complete===true?'':readerSupplementHtml(chapter)}${options.complete!==true&&(READER_SECTION_OMISSIONS[chapter.id]||[]).length?`<details class="mm-book-full-source-inline"><summary>Read all original source sections · ${(READER_SECTION_OMISSIONS[chapter.id]||[]).length} additional sections</summary>${readerOmittedSectionsHtml(chapter)}</details>`:''}${diagramHtml(chapter,{readerMode:true})}${workedCaseHtml(chapter,{readerMode:true,audioExpanded:options.priorityCases===true})}${chapter.id==='material-families'?materialAtlasHtml(chapter):''}</section>`;
+    return `<section class="mm-book-reader-module" data-mm-book-reader-module="${esc(chapter.id)}"><h3 data-mm-book-anchor="module:${esc(chapter.id)}">${esc(chapter.title)}</h3>${caution}${scope}${sections.map((s,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:section:${index}">${esc(s.title||'')}</h4>${proseHtml(s.text)}</section>`).join('')}${options.complete===true?'':readerSupplementHtml(chapter)}${options.complete!==true&&(READER_SECTION_OMISSIONS[chapter.id]||[]).length?`<details class="mm-book-full-source-inline"><summary>Read all original source sections · ${(READER_SECTION_OMISSIONS[chapter.id]||[]).length} additional sections</summary>${readerOmittedSectionsHtml(chapter)}</details>`:''}${diagramHtml(chapter,{readerMode:true})}${workedCaseHtml(chapter,{readerMode:true,audioExpanded:options.priorityCases===true})}${chapter.id==='material-families'?materialAtlasHtml(chapter):''}${materialPropertyGuideHtml(chapter,{open:options.complete===true})}</section>`;
   }
   function readerPageTurn(reader){
     const rows=allReaderChapters(),index=rows.findIndex(row=>row.id===reader.id);
@@ -691,11 +715,21 @@
     ui.summary.textContent=`${readers.length} reader chapters · ${allChapters().length} governed modules · ${review.length} modules in technical review · ${verified.length} source-reviewed modules`;
     if(ui.smeStatus)ui.smeStatus.textContent=smeStatusText();
     // Plain numbered contents. The full governed 46-module index and editorial
-    // notes remain accessible AFTER the 20 chapter titles, without badges.
+    // notes remain accessible AFTER the 21 chapter titles, without badges.
     const toc=`<ol class="mm-book-toc">${readers.map((reader,index)=>`<li>
       <button type="button" data-mm-book-reader-chapter-open="${esc(reader.id)}">
         <span class="mm-book-toc-number">${index+1}.</span><span>${esc(reader.title)}<small class="mm-book-toc-meta">${esc(reader.depthBand)} · ${reader.moduleIds.length} source module${reader.moduleIds.length===1?'':'s'} · ${reader.checkQuestions.length} review questions</small></span>
       </button></li>`).join('')}</ol>`;
+    const finder=readerArchitecture.caseFinder,caseById=new Map(workedCaseLedger.cases.map(item=>[item.id,item])),readerByModule=new Map(readers.flatMap(reader=>reader.moduleIds.map(moduleId=>[moduleId,reader])));
+    const caseFinderGroups=finder.groups.map(group=>{
+      const buttons=group.caseIds.map(caseId=>{
+        const item=caseById.get(caseId),reader=readerByModule.get(item?.chapterId);
+        if(!item||!reader)throw new Error("Book case finder target unavailable: "+caseId);
+        return `<button type="button" class="ghost mm-book-chapter-button" data-mm-book-case-finder-case="${esc(item.id)}" data-mm-book-case-finder-reader="${esc(reader.id)}">${esc(item.title)} <small>${esc(reader.title)}</small></button>`;
+      }).join("");
+      return `<section class="mm-book-case-finder-group"><h4>${esc(group.title)}</h4><p>${esc(group.description)}</p><div>${buttons}</div></section>`;
+    }).join("");
+    const caseFinder=`<details class="mm-book-governed-index mm-book-case-finder"><summary>${esc(finder.title)} <small>${workedCaseLedger.cases.length} examples</small></summary><p>${esc(finder.description)}</p>${caseFinderGroups}</details>`;
     const moduleIndex=`<details class="mm-book-governed-index"><summary>Source module index (46 entries)</summary>
       ${(manifest.parts||[]).map(part=>`<section><h4>${esc(part.title)}</h4><div>${(part.chapters||[]).map(chapter=>`<button type="button" class="ghost mm-book-chapter-button" data-mm-book-chapter="${esc(chapter.id)}">${esc(chapter.title)} <small>${esc(chapter.level)} · ${esc(stateLabel(chapter.state))}</small></button>`).join('')}</div></section>`).join('')}</details>`;
     const notes=`<details class="mm-book-contents-guide"><summary>Reading guide & editorial notes</summary>
@@ -706,13 +740,18 @@
       ${readerTermGuideHtml(readers)}
     </details>`;
     ui.parts.innerHTML=`<section class="card mm-book-table-of-contents">
-      <h2>Contents</h2><p class="mm-book-toc-help">Start with a numbered chapter or open the 46-module technical index below. Source-reviewed does not mean independent human expert approval.</p>${moduleIndex}${toc}
-      <div class="mm-book-toc-appendix">${notes}</div>
+      <h2>Contents</h2><p class="mm-book-toc-help">Open a numbered chapter, find a worked example by task, or browse the 46-module technical index. Source-reviewed does not mean independent human expert approval.</p>${toc}
+      <div class="mm-book-toc-appendix">${caseFinder}${moduleIndex}${notes}</div>
     </section>`;
     ui.parts.querySelectorAll('[data-mm-book-reader-chapter-open]').forEach(button=>{
       button.addEventListener('pointerdown',captureContentsScroll,{passive:true});
       button.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' ')captureContentsScroll();});
       button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookReaderChapterOpen));
+    });
+    ui.parts.querySelectorAll('[data-mm-book-case-finder-case]').forEach(button=>{
+      button.addEventListener('pointerdown',captureContentsScroll,{passive:true});
+      button.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' ')captureContentsScroll();});
+      button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookCaseFinderReader,{openCaseId:button.dataset.mmBookCaseFinderCase}));
     });
     ui.parts.querySelectorAll('[data-mm-book-chapter]').forEach(button=>{
       button.addEventListener('pointerdown',captureContentsScroll,{passive:true});
@@ -735,7 +774,7 @@
     contentsWindowScrollY=saved.windowTop;
     pendingContentsScroll=null;
   }
-  function showReaderChapter(id,{preserveEditionPosition=false}={}){
+  function showReaderChapter(id,{preserveEditionPosition=false,openCaseId=null}={}){
     const reader=allReaderChapters().find(x=>x.id===id);if(!reader||!ui)return;
     // Changing reading edition must not overwrite a real learner bookmark with chapter-top.
     const editionSnapshot=preserveEditionPosition&&activeReadingPosition?.kind==='reader-chapter'&&activeReadingPosition.id===id&&resumeStorageKey()===activeReadingScopeKey
@@ -743,7 +782,18 @@
     bookIntentEpoch++;rememberContentsBeforeReading();stopBookSpeech();contentsFocus={kind:'reader-chapter',id};restoreBookChrome();ui.hero.hidden=true;ui.accuracy.hidden=true;const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';
     ui.reader.innerHTML=`${back}${readerChapterHtml(reader)}`;ui.contents.hidden=true;ui.reader.hidden=false;bindBack();ui.reader.querySelector('[data-mm-book-read-toggle]')?.addEventListener('click',event=>{const value=event.currentTarget.dataset.mmBookReadToggle;if(!['guided','complete'].includes(value))return;readerDisplayMode=value;showReaderChapter(id,{preserveEditionPosition:true});});ui.reader.querySelector('[data-mm-book-listen-chapter]')?.addEventListener('click',()=>{if(ui.audioChapter)ui.audioChapter.value=id;startVerifiedListening({resume:false});});ui.reader.querySelectorAll('[data-mm-book-page-turn]').forEach(button=>button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookPageTurn)));bindMaterialPagination(ui.reader);bindBookScrollRoot();
     if(editionSnapshot)void restoreReadingPosition(editionSnapshot,bookIntentEpoch);
-    else{rememberReadingPosition('reader-chapter',id,reader.title,0);scrollBookReaderToTop();}
+    else{
+      rememberReadingPosition('reader-chapter',id,reader.title,0);
+      if(openCaseId){
+        const target=[...ui.reader.querySelectorAll('[data-mm-worked-case]')].find(item=>item.dataset.mmWorkedCase===openCaseId);
+        if(target){
+          target.open=true;
+          const summary=target.querySelector('summary');
+          if(summary){summary.setAttribute('tabindex','-1');summary.focus({preventScroll:true});}
+          requestAnimationFrame(()=>{if(!target.isConnected||ui.reader.hidden)return;scrollBookBy(target.getBoundingClientRect().top-bookViewportTop());queueReadingScrollSave();});
+        }else scrollBookReaderToTop();
+      }else scrollBookReaderToTop();
+    }
     emitBookRender('reader-chapter',id);
     if(reader.moduleIds.includes('material-families'))void hydrateMaterialAtlas();
   }
@@ -831,7 +881,7 @@
     const started=reader.startBookFromGesture();
     if(!started)ui.summary.textContent='No readable Book audio was found. Try the Test phone sound button or reload the Book.';
     emitBookRender('listening');}
-  function openBook(){if(!ui)return;if(open)flushReadingPosition({notify:true});clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingPosition=null;activeReadingScopeKey=null;bookIntentEpoch++;previousView=[...document.querySelectorAll('.view')].find(v=>!v.classList.contains('hidden')&&v!==ui.view)||previousView;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));ui.view.classList.remove('hidden');restoreBookChrome();open=true;setBookInstantScroll(true);document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));ui.nav.classList.add('active');const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');if(title)title.textContent='Book';if(subtitle)subtitle.textContent='Evidence-governed injection moulding reference — 20 reader chapters preserve 46 module-level claim and source boundaries.';contentsScrollY=0;contentsWindowScrollY=0;pendingContentsScroll=null;showContents({restoreScroll:false});scrollBookTo(0);emitBookRender('contents');if(!manifest){ui.summary.textContent='Loading governed Book content on demand…';ui.smeStatus.textContent='Independent human SME review status loads with the Book content.';void ensureManifest().catch(()=>{});}}
+  function openBook(){if(!ui)return;if(open)flushReadingPosition({notify:true});clearTimeout(resumeScrollTimer);resumeScrollTimer=0;activeReadingPosition=null;activeReadingScopeKey=null;bookIntentEpoch++;previousView=[...document.querySelectorAll('.view')].find(v=>!v.classList.contains('hidden')&&v!==ui.view)||previousView;document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));ui.view.classList.remove('hidden');restoreBookChrome();open=true;setBookInstantScroll(true);document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));ui.nav.classList.add('active');const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');if(title)title.textContent='Book';if(subtitle)subtitle.textContent='Evidence-governed injection moulding reference — 21 reader chapters preserve 46 module-level claim and source boundaries.';contentsScrollY=0;contentsWindowScrollY=0;pendingContentsScroll=null;showContents({restoreScroll:false});scrollBookTo(0);emitBookRender('contents');if(!manifest){ui.summary.textContent='Loading governed Book content on demand…';ui.smeStatus.textContent='Independent human SME review status loads with the Book content.';void ensureManifest().catch(()=>{});}}
   async function openChapter(id){
     openBook();
     const intent=bookIntentEpoch,learnerKey=resumeStorageKey();
@@ -877,7 +927,7 @@
   function installBookSearch(){if(window.__MM_BOOK_SEARCH_BOUND__===VERSION)return true;const base=window.doSearch;if(typeof base!=='function')return false;window.doSearch=function(){const result=base.apply(this,arguments);void appendBookSearchResults();return result};window.__MM_BOOK_SEARCH_BOUND__=VERSION;return true;}
   function bindBookSearchInput(){if(window.__MM_BOOK_SEARCH_INPUT_BOUND__===VERSION)return;document.addEventListener('input',event=>{if(event.target?.id==='globalSearch')void appendBookSearchResults();});window.__MM_BOOK_SEARCH_INPUT_BOUND__=VERSION;}
   function armBookSearch(){bindBookSearchInput();if(installBookSearch())return;window.addEventListener('mm:domains-ready',installBookSearch,{once:true});window.addEventListener('load',installBookSearch,{once:true});if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installBookSearch,{once:true});else queueMicrotask(installBookSearch);}
-  function createUI(){const nav=document.getElementById('nav'),main=document.querySelector('#mainContent,.main,main');if(!nav||!main||document.getElementById('mmBookView'))return;const button=document.createElement('button');button.type='button';button.dataset.mmBookTab='1';button.innerHTML='<span class="mm-book-nav-icon" aria-hidden="true"></span><span>Book</span>';button.setAttribute('aria-label','Book');const listening=nav.querySelector('[data-mm-listening-tab]'),path=nav.querySelector('[data-view="path"]');(listening||path)?.insertAdjacentElement('afterend',button);if(!listening&&!path)nav.prepend(button);const view=document.createElement('section');view.id='mmBookView';view.className='view hidden';view.innerHTML=`<section class="card" data-mm-book-hero><span class="eyebrow">MouldMaster Book</span><h2>Injection moulding from foundations to advanced troubleshooting</h2><p>The Book is source-first and evidence-governed. Twenty reader chapters group 46 traceable modules for a clearer learning flow. Source-reviewed modules retain their applicability and exclusions; machine, material, mould, hot-runner and workplace-specific requirements remain controlling.</p><p data-mm-book-summary>Loading governed Book manifest…</p><p data-mm-book-sme-status class="muted">Loading independent human SME review status…</p><div class="mm-book-audio-setup"><label>Book audio content <select data-mm-book-audio-mode aria-label="Book audio content"><option value="complete">Complete source text (all 46 modules)</option><option value="examples">Complete text and 27 worked examples</option><option value="streamlined">Shorter first-read text</option></select></label><label>Start at <select data-mm-book-audio-start aria-label="Start Book audio at chapter"></select></label><p class="muted">Book audio is different from the separate lesson Listening tab. Material Atlas profiles and detailed claim/source ledgers remain visual reference data. Device/browser voices vary.</p></div><div class="mm-book-hero-actions"><button type="button" class="ghost" data-mm-book-mode="listen" disabled>Listening unlocks after source evidence review</button><button type="button" class="ghost" data-mm-book-audio-continue hidden>Continue listening</button></div></section><section data-mm-book-contents><div data-mm-book-parts></div></section><section class="card" data-mm-book-reader hidden></section><section class="card" data-mm-book-accuracy><h3>Accuracy and assurance boundary</h3><p><b>Source evidence reviewed</b> applies to the governed module wording, not to a reader-chapter title. Reader chapters are structural groupings and cannot upgrade evidence status. The Book does not replace current grade, machine, mould, hot-runner, product or site-specific documentation.</p><p><b>Independent validation:</b> source evidence review does not imply independent human SME approval, physical-device validation, curriculum SME approval, learner-outcome validation, accreditation or production validation. Those remain separate external gates.</p></section>`;view.querySelector('[data-mm-book-contents]').insertAdjacentElement('afterend',view.querySelector('[data-mm-book-hero]'));main.appendChild(view);ui={view,nav:button,hero:view.querySelector('[data-mm-book-hero]'),accuracy:view.querySelector('[data-mm-book-accuracy]'),summary:view.querySelector('[data-mm-book-summary]'),smeStatus:view.querySelector('[data-mm-book-sme-status]'),parts:view.querySelector('[data-mm-book-parts]'),contents:view.querySelector('[data-mm-book-contents]'),reader:view.querySelector('[data-mm-book-reader]'),listen:view.querySelector('[data-mm-book-mode="listen"]'),listenContinue:view.querySelector('[data-mm-book-audio-continue]'),audioMode:view.querySelector('[data-mm-book-audio-mode]'),audioChapter:view.querySelector('[data-mm-book-audio-start]')};button.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openBook();});ui.listen.addEventListener('click',()=>startVerifiedListening({resume:false}));ui.listenContinue.addEventListener('click',()=>startVerifiedListening({resume:true}));const bindShellExit=()=>window.MM_APP_SHELL?.events?.onViewChange?.(view=>{if(open&&view!=='book')leaveBook();});if(!bindShellExit())window.addEventListener('mm:domains-ready',bindShellExit,{once:true});}
+  function createUI(){const nav=document.getElementById('nav'),main=document.querySelector('#mainContent,.main,main');if(!nav||!main||document.getElementById('mmBookView'))return;const button=document.createElement('button');button.type='button';button.dataset.mmBookTab='1';button.innerHTML='<span class="mm-book-nav-icon" aria-hidden="true"></span><span>Book</span>';button.setAttribute('aria-label','Book');const listening=nav.querySelector('[data-mm-listening-tab]'),path=nav.querySelector('[data-view="path"]');(listening||path)?.insertAdjacentElement('afterend',button);if(!listening&&!path)nav.prepend(button);const view=document.createElement('section');view.id='mmBookView';view.className='view hidden';view.innerHTML=`<section class="card" data-mm-book-hero><span class="eyebrow">MouldMaster Book</span><h2>Injection moulding from foundations to advanced troubleshooting</h2><p>The Book is source-first and evidence-governed. Twenty-one reader chapters group 46 traceable modules for a clearer learning flow. Source-reviewed modules retain their applicability and exclusions; machine, material, mould, hot-runner and workplace-specific requirements remain controlling.</p><p data-mm-book-summary>Loading governed Book manifest…</p><p data-mm-book-sme-status class="muted">Loading independent human SME review status…</p><div class="mm-book-audio-setup"><label>Book audio content <select data-mm-book-audio-mode aria-label="Book audio content"><option value="complete">Complete source text (all 46 modules)</option><option value="examples">Complete text and 27 worked examples</option><option value="streamlined">Shorter first-read text</option></select></label><label>Start at <select data-mm-book-audio-start aria-label="Start Book audio at chapter"></select></label><p class="muted">Book audio is different from the separate lesson Listening tab. Material Atlas profiles and detailed claim/source ledgers remain visual reference data. Device/browser voices vary.</p></div><div class="mm-book-hero-actions"><button type="button" class="ghost" data-mm-book-mode="listen" disabled>Listening unlocks after source evidence review</button><button type="button" class="ghost" data-mm-book-audio-continue hidden>Continue listening</button></div></section><section data-mm-book-contents><div data-mm-book-parts></div></section><section class="card" data-mm-book-reader hidden></section><section class="card" data-mm-book-accuracy><h3>Accuracy and assurance boundary</h3><p><b>Source evidence reviewed</b> applies to the governed module wording, not to a reader-chapter title. Reader chapters are structural groupings and cannot upgrade evidence status. The Book does not replace current grade, machine, mould, hot-runner, product or site-specific documentation.</p><p><b>Independent validation:</b> source evidence review does not imply independent human SME approval, physical-device validation, curriculum SME approval, learner-outcome validation, accreditation or production validation. Those remain separate external gates.</p></section>`;view.querySelector('[data-mm-book-contents]').insertAdjacentElement('afterend',view.querySelector('[data-mm-book-hero]'));main.appendChild(view);ui={view,nav:button,hero:view.querySelector('[data-mm-book-hero]'),accuracy:view.querySelector('[data-mm-book-accuracy]'),summary:view.querySelector('[data-mm-book-summary]'),smeStatus:view.querySelector('[data-mm-book-sme-status]'),parts:view.querySelector('[data-mm-book-parts]'),contents:view.querySelector('[data-mm-book-contents]'),reader:view.querySelector('[data-mm-book-reader]'),listen:view.querySelector('[data-mm-book-mode="listen"]'),listenContinue:view.querySelector('[data-mm-book-audio-continue]'),audioMode:view.querySelector('[data-mm-book-audio-mode]'),audioChapter:view.querySelector('[data-mm-book-audio-start]')};button.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openBook();});ui.listen.addEventListener('click',()=>startVerifiedListening({resume:false}));ui.listenContinue.addEventListener('click',()=>startVerifiedListening({resume:true}));const bindShellExit=()=>window.MM_APP_SHELL?.events?.onViewChange?.(view=>{if(open&&view!=='book')leaveBook();});if(!bindShellExit())window.addEventListener('mm:domains-ready',bindShellExit,{once:true});}
   async function init(){createUI();bindBookScrollRoot();armBookSearch();return true;}
   window.addEventListener('click',event=>{const target=event.target?.closest?.('nav button,[data-view],[data-page]');if(!target||target.dataset.mmBookTab||ui?.view?.contains(target))return;if(open)leaveBook();},true);
   let ready;

@@ -14,6 +14,16 @@
       "scope": "General injection-moulding principles, consistent process-parameter descriptions and reproducible reporting. ISO confirms the 2017 edition remains current after review in 2022.",
       "checked": "2026-09-14",
       "currentState": "published-confirmed"
+    },
+    {
+      "id": "ENVALIOR-INJECTION-DESIGN-GUIDE-2026",
+      "type": "manufacturer-design-guide",
+      "issuer": "Envalior",
+      "title": "Design guide",
+      "url": "https://www.envalior.com/en-us/material-advisor/design-guide",
+      "scope": "General design guide for thermoplastic injection-moulded parts covering wall thickness, ribs/gussets, bosses, radii/corners, coring, draft and undercuts. Advice is general; exact geometry depends on grade, function, tool, processing and product requirements. No universal dimensions or process instructions are imported.",
+      "checked": "2026-11-03",
+      "currentState": "current-public-manufacturer-design-guide"
     }
   ],
   "chapters": [
@@ -28,11 +38,7 @@
       "sections": [
         {
           "title": "Start here: follow one part",
-          "text": "Imagine a small plastic part, such as a cap or a clip. It begins as solid plastic pellets: small pieces fed into a machine. Plastic is made from materials called polymers. When heat makes it soft enough to flow, it is called a melt. The machine pushes a measured amount of that melt into a strong reusable tool called a mould. Inside the mould is a hollow shape called the cavity. The plastic cools enough to hold that shape, the mould opens, and the part is removed. Then the steps repeat. That repeating journey is one cycle. The aim is to make parts that meet their requirements again and again, while the machine and people stay within their safety limits."
-        },
-        {
-          "title": "The process in one sentence",
-          "text": "Injection moulding repeatedly prepares a polymer melt, drives a controlled quantity into a closed mould, allows the material to form and solidify sufficiently, and removes the moulded part so the cycle can repeat."
+          "text": "This book focuses on thermoplastic injection moulding; other injection processes need their own material-specific guidance. Imagine a small plastic part, such as a cap or a clip. It begins as solid plastic pellets: small pieces fed into a machine. Plastic is made from materials called polymers. When heat makes it soft enough to flow, it is called a melt. The machine pushes a measured amount of that melt into a strong reusable tool called a mould. Inside the mould is a hollow shape called the cavity. The plastic cools enough to hold that shape, the mould opens, and the part is removed. Then the steps repeat. That repeating journey is one cycle. The aim is to make parts that meet their requirements again and again, while the machine and people stay within their safety limits."
         },
         {
           "title": "What the process must achieve",
@@ -43,28 +49,12 @@
           "text": "Moulding conditions are not transferable constants. Standards for reproducible test-specimen moulding explicitly recognise that required conditions vary with the material. Production parts add further dependence on geometry, mould design, machine capability and quality requirements."
         },
         {
-          "title": "How to think like a process engineer",
-          "text": "Separate the desired part result from the machine inputs used to create it. Observe what the material and cavity are doing, record the conditions that matter, and change one justified variable at a time when establishing cause and effect."
-        },
-        {
-          "title": "Think in linked stages, not isolated settings",
-          "text": "A moulded part is the accumulated result of material preparation, plasticising, flow through the machine and mould, cavity filling, post-fill pressure transmission, heat removal and release. A change at one stage can alter what later stages receive. For example, a change that alters melt condition can change pressure demand, filling behaviour, packing response and the time required before the part can be ejected. This is why professional troubleshooting starts from a process model rather than from a list of favourite settings."
-        },
-        {
-          "title": "Inputs, process signals and outputs are different kinds of evidence",
-          "text": "Inputs are things the process deliberately controls or receives, such as material condition, machine commands and mould thermal conditions. Process signals are observations of what the system actually did, such as screw position, time, pressure or cavity-sensor traces. Outputs are the measured properties of the moulded part. Good engineering keeps those categories separate: a controller setpoint is not proof of the physical state inside the cavity, and an acceptable-looking part is not proof that every important quality requirement is stable."
-        },
-        {
           "title": "The aim is repeatable conformance, not a perfect-looking single cycle",
           "text": "One good part does not establish a robust process. The practical objective is a documented operating region in which expected variation in material, machine, mould and environment still produces parts that meet defined requirements. That means the engineer must care about repeatability, measurement, traceability and evidence over time, not only the immediate response to a parameter change."
         },
         {
           "title": "Build an evidence chain from the process to the part",
           "text": "A useful explanation connects what entered the process, what the machine and mould did, and what was measured on the part. Record the material identity and condition, relevant commands, actual process traces and the inspection result as separate evidence. Keep the comparison tied to the same mould, cavity and defined quality requirement where possible. If several inputs change together, the resulting part may improve without showing which change mattered. A process conclusion is stronger when it predicts an observable response and remains consistent across repeated cycles, rather than explaining one result after it is already known."
-        },
-        {
-          "title": "Follow the process as a chain of handoffs",
-          "text": "A part passes through a sequence of linked conditions: material is supplied to the machine, the screw prepares and meters a shot, the injection unit delivers melt through the feed path, the cavity is filled, post-fill pressure acts while the gate permits it, heat leaves the part, and the mould releases it. Each stage hands a different material state to the next. A later symptom can therefore have an earlier cause. A poor surface may be observed after ejection, for example, while the relevant evidence could include material condition, filling history, thermal exposure or mould response. The sequence is a map for investigation, not a promise that every machine uses identical phase names or timing."
         },
         {
           "title": "Keep commands, signals and part results separate",
@@ -86,30 +76,6 @@
           "text": "A moulding cycle is a repeating set of steps. First, the machine heats and mixes pellets until they can flow; this preparation is called plasticising. It prepares a measured amount called a shot. Next, the machine pushes the shot through channels and a small opening called the gate into the cavity. Pressure describes how concentrated a push is over an area. In physics, pressure is force divided by area. If the same force acts over a smaller area, the pressure is higher, like pressing with one fingertip instead of a flat palm. Pressure and force are related, but they are not the same thing. The machine changes from filling to holding pressure; this change is called transfer. Holding pressure, or packing, can feed material as it cools and shrinks. Finally, the part cools enough to come out of the mould. The stages can overlap, and different machines may name them differently. Think of the cycle as one connected sequence, not a row of unrelated buttons."
         },
         {
-          "title": "Prepare the next shot",
-          "text": "The plasticising unit rotates and retracts the screw to prepare a controlled quantity of melt for a later injection. Material preparation and thermal history continue to matter even when the mould is closed and cooling."
-        },
-        {
-          "title": "Fill the cavity",
-          "text": "The machine advances the screw so melt flows through the nozzle, feed system and gate into the cavity. During this phase, flow resistance and the commanded motion interact; displayed hydraulic or injection pressure is not itself proof of cavity pressure."
-        },
-        {
-          "title": "Transfer and pack",
-          "text": "A controlled transition moves the process from filling toward post-fill pressure control. Packing compensates for material contraction while the gate and part remain able to respond. The correct transition and packing strategy must be established for the actual moulded system rather than copied as a universal percentage or pressure."
-        },
-        {
-          "title": "Cool and eject",
-          "text": "The part must remain constrained long enough to reach a condition where opening and ejection can occur without unacceptable deformation or damage. Cooling, mould temperature distribution, part geometry and material behaviour all affect this stage."
-        },
-        {
-          "title": "Treat the cycle as an interacting system",
-          "text": "Cycle phases overlap physically even when the controller displays them separately. Plasticising may occur while the part cools, and thermal or pressure history from one phase can change what happens in the next. Diagnose the complete sequence, not a single screen value in isolation."
-        },
-        {
-          "title": "Each stage hands conditions to the next",
-          "text": "The moulding cycle is easiest to understand as a chain of state changes. Plasticising prepares a shot with a particular thermal and mixing history. Filling determines how the flow front advances and how orientation develops. Transfer changes the control objective as the cavity approaches the end of filling. Packing can compensate for contraction while the feed path remains effective. Cooling changes stiffness and dimensions until the part can be released. Ejection then imposes mechanical loads on a still-evolving part. Problems often appear in one stage even though their cause began earlier."
-        },
-        {
           "title": "Cycle time is not only a productivity number",
           "text": "Changing the duration of a stage can alter material residence, mould thermal balance, part temperature at ejection and the amount of time available for pressure transmission. Therefore a shorter cycle is not automatically an improvement, and a longer cycle is not automatically safer. Evaluate cycle changes against part quality, process stability, equipment limits and the thermal state of the moulding system."
         },
@@ -120,10 +86,6 @@
         {
           "title": "Read the cycle as a timed sequence of physical events",
           "text": "A controller phase name is useful only when it is connected to the event it represents. Follow when screw recovery begins, when the screw advances, when the control objective changes, how long pressure can influence the cavity, when cooling is complete enough for release, and when the next shot is ready. Some machine work overlaps: recovery may happen while the part cools. That overlap means a change in one displayed duration can affect material residence or the next cycle even when the mould is doing something else. Compare traces on a shared time basis and confirm the machine's signal definitions before interpreting a transition."
-        },
-        {
-          "title": "The stages interact across the cycle",
-          "text": "The cycle is not a row of independent settings. Screw recovery prepares material for a later shot while the current part may still be cooling; the exact overlap depends on the machine sequence. Filling creates a pressure and temperature history that affects what happens after transfer. Cooling then influences whether the part can be released and how it responds after ejection. A change made to shorten one phase can move demand into another phase or change the condition presented to it. When comparing cycles, note the full sequence and actual response rather than judging one timer or setpoint in isolation."
         },
         {
           "title": "Trace an outcome back through the sequence",
@@ -160,14 +122,6 @@
           "text": "The controller coordinates commanded motion, temperatures, pressures, timing, alarms and interlocks. The machine also contains energy sources and stored-energy hazards that cannot be understood safely from the process screen alone."
         },
         {
-          "title": "Use the machine documentation",
-          "text": "For setup, maintenance, guarding, isolation, limits and permitted operation, the specific machine manufacturer's instructions and the site's approved procedures control. A generic Book chapter cannot replace them."
-        },
-        {
-          "title": "Read the machine as interacting subsystems",
-          "text": "The injection unit, clamp, drive system, controller, guards and mould interface work as one operating system. A displayed value belongs to a particular subsystem and measurement point, so interpretation should begin by asking what physical quantity is commanded or measured, where it is measured and which components lie between that signal and the polymer in the cavity. This prevents a machine label from being mistaken for direct knowledge of cavity conditions or part quality."
-        },
-        {
           "title": "Machine-specific documentation remains controlling",
           "text": "Generic anatomy supports communication, but actual limits, modes, calibration methods, interlocks and service procedures depend on the machine and controller. Before using a signal diagnostically, verify its units, scaling, sensor location and control mode in current equipment documentation. Transferable understanding should focus on physical function and evidence rather than memorised screen positions or assumptions that the same label means the same implementation on every machine."
         },
@@ -178,10 +132,6 @@
         {
           "title": "Trace the functions, not just the component names",
           "text": "The injection unit takes material from the feed region, transports and heats it in the barrel, uses the screw to prepare a measured melt quantity, and delivers that melt through the nozzle. The clamping unit holds the mould closed during the process, then opens it and coordinates the release sequence. The controller links commands, measured signals and machine sequencing. These functions form one machine, but their limits and measurements differ. When a symptom is reported, name the subsystem and the evidence point involved: a recovery issue, a nozzle-side restriction, a clamp response and a mould release problem are not interchangeable descriptions. The exact configuration varies, so the machine manual and local setup record remain the reference for the machine in front of you."
-        },
-        {
-          "title": "Read commanded and actual values as different evidence",
-          "text": "A screen can show a target value, an achieved value, a limit or a calculated value. Those labels describe different things. A target temperature is a controller request; an actual reading comes from a sensor at its installed location; neither is automatically the melt temperature throughout the screw, nozzle or mould. Similarly, a pressure reading belongs to a defined transducer and control system. Before interpreting a trace, identify its source, unit, sampling time and whether it is filtered or calculated. This prevents comparisons between unlike signals and keeps a sensor observation from being mistaken for a measurement at another point in the process."
         }
       ]
     },
@@ -190,7 +140,8 @@
       "state": "technical-review",
       "applicability": "Common mould parts and functions. Real moulds differ; use the tool drawing and site procedures for the actual tool.",
       "sourceIds": [
-        "ISO-12165-2019"
+        "ISO-12165-2019",
+        "ENVALIOR-INJECTION-DESIGN-GUIDE-2026"
       ],
       "sections": [
         {
@@ -214,16 +165,8 @@
           "text": "Cooling or temperature-control circuits remove or supply heat so the mould reaches a useful thermal condition. Circuit layout, flow condition and local heat load can create different surface temperatures across the tool, which is why a single controller setpoint does not describe the whole mould."
         },
         {
-          "title": "Follow the complete path through the mould",
-          "text": "A useful mould mental model follows material from the inlet through runners and gates into each cavity while also tracking venting, cooling, guidance, parting surfaces, inserts, slides and ejection. Defects often reflect interactions between these features rather than one isolated component. Mapping symptom location to nearby mould features is therefore a stronger starting point than assuming every defect is primarily a machine-setting problem."
-        },
-        {
           "title": "Precise terminology improves diagnostic handover",
           "text": "Troubleshooting often crosses shifts and disciplines, so records should identify the exact cavity, insert, gate, vent, cooling circuit, parting feature or ejection element involved. That makes observations repeatable and reduces ambiguous instructions. Standard terminology supports communication, while the actual mould drawing, maintenance record and approved site controls remain authoritative for a specific tool."
-        },
-        {
-          "title": "Use location to connect a symptom to mould features",
-          "text": "Record where a symptom appears: which cavity, which side of the part, how far from the gate, and whether it follows a parting surface, vent, insert or cooling region. A repeated location can narrow the feature map worth inspecting, while a symptom across all cavities may point toward a shared upstream condition. Neither pattern proves a cause. Location is a way to make the next comparison more discriminating, and the actual mould drawing and approved inspection method remain the authority for identifying tool features."
         },
         {
           "title": "Treat the mould as a flow, heat and release system",
@@ -232,6 +175,10 @@
         {
           "title": "Tie observations to cavity and location",
           "text": "In a multi-cavity or family mould, a single machine trace can represent several different local cavity outcomes. Record which cavity produced the measured part, where on that part the feature was found, and whether the same feature appears elsewhere. A defect fixed to one cavity suggests a different set of questions from a defect shared across all cavities, though neither pattern proves a cause. Tool condition, local flow and heat removal can vary by location. Keeping cavity identity and measurement location attached to a result makes later comparisons useful instead of averaging away a meaningful difference."
+        },
+        {
+          "title": "Map part geometry to process and tooling questions",
+          "text": "Start with the part’s function, drawing and material identity. Mark the surfaces and dimensions that matter to the product, then trace how the part geometry connects to filling, heat removal and release. This drawing review is a way to ask better questions; it does not replace the approved part design, mould drawing, supplier guidance or a toolmaker’s review.\n\nLook first at the walls and transitions. Note abrupt changes in thickness, thick intersections, corners, ribs and bosses. These features can affect how melt reaches a region, how heat leaves it, and how the moulded part changes dimension or appearance. Ribs and bosses may help a part meet a structural or assembly need, while their connections can create local material buildup. A design guide can help flag these locations, but there is no single wall, rib or boss ratio that suits every grade and part.\n\nNext, mark the feed entry and the likely flow paths on the drawing. Note where a path divides around a hole, core or other feature and where fronts may meet. Identify cosmetic or load-bearing regions where the meeting location could matter, then ask how the actual gate arrangement and mould flow will be checked. Do not infer a weld-line position from the outside shape alone.\n\nThen connect geometry to heat and release. Highlight thick or asymmetric regions for cooling review, and use the actual tool drawing to identify relevant circuits and cavity locations. Mark the draw direction, surfaces that need draft, undercuts and any slides or other mechanisms. Ask how ejection contact and part movement will be inspected. The exact cooling and ejection arrangement varies by tool.\n\nA useful design handover pairs each annotation with a question and an observable check: where should filling be examined, which dimensions are sensitive to local geometry, where could appearance or a flow-front meeting matter, and which surfaces or cavities need separate inspection? Keep those questions attached to the part revision, material grade and tool revision. Numerical dimensions and acceptance criteria must come from the controlled product design, material information and engineering review for that application."
         }
       ]
     },
@@ -248,14 +195,6 @@
           "text": "An injection moulding machine can move with great force, become very hot, and contain stored energy even when it looks still. Guards are barriers. Interlocks are safety devices that help prevent or stop hazardous movement when a guard or other condition is not safe. A stopped cycle or quiet screen does not prove that a machine is safe to enter. This chapter explains words and boundaries; it is not a procedure for entering, adjusting, cleaning, or repairing equipment. Use the approved instructions for the actual machine and workplace, and involve an authorised, trained person when a task reaches a safety boundary."
         },
         {
-          "title": "Safety is a system boundary",
-          "text": "Injection-moulding equipment combines hazardous motion, hot surfaces and materials, pressure, electrical energy and other machine-dependent energy sources. Safe work depends on engineered safeguards, correct machine condition, authorised procedures and competent people."
-        },
-        {
-          "title": "A stopped screen is not an isolation",
-          "text": "The absence of commanded movement does not prove that hazardous energy has been isolated or dissipated. Never infer a safe intervention state from a controller display, cycle stop or open guard alone."
-        },
-        {
           "title": "Guarding and interlocks are safety functions",
           "text": "Do not defeat, bypass or treat safeguards as production inconveniences. If a safeguard prevents the intended task, the task needs the approved machine- and site-specific safe method instead of an improvised workaround."
         },
@@ -264,24 +203,12 @@
           "text": "If a task involves access to a danger zone, isolation, stored energy, maintenance, abnormal machine condition or uncertainty about a safeguard, this Book does not provide the procedure. Use the machine manufacturer's instructions, the site's authorised safety system and competent supervision."
         },
         {
-          "title": "Stored energy persists when motion stops",
-          "text": "An idle machine can still contain thermal, hydraulic, pneumatic, electrical, spring, gravity or polymer-pressure hazards. A stopped cycle therefore does not by itself establish a safe intervention state. Troubleshooting must preserve guards and interlocks and follow the applicable machine, mould and workplace isolation procedures whenever work crosses the normal guarded operating boundary. Generic process knowledge never authorises defeating a protective function."
-        },
-        {
           "title": "Separate observation from intervention",
           "text": "Many useful diagnostic observations can be made without entering a hazard zone: controller traces, cycle timing, part inspection, external measurements and recorded process trends. Prefer those methods first. When a diagnosis genuinely requires physical access, maintenance, purging or tooling work, the task moves from generic troubleshooting into controlled site procedure. The Book can explain the evidence needed but cannot replace authorised risk assessment or equipment-specific instructions."
         },
         {
-          "title": "Choose evidence collection that stays within the safe boundary",
-          "text": "A diagnostic question does not authorise a hazardous test. Start with information available from normal guarded operation, such as recorded traces, cycle history, external part measurements and observations made from an authorised position. If answering the question would require access to moving, hot, pressurised or stored-energy components, the work must move to the machine- and site-specific safe system, competent supervision and authorised task controls. This Book provides no isolation sequence and no permission to bypass a safeguard."
-        },
-        {
           "title": "A stop, a fault and isolation are different states",
           "text": "A stopped cycle or controller fault does not, by itself, establish that hazardous energy has been isolated or dissipated. The machine may retain stored, electrical, hydraulic, pneumatic, thermal or gravity-related hazards, and the applicable safeguards depend on the specific equipment and task. This Book helps learners recognize the boundary; it does not provide a generic isolation sequence or authorize access. Use the machine manufacturer's instructions, the site's risk controls and the role-specific authorization process. If the safe state is uncertain, the task stays within the site's escalation and isolation system rather than being inferred from the display."
-        },
-        {
-          "title": "Safety controls define the boundary of process work",
-          "text": "A process target never overrides guarding, interlocks, rated equipment limits or a site's safe-work controls. Do not treat a bypass, defeated safeguard or improvised access method as a troubleshooting step. Process evidence can be collected only through permitted observation points and approved methods. This also applies to material handling, purging, mould temperature equipment and ejection: the correct method depends on the machine, resin, tool and local procedure. The learner's responsibility is to recognize when a question has moved from process reasoning into an authorized safety task and to use the appropriate trained person and control system."
         }
       ]
     }

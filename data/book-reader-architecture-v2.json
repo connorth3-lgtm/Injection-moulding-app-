@@ -3,7 +3,7 @@
   "bookId": "mouldmaster-book",
   "version": "2026.10.07-reader-first-read-deep",
   "status": "governed-derived-reader-map",
-  "purpose": "Reader-facing consolidation of the 46 governed content modules into substantial book chapters while preserving module IDs for claim, source, SME and runtime traceability.",
+  "purpose": "Reader-facing consolidation of the 46 governed content modules into substantial book chapters while preserving module IDs for claim, source, SME and runtime traceability. The 21-chapter sequence separates a beginner materials path from its advanced follow-up.",
   "targetWordsPerReaderChapter": {
     "nominal": 1000,
     "range": [
@@ -86,33 +86,77 @@
         "material-families",
         "fillers-additives"
       ],
-      "goal": "Understand in plain language how plastic structure, broad material families and added ingredients can affect a part, and why the exact supplier grade matters.",
+      "goal": "Build a beginner’s mental model of polymers: how repeat units form chains, how chain populations and structure differ between grades, what changes during cooling, and why measurements and exact-grade evidence matter.",
       "depthBand": "Foundation",
       "learningObjectives": [
-        "Describe how different plastic structures can respond differently as they cool.",
-        "Explain why a family name is not enough to identify a material or its production guidance.",
-        "Recognise how fibres and additives can change more than one part property."
+        "Describe a polymer as a population of long chains made from repeating chemical units.",
+        "Explain how molecular-weight distribution, branching and entanglement can influence chain motion and measured melt behaviour, while keeping study results tied to the tested material.",
+        "Distinguish glass transition, melting and crystallisation as different thermal events.",
+        "Explain why DSC and other polymer measurements answer specific questions rather than describing a complete production part.",
+        "Use the exact commercial grade and test conditions when comparing supplier evidence."
       ],
       "checkQuestions": [
-        "What is a polymer chain, in everyday words?",
-        "How are amorphous and semi-crystalline plastics different as they cool?",
-        "Why can two grades with the same family name behave differently?",
-        "What should be checked before comparing a supplier property value?",
-        "How can fibres make a part behave differently in different directions?"
+        "What is a repeat unit, and why is a resin not usually made of identical chain lengths?",
+        "What does molecular-weight distribution tell you that one average cannot?",
+        "How are entanglement and chemical cross-links different?",
+        "How do glass transition, melting and crystallisation describe different events?",
+        "What can a DSC trace tell you, and what does it not directly map in a moulded part?",
+        "Why must a cooling-rate result stay linked to the exact polymer sample and test method?",
+        "What should be checked before comparing two supplier property values?"
       ],
-      "applyPrompt": "Imagine comparing two candidate plastics for one part. Write down what the part must do, the exact supplier grade for each candidate, the test conditions behind the data, and what would need to be checked on a moulded part.",
+      "applyPrompt": "Compare two hypothetical grades for one part. Record the exact grade identity, the polymer-structure features or measurements actually known, each property’s method and conditions, the part directions and requirements that matter, and what must be measured on a moulded part. Mark unknown information as unknown.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
       "scenarioPrompt": "Two exact grades from the same material family are proposed for the same mould. Without assuming interchangeability, list the grade documents and observed process/part evidence you would compare before deciding whether a transfer is defensible.",
-      "readingThread": "Start with the long molecules that make up plastic. Then see how broad families differ, and how fibres or additives can change the material further.",
+      "readingThread": "Begin with the repeating chemical units and long chains. Then follow how chain-size distributions and branching affect molecular motion, how amorphous and semi-crystalline materials respond to heat, and how measurement and grade documents turn those ideas into bounded evidence.",
       "keyTerms": [
         "polymer chain",
-        "amorphous",
-        "semi-crystalline",
-        "material family",
-        "grade",
-        "fibre reinforcement",
-        "additive"
+        "repeat unit",
+        "molecular-weight distribution",
+        "branching",
+        "entanglement",
+        "glass transition",
+        "crystallisation",
+        "differential scanning calorimetry (DSC)"
       ]
+    },
+    {
+      "id": "r03a",
+      "title": "Advanced Materials: Fibre Orientation and High-Performance Polymers",
+      "moduleIds": [
+        "fibre-orientation",
+        "high-performance-polymers"
+      ],
+      "goal": "Apply the beginner materials map to advanced engineering questions: how local fibre-orientation distributions relate to directional part behaviour, how physical measurements and simulations can be compared, and how a high-demand polymer must be reviewed against the whole material-handling and equipment system.",
+      "depthBand": "Advanced",
+      "learningObjectives": [
+        "Explain fibre orientation as a local distribution that can vary across a part and through its thickness.",
+        "Separate global flow-path reasoning, local orientation measurements and part-level performance evidence.",
+        "Describe what micro-CT observations and simulation predictions can each contribute, and where their limits remain.",
+        "Plan directional measurements around product functions, features and cavity identity.",
+        "Prepare an exact-grade review covering supplier documents, equipment interfaces and the material’s thermal path."
+      ],
+      "checkQuestions": [
+        "Why is one flow arrow across a whole part only a starting picture of fibre orientation?",
+        "What does anisotropy mean when you compare dimensions or properties in different directions?",
+        "What does a micro-CT measurement tell you that a simulation prediction does not, and what can neither establish alone?",
+        "Why should measurement location, direction and cavity identity be preserved?",
+        "Why can a family label such as “high-performance” not supply the conditions for an exact grade?",
+        "Which supplier documents, equipment interfaces and thermal-history records belong in a material-change review?"
+      ],
+      "applyPrompt": "Choose a hypothetical reinforced or high-temperature material. Create two linked but separate review sheets: one for directional part evidence and one for exact-grade/system compatibility. Include grade identity, relevant supplier and equipment document revisions, part locations and directions, measurement methods and conditions, simulation assumptions if used, unresolved questions, and the physical evidence needed to evaluate the part. Leave unknown values blank; do not fill them with generic settings.",
+      "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
+      "readingThread": "Start with orientation as a spatial distribution, then compare model predictions with physical observations and plan measurements in product-relevant directions. Next, treat a high-performance material as a system review: read the exact grade documents, map its thermal path and check every relevant equipment interface.",
+      "keyTerms": [
+        "fibre orientation",
+        "orientation distribution",
+        "anisotropy",
+        "micro-CT",
+        "simulation validation",
+        "exact grade",
+        "thermal history",
+        "equipment compatibility"
+      ],
+      "scenarioPrompt": "A reinforced grade is proposed for a part with a dimension that changes by direction, and the same project is considering a high-temperature alternative. Separate the two reviews: list orientation evidence for the existing part, then list exact-grade supplier and equipment evidence for the proposed material. Mark hypotheses separately from measured facts."
     },
     {
       "id": "r04",
@@ -542,63 +586,62 @@
     },
     {
       "id": "r18",
-      "title": "Dimensional Stability and Reinforced Materials",
+      "title": "Dimensional Stability and Measurement Conditions",
       "moduleIds": [
-        "dimensional-stability",
-        "fibre-orientation"
+        "dimensional-stability"
       ],
-      "goal": "Explain time-dependent dimensions, directional behaviour and anisotropy with explicit measurement conditions.",
+      "goal": "Explain why a dimension depends on when, where and how it is measured, and how controlled comparisons help separate competing causes.",
       "depthBand": "Engineer",
       "learningObjectives": [
-        "Control dimensional reference conditions.",
-        "Explain how reinforcement and orientation create directional response."
+        "Include conditioning, timing, environment and method in a dimensional result.",
+        "Use cavity, time and measurement-direction patterns to organise competing explanations."
       ],
       "checkQuestions": [
-        "Why must measurement timing be part of a dimensional result?",
-        "How can cavity pattern and directionality distinguish competing dimensional mechanisms?",
-        "Why should reinforced grades not use generic isotropic shrinkage assumptions?"
+        "Why must measurement timing and conditioning be part of a dimensional result?",
+        "How could a time trend differ from a cavity-specific pattern?",
+        "Why does a measurement help test a possible cause without automatically proving it?"
       ],
       "applyPrompt": "Plan a dimensional study that separates conditioning time, cavity identity and measurement direction.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "readingThread": "Read dimensional state and fibre orientation together because both make measurement direction, timing and conditioning part of the interpretation.",
+      "readingThread": "Define the measurement conditions first. Then use consistent measurements over time and across cavities to compare possible material, mould and process contributions.",
       "keyTerms": [
         "dimensional stability",
         "conditioning",
-        "fibre orientation",
-        "anisotropy",
-        "measurement timing"
+        "measurement timing",
+        "reference condition",
+        "post-mould change"
       ]
     },
     {
       "id": "r19",
-      "title": "Thin-Wall, Multi-Cavity and High-Performance Processing",
+      "title": "Thin-Wall and Multi-Cavity Processing",
       "moduleIds": [
         "thin-wall",
-        "multi-cavity",
-        "high-performance-polymers"
+        "multi-cavity"
       ],
-      "goal": "Cover advanced situations where machine, mould, material and supplier limits become especially important.",
+      "goal": "Study advanced moulding situations where machine capability, flow path and cavity-specific evidence become especially important.",
       "depthBand": "Advanced",
       "learningObjectives": [
-        "Recognise advanced cases where equipment, flow path and grade limits dominate.",
-        "Preserve cavity identity and supplier-specific boundaries."
+        "Recognise why thin-wall capability depends on more than one machine rating.",
+        "Preserve cavity identity when evaluating balance and part results."
       ],
       "checkQuestions": [
         "Why can thin-wall capability not be judged from pressure rating alone?",
-        "How can pooling cavities hide a systematic imbalance?",
-        "Why must high-performance polymer processing remain supplier-led?"
+        "How can pooling results from several cavities hide a repeated imbalance?",
+        "What evidence would help distinguish a cavity-specific issue from a whole-process change?"
       ],
-      "applyPrompt": "For a four-cavity thin-wall part, list which machine, mould, material and cavity-specific evidence you would preserve.",
+      "applyPrompt": "For a hypothetical four-cavity thin-wall part, list the machine, mould, flow-path and cavity-specific evidence you would preserve before drawing a conclusion.",
       "evidenceBoundary": "Use these learning prompts to test understanding. They do not add technical claims or authorize machine, mould, material, product or site changes beyond the governed modules and controlling documentation.",
-      "sequencePrompt": "Treat these advanced topics as boundary-heavy applications of the earlier method: preserve cavity identity, equipment capability, material-grade limits and measured response. Thin-wall, multi-cavity and high-performance processing become unsafe teaching topics when exact machine, mould or supplier constraints are replaced by generic recipes.",
-      "scenarioPrompt": "For a proposed high-performance grade, build a verification checklist covering the exact-grade documents, machine/mould/hot-runner interfaces and evidence you would need before treating the material as compatible with the existing system.",
-      "readingThread": "Use these advanced topics as examples of tighter process constraints, then compare which evidence becomes more important as geometry, balance and material demands increase.",
+      "sequencePrompt": "Carry the evidence method into demanding geometries: keep machine capability, flow path and individual cavity response connected to the part result.",
+      "scenarioPrompt": "A four-cavity mould shows a dimensional difference in one cavity while the pooled average still looks acceptable. List how you would keep cavity identity, machine measurements, mould condition and part measurements linked while investigating. Do not infer a cause from the average alone.",
+      "readingThread": "Use thin-wall and multi-cavity examples to see why equipment limits, flow path and cavity identity must stay visible in the evidence.",
       "keyTerms": [
         "thin wall",
         "multi-cavity balance",
-        "high-performance polymer",
         "pressure demand",
-        "thermal history"
+        "flow path",
+        "cavity identity",
+        "machine capability"
       ]
     },
     {
@@ -643,5 +686,74 @@
   "release": "2026.10.22.2",
   "pedagogyPolicy": "Reader-level objectives, checks, application prompts, reading threads, key-term labels and optional reasoning scenarios are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority. Sequence prompts are reader-orientation scaffolds derived from existing governed module order; they add no independent technical authority. Key terms identify vocabulary to notice and do not act as standalone definitions.",
   "depthBandMeaning": "Depth labels describe how technical the ideas are; they are not a test of who can read a chapter and they are not a ladder you have to climb in order. The first five chapters start with plain-language explanations and build toward more specialist detail.",
-  "firstReadPolicy": "The guided reading starts with the main explanation. Notes about where ideas apply, source details and worked examples are available through progressive disclosure: open them when you want more detail. Key terms are navigation labels; the chapter text explains their meanings."
+  "firstReadPolicy": "The guided reading starts with the main explanation. Notes about where ideas apply, source details and worked examples are available through progressive disclosure: open them when you want more detail. Key terms are navigation labels; the chapter text explains their meanings.",
+  "caseFinder": {
+    "schema": 1,
+    "title": "Find a worked example",
+    "description": "Browse the 27 existing synthetic worked examples by task. Each entry opens the example inside its existing reader chapter.",
+    "groups": [
+      {
+        "id": "materials",
+        "title": "Materials and thermal behaviour",
+        "description": "Moisture, material condition, degradation, heat and dimensional conditioning.",
+        "caseIds": [
+          "worked-conditioning-v1",
+          "worked-heat-load-v1",
+          "worked-splay-boundary-v1",
+          "worked-dimensional-conditioning-v1",
+          "worked-black-speck-source-map-v1"
+        ]
+      },
+      {
+        "id": "process-development",
+        "title": "Process development",
+        "description": "Build controlled studies and understand process, machine and feed-system behaviour.",
+        "caseIds": [
+          "worked-clamp-force-v1",
+          "worked-pressure-loss-v1",
+          "worked-gate-seal-v1",
+          "worked-doe-interaction-v1",
+          "worked-vp-transfer-v1",
+          "worked-feed-balance-v1",
+          "worked-hot-runner-timing-v1",
+          "worked-fill-study-v1",
+          "worked-shot-utilisation-v1",
+          "worked-process-window-v1"
+        ]
+      },
+      {
+        "id": "defects",
+        "title": "Defects",
+        "description": "Connect common moulding symptoms with observations and controlled evidence.",
+        "caseIds": [
+          "worked-diagnostic-short-shot-v1",
+          "worked-vent-diagnosis-v1",
+          "worked-warpage-discrimination-v1",
+          "worked-weld-line-diagnosis-v1",
+          "worked-filling-boundary-defect-v1"
+        ]
+      },
+      {
+        "id": "measurement",
+        "title": "Measurement and monitoring",
+        "description": "Interpret pressure, cavity-to-cavity, capability and process signals; preserve a defensible baseline.",
+        "caseIds": [
+          "worked-pressure-trace-v1",
+          "worked-multi-cavity-v1",
+          "worked-capability-v1",
+          "worked-process-monitoring-alarm-v1",
+          "worked-process-baseline-record-v1"
+        ]
+      },
+      {
+        "id": "troubleshooting",
+        "title": "Troubleshooting",
+        "description": "Use trends and competing causes to decide what to investigate next.",
+        "caseIds": [
+          "worked-ejection-trend-v1",
+          "worked-complex-diagnostics-v1"
+        ]
+      }
+    ]
+  }
 }

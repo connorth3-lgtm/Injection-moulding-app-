@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.02.2",
+  "release": "2026.11.03.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "17ae5aa2e73929aabd9f3dc1fd0415867e27e6be",
-  "scope": "Removed the hidden audio carrier and Android MediaSession that created persistent notifications, and stopped automatic hidden-page speech retries. Interrupted browser speech requires an explicit Resume tap; screen-off playback remains platform-dependent. Release 2026.11.02.2 exact-source candidate 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be passed automated preview quality gates. No human or external validation is inferred.",
-  "approvalBoundary": "Release 2026.11.02.2 exact candidate producer run 41334499139 created artifact 13095275054 for source 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be, with runtime fingerprint sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": "f270ac25db08f4729f93e7447d5201d43489f7aa",
+  "scope": "Release 2026.11.03.1 exact-source candidate f270ac25db08f4729f93e7447d5201d43489f7aa adds the Book chapter, materials guide and worked-example finder updates. The candidate passed the exact-source automated preview gates; no human or external validation is inferred.",
+  "approvalBoundary": "Release 2026.11.03.1 exact candidate producer run 41594378980 created artifact 13210979022 for source f270ac25db08f4729f93e7447d5201d43489f7aa, with runtime fingerprint sha256:bb58e75d141efd77c6388231ab7cef8ae4737c00393176228583b748a674bbf2 and digest sha256:581b205bca0f0b0081580bbd126a3dcfa6a17632af067a8521b2475ec7d5326f. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -43,10 +43,10 @@
   "productionAuthority": "advisory-only",
   "humanEvidenceStatus": "hold",
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
-  "lastReviewedDate": "2026-11-01",
+  "lastReviewedDate": "2026-11-03",
   "previousVerifiedCandidate": {
-    "release": "2026.11.02.1",
-    "sourceSha": "77bdec076f7ddb73555d6509642f6b46169008a9",
-    "runtimeFingerprint": "sha256:387fd33a7fa8b9c6a14c94e2ec582bf60ab95e744feaccdb7f71d68e6108d565"
+    "release": "2026.11.02.2",
+    "sourceSha": "17ae5aa2e73929aabd9f3dc1fd0415867e27e6be",
+    "runtimeFingerprint": "sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913"
   }
 }
