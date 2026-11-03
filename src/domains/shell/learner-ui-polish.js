@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.11.03.1
+/* MouldMaster learner UI polish — 2026.11.03.2
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.11.03.1';
+const VERSION='2026.11.03.2';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
 const STYLE_REV='2026.10.20.2-pr640-materials-parity';
 const DESKTOP_QUERY='(min-width:1101px)';
@@ -345,6 +345,14 @@ function ensurePreviewStatus(){
   // The title/subtitle container is deliberately hidden on several mobile
   // routes. Keep this independent status label in the visible topbar.
   bar.appendChild(badge);
+  window.addEventListener('mm:book-render',event=>{
+    const kind=String(event?.detail?.kind||'');
+    if(kind==='contents'||kind==='outside'){
+      badge.classList.remove('mm-preview-status-book-hidden');
+    }else if(['chapter','reader-chapter','listening'].includes(kind)){
+      badge.classList.add('mm-preview-status-book-hidden');
+    }
+  });
 }
 const ASSET='./assets/book-diagrams/';
 const PHOTO_ASSET='./assets/mockup-reference-tiles.webp';

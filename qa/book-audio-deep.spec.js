@@ -31,7 +31,7 @@ test('complete Book narration includes governed module text, chapter seeking and
   const book=page.locator('#mmBookView');
   await expect(book.locator('[data-mm-book-audio-chapter="r06"] h4').filter({hasText:'Transfer is a control transition'})).toHaveCount(1);
   await expect(book.locator('[data-mm-book-audio-chapter]')).toHaveCount(21);
-  await expect(book.locator('[data-mm-book-audio-chapter] .mm-book-reader-assurance')).toHaveCount(21); // all spoken chapters preserve source and SME limitations
+  await expect(book.locator('[data-mm-book-audio-chapter] .mm-book-reader-assurance')).toHaveCount(0); // shared Book-level assurance avoids repeating boilerplate in all 21 chapters
   const player=page.locator('.mm-read-aloud');
   await expect(player.locator('[data-mm-book-audio-controls]')).toBeVisible();
   await expect(player.locator('[data-mm-book-audio-chapter]')).toHaveValue('r06');
@@ -80,13 +80,16 @@ test('book narration progresses to saved chapter without automatically restartin
   expect(cursor===null||cursor.chapterId!=='r12').toBeTruthy();
 });
 
-test('first-read Book keeps expert-review boundary visible without a duplicate source-section panel',async({page})=>{
+test('first-read Book keeps one Book-level assurance boundary without repeating it in each chapter',async({page})=>{
   await openBook(page);
+  await expect(page.locator('#mmBookView [data-mm-book-accuracy]')).toContainText('source evidence review does not imply independent human SME approval');
   await page.locator('#mmBookView .mm-book-toc [data-mm-book-reader-chapter-open="r06"]').click();
   const reader=page.locator('#mmBookView [data-mm-book-reader]');
-  await expect(reader.locator('.mm-book-reader-assurance')).toContainText('Independent human SME review pending');
-  await expect(reader.locator('.mm-book-full-source-inline')).toHaveCount(0);
-  await expect(reader.locator('[data-mm-book-reader-module="vp-transfer"] h4').filter({hasText:'Transfer is a control transition'})).toHaveCount(1);
+  await expect(reader.locator('.mm-book-reader-assurance')).toHaveCount(0);
+  const original=reader.locator('.mm-book-full-source-inline').first();
+  await expect(original).toContainText('Read all original source sections');
+  await original.locator('summary').first().click();
+  await expect(original).toContainText('What transfer means');
 });
 
 test('switching between guided and complete reader modes keeps source prose and module evidence unchanged',async({page})=>{
@@ -99,7 +102,7 @@ test('switching between guided and complete reader modes keeps source prose and 
   await expect(root.locator('[data-mm-book-read-toggle]')).toHaveText('Switch to guided reading');
   await expect(root.locator('[data-mm-book-reader-module="vp-transfer"] h4').filter({hasText:'Transfer is a control transition'})).toHaveCount(1);
   await expect(root.locator('.mm-book-full-source-inline')).toHaveCount(0);
-  await expect(root.locator('.mm-book-reader-assurance')).toContainText('Independent human SME review pending');
+  await expect(root.locator('.mm-book-reader-assurance')).toHaveCount(0);
   await root.locator('[data-mm-book-read-toggle]').click();
   await expect(root.locator('[data-mm-book-reader-module="vp-transfer"] h4').filter({hasText:'Transfer is a control transition'})).toHaveCount(1);
   await expect(root.locator('.mm-book-full-source-inline')).toHaveCount(0);

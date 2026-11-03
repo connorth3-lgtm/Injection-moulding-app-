@@ -5,7 +5,7 @@
 (function(){
   'use strict';
 
-  const VERSION='2026.11.03.1';
+  const VERSION='2026.11.03.2';
   // The dedicated Android wrapper injects a native TextToSpeech bridge before
   // this file loads. Browser/PWA builds keep the existing speech-synthesis path.
   const nativeTts=window.MouldMasterNativeTts||null;
