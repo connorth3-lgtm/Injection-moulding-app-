@@ -1,6 +1,6 @@
 # Electron 45 support boundary
 
-MouldMaster Academy uses Electron `45.0.0` for the open Windows desktop runtime. This support review was recorded on 28 October 2026 against Electron's official 45.0.0 release notes and support schedule.
+MouldMaster Academy uses Electron `45.2.1` for the open Windows desktop runtime. This support review was updated on 3 November 2026 against Electron's official 45.2.1 release notes and support schedule.
 
 ## Supported MouldMaster desktop scope
 
@@ -30,5 +30,5 @@ Upstream references:
 
 - https://www.electronjs.org/blog/electron-45-0
 - https://www.electronjs.org/docs/latest/breaking-changes/
-- https://releases.electronjs.org/release/v45.0.0
+- https://releases.electronjs.org/release/v45.2.1
 - https://releases.electronjs.org/schedule

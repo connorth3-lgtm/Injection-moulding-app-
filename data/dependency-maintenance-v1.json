@@ -25,11 +25,11 @@
     },
     {
       "id": "electron-desktop",
-      "declared": "45.0.0",
+      "declared": "45.2.1",
       "statusAtReview": "supported-stable",
       "eol": "2027-04-27",
       "owner": "repository-maintainer",
-      "rationale": "Security boundary and runtime for the open Windows desktop wrapper; Electron 45.0.0 was reviewed against its supported platform boundary and current upstream release schedule.",
+      "rationale": "Security boundary and runtime for the open Windows desktop wrapper; Electron 45.2.1 was reviewed against its supported platform boundary and current upstream release schedule.",
       "authoritativeSource": "https://releases.electronjs.org/schedule"
     },
     {
