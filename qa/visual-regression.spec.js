@@ -192,7 +192,7 @@ async function openBookContents(page,{expandIndex=false}={}){
   }
   await expect(contents).toBeVisible();
   if(expandIndex){
-    const index=contents.locator('details.mm-book-governed-index');
+    const index=contents.locator('details.mm-book-governed-index:not(.mm-book-case-finder)');
     await expect(index.locator('summary')).toBeVisible();
     if(!(await index.evaluate(el=>el.open)))await index.locator('summary').click();
     await expect(contents.locator('[data-mm-book-chapter]').first()).toBeVisible();
