@@ -123,7 +123,7 @@
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
       ],
-      "authoredGitBlobSha1": "7daf6e64657992c5ea34d07e0007b713e20ca0f6"
+      "authoredGitBlobSha1": "bda17841e8a6d271f1afda1ec5587fd944130668"
     },
     {
       "moduleId": "material-families",
@@ -143,7 +143,7 @@
         "The datasheet comparison uses invented values and fictional grades; it adds no supplier claim, production setting, acceptance criterion or part-performance guarantee.",
         "Regrind or recycled-content percentages are not universal allowances; the cited PP and PCR-HDPE studies apply only to their tested feedstocks, histories and conditions."
       ],
-      "authoredGitBlobSha1": "7daf6e64657992c5ea34d07e0007b713e20ca0f6"
+      "authoredGitBlobSha1": "bda17841e8a6d271f1afda1ec5587fd944130668"
     },
     {
       "moduleId": "fillers-additives",
@@ -160,7 +160,7 @@
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
       ],
-      "authoredGitBlobSha1": "7daf6e64657992c5ea34d07e0007b713e20ca0f6"
+      "authoredGitBlobSha1": "bda17841e8a6d271f1afda1ec5587fd944130668"
     },
     {
       "moduleId": "fibre-orientation",
@@ -213,7 +213,7 @@
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
       ],
-      "authoredGitBlobSha1": "7daf6e64657992c5ea34d07e0007b713e20ca0f6"
+      "authoredGitBlobSha1": "bda17841e8a6d271f1afda1ec5587fd944130668"
     },
     {
       "moduleId": "moisture-drying",
@@ -231,7 +231,7 @@
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
       ],
-      "authoredGitBlobSha1": "7daf6e64657992c5ea34d07e0007b713e20ca0f6"
+      "authoredGitBlobSha1": "bda17841e8a6d271f1afda1ec5587fd944130668"
     },
     {
       "moduleId": "thermal-history",
@@ -248,7 +248,7 @@
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
       ],
-      "authoredGitBlobSha1": "7daf6e64657992c5ea34d07e0007b713e20ca0f6"
+      "authoredGitBlobSha1": "bda17841e8a6d271f1afda1ec5587fd944130668"
     },
     {
       "moduleId": "plasticising-unit",
@@ -266,7 +266,7 @@
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
       ],
-      "authoredGitBlobSha1": "7daf6e64657992c5ea34d07e0007b713e20ca0f6"
+      "authoredGitBlobSha1": "bda17841e8a6d271f1afda1ec5587fd944130668"
     },
     {
       "moduleId": "vp-transfer",
@@ -731,21 +731,20 @@
   },
   "readerPresentationReview": {
     "conclusion": "derived-presentation-only-no-new-technical-claims",
-    "scope": "First-read chapter threads, key-term navigation, progressive disclosure and clearly labelled hypothetical worked examples remain derived scaffolds. This revision surfaces the existing thermoplastic scope in the opening chapter and removes an exact repeated pressure definition and analogy from the machine-signals chapter. No new technical claim, source record or reader prompt was added; independent SME status remains on HOLD.",
+    "scope": "The first-read presentation keeps the 13 distinct hypothetical examples, derived chapter scaffolds and progressive disclosure. Recent edits state the thermoplastic scope in the opening, remove a repeated pressure definition and fingertip analogy, and delete one short grade-interchangeability summary that duplicated longer guidance. No claim IDs, source records or reader prompts changed; independent SME status remains on HOLD.",
     "independentSmeStatus": "hold"
   },
   "latestRevision": {
-    "id": "thermoplastic-scope-and-pressure-signal-clarity-2026-11-03",
+    "id": "remove-duplicate-grade-substitution-summary-2026-11-03",
     "date": "2026-11-03",
     "scope": [
-      "r01",
-      "r05"
+      "r03"
     ],
-    "previousRevisionId": "recycled-feedstock-and-part-design-map-2026-11-03",
+    "previousRevisionId": "thermoplastic-scope-and-pressure-signal-clarity-2026-11-03",
     "firstReadVisibleWords": {
       "r01": 1243,
       "r02": 1921,
-      "r03": 3940,
+      "r03": 3877,
       "r03a": 2616,
       "r04": 1709,
       "r05": 1587,
@@ -766,24 +765,25 @@
       "r20": 1003
     },
     "firstReadVisibleWordDeltaByChapter": {
-      "r01": 15,
-      "r05": -56
+      "r03": -63
     },
-    "firstReadVisibleWordDeltaTotal": -41,
-    "firstReadVisibleWordTotal": 27146,
-    "changedSectionCount": 2,
+    "firstReadVisibleWordDeltaTotal": -63,
+    "firstReadVisibleWordTotal": 27083,
+    "changedSectionCount": 1,
     "addedSectionCount": 0,
-    "changedSectionsByModule": {
-      "what-injection-moulding-is": "Start here: follow one part",
-      "velocity-pressure": "Start here: the machine’s request and its response"
+    "removedSectionCount": 1,
+    "removedSectionsByModule": {
+      "material-families": [
+        "Do not infer interchangeability from similar labels"
+      ]
     },
     "newClaimIdCount": 0,
     "newSourceRecordCount": 0,
     "addedSourceRecordIds": [],
     "belowSoftTargetChapterCount": 0,
     "belowSoftTargetChapterIds": [],
-    "conclusion": "The opening now states the thermoplastic scope directly in first-read prose, and the machine-signals chapter no longer repeats the pressure definition and fingertip analogy from the cycle overview. Existing governed technical claims, source records and reader prompts are unchanged. Independent SME and device review remain on HOLD.",
-    "rationale": "Make the book's material/process boundary visible to new readers before progressive-disclosure notes, and keep the later machine-signal explanation focused on commanded speed, achieved motion and pressure measurement location rather than repeating the earlier pressure primer.",
+    "conclusion": "Removed a short standalone interchangeability summary because the opening grade explanation and the longer substitution-review section already teach the same comparison rule. The claim inventory and claim conclusions are unchanged; independent SME and device review remain on HOLD.",
+    "rationale": "Reduce repetition in the material-family chapter while retaining the full exact-grade, like-for-like comparison, supplier-document and product-verification guidance in its longer sections.",
     "independentSmeStatus": "hold",
     "humanDeviceValidationStatus": "hold",
     "readerPromptsUpdated": false
@@ -1427,6 +1427,60 @@
       ],
       "conclusion": "Added a drawing-led design-to-process map to the mould chapter and a feedstock-history section to the materials chapter. The sections distinguish geometry questions from controlled dimensions and explain how regrind and recycled feedstock histories affect evidence needs. Two scoped studies and one manufacturer design guide were added to existing claim boundaries; no claim IDs, universal allowances, dimensions, production settings or acceptance criteria were added. Independent SME and device review remain on HOLD.",
       "rationale": "The design map helps a beginner connect walls, transitions, ribs, bosses, gates, likely flow-front meetings, cooling, draft and ejection to drawing-level review questions without prescribing universal ratios. The feedstock section separates known in-house regrind from post-consumer streams, emphasizes lot and source history, and bounds its examples to one repeated-processing PP study and six PCR-HDPE batches from one collection system.",
+      "independentSmeStatus": "hold",
+      "humanDeviceValidationStatus": "hold",
+      "readerPromptsUpdated": false
+    },
+    {
+      "id": "thermoplastic-scope-and-pressure-signal-clarity-2026-11-03",
+      "date": "2026-11-03",
+      "scope": [
+        "r01",
+        "r05"
+      ],
+      "previousRevisionId": "recycled-feedstock-and-part-design-map-2026-11-03",
+      "firstReadVisibleWords": {
+        "r01": 1243,
+        "r02": 1921,
+        "r03": 3940,
+        "r03a": 2616,
+        "r04": 1709,
+        "r05": 1587,
+        "r06": 898,
+        "r07": 923,
+        "r08": 955,
+        "r09": 930,
+        "r10": 945,
+        "r11": 877,
+        "r12": 970,
+        "r13": 1009,
+        "r14": 1011,
+        "r15": 941,
+        "r16": 984,
+        "r17": 918,
+        "r18": 886,
+        "r19": 880,
+        "r20": 1003
+      },
+      "firstReadVisibleWordDeltaByChapter": {
+        "r01": 15,
+        "r05": -56
+      },
+      "firstReadVisibleWordDeltaTotal": -41,
+      "firstReadVisibleWordTotal": 27146,
+      "changedSectionCount": 2,
+      "addedSectionCount": 0,
+      "changedSectionsByModule": {
+        "what-injection-moulding-is": "Start here: follow one part",
+        "velocity-pressure": "Start here: the machine’s request and its response"
+      },
+      "newClaimIdCount": 0,
+      "newSourceRecordCount": 0,
+      "addedSourceRecordIds": [],
+      "belowSoftTargetChapterCount": 0,
+      "belowSoftTargetChapterIds": [],
+      "conclusion": "The opening now states the thermoplastic scope directly in first-read prose, and the machine-signals chapter no longer repeats the pressure definition and fingertip analogy from the cycle overview. Existing governed technical claims, source records and reader prompts are unchanged. Independent SME and device review remain on HOLD.",
+      "rationale": "Make the book's material/process boundary visible to new readers before progressive-disclosure notes, and keep the later machine-signal explanation focused on commanded speed, achieved motion and pressure measurement location rather than repeating the earlier pressure primer.",
       "independentSmeStatus": "hold",
       "humanDeviceValidationStatus": "hold",
       "readerPromptsUpdated": false

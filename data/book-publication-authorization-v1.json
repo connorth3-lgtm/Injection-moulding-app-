@@ -37,7 +37,7 @@
       "material-catalog-v1.json": "7e32663e0f65ded1fd0ed3c1ae5a69c9cd0796fa",
       "book-engineering-diagrams-v1.json": "b4e0265cc5e78c861c68b4a6caefcddedfe3ba10",
       "book-reader-architecture-v2.json": "605d1b4fd92b03f1b11fc9a79f2cd2b8bbdd409e",
-      "book-editorial-expansion-review-v1.json": "495b5fdccd3b57f58f68c836e91199e393f2ba39",
+      "book-editorial-expansion-review-v1.json": "e3205c659cb1d908158f0da98f0b1b23cf94f86a",
       "book-claim-evidence-reference-v1.json": "8b17e88c54b4456e8d0d5afa0a26f8ec0ebb3081",
       "book-claim-review-foundations-materials-machine-v1.json": "a3f8246ca5cbf5a099f32885953fadd722141785",
       "book-claim-review-process-tooling-v1.json": "525a946af21ea069ab7c3c003c5d7a6963d01707",
@@ -46,7 +46,7 @@
       "book-claim-review-high-risk-v1.json": "ba46cdf63811e4df1bd274df240756586380b406",
       "book-claim-resolution-high-risk-v2.json": "bbced00a8b699809fb1c4e55132d2265021bb278",
       "book-claim-resolution-all-v1.json": "1f3e6495947727f9ca73e3cf13b550aa24b38764",
-      "book-chapters-materials-machine-v1.json": "7daf6e64657992c5ea34d07e0007b713e20ca0f6"
+      "book-chapters-materials-machine-v1.json": "bda17841e8a6d271f1afda1ec5587fd944130668"
     }
   },
   "canonicalAcademicEvidenceUrls": {

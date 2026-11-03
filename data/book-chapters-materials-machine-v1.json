@@ -185,10 +185,6 @@
           "text": "Two grades from the same polymer family may differ through molecular weight, reinforcement, flame retardants, impact modifiers, colour systems or processing aids. Production decisions should therefore resolve the full commercial grade and revision of its supplier information before relying on family-level guidance."
         },
         {
-          "title": "Do not infer interchangeability from similar labels",
-          "text": "Two grades in the same polymer family may differ enough in reinforcement, viscosity, additive package or thermal stability that a process transferred between them behaves differently. When substituting material, treat the change as a new evidence question: confirm grade identity, supplier constraints, drying or conditioning requirements where applicable, and the product characteristics that must be reverified."
-        },
-        {
           "title": "Resolve the full material identity before comparing data",
           "text": "Write down the manufacturer and complete grade designation, including formulation or colour suffixes that distinguish the supplied material. Then identify the current technical data and processing guidance for that exact grade, and note the conditions attached to any property value being compared. A family name, a similar abbreviation or a supplier's broad product page may point toward relevant information but cannot establish that two grades share a processing window. Keep substitution evidence tied to the actual material received and the part requirements that must be confirmed."
         },
