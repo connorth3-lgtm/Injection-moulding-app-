@@ -29,7 +29,7 @@
       "book-claim-resolution-high-risk-v1.json": "84d007a72c16b60e01ba392f9ca6e0f6d487cc85",
       "book-authored-foundations-v1.json": "404458e1a79df611bc501371306c9b9327f7f0b7",
       "book-evidence-registry-v1.json": "30ac109c576d256f3e316463f832c77e6606a1e5",
-      "book-authored-remaining-v1.json": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "book-authored-remaining-v1.json": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "book-worked-engineering-cases-v1.json": "e66b2c6a77bfc2135b404013e3838fa537178e86",
       "book-evidence-enrichment-v2.json": "bef9c879cd387c3e74a4df8dd37adccb1558a0a7",
       "book-material-grade-atlas-v1.json": "f2a5f171cbb92ee4d25c0e2f1930764493ffb5d5",
@@ -37,7 +37,7 @@
       "material-catalog-v1.json": "7e32663e0f65ded1fd0ed3c1ae5a69c9cd0796fa",
       "book-engineering-diagrams-v1.json": "b4e0265cc5e78c861c68b4a6caefcddedfe3ba10",
       "book-reader-architecture-v2.json": "cbbb5cc9ee09fcfb010772213e4abe536b81b341",
-      "book-editorial-expansion-review-v1.json": "5418f4469e2c52b634ae0064e1f6cf86dac54d7a",
+      "book-editorial-expansion-review-v1.json": "d6c08251893890a930ae9efd4b280c12a02731db",
       "book-claim-evidence-reference-v1.json": "4c3c1e5dc1c49189572ab6f2067c01ab32ae9e8f",
       "book-claim-review-foundations-materials-machine-v1.json": "14b4374356b7df2f729c1668ebfa616fd3266807",
       "book-claim-review-process-tooling-v1.json": "525a946af21ea069ab7c3c003c5d7a6963d01707",
@@ -250,10 +250,10 @@
     "status": "authorized-repository-technical-source-review",
     "release": "2026.10.22.2",
     "ledger": "data/book-editorial-expansion-review-v1.json",
-    "moduleCount": 37,
+    "moduleCount": 39,
     "noNewClaimIds": true,
     "independentSmeStatus": "hold",
-    "authorityBoundary": "Expanded prose across 37 governed modules is authorized only within each module's mapped existing governed claim scope; no independent human SME approval, universal recipe or production authority is implied."
+    "authorityBoundary": "Expanded prose across 39 governed modules is reviewed only within each module's mapped existing governed claim scope; the 13 new worked examples are hypothetical and add no independent technical claims, human SME approval, universal recipe or production authority."
   },
   "claimEvidenceReferenceAuthorization": {
     "status": "authorized-derived-evidence-index",
