@@ -21,7 +21,7 @@
   const MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1='7a45cc0da8a18282a04ddf437d802bc6377f15e3';
   const MATERIAL_PAGE_SIZE=24;
   const BATCH_PATHS=[`${BOOK_DATA}book-authored-foundations-v1.json`,`${BOOK_DATA}book-evidence-registry-v1.json`,`${BOOK_DATA}book-chapters-materials-machine-v1.json`,`${BOOK_DATA}book-authored-remaining-v1.json`];
-  const AUTH_GIT_BLOB_SHA1='1ef30c110bd2ea92618e8976c3e7f675273a1284';
+  const AUTH_GIT_BLOB_SHA1='b5a06a651f0a2956477021c794c500d45fef5d61';
   const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-claim-resolution-high-risk-v2.json','book-claim-resolution-all-v1.json','book-claim-review-foundations-materials-machine-v1.json','book-claim-review-process-tooling-v1.json','book-claim-review-troubleshooting-v1.json','book-claim-review-engineering-advanced-v1.json','book-claim-review-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-engineering-diagrams-v1.json','book-evidence-enrichment-v2.json','book-claim-evidence-reference-v1.json','book-reader-architecture-v2.json','book-editorial-expansion-review-v1.json','book-material-grade-atlas-v1.json','book-material-regional-evidence-v1.json','material-catalog-v1.json'];
   const CANONICAL_SOURCE_URLS=Object.freeze({
     'OUBELLAOUCH-2024-FIBRE-ORIENTATION':'https://doi.org/10.1007/s00170-024-12990-5',
@@ -325,7 +325,7 @@
     if(data?.readerArchitecture?.gitBlobSha1!==integrityMap?.['book-reader-architecture-v2.json']||data?.readerArchitecture?.conclusion!=='derived-reader-scaffolding-without-new-technical-claims')throw new Error('Book editorial review reader-architecture binding mismatch');
     return data;
   }
-  function validateMaterialPropertyGuide(guide,sourceMap,chapterId){
+    function validateMaterialPropertyGuide(guide,sourceMap,chapterId){
     if(!guide)return;
     if(guide.schema!==1||!guide.summary||!guide.title||!guide.intro||!Array.isArray(guide.sourceIds)||!Array.isArray(guide.rows)||guide.rows.length!==28)throw new Error('Invalid material property guide in '+chapterId);
     const guideIds=new Set(guide.sourceIds);if(guideIds.size!==guide.sourceIds.length||!guideIds.size)throw new Error('Invalid material property guide source list in '+chapterId);
@@ -335,8 +335,14 @@
       for(const id of row.sourceIds){if(!guideIds.has(id)||!sourceMap.has(id))throw new Error('Unresolved material property guide source '+id);rowIds.add(id);}
     }
     if(rowIds.size!==guideIds.size||[...guideIds].some(id=>!rowIds.has(id)))throw new Error('Material property guide source coverage mismatch in '+chapterId);
+    const example=guide.comparisonExample;
+    if(example?.schema!==1||example?.status!=='hypothetical-teaching-data'||!example.title||!example.intro||!example.gradeA||!example.gradeB||!Array.isArray(example.rows)||example.rows.length!==2||!example.takeaway||!example.boundary)throw new Error('Invalid hypothetical material comparison in '+chapterId);
+    for(const row of example.rows){
+      if(!row?.property||!row?.methodAndConditions||!row?.valueA||!row?.valueB||!row?.interpretation||!Array.isArray(row.sourceIds)||!row.sourceIds.length)throw new Error('Incomplete hypothetical material comparison row in '+chapterId);
+      for(const id of row.sourceIds)if(!guideIds.has(id)||!sourceMap.has(id))throw new Error('Unresolved hypothetical comparison source '+id);
+    }
   }
-  function validateSmeReviewfunction validateSmeReview(data,declared){
+  function validateSmeReviewfunction validateSmeReviewfunction validateSmeReview(data,declared){
     if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||!Array.isArray(data.chapterIds)||!Array.isArray(data.reviews))throw new Error('Book SME review contract identity check failed');
     if(data.chapterIds.length!==declared.size||new Set(data.chapterIds).size!==data.chapterIds.length)throw new Error('Book SME review chapter coverage mismatch');for(const id of data.chapterIds)if(!declared.has(id))throw new Error(`Book SME review contains unknown chapter: ${id}`);if(workedCaseLedger){const expected=workedCaseLedger.cases.map(x=>x.id),actual=Array.isArray(data.workedCaseIds)?data.workedCaseIds:[];if(data.release!==VERSION||actual.length!==expected.length||expected.some(id=>!actual.includes(id)))throw new Error('Book SME worked-case scope mismatch');}if(evidenceEnrichmentLedger){const expected=evidenceEnrichmentLedger.chapterPatches.map(x=>x.chapterId),actual=Array.isArray(data.enrichmentChapterIds)?data.enrichmentChapterIds:[];if(data.release!==VERSION||actual.length!==expected.length||expected.some(id=>!actual.includes(id)))throw new Error('Book SME enrichment scope mismatch');}if(diagramLedger){const expected=diagramLedger.diagrams.map(x=>x.id),actual=Array.isArray(data.diagramIds)?data.diagramIds:[];if(data.release!==VERSION||actual.length!==expected.length||expected.some(id=>!actual.includes(id)))throw new Error('Book SME diagram scope mismatch');}
     const approved=new Set();for(const review of data.reviews){if(!review?.chapterId||!declared.has(review.chapterId))throw new Error(`Book SME review record has unknown chapter: ${review?.chapterId||'missing'}`);if(review.conclusion==='approved')approved.add(review.chapterId);}if(data.status==='validated'&&approved.size!==declared.size)throw new Error('Book SME review cannot be validated without approval coverage for every chapter');return data;
@@ -598,12 +604,16 @@
     if(!rows.length)return '';
     return `<details class="mm-book-reader-supplement"><summary><b>Additional context</b> — optional quality/evidence sidebar</summary><div>${rows.map((section,index)=>`<section><h4 data-mm-book-anchor="module:${esc(chapter.id)}:supplement:${index}">${esc(section.title)}</h4>${proseHtml(section.text)}</section>`).join('')}</div></details>`;
   }
-  function materialPropertyGuideHtml(chapter,options={}){
+    function materialPropertyGuideHtml(chapter,options={}){
     const guide=chapter?.propertyGuide;if(!guide)return '';
     const body=(guide.rows||[]).map(row=>'<tr><th scope="row">'+esc(row.property)+'</th><td>'+esc(row.meaning)+'</td><td><p>'+esc(row.readAs)+'</p><small>Method reference: '+esc(row.standard)+'</small></td></tr>').join('');
-    return '<details class="mm-book-material-property-guide"'+(options.open===true?' open':'')+'><summary><b>'+esc(guide.summary)+'</b></summary><div class="mm-book-material-property-guide-body"><h4>'+esc(guide.title)+'</h4><p>'+esc(guide.intro)+'</p><div class="mm-book-property-guide-wrap"><table><thead><tr><th scope="col">Property</th><th scope="col">What the test reports</th><th scope="col">How to interpret it</th></tr></thead><tbody>'+body+'</tbody></table></div></div></details>';
+    const example=guide.comparisonExample;
+    const comparisonRows=(example?.rows||[]).map(row=>'<tr><th scope="row">'+esc(row.property)+'</th><td>'+esc(row.methodAndConditions)+'</td><td>'+esc(row.valueA)+'</td><td>'+esc(row.valueB)+'</td></tr>').join('');
+    const interpretations=(example?.rows||[]).map(row=>'<li><strong>'+esc(row.property)+':</strong> '+esc(row.interpretation)+'</li>').join('');
+    const comparison=example?'<section class="mm-book-material-property-comparison"><h4>'+esc(example.title)+'</h4><p>'+esc(example.intro)+'</p><div class="mm-book-property-guide-wrap"><table><thead><tr><th scope="col">Property</th><th scope="col">Method and matched conditions</th><th scope="col">'+esc(example.gradeA)+'</th><th scope="col">'+esc(example.gradeB)+'</th></tr></thead><tbody>'+comparisonRows+'</tbody></table></div><ul>'+interpretations+'</ul><p><strong>Takeaway:</strong> '+esc(example.takeaway)+'</p><p><small>'+esc(example.boundary)+'</small></p></section>':'';
+    return '<details class="mm-book-material-property-guide"'+(options.open===true?' open':'')+'><summary><b>'+esc(guide.summary)+'</b></summary><div class="mm-book-material-property-guide-body"><h4>'+esc(guide.title)+'</h4><p>'+esc(guide.intro)+'</p><div class="mm-book-property-guide-wrap"><table><thead><tr><th scope="col">Property</th><th scope="col">What the test reports</th><th scope="col">How to interpret it</th></tr></thead><tbody>'+body+'</tbody></table></div>'+comparison+'</div></details>';
   }
-  // The simplified first-read path// The simplified first-read path keeps repeated source sections out of its
+  // The simplified first-read path// The simplified first-read path// The simplified first-read path keeps repeated source sections out of its
   // main prose. Expose the exact authored wording only in the optional notes,
   // so a reader can audit it without navigating away or claiming SME approval.
   function readerOmittedSectionsHtml(chapter){

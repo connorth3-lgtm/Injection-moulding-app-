@@ -138,9 +138,10 @@
         "No correlation or successful intervention is represented as proof of causation.",
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD.",
-        "The property guide explains test families and limits; it adds no grade-specific performance guarantee, production setting, acceptance criterion or product approval."
+        "The property guide explains test families and limits; it adds no grade-specific performance guarantee, production setting, acceptance criterion or product approval.",
+        "The datasheet comparison uses invented values and fictional grades; it adds no supplier claim, production setting, acceptance criterion or part-performance guarantee."
       ],
-      "authoredGitBlobSha1": "0c35f590377f44ab591724a671b1a49565a62944"
+      "authoredGitBlobSha1": "358525fe766b5376d8aaa492c3ccf639fc2e6c85"
     },
     {
       "moduleId": "fillers-additives",
@@ -732,12 +733,12 @@
     "independentSmeStatus": "hold"
   },
   "latestRevision": {
-    "id": "expanded-material-property-guide-2026-11-03",
+    "id": "material-datasheet-comparison-2026-11-03",
     "date": "2026-11-03",
     "scope": [
       "r03"
     ],
-    "previousRevisionId": "material-property-guide-2026-11-03",
+    "previousRevisionId": "expanded-material-property-guide-2026-11-03",
     "firstReadVisibleWords": {
       "r01": 1228,
       "r02": 1568,
@@ -767,52 +768,103 @@
     "firstReadVisibleWordIncreaseTotal": 3,
     "firstReadVisibleWordTotal": 26527,
     "addedSectionCount": 1,
-    "addedSectionTitleAndBodyWords": 1407,
+    "addedSectionTitleAndBodyWords": 201,
     "addedSectionTitlesByModule": {
-      "material-families": "Quick guide to common material properties"
+      "material-families": "Worked comparison: two fictional polypropylene datasheets"
     },
     "belowSoftTargetChapterCount": 0,
     "belowSoftTargetChapterIds": [],
     "newClaimIdCount": 0,
-    "newSourceRecordCount": 29,
-    "addedSourceRecordIds": [
-      "ISO-11443-2021",
-      "ISO-604-2002",
-      "ISO-868-2003",
-      "ISO-899-1-2017",
-      "ISO-899-2-2024",
-      "ISO-6721-1-2019",
-      "ISO-13003-2003",
-      "ISO-11357-2-2020",
-      "ISO-11357-3-2025",
-      "ISO-11357-4-2021",
-      "ISO-306-2022",
-      "ISO-11359-2-2021",
-      "ISO-22007-2-2022",
-      "ISO-11358-1-2022",
-      "ISO-175-2010",
-      "ISO-22088-3-2006",
-      "IEC-62631-3-1-2016",
-      "IEC-62631-3-2-2023",
-      "IEC-60243-1-2013",
-      "ISO-3915-2022",
-      "ISO-10840-2026",
-      "ISO-13927-2023",
-      "ISO-4892-2-2013",
-      "ISO-4892-3-2024",
-      "ISO-13468-1-2019",
-      "ISO-14782-2021",
-      "ISO-16014-1-2019",
-      "ISO-3451-1-2026",
-      "ISO-7148-2-2026"
-    ],
-    "conclusion": "Expanded the collapsed material-property guide from 9 to 28 rows covering the main property families used to understand and compare injection-moulding plastics. The entries preserve test conditions, distinguish measurements that answer different questions, and state where results are application-specific. No new claim IDs, process settings or production authority were added; independent SME and device review remain on hold.",
-    "rationale": "The first guide was intentionally short but left out important mechanical, rheological, thermal, chemical, electrical, fire, weathering, optical and structural measurements. The expanded reference addresses the user's request for broader coverage while defining a practical scope: commonly used and application-relevant property families, not every specialised polymer test. Each row links to an official method or guidance standard and limits how its results should be interpreted.",
+    "newSourceRecordCount": 0,
+    "addedSourceRecordIds": [],
+    "conclusion": "Added a compact, explicitly hypothetical comparison of two fictional polypropylene datasheets. It demonstrates how matching method and test conditions permit comparison of reported values and states why those values do not establish mould filling or finished-part suitability. No claims or evidence sources were added; SME and device review remain on hold.",
+    "rationale": "A worked comparison shows readers how to check grade identity, method, specimen, orientation, conditioning, temperature, load or speed and units before interpreting results. Invented values are labelled as teaching data and make no supplier, production or part-performance claim.",
     "independentSmeStatus": "hold",
     "humanDeviceValidationStatus": "hold",
     "readerPromptsUpdated": false
   },
   "revisionHistory": [
+    {
+      "id": "expanded-material-property-guide-2026-11-03",
+      "date": "2026-11-03",
+      "scope": [
+        "r03"
+      ],
+      "previousRevisionId": "material-property-guide-2026-11-03",
+      "firstReadVisibleWords": {
+        "r01": 1228,
+        "r02": 1568,
+        "r03": 3633,
+        "r03a": 2616,
+        "r04": 1709,
+        "r05": 1643,
+        "r06": 898,
+        "r07": 923,
+        "r08": 955,
+        "r09": 930,
+        "r10": 945,
+        "r11": 877,
+        "r12": 970,
+        "r13": 1009,
+        "r14": 1011,
+        "r15": 941,
+        "r16": 984,
+        "r17": 918,
+        "r18": 886,
+        "r19": 880,
+        "r20": 1003
+      },
+      "firstReadVisibleWordIncreaseByChapter": {
+        "r03": 3
+      },
+      "firstReadVisibleWordIncreaseTotal": 3,
+      "firstReadVisibleWordTotal": 26527,
+      "addedSectionCount": 1,
+      "addedSectionTitleAndBodyWords": 1407,
+      "addedSectionTitlesByModule": {
+        "material-families": "Quick guide to common material properties"
+      },
+      "belowSoftTargetChapterCount": 0,
+      "belowSoftTargetChapterIds": [],
+      "newClaimIdCount": 0,
+      "newSourceRecordCount": 29,
+      "addedSourceRecordIds": [
+        "ISO-11443-2021",
+        "ISO-604-2002",
+        "ISO-868-2003",
+        "ISO-899-1-2017",
+        "ISO-899-2-2024",
+        "ISO-6721-1-2019",
+        "ISO-13003-2003",
+        "ISO-11357-2-2020",
+        "ISO-11357-3-2025",
+        "ISO-11357-4-2021",
+        "ISO-306-2022",
+        "ISO-11359-2-2021",
+        "ISO-22007-2-2022",
+        "ISO-11358-1-2022",
+        "ISO-175-2010",
+        "ISO-22088-3-2006",
+        "IEC-62631-3-1-2016",
+        "IEC-62631-3-2-2023",
+        "IEC-60243-1-2013",
+        "ISO-3915-2022",
+        "ISO-10840-2026",
+        "ISO-13927-2023",
+        "ISO-4892-2-2013",
+        "ISO-4892-3-2024",
+        "ISO-13468-1-2019",
+        "ISO-14782-2021",
+        "ISO-16014-1-2019",
+        "ISO-3451-1-2026",
+        "ISO-7148-2-2026"
+      ],
+      "conclusion": "Expanded the collapsed material-property guide from 9 to 28 rows covering the main property families used to understand and compare injection-moulding plastics. The entries preserve test conditions, distinguish measurements that answer different questions, and state where results are application-specific. No new claim IDs, process settings or production authority were added; independent SME and device review remain on hold.",
+      "rationale": "The first guide was intentionally short but left out important mechanical, rheological, thermal, chemical, electrical, fire, weathering, optical and structural measurements. The expanded reference addresses the user's request for broader coverage while defining a practical scope: commonly used and application-relevant property families, not every specialised polymer test. Each row links to an official method or guidance standard and limits how its results should be interpreted.",
+      "independentSmeStatus": "hold",
+      "humanDeviceValidationStatus": "hold",
+      "readerPromptsUpdated": false
+    },
     {
       "id": "material-property-guide-2026-11-03",
       "date": "2026-11-03",

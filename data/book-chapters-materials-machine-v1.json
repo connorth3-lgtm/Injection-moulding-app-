@@ -521,7 +521,40 @@
               "ISO-7148-2-2026"
             ]
           }
-        ]
+        ],
+        "comparisonExample": {
+          "schema": 1,
+          "status": "hypothetical-teaching-data",
+          "title": "Worked comparison: two fictional polypropylene datasheets",
+          "intro": "Every value and grade name below is invented for teaching. The grades are not real products.",
+          "gradeA": "Mock PP grade A",
+          "gradeB": "Mock PP grade B",
+          "rows": [
+            {
+              "property": "Melt mass-flow rate (MFR)",
+              "methodAndConditions": "ISO 1133-1:2022; both at 230 °C and 2.16 kg",
+              "valueA": "12 g/10 min",
+              "valueB": "24 g/10 min",
+              "interpretation": "With the same stated method and conditions, grade B reports the higher MFR in this test. That does not prove it will fill a particular mould faster or reveal its full viscosity curve.",
+              "sourceIds": [
+                "ISO-1133-1-2022"
+              ]
+            },
+            {
+              "property": "Tensile modulus",
+              "methodAndConditions": "ISO 527-1:2019 and ISO 527-2:2025; same specimen geometry, flow direction, conditioning, temperature and test speed",
+              "valueA": "1,250 MPa",
+              "valueB": "1,400 MPa",
+              "interpretation": "Grade B reports the higher tensile modulus in this matched test, meaning greater stiffness in that test. It does not mean higher tensile strength, impact toughness or better finished-part performance.",
+              "sourceIds": [
+                "ISO-527-1-2019",
+                "ISO-527-2-2025"
+              ]
+            }
+          ],
+          "takeaway": "First check the full grade designation, test method, specimen, direction, conditioning, temperature, load or speed, and units. Compare only like-for-like results. Then choose what to investigate from the part's actual load, impact, temperature, moisture and chemical requirements; validate the selected grade in the moulded part.",
+          "boundary": "These synthetic numbers demonstrate comparison logic only. They are not supplier data, a grade recommendation, a processing instruction or proof of part performance."
+        }
       }
     },
     {
