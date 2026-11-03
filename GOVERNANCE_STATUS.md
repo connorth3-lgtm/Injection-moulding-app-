@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.11.03.1 source dd7a5c8daef1a60620389a14c2a0477a1fb34d29 run 41589743761 artifact 13209058644 fingerprint sha256:1eb3792181fa3eca70021c60af631fcc0bfda88bd081cf0d90de8036cf252b9b identifies the retained exact-source software candidate; human, device and production authorization remain HOLD. |
-| Behavioral / browser | **pass** | PASS: release 2026.11.03.1 source dd7a5c8daef1a60620389a14c2a0477a1fb34d29 passed Mobile Browser QA run 41589743970 and Question Quality 50-Pass run 41589743958 on the exact candidate source; human/device validation remains HOLD. |
+| Static / contract | **pass** | PASS: release 2026.11.03.1 source f270ac25db08f4729f93e7447d5201d43489f7aa run 41594378980 artifact 13210979022 fingerprint sha256:bb58e75d141efd77c6388231ab7cef8ae4737c00393176228583b748a674bbf2 identifies the retained exact-source software candidate; human, device and production authorization remain HOLD. |
+| Behavioral / browser | **pass** | PASS: release 2026.11.03.1 source f270ac25db08f4729f93e7447d5201d43489f7aa passed Mobile Browser QA run 41594378885 and Question Quality 50-Pass run 41594379016 on the exact candidate source; human/device validation remains HOLD. |
 | External human / device | **hold** | Independent human/device/provider evidence remains HOLD for release 2026.11.03.1; no automated workflow can establish it. |
