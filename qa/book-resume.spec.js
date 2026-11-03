@@ -265,7 +265,7 @@ test('Book Contents returns keyboard focus to the originating reader and module 
   await expect(chapter).toBeFocused();
   await expect(chapter).toBeInViewport();
 
-  const index=page.locator('details.mm-book-governed-index');
+  const index=page.locator('details.mm-book-governed-index:not(.mm-book-case-finder)');
   await index.locator('summary').click();
   const moduleButton=page.locator('[data-mm-book-chapter]').first();
   await moduleButton.focus();
