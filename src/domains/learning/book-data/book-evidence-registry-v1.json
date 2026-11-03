@@ -504,6 +504,36 @@
       "scope": "Tribological tests for polymer-based plain-bearing material pairs under specified load, sliding velocity, temperature and lubrication; results apply to defined bearing conditions.",
       "checked": "2026-11-03",
       "currentState": "published"
+    },
+    {
+      "id": "ISO-11357-1-2023",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Differential scanning calorimetry (DSC) — Part 1: General principles",
+      "url": "https://www.iso.org/standard/83904.html",
+      "scope": "General DSC principles, apparatus, sampling, calibration and common procedure/reporting requirements; specific determinations are defined in other parts of ISO 11357.",
+      "checked": "2026-11-03",
+      "currentState": "published-confirmed"
+    },
+    {
+      "id": "POLYM-LDPE-MICROSTRUCTURE-RHEOLOGY-2021",
+      "type": "peer-reviewed-study",
+      "issuer": "RSC Advances",
+      "title": "Connecting the complex microstructure of LDPE to its rheology and processing properties via a combined fractionation and modelling approach",
+      "url": "https://doi.org/10.1039/D1RA03749H",
+      "scope": "Peer-reviewed study relating LDPE molecular-weight fractionation and long-chain branching to measured rheological behaviour; use as mechanism evidence, not as a numerical model for every moulding grade.",
+      "checked": "2026-11-03",
+      "currentState": "peer-reviewed-2021"
+    },
+    {
+      "id": "POLYM-PP-COOLING-RATE-CRYSTALLIZATION-2022",
+      "type": "peer-reviewed-study",
+      "issuer": "Polymers",
+      "title": "Influence of Cooling Rate on Crystallization Behavior of Semi-Crystalline Polypropylene: Experiments and Mathematical Modeling",
+      "url": "https://doi.org/10.3390/polym14173646",
+      "scope": "Flash-DSC study of cooling-rate effects on crystallization in the tested semi-crystalline PP; measured trends and values are material- and method-specific.",
+      "checked": "2026-11-03",
+      "currentState": "peer-reviewed-2022"
     }
   ]
 }
