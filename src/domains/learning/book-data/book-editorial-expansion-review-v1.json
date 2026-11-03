@@ -15,7 +15,7 @@
     {
       "moduleId": "what-injection-moulding-is",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "404458e1a79df611bc501371306c9b9327f7f0b7",
+      "authoredGitBlobSha1": "b8e5cf83bb5102709568e8670550e8d4d6d6b021",
       "governedClaimIds": [
         "what-injection-moulding-is-01",
         "what-injection-moulding-is-02",
@@ -34,7 +34,7 @@
     {
       "moduleId": "cycle",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "404458e1a79df611bc501371306c9b9327f7f0b7",
+      "authoredGitBlobSha1": "b8e5cf83bb5102709568e8670550e8d4d6d6b021",
       "governedClaimIds": [
         "cycle-01",
         "cycle-02",
@@ -54,7 +54,7 @@
     {
       "moduleId": "machine-anatomy",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "404458e1a79df611bc501371306c9b9327f7f0b7",
+      "authoredGitBlobSha1": "b8e5cf83bb5102709568e8670550e8d4d6d6b021",
       "governedClaimIds": [
         "machine-anatomy-01",
         "machine-anatomy-02",
@@ -73,7 +73,7 @@
     {
       "moduleId": "mould-anatomy",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "404458e1a79df611bc501371306c9b9327f7f0b7",
+      "authoredGitBlobSha1": "b8e5cf83bb5102709568e8670550e8d4d6d6b021",
       "governedClaimIds": [
         "mould-anatomy-01",
         "mould-anatomy-02",
@@ -86,13 +86,14 @@
         "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
         "No correlation or successful intervention is represented as proof of causation.",
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
+        "Independent human SME status remains HOLD.",
+        "The design guide is general; no universal wall, rib, boss or draft ratios, gate location, vent dimensions or process settings are asserted. Controlled drawings and application review remain authoritative."
       ]
     },
     {
       "moduleId": "safety-foundations",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "404458e1a79df611bc501371306c9b9327f7f0b7",
+      "authoredGitBlobSha1": "b8e5cf83bb5102709568e8670550e8d4d6d6b021",
       "governedClaimIds": [
         "safety-foundations-01",
         "safety-foundations-02",
@@ -122,7 +123,7 @@
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
       ],
-      "authoredGitBlobSha1": "0393830e557ac7dcb30fcd428345a0a350239bdd"
+      "authoredGitBlobSha1": "2d217de0b886b8087e4318ea9ccf91ce0c61b1f5"
     },
     {
       "moduleId": "material-families",
@@ -139,9 +140,10 @@
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD.",
         "The property guide explains test families and limits; it adds no grade-specific performance guarantee, production setting, acceptance criterion or product approval.",
-        "The datasheet comparison uses invented values and fictional grades; it adds no supplier claim, production setting, acceptance criterion or part-performance guarantee."
+        "The datasheet comparison uses invented values and fictional grades; it adds no supplier claim, production setting, acceptance criterion or part-performance guarantee.",
+        "Regrind or recycled-content percentages are not universal allowances; the cited PP and PCR-HDPE studies apply only to their tested feedstocks, histories and conditions."
       ],
-      "authoredGitBlobSha1": "358525fe766b5376d8aaa492c3ccf639fc2e6c85"
+      "authoredGitBlobSha1": "2d217de0b886b8087e4318ea9ccf91ce0c61b1f5"
     },
     {
       "moduleId": "fillers-additives",
@@ -158,7 +160,7 @@
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
       ],
-      "authoredGitBlobSha1": "0393830e557ac7dcb30fcd428345a0a350239bdd"
+      "authoredGitBlobSha1": "2d217de0b886b8087e4318ea9ccf91ce0c61b1f5"
     },
     {
       "moduleId": "fibre-orientation",
@@ -211,7 +213,7 @@
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
       ],
-      "authoredGitBlobSha1": "0393830e557ac7dcb30fcd428345a0a350239bdd"
+      "authoredGitBlobSha1": "2d217de0b886b8087e4318ea9ccf91ce0c61b1f5"
     },
     {
       "moduleId": "moisture-drying",
@@ -229,7 +231,7 @@
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
       ],
-      "authoredGitBlobSha1": "0393830e557ac7dcb30fcd428345a0a350239bdd"
+      "authoredGitBlobSha1": "2d217de0b886b8087e4318ea9ccf91ce0c61b1f5"
     },
     {
       "moduleId": "thermal-history",
@@ -246,7 +248,7 @@
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
       ],
-      "authoredGitBlobSha1": "0393830e557ac7dcb30fcd428345a0a350239bdd"
+      "authoredGitBlobSha1": "2d217de0b886b8087e4318ea9ccf91ce0c61b1f5"
     },
     {
       "moduleId": "plasticising-unit",
@@ -264,7 +266,7 @@
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
       ],
-      "authoredGitBlobSha1": "0393830e557ac7dcb30fcd428345a0a350239bdd"
+      "authoredGitBlobSha1": "2d217de0b886b8087e4318ea9ccf91ce0c61b1f5"
     },
     {
       "moduleId": "vp-transfer",
@@ -733,16 +735,17 @@
     "independentSmeStatus": "hold"
   },
   "latestRevision": {
-    "id": "material-datasheet-comparison-2026-11-03",
+    "id": "recycled-feedstock-and-part-design-map-2026-11-03",
     "date": "2026-11-03",
     "scope": [
+      "r02",
       "r03"
     ],
-    "previousRevisionId": "expanded-material-property-guide-2026-11-03",
+    "previousRevisionId": "material-datasheet-comparison-2026-11-03",
     "firstReadVisibleWords": {
       "r01": 1228,
-      "r02": 1568,
-      "r03": 3633,
+      "r02": 1921,
+      "r03": 3940,
       "r03a": 2616,
       "r04": 1709,
       "r05": 1643,
@@ -763,27 +766,84 @@
       "r20": 1003
     },
     "firstReadVisibleWordIncreaseByChapter": {
-      "r03": 3
+      "r02": 353,
+      "r03": 307
     },
-    "firstReadVisibleWordIncreaseTotal": 3,
-    "firstReadVisibleWordTotal": 26527,
-    "addedSectionCount": 1,
-    "addedSectionTitleAndBodyWords": 201,
+    "firstReadVisibleWordIncreaseTotal": 660,
+    "firstReadVisibleWordTotal": 27187,
+    "addedSectionCount": 2,
+    "addedSectionTitleAndBodyWords": 660,
     "addedSectionTitlesByModule": {
-      "material-families": "Worked comparison: two fictional polypropylene datasheets"
+      "mould-anatomy": "Map part geometry to process and tooling questions",
+      "material-families": "Track regrind and recycled-feedstock history"
     },
     "belowSoftTargetChapterCount": 0,
     "belowSoftTargetChapterIds": [],
     "newClaimIdCount": 0,
-    "newSourceRecordCount": 0,
-    "addedSourceRecordIds": [],
-    "conclusion": "Added a compact, explicitly hypothetical comparison of two fictional polypropylene datasheets. It demonstrates how matching method and test conditions permit comparison of reported values and states why those values do not establish mould filling or finished-part suitability. No claims or evidence sources were added; SME and device review remain on hold.",
-    "rationale": "A worked comparison shows readers how to check grade identity, method, specimen, orientation, conditioning, temperature, load or speed and units before interpreting results. Invented values are labelled as teaching data and make no supplier, production or part-performance claim.",
+    "newSourceRecordCount": 3,
+    "addedSourceRecordIds": [
+      "POLYM-PP-RECYCLING-CYCLES-2021",
+      "PCR-HDPE-SEASONAL-BATCH-2025",
+      "ENVALIOR-INJECTION-DESIGN-GUIDE-2026"
+    ],
+    "conclusion": "Added a drawing-led design-to-process map to the mould chapter and a feedstock-history section to the materials chapter. The sections distinguish geometry questions from controlled dimensions and explain how regrind and recycled feedstock histories affect evidence needs. Two scoped studies and one manufacturer design guide were added to existing claim boundaries; no claim IDs, universal allowances, dimensions, production settings or acceptance criteria were added. Independent SME and device review remain on HOLD.",
+    "rationale": "The design map helps a beginner connect walls, transitions, ribs, bosses, gates, likely flow-front meetings, cooling, draft and ejection to drawing-level review questions without prescribing universal ratios. The feedstock section separates known in-house regrind from post-consumer streams, emphasizes lot and source history, and bounds its examples to one repeated-processing PP study and six PCR-HDPE batches from one collection system.",
     "independentSmeStatus": "hold",
     "humanDeviceValidationStatus": "hold",
     "readerPromptsUpdated": false
   },
   "revisionHistory": [
+    {
+      "id": "material-datasheet-comparison-2026-11-03",
+      "date": "2026-11-03",
+      "scope": [
+        "r03"
+      ],
+      "previousRevisionId": "expanded-material-property-guide-2026-11-03",
+      "firstReadVisibleWords": {
+        "r01": 1228,
+        "r02": 1568,
+        "r03": 3633,
+        "r03a": 2616,
+        "r04": 1709,
+        "r05": 1643,
+        "r06": 898,
+        "r07": 923,
+        "r08": 955,
+        "r09": 930,
+        "r10": 945,
+        "r11": 877,
+        "r12": 970,
+        "r13": 1009,
+        "r14": 1011,
+        "r15": 941,
+        "r16": 984,
+        "r17": 918,
+        "r18": 886,
+        "r19": 880,
+        "r20": 1003
+      },
+      "firstReadVisibleWordIncreaseByChapter": {
+        "r03": 3
+      },
+      "firstReadVisibleWordIncreaseTotal": 3,
+      "firstReadVisibleWordTotal": 26527,
+      "addedSectionCount": 1,
+      "addedSectionTitleAndBodyWords": 201,
+      "addedSectionTitlesByModule": {
+        "material-families": "Worked comparison: two fictional polypropylene datasheets"
+      },
+      "belowSoftTargetChapterCount": 0,
+      "belowSoftTargetChapterIds": [],
+      "newClaimIdCount": 0,
+      "newSourceRecordCount": 0,
+      "addedSourceRecordIds": [],
+      "conclusion": "Added a compact, explicitly hypothetical comparison of two fictional polypropylene datasheets. It demonstrates how matching method and test conditions permit comparison of reported values and states why those values do not establish mould filling or finished-part suitability. No claims or evidence sources were added; SME and device review remain on hold.",
+      "rationale": "A worked comparison shows readers how to check grade identity, method, specimen, orientation, conditioning, temperature, load or speed and units before interpreting results. Invented values are labelled as teaching data and make no supplier, production or part-performance claim.",
+      "independentSmeStatus": "hold",
+      "humanDeviceValidationStatus": "hold",
+      "readerPromptsUpdated": false
+    },
     {
       "id": "expanded-material-property-guide-2026-11-03",
       "date": "2026-11-03",

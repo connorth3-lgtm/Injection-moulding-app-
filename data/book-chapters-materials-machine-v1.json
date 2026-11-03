@@ -167,7 +167,9 @@
       "sourceIds": [
         "BASF-ULTRADUR-FAMILY",
         "BASF-ULTRASON-FAMILY",
-        "POLYM-LDPE-MICROSTRUCTURE-RHEOLOGY-2021"
+        "POLYM-LDPE-MICROSTRUCTURE-RHEOLOGY-2021",
+        "POLYM-PP-RECYCLING-CYCLES-2021",
+        "PCR-HDPE-SEASONAL-BATCH-2025"
       ],
       "sections": [
         {
@@ -205,6 +207,10 @@
         {
           "title": "Review a substitution as a new evidence question",
           "text": "A material substitution is not established by matching only the family abbreviation or a single published property. Confirm the exact old and new grades, formulation suffixes, colour, revision and supplier guidance. Compare the properties that matter to the product on a like-for-like test basis, then identify which process observations and part characteristics could change. Decide in advance what evidence would support the substitution and what result would require further review. A controlled comparison may show that the new grade behaves acceptably in the intended system, but that result applies to the tested material, tool, machine, part and conditions. It does not create a transferable recipe for other grades or moulds."
+        },
+        {
+          "title": "Track regrind and recycled-feedstock history",
+          "text": "A resin family and grade do not fully describe the feed after it has been recovered or processed again. For each comparison, record the exact grade and lot, where the returned material came from, whether it is plant-generated sprues or runners, rejected mouldings, or purchased recycled feedstock, and what blending or processing history is documented. Keep virgin resin, known in-house regrind, and post-consumer recycled material as distinct feed descriptions; they can have different histories and different kinds of uncertainty.\n\nA regrind percentage describes a particular blend under a particular material and product specification. It is not a universal safe allowance or a transferable machine setting. The usable blend depends on the exact resin, feedstock source and preparation, supplier guidance, part requirements, customer or regulatory requirements, and the evidence from the intended process and product. Do not carry a percentage from one grade, part or supplier into another without review.\n\nResearch illustrates why the history matters, but does not supply a general limit. A 2021 study followed one polypropylene material through repeated plasticising, injection moulding, crushing and reprocessing, then measured fluidity and tensile properties. A 2025 study compared six post-consumer HDPE batches from one German municipal waste stream and related batch differences in composition and rheology to measured processing and product responses. The results apply to those materials and study conditions; they do not establish a maximum regrind fraction or predict another recycled feed.\n\nFor a material trial, identify the feed stream and lot before interpreting results. Agree which product-critical properties and dimensions must be checked, keep the blend and process records linked to sampled parts, and compare the results against the product’s controlled requirements. If the feed identity or history is uncertain, record that as an unresolved evidence question rather than treating a family name or blend percentage as proof of equivalence."
         }
       ],
       "propertyGuide": {

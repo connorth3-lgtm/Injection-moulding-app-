@@ -1,12 +1,12 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.11.02.2`**.
+Current governed web candidate: **`2026.11.03.1`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.11.02.2 source 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be run 41334499139 artifact 13095275054 fingerprint sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913 identifies the retained exact-source software candidate; human, device and production authorization remain HOLD. |
-| Behavioral / browser | **pass** | PASS: release 2026.11.02.2 source 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be passed Mobile Browser QA run 41334498987 and Question Quality 50-Pass run 41334498796 on the exact candidate source; human/device validation remains HOLD. |
-| External human / device | **hold** | Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed. |
+| Static / contract | **fail** | HOLD: release 2026.11.03.1 has no retained exact-source candidate yet; static/runtime quality must be independently checked on the new release candidate. No source, human, device or production approval is implied. |
+| Behavioral / browser | **fail** | HOLD: browser and question-quality gates for release 2026.11.03.1 are pending exact-head verification; prior green workflows do not transfer to a different exact source. |
+| External human / device | **hold** | Independent human/device/provider evidence remains HOLD for release 2026.11.03.1; no automated workflow can establish it. |

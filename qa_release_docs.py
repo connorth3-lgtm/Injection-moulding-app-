@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
-  'web_release':'2026.11.02.2',
+  'web_release':'2026.11.03.1',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -149,7 +149,7 @@ need('must NOT be silently inserted into this legacy feed' in upload,'recovery/P
 
 support=text('support.html')
 learner_ui=text('src/domains/shell/learner-ui-polish.js')
-for k,id_ in {'web_release':'mmPwa','desktop_release':'mmDesktop','content_version':'mmContent','question_bank_version':'mmBank','assessment_quality_version':'mmQuality','assessment_storage_scope_version':'mmScope','assessment_evidence_version':'mmEvidence','windows_recovery_release':'mmRecovery'}.items():
+for k,id_ in {'web_release':'2026.11.03.1','desktop_release':'mmDesktop','content_version':'mmContent','question_bank_version':'mmBank','assessment_quality_version':'mmQuality','assessment_storage_scope_version':'mmScope','assessment_evidence_version':'mmEvidence','windows_recovery_release':'mmRecovery'}.items():
     need(f'id="{id_}">{V[k]}' in support,f'support fallback version stale: {k}')
     need(f"{k}:'{id_}'" in support,f'support dynamic version mapping missing: {k}')
 need("fetch('./version.json',{cache:'no-store'})" in support,'support page must synchronise from version.json')

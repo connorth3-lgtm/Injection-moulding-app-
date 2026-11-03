@@ -14,6 +14,16 @@
       "scope": "General injection-moulding principles, consistent process-parameter descriptions and reproducible reporting. ISO confirms the 2017 edition remains current after review in 2022.",
       "checked": "2026-09-14",
       "currentState": "published-confirmed"
+    },
+    {
+      "id": "ENVALIOR-INJECTION-DESIGN-GUIDE-2026",
+      "type": "manufacturer-design-guide",
+      "issuer": "Envalior",
+      "title": "Design guide",
+      "url": "https://www.envalior.com/en-us/material-advisor/design-guide",
+      "scope": "General design guide for thermoplastic injection-moulded parts covering wall thickness, ribs/gussets, bosses, radii/corners, coring, draft and undercuts. Advice is general; exact geometry depends on grade, function, tool, processing and product requirements. No universal dimensions or process instructions are imported.",
+      "checked": "2026-11-03",
+      "currentState": "current-public-manufacturer-design-guide"
     }
   ],
   "chapters": [
@@ -130,7 +140,8 @@
       "state": "technical-review",
       "applicability": "Common mould parts and functions. Real moulds differ; use the tool drawing and site procedures for the actual tool.",
       "sourceIds": [
-        "ISO-12165-2019"
+        "ISO-12165-2019",
+        "ENVALIOR-INJECTION-DESIGN-GUIDE-2026"
       ],
       "sections": [
         {
@@ -164,6 +175,10 @@
         {
           "title": "Tie observations to cavity and location",
           "text": "In a multi-cavity or family mould, a single machine trace can represent several different local cavity outcomes. Record which cavity produced the measured part, where on that part the feature was found, and whether the same feature appears elsewhere. A defect fixed to one cavity suggests a different set of questions from a defect shared across all cavities, though neither pattern proves a cause. Tool condition, local flow and heat removal can vary by location. Keeping cavity identity and measurement location attached to a result makes later comparisons useful instead of averaging away a meaningful difference."
+        },
+        {
+          "title": "Map part geometry to process and tooling questions",
+          "text": "Start with the part’s function, drawing and material identity. Mark the surfaces and dimensions that matter to the product, then trace how the part geometry connects to filling, heat removal and release. This drawing review is a way to ask better questions; it does not replace the approved part design, mould drawing, supplier guidance or a toolmaker’s review.\n\nLook first at the walls and transitions. Note abrupt changes in thickness, thick intersections, corners, ribs and bosses. These features can affect how melt reaches a region, how heat leaves it, and how the moulded part changes dimension or appearance. Ribs and bosses may help a part meet a structural or assembly need, while their connections can create local material buildup. A design guide can help flag these locations, but there is no single wall, rib or boss ratio that suits every grade and part.\n\nNext, mark the feed entry and the likely flow paths on the drawing. Note where a path divides around a hole, core or other feature and where fronts may meet. Identify cosmetic or load-bearing regions where the meeting location could matter, then ask how the actual gate arrangement and mould flow will be checked. Do not infer a weld-line position from the outside shape alone.\n\nThen connect geometry to heat and release. Highlight thick or asymmetric regions for cooling review, and use the actual tool drawing to identify relevant circuits and cavity locations. Mark the draw direction, surfaces that need draft, undercuts and any slides or other mechanisms. Ask how ejection contact and part movement will be inspected. The exact cooling and ejection arrangement varies by tool.\n\nA useful design handover pairs each annotation with a question and an observable check: where should filling be examined, which dimensions are sensitive to local geometry, where could appearance or a flow-front meeting matter, and which surfaces or cavities need separate inspection? Keep those questions attached to the part revision, material grade and tool revision. Numerical dimensions and acceptance criteria must come from the controlled product design, material information and engineering review for that application."
         }
       ]
     },

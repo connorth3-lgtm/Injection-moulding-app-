@@ -253,9 +253,9 @@ need(r'function readerListeningModuleHtml\s*\(' in live_pages_verifier and r'fun
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('independentSmeStatus') == 'hold', 'evidence-enrichment authorization must preserve SME HOLD')
 
 claim_auth=authorization.get('claimEvidenceReferenceAuthorization') or {}
-need(claim_auth.get('status')=='authorized-derived-evidence-index' and claim_auth.get('release')==claim_evidence.get('release') and claim_auth.get('ledger')=='data/book-claim-evidence-reference-v1.json' and claim_auth.get('chapterCount')==46 and claim_auth.get('sourceCount')==55 and claim_auth.get('claimCount')==137 and claim_auth.get('noNewClaims') is True and claim_auth.get('independentSmeStatus')=='hold', 'claim-evidence reference authorization boundary drift')
+need(claim_auth.get('status')=='authorized-derived-evidence-index' and claim_auth.get('release')==claim_evidence.get('release') and claim_auth.get('ledger')=='data/book-claim-evidence-reference-v1.json' and claim_auth.get('chapterCount')==46 and claim_auth.get('sourceCount')==58 and claim_auth.get('claimCount')==137 and claim_auth.get('noNewClaims') is True and claim_auth.get('independentSmeStatus')=='hold', 'claim-evidence reference authorization boundary drift')
 need(claim_evidence.get('schemaVersion')==1 and claim_evidence.get('bookId')=='mouldmaster-book' and claim_evidence.get('status')=='governed-reader-claim-evidence-index', 'claim-evidence reference identity drift')
-need(claim_evidence.get('release')==book_sme.get('release') and claim_evidence.get('chapterCount')==46 and claim_evidence.get('sourceCount')==55 and claim_evidence.get('claimCount')==137, 'claim-evidence reference release/coverage drift')
+need(claim_evidence.get('release')==book_sme.get('release') and claim_evidence.get('chapterCount')==46 and claim_evidence.get('sourceCount')==58 and claim_evidence.get('claimCount')==137, 'claim-evidence reference release/coverage drift')
 claim_review_paths=[
     ROOT / 'data/book-claim-review-foundations-materials-machine-v1.json',
     ROOT / 'data/book-claim-review-process-tooling-v1.json',
@@ -315,7 +315,7 @@ need(actual_claim_rows==expected_claim_rows, 'reader claim-level evidence trace 
 need(actual_claim_evidence==expected_claim_evidence, 'reader claim-evidence index drifted from final governed review/resolution state')
 expected_source_ids={source_id for ids in expected_claim_evidence.values() for source_id in ids}
 actual_source_ids={source.get('id') for source in claim_evidence.get('sourceSeeds', [])}
-need(len(expected_source_ids)==55 and actual_source_ids==expected_source_ids, 'reader final claim-evidence source coverage drift')
+need(len(expected_source_ids)==58 and actual_source_ids==expected_source_ids, 'reader final claim-evidence source coverage drift')
 need(all(source.get('title') and source.get('url') and source.get('scope') for source in claim_evidence.get('sourceSeeds', [])), 'reader claim-evidence source metadata incomplete')
 hot=actual_claim_evidence.get('hot-runners') or []
 need({'HUSKY-SCVG-HOT-SPRUE-SERVICE-2024','MOLD-MASTERS-HOT-RUNNER-USER-MANUAL-2020','BASF-ULTRAMID-PROCESSING'} <= set(hot), 'hot-runner final governed evidence disappeared from reader references')
@@ -374,12 +374,12 @@ need("ui.listen.addEventListener('click',()=>startVerifiedListening({resume:fals
 need('style="' not in book_runtime and "style='" not in book_runtime, 'Book runtime reintroduced inline HTML style attributes')
 for marker in ('READER_SECTION_OMISSIONS','READER_SUPPLEMENT_SECTIONS','readerSections','readerSupplementHtml','readerModuleEvidenceHtml','mm-book-reader-governance','mm-book-inline-evidence'):
     need(marker in book_runtime, f'Book reader editorial consolidation safeguard missing: {marker}')
-need("'diagnostic-method':Object.freeze(['Start with the symptom','Build competing mechanisms','Change to learn'" in book_runtime, 'Book reader must consolidate the repeated diagnostic-method opening')
+need("const READER_SECTION_OMISSIONS=Object.freeze({});" in book_runtime, 'Book reader must render all remaining governed sections after repeated-source consolidation')
 need('const READER_SUPPLEMENT_SECTIONS=Object.freeze({});' in book_runtime, 'Book reader must not retain the obsolete ISO-packaging supplemental pointer')
 need('function readerOmittedSectionsHtml(chapter)' in book_runtime and 'readerOmittedSectionsHtml(ch)' in book_runtime and 'data-mm-book-omitted-module' in book_runtime, 'Book reader must offer all consolidated authored sections under optional source disclosure')
 need("workedCaseHtml(chapter,{readerMode:true,audioExpanded:options.priorityCases===true})" in book_runtime and "diagramHtml(chapter,{readerMode:true})" in book_runtime and "const priorityCases=['r07','r10','r11','r15'].includes(reader.id)" in book_runtime, 'Book reader must retain case/diagram coverage and expand governed examples in the four shortest chapters')
 need('Module evidence' in book_runtime and 'Worked-example evidence' in book_runtime and 'Chapter references' in book_runtime, 'Book reader evidence must remain available behind progressive disclosure')
-need("'black-specks':Object.freeze(['Separate continuous contamination from event-driven contamination'])" in book_runtime, 'Book reader must consolidate the remaining black-speck chronology repetition')
+need("'black-specks':Object.freeze(" not in book_runtime, 'Book reader must not retain an obsolete black-speck omission mapping')
 need('function proseHtml(value)' in book_runtime and 'words.length<=90' in book_runtime, 'Book reader must split only unusually long governed prose for readability')
 need('const metaList=' in book_runtime and 'No separate assumptions list is declared' in book_runtime and 'No separate units list is declared' in book_runtime, 'Book reader worked examples must present consistent assumptions/units metadata')
 need('Reasoning scenario:' in book_runtime and 'Chapter depth:' in book_runtime and 'Depth labels:' in book_runtime, 'Book reader pedagogy/depth clarification missing')

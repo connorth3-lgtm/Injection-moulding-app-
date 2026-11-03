@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "pass",
+    "technicalAutomation": "fail",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,16 +345,16 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "pass",
-      "meaning": "PASS: release 2026.11.02.2 source 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be run 41334499139 artifact 13095275054 fingerprint sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913 identifies the retained exact-source software candidate; human, device and production authorization remain HOLD."
+      "status": "fail",
+      "meaning": "HOLD: release 2026.11.03.1 has no retained exact-source candidate yet; static/runtime quality must be independently checked on the new release candidate. No source, human, device or production approval is implied."
     },
     "behavioralBrowser": {
-      "status": "pass",
-      "meaning": "PASS: release 2026.11.02.2 source 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be passed Mobile Browser QA run 41334498987 and Question Quality 50-Pass run 41334498796 on the exact candidate source; human/device validation remains HOLD."
+      "status": "fail",
+      "meaning": "HOLD: browser and question-quality gates for release 2026.11.03.1 are pending exact-head verification; prior green workflows do not transfer to a different exact source."
     },
     "externalHumanDevice": {
       "status": "hold",
-      "meaning": "Human SME, real device/assistive-technology, signed distribution, learner-outcome and provider/accreditation evidence remains release-bound HOLD until genuinely executed."
+      "meaning": "Independent human/device/provider evidence remains HOLD for release 2026.11.03.1; no automated workflow can establish it."
     }
   }
 }

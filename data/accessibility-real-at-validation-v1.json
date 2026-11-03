@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.02.2",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.02.2.md",
-  "sourceSha": "17ae5aa2e73929aabd9f3dc1fd0415867e27e6be",
-  "runtimeFingerprint": "sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913",
+  "release": "2026.11.03.1",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.03.1.md",
+  "sourceSha": null,
+  "runtimeFingerprint": null,
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.11.02.2 is bound to retained technical-preview candidate 17ae5aa2e73929aabd9f3dc1fd0415867e27e6be with public-runtime fingerprint sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Release 2026.11.03.1 is awaiting a retained exact-source candidate. Automated browser tests do not substitute for human NVDA and VoiceOver review; all real-AT tasks remain pending.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -306,16 +306,12 @@
     "textZoom200Percent": true
   },
   "previousCandidate": {
-    "release": "2026.11.02.1",
-    "sourceSha": "77bdec076f7ddb73555d6509642f6b46169008a9",
-    "runtimeFingerprint": "sha256:387fd33a7fa8b9c6a14c94e2ec582bf60ab95e744feaccdb7f71d68e6108d565"
-  },
-  "technicalCandidateStatus": "PASS — exact-source candidate run 41325574413, artifact 13089959457, and runtime fingerprint sha256:387fd33a7fa8b9c6a14c94e2ec582bf60ab95e744feaccdb7f71d68e6108d565 passed exact-head quality gates. Real NVDA and VoiceOver tasks remain pending.",
-  "candidate": {
     "release": "2026.11.02.2",
     "sourceSha": "17ae5aa2e73929aabd9f3dc1fd0415867e27e6be",
     "runtimeFingerprint": "sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913"
   },
+  "technicalCandidateStatus": "PASS — exact-source candidate run 41325574413, artifact 13089959457, and runtime fingerprint sha256:387fd33a7fa8b9c6a14c94e2ec582bf60ab95e744feaccdb7f71d68e6108d565 passed exact-head quality gates. Real NVDA and VoiceOver tasks remain pending.",
+  "candidate": null,
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",

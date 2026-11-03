@@ -15,7 +15,7 @@
     "data/book-qualification-resolution-all-v1.json"
   ],
   "chapterCount": 46,
-  "sourceCount": 55,
+  "sourceCount": 58,
   "sourceSeeds": [
     {
       "id": "ARBURG-PLASTICISING-SERVICE",
@@ -566,6 +566,36 @@
       "checked": "2026-09-14",
       "state": "peer-reviewed-fetched",
       "scope": "Multi-variable warpage/shrinkage mechanisms and process-parameter interactions; not a universal recipe."
+    },
+    {
+      "id": "POLYM-PP-RECYCLING-CYCLES-2021",
+      "type": "peer-reviewed-study",
+      "issuer": "Sustainability",
+      "title": "Number of Times Recycled and Its Effect on the Recyclability, Fluidity and Tensile Properties of Polypropylene Injection Molded Parts",
+      "url": "https://doi.org/10.3390/su131911085",
+      "checked": "2026-11-03",
+      "state": "peer-reviewed-2021",
+      "scope": "Study of one polypropylene feedstock through repeated plasticising, injection moulding, crushing and reprocessing cycles, with fluidity and tensile-property measurements. Findings are bounded to that material and protocol; they do not define an allowance for other grades, scrap streams or parts."
+    },
+    {
+      "id": "PCR-HDPE-SEASONAL-BATCH-2025",
+      "type": "peer-reviewed-study",
+      "issuer": "Polymers",
+      "title": "Investigating the Impact of Seasonal Input Stream Fluctuations on Post-Consumer High-Density Polyethylene Composition and Processing",
+      "url": "https://doi.org/10.3390/polym17131828",
+      "checked": "2026-11-03",
+      "state": "peer-reviewed-2025",
+      "scope": "Study of six consecutive post-consumer HDPE batches from one German municipal-waste stream; compares batch composition, contamination and rheology with processing data and product properties. Evidence of measured variability in that stream, not a universal PCR specification or acceptance threshold."
+    },
+    {
+      "id": "ENVALIOR-INJECTION-DESIGN-GUIDE-2026",
+      "type": "manufacturer-design-guide",
+      "issuer": "Envalior",
+      "title": "Design guide",
+      "url": "https://www.envalior.com/en-us/material-advisor/design-guide",
+      "checked": "2026-11-03",
+      "state": "current-public-manufacturer-design-guide",
+      "scope": "General design guide for thermoplastic injection-moulded parts covering wall thickness, ribs/gussets, bosses, radii/corners, coring, draft and undercuts. Advice is general; exact geometry depends on grade, function, tool, processing and product requirements. No universal dimensions or process instructions are imported."
     }
   ],
   "chapters": [
@@ -1296,7 +1326,9 @@
         "BASF-ULTRADUR-FAMILY",
         "BASF-ULTRASON-INJECTION",
         "BASF-ELASTOLLAN-565",
-        "POLYM-LDPE-MICROSTRUCTURE-RHEOLOGY-2021"
+        "POLYM-LDPE-MICROSTRUCTURE-RHEOLOGY-2021",
+        "POLYM-PP-RECYCLING-CYCLES-2021",
+        "PCR-HDPE-SEASONAL-BATCH-2025"
       ],
       "claims": [
         {
@@ -1312,7 +1344,9 @@
           "evidenceIds": [
             "ASTM-D3641-24",
             "BASF-ELASTOLLAN-565",
-            "POLYM-LDPE-MICROSTRUCTURE-RHEOLOGY-2021"
+            "POLYM-LDPE-MICROSTRUCTURE-RHEOLOGY-2021",
+            "POLYM-PP-RECYCLING-CYCLES-2021",
+            "PCR-HDPE-SEASONAL-BATCH-2025"
           ]
         }
       ]
@@ -1356,6 +1390,7 @@
       "evidenceIds": [
         "ISO-12165-2019",
         "BASF-ULTRADUR-FAMILY",
+        "ENVALIOR-INJECTION-DESIGN-GUIDE-2026",
         "KISTLER-MOULD-TEMPERATURE-MONITORING",
         "KUO-2022-COOLING-WARPAGE"
       ],
@@ -1376,7 +1411,8 @@
         {
           "claimId": "mould-anatomy-03",
           "evidenceIds": [
-            "ISO-12165-2019"
+            "ISO-12165-2019",
+            "ENVALIOR-INJECTION-DESIGN-GUIDE-2026"
           ]
         },
         {

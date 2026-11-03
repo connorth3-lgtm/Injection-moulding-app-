@@ -534,6 +534,26 @@
       "scope": "Flash-DSC study of cooling-rate effects on crystallization in the tested semi-crystalline PP; measured trends and values are material- and method-specific.",
       "checked": "2026-11-03",
       "currentState": "peer-reviewed-2022"
+    },
+    {
+      "id": "POLYM-PP-RECYCLING-CYCLES-2021",
+      "type": "peer-reviewed-study",
+      "issuer": "Sustainability",
+      "title": "Number of Times Recycled and Its Effect on the Recyclability, Fluidity and Tensile Properties of Polypropylene Injection Molded Parts",
+      "url": "https://doi.org/10.3390/su131911085",
+      "scope": "Study of one polypropylene feedstock through repeated plasticising, injection moulding, crushing and reprocessing cycles, with fluidity and tensile-property measurements. Findings are bounded to that material and protocol; they do not define an allowance for other grades, scrap streams or parts.",
+      "checked": "2026-11-03",
+      "currentState": "peer-reviewed-2021"
+    },
+    {
+      "id": "PCR-HDPE-SEASONAL-BATCH-2025",
+      "type": "peer-reviewed-study",
+      "issuer": "Polymers",
+      "title": "Investigating the Impact of Seasonal Input Stream Fluctuations on Post-Consumer High-Density Polyethylene Composition and Processing",
+      "url": "https://doi.org/10.3390/polym17131828",
+      "scope": "Study of six consecutive post-consumer HDPE batches from one German municipal-waste stream; compares batch composition, contamination and rheology with processing data and product properties. Evidence of measured variability in that stream, not a universal PCR specification or acceptance threshold.",
+      "checked": "2026-11-03",
+      "currentState": "peer-reviewed-2025"
     }
   ]
 }

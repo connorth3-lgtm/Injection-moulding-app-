@@ -21,7 +21,7 @@
   const MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1='7a45cc0da8a18282a04ddf437d802bc6377f15e3';
   const MATERIAL_PAGE_SIZE=24;
   const BATCH_PATHS=[`${BOOK_DATA}book-authored-foundations-v1.json`,`${BOOK_DATA}book-evidence-registry-v1.json`,`${BOOK_DATA}book-chapters-materials-machine-v1.json`,`${BOOK_DATA}book-authored-remaining-v1.json`];
-  const AUTH_GIT_BLOB_SHA1='7dc1bf8495ecf5ebb522adf46842337c6efcb02b';
+  const AUTH_GIT_BLOB_SHA1='555b9e6c95a54e82c98c1b760fce35787ce338d6';
   const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-claim-resolution-high-risk-v2.json','book-claim-resolution-all-v1.json','book-claim-review-foundations-materials-machine-v1.json','book-claim-review-process-tooling-v1.json','book-claim-review-troubleshooting-v1.json','book-claim-review-engineering-advanced-v1.json','book-claim-review-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-engineering-diagrams-v1.json','book-evidence-enrichment-v2.json','book-claim-evidence-reference-v1.json','book-reader-architecture-v2.json','book-editorial-expansion-review-v1.json','book-material-grade-atlas-v1.json','book-material-regional-evidence-v1.json','material-catalog-v1.json'];
   const CANONICAL_SOURCE_URLS=Object.freeze({
     'OUBELLAOUCH-2024-FIBRE-ORIENTATION':'https://doi.org/10.1007/s00170-024-12990-5',
@@ -30,6 +30,8 @@
     'PARIZS-2023-IN-MOLD-SENSORS':'https://doi.org/10.3390/s23031735',
     'LI-2024-WELD-LINE-REVIEW':'https://doi.org/10.1007/s00170-024-13607-7',
     'POLYM-LDPE-MICROSTRUCTURE-RHEOLOGY-2021':'https://doi.org/10.1039/D1RA03749H',
+    'POLYM-PP-RECYCLING-CYCLES-2021':'https://doi.org/10.3390/su131911085',
+    'PCR-HDPE-SEASONAL-BATCH-2025':'https://doi.org/10.3390/polym17131828',
     'POLYM-PP-COOLING-RATE-CRYSTALLIZATION-2022':'https://doi.org/10.3390/polym14173646'
   });
   const EVIDENCE_IDENTITIES=Object.freeze({
@@ -392,8 +394,8 @@
   }
   function validateClaimEvidenceReference(data,declared,sourceMap,manifestData,auth){
     if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='governed-reader-claim-evidence-index'||!Array.isArray(data.sourceSeeds)||!Array.isArray(data.chapters))throw new Error('Book claim-evidence reference identity check failed');
-    const permit=auth?.claimEvidenceReferenceAuthorization;if(permit?.status!=='authorized-derived-evidence-index'||permit?.release!==VERSION||permit?.ledger!=='data/book-claim-evidence-reference-v1.json'||permit?.chapterCount!==46||permit?.sourceCount!==55||permit?.claimCount!==137||permit?.noNewClaims!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book claim-evidence reference authorization missing');
-    if(data.chapterCount!==46||data.sourceCount!==55||data.claimCount!==137||data.sourceSeeds.length!==55||data.chapters.length!==46)throw new Error('Book claim-evidence reference coverage mismatch');
+    const permit=auth?.claimEvidenceReferenceAuthorization;if(permit?.status!=='authorized-derived-evidence-index'||permit?.release!==VERSION||permit?.ledger!=='data/book-claim-evidence-reference-v1.json'||permit?.chapterCount!==46||permit?.sourceCount!==58||permit?.claimCount!==137||permit?.noNewClaims!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book claim-evidence reference authorization missing');
+    if(data.chapterCount!==46||data.sourceCount!==58||data.claimCount!==137||data.sourceSeeds.length!==58||data.chapters.length!==46)throw new Error('Book claim-evidence reference coverage mismatch');
     const sourceIds=new Set();for(const source of data.sourceSeeds){if(!source?.id||!source?.title||!source?.url||!source?.scope||sourceIds.has(source.id))throw new Error('Invalid or duplicate claim-evidence source');sourceIds.add(source.id);if(!sourceMap.has(source.id)){sourceMap.set(source.id,source);manifestData.sourceSeeds.push(source);}}
     const chapterIds=new Set(),claimIds=new Set();let claimCount=0;for(const row of data.chapters){if(!row?.chapterId||chapterIds.has(row.chapterId)||!declared.has(row.chapterId)||!Array.isArray(row.evidenceIds)||!row.evidenceIds.length||!Array.isArray(row.claims)||!row.claims.length)throw new Error('Invalid claim-evidence chapter coverage');chapterIds.add(row.chapterId);if(new Set(row.evidenceIds).size!==row.evidenceIds.length)throw new Error(`Duplicate claim-evidence id in ${row.chapterId}`);for(const id of row.evidenceIds)if(!sourceMap.has(id))throw new Error(`Unknown claim-evidence source ${id} in ${row.chapterId}`);for(const claim of row.claims){if(!claim?.claimId||claimIds.has(claim.claimId)||!Array.isArray(claim.evidenceIds)||!claim.evidenceIds.length)throw new Error(`Invalid claim-evidence claim in ${row.chapterId}`);claimIds.add(claim.claimId);claimCount++;for(const id of claim.evidenceIds){if(!row.evidenceIds.includes(id)||!sourceMap.has(id))throw new Error(`Invalid claim-evidence source ${id} in ${claim.claimId}`);}}}
     if(chapterIds.size!==declared.size||[...declared.keys()].some(id=>!chapterIds.has(id))||claimCount!==137)throw new Error('Book claim-evidence chapter/claim coverage incomplete');

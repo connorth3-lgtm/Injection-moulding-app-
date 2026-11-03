@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "bookId": "mouldmaster-book",
-  "version": "2026.09.14.1",
+  "version": "2026.11.03.1",
   "policy": "accuracy-overkill",
   "reviewScope": "remaining-foundations-materials-machine",
   "publicationEffect": "none",
   "chapterPromotionAuthorized": false,
-  "reviewedAt": "2026-09-14",
+  "reviewedAt": "2026-11-03",
   "sourceSeeds": [
     {
       "id": "ASTM-D3641-24",
@@ -127,6 +127,36 @@
       "checked": "2026-11-02",
       "state": "peer-reviewed-fetched",
       "scope": "Flash-DSC and modelling study of one semi-crystalline polypropylene sample evaluating cooling rate and crystallisation. Findings apply to the tested sample and methods; no universal processing value is implied."
+    },
+    {
+      "id": "POLYM-PP-RECYCLING-CYCLES-2021",
+      "type": "peer-reviewed-study",
+      "issuer": "Sustainability",
+      "title": "Number of Times Recycled and Its Effect on the Recyclability, Fluidity and Tensile Properties of Polypropylene Injection Molded Parts",
+      "url": "https://doi.org/10.3390/su131911085",
+      "checked": "2026-11-03",
+      "state": "peer-reviewed-2021",
+      "scope": "Study of one polypropylene feedstock through repeated plasticising, injection moulding, crushing and reprocessing cycles, with fluidity and tensile-property measurements. Findings are bounded to that material and protocol; they do not define an allowance for other grades, scrap streams or parts."
+    },
+    {
+      "id": "PCR-HDPE-SEASONAL-BATCH-2025",
+      "type": "peer-reviewed-study",
+      "issuer": "Polymers",
+      "title": "Investigating the Impact of Seasonal Input Stream Fluctuations on Post-Consumer High-Density Polyethylene Composition and Processing",
+      "url": "https://doi.org/10.3390/polym17131828",
+      "checked": "2026-11-03",
+      "state": "peer-reviewed-2025",
+      "scope": "Study of six consecutive post-consumer HDPE batches from one German municipal-waste stream; compares batch composition, contamination and rheology with processing data and product properties. Evidence of measured variability in that stream, not a universal PCR specification or acceptance threshold."
+    },
+    {
+      "id": "ENVALIOR-INJECTION-DESIGN-GUIDE-2026",
+      "type": "manufacturer-design-guide",
+      "issuer": "Envalior",
+      "title": "Design guide",
+      "url": "https://www.envalior.com/en-us/material-advisor/design-guide",
+      "checked": "2026-11-03",
+      "state": "current-public-manufacturer-design-guide",
+      "scope": "General design guide for thermoplastic injection-moulded parts covering wall thickness, ribs/gussets, bosses, radii/corners, coring, draft and undercuts. Advice is general; exact geometry depends on grade, function, tool, processing and product requirements. No universal dimensions or process instructions are imported."
     }
   ],
   "chapters": [
@@ -364,10 +394,11 @@
           "applicability": "Conventional mould assemblies.",
           "exclusions": "Not all tools use the same mechanisms.",
           "evidence": [
-            "ISO-12165-2019"
+            "ISO-12165-2019",
+            "ENVALIOR-INJECTION-DESIGN-GUIDE-2026"
           ],
           "conclusion": "supported",
-          "basis": "ISO terminology standard documents mould components and equivalent terms without implying one universal construction."
+          "basis": "ISO terminology documents mould components without implying one universal construction. Envalior's general design guide discusses draft as an aid to part release and explains that wall features such as ribs, bosses and coring must be considered in design; it supplies no universal dimensional ratio or tool-specific ejection arrangement."
         },
         {
           "claimId": "mould-anatomy-04",
@@ -482,10 +513,12 @@
           "evidence": [
             "ASTM-D3641-24",
             "BASF-ELASTOLLAN-565",
-            "POLYM-LDPE-MICROSTRUCTURE-RHEOLOGY-2021"
+            "POLYM-LDPE-MICROSTRUCTURE-RHEOLOGY-2021",
+            "POLYM-PP-RECYCLING-CYCLES-2021",
+            "PCR-HDPE-SEASONAL-BATCH-2025"
           ],
           "conclusion": "supported",
-          "basis": "ASTM places material-specific guidance above generic practice and grade data sheets provide distinct processing requirements. A primary fractionation and rheology study of LDPE illustrates that molecular weight and branching can relate to selected rheological responses in tested fractions; it does not establish a universal grade-selection rule."
+          "basis": "ASTM places material-specific guidance above generic practice, and grade data sheets provide distinct processing requirements. A primary LDPE fractionation/rheology study illustrates that molecular architecture can relate to measured rheology for the tested fractions. A repeated-processing study measured fluidity and tensile properties for one PP feedstock, while a six-batch PCR-HDPE study found composition and rheology variation associated with measured processing and product differences. These examples explain why grade and feedstock history must remain explicit; they do not establish a universal recycled-content allowance or grade-selection rule."
         }
       ]
     },
