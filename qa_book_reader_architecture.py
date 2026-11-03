@@ -42,7 +42,7 @@ assert reader.get("schema")==1 and reader.get("bookId")=="mouldmaster-book"
 assert reader.get("release")==book_release
 assert reader.get("status")=="governed-derived-reader-map"
 readers=reader.get("readerChapters") or []
-assert len(readers)==21 and len({r.get("id") for r in readers})==20
+assert len(readers)==21 and len({r.get("id") for r in readers})==21
 covered=[]
 for row in readers:
     assert row.get("id") and row.get("title") and row.get("goal")
