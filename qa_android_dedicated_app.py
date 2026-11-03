@@ -52,7 +52,7 @@ for marker in (
     need(marker in service, f"foreground native audio service contract missing: {marker}")
 for marker in ("MouldMasterNativeTts", "window.MMNativeTtsEvent", "nativeQueueSupported", "buildNativeQueue", "speakQueue", "if(nativeSupported)return false", "nativeTts.speak(", "Test phone voice", "Reading with phone audio"):
     need(marker in runtime, f"bundled native-aware Read Aloud runtime missing: {marker}")
-need("compileSdk 35" in gradle and "targetSdk 35" in gradle, "Android SDK target must be explicit")
+need("compileSdk 36" in gradle and "targetSdk 36" in gradle, "Android SDK target must meet current Play requirements")
 need("gradle -p android assembleDebug" in workflow, "Android build workflow missing")
 
 need("android.permission.POST_NOTIFICATIONS" not in manifest, "Android app must not request notification permission for background playback")

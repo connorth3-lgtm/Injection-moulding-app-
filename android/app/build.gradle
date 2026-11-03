@@ -2,14 +2,24 @@ plugins {
     id "com.android.application"
 }
 
+def playUploadConfig = [
+    storeFile: System.getenv("MM_PLAY_UPLOAD_KEYSTORE_FILE"),
+    storePassword: System.getenv("MM_PLAY_UPLOAD_STORE_PASSWORD"),
+    keyAlias: System.getenv("MM_PLAY_UPLOAD_KEY_ALIAS"),
+    keyPassword: System.getenv("MM_PLAY_UPLOAD_KEY_PASSWORD")
+]
+def playUploadConfigured = playUploadConfig.values().every { value ->
+    value != null && !value.trim().isEmpty()
+}
+
 android {
     namespace "org.mouldmaster.academy"
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId "org.mouldmaster.academy"
         minSdk 26
-        targetSdk 35
+        targetSdk 36
         versionCode 20261103
         versionName "2026.11.03"
         buildConfigField "String", "WEB_URL", "\"https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/\""
@@ -19,10 +29,43 @@ android {
         buildConfig true
     }
 
+    signingConfigs {
+        if (playUploadConfigured) {
+            playUpload {
+                storeFile file(playUploadConfig.storeFile)
+                storePassword playUploadConfig.storePassword
+                keyAlias playUploadConfig.keyAlias
+                keyPassword playUploadConfig.keyPassword
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (playUploadConfigured) {
+                signingConfig signingConfigs.playUpload
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
+    }
+}
+
+tasks.register("verifyPlayUploadSigning") {
+    group = "verification"
+    description = "Require the owner-provided upload key before creating a Play bundle."
+    doLast {
+        if (!playUploadConfigured) {
+            throw new GradleException("Set MM_PLAY_UPLOAD_KEYSTORE_FILE, MM_PLAY_UPLOAD_STORE_PASSWORD, MM_PLAY_UPLOAD_KEY_ALIAS and MM_PLAY_UPLOAD_KEY_PASSWORD to build a Play upload bundle.")
+        }
+        if (!file(playUploadConfig.storeFile).isFile()) {
+            throw new GradleException("MM_PLAY_UPLOAD_KEYSTORE_FILE does not point to a readable keystore file.")
+        }
+    }
+}
+
+tasks.configureEach { task ->
+    if (task.name == "bundleRelease") {
+        task.dependsOn("verifyPlayUploadSigning")
     }
 }

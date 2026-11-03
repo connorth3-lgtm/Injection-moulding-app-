@@ -21,10 +21,25 @@ native TextToSpeech service and a foreground media-playback service.
 
 ## Build and install
 
-From a machine with Android Studio or Gradle and Android SDK 35:
+From a machine with Android Studio or Gradle and Android SDK 36:
 
     gradle -p android assembleDebug
     adb install -r android/app/build/outputs/apk/debug/app-debug.apk
+
+The debug APK is for device testing. It is not the Play upload.
+
+## Private Google Play internal test
+
+The app uses package name `org.mouldmaster.academy`, version name `2026.11.03`,
+and version code `20261103`. See [PLAY_INTERNAL_TESTING.md](PLAY_INTERNAL_TESTING.md)
+for the private internal-testing workflow. It builds a signed Android App Bundle
+only when the owner-provided upload-key secrets are configured; it does not publish
+to Google Play automatically.
+
+The generated Play bundle uses the upload key. Keep the keystore outside the repository
+and back it up securely. The debug APK currently distributed by CI is signed with its
+debug key, so a Play-installed build will not update that APK in place. Export learner
+progress from the app before switching, then import it after installing the Play test.
 
 Open the app once online. It loads the current governed preview and retains the WebView's
 normal origin/service-worker cache for subsequent offline starts where supported. On Android
