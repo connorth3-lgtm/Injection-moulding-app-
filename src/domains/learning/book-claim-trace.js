@@ -48,7 +48,7 @@ function buildTrace(reviews,resolutions){
  claims=new Map();sources=new Map();
  for(const s of window.MMBook?.getManifest?.()?.sourceSeeds||[])addSource(s);
  const finalIndex=window.MMBook?.getClaimEvidenceReference?.();
- if(finalIndex?.status!=='governed-reader-claim-evidence-index'||finalIndex?.chapterCount!==46||finalIndex?.claimCount!==137||finalIndex?.sourceCount!==52)throw new Error('Complete claim trace final evidence index is unavailable or invalid');
+ if(finalIndex?.status!=='governed-reader-claim-evidence-index'||finalIndex?.chapterCount!==46||finalIndex?.claimCount!==137||finalIndex?.sourceCount!==58)throw new Error('Complete claim trace final evidence index is unavailable or invalid');
  for(const s of finalIndex.sourceSeeds||[])addSource(s);
  const chapterIds=new Set();
  for(const ledger of reviews){
