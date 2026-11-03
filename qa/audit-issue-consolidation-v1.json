@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.03.1",
+  "release": "2026.11.03.2",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "f270ac25db08f4729f93e7447d5201d43489f7aa",
-  "scope": "Release 2026.11.03.1 exact-source candidate f270ac25db08f4729f93e7447d5201d43489f7aa adds the Book chapter, materials guide and worked-example finder updates. The candidate passed the exact-source automated preview gates; no human or external validation is inferred.",
-  "approvalBoundary": "Release 2026.11.03.1 exact candidate producer run 41594378980 created artifact 13210979022 for source f270ac25db08f4729f93e7447d5201d43489f7aa, with runtime fingerprint sha256:bb58e75d141efd77c6388231ab7cef8ae4737c00393176228583b748a674bbf2 and digest sha256:581b205bca0f0b0081580bbd126a3dcfa6a17632af067a8521b2475ec7d5326f. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": null,
+  "scope": "Release 2026.11.03.2 removes repeated Book preview and assurance notices while retaining the central Book accuracy boundary. The exact-source candidate has not yet been retained; no human or external validation is inferred.",
+  "approvalBoundary": "Release 2026.11.03.2 has no retained exact-source candidate yet. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -45,8 +45,8 @@
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
   "lastReviewedDate": "2026-11-03",
   "previousVerifiedCandidate": {
-    "release": "2026.11.02.2",
-    "sourceSha": "17ae5aa2e73929aabd9f3dc1fd0415867e27e6be",
-    "runtimeFingerprint": "sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913"
+    "release": "2026.11.03.1",
+    "sourceSha": "f270ac25db08f4729f93e7447d5201d43489f7aa",
+    "runtimeFingerprint": "sha256:bb58e75d141efd77c6388231ab7cef8ae4737c00393176228583b748a674bbf2"
   }
 }

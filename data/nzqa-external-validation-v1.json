@@ -1,17 +1,12 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.03.1",
+  "release": "2026.11.03.2",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.03.1.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.03.2.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "candidate": {
-    "release": "2026.11.03.1",
-    "sourceSha": "f270ac25db08f4729f93e7447d5201d43489f7aa",
-    "runtimeFingerprint": "sha256:bb58e75d141efd77c6388231ab7cef8ae4737c00393176228583b748a674bbf2"
-  },
-  "boundary": "Release 2026.11.03.1 technical candidate f270ac25db08f4729f93e7447d5201d43489f7aa does not establish any of NZQA/provider G1\u2013G8 external gates or assessment/accreditation authority.",
+  "boundary": "Release 2026.11.03.2 candidate has not yet been retained and does not establish any NZQA/provider G1\u2013G8 external gates or assessment/accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
