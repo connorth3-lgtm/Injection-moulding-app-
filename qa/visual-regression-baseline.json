@@ -41,7 +41,7 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Technical comparison baseline for release 2026.11.03.1. It records the intended Book chapter, materials guide, contents finder and listening changes at the exact web runtime source listed below. The baseline comparison is technical regression evidence only; it does not claim independent human visual, accessibility, device, Book SME, provider, learner or production validation. Those external evidence streams remain HOLD.",
+  "policy": "Technical comparison baseline for release 2026.11.03.1. It records the intended Book chapter, materials guide, contents finder and listening changes at the exact web runtime source listed below. The baseline comparison is technical regression evidence only and is not visual-owner approval; it does not claim independent human visual, accessibility, device, Book SME, provider, learner or production validation. Those external evidence streams remain HOLD.",
   "ref": "visual-baseline/2026.11.03.1",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
