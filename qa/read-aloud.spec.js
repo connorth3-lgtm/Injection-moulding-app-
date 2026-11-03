@@ -475,7 +475,7 @@ test('Read Aloud supported-path controls execute the exact product runtime in a 
   await expect.poll(()=>page.evaluate(()=>window.MMReadAloud?.supported===true)).toBeTruthy();
   const host=page.locator('.mm-read-aloud');
   await expect(host).toBeVisible();
-  await expect(host).toHaveAttribute('data-version','2026.11.03.1');
+  await expect(host).toHaveAttribute('data-version','2026.11.03.2');
   await host.locator('details').evaluate(el=>{el.open=true;});
 
   const visibilityCheck=await page.evaluate(() => {

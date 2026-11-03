@@ -24,6 +24,13 @@ def replace_once(text: str, pattern: str, replacement: str, label: str) -> str:
     return out
 
 
+def replace_all(text: str, pattern: str, replacement: str, label: str, *, minimum: int = 1) -> str:
+    out, count = re.subn(pattern, replacement, text, flags=re.M)
+    if count < minimum:
+        raise SystemExit(f"Could not synchronise {label}: expected at least {minimum} match(es), found {count}")
+    return out
+
+
 def desired_files() -> dict[Path, str]:
     version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
     web_release = str(version.get("web_release", ""))
@@ -90,13 +97,7 @@ def desired_files() -> dict[Path, str]:
 
     read_aloud_qa_path = ROOT / "qa" / "read-aloud.spec.js"
     read_aloud_qa = read_aloud_qa_path.read_text(encoding="utf-8")
-    read_aloud_qa = replace_once(
-        read_aloud_qa,
-        r"(^\s*await expect\(host\)\.toHaveAttribute\('data-version',')[^']+('\);$)",
-        rf"\g<1>{web_release}\g<2>",
-        "Read Aloud host test version",
-    )
-    read_aloud_qa = replace_once(
+    read_aloud_qa = replace_all(
         read_aloud_qa,
         r"(^\s*await expect\(host\)\.toHaveAttribute\('data-version',')[^']+('\);$)",
         rf"\g<1>{web_release}\g<2>",

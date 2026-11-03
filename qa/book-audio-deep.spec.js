@@ -86,10 +86,8 @@ test('first-read Book keeps one Book-level assurance boundary without repeating 
   await page.locator('#mmBookView .mm-book-toc [data-mm-book-reader-chapter-open="r06"]').click();
   const reader=page.locator('#mmBookView [data-mm-book-reader]');
   await expect(reader.locator('.mm-book-reader-assurance')).toHaveCount(0);
-  const original=reader.locator('.mm-book-full-source-inline').first();
-  await expect(original).toContainText('Read all original source sections');
-  await original.locator('summary').first().click();
-  await expect(original).toContainText('What transfer means');
+  await expect(reader.locator('.mm-book-full-source-inline')).toHaveCount(0);
+  await expect(reader.locator('[data-mm-book-reader-module="vp-transfer"] h4').filter({hasText:'Transfer is a control transition'})).toHaveCount(1);
 });
 
 test('switching between guided and complete reader modes keeps source prose and module evidence unchanged',async({page})=>{
