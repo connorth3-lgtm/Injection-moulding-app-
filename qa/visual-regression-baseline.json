@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.02.2",
-  "commit": "171dce34a94ebfcd88ed40c03f8e1c17485f57fc",
+  "release": "2026.11.03.1",
+  "commit": "71895bee35082cb1dfefb6189b5dd03f223ae701",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Historical owner visual approvals remain recorded for earlier immutable baselines. For the 2026.11.02.2 technical preview, the unchanged screenshot comparison ref is inherited from the immediately prior baseline because the Read Aloud notification fix restores the approved visible player copy. The exact ref is visual-baseline/2026.11.02.2 at 171dce34a94ebfcd88ed40c03f8e1c17485f57fc; no visual-owner approval is inferred from this technical comparison. No masking or skipped surfaces are permitted; human/device, Book SME, provider, signing and production evidence remain HOLD.",
-  "ref": "visual-baseline/2026.11.02.2",
+  "policy": "Technical comparison baseline for release 2026.11.03.1. It records the intended Book chapter, materials guide, contents finder and listening changes at the exact web runtime source listed below. The baseline comparison is technical regression evidence only; it does not claim independent human visual, accessibility, device, Book SME, provider, learner or production validation. Those external evidence streams remain HOLD.",
+  "ref": "visual-baseline/2026.11.03.1",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "171dce34a94ebfcd88ed40c03f8e1c17485f57fc"
+    "referenceSourceSha": "71895bee35082cb1dfefb6189b5dd03f223ae701"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",
