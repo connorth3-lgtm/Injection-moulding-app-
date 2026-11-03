@@ -32,7 +32,7 @@ test('Book distinguishes source evidence review from independent human validatio
 
   const readerButtons=view.locator('.mm-book-toc > li > button[data-mm-book-reader-chapter-open]');
   const moduleButtons=view.locator('[data-mm-book-chapter]');
-  await expect(readerButtons).toHaveCount(20);
+  await expect(readerButtons).toHaveCount(21);
   await expect(moduleButtons).toHaveCount(46);
   await expect(moduleButtons.first()).toContainText('Source evidence reviewed');
   await expect(view).not.toContainText(/\bEvidence verified\b/i);
@@ -242,38 +242,26 @@ test('Material Atlas discloses comparison restrictions, sources and unknown supp
 });
 
 
-test('Book exposes every consolidated weld-line source section on demand without crowding first read',async({page})=>{
+test('Book keeps consolidated weld-line detail in the guided read and full source module',async({page})=>{
   await openApp(page);
   await page.evaluate(()=>window.MMBook.openReaderChapter('r15'));
   const chapter=page.locator('[data-mm-book-reader-chapter="r15"]');
   await expect(chapter).toBeVisible();
-  // The original module titles are not duplicated in the linear first read.
-  await expect(chapter.locator('[data-mm-book-reader-module="weld-lines"] h4',{hasText:'How they form'})).toHaveCount(0);
-  const notes=chapter.locator('details.mm-book-reader-notes');
-  const source=notes.locator('[data-mm-book-omitted-module="weld-lines"]');
-  await expect(source).toHaveCount(1);
-  // A closed <details> still renders its <summary>. Check the disclosure
-  // state rather than visibility of the container (which differs on WebKit).
-  await expect(source).not.toHaveAttribute('open','');
-  if((await notes.getAttribute('open'))===null)await notes.locator(':scope > summary').click();
-  await expect(notes).toHaveAttribute('open','');
-  await source.locator(':scope > summary').click();
-  await expect(source).toHaveAttribute('open','');
-  await expect(source.locator('section h5')).toHaveCount(6);
-  await expect(source).toContainText('How they form');
-  await expect(source).toContainText('Formation begins with divided flow');
-  await expect(source).toContainText('independent human SME approval is still pending');
+  const readerModule=chapter.locator('[data-mm-book-reader-module="weld-lines"]');
+  await expect(readerModule).toBeVisible();
+  await expect(readerModule.locator(':scope > section')).toHaveCount(9);
+  await expect(readerModule).toContainText('A weld line records a flow-front meeting event');
+  await expect(readerModule).toContainText('Flow-front temperature is only part of the story');
+  await expect(readerModule).toContainText('Use testing that matches the real product risk');
+  await expect(readerModule).toContainText('Gas and venting belong in the diagnosis');
 
-  // The optional wording comes from the same governed original module.
-  const originalHeading=await source.locator('section h5').first().textContent();
-  const originalBody=await source.locator('section').first().innerText();
+  const headings=await readerModule.locator(':scope > section > h4').allTextContents();
+  expect(headings).toHaveLength(9);
   await page.evaluate(()=>window.MMBook.openChapter('weld-lines'));
   const full=page.locator('[data-mm-book-verified-chapter="weld-lines"]');
   await expect(full).toBeVisible();
-  const matched=full.locator('section').filter({has:page.locator('h3',{hasText:originalHeading})}).first();
-  await expect(matched).toBeVisible();
-  expect(await matched.innerText()).toBe(originalBody);
-});
+  for(const heading of headings)await expect(full).toContainText(heading);
+});;
 
 test('Material Atlas final keyboard pagination leaves focus on a newly loaded record',async({page})=>{
   await openApp(page);
