@@ -337,7 +337,7 @@ for reader in readers:
         governed.update(actual_claim_evidence[module_id])
     need(governed, f'reader chapter has no governed evidence: {reader.get("id")}')
 need("for(const id of claimEvidenceIds(ch.id))ids.add(id)" in book_runtime, 'reader chapter references must include every module final claim-evidence id')
-need("ids=[...new Set([...(chapter.sourceIds||[]),...claimEvidenceIds(chapter.id)])]" in book_runtime, 'module evidence anchors must include final claim evidence')
+need("ids=[...new Set([...(chapter.sourceIds||[]),...(chapter.propertyGuide?.sourceIds||[]),...claimEvidenceIds(chapter.id)])]" in book_runtime, 'module evidence anchors must include final claim evidence')
 for marker in ('EVIDENCE_IDENTITIES','BASF-INJECTION-PROBLEMS','NIST-SEMATECH-DOE','NIST-SEMATECH-CAPABILITY','PARIZS-2023-IN-MOLD-SENSORS-WORKED','getEvidenceIdentity'):
     need(marker in book_runtime, f'evidence alias/family normalization missing from Book runtime: {marker}')
 need('getEvidenceIdentity' in claim_trace_runtime and 'Evidence family:' in claim_trace_runtime, 'complete claim trace must explain evidence-family relationships')
