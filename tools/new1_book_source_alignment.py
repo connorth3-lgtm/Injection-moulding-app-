@@ -41,8 +41,9 @@ SOURCE_DECLARATION_STATES = frozenset((
     "published-confirmed", "active", "current-public-manufacturer-document",
     "current-public-manufacturer-page", "current-public-training-outline",
     "peer-reviewed-2022", "public-manufacturer-document-version-8-2025",
-    "current-public-processing-data-sheet-02-2026", "published",
-    "active-listed",
+    "current-public-processing-data-sheet-02-2026", "current-public-manufacturer-design-guide",
+    "published", "published-under-review", "active-listed",
+    "peer-reviewed-2021", "peer-reviewed-2025", "peer-reviewed-fetched",
 ))
 
 
