@@ -66,7 +66,7 @@ For an unsigned portable build, a hostile actor able to replace the executable a
 Electron, electron-builder and their transitive packages are third-party code.
 
 Controls:
-- Electron and the stable portable/NSIS electron-builder dependency are exact-pinned;
+- Electron 45.2.1 and the stable portable/NSIS electron-builder 26.18.0 dependencies are exact-pinned;
 - `package-lock.json` locks their transitive versions, registry URLs and integrity hashes;
 - build CI uses `npm ci` rather than unconstrained install/update;
 - the Store workflow invokes the exact MSIX-capable `electron-builder@27.0.0-alpha.11` prerelease because MSIX is not available in the pinned v26 stable line;
