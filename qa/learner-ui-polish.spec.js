@@ -436,7 +436,7 @@ test('Book Materials chapter exposes the complete governed material datasets wit
   await page.evaluate(()=>window.MMBook.load());
   await page.evaluate(()=>window.MMBook.open());
   // Modules are intentionally inside the progressively disclosed 46-module index.
-  const index=page.locator('[data-mm-book-contents] details.mm-book-governed-index');
+  const index=page.locator('[data-mm-book-contents] details.mm-book-governed-index:not(.mm-book-case-finder)');
   await expect(index.locator('summary')).toBeVisible();
   if(!(await index.evaluate(el=>el.open)))await index.locator('summary').click();
   await expect(page.locator('[data-mm-book-chapter="material-families"]')).toBeVisible();
