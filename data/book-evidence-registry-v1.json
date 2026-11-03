@@ -214,6 +214,296 @@
       "scope": "Methods for determining water content in plastic powders, granules and finished articles; this is a different measurement from water absorption under ISO 62.",
       "checked": "2026-11-03",
       "currentState": "published-confirmed"
+    },
+    {
+      "id": "ISO-11443-2021",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Determination of the fluidity of plastics using capillary and slit-die rheometers",
+      "url": "https://www.iso.org/standard/80003.html",
+      "scope": "Capillary and slit-die rheometer methods for determining plastic fluidity under specified geometry and test conditions; apparent viscosity and flow response depend on stated shear and temperature conditions.",
+      "checked": "2026-11-03",
+      "currentState": "published-confirmed"
+    },
+    {
+      "id": "ISO-604-2002",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Determination of compressive properties",
+      "url": "https://www.iso.org/standard/31261.html",
+      "scope": "Method for determining compressive properties of plastic specimens under defined pretreatment, temperature, humidity and test conditions.",
+      "checked": "2026-11-03",
+      "currentState": "published-confirmed"
+    },
+    {
+      "id": "ISO-868-2003",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics and ebonite — Determination of indentation hardness by means of a durometer (Shore hardness)",
+      "url": "https://www.iso.org/standard/34804.html",
+      "scope": "Durometer method for Shore indentation hardness using specified hardness scales and conditions; the result depends on specimen and method details.",
+      "checked": "2026-11-03",
+      "currentState": "published-confirmed"
+    },
+    {
+      "id": "ISO-899-1-2017",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Determination of creep behaviour — Part 1: Tensile creep",
+      "url": "https://www.iso.org/standard/72819.html",
+      "scope": "Method for determining tensile creep of standard plastic specimens under specified pretreatment, temperature, humidity and load conditions.",
+      "checked": "2026-11-03",
+      "currentState": "published-confirmed"
+    },
+    {
+      "id": "ISO-899-2-2024",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Determination of creep behaviour — Part 2: Flexural creep by three-point loading",
+      "url": "https://www.iso.org/standard/84391.html",
+      "scope": "Method for determining flexural creep of plastic specimens in three-point loading under specified pretreatment, temperature, humidity and load conditions.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-6721-1-2019",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Determination of dynamic mechanical properties — Part 1: General principles",
+      "url": "https://www.iso.org/standard/73142.html",
+      "scope": "General principles for determining dynamic mechanical properties of rigid plastics in the linear viscoelastic region; test mode, frequency, temperature and specimen define the result.",
+      "checked": "2026-11-03",
+      "currentState": "published-confirmed"
+    },
+    {
+      "id": "ISO-13003-2003",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Fibre-reinforced plastics — Determination of fatigue properties under cyclic loading conditions",
+      "url": "https://www.iso.org/standard/32190.html",
+      "scope": "General procedures for fatigue testing of fibre-reinforced plastic composites under constant-amplitude, constant-frequency cyclic loading; this scope is for reinforced composites.",
+      "checked": "2026-11-03",
+      "currentState": "published-confirmed"
+    },
+    {
+      "id": "ISO-11357-2-2020",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Differential scanning calorimetry (DSC) — Part 2: Determination of glass transition temperature and step height",
+      "url": "https://www.iso.org/standard/77310.html",
+      "scope": "DSC methods for determining glass-transition temperature and step height in amorphous and partially crystalline plastics under specified scan and sample conditions.",
+      "checked": "2026-11-03",
+      "currentState": "published-confirmed"
+    },
+    {
+      "id": "ISO-11357-3-2025",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Differential scanning calorimetry (DSC) — Part 3: Determination of temperature and enthalpy of melting and crystallization",
+      "url": "https://www.iso.org/standard/88106.html",
+      "scope": "Conventional DSC method for determining melting and crystallization temperatures and enthalpies of crystalline or partially crystalline plastics.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-11357-4-2021",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Differential scanning calorimetry (DSC) — Part 4: Determination of specific heat capacity",
+      "url": "https://www.iso.org/standard/79998.html",
+      "scope": "DSC methods for determining specific heat capacity of plastics; calibration, temperature range and sample history define the result.",
+      "checked": "2026-11-03",
+      "currentState": "published-under-review"
+    },
+    {
+      "id": "ISO-306-2022",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Thermoplastic materials — Determination of Vicat softening temperature (VST)",
+      "url": "https://www.iso.org/standard/82176.html",
+      "scope": "Methods for determining Vicat softening temperature of thermoplastic materials using specified test forces and heating rates.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-11359-2-2021",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Thermomechanical analysis (TMA) — Part 2: Determination of coefficient of linear thermal expansion and glass transition temperature",
+      "url": "https://www.iso.org/standard/81835.html",
+      "scope": "Thermomechanical-analysis method for determining linear thermal expansion of solid plastics and, under the method, glass-transition temperature.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-22007-2-2022",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Determination of thermal conductivity and thermal diffusivity — Part 2: Transient plane heat source (hot disc) method",
+      "url": "https://www.iso.org/standard/81836.html",
+      "scope": "Transient plane heat source method for determining thermal conductivity and thermal diffusivity of plastics under defined specimen and test conditions.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-11358-1-2022",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Thermogravimetry (TG) of polymers — Part 1: General principles",
+      "url": "https://www.iso.org/standard/79999.html",
+      "scope": "Thermogravimetric methods for investigating polymer mass changes, including decomposition and volatile, additive or filler fractions under stated atmosphere and heating conditions.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-175-2010",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Methods of test for the determination of the effects of immersion in liquid chemicals",
+      "url": "https://www.iso.org/standard/55483.html",
+      "scope": "Methods for exposing plastic specimens without external restraint to liquid chemicals and determining resulting changes; environmental stress cracking is treated separately in ISO 22088.",
+      "checked": "2026-11-03",
+      "currentState": "published-confirmed"
+    },
+    {
+      "id": "ISO-22088-3-2006",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Determination of resistance to environmental stress cracking (ESC) — Part 3: Bent strip method",
+      "url": "https://www.iso.org/standard/34874.html",
+      "scope": "Method for assessing environmental stress-cracking resistance of thermoplastics held at fixed flexural strain in the presence of chemical agents.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "IEC-62631-3-1-2016",
+      "type": "standard",
+      "issuer": "IEC",
+      "title": "Dielectric and resistive properties of solid insulating materials — Part 3-1: Determination of resistive properties (DC methods) — Volume resistance and volume resistivity",
+      "url": "https://webstore.iec.ch/en/publication/24397",
+      "scope": "DC method for determining volume resistance and volume resistivity of solid electrical insulating materials; conditioning, electrodes and specimen geometry affect the result.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "IEC-62631-3-2-2023",
+      "type": "standard",
+      "issuer": "IEC",
+      "title": "Dielectric and resistive properties of solid insulating materials — Part 3-2: Determination of resistive properties (DC methods) — Surface resistance and surface resistivity",
+      "url": "https://webstore.iec.ch/en/publication/62315",
+      "scope": "DC method for determining surface resistance and surface resistivity of solid electrical insulating materials under specified test conditions.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "IEC-60243-1-2013",
+      "type": "standard",
+      "issuer": "IEC",
+      "title": "Electric strength of insulating materials — Test methods — Part 1: Tests at power frequencies",
+      "url": "https://webstore.iec.ch/en/publication/1101",
+      "scope": "Methods for determining short-time electric strength of solid insulating materials at power frequencies under specified specimen and test conditions.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-3915-2022",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Measurement of resistivity of conductive plastics",
+      "url": "https://www.iso.org/standard/81838.html",
+      "scope": "Method for measuring electrical resistivity of conductive plastics; test arrangement and the stated surface-conduction context affect interpretation.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-10840-2026",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Specifications and guidance for the use of standard fire tests",
+      "url": "https://www.iso.org/standard/90471.html",
+      "scope": "Guidance for selecting and interpreting standard fire tests for plastics and products in relation to intended use and the reaction-to-fire characteristics measured.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-13927-2023",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Simple heat release test using a conical radiant heater and a thermopile detector",
+      "url": "https://www.iso.org/standard/82203.html",
+      "scope": "Method for assessing heat-release rate of essentially flat products exposed horizontally to controlled radiant heating with an external igniter; ignition and sustained flaming are also measured.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-4892-2-2013",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Methods of exposure to laboratory light sources — Part 2: Xenon-arc lamps",
+      "url": "https://www.iso.org/standard/55481.html",
+      "scope": "Laboratory xenon-arc exposure method with moisture for reproducing selected weathering effects; exposure conditions do not directly convert to field service life.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-4892-3-2024",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Methods of exposure to laboratory light sources — Part 3: Fluorescent UV lamps",
+      "url": "https://www.iso.org/standard/83802.html",
+      "scope": "Laboratory exposure of plastic specimens to fluorescent UV radiation, heat and water to simulate selected weathering effects under defined conditions.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-13468-1-2019",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Determination of the total luminous transmittance of transparent materials — Part 1: Single-beam instrument",
+      "url": "https://www.iso.org/standard/77312.html",
+      "scope": "Method for determining visible-range total luminous transmittance of planar, transparent and substantially colourless plastics using a specified single-beam instrument.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-14782-2021",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Determination of haze for transparent materials",
+      "url": "https://www.iso.org/standard/81840.html",
+      "scope": "Method for measuring haze, a wide-angle light-scattering property, in transparent and substantially colourless plastics.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-16014-1-2019",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Determination of average molecular weight and molecular weight distribution of polymers using size-exclusion chromatography — Part 1: General principles",
+      "url": "https://www.iso.org/standard/74995.html",
+      "scope": "General principles for determining polymer molecular-weight averages and distribution using size-exclusion chromatography; results depend on calibration or absolute-detection method.",
+      "checked": "2026-11-03",
+      "currentState": "published-confirmed"
+    },
+    {
+      "id": "ISO-3451-1-2026",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plastics — Determination of ash — Part 1: General methods",
+      "url": "https://www.iso.org/standard/91099.html",
+      "scope": "General methods for determining ash in plastics; residue can help assess inorganic content but resin-specific method and formulation determine what it represents.",
+      "checked": "2026-11-03",
+      "currentState": "published"
+    },
+    {
+      "id": "ISO-7148-2-2026",
+      "type": "standard",
+      "issuer": "ISO",
+      "title": "Plain bearings — Testing of the tribological behaviour of bearing materials — Part 2: Testing of polymer-based bearing materials",
+      "url": "https://www.iso.org/standard/88052.html",
+      "scope": "Tribological tests for polymer-based plain-bearing material pairs under specified load, sliding velocity, temperature and lubrication; results apply to defined bearing conditions.",
+      "checked": "2026-11-03",
+      "currentState": "published"
     }
   ]
 }

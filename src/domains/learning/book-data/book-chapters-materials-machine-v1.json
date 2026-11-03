@@ -211,20 +211,49 @@
         "schema": 1,
         "summary": "Material property guide",
         "title": "Quick guide to common material properties",
-        "intro": "Each value answers one test question under stated conditions. Compare the exact grade, method, specimen, conditioning, direction, temperature, rate or load, and units where reported. A datasheet value alone does not certify a moulded part.",
+        "intro": "This guide covers the main measured property families used to understand and compare injection-moulding plastics; it is broad, not every specialist polymer test. Compare the exact grade, method, specimen, conditioning, direction, temperature, rate or load, and units. A datasheet value alone does not certify a moulded part.",
         "sourceIds": [
           "ISO-1133-1-2022",
+          "ISO-11443-2021",
           "ISO-527-1-2019",
           "ISO-527-2-2025",
           "ISO-178-2019",
+          "ISO-604-2002",
           "ISO-179-1-2026",
+          "ISO-868-2003",
+          "ISO-6721-1-2019",
+          "ISO-899-1-2017",
+          "ISO-899-2-2024",
+          "ISO-13003-2003",
           "ISO-11357-1-2023",
+          "ISO-11357-2-2020",
+          "ISO-11357-3-2025",
+          "ISO-11357-4-2021",
           "ISO-75-1-2020",
           "ISO-75-2-2013",
+          "ISO-306-2022",
+          "ISO-11359-2-2021",
+          "ISO-22007-2-2022",
+          "ISO-11358-1-2022",
           "ISO-294-4-2018",
           "ISO-1183-1-2025",
           "ISO-62-2008",
-          "ISO-15512-2019"
+          "ISO-15512-2019",
+          "ISO-175-2010",
+          "ISO-22088-3-2006",
+          "IEC-62631-3-1-2016",
+          "IEC-62631-3-2-2023",
+          "IEC-60243-1-2013",
+          "ISO-3915-2022",
+          "ISO-10840-2026",
+          "ISO-13927-2023",
+          "ISO-4892-2-2013",
+          "ISO-4892-3-2024",
+          "ISO-13468-1-2019",
+          "ISO-14782-2021",
+          "ISO-16014-1-2019",
+          "ISO-3451-1-2026",
+          "ISO-7148-2-2026"
         ],
         "rows": [
           {
@@ -234,6 +263,15 @@
             "standard": "ISO 1133-1:2022",
             "sourceIds": [
               "ISO-1133-1-2022"
+            ]
+          },
+          {
+            "property": "Melt viscosity and shear response",
+            "meaning": "Capillary or slit-die tests show how melt flow resistance changes across defined shear conditions; this is a fuller flow curve than a single MFR/MVR index.",
+            "readAs": "Keep melt temperature, shear rate, die geometry and conditioning with the curve. It helps compare melt behaviour but does not predict a specific cavity fill by itself.",
+            "standard": "ISO 11443:2021",
+            "sourceIds": [
+              "ISO-11443-2021"
             ]
           },
           {
@@ -256,6 +294,15 @@
             ]
           },
           {
+            "property": "Compression strength and modulus",
+            "meaning": "A specimen is squeezed to measure its compressive stress-strain response.",
+            "readAs": "Use the test direction, specimen shape, conditioning, temperature and rate. Compression results answer a different loading question from tensile or flexural values.",
+            "standard": "ISO 604:2002",
+            "sourceIds": [
+              "ISO-604-2002"
+            ]
+          },
+          {
             "property": "Impact strength (Charpy)",
             "meaning": "A rapid impact test records how a defined plastic specimen responds to a blow.",
             "readAs": "Notch, specimen configuration, conditioning and temperature affect the result. It is not a universal toughness score or a complete prediction of part impact performance.",
@@ -265,12 +312,52 @@
             ]
           },
           {
-            "property": "Thermal transitions (DSC)",
-            "meaning": "Differential scanning calorimetry records heat-flow events in the tested sample, including glass-transition, melting and crystallisation events where applicable.",
-            "readAs": "Interpret the sample, scan and method. These events are not a temperature map of the moulded part or a single safe processing or service limit.",
-            "standard": "ISO 11357-1:2023",
+            "property": "Indentation hardness (Shore)",
+            "meaning": "A durometer measures resistance to indentation using a stated Shore scale, such as A or D.",
+            "readAs": "Scale, specimen thickness, surface, dwell time and temperature matter. A Shore number is not a direct conversion to tensile strength or wear life.",
+            "standard": "ISO 868:2003",
             "sourceIds": [
-              "ISO-11357-1-2023"
+              "ISO-868-2003"
+            ]
+          },
+          {
+            "property": "Viscoelastic response (dynamic mechanical analysis)",
+            "meaning": "Dynamic mechanical tests measure a material's elastic and energy-losing response as temperature or test frequency changes.",
+            "readAs": "Storage modulus, loss modulus and tan delta are tied to test mode, frequency, temperature and specimen. They do not give one universal stiffness value for every part condition.",
+            "standard": "ISO 6721-1:2019",
+            "sourceIds": [
+              "ISO-6721-1-2019"
+            ]
+          },
+          {
+            "property": "Creep under sustained load",
+            "meaning": "Creep measures how a plastic specimen continues to deform over time while a load is held; tensile and flexural tests examine different loading modes.",
+            "readAs": "Compare only at similar stress, temperature, humidity, time and specimen conditions. Short-term strength cannot be substituted for long-term deformation.",
+            "standard": "ISO 899-1:2017; ISO 899-2:2024",
+            "sourceIds": [
+              "ISO-899-1-2017",
+              "ISO-899-2-2024"
+            ]
+          },
+          {
+            "property": "Fatigue under repeated loading",
+            "meaning": "Fatigue testing studies damage or failure under repeated loading cycles; the cited method is for fibre-reinforced plastic composites.",
+            "readAs": "Stress ratio, direction, frequency, temperature, specimen and failure definition matter. A fatigue result for one reinforcement and loading setup is not a life guarantee for another grade or part.",
+            "standard": "ISO 13003:2003",
+            "sourceIds": [
+              "ISO-13003-2003"
+            ]
+          },
+          {
+            "property": "Thermal transitions and specific heat (DSC)",
+            "meaning": "Differential scanning calorimetry measures heat-flow changes used to identify glass-transition behaviour, melting and crystallisation temperatures and enthalpies, and specific heat capacity.",
+            "readAs": "Sample history, heating or cooling rate, scan cycle, atmosphere and method affect interpretation. These events are not a mould temperature map or a single safe processing or service limit.",
+            "standard": "ISO 11357-1:2023; ISO 11357-2:2020; ISO 11357-3:2025; ISO 11357-4:2021",
+            "sourceIds": [
+              "ISO-11357-1-2023",
+              "ISO-11357-2-2020",
+              "ISO-11357-3-2025",
+              "ISO-11357-4-2021"
             ]
           },
           {
@@ -281,6 +368,42 @@
             "sourceIds": [
               "ISO-75-1-2020",
               "ISO-75-2-2013"
+            ]
+          },
+          {
+            "property": "Vicat softening temperature",
+            "meaning": "Vicat reports the temperature at which a loaded needle reaches a specified penetration in a thermoplastic specimen during heating.",
+            "readAs": "The chosen force and heating rate define the result. Vicat and HDT are different tests and neither by itself guarantees a continuous-use temperature.",
+            "standard": "ISO 306:2022",
+            "sourceIds": [
+              "ISO-306-2022"
+            ]
+          },
+          {
+            "property": "Thermal expansion (coefficient of linear expansion)",
+            "meaning": "The coefficient describes how specimen length changes with temperature over a stated range.",
+            "readAs": "Direction, temperature range, test load and reinforcement orientation matter. Expansion measured on a standard specimen may not match every location in an anisotropic moulded part.",
+            "standard": "ISO 11359-2:2021",
+            "sourceIds": [
+              "ISO-11359-2-2021"
+            ]
+          },
+          {
+            "property": "Thermal conductivity and diffusivity",
+            "meaning": "These measurements describe how readily heat moves through a material and how quickly temperature changes spread through it.",
+            "readAs": "Method, temperature, specimen direction, fillers and fibre orientation matter. Material values alone do not determine mould cooling time, which also depends on part geometry, tool and contact conditions.",
+            "standard": "ISO 22007-2:2022",
+            "sourceIds": [
+              "ISO-22007-2-2022"
+            ]
+          },
+          {
+            "property": "Thermal decomposition and mass loss (TGA)",
+            "meaning": "Thermogravimetry tracks specimen mass as temperature or time changes under a stated atmosphere; it can reveal mass-loss steps and residual ash.",
+            "readAs": "Atmosphere, heating rate and sample preparation change the trace. A decomposition onset is not a recommended barrel setpoint or guaranteed processing limit.",
+            "standard": "ISO 11358-1:2022",
+            "sourceIds": [
+              "ISO-11358-1-2022"
             ]
           },
           {
@@ -309,6 +432,93 @@
             "sourceIds": [
               "ISO-62-2008",
               "ISO-15512-2019"
+            ]
+          },
+          {
+            "property": "Chemical resistance",
+            "meaning": "Immersion tests expose an unstressed plastic specimen to a specified liquid and measure changes after exposure.",
+            "readAs": "Chemical identity, concentration, temperature, duration, stress state and measured property matter. A result for one liquid and specimen does not establish universal compatibility.",
+            "standard": "ISO 175:2010",
+            "sourceIds": [
+              "ISO-175-2010"
+            ]
+          },
+          {
+            "property": "Environmental stress cracking",
+            "meaning": "This test examines cracking of a thermoplastic held under strain while exposed to a chemical agent.",
+            "readAs": "Chemical agent, imposed strain, time, temperature and specimen preparation define the result. It is distinct from immersion testing of an unstressed specimen.",
+            "standard": "ISO 22088-3:2006",
+            "sourceIds": [
+              "ISO-22088-3-2006"
+            ]
+          },
+          {
+            "property": "Electrical resistivity and insulation",
+            "meaning": "Electrical tests may measure volume or surface resistivity, dielectric strength, or resistivity of conductive plastics.",
+            "readAs": "Separate conductive grades from insulating grades and keep voltage, frequency, electrodes, thickness, humidity and conditioning with results. These are different electrical behaviours, not one generic electrical rating.",
+            "standard": "IEC 62631-3-1:2016; IEC 62631-3-2:2023; IEC 60243-1:2013; ISO 3915:2022",
+            "sourceIds": [
+              "IEC-62631-3-1-2016",
+              "IEC-62631-3-2-2023",
+              "IEC-60243-1-2013",
+              "ISO-3915-2022"
+            ]
+          },
+          {
+            "property": "Fire response and heat release",
+            "meaning": "Fire tests measure specific behaviours such as ignition, burning progression or heat release under a defined apparatus and exposure.",
+            "readAs": "Test selection must match the product question. Specimen thickness, orientation, additives and conditioning affect results; a material test does not establish a product's regulatory approval or real-fire performance.",
+            "standard": "ISO 10840:2026; ISO 13927:2023",
+            "sourceIds": [
+              "ISO-10840-2026",
+              "ISO-13927-2023"
+            ]
+          },
+          {
+            "property": "UV exposure and weathering",
+            "meaning": "Laboratory xenon-arc and fluorescent-UV exposures reproduce selected light, heat and moisture stresses to compare changes in plastics.",
+            "readAs": "Lamp spectrum, exposure cycle, moisture, temperature and endpoint matter. Accelerated exposure does not convert directly into a guaranteed number of outdoor service years.",
+            "standard": "ISO 4892-2:2013; ISO 4892-3:2024",
+            "sourceIds": [
+              "ISO-4892-2-2013",
+              "ISO-4892-3-2024"
+            ]
+          },
+          {
+            "property": "Light transmission and haze",
+            "meaning": "Optical tests measure visible light passing through transparent plastics and the scattering that makes a specimen look hazy.",
+            "readAs": "Thickness, surface, colour, crystallinity and specimen preparation affect the result. These tests do not replace colour or appearance specifications for a finished component.",
+            "standard": "ISO 13468-1:2019; ISO 14782:2021",
+            "sourceIds": [
+              "ISO-13468-1-2019",
+              "ISO-14782-2021"
+            ]
+          },
+          {
+            "property": "Molecular weight and distribution (advanced)",
+            "meaning": "Size-exclusion chromatography estimates molecular-weight averages and the distribution of chain sizes in a polymer sample.",
+            "readAs": "Solvent, calibration, detector and sample preparation affect reported values. These advanced data are not normally a substitute for grade identity or measured melt-flow behaviour.",
+            "standard": "ISO 16014-1:2019",
+            "sourceIds": [
+              "ISO-16014-1-2019"
+            ]
+          },
+          {
+            "property": "Ash and inorganic filler content (advanced)",
+            "meaning": "Ash testing measures residue after a specified burn-off procedure and can help assess inorganic content in a plastic.",
+            "readAs": "The residue depends on resin chemistry, fillers, flame retardants and the selected procedure. Ash does not identify the filler or show fibre orientation in the moulded part.",
+            "standard": "ISO 3451-1:2026",
+            "sourceIds": [
+              "ISO-3451-1-2026"
+            ]
+          },
+          {
+            "property": "Friction and wear in polymer bearings (application-specific)",
+            "meaning": "Tribological tests measure friction and wear for defined polymer-bearing material pairs under specified sliding and lubrication conditions.",
+            "readAs": "The material pairing, load, speed, temperature, surface and lubrication define the result. Do not transfer bearing test values to unrelated moulded components.",
+            "standard": "ISO 7148-2:2026",
+            "sourceIds": [
+              "ISO-7148-2-2026"
             ]
           }
         ]
