@@ -27,7 +27,7 @@
       "book-sme-review-v1.json": "36130deb9c3ffb5299d120991d5c71cc0b8377fc",
       "book-qualification-resolution-all-v1.json": "c6da26d0c4ed3608b1a19b1551856c1d80c03a8f",
       "book-claim-resolution-high-risk-v1.json": "84d007a72c16b60e01ba392f9ca6e0f6d487cc85",
-      "book-authored-foundations-v1.json": "b8e5cf83bb5102709568e8670550e8d4d6d6b021",
+      "book-authored-foundations-v1.json": "c983d1e910089bde2ee4a679418803821bd3f765",
       "book-evidence-registry-v1.json": "02151763ce680f85a3e50152f3eeb2549e4d050c",
       "book-authored-remaining-v1.json": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "book-worked-engineering-cases-v1.json": "e66b2c6a77bfc2135b404013e3838fa537178e86",
@@ -37,7 +37,7 @@
       "material-catalog-v1.json": "7e32663e0f65ded1fd0ed3c1ae5a69c9cd0796fa",
       "book-engineering-diagrams-v1.json": "b4e0265cc5e78c861c68b4a6caefcddedfe3ba10",
       "book-reader-architecture-v2.json": "605d1b4fd92b03f1b11fc9a79f2cd2b8bbdd409e",
-      "book-editorial-expansion-review-v1.json": "cc6f047fc7410188081d51a15aa9de026c0b91ca",
+      "book-editorial-expansion-review-v1.json": "495b5fdccd3b57f58f68c836e91199e393f2ba39",
       "book-claim-evidence-reference-v1.json": "8b17e88c54b4456e8d0d5afa0a26f8ec0ebb3081",
       "book-claim-review-foundations-materials-machine-v1.json": "a3f8246ca5cbf5a099f32885953fadd722141785",
       "book-claim-review-process-tooling-v1.json": "525a946af21ea069ab7c3c003c5d7a6963d01707",
@@ -46,7 +46,7 @@
       "book-claim-review-high-risk-v1.json": "ba46cdf63811e4df1bd274df240756586380b406",
       "book-claim-resolution-high-risk-v2.json": "bbced00a8b699809fb1c4e55132d2265021bb278",
       "book-claim-resolution-all-v1.json": "1f3e6495947727f9ca73e3cf13b550aa24b38764",
-      "book-chapters-materials-machine-v1.json": "2d217de0b886b8087e4318ea9ccf91ce0c61b1f5"
+      "book-chapters-materials-machine-v1.json": "7daf6e64657992c5ea34d07e0007b713e20ca0f6"
     }
   },
   "canonicalAcademicEvidenceUrls": {
