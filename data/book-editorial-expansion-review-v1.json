@@ -4,8 +4,8 @@
   "release": "2026.10.22.2",
   "status": "repository-technical-review-complete",
   "reviewType": "editorial-expansion-claim-boundary-review",
-  "purpose": "Bind the reviewed chapter-depth revisions, reader consolidation and redundancy cleanup to the existing governed claim inventory without manufacturing independent human SME approval.",
-  "reviewBoundary": "Repository-controlled content and source review only. It records the editorial deletions and checks the remaining prose against existing governed claim scope; it is not independent human SME validation and cannot create machine-, mould-, grade-, product- or site-specific production authority.",
+  "purpose": "Bind chapter-depth additions, reader consolidation and redundancy cleanup to the existing governed claim inventory without implying independent human SME approval.",
+  "reviewBoundary": "Repository-controlled content and source review only. It records editorial deletions and additions, and checks new explanations against existing governed claim scopes; it is not independent human SME validation and cannot create machine-, mould-, grade-, product- or site-specific production authority.",
   "readerArchitecture": {
     "path": "data/book-reader-architecture-v2.json",
     "gitBlobSha1": "cbbb5cc9ee09fcfb010772213e4abe536b81b341",
@@ -125,6 +125,76 @@
       "authoredGitBlobSha1": "0393830e557ac7dcb30fcd428345a0a350239bdd"
     },
     {
+      "moduleId": "material-families",
+      "authoredPath": "data/book-chapters-materials-machine-v1.json",
+      "governedClaimIds": [
+        "material-families-01",
+        "material-families-02"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ],
+      "authoredGitBlobSha1": "0393830e557ac7dcb30fcd428345a0a350239bdd"
+    },
+    {
+      "moduleId": "fillers-additives",
+      "authoredPath": "data/book-chapters-materials-machine-v1.json",
+      "governedClaimIds": [
+        "fillers-additives-01",
+        "fillers-additives-02"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ],
+      "authoredGitBlobSha1": "0393830e557ac7dcb30fcd428345a0a350239bdd"
+    },
+    {
+      "moduleId": "fibre-orientation",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
+      "governedClaimIds": [
+        "fibre-orientation-01",
+        "fibre-orientation-02",
+        "fibre-orientation-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "high-performance-polymers",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
+      "governedClaimIds": [
+        "high-performance-polymers-01",
+        "high-performance-polymers-02",
+        "high-performance-polymers-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
       "moduleId": "rheology",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
       "governedClaimIds": [
@@ -177,40 +247,6 @@
       "authoredGitBlobSha1": "0393830e557ac7dcb30fcd428345a0a350239bdd"
     },
     {
-      "moduleId": "material-families",
-      "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "governedClaimIds": [
-        "material-families-01",
-        "material-families-02"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
-      ],
-      "authoredGitBlobSha1": "0393830e557ac7dcb30fcd428345a0a350239bdd"
-    },
-    {
-      "moduleId": "fillers-additives",
-      "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "governedClaimIds": [
-        "fillers-additives-01",
-        "fillers-additives-02"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
-      ],
-      "authoredGitBlobSha1": "0393830e557ac7dcb30fcd428345a0a350239bdd"
-    },
-    {
       "moduleId": "plasticising-unit",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
       "governedClaimIds": [
@@ -231,7 +267,7 @@
     {
       "moduleId": "vp-transfer",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "vp-transfer-01",
         "vp-transfer-02",
@@ -249,7 +285,7 @@
     {
       "moduleId": "clamp",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "clamp-01",
         "clamp-02",
@@ -265,9 +301,28 @@
       ]
     },
     {
+      "moduleId": "hot-runners",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
+      "governedClaimIds": [
+        "hot-runners-01",
+        "hot-runners-02",
+        "hot-runners-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the added example.",
+        "No machine, mould, hot-runner, material-grade, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "The new worked example is explicitly hypothetical and adds no machine-specific procedure.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
       "moduleId": "cooling",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "cooling-01",
         "cooling-02",
@@ -285,7 +340,7 @@
     {
       "moduleId": "ejection-draft",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "ejection-draft-01",
         "ejection-draft-02",
@@ -303,7 +358,7 @@
     {
       "moduleId": "process-baseline",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "process-baseline-01",
         "process-baseline-02",
@@ -321,7 +376,7 @@
     {
       "moduleId": "documentation",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "documentation-01",
         "documentation-02",
@@ -337,9 +392,28 @@
       ]
     },
     {
+      "moduleId": "process-window",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
+      "governedClaimIds": [
+        "process-window-01",
+        "process-window-02",
+        "process-window-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the added example.",
+        "No machine, mould, hot-runner, material-grade, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "The new worked example is explicitly hypothetical and adds no machine-specific procedure.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
       "moduleId": "diagnostic-method",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "diagnostic-method-01",
         "diagnostic-method-02",
@@ -357,7 +431,7 @@
     {
       "moduleId": "short-shot",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "short-shot-01",
         "short-shot-02",
@@ -375,7 +449,7 @@
     {
       "moduleId": "flash",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "flash-01",
         "flash-02",
@@ -393,7 +467,7 @@
     {
       "moduleId": "sink-voids",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "sink-voids-01",
         "sink-voids-02",
@@ -409,9 +483,27 @@
       ]
     },
     {
+      "moduleId": "warpage",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
+      "governedClaimIds": [
+        "warpage-01",
+        "warpage-02",
+        "warpage-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
       "moduleId": "splay",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "splay-01",
         "splay-02",
@@ -429,7 +521,7 @@
     {
       "moduleId": "burns",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "burns-01",
         "burns-02",
@@ -445,45 +537,9 @@
       ]
     },
     {
-      "moduleId": "weld-lines",
-      "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
-      "governedClaimIds": [
-        "weld-lines-01",
-        "weld-lines-02",
-        "weld-lines-03"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
-      ]
-    },
-    {
-      "moduleId": "warpage",
-      "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
-      "governedClaimIds": [
-        "warpage-01",
-        "warpage-02",
-        "warpage-03"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
-      ]
-    },
-    {
       "moduleId": "black-specks",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "black-specks-01",
         "black-specks-02",
@@ -499,9 +555,27 @@
       ]
     },
     {
+      "moduleId": "weld-lines",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
+      "governedClaimIds": [
+        "weld-lines-01",
+        "weld-lines-02",
+        "weld-lines-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
       "moduleId": "cavity-pressure",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "cavity-pressure-01",
         "cavity-pressure-02",
@@ -517,9 +591,27 @@
       ]
     },
     {
+      "moduleId": "process-monitoring",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
+      "governedClaimIds": [
+        "process-monitoring-01",
+        "process-monitoring-02",
+        "process-monitoring-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
       "moduleId": "doe",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "doe-01",
         "doe-02",
@@ -537,7 +629,7 @@
     {
       "moduleId": "capability",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "capability-01",
         "capability-02",
@@ -553,27 +645,9 @@
       ]
     },
     {
-      "moduleId": "process-monitoring",
-      "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
-      "governedClaimIds": [
-        "process-monitoring-01",
-        "process-monitoring-02",
-        "process-monitoring-03"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
-      ]
-    },
-    {
       "moduleId": "dimensional-stability",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "dimensional-stability-01",
         "dimensional-stability-02",
@@ -589,27 +663,9 @@
       ]
     },
     {
-      "moduleId": "fibre-orientation",
-      "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
-      "governedClaimIds": [
-        "fibre-orientation-01",
-        "fibre-orientation-02",
-        "fibre-orientation-03"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
-      ]
-    },
-    {
       "moduleId": "thin-wall",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "thin-wall-01",
         "thin-wall-02",
@@ -627,7 +683,7 @@
     {
       "moduleId": "multi-cavity",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "multi-cavity-01",
         "multi-cavity-02",
@@ -643,27 +699,9 @@
       ]
     },
     {
-      "moduleId": "high-performance-polymers",
-      "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
-      "governedClaimIds": [
-        "high-performance-polymers-01",
-        "high-performance-polymers-02",
-        "high-performance-polymers-03"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
-      ]
-    },
-    {
       "moduleId": "complex-diagnostics",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "34efa3db5e50e531e016e6ab9f2a84a46cef5c2c",
+      "authoredGitBlobSha1": "9d9abd19105ee2463a35cfab7cd5b2991752c625",
       "governedClaimIds": [
         "complex-diagnostics-01",
         "complex-diagnostics-02",
@@ -689,32 +727,28 @@
   },
   "readerPresentationReview": {
     "conclusion": "derived-presentation-only-no-new-technical-claims",
-    "scope": "First-read chapter threads, key-term navigation, progressive disclosure and clearly labelled hypothetical worked examples. This revision removes repetitive same-module sections across 35 governed modules. The default first read now contains every remaining authored section. No technical claims, sources, reader prompts or worked examples were added or changed.",
+    "scope": "First-read chapter threads, key-term navigation, progressive disclosure and clearly labelled hypothetical worked examples. This revision adds 13 distinct worked examples or explanatory sections to the 13 chapters previously below the non-gating 850-word soft target. All additions use existing governed module claims and sources; no claim IDs, source records, reader prompts or acceptance requirements were added.",
     "independentSmeStatus": "hold"
   },
   "latestRevision": {
-    "id": "reader-redundancy-cleanup-2026-11-02",
-    "date": "2026-11-02",
+    "id": "short-chapter-depth-examples-2026-11-03",
+    "date": "2026-11-03",
     "scope": [
-      "r01",
-      "r02",
-      "r03",
-      "r03a",
-      "r04",
-      "r05",
       "r06",
+      "r07",
       "r08",
       "r09",
+      "r10",
       "r11",
-      "r12",
       "r13",
       "r14",
       "r15",
       "r16",
-      "r17",
+      "r18",
       "r19",
       "r20"
     ],
+    "previousRevisionId": "reader-redundancy-cleanup-2026-11-02",
     "firstReadVisibleWords": {
       "r01": 1228,
       "r02": 1568,
@@ -722,255 +756,62 @@
       "r03a": 2616,
       "r04": 1709,
       "r05": 1643,
-      "r06": 525,
-      "r07": 540,
-      "r08": 698,
-      "r09": 558,
-      "r10": 420,
-      "r11": 566,
+      "r06": 898,
+      "r07": 923,
+      "r08": 955,
+      "r09": 930,
+      "r10": 945,
+      "r11": 877,
       "r12": 970,
-      "r13": 787,
-      "r14": 740,
-      "r15": 512,
-      "r16": 767,
+      "r13": 1009,
+      "r14": 1011,
+      "r15": 941,
+      "r16": 984,
       "r17": 918,
-      "r18": 473,
-      "r19": 485,
-      "r20": 773
+      "r18": 886,
+      "r19": 880,
+      "r20": 1003
     },
-    "firstReadVisibleWordReductionByChapter": {
-      "r01": 812,
-      "r02": 717,
-      "r03": 1329,
-      "r03a": 160,
-      "r04": 577,
-      "r05": 642,
-      "r06": 170,
-      "r08": 107,
-      "r09": 151,
-      "r12": 123,
-      "r13": 59,
-      "r14": 79,
-      "r15": 117,
-      "r16": 93,
-      "r17": 57,
-      "r19": 26,
-      "r20": 47
+    "firstReadVisibleWordIncreaseByChapter": {
+      "r06": 373,
+      "r07": 383,
+      "r08": 257,
+      "r09": 372,
+      "r10": 525,
+      "r11": 311,
+      "r13": 222,
+      "r14": 271,
+      "r15": 429,
+      "r16": 217,
+      "r18": 413,
+      "r19": 395,
+      "r20": 230
     },
-    "firstReadVisibleWordReductionTotal": 5266,
-    "firstReadVisibleWordTotal": 22126,
-    "removedSectionCount": 135,
-    "removedSectionTitleAndBodyWords": 7288,
-    "removedSectionTitlesByModule": {
-      "what-injection-moulding-is": [
-        "The process in one sentence",
-        "How to think like a process engineer",
-        "Think in linked stages, not isolated settings",
-        "Inputs, process signals and outputs are different kinds of evidence",
-        "Follow the process as a chain of handoffs"
-      ],
-      "cycle": [
-        "Prepare the next shot",
-        "Fill the cavity",
-        "Transfer and pack",
-        "Cool and eject",
-        "Treat the cycle as an interacting system",
-        "Each stage hands conditions to the next",
-        "The stages interact across the cycle"
-      ],
-      "machine-anatomy": [
-        "Use the machine documentation",
-        "Read the machine as interacting subsystems",
-        "Read commanded and actual values as different evidence"
-      ],
-      "mould-anatomy": [
-        "Follow the complete path through the mould",
-        "Use location to connect a symptom to mould features"
-      ],
-      "safety-foundations": [
-        "Safety is a system boundary",
-        "A stopped screen is not an isolation",
-        "Stored energy persists when motion stops",
-        "Choose evidence collection that stays within the safe boundary",
-        "Safety controls define the boundary of process work"
-      ],
-      "polymer-structure": [
-        "Structure changes processing behaviour",
-        "Do not turn the categories into absolutes",
-        "Structure influences the way a moulding responds to heat and flow",
-        "Amorphous and semi-crystalline are useful categories, not complete recipes",
-        "Morphology can vary within one part",
-        "Cooling gives the material a local structural history",
-        "Think of a polymer as chains with different freedom to move",
-        "Glass transition and melting are different landmarks"
-      ],
-      "rheology": [
-        "Flow resistance is not a single material number",
-        "Pressure is evidence about the whole flow path",
-        "Compare pressure only when the flow conditions are understood"
-      ],
-      "moisture-drying": [
-        "Moisture state is a condition to verify",
-        "Dryer performance and material exposure are separate questions"
-      ],
-      "thermal-history": [
-        "Time at temperature matters",
-        "Look for evidence of changing residence or degradation",
-        "Use interruptions as diagnostic evidence",
-        "Treat temperature and residence as a path through the equipment"
-      ],
-      "material-families": [
-        "Family names describe tendencies, not production windows",
-        "Use family knowledge to ask better questions",
-        "Compare materials by the behaviour relevant to the decision",
-        "Connect family behaviour to observable process evidence",
-        "Read a supplier property as bounded evidence",
-        "Recognize family names without treating them as complete identities"
-      ],
-      "fillers-additives": [
-        "Modifiers change the material system",
-        "Modifiers change more than one property at a time",
-        "Reinforcement introduces directional evidence",
-        "Treat formulation changes as process changes",
-        "Relate modifier effects to direction and position"
-      ],
-      "plasticising-unit": [
-        "Plasticising prepares the next shot",
-        "The non-return valve matters during injection",
-        "Hardware suitability is material dependent",
-        "Recovery repeatability is a useful process signal",
-        "Recovery meters a shot while preparing the next melt quantity"
-      ],
-      "shot-utilisation": [
-        "Screw position is process evidence",
-        "Machine suitability is multi-dimensional",
-        "Use cushion and screw position as trends, not verdicts",
-        "Evaluate machine fit as a group of constraints"
-      ],
-      "velocity-pressure": [
-        "Velocity command and pressure demand are different quantities",
-        "A process should distinguish control from limits",
-        "Transfer changes the control objective",
-        "Compare commanded velocity with achieved motion"
-      ],
-      "vp-transfer": [
-        "What transfer means",
-        "Why timing matters",
-        "How to establish it",
-        "Confirm transfer robustness, not only one ideal cycle"
-      ],
-      "clamp": [
-        "Why a single formula is not enough",
-        "Projected area is a model input, not the whole decision"
-      ],
-      "cooling": [
-        "Cooling drives repeatability",
-        "Setpoint is not surface temperature",
-        "Measure the system",
-        "Cooling is a heat-flow problem, not only a timer",
-        "Measure multiple links in the cooling chain"
-      ],
-      "ejection-draft": [
-        "Release is mechanical and thermal",
-        "Ejection evidence matters",
-        "Do not cure tooling problems blindly"
-      ],
-      "process-baseline": [
-        "Start inside known limits",
-        "Record what can reproduce the state",
-        "Stability before optimization",
-        "A baseline records state, not just setpoints",
-        "Baseline before optimisation"
-      ],
-      "documentation": [
-        "Record the conditions that matter",
-        "Preserve context",
-        "Link changes to evidence",
-        "Link each engineering change to a question",
-        "Preserve material, cavity and timing context"
-      ],
-      "diagnostic-method": [
-        "Start with the symptom",
-        "Build competing mechanisms",
-        "Change to learn",
-        "Start with the symptom boundary",
-        "Write competing mechanisms and predicted evidence",
-        "Verify recovery and guard against coincidence"
-      ],
-      "short-shot": [
-        "Use evidence",
-        "Locate where filling stops",
-        "Use cavity comparison in multi-cavity moulds"
-      ],
-      "flash": [
-        "Locate before correcting",
-        "Map flash before changing clamp or pressure",
-        "Separate mould condition from process pressure history"
-      ],
-      "sink-voids": [
-        "Both arise from contraction",
-        "Surface sink and internal void are different outcomes",
-        "Test the pressure-and-cooling history",
-        "Internal evidence can contradict surface appearance"
-      ],
-      "splay": [
-        "Appearance is not a unique diagnosis"
-      ],
-      "burns": [
-        "Separate gas compression from degradation",
-        "Location and timing discriminate",
-        "Correct the mechanism"
-      ],
-      "weld-lines": [
-        "How they form",
-        "Quality depends on the meeting conditions",
-        "Treat location as a design-process interaction",
-        "Evaluate both location and performance",
-        "Geometry can dominate where the line forms",
-        "Formation begins with divided flow",
-        "Appearance and structural consequence are not identical",
-        "Location is often a design-process interaction"
-      ],
-      "black-specks": [
-        "Pattern matters",
-        "Trace the contamination path",
-        "Separate continuous contamination from event-driven contamination"
-      ],
-      "cavity-pressure": [
-        "Why measure in the cavity",
-        "Curve features need context",
-        "Use correlations carefully",
-        "Use the trace as evidence of sequence",
-        "Understand the measurement location",
-        "Read the trace as a sequence"
-      ],
-      "doe": [
-        "Replication and confirmation protect against chance findings"
-      ],
-      "process-monitoring": [
-        "Connect alarms to predefined actions"
-      ],
-      "fibre-orientation": [
-        "Flow orients reinforcement",
-        "Process and design interact"
-      ],
-      "thin-wall": [
-        "Thin sections increase flow challenge"
-      ],
-      "high-performance-polymers": [
-        "The label does not define a process",
-        "Thermal margin may be narrow",
-        "Material change can change equipment compatibility"
-      ],
-      "complex-diagnostics": [
-        "Use chronology and boundaries",
-        "Rank hypotheses by consequence as well as likelihood",
-        "Distinguish containment from root-cause correction"
-      ]
+    "firstReadVisibleWordIncreaseTotal": 4398,
+    "firstReadVisibleWordTotal": 26524,
+    "addedSectionCount": 13,
+    "addedSectionTitleAndBodyWords": 4398,
+    "addedSectionTitlesByModule": {
+      "vp-transfer": "Worked example (hypothetical): separate transfer evidence from a local flash symptom",
+      "hot-runners": "Worked example (hypothetical): a colour mark after a production interruption",
+      "ejection-draft": "Worked example (hypothetical): a part distorts while leaving one core",
+      "documentation": "Worked example (hypothetical): hand over a baseline another shift can interpret",
+      "process-window": "Worked example (hypothetical): build a process window from a sequence of questions",
+      "diagnostic-method": "Worked example (hypothetical): a short shot appears after an interruption",
+      "warpage": "Worked example (hypothetical): a reinforced panel bows after release",
+      "black-specks": "Worked example (hypothetical): compare an all-cavity event with a one-cavity event",
+      "weld-lines": "Worked example (hypothetical): assess a line downstream of a hole",
+      "cavity-pressure": "Worked example (hypothetical): interpret a changed trace before changing an alarm",
+      "dimensional-stability": "Worked example (hypothetical): distinguish a measurement-time change from a process change",
+      "thin-wall": "Worked example (hypothetical): a thin-wall cavity does not fill consistently",
+      "complex-diagnostics": "Worked example (hypothetical): choose the next measurement when evidence conflicts"
     },
-    "addedSectionCount": 0,
-    "conclusion": "Removed 135 repeated or summary sections across 35 governed modules, including the 53 sections previously hidden from the first read. The runtime now presents every remaining authored section directly. The retained material stays within the existing governed claims and evidence; no claims, sources, prompts or examples were added or changed.",
-    "rationale": "Same-module introductions and summaries often restated fuller sections later in the same module. Removing those repeats shortens the reading path while preserving distinct mechanisms, evidence checks, examples and safety guidance. Cross-chapter reminders remain where each chapter needs its own context.",
+    "belowSoftTargetChapterCount": 0,
+    "belowSoftTargetChapterIds": [],
+    "newClaimIdCount": 0,
+    "newSourceRecordCount": 0,
+    "conclusion": "Added 13 distinct explanatory or hypothetical example sections to the 13 chapters that were below the 850-word non-gating soft target. Each is tied to an existing module claim scope; no claim IDs, evidence sources, reader prompts or acceptance requirements were added. All 21 first-read chapters now meet or exceed the soft target. Independent human SME review and device validation remain HOLD.",
+    "rationale": "The compact chapters needed concrete applications of their existing mechanisms and evidence rules. The examples show how to preserve cavity, time, measurement and material context, compare predictions, and state uncertainty. They add learning depth without prescribing universal settings or repeating summary sections.",
     "independentSmeStatus": "hold",
     "humanDeviceValidationStatus": "hold",
     "readerPromptsUpdated": false
@@ -996,6 +837,289 @@
       "independentSmeStatus": "hold",
       "humanDeviceValidationStatus": "hold",
       "readerPromptsUpdated": true
+    },
+    {
+      "id": "reader-redundancy-cleanup-2026-11-02",
+      "date": "2026-11-02",
+      "scope": [
+        "r01",
+        "r02",
+        "r03",
+        "r03a",
+        "r04",
+        "r05",
+        "r06",
+        "r08",
+        "r09",
+        "r11",
+        "r12",
+        "r13",
+        "r14",
+        "r15",
+        "r16",
+        "r17",
+        "r19",
+        "r20"
+      ],
+      "firstReadVisibleWords": {
+        "r01": 1228,
+        "r02": 1568,
+        "r03": 3630,
+        "r03a": 2616,
+        "r04": 1709,
+        "r05": 1643,
+        "r06": 525,
+        "r07": 540,
+        "r08": 698,
+        "r09": 558,
+        "r10": 420,
+        "r11": 566,
+        "r12": 970,
+        "r13": 787,
+        "r14": 740,
+        "r15": 512,
+        "r16": 767,
+        "r17": 918,
+        "r18": 473,
+        "r19": 485,
+        "r20": 773
+      },
+      "firstReadVisibleWordReductionByChapter": {
+        "r01": 812,
+        "r02": 717,
+        "r03": 1329,
+        "r03a": 160,
+        "r04": 577,
+        "r05": 642,
+        "r06": 170,
+        "r08": 107,
+        "r09": 151,
+        "r12": 123,
+        "r13": 59,
+        "r14": 79,
+        "r15": 117,
+        "r16": 93,
+        "r17": 57,
+        "r19": 26,
+        "r20": 47
+      },
+      "firstReadVisibleWordReductionTotal": 5266,
+      "firstReadVisibleWordTotal": 22126,
+      "removedSectionCount": 135,
+      "removedSectionTitleAndBodyWords": 7288,
+      "removedSectionTitlesByModule": {
+        "what-injection-moulding-is": [
+          "The process in one sentence",
+          "How to think like a process engineer",
+          "Think in linked stages, not isolated settings",
+          "Inputs, process signals and outputs are different kinds of evidence",
+          "Follow the process as a chain of handoffs"
+        ],
+        "cycle": [
+          "Prepare the next shot",
+          "Fill the cavity",
+          "Transfer and pack",
+          "Cool and eject",
+          "Treat the cycle as an interacting system",
+          "Each stage hands conditions to the next",
+          "The stages interact across the cycle"
+        ],
+        "machine-anatomy": [
+          "Use the machine documentation",
+          "Read the machine as interacting subsystems",
+          "Read commanded and actual values as different evidence"
+        ],
+        "mould-anatomy": [
+          "Follow the complete path through the mould",
+          "Use location to connect a symptom to mould features"
+        ],
+        "safety-foundations": [
+          "Safety is a system boundary",
+          "A stopped screen is not an isolation",
+          "Stored energy persists when motion stops",
+          "Choose evidence collection that stays within the safe boundary",
+          "Safety controls define the boundary of process work"
+        ],
+        "polymer-structure": [
+          "Structure changes processing behaviour",
+          "Do not turn the categories into absolutes",
+          "Structure influences the way a moulding responds to heat and flow",
+          "Amorphous and semi-crystalline are useful categories, not complete recipes",
+          "Morphology can vary within one part",
+          "Cooling gives the material a local structural history",
+          "Think of a polymer as chains with different freedom to move",
+          "Glass transition and melting are different landmarks"
+        ],
+        "rheology": [
+          "Flow resistance is not a single material number",
+          "Pressure is evidence about the whole flow path",
+          "Compare pressure only when the flow conditions are understood"
+        ],
+        "moisture-drying": [
+          "Moisture state is a condition to verify",
+          "Dryer performance and material exposure are separate questions"
+        ],
+        "thermal-history": [
+          "Time at temperature matters",
+          "Look for evidence of changing residence or degradation",
+          "Use interruptions as diagnostic evidence",
+          "Treat temperature and residence as a path through the equipment"
+        ],
+        "material-families": [
+          "Family names describe tendencies, not production windows",
+          "Use family knowledge to ask better questions",
+          "Compare materials by the behaviour relevant to the decision",
+          "Connect family behaviour to observable process evidence",
+          "Read a supplier property as bounded evidence",
+          "Recognize family names without treating them as complete identities"
+        ],
+        "fillers-additives": [
+          "Modifiers change the material system",
+          "Modifiers change more than one property at a time",
+          "Reinforcement introduces directional evidence",
+          "Treat formulation changes as process changes",
+          "Relate modifier effects to direction and position"
+        ],
+        "plasticising-unit": [
+          "Plasticising prepares the next shot",
+          "The non-return valve matters during injection",
+          "Hardware suitability is material dependent",
+          "Recovery repeatability is a useful process signal",
+          "Recovery meters a shot while preparing the next melt quantity"
+        ],
+        "shot-utilisation": [
+          "Screw position is process evidence",
+          "Machine suitability is multi-dimensional",
+          "Use cushion and screw position as trends, not verdicts",
+          "Evaluate machine fit as a group of constraints"
+        ],
+        "velocity-pressure": [
+          "Velocity command and pressure demand are different quantities",
+          "A process should distinguish control from limits",
+          "Transfer changes the control objective",
+          "Compare commanded velocity with achieved motion"
+        ],
+        "vp-transfer": [
+          "What transfer means",
+          "Why timing matters",
+          "How to establish it",
+          "Confirm transfer robustness, not only one ideal cycle"
+        ],
+        "clamp": [
+          "Why a single formula is not enough",
+          "Projected area is a model input, not the whole decision"
+        ],
+        "cooling": [
+          "Cooling drives repeatability",
+          "Setpoint is not surface temperature",
+          "Measure the system",
+          "Cooling is a heat-flow problem, not only a timer",
+          "Measure multiple links in the cooling chain"
+        ],
+        "ejection-draft": [
+          "Release is mechanical and thermal",
+          "Ejection evidence matters",
+          "Do not cure tooling problems blindly"
+        ],
+        "process-baseline": [
+          "Start inside known limits",
+          "Record what can reproduce the state",
+          "Stability before optimization",
+          "A baseline records state, not just setpoints",
+          "Baseline before optimisation"
+        ],
+        "documentation": [
+          "Record the conditions that matter",
+          "Preserve context",
+          "Link changes to evidence",
+          "Link each engineering change to a question",
+          "Preserve material, cavity and timing context"
+        ],
+        "diagnostic-method": [
+          "Start with the symptom",
+          "Build competing mechanisms",
+          "Change to learn",
+          "Start with the symptom boundary",
+          "Write competing mechanisms and predicted evidence",
+          "Verify recovery and guard against coincidence"
+        ],
+        "short-shot": [
+          "Use evidence",
+          "Locate where filling stops",
+          "Use cavity comparison in multi-cavity moulds"
+        ],
+        "flash": [
+          "Locate before correcting",
+          "Map flash before changing clamp or pressure",
+          "Separate mould condition from process pressure history"
+        ],
+        "sink-voids": [
+          "Both arise from contraction",
+          "Surface sink and internal void are different outcomes",
+          "Test the pressure-and-cooling history",
+          "Internal evidence can contradict surface appearance"
+        ],
+        "splay": [
+          "Appearance is not a unique diagnosis"
+        ],
+        "burns": [
+          "Separate gas compression from degradation",
+          "Location and timing discriminate",
+          "Correct the mechanism"
+        ],
+        "weld-lines": [
+          "How they form",
+          "Quality depends on the meeting conditions",
+          "Treat location as a design-process interaction",
+          "Evaluate both location and performance",
+          "Geometry can dominate where the line forms",
+          "Formation begins with divided flow",
+          "Appearance and structural consequence are not identical",
+          "Location is often a design-process interaction"
+        ],
+        "black-specks": [
+          "Pattern matters",
+          "Trace the contamination path",
+          "Separate continuous contamination from event-driven contamination"
+        ],
+        "cavity-pressure": [
+          "Why measure in the cavity",
+          "Curve features need context",
+          "Use correlations carefully",
+          "Use the trace as evidence of sequence",
+          "Understand the measurement location",
+          "Read the trace as a sequence"
+        ],
+        "doe": [
+          "Replication and confirmation protect against chance findings"
+        ],
+        "process-monitoring": [
+          "Connect alarms to predefined actions"
+        ],
+        "fibre-orientation": [
+          "Flow orients reinforcement",
+          "Process and design interact"
+        ],
+        "thin-wall": [
+          "Thin sections increase flow challenge"
+        ],
+        "high-performance-polymers": [
+          "The label does not define a process",
+          "Thermal margin may be narrow",
+          "Material change can change equipment compatibility"
+        ],
+        "complex-diagnostics": [
+          "Use chronology and boundaries",
+          "Rank hypotheses by consequence as well as likelihood",
+          "Distinguish containment from root-cause correction"
+        ]
+      },
+      "addedSectionCount": 0,
+      "conclusion": "Removed 135 repeated or summary sections across 35 governed modules, including the 53 sections previously hidden from the first read. The runtime now presents every remaining authored section directly. The retained material stays within the existing governed claims and evidence; no claims, sources, prompts or examples were added or changed.",
+      "rationale": "Same-module introductions and summaries often restated fuller sections later in the same module. Removing those repeats shortens the reading path while preserving distinct mechanisms, evidence checks, examples and safety guidance. Cross-chapter reminders remain where each chapter needs its own context.",
+      "independentSmeStatus": "hold",
+      "humanDeviceValidationStatus": "hold",
+      "readerPromptsUpdated": false
     }
   ]
 }
