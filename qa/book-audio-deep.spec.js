@@ -101,7 +101,7 @@ test('switching between guided and complete reader modes keeps source prose and 
   await expect(root.locator('.mm-book-full-source-inline')).toHaveCount(0);
   await expect(root.locator('.mm-book-reader-assurance')).toContainText('Independent human SME review pending');
   await root.locator('[data-mm-book-read-toggle]').click();
-  await expect(root.locator('[data-mm-book-reader-module="vp-transfer"] h4').filter({hasText:'Transfer is a control transition'})).toHaveCount(0);
+  await expect(root.locator('[data-mm-book-reader-module="vp-transfer"] h4').filter({hasText:'Transfer is a control transition'})).toHaveCount(1);
   await expect(root.locator('.mm-book-full-source-inline')).toHaveCount(0);
 });
 
