@@ -329,7 +329,7 @@ for source_id in shared_worked:
     need(worked_sources[source_id]==claim_sources[source_id], f'shared worked-case evidence metadata conflicts with final claim evidence: {source_id}')
 need('Conflicting worked-case source id' in book_runtime and "fields=['type','issuer','title','url','checked','state','scope','canonicalUrl']" in book_runtime, 'Book runtime must accept only metadata-identical shared worked-case evidence records')
 readers=reader_architecture.get('readerChapters', [])
-need(len(readers)==21, 'reader evidence transparency must cover 20 reader chapters')
+need(len(readers)==21, 'reader evidence transparency must cover 21 reader chapters')
 for reader in readers:
     governed=set()
     for module_id in reader.get('moduleIds', []):
