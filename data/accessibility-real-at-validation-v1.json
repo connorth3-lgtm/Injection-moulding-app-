@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.03.1",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.03.1.md",
-  "sourceSha": "f270ac25db08f4729f93e7447d5201d43489f7aa",
-  "runtimeFingerprint": "sha256:bb58e75d141efd77c6388231ab7cef8ae4737c00393176228583b748a674bbf2",
+  "release": "2026.11.03.2",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.03.2.md",
+  "sourceSha": "eebd169218d108bfadc8c78898b779ee373e2613",
+  "runtimeFingerprint": "sha256:10e62706fc5ed4bfdf2442172648b53c888c246cb2c9324243b5be284d9878df",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.11.03.1 is bound to exact retained learner-runtime candidate f270ac25db08f4729f93e7447d5201d43489f7aa; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.11.03.2 is bound to exact retained learner-runtime candidate eebd169218d108bfadc8c78898b779ee373e2613; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -307,15 +307,10 @@
   },
   "previousCandidate": {
     "release": "2026.11.03.1",
-    "sourceSha": "dd7a5c8daef1a60620389a14c2a0477a1fb34d29",
-    "runtimeFingerprint": "sha256:1eb3792181fa3eca70021c60af631fcc0bfda88bd081cf0d90de8036cf252b9b"
+    "sourceSha": "f270ac25db08f4729f93e7447d5201d43489f7aa",
+    "runtimeFingerprint": "sha256:bb58e75d141efd77c6388231ab7cef8ae4737c00393176228583b748a674bbf2"
   },
   "technicalCandidateStatus": "PASS \u2014 exact-source candidate run 41589743761, artifact 13209058644, and runtime fingerprint sha256:1eb3792181fa3eca70021c60af631fcc0bfda88bd081cf0d90de8036cf252b9b passed exact-head browser/question quality gates. Real NVDA and VoiceOver tasks remain pending.",
-  "candidate": {
-    "release": "2026.11.03.1",
-    "sourceSha": "dd7a5c8daef1a60620389a14c2a0477a1fb34d29",
-    "runtimeFingerprint": "sha256:1eb3792181fa3eca70021c60af631fcc0bfda88bd081cf0d90de8036cf252b9b"
-  },
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",

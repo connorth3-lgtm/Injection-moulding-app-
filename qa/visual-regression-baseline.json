@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.03.1",
-  "commit": "71895bee35082cb1dfefb6189b5dd03f223ae701",
+  "release": "2026.11.03.2",
+  "commit": "9798f77db2d6a5b4b0a078faeb152bd23c847449",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Technical comparison baseline for release 2026.11.03.1. It records the intended Book chapter, materials guide, contents finder and listening changes at the exact web runtime source listed below. The baseline comparison is technical regression evidence only and is not visual-owner approval; it does not claim independent human visual, accessibility, device, Book SME, provider, learner or production validation. Those external evidence streams remain HOLD.",
-  "ref": "visual-baseline/2026.11.03.1",
+  "policy": "Technical comparison baseline for release 2026.11.03.2, pinned to the exact code commit before release metadata rebinding. This strict comparison is software regression evidence only and is not visual-owner approval; independent visual, accessibility, device, Book SME, provider, learner or production validation remains HOLD.",
+  "ref": "visual-baseline/2026.11.03.2",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "71895bee35082cb1dfefb6189b5dd03f223ae701"
+    "referenceSourceSha": "9798f77db2d6a5b4b0a078faeb152bd23c847449"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",

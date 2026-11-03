@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.03.1",
+  "release": "2026.11.03.2",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "f270ac25db08f4729f93e7447d5201d43489f7aa",
-  "scope": "Release 2026.11.03.1 exact-source candidate f270ac25db08f4729f93e7447d5201d43489f7aa adds the Book chapter, materials guide and worked-example finder updates. The candidate passed the exact-source automated preview gates; no human or external validation is inferred.",
-  "approvalBoundary": "Release 2026.11.03.1 exact candidate producer run 41594378980 created artifact 13210979022 for source f270ac25db08f4729f93e7447d5201d43489f7aa, with runtime fingerprint sha256:bb58e75d141efd77c6388231ab7cef8ae4737c00393176228583b748a674bbf2 and digest sha256:581b205bca0f0b0081580bbd126a3dcfa6a17632af067a8521b2475ec7d5326f. This is a technical candidate, not independent approval. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": "eebd169218d108bfadc8c78898b779ee373e2613",
+  "scope": "Release 2026.11.03.2 removes repeated preview and assurance notices from Book chapters while retaining the central Book accuracy boundary. The exact technical candidate source eebd169218d108bfadc8c78898b779ee373e2613 is retained with runtime fingerprint sha256:10e62706fc5ed4bfdf2442172648b53c888c246cb2c9324243b5be284d9878df; producer run 41601061912 and exact-source browser/question/book checks passed. No human or external validation is inferred.",
+  "approvalBoundary": "Release 2026.11.03.2 has retained exact-source technical candidate eebd169218d108bfadc8c78898b779ee373e2613 with fingerprint sha256:10e62706fc5ed4bfdf2442172648b53c888c246cb2c9324243b5be284d9878df and producer artifact 13214790061. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -45,8 +45,8 @@
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
   "lastReviewedDate": "2026-11-03",
   "previousVerifiedCandidate": {
-    "release": "2026.11.02.2",
-    "sourceSha": "17ae5aa2e73929aabd9f3dc1fd0415867e27e6be",
-    "runtimeFingerprint": "sha256:a4f483ea1290bb2fac19d06870bbe676aae1d458491b79026c8e23c9715d3913"
+    "release": "2026.11.03.1",
+    "sourceSha": "f270ac25db08f4729f93e7447d5201d43489f7aa",
+    "runtimeFingerprint": "sha256:bb58e75d141efd77c6388231ab7cef8ae4737c00393176228583b748a674bbf2"
   }
 }

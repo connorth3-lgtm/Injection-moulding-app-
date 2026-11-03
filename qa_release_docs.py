@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
-  'web_release':'2026.11.03.1',
+  'web_release':'2026.11.03.2',
  'android_release':'2026.08.26.2',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -405,6 +405,24 @@ elif visual.get('release')=='2026.11.03.1':
          and 'Human visual-owner decision: **PENDING**' in review_current
          and 'no masking or skipped surfaces' in review_current.lower(),
          '2026.11.03.1 technical visual baseline must retain strict coverage and explicit owner HOLD')
+elif visual.get('release')=='2026.11.03.2':
+    # Strict technical comparison only; visual-owner approval remains pending.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.03.2.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.03.2'
+         and visual.get('commit')=='9798f77db2d6a5b4b0a078faeb152bd23c847449'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'not visual-owner approval' in visual.get('policy','').lower()
+         and 'STATUS: VISUAL BASELINE HOLD' in review_current
+         and f"- Candidate source: `{current_candidate['sourceSha']}`" in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and 'no masking or skipped surfaces' in review_current.lower(),
+         '2026.11.03.2 technical visual baseline must retain strict coverage and explicit owner HOLD')
 elif visual.get('release')=='2026.10.22.2':
     # The 2026.10.22.2 Book comparison was separately reviewed by the owner
     # from source-linked screenshots. Lock this exact reviewed ref/source/artifact

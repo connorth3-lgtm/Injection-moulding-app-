@@ -167,7 +167,7 @@ book = (ROOT / "src/domains/learning/book-runtime.js").read_text(encoding="utf-8
 for marker in (
     'BOOK_AUDIO_PREFIX', 'activeAudioScopeKey', 'getAudioResume:readAudioResume',
     'Complete source text (all 46 modules)', 'Complete text and 27 worked examples',
-    'Shorter first-read text', 'Independent human SME review pending',
+    'Shorter first-read text', 'source evidence review does not imply independent human SME approval',
     'Read all original source sections',
 ):
     need(marker in book, f"Book reading/listening transparency contract missing: {marker}")

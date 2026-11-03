@@ -118,7 +118,6 @@ html.mm-ios-webkit body{min-height:100dvh;min-height:-webkit-fill-available;-web
 #mmBookView .mm-book-audio-setup p{grid-column:1/-1;margin:0;font-size:.88rem;line-height:1.45}
 #mmBookView .mm-book-hero-actions{display:flex;flex-wrap:wrap;gap:10px}
 #mmBookView .mm-book-hero-actions button{min-height:44px}
-#mmBookView .mm-book-reader-assurance{border-left:3px solid #e0b865;background:rgba(224,184,101,.08);border-radius:6px;padding:10px 12px;margin:12px 0 20px;line-height:1.5}
 #mmBookView .mm-book-full-source-inline{border:1px solid #3b5575;border-radius:10px;margin:12px 0 18px;padding:10px 12px}
 #mmBookView .mm-book-full-source-inline>summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
 #mmBookView .mm-book-full-source-inline .mm-book-reader-source-sections{padding:10px 2px;border:0}
