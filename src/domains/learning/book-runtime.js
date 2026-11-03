@@ -21,7 +21,7 @@
   const MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1='7a45cc0da8a18282a04ddf437d802bc6377f15e3';
   const MATERIAL_PAGE_SIZE=24;
   const BATCH_PATHS=[`${BOOK_DATA}book-authored-foundations-v1.json`,`${BOOK_DATA}book-evidence-registry-v1.json`,`${BOOK_DATA}book-chapters-materials-machine-v1.json`,`${BOOK_DATA}book-authored-remaining-v1.json`];
-  const AUTH_GIT_BLOB_SHA1='0e4086ff5f2c9cb539ad18c5b74a09037b18a124';
+  const AUTH_GIT_BLOB_SHA1='3ef6498ef6cd6a1f5d5ecb24adbc25507eba229b';
   const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-claim-resolution-high-risk-v2.json','book-claim-resolution-all-v1.json','book-claim-review-foundations-materials-machine-v1.json','book-claim-review-process-tooling-v1.json','book-claim-review-troubleshooting-v1.json','book-claim-review-engineering-advanced-v1.json','book-claim-review-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-engineering-diagrams-v1.json','book-evidence-enrichment-v2.json','book-claim-evidence-reference-v1.json','book-reader-architecture-v2.json','book-editorial-expansion-review-v1.json','book-material-grade-atlas-v1.json','book-material-regional-evidence-v1.json','material-catalog-v1.json'];
   const CANONICAL_SOURCE_URLS=Object.freeze({
     'OUBELLAOUCH-2024-FIBRE-ORIENTATION':'https://doi.org/10.1007/s00170-024-12990-5',
@@ -297,6 +297,10 @@
   function validateReaderArchitecture(data,declared,auth){
     if(data?.schema!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='governed-derived-reader-map'||!Array.isArray(data.readerChapters)||!data?.depthBandMeaning||!data?.pedagogyPolicy||!data?.firstReadPolicy)throw new Error('Book reader architecture identity check failed');
     const permit=auth?.readerArchitectureAuthorization;if(permit?.status!=='authorized-derived-structure'||permit?.release!==VERSION||permit?.ledger!=='data/book-reader-architecture-v2.json'||permit?.readerChapterCount!==21||permit?.governedModuleCount!==46||permit?.noNewTechnicalClaims!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book reader architecture authorization missing');
+    const finderPermit=permit?.caseFinderAuthorization,finder=data.caseFinder;
+    if(finderPermit?.status!=='authorized-derived-navigation'||finderPermit?.release!==VERSION||finderPermit?.ledger!=='data/book-reader-architecture-v2.json'||finderPermit?.caseCount!==27||finderPermit?.groupCount!==5||finderPermit?.noNewTechnicalClaims!==true||finderPermit?.independentSmeStatus!=='hold')throw new Error('Book case finder authorization missing');
+    const finderGroupOrder=['materials','process-development','defects','measurement','troubleshooting'];
+    if(finder?.schema!==1||finder?.title!=='Find a worked example'||!finder?.description||!Array.isArray(finder.groups)||finder.groups.length!==finderGroupOrder.length||finder.groups.some((group,index)=>group?.id!==finderGroupOrder[index]||!group.title||!group.description||!Array.isArray(group.caseIds)||!group.caseIds.length))throw new Error('Book case finder structure invalid');
     if(data.readerChapters.length!==21)throw new Error('Book reader chapter count mismatch');
     const readerIds=new Set(),moduleIds=[];
     for(const reader of data.readerChapters){
@@ -349,6 +353,9 @@
       if(!Array.isArray(item.claims)||item.claims.length!==1)throw new Error(`Worked case must have one governed case claim: ${item.id}`);
       const claim=item.claims[0];if(!claim?.id||claimIds.has(claim.id)||claim.conclusion!=='supported-with-explicit-synthetic-scope'||!claim.statement)throw new Error(`Invalid worked-case claim: ${item.id}`);claimIds.add(claim.id);for(const id of claim.sourceIds||[])if(!sourceMap.has(id))throw new Error(`Unknown worked-case claim source ${id} in ${claim.id}`);
     }
+    const finder=readerArchitecture?.caseFinder,listedCaseIds=new Set();
+    for(const group of finder.groups)for(const id of group.caseIds){if(!caseIds.has(id))throw new Error('Unknown worked case in case finder: '+id);if(listedCaseIds.has(id))throw new Error('Duplicate worked case in case finder: '+id);listedCaseIds.add(id);}
+    if(listedCaseIds.size!==caseIds.size||[...caseIds].some(id=>!listedCaseIds.has(id)))throw new Error('Book case finder must cover all worked cases exactly once');
     const authority=data.authorityBoundary||{};if(authority.productionUse!=='advisory-only'||authority.validatedRecipeAuthority!==false||authority.automaticMachineControl!==false||authority.universalSetpoints!==false)throw new Error('Worked-case authority boundary weakened');
     return data;
   }
@@ -684,6 +691,16 @@
       <button type="button" data-mm-book-reader-chapter-open="${esc(reader.id)}">
         <span class="mm-book-toc-number">${index+1}.</span><span>${esc(reader.title)}<small class="mm-book-toc-meta">${esc(reader.depthBand)} · ${reader.moduleIds.length} source module${reader.moduleIds.length===1?'':'s'} · ${reader.checkQuestions.length} review questions</small></span>
       </button></li>`).join('')}</ol>`;
+    const finder=readerArchitecture.caseFinder,caseById=new Map(workedCaseLedger.cases.map(item=>[item.id,item])),readerByModule=new Map(readers.flatMap(reader=>reader.moduleIds.map(moduleId=>[moduleId,reader])));
+    const caseFinderGroups=finder.groups.map(group=>{
+      const buttons=group.caseIds.map(caseId=>{
+        const item=caseById.get(caseId),reader=readerByModule.get(item?.chapterId);
+        if(!item||!reader)throw new Error("Book case finder target unavailable: "+caseId);
+        return `<button type="button" class="ghost mm-book-chapter-button" data-mm-book-case-finder-case="${esc(item.id)}" data-mm-book-case-finder-reader="${esc(reader.id)}">${esc(item.title)} <small>${esc(reader.title)}</small></button>`;
+      }).join("");
+      return `<section class="mm-book-case-finder-group"><h4>${esc(group.title)}</h4><p>${esc(group.description)}</p><div>${buttons}</div></section>`;
+    }).join("");
+    const caseFinder=`<details class="mm-book-governed-index mm-book-case-finder"><summary>${esc(finder.title)} <small>${workedCaseLedger.cases.length} examples</small></summary><p>${esc(finder.description)}</p>${caseFinderGroups}</details>`;
     const moduleIndex=`<details class="mm-book-governed-index"><summary>Source module index (46 entries)</summary>
       ${(manifest.parts||[]).map(part=>`<section><h4>${esc(part.title)}</h4><div>${(part.chapters||[]).map(chapter=>`<button type="button" class="ghost mm-book-chapter-button" data-mm-book-chapter="${esc(chapter.id)}">${esc(chapter.title)} <small>${esc(chapter.level)} · ${esc(stateLabel(chapter.state))}</small></button>`).join('')}</div></section>`).join('')}</details>`;
     const notes=`<details class="mm-book-contents-guide"><summary>Reading guide & editorial notes</summary>
@@ -694,13 +711,18 @@
       ${readerTermGuideHtml(readers)}
     </details>`;
     ui.parts.innerHTML=`<section class="card mm-book-table-of-contents">
-      <h2>Contents</h2><p class="mm-book-toc-help">Start with a numbered chapter or open the 46-module technical index below. Source-reviewed does not mean independent human expert approval.</p>${moduleIndex}${toc}
-      <div class="mm-book-toc-appendix">${notes}</div>
+      <h2>Contents</h2><p class="mm-book-toc-help">Open a numbered chapter, find a worked example by task, or browse the 46-module technical index. Source-reviewed does not mean independent human expert approval.</p>${toc}
+      <div class="mm-book-toc-appendix">${caseFinder}${moduleIndex}${notes}</div>
     </section>`;
     ui.parts.querySelectorAll('[data-mm-book-reader-chapter-open]').forEach(button=>{
       button.addEventListener('pointerdown',captureContentsScroll,{passive:true});
       button.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' ')captureContentsScroll();});
       button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookReaderChapterOpen));
+    });
+    ui.parts.querySelectorAll('[data-mm-book-case-finder-case]').forEach(button=>{
+      button.addEventListener('pointerdown',captureContentsScroll,{passive:true});
+      button.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' ')captureContentsScroll();});
+      button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookCaseFinderReader,{openCaseId:button.dataset.mmBookCaseFinderCase}));
     });
     ui.parts.querySelectorAll('[data-mm-book-chapter]').forEach(button=>{
       button.addEventListener('pointerdown',captureContentsScroll,{passive:true});
@@ -723,7 +745,7 @@
     contentsWindowScrollY=saved.windowTop;
     pendingContentsScroll=null;
   }
-  function showReaderChapter(id,{preserveEditionPosition=false}={}){
+  function showReaderChapter(id,{preserveEditionPosition=false,openCaseId=null}={}){
     const reader=allReaderChapters().find(x=>x.id===id);if(!reader||!ui)return;
     // Changing reading edition must not overwrite a real learner bookmark with chapter-top.
     const editionSnapshot=preserveEditionPosition&&activeReadingPosition?.kind==='reader-chapter'&&activeReadingPosition.id===id&&resumeStorageKey()===activeReadingScopeKey
@@ -731,7 +753,18 @@
     bookIntentEpoch++;rememberContentsBeforeReading();stopBookSpeech();contentsFocus={kind:'reader-chapter',id};restoreBookChrome();ui.hero.hidden=true;ui.accuracy.hidden=true;const back='<button type="button" class="ghost" data-mm-book-back>← Book contents</button>';
     ui.reader.innerHTML=`${back}${readerChapterHtml(reader)}`;ui.contents.hidden=true;ui.reader.hidden=false;bindBack();ui.reader.querySelector('[data-mm-book-read-toggle]')?.addEventListener('click',event=>{const value=event.currentTarget.dataset.mmBookReadToggle;if(!['guided','complete'].includes(value))return;readerDisplayMode=value;showReaderChapter(id,{preserveEditionPosition:true});});ui.reader.querySelector('[data-mm-book-listen-chapter]')?.addEventListener('click',()=>{if(ui.audioChapter)ui.audioChapter.value=id;startVerifiedListening({resume:false});});ui.reader.querySelectorAll('[data-mm-book-page-turn]').forEach(button=>button.addEventListener('click',()=>showReaderChapter(button.dataset.mmBookPageTurn)));bindMaterialPagination(ui.reader);bindBookScrollRoot();
     if(editionSnapshot)void restoreReadingPosition(editionSnapshot,bookIntentEpoch);
-    else{rememberReadingPosition('reader-chapter',id,reader.title,0);scrollBookReaderToTop();}
+    else{
+      rememberReadingPosition('reader-chapter',id,reader.title,0);
+      if(openCaseId){
+        const target=[...ui.reader.querySelectorAll('[data-mm-worked-case]')].find(item=>item.dataset.mmWorkedCase===openCaseId);
+        if(target){
+          target.open=true;
+          const summary=target.querySelector('summary');
+          if(summary){summary.setAttribute('tabindex','-1');summary.focus({preventScroll:true});}
+          requestAnimationFrame(()=>{if(!target.isConnected||ui.reader.hidden)return;scrollBookBy(target.getBoundingClientRect().top-bookViewportTop());queueReadingScrollSave();});
+        }else scrollBookReaderToTop();
+      }else scrollBookReaderToTop();
+    }
     emitBookRender('reader-chapter',id);
     if(reader.moduleIds.includes('material-families'))void hydrateMaterialAtlas();
   }

@@ -686,5 +686,74 @@
   "release": "2026.10.22.2",
   "pedagogyPolicy": "Reader-level objectives, checks, application prompts, reading threads, key-term labels and optional reasoning scenarios are derived learning scaffolds only. They add no technical claims, do not alter governed module evidence status and cannot create production authority. Sequence prompts are reader-orientation scaffolds derived from existing governed module order; they add no independent technical authority. Key terms identify vocabulary to notice and do not act as standalone definitions.",
   "depthBandMeaning": "Depth labels describe how technical the ideas are; they are not a test of who can read a chapter and they are not a ladder you have to climb in order. The first five chapters start with plain-language explanations and build toward more specialist detail.",
-  "firstReadPolicy": "The guided reading starts with the main explanation. Notes about where ideas apply, source details and worked examples are available through progressive disclosure: open them when you want more detail. Key terms are navigation labels; the chapter text explains their meanings."
+  "firstReadPolicy": "The guided reading starts with the main explanation. Notes about where ideas apply, source details and worked examples are available through progressive disclosure: open them when you want more detail. Key terms are navigation labels; the chapter text explains their meanings.",
+  "caseFinder": {
+    "schema": 1,
+    "title": "Find a worked example",
+    "description": "Browse the 27 existing synthetic worked examples by task. Each entry opens the example inside its existing reader chapter.",
+    "groups": [
+      {
+        "id": "materials",
+        "title": "Materials and thermal behaviour",
+        "description": "Moisture, material condition, degradation, heat and dimensional conditioning.",
+        "caseIds": [
+          "worked-conditioning-v1",
+          "worked-heat-load-v1",
+          "worked-splay-boundary-v1",
+          "worked-dimensional-conditioning-v1",
+          "worked-black-speck-source-map-v1"
+        ]
+      },
+      {
+        "id": "process-development",
+        "title": "Process development",
+        "description": "Build controlled studies and understand process, machine and feed-system behaviour.",
+        "caseIds": [
+          "worked-clamp-force-v1",
+          "worked-pressure-loss-v1",
+          "worked-gate-seal-v1",
+          "worked-doe-interaction-v1",
+          "worked-vp-transfer-v1",
+          "worked-feed-balance-v1",
+          "worked-hot-runner-timing-v1",
+          "worked-fill-study-v1",
+          "worked-shot-utilisation-v1",
+          "worked-process-window-v1"
+        ]
+      },
+      {
+        "id": "defects",
+        "title": "Defects",
+        "description": "Connect common moulding symptoms with observations and controlled evidence.",
+        "caseIds": [
+          "worked-diagnostic-short-shot-v1",
+          "worked-vent-diagnosis-v1",
+          "worked-warpage-discrimination-v1",
+          "worked-weld-line-diagnosis-v1",
+          "worked-filling-boundary-defect-v1"
+        ]
+      },
+      {
+        "id": "measurement",
+        "title": "Measurement and monitoring",
+        "description": "Interpret pressure, cavity-to-cavity, capability and process signals; preserve a defensible baseline.",
+        "caseIds": [
+          "worked-pressure-trace-v1",
+          "worked-multi-cavity-v1",
+          "worked-capability-v1",
+          "worked-process-monitoring-alarm-v1",
+          "worked-process-baseline-record-v1"
+        ]
+      },
+      {
+        "id": "troubleshooting",
+        "title": "Troubleshooting",
+        "description": "Use trends and competing causes to decide what to investigate next.",
+        "caseIds": [
+          "worked-ejection-trend-v1",
+          "worked-complex-diagnostics-v1"
+        ]
+      }
+    ]
+  }
 }

@@ -36,7 +36,7 @@
       "book-material-regional-evidence-v1.json": "4a42fa97f737b13271518d63672d3c4a01421e14",
       "material-catalog-v1.json": "7e32663e0f65ded1fd0ed3c1ae5a69c9cd0796fa",
       "book-engineering-diagrams-v1.json": "b4e0265cc5e78c861c68b4a6caefcddedfe3ba10",
-      "book-reader-architecture-v2.json": "cbbb5cc9ee09fcfb010772213e4abe536b81b341",
+      "book-reader-architecture-v2.json": "605d1b4fd92b03f1b11fc9a79f2cd2b8bbdd409e",
       "book-editorial-expansion-review-v1.json": "d6c08251893890a930ae9efd4b280c12a02731db",
       "book-claim-evidence-reference-v1.json": "4c3c1e5dc1c49189572ab6f2067c01ab32ae9e8f",
       "book-claim-review-foundations-materials-machine-v1.json": "14b4374356b7df2f729c1668ebfa616fd3266807",
@@ -236,7 +236,7 @@
     "governedModuleCount": 46,
     "noNewTechnicalClaims": true,
     "independentSmeStatus": "hold",
-    "authorityBoundary": "Reader chapters are editorial groupings with derived depth labels, objectives, knowledge checks, application prompts, reading threads, key-term navigation labels, optional reasoning scenarios and selected sequence prompts for continuity. Progressive disclosure changes reading order only; it does not remove the underlying governed applicability, evidence or worked-example content. These scaffolds add no technical claims; underlying governed module state, claims, evidence and SME status remain authoritative.",
+    "authorityBoundary": "Reader chapters are editorial groupings with derived depth labels, objectives, knowledge checks, application prompts, reading threads, key-term navigation labels, optional reasoning scenarios and selected sequence prompts for continuity. Progressive disclosure changes reading order only; it does not remove the underlying governed applicability, evidence or worked-example content. These scaffolds add no technical claims; underlying governed module state, claims, evidence and SME status remain authoritative. A task-grouped case finder maps existing synthetic examples to their existing chapters for navigation only; it adds no claims, evidence or process authority.",
     "firstReadPresentation": {
       "status": "authorized-derived-presentation",
       "coreProseFirst": true,
@@ -244,6 +244,15 @@
       "workedExamplesOptionalExpand": true,
       "keyTermsAreNavigationLabelsOnly": true,
       "readingThreadsAreOrientationOnly": true
+    },
+    "caseFinderAuthorization": {
+      "status": "authorized-derived-navigation",
+      "release": "2026.10.22.2",
+      "ledger": "data/book-reader-architecture-v2.json",
+      "caseCount": 27,
+      "groupCount": 5,
+      "noNewTechnicalClaims": true,
+      "independentSmeStatus": "hold"
     }
   },
   "editorialExpansionAuthorization": {
