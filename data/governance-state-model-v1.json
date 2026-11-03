@@ -350,7 +350,7 @@
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "PASS: exact source eebd169218d108bfadc8c78898b779ee373e2613 passed Mobile Browser QA run 41601062178, Question Quality 50-Pass run 41601061974, and Combined Learn Book QA run 41601062296. The strict 52-screen visual regression matrix passed; independent visual-owner, human, device, provider and production approval remains HOLD."
+      "meaning": "PASS: release 2026.11.03.2, source eebd169218d108bfadc8c78898b779ee373e2613 passed Mobile Browser QA run 41601062178, Question Quality 50-Pass run 41601061974, and Combined Learn Book QA run 41601062296. The strict 52-screen visual regression matrix passed; independent visual-owner, human, device, provider and production approval remains HOLD."
     },
     "externalHumanDevice": {
       "status": "hold",
