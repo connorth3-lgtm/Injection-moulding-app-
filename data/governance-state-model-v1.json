@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "fail",
+    "technicalAutomation": "pass",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "fail",
-      "meaning": "HOLD: release 2026.11.03.1 has no retained exact-source candidate yet; static/runtime quality must be independently checked on the new release candidate. No source, human, device or production approval is implied."
+      "status": "pass",
+      "meaning": "PASS: release 2026.11.03.1 source dd7a5c8daef1a60620389a14c2a0477a1fb34d29 run 41589743761 artifact 13209058644 fingerprint sha256:1eb3792181fa3eca70021c60af631fcc0bfda88bd081cf0d90de8036cf252b9b identifies the retained exact-source software candidate; human, device and production authorization remain HOLD."
     },
     "behavioralBrowser": {
-      "status": "fail",
-      "meaning": "HOLD: browser and question-quality gates for release 2026.11.03.1 are pending exact-head verification; prior green workflows do not transfer to a different exact source."
+      "status": "pass",
+      "meaning": "PASS: release 2026.11.03.1 source dd7a5c8daef1a60620389a14c2a0477a1fb34d29 passed Mobile Browser QA run 41589743970 and Question Quality 50-Pass run 41589743958 on the exact candidate source; human/device validation remains HOLD."
     },
     "externalHumanDevice": {
       "status": "hold",

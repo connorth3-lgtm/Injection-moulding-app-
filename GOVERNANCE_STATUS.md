@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: release 2026.11.03.1 has no retained exact-source candidate yet; static/runtime quality must be independently checked on the new release candidate. No source, human, device or production approval is implied. |
-| Behavioral / browser | **fail** | HOLD: browser and question-quality gates for release 2026.11.03.1 are pending exact-head verification; prior green workflows do not transfer to a different exact source. |
+| Static / contract | **pass** | PASS: release 2026.11.03.1 source dd7a5c8daef1a60620389a14c2a0477a1fb34d29 run 41589743761 artifact 13209058644 fingerprint sha256:1eb3792181fa3eca70021c60af631fcc0bfda88bd081cf0d90de8036cf252b9b identifies the retained exact-source software candidate; human, device and production authorization remain HOLD. |
+| Behavioral / browser | **pass** | PASS: release 2026.11.03.1 source dd7a5c8daef1a60620389a14c2a0477a1fb34d29 passed Mobile Browser QA run 41589743970 and Question Quality 50-Pass run 41589743958 on the exact candidate source; human/device validation remains HOLD. |
 | External human / device | **hold** | Independent human/device/provider evidence remains HOLD for release 2026.11.03.1; no automated workflow can establish it. |
