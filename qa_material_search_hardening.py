@@ -17,11 +17,11 @@ for p in [registry,module,spec,unified_spec,'src/domains/materials/material-sear
     r=subprocess.run(['node','--check',str(ROOT/p)],capture_output=True,text=True)
     need(r.returncode==0,f'{p} syntax error: {r.stderr or r.stdout}')
 code=text(module)
-for marker in ['MM_MATERIAL_SEARCH_PAGINATION','index.searchPage','index.searchAllPage','PAGE_SIZE=24','ALL_PAGE_SIZE=12','data-mm-all-material-index','aria-live','mmMaterialSearchMode','cloneNode(true)','hasPrevious','hasNext']:
+for marker in ['MM_MATERIAL_SEARCH_PAGINATION','index.searchPage','index.searchAllPage','PAGE_SIZE=24','ALL_PAGE_SIZE=12','data-mm-all-material-index','aria-live','mmMaterialSearchMode','cloneNode(true)','hasPrevious','hasNext','mm-material-catalogue-tools','data-mm-material-jump="compare"','data-mm-material-jump="change"']:
     need(marker in code,f'indexed material pagination marker missing: {marker}')
 need('style=' not in code,'material pagination must not emit inline style attributes')
 registry_code=text(registry)
-for marker in ['mmMaterialsPageIntro','Additional material tools','More material tools','data-mm-material-jump="compare"','data-mm-material-jump="change"','mmMaterialCompare','mmMaterialChange','mmMaterialLearningAnchor','openPage',"searchParams.set('view','materials')",'materials-page']:
+for marker in ['Compare or change grades','mmMaterialCompare','mmMaterialChange','mmMaterialLearningAnchor','openPage',"searchParams.set('view','materials')",'materials-page']:
     need(marker in registry_code,f'dedicated Materials page marker missing: {marker}')
 materials_page=text('materials.html')
 need('index.html?view=materials' in materials_page,'dedicated materials entry must resolve to canonical app Materials route')

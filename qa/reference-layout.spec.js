@@ -79,11 +79,14 @@ for(const width of [320,360,390,412]){
     // The old conceptual explorer is retained under the SAME Materials
     // catalogue, available on demand, not a second competing page section.
     const familyScience=page.locator('#materials #mmExactMaterialCatalog [data-mm-family-science]');
+    const study=page.locator('#materials #mmMaterialLearningAnchor');
     await expect(familyScience).toHaveCount(1);
     await expect(familyScience).not.toHaveAttribute('open','');
+    await study.locator(':scope > summary').click();
     await familyScience.locator(':scope > summary').click();
     await expect(familyScience.locator('.mat-shell')).toBeVisible();
     await familyScience.locator(':scope > summary').click();
+    await study.locator(':scope > summary').click();
     const pp=page.locator('#materials [data-mm-family-open="PP"]');
     await expect(pp).toBeVisible();
     await expect(pp).toContainText('95 published grades');
@@ -120,11 +123,8 @@ for(const width of [320,360,390,412]){
     await expect(first.locator('[data-mm-material-jump="compare"]')).toBeVisible();
     await first.locator('[data-mm-material-jump="learning"]').click();
     await expect(familyScience).toHaveAttribute('open','');
-    // The learning landing section stays visible outside the optional
-    // family-science disclosure, so lesson navigation is never hidden.
-    const study=page.locator('#materials .mm-material-study-tools');
     await expect(study).toHaveCount(1);
-    await expect(study.locator('#mmMaterialLearningAnchor')).toBeVisible();
+    await expect(study).toHaveAttribute('open','');
     await expect(study.locator(':scope > .mat-tabs')).toBeVisible();
     await expect(study.locator(':scope > .mat-tabs button')).toHaveCount(5);
     await expect(study.locator('[data-mm-family-science]')).toHaveCount(1);
@@ -267,7 +267,7 @@ for(const width of [360,810]){
     await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
     await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="troubleshooting"]').click();
     const troubleshootPicker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid[data-mm-reference-practice-picker="modal"]');
-    await expect(troubleshootPicker.locator('button')).toHaveCount(3);
+    await expect(troubleshootPicker.locator('button')).toHaveCount(4);
     await troubleshootPicker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
     await expect(page.locator('#defects .mm-dx-workbench')).toBeVisible();
     await expect(page.locator('#defects > .mm-practice-tool-return')).toBeVisible();
@@ -589,6 +589,7 @@ test('Materials routes quiz, reference evidence, explorer and labs without stale
   const guide=study.locator('[data-mm-family-science]');
   await expect(guide).toHaveCount(1);
   await expect(guide).not.toHaveAttribute('open','');
+  await study.locator(':scope > summary').click();
 
   await study.locator(':scope > .mat-tabs > button').filter({hasText:'Knowledge check'}).click();
   const quiz=material.locator('.mat-quiz-card');

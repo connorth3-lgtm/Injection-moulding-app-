@@ -59,7 +59,7 @@ test('five mobile tabs start with actionable content instead of oversized introd
   await expect(page.locator('#materials .mm-material-all-index-head h3')).toBeVisible();
   await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
   await expect(page.locator('#materials [data-mm-catalogue-boundary]')).toBeAttached();
-  await expect(page.locator('#materials #mmMaterialsPageIntro')).toBeVisible();
+  await expect(page.locator('#materials .mm-material-catalogue-tools')).toBeVisible();
   await expect(page.locator('#materials [data-mm-all-material-results] [data-mm-family-open="PP"]')).toBeVisible();
   await expect(page.locator('#materials [data-mm-exact-query]')).toBeHidden();
   await expect(page.locator('#materials [data-mm-exact-results]')).toBeHidden();
@@ -534,7 +534,7 @@ test('Defect Finder and Troubleshooting Coach share an evidence-gated offline ca
   await page.evaluate(()=>switchView('scenarios'));
   await page.locator('#scenarios [data-mm-hub-action="troubleshooting"]').click();
   const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
-  await expect(picker.locator('button')).toHaveCount(3);
+  await expect(picker.locator('button')).toHaveCount(4);
   await picker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
   const root=page.locator('#defects');
   await expect(root.getByRole('heading',{name:'Defect Finder + Troubleshooting Coach'})).toBeVisible();

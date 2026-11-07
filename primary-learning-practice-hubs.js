@@ -154,13 +154,17 @@ let learnToolOrigin=null;
 const LEARN_TOOL_ACTIONS=new Set(['assessments','diagnostic-labs','material-labs','measured-decisions','process-data','troubleshooting','scenario-detail','learn-scenarios']);
 function bind(root){
   if(root?.id==='scenarios')bindPracticeGuided(root);
+  if(!root||root.dataset.mmHubActionsBound==='1')return;
+  root.dataset.mmHubActionsBound='1';
   const source=root?.id==='path'?'learn':root?.id==='scenarios'?'practice':'modal';
-  root?.querySelectorAll('[data-mm-hub-action]').forEach(button=>button.addEventListener('click',()=>{
+  root.addEventListener('click',event=>{
+    const button=event.target?.closest?.('[data-mm-hub-action]');
+    if(!button||!root.contains(button))return;
     const action=button.dataset.mmHubAction;
     if(source==='learn'&&LEARN_TOOL_ACTIONS.has(action))learnToolOrigin=action;
     else if(source==='practice')learnToolOrigin=null;
     runAction(action,source==='learn'?'learn':'practice');
-  }));
+  });
 }
 function safeOpen(apiName,fallback){
   const api=window[apiName];
@@ -184,7 +188,7 @@ function openPicker(kind){
   if(kind==='learn-resources'){
     openModal(`<section class="mm-learning-resource-chooser"><span class="eyebrow">Learning Resources</span><h2>One reference shelf</h2><p class="muted">Choose a source-owned reference for definitions, diagrams, long-form reading and verified material grades.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="visuals"><b>Process visuals & charts</b><small>Explore the real interactive phase and engineering concept visuals.</small></button><button type="button" data-mm-hub-action="glossary"><b>Injection moulding glossary</b><small>Find clear technical definitions before reading in depth.</small></button><button type="button" data-mm-hub-action="book"><b>Technical Book</b><small>Open governed chapters, worked examples and primary-source context.</small></button><button type="button" data-mm-hub-action="materials"><b>Materials & exact grades</b><small>Review supplier-backed grade records and the family-level teaching guide.</small></button></div><p class="tiny muted">Education and reference only. Supplier guidance and site procedures remain authoritative.</p></section>`);
   }else if(kind==='troubleshooting'){
-    openModal(`<div class="mm-diagnose-chooser"><span class="eyebrow">Practice · one diagnostic workflow</span><h2>Diagnose a problem</h2><p class="muted">Start from an observed defect, compare competing mechanisms and verify the next check with evidence. Choose the real tool appropriate to that stage.</p><div class="mm-diagnose-step-strip"><span><b>1</b> Observe</span><span><b>2</b> Isolate</span><span><b>3</b> Verify</span></div><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="mould-master"><b>Mould Master</b><small>Build an evidence-led troubleshooting case from a real defect.</small></button><button type="button" data-mm-hub-action="diagnostic-workbench"><b>Defect Finder + Troubleshooting Coach</b><small>One guided workspace: symptoms, competing mechanisms, measured evidence and review-ready learning notes.</small></button><button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic labs</b><small>Practise evidence-first fault isolation.</small></button></div><p class="tiny muted">Training only; use authorised site isolation and qualified supervision for real machinery.</p></div>`);
+    openModal(`<div class="mm-diagnose-chooser"><span class="eyebrow">Practice · one diagnostic workflow</span><h2>Diagnose a problem</h2><p class="muted">Start from an observed defect, compare competing mechanisms and verify the next check with evidence. Choose the real tool appropriate to that stage.</p><div class="mm-diagnose-step-strip"><span><b>1</b> Observe</span><span><b>2</b> Isolate</span><span><b>3</b> Verify</span></div><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="mould-master"><b>Mould Master</b><small>Build an evidence-led troubleshooting case from a real defect.</small></button><button type="button" data-mm-hub-action="diagnostic-workbench"><b>Defect Finder + Troubleshooting Coach</b><small>One guided workspace: symptoms, competing mechanisms, measured evidence and review-ready learning notes.</small></button><button type="button" data-mm-hub-action="guided-practice"><b>Guided fault practice</b><small>Work through five decisions in a training case, with a worked review for each fault.</small></button><button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic labs</b><small>Practise evidence-first fault isolation.</small></button></div><p class="tiny muted">Training only. Use authorised site isolation and qualified supervision for real machinery.</p></div>`);
   }else if(kind==='labs'){
     openModal(`<span class="eyebrow">Practice</span><h2>Labs & simulators</h2><p class="muted">Choose a controlled learning tool.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="spatial-twin"><b>Spatial Twin</b><small>Enter an explorable moulding cell, switch evidence modes and time-travel through a governed diagnostic case.</small></button><button type="button" data-mm-hub-action="simulator"><b>Virtual apprenticeship</b><small>Investigate authored shop-floor cases, justify the next evidence, then explore relative process changes in the simulator.</small></button><button type="button" data-mm-hub-action="material-labs"><b>Material labs</b><small>Compare resin behaviour and evidence.</small></button></div>`);
   }else if(kind==='questions'){
@@ -458,6 +462,7 @@ function runAction(action,source='practice'){
     case 'saved': closePicker(); return lessonCatalog.open({filter:'saved'});
     case 'daily': return openDaily();
     case 'troubleshooting': return openPicker('troubleshooting');
+    case 'guided-practice': return openGuidedPractice();
     case 'mould-master': closePicker(); return safeOpen('MM_MOULD_MASTER_WORKSPACE',()=>switchView('defects'));
     case 'diagnostic-workbench': return dxOpen();
     case 'defects': return dxOpen();
@@ -489,7 +494,7 @@ function createLessonCatalog(){
   // Specialist completion is owned by the independent specialist curriculum.
   // Read through its API rather than reimplementing learner storage or credit.
   const specialistDone=id=>window.MM_SPECIALIST_CURRICULUM?.isComplete?.(id)===true||window.MM_SPECIALIST_EVIDENCE_GAPS?.isComplete?.(id)===true;
-  function markup(){
+  function markup(workshop){
     const active=Number(user?.currentLesson);
     const groups=courses().map(course=>{
       const lessons=(course.lessonIds||[]).map(id=>core().find(l=>l.id===id)).filter(Boolean);
@@ -508,8 +513,9 @@ function createLessonCatalog(){
     const extra=specialists();
     const extraGroup=extra.length?`<details class="mm-catalog-group" data-mm-catalog-group><summary><span class="mm-catalog-group-name">Optional specialist lessons</span><span class="mm-catalog-group-meta">${extra.length} extras · separate progress</span></summary><div class="mm-catalog-rows">${extra.map(l=>`<button type="button" class="mm-catalog-lesson" data-mm-specialist-id="${esc(l.id)}" data-mm-catalog-item data-mm-catalog-type="specialist" data-mm-catalog-done="${specialistDone(l.id)?'1':'0'}" data-mm-catalog-text="${esc([l.id,l.title,l.level].join(' ').toLowerCase())}"><span class="mm-catalog-num">${esc(l.id)}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">${specialistDone(l.id)?'✓ Done':'Open'}</span></button>`).join('')}</div></details>`:'';
     return `<section class="mm-all-lessons" data-mm-lesson-catalog aria-label="All lessons">
-      <div class="mm-catalog-head"><h2 tabindex="-1">All lessons</h2><p>${core().length} core · ${materialLessons().length} material science · ${extra.length} optional specialist lessons. All in one library, with separate progress.</p></div>
+      <div class="mm-catalog-head"><h2 tabindex="-1">All lessons</h2><p>${core().length} core · ${materialLessons().length} material science · ${extra.length} optional specialist lessons. All in one library, with separate progress.</p><button class="secondary mm-catalog-resources" type="button" data-mm-hub-action="learn-resources">Learning resources</button></div>
       <div class="mm-catalog-controls"><label><span>Find a lesson</span><input type="search" autocomplete="off" placeholder="Search topics or lessons" data-mm-catalog-query value="${esc(state.query)}"></label><label><span>Show</span><select data-mm-catalog-filter><option value="all"${state.filter==='all'?' selected':''}>All lessons</option><option value="todo"${state.filter==='todo'?' selected':''}>Not finished</option><option value="done"${state.filter==='done'?' selected':''}>Completed</option><option value="saved"${state.filter==='saved'?' selected':''}>Saved</option><option value="material"${state.filter==='material'?' selected':''}>Material science</option><option value="specialist"${state.filter==='specialist'?' selected':''}>Specialist</option></select></label></div>
+      ${workshop}
       <p class="mm-catalog-results" aria-live="polite" data-mm-catalog-count></p>
       <div class="mm-catalog-groups">${groups}${materialGroups}${extraGroup}</div>
       <p class="mm-catalog-empty" data-mm-catalog-empty hidden>No matching lessons. Try another search or filter.</p>
@@ -571,8 +577,9 @@ function createLessonCatalog(){
     box.dataset.mmCatalogBound='1';
     const input=box.querySelector('[data-mm-catalog-query]');
     const filter=box.querySelector('[data-mm-catalog-filter]');
-    input?.addEventListener('input',()=>{state.query=input.value;update(root)});
-    filter?.addEventListener('change',()=>{state.filter=filter.value;update(root)});
+    const workshop=box.querySelector('.mm-learn-master-lesson');
+    input?.addEventListener('input',()=>{state.query=input.value;workshop?.removeAttribute('open');update(root)});
+    filter?.addEventListener('change',()=>{state.filter=filter.value;workshop?.removeAttribute('open');update(root)});
     box.addEventListener('click',event=>{
       const button=event.target.closest('button[data-mm-lesson-id],button[data-mm-specialist-id],button[data-mm-material-id]');
       if(!button||!box.contains(button))return;
@@ -607,6 +614,7 @@ function createLessonCatalog(){
     state.filter=allowed.includes(options.filter)?options.filter:'all';
     state.query=typeof options.query==='string'?options.query.trim().slice(0,120):'';
     window.mmSpecialistClose?.();
+    document.querySelector('#path .mm-learn-master-lesson')?.removeAttribute('open');
     if(typeof materialTab!=='undefined'&&materialTab==='learn')materialTab='explorer';
     if(typeof currentView==='string'&&currentView==='path')renderLearnHub();
     else switchView('path');
@@ -1099,17 +1107,10 @@ function learnReasoningMarkup(){
     </details>`;
   }).join('');
 }
-function learnHubMarkup(){
-  const c=lessonContext();
-  const lesson=c?.lesson;const course=c?.course;
-  const lessonLine=course?`${esc(course.name)} · Lesson ${(c.position||0)+1} of ${course.lessonIds.length}`:'Your current lesson';
-  return `<div class="mm-primary-hub mm-learn-hub">
-    <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>Lessons</h1><p>Core, material science and specialist lessons in one place.</p></header>
-    <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
-    <nav class="mm-learn-jump" aria-label="Learn section shortcuts"><a href="#mmLearnArena">Troubleshooting</a><a href="#mmLearnQuestions">Questions</a><a href="#mmLearnCourses">All lessons</a></nav>
-    <section class="mm-learn-courses" id="mmLearnCourses" aria-label="Search and browse all lessons">${lessonCatalog.markup()}</section>
-    <section class="mm-learn-master-lesson" aria-labelledby="mmLearnMasterHeading">
-      <header class="mm-learn-studio-head mm-learn-master-intro"><span class="eyebrow">One complete interactive lesson</span><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>One connected lesson in two stages: investigate a real-world situation, then practise decisions and reflect on what the evidence supports.</p><div class="mm-learn-master-meta">2 connected stages · 169 governed prompts · 32 optional questions inside their relevant core lessons</div></header>
+function learnWorkshopMarkup(open){
+  return `<details class="mm-learn-master-lesson"${open?' open':''}>
+      <summary>Interactive lesson <span>Fault finding and evidence</span></summary>
+      <header class="mm-learn-studio-head mm-learn-master-intro"><h2 id="mmLearnMasterHeading">From the fault to the evidence</h2><p>Investigate a shop-floor problem, then practise decisions and reflect on what the evidence supports.</p></header>
       <div class="mm-learn-studio" aria-label="Two stages of the combined lesson">
       <section class="mm-learn-step mm-learn-step-arena" aria-labelledby="mmLearnArenaStep">
         <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">01</span><div><span class="eyebrow">Investigate</span><h3 id="mmLearnArenaStep">Read the evidence</h3></div></div>
@@ -1132,9 +1133,16 @@ function learnHubMarkup(){
 <details><summary><span>04</span><b>Verify the recovery</b><small>When is the investigation complete?</small></summary><p>Record before/after actuals, representative cavity-labelled quality and measurement confidence. Formal process approval requires the site's change-control evidence and human review.</p></details></div><p class="mm-learn-safety-note">Training only; this case has no machine-control or workplace competency authority.</p></section>
       </section>
       </div>
-    </section>
-
-    <div class="mm-catalog-extra"><button class="secondary" type="button" data-mm-hub-action="learn-resources">Open Learning Resources →</button></div>
+    </details>`;
+}
+function learnHubMarkup(workshopOpen){
+  const c=lessonContext();
+  const lesson=c?.lesson;const course=c?.course;
+  const lessonLine=course?`${esc(course.name)} · Lesson ${(c.position||0)+1} of ${course.lessonIds.length}`:'Your current lesson';
+  return `<div class="mm-primary-hub mm-learn-hub">
+    <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>Lessons</h1><p>Core, material science and specialist lessons in one place.</p></header>
+    <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
+    <section class="mm-learn-courses" id="mmLearnCourses" aria-label="Search and browse all lessons">${lessonCatalog.markup(learnWorkshopMarkup(workshopOpen))}</section>
   </div>`;
 }
 
@@ -1294,27 +1302,17 @@ const PRACTICE_CASE_REVIEWS=Object.freeze([
     "button": "Practise safe diagnostic reasoning"
   }
 ]);
-function practiceCaseReviewMarkup(){
-  return `<section class="mm-practice-cases" id="mmPracticeCases" aria-labelledby="mmPracticeCasesTitle">
-    <header class="mm-practice-cases-head"><span class="eyebrow">Five optional worked cases · unscored</span>
-      <h2 id="mmPracticeCasesTitle">From a fault to a defensible decision</h2>
-      <p>Study the observed problem, separate plausible mechanisms and review the evidence that would justify the next step. These are teaching examples—not five more governed scenarios.</p>
-    </header>
-    <div class="mm-practice-case-list">${PRACTICE_CASE_REVIEWS.map(item=>`
-      <details class="mm-practice-case">
-        <summary><span class="mm-practice-case-number">${esc(item.id)}</span><strong>${esc(item.topic)}</strong><span class="mm-practice-case-disclosure">Open worked review ↓</span></summary>
-        <div class="mm-practice-case-body">
-          <p class="mm-practice-case-situation">${esc(item.situation)}</p>
-          <div><b>1 · Observe the evidence</b><p>${esc(item.observe)}</p></div>
-          <div><b>2 · Compare plausible causes</b><p>${esc(item.reason)}</p></div>
-          <div><b>3 · Verify safely</b><p>${esc(item.verify)}</p></div>
-          <div class="mm-practice-case-caution"><b>Common mistake to avoid</b><p>${esc(item.avoid)}</p></div>
-          <button type="button" class="mm-practice-case-start" data-mm-guided-case="${esc(item.id)}">Try this five-step guided case →</button>
-          <button type="button" class="mm-practice-case-launch" data-mm-hub-action="${esc(item.action)}">${esc(item.button)} →</button>
-        </div>
-      </details>`).join('')}</div>
-    <p class="mm-learn-safety-note">Training only. Use site isolation procedures, competent supervision, verified supplier documentation and approved quality/change control for any physical intervention.</p>
-  </section>`;
+function practiceCaseReviewMarkup(item){
+  return `<details class="mm-practice-case" data-mm-worked-review="${esc(item.id)}">
+    <summary>Worked review · ${esc(item.topic)}</summary>
+    <div class="mm-practice-case-body">
+      <div><b>1 · Observe the evidence</b><p>${esc(item.observe)}</p></div>
+      <div><b>2 · Compare plausible causes</b><p>${esc(item.reason)}</p></div>
+      <div><b>3 · Verify safely</b><p>${esc(item.verify)}</p></div>
+      <div class="mm-practice-case-caution"><b>Common mistake to avoid</b><p>${esc(item.avoid)}</p></div>
+      <button type="button" class="mm-practice-case-launch" data-mm-hub-action="${esc(item.action)}">${esc(item.button)} →</button>
+    </div>
+  </details>`;
 }
 // One continuous five-stage teaching workflow. Not graded, stored, or machine-connected.
 // Hypothetical findings are explicitly labelled; all physical actions remain site-controlled.
@@ -1468,10 +1466,11 @@ function practiceGuidedStepMarkup(){
   </div>`;
 }
 function practiceGuidedMarkup(){
+  const review=PRACTICE_CASE_REVIEWS.find(item=>item.id===practiceGuidedState.id);
   return `<section class="mm-practice-guided" id="mmPracticeGuided" aria-labelledby="mmPracticeGuidedTitle">
     <header class="mm-practice-guided-intro"><span class="eyebrow">Guided diagnostic practice · five linked decisions</span>
-      <h2 id="mmPracticeGuidedTitle">Solve one fault from start to finish</h2>
-      <p>Identify the fault → compare causes → choose a safe test → interpret evidence → verify the result. Practise reasoning before opening the original tool; these five training cases do not affect scores or machine settings.</p>
+      <h2 id="mmPracticeGuidedTitle" tabindex="-1">Solve one fault from start to finish</h2>
+      <p>Choose a fault, work through the evidence and open its worked review when you’re ready.</p>
     </header>
     <div class="mm-practice-guided-selector" role="group" aria-label="Choose a training fault">
       ${PRACTICE_CASE_REVIEWS.map(item=>`<button type="button" data-mm-guided-case="${esc(item.id)}" aria-pressed="${item.id===practiceGuidedState.id?'true':'false'}">${esc(item.topic)}</button>`).join('')}
@@ -1480,13 +1479,17 @@ function practiceGuidedMarkup(){
       ${PRACTICE_GUIDED_STEPS.map((step,i)=>`<li class="${i===practiceGuidedState.step?'is-current':''}${i<practiceGuidedState.step?' is-reviewed':''}" ${i===practiceGuidedState.step?'aria-current="step"':''}><span>${i+1}</span><small>${esc(step.title)}</small></li>`).join('')}
     </ol>
     <div data-mm-practice-guided-body>${practiceGuidedStepMarkup()}</div>
-    <p class="mm-learn-safety-note">Session-only, unscored teaching. No data is sent to equipment or recorded as formal evidence. Follow approved procedures and competent oversight on real machinery.</p>
+    ${practiceCaseReviewMarkup(review)}
+    <p class="mm-learn-safety-note">Session-only, unscored training. For real machinery, follow site isolation procedures, competent supervision, current supplier guidance and approved change control.</p>
   </section>`;
 }
 function practiceGuidedRender(root,focus){
   const section=root?.querySelector('#mmPracticeGuided');if(!section)return;
   const temp=document.createElement('div');temp.innerHTML=practiceGuidedMarkup();
-  section.replaceWith(temp.firstElementChild);
+  const next=temp.firstElementChild;
+  const openReview=section.querySelector('[data-mm-worked-review][open]');
+  if(openReview?.dataset.mmWorkedReview===practiceGuidedState.id)next.querySelector('[data-mm-worked-review]').open=true;
+  section.replaceWith(next);
   if(focus)requestAnimationFrame(()=>root.querySelector(focus)?.focus({preventScroll:true}));
 }
 function bindPracticeGuided(root){
@@ -1501,7 +1504,6 @@ function bindPracticeGuided(root){
       practiceGuidedState={id,step:0,answers:{}};
       learnToolOrigin=null;
       practiceGuidedRender(root,'#mmPracticeGuidedStepTitle');
-      if(trigger.closest('.mm-practice-case'))requestAnimationFrame(()=>root.querySelector('#mmPracticeGuided')?.scrollIntoView?.({block:'start',behavior:'smooth'}));
     }else if(trigger.hasAttribute('data-mm-guided-choice')){
       const selected=Number(trigger.dataset.mmGuidedChoice);
       if(!Number.isInteger(selected)||selected<0||selected>2)return;
@@ -1525,7 +1527,6 @@ function bindPracticeGuided(root){
 function practiceHubMarkup(){
   let done=false;try{done=typeof dailyDone==='function'&&dailyDone()}catch(_){}
   const scenarioCount=D?.scenarios?.length||0;
-  const examCount=D?.exams?Object.keys(D.exams).length:0;
   const plan=learnerPracticePlan();
   return `<div class="mm-primary-hub mm-practice-hub">
     <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1>What should I practise next?</h1><p>${esc(practiceStatusLine(plan))}</p></header>
@@ -1538,13 +1539,13 @@ function practiceHubMarkup(){
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Explore behaviour · 5–15 min</span><b>Use labs & simulators</b><small>Test process and material reasoning in a controlled training environment without changing a real machine.</small><span class="mm-hub-tile-action">Choose a lab or simulator →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="question-centre"><span class="eyebrow">Questions & checks · choose a mode</span><b>Question Centre</b><small>Formal checks, diagnostic and material questions, scenarios and measured-evidence decisions in one place. Lesson exercises and Book self-checks remain beside their teaching.</small><span class="mm-hub-tile-action">Open all question modes →</span></button>
     </div></section>
-    <section class="mm-practice-diagnose-journey" aria-label="Three-step diagnostic workflow"><div class="mm-practice-diagnose-head"><span class="eyebrow">Connected troubleshooting</span><h2>One problem. One evidence trail.</h2><p>Choose a real learning tool for the stage you need. Its native feedback, score and evidence stay independent.</p></div><div class="mm-practice-diagnose-stages"><div><strong>01 · Observe</strong><span>Describe the defect, location and baseline</span></div><div><strong>02 · Isolate</strong><span>Compare material, machine and mould causes</span></div><div><strong>03 · Verify</strong><span>Choose a discriminating check and record the result</span></div></div></section>
-    ${practiceGuidedMarkup()}
-    ${practiceCaseReviewMarkup()}
-
   </div>`;
 }
-function renderLearnHub(){const root=document.getElementById('path');if(!root)return;root.dataset.mmHubMode='hub';root.innerHTML=learnHubMarkup();bind(root);lessonCatalog.attach(root)}
+function renderLearnHub(){
+  const root=document.getElementById('path');if(!root)return;
+  const workshopOpen=root.querySelector('.mm-learn-master-lesson')?.open;
+  root.dataset.mmHubMode='hub';root.innerHTML=learnHubMarkup(workshopOpen);bind(root);lessonCatalog.attach(root);
+}
 function renderPracticeHub(){
   const root=document.getElementById('scenarios');if(!root)return;
   root.dataset.mmHubMode='hub';root.innerHTML=practiceHubMarkup();bind(root);
@@ -1560,16 +1561,29 @@ function renderPracticeHub(){
   });
   window.MM_APP_SHELL?.navigation?.setCustomActive?.('');
 }
-function detailBack(root,label,back){
+function openGuidedPractice(){
+  closePicker();
+  if(currentView!=='scenarios')switchView('scenarios');
+  const root=document.getElementById('scenarios');if(!root)return;
+  learnToolOrigin=null;
+  root.dataset.mmHubMode='guided-practice';
+  root.innerHTML=`<div class="mm-primary-hub">${practiceGuidedMarkup()}</div>`;
+  detailBack(root,'Guided fault practice','Practice','troubleshooting');
+  bind(root);
+  window.scrollTo({top:0,behavior:'instant'});
+  root.querySelector('#mmPracticeGuidedTitle')?.focus({preventScroll:true});
+}
+function detailBack(root,label,back,returnAction='scenario-detail'){
   const bar=document.createElement('div');bar.className='mm-hub-detail-back';bar.innerHTML=`<button type="button">← ${esc(back)}</button><span>${esc(label)}</span>`;
   bar.querySelector('button').addEventListener('click',()=>{
     if(back==='Learn'){
+      const action=learnToolOrigin||'learn-scenarios';
       switchView('path');
       learnToolOrigin=null;
-      requestAnimationFrame(()=>document.querySelector('#path [data-mm-hub-action="learn-scenarios"]')?.focus({preventScroll:true}));
+      requestAnimationFrame(()=>document.querySelector(`#path [data-mm-hub-action="${action}"]`)?.focus());
     }else{
       renderPracticeHub();
-      requestAnimationFrame(()=>root.ownerDocument.querySelector('#scenarios .mm-practice-hub [data-mm-hub-action="scenario-detail"]')?.focus({preventScroll:true}));
+      requestAnimationFrame(()=>root.querySelector(`.mm-practice-hub [data-mm-hub-action="${returnAction}"]`)?.focus());
     }
   });root.prepend(bar);
 }

@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.11.08.1
+/* MouldMaster learner UI polish — 2026.11.08.2
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.11.08.1';
+const VERSION='2026.11.08.2';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
 const STYLE_REV='2026.10.20.2-pr640-materials-parity';
 const DESKTOP_QUERY='(min-width:1101px)';
@@ -783,20 +783,8 @@ function materialArt(label){
   for(const [matcher,pic] of familyArt)if(matcher.test(label))return pic;
   return 'materials';
 }
-/* The grade registry owns factual exact-grade data; this educational guide only
-   connects the pre-existing real lessons, native labs and registry. */
-function mountMaterialJourney(root,catalogue){
-  if(!root||!catalogue||root.querySelector('.mm-material-journey'))return;
-  const journey=document.createElement('section');
-  journey.className='mm-material-journey';
-  journey.setAttribute('aria-labelledby','mmMaterialJourneyTitle');
-  journey.innerHTML=`<header><span class="eyebrow">Guided material learning</span><h2 id="mmMaterialJourneyTitle">From resin choice to evidence</h2><p>One learning route connects your material lessons, resin-behaviour questions and exact-grade records. General teaching is not a supplier recipe.</p></header>
-  <div class="mm-material-journey-actions">
-    <button type="button" data-mm-material-journey="lessons"><strong>01 · Learn</strong><span>Study polymer families and moisture behaviour</span></button>
-    <button type="button" data-mm-material-journey="labs"><strong>02 · Test</strong><span>Use the existing resin behaviour labs</span></button>
-    <button type="button" data-mm-material-journey="grades"><strong>03 · Verify</strong><span>Check actual supplier-backed grade evidence</span></button>
-  </div>
-  <details class="mm-material-journey-reasoning"><summary>Five material decisions explained <span>Expand teaching notes ↓</span></summary>
+function materialReasoningMarkup(){
+  return `<details class="mm-material-journey-reasoning"><summary>Five material decisions explained</summary>
     <div class="mm-material-journey-questions">
       <details><summary>Moisture: can dryer settings prove the resin is dry?</summary><p>No. Compare the exact supplier's procedure with handling history and, where applicable, a validated moisture measurement. Dryer displays alone do not prove pellet condition.</p></details>
       <details><summary>Degradation: what evidence distinguishes heat history from contamination?</summary><p>Review grade identity, residence time, process trace history, visual defect location and controlled inspection. A dark spot alone cannot identify the mechanism.</p></details>
@@ -806,18 +794,10 @@ function mountMaterialJourney(root,catalogue){
     </div>
     <p class="mm-learn-safety-note">Optional, unscored teaching. Real process and grade decisions require current manufacturer documents, competent human review and site procedures.</p>
   </details>`;
-  journey.querySelectorAll('[data-mm-material-journey]').forEach(button=>button.addEventListener('click',()=>{
-    const action=button.dataset.mmMaterialJourney;
-    if(action==='lessons')window.MM_LESSON_CATALOG?.open?.({filter:'material'});
-    if(action==='labs')window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.();
-    if(action==='grades')catalogue.scrollIntoView?.({block:'start',behavior:'smooth'});
-  }));
-  catalogue.insertAdjacentElement('afterend',journey);
 }
 function materials(){
   const root=document.getElementById('materials'),catalogue=root?.querySelector('[data-mm-all-material-index]');
   if(!root||!catalogue)return;
-  mountMaterialJourney(root,catalogue);
   // One visible heading belongs to the consolidated catalogue itself.
   // Never add a separate Materials hero above the catalogue.
   const heading=catalogue.querySelector('.mm-material-all-index-head h3');
@@ -833,8 +813,9 @@ function materials(){
   // Discover it there too: repeated navigation and tab changes must still
   // reopen the guide when teaching content becomes active.
   const legacy=root.querySelector('.mat-shell');
-  if(legacy){
-    let guide=catalogue.parentElement?.querySelector('[data-mm-family-science]');
+  const study=root.querySelector('#mmMaterialLearningAnchor');
+  if(legacy&&study){
+    let guide=study.querySelector('[data-mm-family-science]');
     if(!guide){
       guide=document.createElement('details');
       guide.className='mm-family-science';
@@ -847,41 +828,34 @@ function materials(){
       const slot=document.createElement('div');
       slot.dataset.mmFamilyScienceContent='1';
       guide.append(summary,explanation,slot);
-      catalogue.insertAdjacentElement('afterend',guide);
+      study.append(guide);
+      study.insertAdjacentHTML('beforeend',materialReasoningMarkup());
     }
-    // Keep the learning landmark and tab navigation visible. Only the
-    // explanatory family reference belongs inside the optional disclosure.
-    // Hiding these controls previously broke material lesson navigation.
-    const tabs=root.querySelector('.mm-material-study-tools > .mat-tabs')||legacy.querySelector(':scope > .mat-tabs');
+    // Preserve the native tab controls and their handlers while moving them
+    // into the same disclosure as the study notes.
+    const tabs=study.querySelector(':scope > .mat-tabs')||legacy.querySelector(':scope > .mat-tabs');
+    if(tabs&&tabs.parentElement!==study){
+      tabs.querySelector(`button.active[data-mm-onclick="switchMaterialTab('explorer')"]`)?.remove();
+      const labs=document.createElement('button');
+      labs.type='button';labs.textContent='Material behaviour labs';
+      labs.addEventListener('click',()=>window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.());
+      tabs.append(labs);
+      guide.before(tabs);
+    }
     const teachingSlot=guide.querySelector('[data-mm-family-science-content]');
     if(teachingSlot&&legacy.parentElement!==teachingSlot)teachingSlot.appendChild(legacy);
+    study.hidden=false;
     // An active default "Learn" tab is NOT permission to reopen a disclosure
     // the learner just closed. Only an actual lesson (or an explicit tab
     // activation below) may reveal the optional family-science pane.
     const lessonShown=!!legacy.querySelector('.mat-lesson');
-    const intro=root.querySelector('#mmMaterialLearningAnchor');
-    // Combine the detached Material Science intro, five legacy mode buttons
-    // and optional general-reference guide into one clear secondary panel.
-    // Preserve the *real* mode buttons and their event handlers; the guide
-    // only contains generic family science, never exact supplier-grade data.
-    let study=root.querySelector('.mm-material-study-tools');
-    if(!study){
-      study=document.createElement('section');
-      study.className='mm-material-study-tools';
-      study.setAttribute('aria-label','Material learning and tools');
-      catalogue.insertAdjacentElement('afterend',study);
-    }
-    // Do not reparent focused controls on every refresh. Native buttons keep
-    // their listeners and keyboard focus through material result rerenders.
-    if(intro&&intro.parentElement!==study)study.appendChild(intro);
-    if(tabs&&tabs.parentElement!==study)study.appendChild(tabs);
-    if(guide.parentElement!==study)study.appendChild(guide);
     // Preserve native disclosure state. The application owns the Material
     // mode buttons: Labs, Knowledge check and References replace the explorer
     // screen, while All lessons opens the shared Learn catalogue. None should
     // programmatically reopen a now-detached family guide on incidental DOM
     // mutations. A genuinely opened material lesson may reveal it once.
     if(lessonShown&&root.dataset.mmReferenceMaterialLessonSeen!=='1'){
+      study.open=true;
       guide.open=true;
       root.dataset.mmReferenceMaterialLessonSeen='1';
     }
