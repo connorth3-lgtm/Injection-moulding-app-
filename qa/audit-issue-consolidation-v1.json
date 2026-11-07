@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.03.2",
+  "release": "2026.11.07.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "eebd169218d108bfadc8c78898b779ee373e2613",
-  "scope": "Release 2026.11.03.2 removes repeated preview and assurance notices from Book chapters while retaining the central Book accuracy boundary. The exact technical candidate source eebd169218d108bfadc8c78898b779ee373e2613 is retained with runtime fingerprint sha256:10e62706fc5ed4bfdf2442172648b53c888c246cb2c9324243b5be284d9878df; producer run 41601061912 and exact-source browser/question/book checks passed. No human or external validation is inferred.",
-  "approvalBoundary": "Release 2026.11.03.2 has retained exact-source technical candidate eebd169218d108bfadc8c78898b779ee373e2613 with fingerprint sha256:10e62706fc5ed4bfdf2442172648b53c888c246cb2c9324243b5be284d9878df and producer artifact 13214790061. All seven human, physical-device, assistive-technology, SME, learner-outcome, Windows signing and NZQA/provider validation statuses remain HOLD. Production authority is advisory-only and tester invitation remains STOP/no-send.",
+  "candidateSourceSha": null,
+  "scope": "Regional study pathways connect the Book and app for New Zealand, the four UK nations and India.",
+  "approvalBoundary": "Release 2026.11.07.1 awaits the retained exact-source technical candidate. Independent validation and tester distribution remain HOLD.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -43,10 +43,16 @@
   "productionAuthority": "advisory-only",
   "humanEvidenceStatus": "hold",
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
-  "lastReviewedDate": "2026-11-03",
+  "lastReviewedDate": "2026-11-08",
   "previousVerifiedCandidate": {
-    "release": "2026.11.03.1",
-    "sourceSha": "f270ac25db08f4729f93e7447d5201d43489f7aa",
-    "runtimeFingerprint": "sha256:bb58e75d141efd77c6388231ab7cef8ae4737c00393176228583b748a674bbf2"
+    "release": "2026.11.03.2",
+    "sourceSha": "eebd169218d108bfadc8c78898b779ee373e2613",
+    "runtimeFingerprint": "sha256:10e62706fc5ed4bfdf2442172648b53c888c246cb2c9324243b5be284d9878df",
+    "candidateRunId": 41601061912,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 13214790061,
+    "artifactName": "physical-pwa-candidate-eebd169218d108bfadc8c78898b779ee373e2613",
+    "artifactDigest": "sha256:aab25e849fb9da96066fbe8ea5f3c279a06b3887949b5a836ed4e8b901d378da",
+    "artifactExpiresAt": "2027-02-01T08:08:19Z"
   }
 }

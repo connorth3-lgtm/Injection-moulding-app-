@@ -9,10 +9,10 @@ const EDUCATION_DATA=Object.freeze({
   "schema": 1,
   "id": "mouldmaster-regional-education-pathways",
   "version": "2026.11.07.1",
-  "checked": "2026-11-07",
+  "checked": "2026-11-08",
   "status": "provisional-study-support-crosswalk",
   "purpose": "Give learners in New Zealand, the United Kingdom's four nations, and India a source-linked study pathway through the same MouldMaster Book and app topics.",
-  "claimBoundary": "This editorial crosswalk supports study only. It does not establish formal equivalence, award qualifications or credits, satisfy required training hours, assess workplace competence, provide consent to assess, or grant authority to operate machinery.",
+  "claimBoundary": "Use this provisional map for study and formative practice. Approved providers and workplaces control credits, assessment, training hours, competence sign-off and machine-operation authority.",
   "localisation": "MouldMaster's interface and Book remain in English. The cited CIPET qualification file records Hindi as an additional language for its qualification and model curriculum.",
   "regionTabs": [
     {
@@ -62,8 +62,8 @@ const EDUCATION_DATA=Object.freeze({
       "nation": "New Zealand",
       "title": "New Zealand Certificate in Plastics Processing (Level 3)",
       "frameworkRef": "NZQA qualification 4401 · optional Injection Moulding strand",
-      "status": "Current qualification reference (checked 2026-11-07)",
-      "level": "NZQF Level 3",
+      "status": "Current qualification reference",
+      "level": "NZQCF Level 3",
       "duration": "95–120 credits; programme duration is provider-set",
       "scopeNote": "The qualification includes an optional Injection Moulding strand. The MouldMaster mapping uses the existing NZQA readiness contract and Book chapter map as study context.",
       "studyOutcomes": [
@@ -104,12 +104,54 @@ const EDUCATION_DATA=Object.freeze({
       }
     },
     {
+      "id": "nz-nzqa-4402",
+      "region": "nz",
+      "nation": "New Zealand",
+      "title": "New Zealand Certificate in Plastics Processing (Level 4)",
+      "frameworkRef": "NZQA qualification 4402 · Injection Moulding strand",
+      "status": "Current qualification reference",
+      "level": "NZQCF Level 4",
+      "duration": "125–130 credits across the qualification strands",
+      "scopeNote": "Technician-level study for people working in plastics processing. The Book links cover quality assurance, process management, advanced materials, fault diagnosis and continuous improvement.",
+      "studyOutcomes": [
+        "Compare process and quality evidence against a documented baseline and explain what a measurement can establish.",
+        "Explain how material behaviour, machine capability and mould conditions can affect the process window.",
+        "Propose a controlled investigation for a plant fault and state the evidence required before any workplace change.",
+        "Describe how a repeatable investigation can support a documented improvement and a handover."
+      ],
+      "bookChapterIds": [
+        "material-families",
+        "shot-utilisation",
+        "process-baseline",
+        "process-window",
+        "documentation",
+        "process-monitoring",
+        "capability",
+        "doe",
+        "complex-diagnostics"
+      ],
+      "practiceActivityIds": [
+        "process-record",
+        "quality-plan",
+        "defect-ledger",
+        "handover"
+      ],
+      "formalRequirements": [
+        "The provider selects and assesses the programme and its Injection Moulding strand.",
+        "Practical setup, fault correction, quality assurance and improvement evidence must meet the provider and workplace requirements."
+      ],
+      "source": {
+        "title": "NZQA: Qualification 4402",
+        "url": "https://www.nzqa.govt.nz/nzqf/search/viewQualification.do?selectedItemKey=4402"
+      }
+    },
+    {
       "id": "uk-england-st1328",
       "region": "uk",
       "nation": "England",
       "title": "Polymer processing technician",
       "frameworkRef": "Skills England apprenticeship standard ST1328, version 1.0",
-      "status": "Approved for delivery (checked 2026-11-07)",
+      "status": "Approved for delivery",
       "level": "Level 3",
       "duration": "Typically 36 months training, a 3-month assessment period, and 626 minimum hours for compliance",
       "scopeNote": "This occupational standard covers polymer processing technologies including injection moulding. It covers preparation, process monitoring, quality, records, maintenance, troubleshooting, and continuous improvement; it is not an injection-moulding-only curriculum.",
@@ -128,10 +170,9 @@ const EDUCATION_DATA=Object.freeze({
         "process-baseline",
         "process-monitoring",
         "documentation",
-        "quality-plan",
+        "capability",
         "diagnostic-method",
-        "process-window",
-        "capability"
+        "process-window"
       ],
       "practiceActivityIds": [
         "process-record",
@@ -142,13 +183,19 @@ const EDUCATION_DATA=Object.freeze({
       ],
       "formalRequirements": [
         "An employer, training provider, and approved end-point assessment organisation control the apprenticeship and end-point assessment.",
-        "The standard's independent assessment includes workplace observation, an interview supported by a portfolio, and a test.",
+        "The end-point assessment includes a test, an observation with questions, and an interview supported by a portfolio.",
         "MouldMaster does not supply the apprenticeship hours, portfolio sign-off, or end-point assessment."
       ],
       "source": {
         "title": "Skills England: ST1328 Polymer processing technician",
-        "url": "https://skillsengland.education.gov.uk/apprenticeship-standards/st1328?view=standard"
-      }
+        "url": "https://skillsengland.education.gov.uk/apprenticeships/st1328-v1-0?view=standard"
+      },
+      "additionalSources": [
+        {
+          "title": "Skills England: ST1328 end-point assessment plan",
+          "url": "https://skillsengland.education.gov.uk/apprenticeships/st1328-v1-0?view=epa"
+        }
+      ]
     },
     {
       "id": "uk-scotland-gp42-gp43",
@@ -156,10 +203,10 @@ const EDUCATION_DATA=Object.freeze({
       "nation": "Scotland",
       "title": "SVQ in Scientific, Technical and Formulation Processing",
       "frameworkRef": "SCQF Level 5 code GP42 22 and Level 6 code GP43 23",
-      "status": "Listed as accredited through 2028-11-30 in the Qualifications Scotland accreditation decision list dated 2026-10-27",
+      "status": "Modern Apprenticeship framework listed by Skills Development Scotland",
       "level": "SCQF Levels 5 and 6",
       "duration": "Workplace/provider arrangement; confirm the current award structure with the centre",
-      "scopeNote": "This is a broad processing qualification, not an injection-moulding-specific award. MouldMaster's mapping is limited to transferable process knowledge and evidence practices.",
+      "scopeNote": "This wider processing framework includes transferable process-operation, quality, safety and troubleshooting skills. Ask the training centre which SVQ units apply to an injection moulding role.",
       "studyOutcomes": [
         "Explain process steps, equipment, materials, monitoring, and safe work.",
         "Record process observations and quality evidence clearly.",
@@ -191,35 +238,43 @@ const EDUCATION_DATA=Object.freeze({
         "MouldMaster does not confer SCQF credit or an SVQ."
       ],
       "source": {
-        "title": "Qualifications Scotland accreditation decision list, 2026-10-27",
-        "url": "https://accreditation.qualifications.gov.scot/accreditation/About_Us/Accreditation_Coordination_Group/decision_lists/2026/October/27_October_2026_"
-      }
+        "title": "Skills Development Scotland: Scientific, Technical and Formulation Processing Modern Apprenticeship",
+        "url": "https://www.apprenticeships.scot/modern-apprenticeships/scientific-technical-and-formulation-processing/individual/"
+      },
+      "additionalSources": [
+        {
+          "title": "Qualifications Scotland accreditation decision list, 2026-10-27",
+          "url": "https://accreditation.qualifications.gov.scot/accreditation/About_Us/Accreditation_Coordination_Group/decision_lists/2026/October/27_October_2026_"
+        }
+      ]
     },
     {
       "id": "uk-wales-framework",
       "region": "uk",
       "nation": "Wales",
-      "title": "Welsh Apprenticeship Framework pathway",
-      "frameworkRef": "Provider/employer-selected framework under SASW",
-      "status": "Generic Welsh framework structure mapped; a plastics-specific framework crosswalk was not verified in this review",
-      "level": "Framework-dependent",
-      "duration": "Framework and pathway dependent",
-      "scopeNote": "Welsh frameworks combine occupation-specific competence and technical knowledge qualifications, with Essential Skills Wales qualifications where applicable. This map supports general study themes only; the learner's provider must choose the applicable approved framework and pathway.",
+      "title": "Polymer Processing Operations apprenticeships",
+      "frameworkRef": "Welsh Polymer Processing Operations · Foundation Apprenticeship and Apprenticeship",
+      "status": "Provider lists Levels 2 and 3. Confirm the framework issue and local intake with the provider.",
+      "level": "Levels 2 and 3",
+      "duration": "Provider and pathway dependent",
+      "scopeNote": "The Welsh provider describes a workplace route for polymer and polymer-composite operations. Level 2 study can support safety, machine-based production, sampling and inspection. Level 3 study can support diagnosis, process improvement and routine servicing where the chosen units cover them.",
       "studyOutcomes": [
-        "Use the Book to build polymer-processing background knowledge and safe evidence habits.",
-        "Connect Book topics to the occupational competence and technical knowledge qualifications selected by the provider.",
-        "Identify applicable communication, numeracy, and digital requirements from the chosen Welsh framework."
+        "Explain safe work, the production cycle and the evidence needed before starting or stopping a process.",
+        "Plan how to document inspection and sampling against the authorised specification.",
+        "For Level 3, compare competing explanations of a process fault and outline the evidence needed to test them.",
+        "Practise clear handover and check which Essential Skills Wales requirements apply to the chosen pathway."
       ],
       "bookChapterIds": [
-        "what-injection-moulding-is",
         "cycle",
         "safety-foundations",
+        "machine-anatomy",
         "material-families",
         "process-baseline",
-        "process-monitoring",
         "documentation",
+        "capability",
+        "process-monitoring",
         "diagnostic-method",
-        "quality-plan"
+        "process-window"
       ],
       "practiceActivityIds": [
         "process-record",
@@ -229,14 +284,23 @@ const EDUCATION_DATA=Object.freeze({
         "handover"
       ],
       "formalRequirements": [
-        "The employer and provider must confirm the current Welsh framework, occupation-specific pathway, qualifications, and Essential Skills Wales requirements.",
-        "No plastics-specific Welsh apprenticeship equivalence is claimed by this MouldMaster mapping.",
-        "MouldMaster does not issue a Welsh apprenticeship completion certificate or regulated qualification."
+        "The Welsh provider confirms the current framework issue, qualifications, unit choices and intake.",
+        "Workplace evidence, practical and written assessments, and applicable Essential Skills Wales requirements are provider-controlled."
       ],
       "source": {
-        "title": "Welsh Government: Apprenticeship frameworks",
-        "url": "https://www.gov.wales/apprenticeship-frameworks"
-      }
+        "title": "Grŵp Llandrillo Menai: Polymer Processing Operations workplace apprenticeship",
+        "url": "https://www.gllm.ac.uk/courses/certificate-in-polymer-operations-available-as-part-of-a-workplace-foundation-apprenticeship-framework-polymer-processing-operations-wales"
+      },
+      "additionalSources": [
+        {
+          "title": "Medr: Welsh apprenticeship frameworks and provider requirements",
+          "url": "https://www.medr.cymru/en/apprenticeships/"
+        },
+        {
+          "title": "Apprenticeship Certificates Wales: published Polymer Processing Operations framework reference FR00484",
+          "url": "https://acwcerts.co.uk/web/wp-content/uploads/2018/07/Polymer_Processing_Operat_Wales_FR00484_2.pdf"
+        }
+      ]
     },
     {
       "id": "uk-northern-ireland-framework-348",
@@ -264,7 +328,7 @@ const EDUCATION_DATA=Object.freeze({
         "process-monitoring",
         "documentation",
         "diagnostic-method",
-        "quality-plan",
+        "capability",
         "process-window"
       ],
       "practiceActivityIds": [
@@ -293,7 +357,7 @@ const EDUCATION_DATA=Object.freeze({
       "status": "Approved 2025-05-26; next review date 2028-05-25 in the qualification file",
       "level": "NCrF / NSQF Level 3.5",
       "duration": "600 hours: 210 theory, 360 practical, and 30 mandatory on-the-job training",
-      "scopeNote": "This is the most injection-moulding-specific reference in the regional map. Its listed modules cover job/process basics, injection operations and troubleshooting, finished-product inspection, workplace health and safety/5S, office software, employability, entrepreneurship, and OJT.",
+      "scopeNote": "This operator qualification covers job and process basics, injection operations and troubleshooting, finished-part inspection, workplace health and safety, 5S, office software, employability, entrepreneurship and on-the-job training.",
       "studyOutcomes": [
         "Explain production instructions, material and mould readiness, and safe work.",
         "Describe injection moulding operations, process monitoring, troubleshooting, and escalation.",
@@ -312,7 +376,7 @@ const EDUCATION_DATA=Object.freeze({
         "process-monitoring",
         "documentation",
         "diagnostic-method",
-        "quality-plan",
+        "capability",
         "dimensional-stability"
       ],
       "practiceActivityIds": [
@@ -370,9 +434,15 @@ const EDUCATION_DATA=Object.freeze({
         "The qualification file names Hindi as an additional language for its qualification/model curriculum; MouldMaster content is currently English."
       ],
       "source": {
-        "title": "National Qualification Register: CIPET MO-IM qualification file",
-        "url": "https://www.nqr.gov.in/public/qualification/file/STT_Qualification_File_MO-IM.pdf"
-      }
+        "title": "National Qualification Register: CIPET Machine Operator – Injection Molding",
+        "url": "https://www.nqr.gov.in/qualifications/14350"
+      },
+      "additionalSources": [
+        {
+          "title": "CIPET: NSQF-aligned qualifications and registration",
+          "url": "https://sdcipet.in/NSQFCourses.aspx"
+        }
+      ]
     }
   ]
 });
@@ -407,7 +477,7 @@ function qmsHtml(q){
 function nzqaHtml(n){
  const current=n.currentInjectionMouldingStandards||[],expired=n.expiredStandardsNotForCurrentAssessmentMapping||[];
  const gates=n.gates||[];
- return '<article class="mm-readiness-card"><span class="eyebrow">New Zealand education readiness</span><h3>NZQA preparation — not approval</h3>'+
+ return '<article class="mm-readiness-card"><span class="eyebrow">New Zealand education readiness</span><h3>NZQA readiness — preparation, not approval</h3>'+
  '<p>The governed NZQA mapping covers <b>'+esc((n.chapterMap||[]).length)+'</b> Book modules and '+esc((n.learningOutcomes||[]).length)+' draft learning outcomes. It is a provider-readiness aid, not an NZQA result.</p>'+
  '<h4>Current Injection Moulding context</h4><div class="mm-readiness-badges">'+current.map(x=>'<span class="mm-readiness-badge">US '+esc(x.id)+' · CMR '+esc(x.cmr||'external')+'</span>').join('')+'</div>'+
  '<h4>Expired / excluded from current assessment mapping</h4><p>'+expired.map(esc).join(', ')+'</p>'+
@@ -423,39 +493,61 @@ function modulesHtml(p){
  return '<details><summary>Official qualification modules and hours</summary><ul>'+p.modules.map(m=>'<li><b>'+esc(m.code)+'</b> — '+esc(m.title)+' ('+esc(m.hours)+' h)</li>').join('')+'</ul></details>';
 }
 function pathwayHtml(e,p){
- const chapters=(p.bookChapterIds||[]).map(id=>'<button type="button" class="ghost" data-book-chapter="'+esc(id)+'">'+esc(titleFor(id))+'</button>').join('');
+ const chapters=p.bookChapterIds.map(id=>`<button type="button" class="ghost" data-education-book-module="${esc(id)}">${esc(titleFor(id))}</button>`).join('');
  const outcomes=(p.studyOutcomes||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
  const gates=(p.formalRequirements||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
- const url=String(p.source?.url||'');
- const sourceLink=url.indexOf('https://')===0?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">Open official source: '+esc(p.source.title||'framework reference')+'</a>':'';
- return '<article class="mm-readiness-card"><span class="eyebrow">'+esc(p.nation)+' · '+esc(p.frameworkRef)+'</span><h3>'+esc(p.title)+'</h3>'+
- '<div class="mm-readiness-badges"><span class="mm-readiness-badge">'+esc(p.level)+'</span><span class="mm-readiness-badge">'+esc(p.status)+'</span><span class="mm-readiness-badge">'+esc(p.duration)+'</span></div>'+
- '<p>'+esc(p.scopeNote)+'</p>'+modulesHtml(p)+
- '<h4>Study outcomes this Book can support</h4><ul>'+outcomes+'</ul>'+
- '<h4>Open mapped Book modules</h4><div class="mm-readiness-badges">'+chapters+'</div>'+
- '<h4>Practice in the app</h4><ul>'+activitiesHtml(e,p)+'</ul>'+
- '<h4>Still needs the relevant provider or workplace</h4><ul>'+gates+'</ul>'+
- '<p>'+sourceLink+'</p></article>';
+ const sourceLinks=[p.source,...(p.additionalSources||[])].map(({title,url})=>
+  `<li><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(title)}</a></li>`).join('');
+ return `<article class="mm-readiness-card" data-education-pathway="${esc(p.id)}">
+  <span class="eyebrow">${esc(p.nation)} · ${esc(p.frameworkRef)}</span><h3>${esc(p.title)}</h3>
+  <div class="mm-readiness-badges"><span class="mm-readiness-badge">${esc(p.level)}</span><span class="mm-readiness-badge">${esc(p.status)}</span><span class="mm-readiness-badge">${esc(p.duration)}</span></div>
+  <p>${esc(p.scopeNote)}</p>${modulesHtml(p)}
+  <h4>What to study</h4><ul>${outcomes}</ul>
+  <h4>Open mapped Book modules</h4><div class="mm-readiness-badges">${chapters}</div>
+  <h4>Formative practice</h4><ul>${activitiesHtml(e,p)}</ul>
+  <button type="button" class="ghost" data-education-practice>Open Practice in the app</button>
+  <h4>Provider or workplace requirements</h4><ul>${gates}</ul>
+  <h4>Official sources</h4><ul>${sourceLinks}</ul>
+ </article>`;
 }
 function educationHtml(e){
- const selected=(e.regionTabs||[]).find(x=>x.id===activeRegion)||e.regionTabs?.[0];
- const tabs=(e.regionTabs||[]).map(x=>'<button type="button" class="ghost" data-region="'+esc(x.id)+'" aria-pressed="'+(x.id===activeRegion?'true':'false')+'">'+esc(x.label)+'</button>').join('');
- const pathways=(e.pathways||[]).filter(p=>p.region===(selected?.id||'nz'));
- return '<section class="card"><span class="eyebrow">Regional study pathways · checked '+esc(e.checked)+'</span><h2>Study injection moulding in your framework context</h2>'+
- '<p>Choose a region to see the official framework context, Book modules, app practice, and external assessment requirements. UK routes are separated by nation.</p>'+
- '<div class="mm-readiness-boundary"><b>Study-support mapping only.</b> This crosswalk is provisional and is not formal qualification equivalence, accreditation, credit, provider consent, assessed competence, or authority to operate a machine.</div>'+
- '<div class="mm-readiness-badges" role="group" aria-label="Choose education pathway region">'+tabs+'</div></section>'+
- '<section class="mm-readiness-grid">'+pathways.map(p=>pathwayHtml(e,p)).join('')+'</section>';
+ const tabs=e.regionTabs.map(({id,label})=>
+  `<button type="button" class="ghost" data-education-region="${esc(id)}" aria-controls="mmEducationPathways" aria-pressed="${id===activeRegion}">${esc(label)}</button>`).join('');
+ return `<section class="card">
+  <span class="eyebrow">Framework sources checked ${esc(e.checked)}</span><h2>Regional study pathways</h2>
+  <p>Choose a region to see Book readings, app practice and provider requirements. The UK has separate pathways for each nation.</p>
+  <p class="mm-readiness-boundary">${esc(e.claimBoundary)}</p>
+  <div class="mm-readiness-badges" role="group" aria-label="Choose education pathway region">${tabs}</div>
+ </section><section id="mmEducationPathways" class="mm-readiness-grid" aria-label="Study pathways in the selected region"></section>`;
+}
+function renderEducationRegion(){
+ for(const button of view.querySelectorAll('[data-education-region]')){
+  const selected=button.dataset.educationRegion===activeRegion;
+  button.setAttribute('aria-pressed',String(selected));
+  button.classList.toggle('secondary',selected);
+  button.classList.toggle('ghost',!selected);
+ }
+ const education=data.education;
+ view.querySelector('#mmEducationPathways').innerHTML=education.pathways.filter(p=>p.region===activeRegion)
+  .map(p=>pathwayHtml(education,p)).join('');
 }
 function ensureView(){
  if(view)return view;
  style();const main=document.querySelector('#mainContent,.main,main');if(!main)return null;
  view=document.createElement('section');view.id='mmStandardsReadinessView';view.className='view hidden mm-readiness-view';view.innerHTML='<section class="card"><span class="eyebrow">Governed support layer</span><h2>Standards & readiness</h2><p>Loading current governed support contracts…</p></section>';
- view.addEventListener('click',function(event){
-  const regionButton=event.target?.closest?.('[data-region]');
-  if(regionButton){activeRegion=regionButton.dataset.region||'nz';render();return;}
-  const chapterButton=event.target?.closest?.('[data-book-chapter]');
-  if(chapterButton){window.MMBook?.openChapter?.(chapterButton.dataset.bookChapter);return;}
+ view.addEventListener('click',event=>{
+  const regionButton=event.target.closest('[data-education-region]');
+  if(regionButton){
+   activeRegion=regionButton.dataset.educationRegion;
+   renderEducationRegion();
+   return;
+  }
+  const moduleButton=event.target.closest('[data-education-book-module]');
+  if(moduleButton){
+   void window.MMBook?.openChapter(moduleButton.dataset.educationBookModule);
+   return;
+  }
+  if(event.target.closest('[data-education-practice]'))window.switchView?.('scenarios');
  });
  main.appendChild(view);return view;
 }
@@ -463,46 +555,46 @@ function render(){
  const root=ensureView();if(!root||!data)return;
  root.innerHTML='<section class="card"><span class="eyebrow">Governed support layer</span><h2>Standards & readiness</h2><p>Use these surfaces to understand evidence and provider-readiness boundaries. They do not create certification, accreditation, consent, competence or production authority.</p></section>'+
  educationHtml(data.education)+'<section class="mm-readiness-grid">'+qmsHtml(data.qms)+nzqaHtml(data.nzqa)+'</section>';
+ renderEducationRegion();
 }
 function open(region){
- if(region&&['nz','uk','india'].includes(region))activeRegion=region;
+ if(EDUCATION_DATA.regionTabs.some(tab=>tab.id===region))activeRegion=region;
  const root=ensureView();if(!root)return;
+ window.MMBook?.prepareRouteExit?.('standards-readiness');
  render();document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'));root.classList.remove('hidden');
  const title=document.getElementById('pageTitle'),sub=document.getElementById('pageSubtitle');if(title)title.textContent='Standards & readiness';if(sub)sub.textContent='New Zealand, UK nation-specific, and India study pathways';
  window.MM_APP_SHELL?.navigation?.setCustomActive?.('standards-readiness','more');
+ root.closest('.main')?.scrollTo({top:0,behavior:'instant'});
+ window.scrollTo({top:0,behavior:'instant'});
+ const heading=root.querySelector('h2');
+ if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
 }
 function install(){
  const shell=window.MM_APP_SHELL;if(!shell?.navigation?.register)return false;
- if(!navDispose)navDispose=shell.navigation.register({id:'standards-readiness',label:'Standards & readiness',icon:'§',description:'ISO 9001 support and NZ, UK, and India education pathway maps.',order:55,group:'progress',mobileGroup:'more',action:()=>open()});
+ if(!navDispose)navDispose=shell.navigation.register({id:'standards-readiness',label:'Standards & readiness',icon:'§',description:'ISO 9001 support and NZQA provider-readiness boundaries.',order:55,group:'progress',mobileGroup:'more',action:()=>open()});
  return true;
 }
-function mountBookPathwayCard(){
- const hero=document.querySelector('#mmBookView [data-mm-book-hero]');
- if(!hero||hero.querySelector('#mm-book-pathway-card'))return false;
- const card=document.createElement('section');card.id='mm-book-pathway-card';card.className='mm-book-pathway-card';
- card.innerHTML='<span class="eyebrow">Regional study pathways</span><h3>Use this Book with NZ, UK, and India study routes</h3><p>Open a nation-aware map to see related Book modules, app practice, and the parts that require a provider or workplace.</p><div class="mm-readiness-badges"></div>';
- const actions=card.querySelector('.mm-book-pathway-actions');
- [['nz','New Zealand'],['uk','United Kingdom'],['india','India']].forEach(item=>{
-  const button=document.createElement('button');button.type='button';button.className='ghost';button.dataset.openRegion=item[0];button.textContent=item[1];
-  button.addEventListener('click',function(){
-   activeRegion=item[0];
-   const navButton=document.querySelector('#nav [data-mm-registry-nav="standards-readiness"]');
-   if(navButton)navButton.click();else open(item[0]);
-  });
-  actions.appendChild(button);
- });
- hero.appendChild(card);return true;
+function mountBookPathwayLink(){
+ const guide=document.querySelector('#mmBookView .mm-book-contents-guide');
+ if(!data||!guide||guide.querySelector('[data-mm-book-education-pathways]'))return;
+ const link=document.createElement('button');
+ link.type='button';
+ link.className='ghost';
+ link.dataset.mmBookEducationPathways='1';
+ link.textContent='Regional study pathways: NZ, UK and India';
+ link.addEventListener('click',()=>open());
+ guide.querySelector('summary').after(link);
 }
 async function init(){
  ensureView();
  try{
   const [qms,nzqa]=await Promise.all([getJson(QMS),getJson(NZQA)]);
   if(qms?.id!=='mouldmaster-iso9001-qms-support'||nzqa?.id!=='mouldmaster-nzqa-education-readiness'||EDUCATION_DATA?.id!=='mouldmaster-regional-education-pathways')throw new Error('readiness contract identity mismatch');
-  data=Object.freeze({qms,nzqa,education:EDUCATION_DATA});render();mountBookPathwayCard();
+  data=Object.freeze({qms,nzqa,education:EDUCATION_DATA});render();mountBookPathwayLink();
  }catch(e){if(view)view.innerHTML='<section class="card"><h2>Standards & readiness unavailable</h2><p>The governed support contracts could not be verified or loaded. No compliance or approval status should be inferred.</p></section>';console.error('[MouldMaster readiness]',e);}
  install();
 }
-window.addEventListener('mm:book-manifest-ready',mountBookPathwayCard);
+window.addEventListener('mm:book-manifest-ready',mountBookPathwayLink);
 if(!install())window.addEventListener('mm:domains-ready',install,{once:true});
 window.MM_STANDARDS_READINESS=Object.freeze({version:VERSION,open,getData:()=>data});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();

@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.11.03.2 exact technical candidate source eebd169218d108bfadc8c78898b779ee373e2613, runtime fingerprint sha256:10e62706fc5ed4bfdf2442172648b53c888c246cb2c9324243b5be284d9878df, producer run 41601061912, and retained artifact 13214790061 are bound in the release contracts. This establishes software candidate provenance only; no human, device, provider or production approval is implied. |
-| Behavioral / browser | **pass** | PASS: release 2026.11.03.2, source eebd169218d108bfadc8c78898b779ee373e2613 passed Mobile Browser QA run 41601062178, Question Quality 50-Pass run 41601061974, and Combined Learn Book QA run 41601062296. The strict 52-screen visual regression matrix passed; independent visual-owner, human, device, provider and production approval remains HOLD. |
-| External human / device | **hold** | Independent human/device/provider evidence remains HOLD for release 2026.11.03.2; no automated workflow can establish it. |
+| Static / contract | **fail** | HOLD: exact-source candidate retention and automated quality checks are pending. |
+| Behavioral / browser | **fail** | HOLD: exact-source candidate retention and automated quality checks are pending. |
+| External human / device | **hold** | Independent human, device and provider evidence remains HOLD for release 2026.11.07.1. |

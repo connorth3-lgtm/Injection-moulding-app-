@@ -62,6 +62,57 @@ test.describe('canonical startup deep links',()=>{
  });
 });
 
+test('regional study pathways connect the app and Book on a phone',async({page})=>{
+ const pageErrors=[];
+ page.on('pageerror',error=>pageErrors.push(error.message));
+ await openApp(page,360);
+ await mobileMore(page);
+ const launcher=page.locator('[data-mm-registry-menu="standards-readiness"]');
+ await revealMoreAction(page,launcher);
+ await launcher.click();
+ const readiness=page.locator('#mmStandardsReadinessView');
+ const group=readiness.getByRole('group',{name:'Choose education pathway region'});
+ const cards=readiness.locator('[data-education-pathway]');
+ const knownModules=await page.evaluate(async()=>{
+  const manifest=await window.MMBook.load();
+  return manifest.parts.flatMap(part=>part.chapters.map(chapter=>chapter.id));
+ });
+ for(const [region,headings] of [
+  ['New Zealand',[/Plastics Processing \(Level 3\)/,/Plastics Processing \(Level 4\)/]],
+  ['United Kingdom',[/Polymer processing technician/,/Scientific, Technical and Formulation Processing/,/Polymer Processing Operations apprenticeships/,/Polymer processing operations apprenticeship framework/]],
+  ['India',[/Machine Operator.*Injection Molding/]],
+ ]){
+  const regionButton=group.getByRole('button',{name:region,exact:true});
+  await regionButton.focus();
+  await regionButton.press('Enter');
+  await expect(regionButton).toBeFocused();
+  await expect(regionButton).toHaveAttribute('aria-pressed','true');
+  await expect(group.locator('[aria-pressed="true"]')).toHaveCount(1);
+  await expect(cards).toHaveCount(headings.length);
+  for(const title of headings)await expect(cards.getByRole('heading',{name:title})).toBeVisible();
+  for(const card of await cards.all()){
+   const moduleIds=await card.locator('[data-education-book-module]').evaluateAll(nodes=>nodes.map(node=>node.dataset.educationBookModule));
+   expect(moduleIds.length).toBeGreaterThan(0);
+   expect(moduleIds.filter(id=>!knownModules.includes(id))).toEqual([]);
+   await expect(card.getByRole('link').first()).toHaveAttribute('href',/^https:\/\//);
+  }
+  await expectNoHorizontalOverflow(page,region+' regional study pathways');
+ }
+ await expect(cards.getByRole('link',{name:/National Qualification Register/})).toHaveAttribute('href','https://www.nqr.gov.in/qualifications/14350');
+ await cards.getByText('Official qualification modules and hours').click();
+ await expect(cards.getByText('Mandatory on-the-job training (30 h)')).toBeVisible();
+ await cards.getByRole('button',{name:'What Injection Moulding Is',exact:true}).click();
+ const book=page.locator('#mmBookView');
+ await expect(book.locator('[data-mm-book-reader] h2')).toHaveText('What injection moulding is and what the process must achieve');
+ await book.getByRole('button',{name:'Book contents'}).click();
+ await book.getByText('Reading guide & editorial notes',{exact:true}).click();
+ await book.getByRole('button',{name:'Regional study pathways: NZ, UK and India'}).click();
+ await expect(group.getByRole('button',{name:'India',exact:true})).toHaveAttribute('aria-pressed','true');
+ await cards.getByRole('button',{name:'Open Practice in the app'}).click();
+ await expectVisible(page,'#scenarios .mm-practice-hub');
+ expect(pageErrors).toEqual([]);
+});
+
 for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name:'desktop',width:1440}]){
  test.describe('UI-only feature reachability '+viewport.name,()=>{
   test('dashboard never exposes obsolete three-certificate denominator',async({page})=>{
