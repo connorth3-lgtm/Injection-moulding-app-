@@ -59,7 +59,7 @@ function pathwayHtml(e,p){
  const outcomes=(p.studyOutcomes||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
  const gates=(p.formalRequirements||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
  const url=String(p.source?.url||'');
- const sourceLink=/^https:\\/\\//.test(url)?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">Open official source: '+esc(p.source.title||'framework reference')+'</a>':'';
+ const sourceLink=url.indexOf('https://')===0?'<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">Open official source: '+esc(p.source.title||'framework reference')+'</a>':'';
  return '<article class="mm-pathway-card"><span class="eyebrow">'+esc(p.nation)+' · '+esc(p.frameworkRef)+'</span><h3>'+esc(p.title)+'</h3>'+
  '<div class="mm-readiness-badges"><span class="mm-readiness-badge">'+esc(p.level)+'</span><span class="mm-readiness-badge">'+esc(p.status)+'</span><span class="mm-readiness-badge">'+esc(p.duration)+'</span></div>'+
  '<p>'+esc(p.scopeNote)+'</p>'+modulesHtml(p)+
