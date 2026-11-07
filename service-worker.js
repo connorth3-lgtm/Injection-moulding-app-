@@ -98,7 +98,6 @@ const CORE=[
   './src/domains/learning/book-data/book-material-regional-evidence-v1.json',
   './src/domains/learning/book-data/book-material-search-index-v1.json',
   './src/domains/learning/book-data/nzqa-education-readiness-v1.json',
-  './data/education-pathways-nz-uk-india-v1.json',
   './src/domains/learning/book-data/nzqa-provider-evidence-templates-v1.json',
   './src/domains/quality/data/quality-management-iso9001-v1.json',
   './src/domains/materials/material-registry.js',
