@@ -629,6 +629,7 @@ for(const width of [390,810]){
     await openApp(page);
     await page.evaluate(()=>switchView('materials'));
 
+    await page.locator('#mmMaterialLearningAnchor > summary').click();
     await page.locator('#materials .mat-tabs button').filter({hasText:'Interactive labs'}).click();
     const labs=page.locator('#materials .mat-shell .mat-labs');
     await expect(labs.locator(':scope > .mat-lab')).toHaveCount(4);
