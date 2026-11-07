@@ -4,7 +4,7 @@ Checked 8 November 2026. This note records the sources and scope used by the app
 
 ## What the mapping does
 
-Open **More → Standards & readiness** in the app or **Book → Reading guide & editorial notes → Regional study pathways**. Choose New Zealand, the UK or India, then open mapped Book modules and the app's practice drills. The regional view also lists activities for preparing fictional records and discussing the evidence a provider or workplace would need.
+Open **More → Learning & progress → Standards & readiness** in the app or **Book → Reading guide & editorial notes → Regional study pathways**. Choose New Zealand, the UK or India, then open mapped Book modules or the app's Practice area. The regional view also lists activities for preparing fictional records and discussing the evidence a provider or workplace would need.
 
 The crosswalk is provisional editorial study support. It does not claim formal equivalence, qualification approval, credit, provider consent to assess, qualification completion, workplace competence, or machine-operation authority. App activities and reading time do not count as mandated training or on-the-job hours. Independent curriculum and subject-matter review remains a separate gate.
 

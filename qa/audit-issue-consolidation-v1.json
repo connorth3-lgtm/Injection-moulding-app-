@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.11.07.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
+  "candidateSourceSha": "40196618576012fb6f2bf682fe39a58dedef55a3",
   "scope": "Regional study pathways connect the Book and app for New Zealand, the four UK nations and India.",
-  "approvalBoundary": "Release 2026.11.07.1 awaits the retained exact-source technical candidate. Independent validation and tester distribution remain HOLD.",
+  "approvalBoundary": "Release 2026.11.07.1 has exact-source technical candidate 40196618576012fb6f2bf682fe39a58dedef55a3 in artifact 13578975898. All seven independent external review streams remain HOLD. Tester distribution remains STOP and production authority is advisory-only.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,

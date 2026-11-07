@@ -406,8 +406,9 @@ elif visual.get('release')=='2026.11.03.1':
          and 'no masking or skipped surfaces' in review_current.lower(),
          '2026.11.03.1 technical visual baseline must retain strict coverage and explicit owner HOLD')
 elif visual.get('release')=='2026.11.03.2':
-    # Strict technical comparison only; visual-owner approval remains pending.
-    review_current=text('qa/VISUAL_REVIEW_2026.11.03.2.md')
+    # The current release may reuse the unchanged technical baseline. Its
+    # own review packet must still identify the current retained candidate.
+    review_current=text(f"qa/VISUAL_REVIEW_{V['web_release']}.md")
     need(visual.get('ref')=='visual-baseline/2026.11.03.2'
          and visual.get('commit')=='9798f77db2d6a5b4b0a078faeb152bd23c847449'
          and visual.get('maxDiffPixels')==12
@@ -420,6 +421,8 @@ elif visual.get('release')=='2026.11.03.2':
          and 'not visual-owner approval' in visual.get('policy','').lower()
          and 'STATUS: VISUAL BASELINE HOLD' in review_current
          and f"- Candidate source: `{current_candidate['sourceSha']}`" in review_current
+         and f"- Reference source: `{visual['commit']}`" in review_current
+         and f"- Baseline reference: `{visual['ref']}`" in review_current
          and 'Human visual-owner decision: **PENDING**' in review_current
          and 'no masking or skipped surfaces' in review_current.lower(),
          '2026.11.03.2 technical visual baseline must retain strict coverage and explicit owner HOLD')

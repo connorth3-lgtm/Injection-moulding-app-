@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "fail",
+    "technicalAutomation": "pass",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "fail",
-      "meaning": "HOLD: exact-source candidate retention and automated quality checks are pending."
+      "status": "pass",
+      "meaning": "PASS: release 2026.11.07.1, source 40196618576012fb6f2bf682fe39a58dedef55a3, fingerprint sha256:bd69ddd37b7f71b0666cc7cac359be99d73a37dab99a7c897b3a83ce8539ffb3, producer run 42383823100, and retained artifact 13578975898 are bound in the technical release records."
     },
     "behavioralBrowser": {
-      "status": "fail",
-      "meaning": "HOLD: exact-source candidate retention and automated quality checks are pending."
+      "status": "pass",
+      "meaning": "PASS: release 2026.11.07.1, source 40196618576012fb6f2bf682fe39a58dedef55a3 passed Mobile Browser QA run 42383823007, Question Quality 50-Pass run 42383823234, Combined Learn Book QA run 42383823086, and Read Aloud QA run 42383823031. The strict 52-screen visual comparison passed. Independent review remains HOLD."
     },
     "externalHumanDevice": {
       "status": "hold",
