@@ -5,7 +5,7 @@
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
   "candidateSourceSha": null,
   "scope": "Consolidate repeated controls at the bottom of Learn, Practice and Materials.",
-  "approvalBoundary": "Release 2026.11.08.2 awaits exact-source and visual review. External validation and tester distribution remain HOLD.",
+  "approvalBoundary": "Owner visual approval is recorded for the exact Learn, Practice and Materials source. A successful exact-source technical candidate is still pending; external validation and tester distribution remain HOLD.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,

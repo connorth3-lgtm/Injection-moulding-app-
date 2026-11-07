@@ -426,6 +426,46 @@ elif visual.get('release')=='2026.11.03.2':
          and 'Human visual-owner decision: **PENDING**' in review_current
          and 'no masking or skipped surfaces' in review_current.lower(),
          '2026.11.03.2 technical visual baseline must retain strict coverage and explicit owner HOLD')
+elif visual.get('release')=='2026.11.08.2':
+    # The owner approved the exact Learn / Practice / Materials screenshot changes
+    # after reviewing the comparison artifact. Lock only this source, artifact,
+    # unchanged 52-capture matrix and 12-pixel threshold; approval cannot spread
+    # to later redesigns or replace any independent validation stream.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.08.2.md')
+    approved_captures=(
+        'desktop-1440x900-learn | 163,754',
+        'desktop-1440x900-materials | 160,657',
+        'desktop-1440x900-practice | 81,347',
+        'phone-360x800-learn | 43,944',
+        'phone-360x800-materials | 64,310',
+        'phone-412x915-learn | 50,626',
+        'phone-412x915-materials | 82,276',
+        'tablet-810x1080-learn | 135,286',
+        'tablet-810x1080-materials | 169,886',
+        'tablet-810x1080-practice | 76,473',
+    )
+    need(visual.get('ref')=='visual-baseline/2026.11.08.2'
+         and visual.get('commit')=='e062c685bac1be2b32ab8564d625e3168042821f'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'OWNER APPROVED VISUAL BASELINE FOR EXACT SOURCE e062c685bac1be2b32ab8564d625e3168042821f' in review_current
+         and f"- Exact screenshot source: `{visual['commit']}`" in review_current
+         and '42420636034' in review_current
+         and '13593550727' in review_current
+         and 'sha256:0db417bd2b4bcdb326180c1c60ebab84f3719a38152620bccbcb7447e2ea8c3f' in review_current
+         and '52 expected and 52 captured surfaces' in review_current
+         and '42 of 52 comparisons' in review_current
+         and all(capture in review_current for capture in approved_captures)
+         and 'No mask' in review_current
+         and 'remain **HOLD**' in review_current
+         and 'owner-approved visual design baseline' in visual.get('policy','').lower()
+         and 'independent accessibility' in visual.get('policy','').lower(),
+         '2026.11.08.2 approved baseline must remain bound to its exact source, artifact, scope and strict 52-screen matrix')
 elif visual.get('release')=='2026.10.22.2':
     # The 2026.10.22.2 Book comparison was separately reviewed by the owner
     # from source-linked screenshots. Lock this exact reviewed ref/source/artifact

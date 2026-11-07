@@ -1,8 +1,8 @@
 # MouldMaster 2026.11.08.2 — external validation status
 
-**STATUS: HOLD — exact-source technical candidate and visual review pending for release 2026.11.08.2. All seven independent review streams remain HOLD.**
+**STATUS: HOLD — owner visual review is approved for the exact Learn, Practice and Materials screenshots; the exact-source technical candidate is still pending. All seven independent review streams remain HOLD.**
 
-This candidate consolidates the Learn interactive lesson, the guided fault reviews in Practice and the Materials catalogue tools.
+This candidate consolidates the Learn interactive lesson, guided fault practice in Practice and the Materials catalogue tools. The exact visual approval is recorded in qa/VISUAL_REVIEW_2026.11.08.2.md; it does not create a retained technical candidate or satisfy any independent validation stream.
 
 
 
