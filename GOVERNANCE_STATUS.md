@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.11.03.2`**.
+Current governed web candidate: **`2026.11.08.1`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.11.03.2 exact technical candidate source eebd169218d108bfadc8c78898b779ee373e2613, runtime fingerprint sha256:10e62706fc5ed4bfdf2442172648b53c888c246cb2c9324243b5be284d9878df, producer run 41601061912, and retained artifact 13214790061 are bound in the release contracts. This establishes software candidate provenance only; no human, device, provider or production approval is implied. |
-| Behavioral / browser | **pass** | PASS: release 2026.11.03.2, source eebd169218d108bfadc8c78898b779ee373e2613 passed Mobile Browser QA run 41601062178, Question Quality 50-Pass run 41601061974, and Combined Learn Book QA run 41601062296. The strict 52-screen visual regression matrix passed; independent visual-owner, human, device, provider and production approval remains HOLD. |
-| External human / device | **hold** | Independent human/device/provider evidence remains HOLD for release 2026.11.03.2; no automated workflow can establish it. |
+| Static / contract | **pass** | PASS: release 2026.11.08.1, source 452334f3260f212fb1eec1bed3f99ffac65f522f, fingerprint sha256:18dc181891537daf93ca8d12c397e646027c639a72aef2a2ebcc0fb2d4dd5718, producer run 42406093540, and retained artifact 13587781254 are bound in the technical release records. |
+| Behavioral / browser | **pass** | PASS: release 2026.11.08.1, source 452334f3260f212fb1eec1bed3f99ffac65f522f passed Mobile Browser QA run 42406093441, Question Quality 50-Pass run 42406093434, Combined Learn Book QA run 42406093449, and Read Aloud QA run 42406093510. The strict 52-screen visual comparison passed. Independent review remains HOLD. |
+| External human / device | **hold** | Independent human, device and provider evidence remains HOLD for release 2026.11.07.1. |

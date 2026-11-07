@@ -1,4 +1,5 @@
 const {test,expect}=require('@playwright/test');
+const {readFile}=require('node:fs/promises');
 const BASE='http://127.0.0.1:4173/';
 
 async function openApp(page,width,learningAwards=[]){
@@ -60,6 +61,123 @@ test.describe('canonical startup deep links',()=>{
    await expectVisible(page,selector);
   }
  });
+});
+
+test('regional study pathways connect the app and Book on a phone',async({page})=>{
+ const pageErrors=[];
+ page.on('pageerror',error=>pageErrors.push(error.message));
+ await openApp(page,360);
+ await mobileMore(page);
+ const launcher=page.locator('[data-mm-registry-menu="standards-readiness"]');
+ await revealMoreAction(page,launcher);
+ await launcher.click();
+ const readiness=page.locator('#mmStandardsReadinessView');
+ const group=readiness.getByRole('group',{name:'Choose education pathway region'});
+ const cards=readiness.locator('[data-education-pathway]');
+ const knownModules=await page.evaluate(async()=>{
+  const manifest=await window.MMBook.load();
+  return manifest.parts.flatMap(part=>part.chapters.map(chapter=>chapter.id));
+ });
+ for(const [region,headings] of [
+  ['New Zealand',[/Plastics Processing \(Level 3\)/,/Plastics Processing \(Level 4\)/]],
+  ['United Kingdom',[/Polymer processing technician/,/Scientific, Technical and Formulation Processing/,/Polymer Processing Operations apprenticeships/,/Polymer processing operations apprenticeship framework/]],
+  ['India',[/Machine Operator.*Injection Molding/]],
+ ]){
+  const regionButton=group.getByRole('button',{name:region,exact:true});
+  await regionButton.focus();
+  await regionButton.press('Enter');
+  await expect(regionButton).toBeFocused();
+  await expect(regionButton).toHaveAttribute('aria-pressed','true');
+  await expect(group.locator('[aria-pressed="true"]')).toHaveCount(1);
+  await expect(cards).toHaveCount(headings.length);
+  for(const title of headings)await expect(cards.getByRole('heading',{name:title})).toBeVisible();
+  for(const card of await cards.all()){
+   const moduleIds=await card.locator('[data-education-book-module]').evaluateAll(nodes=>nodes.map(node=>node.dataset.educationBookModule));
+   expect(moduleIds.length).toBeGreaterThan(0);
+   expect(moduleIds.filter(id=>!knownModules.includes(id))).toEqual([]);
+   await expect(card.getByRole('link').first()).toHaveAttribute('href',/^https:\/\//);
+   const course=card.locator('[data-education-course]');
+   await course.locator(':scope > summary').click();
+   await expect(course.getByText('Draft for provider review',{exact:true})).toBeVisible();
+   await expect(course.getByText(/^Study and evidence map/)).toBeVisible();
+   await course.locator(':scope > summary').click();
+  }
+  if(region==='United Kingdom'){
+   const england=cards.locator('[data-education-course="uk-england-st1328"]');
+   await england.locator(':scope > summary').click();
+   await england.getByText('End-point assessment methods',{exact:true}).click();
+   await expect(england.getByRole('heading',{name:'Workplace observation with questions'})).toBeVisible();
+   await expect(england.getByText(/40-question test with 60 minutes/)).toBeVisible();
+   await england.locator(':scope > summary').click();
+  }
+  await expectNoHorizontalOverflow(page,region+' regional study pathways');
+ }
+ await expect(cards.getByRole('link',{name:/National Qualification Register/})).toHaveAttribute('href','https://www.nqr.gov.in/qualifications/14350');
+ await cards.getByText('Official qualification modules and hours').click();
+ await expect(cards.getByText('Mandatory on-the-job training (30 h)')).toBeVisible();
+ await expect(cards.getByText(/Theory 90 h · Practical 180 h/)).toBeVisible();
+ const india=cards.locator('[data-education-course]');
+ await india.locator(':scope > summary').click();
+ await india.getByText('Delivery and training records',{exact:true}).click();
+ await expect(india.getByText(/180 theory, 30 employability, 360 practical and 30 mandatory on-the-job hours/)).toBeVisible();
+ await expect(india.getByText(/200 theory and 400 practical marks/)).toBeVisible();
+ await india.getByText(/^Study and evidence map/).click();
+ await expect(india.getByText(/CPC\/N0221 AO11 \(repeated source row\)/)).toBeVisible();
+ const indiaSafety=india.locator('[data-education-exercise="india-5s"]');
+ await india.locator('[data-education-workbook="india-5s"]').first().click();
+ await expect(indiaSafety.locator(':scope > summary')).toBeFocused();
+ const hindi=indiaSafety.locator('details[lang="hi"]');
+ await hindi.locator(':scope > summary').click();
+ await expect(hindi.locator('ol > li').first()).toBeVisible();
+ await hindi.getByText('उत्तर और कारण देखें',{exact:true}).first().click();
+ await expect(hindi.locator('ol details[open] p')).toBeVisible();
+ await expectNoHorizontalOverflow(page,'Expanded India mapping and Hindi workbook');
+ await page.evaluate(()=>{document.documentElement.style.fontSize='200%'});
+ await expectNoHorizontalOverflow(page,'Expanded India mapping at 200% text scaling');
+ await page.evaluate(()=>{document.documentElement.style.fontSize=''});
+ await india.getByText('Provider review and blank records',{exact:true}).click();
+ const downloaded=page.waitForEvent('download');
+ await india.getByRole('button',{name:'Download draft assessor pack'}).click();
+ const download=await downloaded;
+ expect(download.suggestedFilename()).toBe('mouldmaster-india-cipet-mo-im-assessor-draft.md');
+ const assessorPack=await readFile(await download.path(),'utf8');
+ for(const marker of ['Draft for provider review','## Formative workbooks','## Provider review','Workplace observation','180 theory, 30 employability','CPC/N0221 AO11 (repeated source row)','काल्पनिक']){
+  expect(assessorPack).toContain(marker);
+ }
+ await india.locator(':scope > summary').click();
+ await cards.getByRole('button',{name:'What Injection Moulding Is',exact:true}).click();
+ const book=page.locator('#mmBookView');
+ await expect(book.locator('[data-mm-book-reader] h2')).toHaveText('What injection moulding is and what the process must achieve');
+ await book.getByRole('button',{name:'Book contents'}).click();
+ await book.getByText('Reading guide & editorial notes',{exact:true}).click();
+ await book.getByRole('button',{name:'Regional study pathways: NZ, UK and India'}).click();
+ await expect(group.getByRole('button',{name:'India',exact:true})).toHaveAttribute('aria-pressed','true');
+ await cards.getByRole('button',{name:'Open Practice in the app'}).click();
+ await expectVisible(page,'#scenarios .mm-practice-hub');
+ await mobileMore(page);
+ const bookLink=page.locator('[data-mm-registry-menu="book"]');
+ await revealMoreAction(page,bookLink);
+ await bookLink.click();
+ const supplements=book.locator('[data-mm-book-education-supplements]');
+ await supplements.locator(':scope > summary').click();
+ const workbook=supplements.locator('[data-education-exercise="quality-record"]');
+ await workbook.locator(':scope > summary').click();
+ await expect(workbook.getByText(/fictional training drawing/)).toBeVisible();
+ await supplements.locator('[data-education-course-link="nz-nzqa-4401"]').click();
+ const operator=cards.locator('[data-education-course="nz-nzqa-4401"]');
+ await expect(operator.locator(':scope > summary')).toBeFocused();
+ const change=operator.locator('[data-education-practical="27926"]');
+ await change.locator(':scope > summary').click();
+ await expect(change.getByText(/two eligible advanced moulds/)).toBeVisible();
+ await expect(change.getByText(/three different types/)).toBeVisible();
+ await expect(change.locator('ol > li')).toHaveCount(8);
+ await operator.getByText(/^Study and evidence map/).click();
+ const lesson=operator.locator('[data-education-lesson="41"]').first();
+ const title=(await lesson.textContent()).split(' · ')[1];
+ await lesson.click();
+ await expect(page.locator('#lesson').getByRole('heading',{name:title,exact:true})).toBeVisible();
+ await expectVisible(page,'#lesson');
+ expect(pageErrors).toEqual([]);
 });
 
 for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name:'desktop',width:1440}]){

@@ -90,6 +90,81 @@ for marker in ["ISO 9001 support — evidence, not certification","NZQA readines
 need("localStorage" not in runtime and "indexedDB" not in runtime,"readiness surface must remain read-only")
 need("quality-management-iso9001-v1.json" in runtime and "nzqa-education-readiness-v1.json" in runtime,"readiness runtime must load governed contracts")
 
+# Regional course packs use existing lesson IDs and the governed Book module IDs.
+course_asset="src/domains/learning/book-data/education-course-packs-v1.json"
+course_canonical=ROOT/"data/education-course-packs-v1.json"
+need(course_canonical.read_bytes()==(ROOT/course_asset).read_bytes(),"regional course pack source/runtime pair drifted")
+courses=load(course_canonical)
+embedded=json.JSONDecoder().raw_decode(runtime.split("const EDUCATION_DATA=Object.freeze(",1)[1])[0]
+release_version=load(ROOT/"version.json")["education_pathways_version"]
+need(courses["schema"]==1 and courses["id"]=="mouldmaster-education-course-packs","course pack identity mismatch")
+need(courses["version"]==embedded["version"]==release_version,"regional study content versions differ")
+need(courses["status"]=="draft-provider-review" and "Approved providers control" in courses["boundary"],"course packs require provider review")
+packs=courses["packs"]
+need(len(packs)==7 and set(packs)=={p["id"] for p in embedded["pathways"]},"each regional pathway requires one course pack")
+lessons_text=text(ROOT/"src/core-runtime/core-inline-002.js").split("window.MM_DATA = ",1)[1].lstrip()
+lesson_ids={lesson["id"] for lesson in json.JSONDecoder().raw_decode(lessons_text)[0]["lessons"]}
+sources=courses["sources"]
+exercises=courses["exercises"]
+used_exercises=set()
+refs={}
+for pid,pack in packs.items():
+    need(pack["scope"] and pack["delivery"] and pack["rows"],f"{pid} is missing delivery scope or mappings")
+    need(all(sources[s]["url"].startswith("https://") and sources[s]["title"] for s in pack["sourceIds"]),f"{pid} has an invalid source")
+    identifiers=[ref for row in pack["rows"] for ref in row["refs"]]
+    refs[pid]=set(identifiers)
+    need(len(identifiers)==len(refs[pid]),f"{pid} has duplicate requirement references")
+    for row in pack["rows"]:
+        need(row["refs"] and row["title"] and row["evidence"],f"{pid} has an incomplete mapping")
+        need(row["coverage"] in {"mapped","supplement","workplace","provider"},f"{pid} has an invalid coverage category")
+        need(set(row["book"])<=set(chapter_ids) and set(row["lessons"])<=lesson_ids,f"{pid} has a broken learning link: {row['title']}")
+        if row["exercise"]: used_exercises.add(row["exercise"])
+need(used_exercises==set(exercises),"workbook links must cover exactly the published workbooks")
+need({key for key,workbook in exercises.items() if "hi" in workbook}=={"india-5s","india-office","india-employability","india-enterprise"},"Hindi workbook set drifted")
+for key,workbook in exercises.items():
+    for content in [workbook, *([workbook["hi"]] if "hi" in workbook else [])]:
+        need(content["title"] and content["context"] and content["reading"] and len(content["questions"])>=2,f"{key} has missing practice content")
+        need(all(q["prompt"] and q["feedback"] for q in content["questions"]),f"{key} has a question without feedback")
+
+for qualification in ("4401","4402"):
+    expected={f"{qualification} core {i}" for i in range(1,6)}|{f"{qualification} Injection Moulding {i}" for i in range(1,3)}
+    need(refs[f"nz-nzqa-{qualification}"]==expected,f"NZQA {qualification} graduate profile map is incomplete")
+expected_criteria={"252":(2,1,4,4),"255":(6,6,2),"260":(2,1,5),"9713":(4,2,3),"27926":(5,3),"29515":(2,2,3)}
+guides=[guide for pack in packs.values() for guide in pack.get("practical",[])]
+need(len(guides)==len(current) and {guide["unit"] for guide in guides}==current,"current NZQA Injection Moulding units require one guide each")
+for guide in guides:
+    unit=guide["unit"]
+    expected=[f"{outcome}.{i}" for outcome,count in enumerate(expected_criteria[unit],1) for i in range(1,count+1)]
+    need([item["ref"] for item in guide["criteria"]]==expected,f"NZQA {unit} criteria are incomplete or out of order")
+    need(guide["entry"] and guide["range"] and all(item["observation"] for item in guide["criteria"]),f"NZQA {unit} evidence guide incomplete")
+need(refs["uk-england-st1328"]=={f"{kind}{i}" for kind,count in [("K",43),("S",35),("B",6)] for i in range(1,count+1)},"ST1328 v1.0 must cover all 84 KSB identifiers")
+methods=packs["uk-england-st1328"]["assessmentMethods"]
+need([len(method["refs"]) for method in methods]==[32,28,24],"ST1328 observation, interview and test counts must match the published method mapping")
+need(set().union(*(set(method["refs"]) for method in methods))==refs["uk-england-st1328"],"ST1328 methods must account for every KSB exactly once")
+scot_refs=refs["uk-scotland-gp42-gp43"]
+need(sum(ref.startswith("GP42 22 / ") for ref in scot_refs)==24 and sum(ref.startswith("GP43 23 / ") for ref in scot_refs)==34,"Scotland award unit catalogue drifted")
+need({"603/2792/3","601/9049/8","601/5072/5"}<=refs["uk-northern-ireland-framework-348"],"NI framework 348 qualification references missing")
+gqa_l2={"L/602/1611","D/602/1242","T/602/1442","T/602/1456","T/602/1487","L/504/9365","Y/504/9367",
+    "D/602/1533","K/602/1521","D/602/1614","R/602/1545","Y/602/1546","M/602/1519","Y/602/1627"}
+gqa_l3={"L/602/1611","A/602/1555","R/602/1559","A/602/1622","H/602/1548","K/602/1602","J/602/1607","J/602/1610"}
+for pack_id,award,expected in [("uk-wales-framework","603/2760/1",gqa_l2),("uk-wales-framework","603/2792/3",gqa_l3),
+                              ("uk-northern-ireland-framework-348","603/2792/3",gqa_l3)]:
+    prefix=f"{award} / "
+    found={ref.removeprefix(prefix) for ref in refs[pack_id] if ref.startswith(prefix)}
+    need(found==expected,f"{pack_id} is missing registered GQA units for {award}")
+india=packs["india-cipet-mo-im"]
+expected_aos={f"{module} AO{i}" for module,count in [("CPC/N0214",18),("CPC/N0221",13),("CPC/N0222",9),
+    ("CPC/N0411",21),("CPC/N0223",11),("CPC/N0219",8),("DGT/VSQ/N0101",7)] for i in range(1,count+1)}
+need(refs["india-cipet-mo-im"]==expected_aos|{"Mandatory OJT 30 h","CPC/N0221 AO11 (repeated source row)"},"CIPET assessment outcome map is incomplete")
+india_path=next(p for p in embedded["pathways"] if p["id"]=="india-cipet-mo-im")
+need(sum(module["hours"] for module in india_path["modules"])==600 and "180 theory, 30 employability, 360 practical and 30" in india_path["duration"],"CIPET hours must include employability separately")
+hours={"Theory":180,"Practical":360,"Employability":30,"On-the-job training":30}
+for category,total in hours.items():
+    need(sum(module["delivery"].get(category,0) for module in india_path["modules"])==total,f"CIPET {category} hours differ from the qualification")
+need(all(sum(module["delivery"].values())==module["hours"] for module in india_path["modules"]),"CIPET per-module breakdown differs from published totals")
+need(any("groups theory and employability into 210 hours" in note for note in india["delivery"]),"CIPET classroom subtotal must remain distinct from theory hours")
+need(any("200 theory and 400 practical marks" in note and "260 and 340" in note and "Training Assessment Wing" in note for note in india["delivery"]),"CIPET conflicting mark totals require centre resolution")
+
 # Book enrichment
 esrc=ROOT/"data/book-evidence-enrichment-v2.json"
 ert=ROOT/"src/domains/learning/book-data/book-evidence-enrichment-v2.json"
@@ -129,6 +204,7 @@ for asset in [
     "./src/domains/learning/book-data/nzqa-education-readiness-v1.json",
     "./src/domains/learning/book-data/nzqa-provider-evidence-templates-v1.json",
     "./src/domains/learning/book-data/book-evidence-enrichment-v2.json",
+    f"./{course_asset}",
 ]:
     need(asset in sw,f"offline release missing governed readiness asset: {asset}")
 
@@ -147,4 +223,4 @@ need(release_key(sme.get("release")) and release_key(version.get("web_release"))
 need(set(sme.get("enrichmentChapterIds",[]))=={x["chapterId"] for x in patches},"Book SME contract does not cover enrichment chapters")
 need(sme.get("status")=="hold","Book SME must remain HOLD")
 
-print("PASS: governed Book enrichment, ISO 9001:2026 support and NZQA readiness are byte-paired, claim-bounded, read-only/offline-governed and release-authorized.")
+print("PASS: governed Book enrichment, ISO 9001:2026 support and NZQA readiness are byte-paired and claim-bounded. Seven draft regional packs have valid learning links, published reference coverage and offline packaging.")

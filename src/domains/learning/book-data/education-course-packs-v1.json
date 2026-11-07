@@ -1,0 +1,3172 @@
+{
+  "schema": 1,
+  "id": "mouldmaster-education-course-packs",
+  "version": "2026.11.08.1",
+  "checked": "2026-11-08",
+  "status": "draft-provider-review",
+  "boundary": "Use these workbooks for study and draft assessment planning. Approved providers control training hours, formal evidence, assessment, moderation and credentials. Only site-authorised staff perform practical work under applicable procedures.",
+  "providerChecklist": [
+    "Select the active framework and programme version for the cohort. Confirm the mandatory units, optional choices and eligible assessment sites with the awarding body or provider.",
+    "Review every mapped reference, the missing teaching and the proposed evidence with a subject specialist and an authorised assessor. Confirm the official assessment instruments and pass rules.",
+    "Review any local language workbook with a vocational educator and native speaker before formal teaching or assessment. Use the provider’s approved assessment language and accommodations.",
+    "Agree site permissions, learner supervision, accessible alternatives, recording rules and safety stop conditions before arranging practical work.",
+    "Trial the materials with learners and assistive technology users. Capture outcomes, access barriers and assessor feedback. Track corrections before the next controlled release.",
+    "Sample evidence and decisions through the provider’s moderation process. Record disagreements, corrective action and closure before relying on the assessment instrument.",
+    "Use provider-held learner and workplace records. Keep personal, customer and proprietary data out of copies shared with MouldMaster or public review."
+  ],
+  "forms": [
+    {
+      "title": "Programme and evidence plan",
+      "fields": [
+        "Programme or standard and version",
+        "Cohort and provider reference",
+        "Mandatory and selected optional units",
+        "Criterion and current assessment instrument reference",
+        "Learning, workplace and assessment schedule",
+        "Additional teaching, delivery language and accommodations",
+        "Assessor and site authorisation reference"
+      ]
+    },
+    {
+      "title": "Delivery and hours record",
+      "fields": [
+        "Session or shift date and learner record reference",
+        "Category of training and approved activity",
+        "Planned hours, eligible actual hours and running total by category",
+        "Attendance or placement evidence reference",
+        "Authorised trainer or workplace verifier reference"
+      ]
+    },
+    {
+      "title": "Workplace observation",
+      "fields": [
+        "Criterion, scope and observation date",
+        "Job, machine, mould or ancillary type reference",
+        "Current procedure and approved setup reference",
+        "Observed performance and evidence location",
+        "Safety pause, escalation or authorised correction",
+        "Range completed and evidence still required",
+        "Authorised observer reference and provider record location"
+      ]
+    },
+    {
+      "title": "Assessment and reassessment",
+      "fields": [
+        "Criteria sampled and assessment instrument version",
+        "Evidence sufficiency and authenticity checks",
+        "Outcome per criterion and evidence rationale",
+        "Feedback and reassessment scope",
+        "Reassessment evidence, date and outcome",
+        "Authorised assessor decision record reference"
+      ]
+    },
+    {
+      "title": "Moderation and corrective action",
+      "fields": [
+        "Assessment sample and rule or version",
+        "Judgement comparison and any inconsistency",
+        "Agreed correction, owner and due date",
+        "Closure evidence and moderator record reference"
+      ]
+    },
+    {
+      "title": "Learner and accessibility trial",
+      "fields": [
+        "Cohort, device and task references",
+        "Baseline and follow-up learning evidence",
+        "Assistive technology and access barriers observed",
+        "Learner and educator feedback summary",
+        "Priority, correction, retest and review date"
+      ]
+    },
+    {
+      "title": "Source and release change",
+      "fields": [
+        "Source, version and review date",
+        "Changed requirement and affected mappings",
+        "Proposed changes and responsible reviewer",
+        "Decision record, implementation version and next check"
+      ]
+    }
+  ],
+  "sources": {
+    "nz27926": {
+      "title": "NZQA unit standard 27926 version 2 and its evidence ranges",
+      "url": "https://www.nzqa.govt.nz/nqfdocs/units/pdf/27926.pdf"
+    },
+    "nz255": {
+      "title": "NZQA unit 255 version 6",
+      "url": "https://www.nzqa.govt.nz/nqfdocs/units/pdf/255.pdf"
+    },
+    "nz-domain": {
+      "title": "NZQA Injection Moulding domain and current standard entries",
+      "url": "https://www.nzqa.govt.nz/framework/explore/domain-full.do?frameworkId=75775"
+    },
+    "nz-provider": {
+      "title": "NZQA programme approval and provider accreditation",
+      "url": "https://www2.nzqa.govt.nz/tertiary/approval-accreditation-and-registration/programme-approval-and-provider-accreditation/"
+    },
+    "nz-moderation": {
+      "title": "NZQA consent and moderation requirements",
+      "url": "https://www2.nzqa.govt.nz/tertiary/assessment-and-moderation-of-standards/consent-and-moderation-requirements/"
+    },
+    "nz-safety": {
+      "title": "WorkSafe New Zealand plastics machinery guidance and currency note",
+      "url": "https://www.worksafe.govt.nz/topic-and-industry/machinery/working-safely-with-plastic-production-machinery/injection-blow-moulding/"
+    },
+    "st1328-ksb": {
+      "title": "Skills England occupational map with the ST1328 knowledge, skills and behaviours",
+      "url": "https://occupational-maps.skillsengland.education.gov.uk/maps/occupation/OCC1328"
+    },
+    "scqf5": {
+      "title": "Qualifications Scotland SCQF Level 5 award structure",
+      "url": "https://www.sqa.org.uk/sqa/files_ccc/SVQlevel5QSSVQScientificTechnicalandFormulationProcessing.doc"
+    },
+    "scqf6": {
+      "title": "Qualifications Scotland SCQF Level 6 award structure",
+      "url": "https://www.sqa.org.uk/sqa/files_ccc/SVQlevel6QSSVQScientificTechnicalandFormulationProcessing.doc"
+    },
+    "scqf": {
+      "title": "Qualifications Scotland SVQ award and assessment information",
+      "url": "https://www.sqa.org.uk/sqa/90297.html"
+    },
+    "wales-library": {
+      "title": "Welsh Government apprenticeship framework library",
+      "url": "https://findanapprenticeship.service.gov.wales/find-an-apprenticeship-framework"
+    },
+    "ncvet": {
+      "title": "NCVET recognition and regulation of awarding bodies",
+      "url": "https://ncvet.gov.in/wp-content/uploads/2025/07/Guidelines-For-Recognition-and-Regulation-of-Awarding-Bodies-2025.pdf"
+    },
+    "cipet-file": {
+      "title": "National Qualification Register CIPET qualification file and assessment annex",
+      "url": "https://www.nqr.gov.in/qualification/file/STT_Qualification_File_MO-IM.pdf"
+    },
+    "nz252": {
+      "title": "NZQA unit 252 version 6",
+      "url": "https://www.nzqa.govt.nz/nqfdocs/units/pdf/252.pdf"
+    },
+    "nz29515": {
+      "title": "NZQA unit 29515 version 1",
+      "url": "https://www.nzqa.govt.nz/nqfdocs/units/pdf/29515.pdf"
+    },
+    "nz260": {
+      "title": "NZQA unit 260 version 6",
+      "url": "https://www.nzqa.govt.nz/nqfdocs/units/pdf/260.pdf"
+    },
+    "nz9713": {
+      "title": "NZQA unit 9713 version 5",
+      "url": "https://www.nzqa.govt.nz/nqfdocs/units/pdf/9713.pdf"
+    },
+    "wales-fr04316": {
+      "title": "Published Wales framework FR04316 for historical qualification comparison",
+      "url": "https://acwcerts.co.uk/web/wp-content/uploads/2018/07/ACW-Polymer-Processing-Operations-FR04316.pdf"
+    },
+    "ni-pearson": {
+      "title": "Pearson 601/9049/8 Advanced Manufacturing Engineering specification issue 6",
+      "url": "https://qualifications.pearson.com/content/dam/pdf/BTEC-Specialist-Qualifications/advanced-manufacturing-engineering-development-technical-knowledge/2016/specification/adv-man-eng-spec.pdf"
+    },
+    "uk-register": {
+      "title": "Ofqual Register of Regulated Qualifications and downloadable unit mappings",
+      "url": "https://www.gov.uk/find-a-regulated-qualification"
+    },
+    "wales-provider-gqa": {
+      "title": "Grŵp Llandrillo Menai Level 3 GQA Polymer Operations delivery and assessment",
+      "url": "https://www.gllm.ac.uk/courses/gqa-paa-vq-set-level-3-certificate-in-polymer-operations"
+    },
+    "st1328-sias": {
+      "title": "SIAS ST1328 v1.0 assessment method allocation and evidence guidance",
+      "url": "https://cogentskills.com/wp-content/uploads/2024/05/L3-Polymer-Processing-Technician-Specification.pdf"
+    }
+  },
+  "exercises": {
+    "mould-change-evidence": {
+      "title": "Mould-change evidence plan",
+      "context": "Fictional training case. A provider is preparing two different advanced mould jobs for an assessor to observe. The two jobs have distinct geometry, configuration and setup specifications.",
+      "reading": [
+        "A preparation record should identify the current work instruction, the machine and mould, the approved job specification, the ancillary equipment and the workplace authorisations. Give every piece of evidence a reference so an assessor can trace it to the job.",
+        "Compare the two jobs before planning observation. A repeated run of one mould is a useful rehearsal. A second job needs its own evidence that the mould and setup criteria satisfy the required range.",
+        "For an observation, capture what the learner did, which workplace procedure applied, what was checked against the job, and what needed escalation. The assessor judges the required performance using the current unit standard and the actual site procedure."
+      ],
+      "questions": [
+        {
+          "prompt": "A second record has a new date but describes the same mould and configuration. What should the assessor ask for?",
+          "feedback": "Ask for evidence from a different eligible advanced mould with distinct dimensions, configuration and setup criteria. The dates alone do not establish the range."
+        },
+        {
+          "prompt": "The job instruction is incomplete and the required nozzle work has no site authorisation. How should the learner respond?",
+          "feedback": "Pause the assessment activity and refer the missing instruction and authorisation to the supervisor. Record the reason and reschedule with the assessor."
+        },
+        {
+          "prompt": "The log lists three dryers of the same type. How should the ancillary range be recorded?",
+          "feedback": "Record the equipment type and the selection, setup and operation evidence for each of three distinct types accepted by the assessor."
+        }
+      ]
+    },
+    "quality-record": {
+      "title": "Inspection and traceability workbook",
+      "context": "A fictional training drawing specifies a diameter from 19.90 to 20.10 mm inclusive. Five readings are 19.97, 20.04, 20.13, 20.00 and 19.94 mm.",
+      "reading": [
+        "Start an inspection record with the job and drawing revisions, part and lot reference, sampling plan, measuring instrument reference and the person who recorded the result. Keep the original observations and the status of the measuring instrument traceable.",
+        "Compare each measurement with the limits and record the individual results. A sample mean can summarise the group. A disposition requires the specified inspection and escalation rules."
+      ],
+      "questions": [
+        {
+          "prompt": "Which reading needs to be flagged under the fictional drawing?",
+          "feedback": "20.13 mm exceeds the 20.10 mm upper limit. Record the result as observed and follow the applicable hold and reporting procedure."
+        },
+        {
+          "prompt": "What evidence would let another person check the result?",
+          "feedback": "The drawing revision, sample ID, measurement method, instrument identity and check status, original reading and date let the next person reproduce the decision."
+        },
+        {
+          "prompt": "What can the five readings establish about the whole production lot?",
+          "feedback": "They describe these five samples. Use the approved sampling plan and the responsible person’s disposition decision for the lot."
+        }
+      ]
+    },
+    "fault-review": {
+      "title": "Evidence-led troubleshooting workbook",
+      "context": "Fictional case. A visual defect appears after a material-lot change. A second cavity has a different defect pattern, and the last known good record is available.",
+      "reading": [
+        "Separate what you observed from what you infer. Compare the same part feature across cavities, lots and recorded time periods. Keep potentially affected samples identified while the site decides the proper disposition.",
+        "Write two competing explanations and choose a piece of evidence that could distinguish between them. Define the check before proposing an authorised trial and retain the observations after the trial."
+      ],
+      "questions": [
+        {
+          "prompt": "Name two competing explanations that can be checked safely from records.",
+          "feedback": "A change in material preparation could affect several cavities. A cavity-specific flow or venting issue might explain a persistent location. Compare cavity-marked samples with material and prior good records."
+        },
+        {
+          "prompt": "What should be recorded before a responsible person authorises a trial?",
+          "feedback": "Define the symptom, affected lot, baseline, decision criterion, proposed evidence, limits of authority and the approval route."
+        },
+        {
+          "prompt": "What makes an apparent recovery convincing?",
+          "feedback": "Use repeat observations from an agreed sample under the documented conditions. Keep the earlier fault and the recovery record so the result can be reviewed."
+        }
+      ]
+    },
+    "process-trial": {
+      "title": "Controlled trial and improvement workbook",
+      "context": "A fictional technician compares two approved trial conditions for a dimensional drift problem. Samples from different cavities, shifts and batches have been mixed in one spreadsheet.",
+      "reading": [
+        "Define the question before comparing data. Pick a response linked to the drawing or approved specification. Record which variables are deliberately changed, which are held constant and how cavity, shift and material lot will be accounted for.",
+        "Use a traceable baseline and confirm the preferred condition on an agreed fresh sample. Record any uncertainty, effects on scrap or cycle time, and the authorised next decision."
+      ],
+      "questions": [
+        {
+          "prompt": "What is the problem with averaging the mixed samples before checking identifiers?",
+          "feedback": "Differences in cavity, shift or lot can be mistaken for a treatment effect. Recover the identifiers, compare like with like and record any data that cannot be separated."
+        },
+        {
+          "prompt": "What should the trial record show when a setting affects quality and throughput differently?",
+          "feedback": "Record both outcomes and the approved acceptance criteria. Escalate the trade-off for a decision rather than changing the production specification yourself."
+        },
+        {
+          "prompt": "What would you show before recommending adoption?",
+          "feedback": "The approved plan, baseline, complete observations, measurement checks, repeat confirmation and documented change decision."
+        }
+      ]
+    },
+    "polymer-processes": {
+      "title": "Polymer process selection and materials workbook",
+      "context": "A fictional customer requests a ribbed clip, a length of continuous profile and a hollow container. A technician must explain which processes to discuss with the engineering team.",
+      "reading": [
+        "Injection moulding forms a discrete part in a closed mould. Extrusion drives material through a die to make a continuous cross-section. Blow moulding forms hollow parts by expanding material against a mould. Thermoforming reshapes a heated sheet, and rotational moulding distributes material over the inside of a rotating mould to create a hollow part.",
+        "Polymerisation builds polymer chains through chemical reactions. Distinguish addition and condensation mechanisms when the material specification or provider syllabus requires them. A processing choice also depends on exact grade, intended use, tooling, material history, tolerances and how quality will be measured.",
+        "A documented process choice includes waste handling, traceability, available equipment and the workplace limits. Use site rules to keep waste streams identified and to decide where reuse is acceptable."
+      ],
+      "questions": [
+        {
+          "prompt": "Which process would you investigate first for the profile, and why?",
+          "feedback": "Extrusion is a reasonable starting point for a constant cross-section. Check the actual drawing, grade, tolerances and production conditions."
+        },
+        {
+          "prompt": "Which process fits the clip and which one might fit the hollow container?",
+          "feedback": "The clip suggests injection moulding. A hollow container could suit blow moulding or rotational moulding depending on its geometry and use. Obtain the specifications before selecting the process."
+        },
+        {
+          "prompt": "Why does a material family alone give a weak basis for a recycling or reuse decision?",
+          "feedback": "Grade, additives, contamination and previous processing can differ. Follow the approved material and waste-control requirements and record the source."
+        }
+      ]
+    },
+    "handover": {
+      "title": "Workplace communication and improvement workbook",
+      "context": "Fictional case. Your shift ends while a quality concern is being investigated. One quarantined tray and one tray awaiting inspection are next to the cell.",
+      "reading": [
+        "A handover helps another person decide what to do safely. State the job and material, last accepted check, affected stock, observed fault, decisions already taken, and the outstanding checks and their owners.",
+        "Distinguish fact, uncertainty and permission. Use the site escalation channel for issues that exceed your role. Record an improvement as a proposal with expected evidence and a responsible reviewer."
+      ],
+      "questions": [
+        {
+          "prompt": "What should a useful handover say about the two trays?",
+          "feedback": "Record the traceable tray and lot IDs, the current status and who may release each tray. Separate the known hold from the pending inspection."
+        },
+        {
+          "prompt": "How should you describe a suspected fault?",
+          "feedback": "Name the symptom and evidence, label the proposed cause as a hypothesis, and identify the next approved check."
+        },
+        {
+          "prompt": "How can you show good team working to an assessor?",
+          "feedback": "Use a contemporaneous handover and a verified account of how you listened, clarified responsibility and followed up, within the evidence rules of the award."
+        }
+      ]
+    },
+    "india-5s": {
+      "title": "India safety and 5S decision workbook",
+      "context": "Fictional CIPET preparation case. The cell has a missing guard confirmation, an unlabelled material container, a tool blocking a marked aisle and an incomplete cleaning record.",
+      "reading": [
+        "The five 5S activities help teams remove unnecessary items, set a place for needed items, clean and inspect, agree consistent routines and keep those routines in use. Use the site rules for identifying, reporting and correcting hazards.",
+        "Housekeeping evidence shows the location, observed issue, person responsible, action and follow-up. A safety concern needs the approved stop and escalation route and the responsible person’s confirmation before a restart."
+      ],
+      "questions": [
+        {
+          "prompt": "Choose the first action when the guard status is uncertain. Continue the run, bypass the guard, or pause and report?",
+          "feedback": "Pause the activity and report it using the site procedure. A responsible person must resolve the guard concern before work resumes."
+        },
+        {
+          "prompt": "What should you do about the unlabelled material?",
+          "feedback": "Separate it from material available for use and notify the supervisor. Obtain its identity from a traceable approved record before use."
+        },
+        {
+          "prompt": "Which 5S actions address the aisle and the missing cleaning record?",
+          "feedback": "Return tools to the agreed locations and restore the clear route under site rules. Record the cleaning and inspection routine, its owner and the follow-up check."
+        },
+        {
+          "prompt": "What belongs in a hazard report?",
+          "feedback": "Record the place, time, observed condition, immediate action, person notified and outstanding follow-up."
+        }
+      ],
+      "hi": {
+        "title": "सुरक्षा और 5S अभ्यास",
+        "context": "काल्पनिक प्रशिक्षण मामला। मशीन के गार्ड की स्थिति स्पष्ट नहीं है। एक सामग्री पात्र पर लेबल नहीं है और रास्ते में औज़ार रखा है।",
+        "reading": [
+          "5S में अनावश्यक वस्तुओं को अलग करना, ज़रूरी वस्तुओं को तय जगह पर रखना, सफ़ाई और निरीक्षण करना, एक समान नियम बनाना और उन नियमों का पालन जारी रखना शामिल है।",
+          "खतरा दिखे तो कार्यस्थल की तय प्रक्रिया के अनुसार काम रोकें और ज़िम्मेदार व्यक्ति को सूचना दें।"
+        ],
+        "questions": [
+          {
+            "prompt": "गार्ड की स्थिति स्पष्ट न हो तो पहला कदम क्या है?",
+            "feedback": "काम रोकें और तय प्रक्रिया से सूचना दें। गार्ड की पुष्टि होने और अनुमति मिलने के बाद ही काम फिर शुरू करें।"
+          },
+          {
+            "prompt": "बिना लेबल वाली सामग्री का क्या करें?",
+            "feedback": "उसे उपयोग के लिए रखी सामग्री से अलग करें। उपयोग से पहले अनुमोदित रिकॉर्ड से पहचान की पुष्टि करें।"
+          },
+          {
+            "prompt": "5S रिकॉर्ड में क्या लिखेंगे?",
+            "feedback": "स्थान, देखी गई समस्या, ज़िम्मेदार व्यक्ति, की गई कार्रवाई और आगे की जाँच लिखें।"
+          }
+        ]
+      }
+    },
+    "india-office": {
+      "title": "India office software and production records workbook",
+      "context": "Fictional shift data. Shift A inspected 120 parts and recorded 6 rejects. Shift B inspected 80 parts and recorded 2 rejects.",
+      "reading": [
+        "In a spreadsheet, enter the job ID, date, shift, inspected count and reject count in separate columns. Make one row for each traceable record. Keep original counts so someone else can check the percentage.",
+        "For a reject rate, divide rejects by inspected parts and format the result as a percentage. If zero parts were inspected, mark the rate as unavailable. In a report or email, summarise the observations, attach the approved version and identify the next action."
+      ],
+      "questions": [
+        {
+          "prompt": "What reject rates do the two shifts show?",
+          "feedback": "A is 6 divided by 120, or 5%. B is 2 divided by 80, or 2.5%."
+        },
+        {
+          "prompt": "What is the combined rate, and how is it calculated?",
+          "feedback": "Add rejects and inspected counts first. Eight rejects across 200 inspected parts give 4%."
+        },
+        {
+          "prompt": "Write the first sentence of a handover email using the figures.",
+          "feedback": "State the job, source record and period, then report 8 rejects in 200 inspected parts and the person who owns the follow-up."
+        }
+      ],
+      "hi": {
+        "title": "स्प्रेडशीट और उत्पादन रिकॉर्ड",
+        "context": "काल्पनिक उदाहरण। पाली A में 120 में से 6 और पाली B में 80 में से 2 निरीक्षित भाग अस्वीकृत हुए।",
+        "reading": [
+          "स्प्रेडशीट में काम की पहचान, तारीख, पाली, निरीक्षित भाग और अस्वीकृत भाग अलग-अलग कॉलम में लिखें।",
+          "अस्वीकृति दर निकालने के लिए अस्वीकृत भागों की संख्या को निरीक्षित भागों की संख्या से भाग दें और प्रतिशत में दिखाएँ।"
+        ],
+        "questions": [
+          {
+            "prompt": "कुल अस्वीकृति दर क्या है?",
+            "feedback": "8 अस्वीकृत भाग ÷ 200 निरीक्षित भाग = 4 प्रतिशत।"
+          },
+          {
+            "prompt": "हैंडओवर में कौन सी बातें लिखें?",
+            "feedback": "काम और रिकॉर्ड की पहचान, जाँच का समय, परिणाम और आगे की कार्रवाई करने वाले व्यक्ति का उल्लेख करें।"
+          }
+        ]
+      }
+    },
+    "india-employability": {
+      "title": "India employability and work communication workbook",
+      "context": "Fictional scenario. A trainee joins a new shop and receives two different work-order revisions at the start of a shift.",
+      "reading": [
+        "Read the job requirements carefully, identify the current controlled document and ask the supervisor to resolve a conflict. Use a clear, respectful handover and record the decision that the next shift needs.",
+        "Describe skills to an employer with an example of what you did, how you checked it and what you learned. Follow the workplace rules for attendance, authorised access, reporting concerns and keeping records private."
+      ],
+      "questions": [
+        {
+          "prompt": "How should you handle the conflicting revisions?",
+          "feedback": "Ask the supervisor which revision controls the job, record the approved revision and check that the correct copy is available to the team."
+        },
+        {
+          "prompt": "Give an example of a useful answer to a question about teamwork.",
+          "feedback": "Describe a specific handover, what was unclear, how you confirmed responsibility and what result you could verify."
+        },
+        {
+          "prompt": "Which documents belong in a trainee’s personal practice portfolio?",
+          "feedback": "Use fictional or provider-approved references. Keep proprietary job documents and identifiable records in the authorised workplace or provider system."
+        }
+      ],
+      "hi": {
+        "title": "रोज़गार कौशल और कार्यस्थल संवाद",
+        "context": "काल्पनिक मामला। पाली की शुरुआत में एक प्रशिक्षु को काम के आदेश की दो अलग प्रतियाँ मिलीं।",
+        "reading": [
+          "काम शुरू करने से पहले पर्यवेक्षक से लागू प्रति की पुष्टि करें। अगले व्यक्ति को स्पष्ट रूप से बताएँ कि कौन-सा रिकॉर्ड उपयोग करना है।"
+        ],
+        "questions": [
+          {
+            "prompt": "दो प्रतियों में अंतर हो तो क्या करेंगे?",
+            "feedback": "पर्यवेक्षक से अनुमोदित संस्करण की पुष्टि करें और उसका संदर्भ रिकॉर्ड में लिखें।"
+          },
+          {
+            "prompt": "साक्षात्कार में टीमवर्क का उदाहरण कैसे दें?",
+            "feedback": "स्थिति, अपनी कार्रवाई, जाँच और परिणाम का एक स्पष्ट उदाहरण दें।"
+          }
+        ]
+      }
+    },
+    "india-enterprise": {
+      "title": "India injection moulding enterprise workbook",
+      "context": "Fictional estimating case. A trial order needs 200 accepted parts. The budget assumes 210 moulded parts, ₹630 in material, ₹420 in labour and power, and a ₹300 setup allowance.",
+      "reading": [
+        "Separate setup costs from costs that change with the number of parts. Use the number of accepted parts when calculating cost per saleable part. Record assumptions for scrap, inspection, packing and the delivery quantity.",
+        "A quote depends on the customer’s specification, acceptance terms and the shop’s capacity. Discuss the scenario with the trainer as a planning exercise and record which information is missing before quoting."
+      ],
+      "questions": [
+        {
+          "prompt": "What is the modelled total cost and the cost per accepted part?",
+          "feedback": "The model totals ₹1,350. Dividing by 200 accepted parts gives ₹6.75 per accepted part under the stated assumptions."
+        },
+        {
+          "prompt": "Why should the quote show the assumed accepted count?",
+          "feedback": "It shows the difference between production quantity and saleable output, so the customer and shop can check what the estimate covers."
+        },
+        {
+          "prompt": "Which missing information would you ask for before completing the fictional estimate?",
+          "feedback": "Ask for the drawing and quality requirements, packaging, delivery, expected repeat order size, and the policy for rejected or reworked parts."
+        }
+      ],
+      "hi": {
+        "title": "इंजेक्शन मोल्डिंग में उद्यमिता का अभ्यास",
+        "context": "काल्पनिक उदाहरण। ग्राहक को 200 स्वीकृत भाग चाहिए। सामग्री ₹630, श्रम और बिजली ₹420, तथा सेटअप ₹300 है।",
+        "reading": [
+          "कुल लागत निकालते समय सेटअप और उत्पादन की लागत अलग पहचानें। प्रति बिक्री योग्य भाग की लागत के लिए स्वीकृत भागों की संख्या का उपयोग करें।"
+        ],
+        "questions": [
+          {
+            "prompt": "कुल और प्रति स्वीकृत भाग की लागत कितनी है?",
+            "feedback": "कुल ₹1,350 है। ₹1,350 ÷ 200 = प्रति स्वीकृत भाग ₹6.75।"
+          },
+          {
+            "prompt": "मूल्य अनुमान से पहले क्या जाँचें?",
+            "feedback": "ड्रॉइंग, स्वीकृति मानदंड, पैकिंग, डिलीवरी और अस्वीकृत भागों की जानकारी की पुष्टि करें।"
+          }
+        ]
+      }
+    },
+    "engineering-drawing": {
+      "title": "Engineering drawing and inspection workbook",
+      "context": "Fictional case. The released Rev C drawing identifies an inspection bore at 20.00 ± 0.10 mm. The outgoing Rev B had the same size but a different surface inspection requirement. A spreadsheet still references Rev B.",
+      "reading": [
+        "Use the released drawing and inspection method together. Identify part, drawing revision, features, units, limits, reference surfaces and sampling plan before collecting evidence. A machine setup sheet, CAD model or screenshot may support the job. The current controlled drawing and method govern the acceptance decision.",
+        "Measurement choice depends on what the drawing asks you to verify. A size measurement, a geometric tolerance, surface condition and thread fit can need different methods. An approved thread gauge may verify functional fit as defined by its procedure. A single external diameter reading cannot establish internal thread acceptance.",
+        "Keep the authorised drawing, measurement program, instrument status and traceable results together. For a CMM result, record the program revision, fixture or reference alignment and the approved acceptance rule. Seek a controlled clarification when requirements conflict."
+      ],
+      "questions": [
+        {
+          "prompt": "A bore reads 20.08 mm using the approved method. What can this reading establish?",
+          "feedback": "It is within the fictional bore size limits of 19.90 to 20.10 mm. Check the applicable surface, geometry, drawing revision and sampling requirements before a disposition."
+        },
+        {
+          "prompt": "The inspection record references Rev B. What should the learner document?",
+          "feedback": "Preserve the original record, flag the revision mismatch and use the responsible person’s correction process. Check which observations need repeating with the released Rev C requirements."
+        },
+        {
+          "prompt": "A model looks right but no approved dimension appears for the feature. How should the learner proceed?",
+          "feedback": "Identify the feature and ask the responsible person to confirm the controlled requirement and method. Record the clarification before treating it as an acceptance check."
+        }
+      ]
+    },
+    "lean-improvement": {
+      "title": "Production loss and mistake-proofing workbook",
+      "context": "Fictional case. A single-cavity cell has 240 planned production minutes, 210 running minutes, an ideal cycle of 30 seconds, 390 parts made and 378 accepted first time. The team has a proposal to reduce time spent confirming lot labels.",
+      "reading": [
+        "Use the same definitions and time window for comparisons. Availability is running time divided by planned production time. Performance is the ideal time for the observed output divided by running time. Quality is first-pass accepted output divided by total output. Overall equipment effectiveness is the product of these three factors.",
+        "Separate downtime, reduced speed and quality losses before proposing changes. A Kaizen exercise uses measured problems, small controlled changes and follow-up. Mistake-proofing makes an error harder to introduce or easier to detect. An approved revision-controlled verification step can help catch a wrong label before a batch starts.",
+        "Plan changes with the people who do the work. Preserve site safety checks, traceability and quality decisions. Define how the team will measure adoption and whether the improvement lasts across shifts."
+      ],
+      "questions": [
+        {
+          "prompt": "Calculate availability, performance, quality and overall equipment effectiveness for the fictional shift.",
+          "feedback": "Availability is 210 ÷ 240 = 87.5%. Performance is 390 × 0.5 ÷ 210 ≈ 92.9%. Quality is 378 ÷ 390 ≈ 96.9%. The product, using unrounded values, is 78.75%."
+        },
+        {
+          "prompt": "What evidence could test the proposed lot-label improvement?",
+          "feedback": "Record the time and number of discrepancies under comparable jobs, use an approved trial with the verification intact, then compare first-pass outcomes and handover observations."
+        },
+        {
+          "prompt": "The elapsed check becomes faster but errors increase. What should the learner report?",
+          "feedback": "Report both observations and the sample used. Escalate the tradeoff and follow the approved change decision process before wider use."
+        }
+      ]
+    }
+  },
+  "packs": {
+    "nz-nzqa-4401": {
+      "framework": "NZQA 4401 Level 3 and Injection Moulding strand",
+      "scope": "The seven profile references follow the published graduate profile in order. They are planning labels. Use the separate draft marking guides for units 252, 255, 27926 and 29515 when the provider selects a corresponding standard.",
+      "sourceIds": [
+        "nz27926",
+        "nz255",
+        "nz-domain",
+        "nz-provider",
+        "nz-moderation",
+        "nz-safety",
+        "nz252",
+        "nz29515"
+      ],
+      "delivery": [
+        "Confirm the approved programme version, Injection Moulding strand, entry and prior-learning decisions, credits and learner workload with the accredited provider.",
+        "Arrange authorised machine access, suitable work and assessment opportunities before scheduling the workplace evidence. The provider confirms standards versions, consent and moderation arrangements.",
+        "Keep separate records for guided study, formative work, formal assessment, workplace observation and reassessment."
+      ],
+      "rows": [
+        {
+          "refs": [
+            "4401 core 1"
+          ],
+          "title": "Safe work and teamwork",
+          "coverage": "workplace",
+          "book": [
+            "safety-foundations",
+            "documentation"
+          ],
+          "lessons": [
+            6,
+            41
+          ],
+          "exercise": "handover",
+          "evidence": "Observe safe decisions and effective communication during authorised work. Capture a traceable handover and the supervisor’s verification."
+        },
+        {
+          "refs": [
+            "4401 core 2"
+          ],
+          "title": "Materials and production knowledge",
+          "coverage": "mapped",
+          "book": [
+            "material-families",
+            "polymer-structure",
+            "moisture-drying",
+            "cycle"
+          ],
+          "lessons": [
+            2,
+            21,
+            26,
+            42
+          ],
+          "exercise": "polymer-processes",
+          "evidence": "Ask the learner to relate a material and documented production requirement to an appropriate preparation decision and explain the evidence used."
+        },
+        {
+          "refs": [
+            "4401 core 3"
+          ],
+          "title": "Production preparation, operation and monitoring",
+          "coverage": "workplace",
+          "book": [
+            "process-baseline",
+            "process-monitoring",
+            "cycle"
+          ],
+          "lessons": [
+            3,
+            41,
+            50,
+            96
+          ],
+          "exercise": "quality-record",
+          "evidence": "Use a supervised job, observed operation and traceable readings against its approved work instruction and part checks."
+        },
+        {
+          "refs": [
+            "4401 core 4"
+          ],
+          "title": "Routine processing problems and reporting",
+          "coverage": "mapped",
+          "book": [
+            "diagnostic-method",
+            "documentation",
+            "short-shot"
+          ],
+          "lessons": [
+            5,
+            51,
+            111
+          ],
+          "exercise": "fault-review",
+          "evidence": "Assess a real or provider-approved diagnostic record with symptom, discriminating evidence, authorised response, verification and escalation."
+        },
+        {
+          "refs": [
+            "4401 core 5"
+          ],
+          "title": "Machinery readiness",
+          "coverage": "workplace",
+          "book": [
+            "machine-anatomy",
+            "mould-anatomy",
+            "process-baseline"
+          ],
+          "lessons": [
+            11,
+            14,
+            31,
+            41
+          ],
+          "exercise": "mould-change-evidence",
+          "evidence": "Observe preparation against the authorised job and confirm the equipment and checks required by the provider’s instrument."
+        },
+        {
+          "refs": [
+            "4401 Injection Moulding 1"
+          ],
+          "title": "Diagnose and resolve injection moulding production and quality issues",
+          "coverage": "workplace",
+          "book": [
+            "diagnostic-method",
+            "process-monitoring",
+            "dimensional-stability"
+          ],
+          "lessons": [
+            51,
+            60,
+            76,
+            111
+          ],
+          "exercise": "fault-review",
+          "evidence": "Review the cause reasoning, approved corrective work and repeated quality observations under the applicable assessment conditions."
+        },
+        {
+          "refs": [
+            "4401 Injection Moulding 2"
+          ],
+          "title": "Routine service and maintenance",
+          "coverage": "workplace",
+          "book": [
+            "mould-anatomy",
+            "safety-foundations",
+            "documentation"
+          ],
+          "lessons": [
+            31,
+            40,
+            118
+          ],
+          "exercise": "handover",
+          "evidence": "The assessor observes the service tasks selected by the programme and checks authorisation, manufacturer and workplace references, and return-to-service evidence."
+        }
+      ],
+      "practical": [
+        {
+          "title": "NZQA 27926 v2 draft mould-change observation and marking guide",
+          "entry": "Confirm current standard status, appropriate workplace procedures and assessor authority before use. Review routine-service preparation against the recommended knowledge in unit 29515.",
+          "range": [
+            "Record two eligible advanced moulds with distinct dimensions, configurations and job setup criteria. The definition is based on a two- or three-plate mould with the specified product-forming features. It excludes moulds that retain molten material between cycles. Check eligibility with the assessor.",
+            "Collect separate evidence for the selection, setup and operation of three different types of ancillary equipment.",
+            "Use workplace-controlled procedures throughout. Record a site reference for each activity, any pause or escalation, and a decision against each criterion for the applicable observation.",
+            "The assessor checks evidence sufficiency across the complete range before making any formal result in the provider system."
+          ],
+          "criteria": [
+            {
+              "ref": "1.1",
+              "observation": "Verify machine readiness for the change against the current workplace procedure and record the approved job reference."
+            },
+            {
+              "ref": "1.2",
+              "observation": "Observe the learner preparing the outgoing and incoming moulds and identify the work records used to verify them."
+            },
+            {
+              "ref": "1.3",
+              "observation": "Record the authorised change work for both eligible advanced moulds and any deviation that needed escalation."
+            },
+            {
+              "ref": "1.4",
+              "observation": "Record the required removal, cleaning and refitting of the nozzle under site controls, with the authorised observer’s evidence reference."
+            },
+            {
+              "ref": "1.5",
+              "observation": "Compare the final documented machine setup with the approved specification for each job."
+            },
+            {
+              "ref": "2.1",
+              "observation": "Check the rationale for the three chosen ancillary types against the job requirements."
+            },
+            {
+              "ref": "2.2",
+              "observation": "Observe setup of each accepted ancillary type and record the checks against its approved instruction."
+            },
+            {
+              "ref": "2.3",
+              "observation": "Observe authorised operation of each ancillary type and record the functional evidence."
+            }
+          ],
+          "unit": "27926"
+        },
+        {
+          "unit": "252",
+          "title": "NZQA 252 v6 draft operator observation and marking guide",
+          "entry": "Confirm provider selection, current unit version and an authorised assessment setting. Record the relevant workplace procedures and agreed evidence before any practical activity.",
+          "range": [
+            "Review at least four hazards from heating plastics. Record at least three examples each of process hazards, harms and precautions.",
+            "Observe four or more post-moulding tasks. The standard permits a simulation for emergency stopping where required. The assessor confirms a safe plan.",
+            "Confirm the scope of waste identification, recycling equipment, personal protection, contamination and equipment hazards using the source and site procedures."
+          ],
+          "criteria": [
+            {
+              "ref": "1.1",
+              "observation": "Ask the learner to identify and explain the risks that arise when the plastics and machine are heated."
+            },
+            {
+              "ref": "1.2",
+              "observation": "Check the links between process hazards, potential harm and the precautions the learner takes under site rules."
+            },
+            {
+              "ref": "2.1",
+              "observation": "Have the learner use the machine sequence or a schematic to explain one complete moulding cycle."
+            },
+            {
+              "ref": "3.1",
+              "observation": "Observe the accepted downstream tasks and record the job criteria used to verify them."
+            },
+            {
+              "ref": "3.2",
+              "observation": "Observe authorised loading of the specified material and check how damage and contamination are prevented."
+            },
+            {
+              "ref": "3.3",
+              "observation": "Record the agreed demonstration of emergency stopping for the machine and associated equipment."
+            },
+            {
+              "ref": "3.4",
+              "observation": "Check the learner’s production records against the current run."
+            },
+            {
+              "ref": "4.1",
+              "observation": "Ask the learner to identify and distinguish purge and start-up waste from the observed job."
+            },
+            {
+              "ref": "4.2",
+              "observation": "Ask how the site’s waste equipment works and what material streams it handles."
+            },
+            {
+              "ref": "4.3",
+              "observation": "Ask what eye and hearing protection the site requires for granulation and why."
+            },
+            {
+              "ref": "4.4",
+              "observation": "Check the learner’s explanation of personal, material and equipment risks and corresponding precautions for granulation."
+            }
+          ]
+        },
+        {
+          "unit": "255",
+          "title": "NZQA 255 v6 draft production control and simple mould trial guide",
+          "entry": "Confirm provider selection, current unit version and an authorised assessment setting. Record the relevant workplace procedures and agreed evidence before any practical activity.",
+          "range": [
+            "Use a repeat production run, a trial of an eligible simple mould in the designated machine and an initial production run. The standard defines what qualifies for each.",
+            "Obtain explanations of two machine malfunctions and separate observed evidence of a different malfunction being identified, corrected and reported.",
+            "Use one demonstrated correction for a material fault and knowledge evidence covering the remaining faults in the standard. Retain the approved trial and production records."
+          ],
+          "criteria": [
+            {
+              "ref": "1.1",
+              "observation": "Review observed monitoring and authorised adjustments against the repeat job’s production and quality criteria."
+            },
+            {
+              "ref": "1.2",
+              "observation": "Check the two machine fault explanations and what evidence would distinguish them."
+            },
+            {
+              "ref": "1.3",
+              "observation": "Verify the distinct observed machine fault, authorised correction, check and report."
+            },
+            {
+              "ref": "1.4",
+              "observation": "Ask the learner to connect tooling faults to the production or quality effects they may cause."
+            },
+            {
+              "ref": "1.5",
+              "observation": "Review the observed material fault and response, then check knowledge of the remaining material faults."
+            },
+            {
+              "ref": "1.6",
+              "observation": "Ask how departures from approved settings affect the process and its outputs."
+            },
+            {
+              "ref": "2.1",
+              "observation": "Observe preparation of the designated machine and eligible trial mould."
+            },
+            {
+              "ref": "2.2",
+              "observation": "Review the clamp force calculation, machine capability check and documented site-approved decisions."
+            },
+            {
+              "ref": "2.3",
+              "observation": "Observe authorised fitting and verification of the pre-start checks."
+            },
+            {
+              "ref": "2.4",
+              "observation": "Check the rationale and approval for initial conditions against the part, material and mould."
+            },
+            {
+              "ref": "2.5",
+              "observation": "Observe the agreed trial, measurement decisions and authorised adjustments."
+            },
+            {
+              "ref": "2.6",
+              "observation": "Check the trial report links the conditions, observations, measured outcomes and decisions."
+            },
+            {
+              "ref": "3.1",
+              "observation": "Observe the start and monitoring of the initial run against the approved job specification."
+            },
+            {
+              "ref": "3.2",
+              "observation": "Check the rationale, authority and traceable records for running adjustments."
+            }
+          ]
+        },
+        {
+          "unit": "29515",
+          "title": "NZQA 29515 v1 draft routine service observation and marking guide",
+          "entry": "Confirm provider selection, current unit version and an authorised assessment setting. Record the relevant workplace procedures and agreed evidence before any practical activity.",
+          "range": [
+            "Use at least five mould functions or operations for the knowledge evidence.",
+            "Record two service events. The source allows one screw and one mould, or two differently configured moulds.",
+            "Verify the site-authorised response to a jam and the monitored production recovery. Agree the closing, storage and refitting evidence with the assessor."
+          ],
+          "criteria": [
+            {
+              "ref": "1.1",
+              "observation": "Check an explanation of the injection mould’s construction and major components."
+            },
+            {
+              "ref": "1.2",
+              "observation": "Ask the learner to explain what the selected mould functions do and when they occur."
+            },
+            {
+              "ref": "2.1",
+              "observation": "Record authorised resolution of the jam, cleaning, inspection and communication of findings."
+            },
+            {
+              "ref": "2.2",
+              "observation": "Verify monitored continuation of production with evidence that the jam has not recurred."
+            },
+            {
+              "ref": "3.1",
+              "observation": "Review the applicable contact surfaces or screw inspection results and how wear or damage was reported."
+            },
+            {
+              "ref": "3.2",
+              "observation": "Observe the site-approved mould lubrication scope and verify its record."
+            },
+            {
+              "ref": "3.3",
+              "observation": "Check completion of the authorised closing, refitting or storage activities and the condition recorded."
+            }
+          ]
+        }
+      ]
+    },
+    "nz-nzqa-4402": {
+      "framework": "NZQA 4402 Level 4 and Injection Moulding strand",
+      "scope": "The seven profile references follow the published graduate profile in order. The provider selects the programme units, trial range and workplace decisions that demonstrate this technician level. Draft guides for units 260 and 9713 support provider-selected assessments.",
+      "sourceIds": [
+        "nz-domain",
+        "nz-provider",
+        "nz-moderation",
+        "nz-safety",
+        "nz260",
+        "nz9713"
+      ],
+      "delivery": [
+        "Confirm entry, provider-selected standards, work scope and the appropriate level of independence for a technician under broad guidance.",
+        "Schedule quality assurance, fault correction, process improvement and an authorised new or changed product trial with evidence and supervisor support.",
+        "Record formal assessor judgement, internal moderation and any external moderation required by the programme and applicable standards."
+      ],
+      "rows": [
+        {
+          "refs": [
+            "4402 core 1"
+          ],
+          "title": "Production quality assurance",
+          "coverage": "workplace",
+          "book": [
+            "capability",
+            "dimensional-stability",
+            "documentation"
+          ],
+          "lessons": [
+            75,
+            76,
+            98,
+            113
+          ],
+          "exercise": "quality-record",
+          "evidence": "Use a controlled sample plan, measurement checks, traceable nonconformance decisions and evidence of follow-up."
+        },
+        {
+          "refs": [
+            "4402 core 2"
+          ],
+          "title": "Manage machinery in plastics processing",
+          "coverage": "workplace",
+          "book": [
+            "machine-anatomy",
+            "clamp",
+            "shot-utilisation",
+            "process-monitoring"
+          ],
+          "lessons": [
+            18,
+            20,
+            91,
+            96,
+            118
+          ],
+          "exercise": "mould-change-evidence",
+          "evidence": "The assessor checks machine suitability reasoning and an authorised equipment record relevant to the provider’s selected plant scope."
+        },
+        {
+          "refs": [
+            "4402 core 3"
+          ],
+          "title": "Apply advanced materials knowledge",
+          "coverage": "mapped",
+          "book": [
+            "polymer-structure",
+            "rheology",
+            "thermal-history",
+            "fillers-additives",
+            "high-performance-polymers"
+          ],
+          "lessons": [
+            24,
+            27,
+            28,
+            63,
+            109
+          ],
+          "exercise": "polymer-processes",
+          "evidence": "Ask for grade-specific reasoning supported by the relevant technical data and a documented quality or processing decision."
+        },
+        {
+          "refs": [
+            "4402 core 4"
+          ],
+          "title": "Diagnose and rectify plant and equipment faults",
+          "coverage": "workplace",
+          "book": [
+            "diagnostic-method",
+            "complex-diagnostics",
+            "process-monitoring"
+          ],
+          "lessons": [
+            96,
+            111,
+            118
+          ],
+          "exercise": "fault-review",
+          "evidence": "Use an authorised plant fault case with a safe evidence plan, approved action, verification and a clear limit on the learner’s authority."
+        },
+        {
+          "refs": [
+            "4402 core 5"
+          ],
+          "title": "Contribute to continuous improvement",
+          "coverage": "workplace",
+          "book": [
+            "process-window",
+            "doe",
+            "capability",
+            "documentation"
+          ],
+          "lessons": [
+            80,
+            89,
+            113,
+            116,
+            117
+          ],
+          "exercise": "lean-improvement",
+          "evidence": "Review the baseline, trial method, measured effects, change decision and sustained follow-up under workplace controls."
+        },
+        {
+          "refs": [
+            "4402 Injection Moulding 1"
+          ],
+          "title": "Manage an injection moulding process",
+          "coverage": "workplace",
+          "book": [
+            "vp-transfer",
+            "cavity-pressure",
+            "multi-cavity",
+            "process-window",
+            "complex-diagnostics"
+          ],
+          "lessons": [
+            39,
+            66,
+            94,
+            112,
+            115
+          ],
+          "exercise": "fault-review",
+          "evidence": "Check a technician’s reasoning about machine, mould, material, quality and variation using actual approved process evidence."
+        },
+        {
+          "refs": [
+            "4402 Injection Moulding 2"
+          ],
+          "title": "Run and evaluate a new or changed product trial",
+          "coverage": "workplace",
+          "book": [
+            "fill-study",
+            "gate-seal",
+            "doe",
+            "process-window",
+            "documentation"
+          ],
+          "lessons": [
+            62,
+            67,
+            70,
+            81,
+            89,
+            90
+          ],
+          "exercise": "process-trial",
+          "evidence": "Assess the approved trial plan, traceable samples, measured results, confirmation and the signed workplace disposition."
+        }
+      ],
+      "practical": [
+        {
+          "unit": "260",
+          "title": "NZQA 260 v6 draft complex mould maintenance observation guide",
+          "entry": "Confirm provider selection, current unit version and an authorised assessment setting. Record the relevant workplace procedures and agreed evidence before any practical activity.",
+          "range": [
+            "Confirm the mould meets the standard’s definition of complex. Use one qualifying mould and its engineering drawings, and explain at least five mould functions or operations.",
+            "Plan complex-mould servicing for two of the source’s listed systems, with hydraulic cylinders in the inspection range and at least two potential problems in the preventive maintenance evidence.",
+            "Check the required close-up and storage steps in the standard against site-authorised work records."
+          ],
+          "criteria": [
+            {
+              "ref": "1.1",
+              "observation": "Ask the learner to identify the complex mould components, their arrangement and control sources."
+            },
+            {
+              "ref": "1.2",
+              "observation": "Check the explanation of at least five relevant functions, their control and interactions."
+            },
+            {
+              "ref": "2.1",
+              "observation": "Ask the learner to use the controlled drawings to explain construction and operation of a qualifying mould."
+            },
+            {
+              "ref": "3.1",
+              "observation": "Record the authorised opening, inspection and findings for the required systems."
+            },
+            {
+              "ref": "3.2",
+              "observation": "Verify approved preventive work and records addressing the selected potential faults."
+            },
+            {
+              "ref": "3.3",
+              "observation": "Observe the applicable lubrication task and review the site-approved record."
+            },
+            {
+              "ref": "3.4",
+              "observation": "Check authorised close-up, preservation, identification and storage evidence."
+            },
+            {
+              "ref": "3.5",
+              "observation": "Ask the learner to explain likely causes, effects and prevention for the selected mould problems."
+            }
+          ]
+        },
+        {
+          "unit": "9713",
+          "title": "NZQA 9713 v5 draft complex mould setting and removal observation guide",
+          "entry": "Confirm provider selection, current unit version and an authorised assessment setting. Record the relevant workplace procedures and agreed evidence before any practical activity.",
+          "range": [
+            "Record complete setting and removal evidence for two qualifying complex moulds with different typical features.",
+            "Record at least three appropriate preparation items for each machine and mould preparation criterion. Use at least two ancillary equipment operations for criterion 2.2.",
+            "Document the job specification, controlled checks and authorisations for each job. Check the definition of a complex mould with the assessor. Consider external actuation and sequencing, or retention of molten material between cycles, as described in the source."
+          ],
+          "criteria": [
+            {
+              "ref": "1.1",
+              "observation": "Observe machine preparation and record the applicable services and checks."
+            },
+            {
+              "ref": "1.2",
+              "observation": "Observe mould preparation and record the applicable services and checks."
+            },
+            {
+              "ref": "1.3",
+              "observation": "Record the site-authorised fitting and acceptance checks for the mould."
+            },
+            {
+              "ref": "1.4",
+              "observation": "Verify the recorded machine and ancillary setup against the authorised job requirements."
+            },
+            {
+              "ref": "2.1",
+              "observation": "Observe the approved machine and mould functional checks and compare the results with the job."
+            },
+            {
+              "ref": "2.2",
+              "observation": "Record functional checks and results for at least two accepted ancillary operations."
+            },
+            {
+              "ref": "3.1",
+              "observation": "Record the required machine preparation evidence for authorised removal."
+            },
+            {
+              "ref": "3.2",
+              "observation": "Record the required mould preparation evidence for authorised removal."
+            },
+            {
+              "ref": "3.3",
+              "observation": "Observe the approved removal and check the completed condition and handover record."
+            }
+          ]
+        }
+      ]
+    },
+    "uk-england-st1328": {
+      "framework": "Skills England ST1328 v1.0, Level 3 Polymer processing technician",
+      "scope": "All 84 published knowledge, skills and behaviour identifiers are grouped by teaching and evidence topic. A group identifies relevant learning or evidence. The provider confirms each individual requirement and supplies the wider polymer, professional and workplace syllabus. The assessment-method map shows where those identifiers are assessed in the published ST1328 v1.0 specification.",
+      "sourceIds": [
+        "st1328-ksb",
+        "st1328-sias"
+      ],
+      "delivery": [
+        "The employer and provider confirm the occupational context, training plan, eligible hours and learner record. The published v1.0 standard lists 626 minimum hours for compliance.",
+        "Agree training for the wider polymer processes, UK safety and environmental requirements, post-processing, engineering drawings, digital systems and other areas named in the occupational standard.",
+        "Prepare for the current end-point assessment through the provider’s approved organisation. The published plan uses an observation with questions, a portfolio-supported interview and a multiple-choice test.",
+        "Prepare authentic portfolio evidence using the assessment plan. Keep workbook reflections and self-check answers in the learning record. The workplace observation takes place under normal working conditions."
+      ],
+      "rows": [
+        {
+          "refs": [
+            "K1",
+            "K2",
+            "K39",
+            "S1",
+            "S2",
+            "S26",
+            "B5"
+          ],
+          "title": "Industry context, job planning and escalation",
+          "coverage": "mapped",
+          "book": [
+            "what-injection-moulding-is",
+            "documentation",
+            "process-baseline"
+          ],
+          "lessons": [
+            1,
+            5,
+            10,
+            41
+          ],
+          "exercise": "handover",
+          "evidence": "Use job planning and escalation evidence. Confirm the provider’s coverage of industries, customers, time management and responses to changing work."
+        },
+        {
+          "refs": [
+            "K3",
+            "K4",
+            "S3",
+            "S4",
+            "B1"
+          ],
+          "title": "Safety, environmental practice and hazard reporting",
+          "coverage": "workplace",
+          "book": [
+            "safety-foundations",
+            "machine-anatomy"
+          ],
+          "lessons": [
+            6,
+            15,
+            41,
+            100
+          ],
+          "exercise": "handover",
+          "evidence": "The provider teaches applicable UK legal and site requirements. Observe approved safety checks, hazard reporting, prioritisation and escalation at the workplace."
+        },
+        {
+          "refs": [
+            "K5",
+            "K6",
+            "K19",
+            "S5",
+            "S6",
+            "B2"
+          ],
+          "title": "Environmental controls, sustainability and reuse",
+          "coverage": "provider",
+          "book": [
+            "material-families",
+            "thermal-history",
+            "documentation"
+          ],
+          "lessons": [
+            29,
+            98,
+            116,
+            117
+          ],
+          "exercise": "polymer-processes",
+          "evidence": "Complete current environmental and lifecycle teaching with the provider, then verify material selection, segregation and waste control in context."
+        },
+        {
+          "refs": [
+            "K7",
+            "K8"
+          ],
+          "title": "Polymer chemistry and synthesis",
+          "coverage": "supplement",
+          "book": [
+            "polymer-structure",
+            "material-families"
+          ],
+          "lessons": [
+            21,
+            22,
+            23
+          ],
+          "exercise": "polymer-processes",
+          "evidence": "Assess the complete chemistry vocabulary, feedstock and synthesis requirements with the provider’s worked explanations and questions."
+        },
+        {
+          "refs": [
+            "K9",
+            "K10",
+            "K11",
+            "K12",
+            "K13",
+            "K14",
+            "K15",
+            "K16"
+          ],
+          "title": "Thermal behaviour, classes, flow and structure",
+          "coverage": "mapped",
+          "book": [
+            "polymer-structure",
+            "rheology",
+            "material-families",
+            "thermal-history"
+          ],
+          "lessons": [
+            21,
+            22,
+            23,
+            24,
+            25,
+            27
+          ],
+          "exercise": "polymer-processes",
+          "evidence": "Use examples of property and processing decisions. The provider covers curing and the scope beyond thermoplastic melt processing."
+        },
+        {
+          "refs": [
+            "K17",
+            "K18"
+          ],
+          "title": "Material datasheets, formulations and test interpretation",
+          "coverage": "mapped",
+          "book": [
+            "material-families",
+            "fillers-additives",
+            "high-performance-polymers"
+          ],
+          "lessons": [
+            21,
+            42,
+            75
+          ],
+          "exercise": "quality-record",
+          "evidence": "Ask the learner to interpret approved datasheets and explain the purpose, evidence and limitations of ingredients and test methods across the syllabus."
+        },
+        {
+          "refs": [
+            "K20",
+            "K24",
+            "S7"
+          ],
+          "title": "Production control and material preparation",
+          "coverage": "workplace",
+          "book": [
+            "process-baseline",
+            "moisture-drying",
+            "material-families",
+            "documentation"
+          ],
+          "lessons": [
+            26,
+            30,
+            42,
+            98,
+            116
+          ],
+          "exercise": "handover",
+          "evidence": "Review preparation and traceability on an approved job. Complete provider coverage of production measures, stock control, material instructions and identification."
+        },
+        {
+          "refs": [
+            "K21",
+            "K22",
+            "S8",
+            "S9",
+            "S10"
+          ],
+          "title": "Plant, tooling, service connections and verification",
+          "coverage": "workplace",
+          "book": [
+            "machine-anatomy",
+            "mould-anatomy",
+            "clamp",
+            "safety-foundations"
+          ],
+          "lessons": [
+            11,
+            14,
+            16,
+            20,
+            31,
+            40
+          ],
+          "exercise": "mould-change-evidence",
+          "evidence": "Use an authorised workplace observation covering the applicable equipment, tooling checks and services within the learner’s scope."
+        },
+        {
+          "refs": [
+            "K23"
+          ],
+          "title": "Range of polymer processing technologies",
+          "coverage": "supplement",
+          "book": [
+            "what-injection-moulding-is",
+            "cycle",
+            "material-families"
+          ],
+          "lessons": [
+            1,
+            2,
+            21
+          ],
+          "exercise": "polymer-processes",
+          "evidence": "Use the workbook to introduce process selection. The provider teaches and assesses the full range, including specialised compounding, forming, layup and additive routes."
+        },
+        {
+          "refs": [
+            "K25",
+            "K27",
+            "S12",
+            "S13",
+            "S14",
+            "S15",
+            "S16"
+          ],
+          "title": "Operating parameters and controlled start, monitor and stop",
+          "coverage": "workplace",
+          "book": [
+            "velocity-pressure",
+            "process-baseline",
+            "process-monitoring",
+            "cycle"
+          ],
+          "lessons": [
+            3,
+            4,
+            17,
+            41,
+            50,
+            96
+          ],
+          "exercise": "mould-change-evidence",
+          "evidence": "Observe approved work against current procedures and job specifications. Capture checks, actual observations and limits of the learner’s authority."
+        },
+        {
+          "refs": [
+            "K26",
+            "S22"
+          ],
+          "title": "Post-processing and labelling",
+          "coverage": "provider",
+          "book": [
+            "documentation",
+            "cooling",
+            "ejection-draft"
+          ],
+          "lessons": [
+            36,
+            37,
+            49,
+            98
+          ],
+          "exercise": "handover",
+          "evidence": "The provider and workplace supply the actual operations, quality requirements and observed evidence for the post-processing scope."
+        },
+        {
+          "refs": [
+            "K28",
+            "K29",
+            "K30",
+            "K31",
+            "S11",
+            "S23",
+            "S24",
+            "S25",
+            "S31",
+            "B3"
+          ],
+          "title": "Quality, cost, delivery, inspection and records",
+          "coverage": "workplace",
+          "book": [
+            "documentation",
+            "capability",
+            "dimensional-stability"
+          ],
+          "lessons": [
+            7,
+            75,
+            76,
+            98,
+            113,
+            116
+          ],
+          "exercise": "quality-record",
+          "evidence": "Use controlled inspection and production evidence showing measurement status, records, deviations, audit follow-up and responsibility for quality."
+        },
+        {
+          "refs": [
+            "K33",
+            "K34"
+          ],
+          "title": "Engineering drawings and digital manufacturing systems",
+          "coverage": "provider",
+          "book": [
+            "dimensional-stability",
+            "mould-anatomy",
+            "documentation"
+          ],
+          "lessons": [
+            31,
+            75,
+            97,
+            109
+          ],
+          "exercise": "engineering-drawing",
+          "evidence": "Teach from current authorised drawings, standards and the systems selected by the provider. Use an approved exercise and confirm the complete digital scope."
+        },
+        {
+          "refs": [
+            "K32",
+            "S27"
+          ],
+          "title": "Preventive maintenance",
+          "coverage": "workplace",
+          "book": [
+            "safety-foundations",
+            "mould-anatomy",
+            "documentation"
+          ],
+          "lessons": [
+            40,
+            118
+          ],
+          "exercise": "handover",
+          "evidence": "Observe the approved maintenance scope and verify the checks, work record and responsible person’s return-to-service decision."
+        },
+        {
+          "refs": [
+            "K35",
+            "K36",
+            "S20",
+            "S21"
+          ],
+          "title": "Analyse data and diagnose process faults",
+          "coverage": "workplace",
+          "book": [
+            "diagnostic-method",
+            "process-monitoring",
+            "complex-diagnostics"
+          ],
+          "lessons": [
+            60,
+            94,
+            96,
+            111
+          ],
+          "exercise": "fault-review",
+          "evidence": "Check the data interpretation, competing explanations, approved action and repeat verification on a traceable case."
+        },
+        {
+          "refs": [
+            "K37",
+            "S17",
+            "S18",
+            "S19",
+            "S28"
+          ],
+          "title": "Controlled trials and continuous improvement",
+          "coverage": "workplace",
+          "book": [
+            "process-window",
+            "doe",
+            "capability",
+            "documentation"
+          ],
+          "lessons": [
+            70,
+            71,
+            80,
+            81,
+            89,
+            117
+          ],
+          "exercise": "lean-improvement",
+          "evidence": "Use an authorised process trial or improvement project, with a clear baseline, measured effects, alternative explanations and confirmation."
+        },
+        {
+          "refs": [
+            "K38",
+            "S34"
+          ],
+          "title": "Digital tools, information handling and security",
+          "coverage": "provider",
+          "book": [
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            97,
+            98
+          ],
+          "exercise": "handover",
+          "evidence": "The provider covers the required tools and current data protection and security responsibilities. Observe controlled workplace use and records."
+        },
+        {
+          "refs": [
+            "K40",
+            "K41",
+            "K42",
+            "K43",
+            "S29",
+            "S30",
+            "S32",
+            "S33",
+            "B4"
+          ],
+          "title": "Inclusive teamwork, communication and presentation",
+          "coverage": "workplace",
+          "book": [
+            "documentation",
+            "diagnostic-method"
+          ],
+          "lessons": [
+            5,
+            70,
+            119,
+            120
+          ],
+          "exercise": "handover",
+          "evidence": "Gather evidence of spoken, written and presented work and observed teamwork. The provider checks equality, diversity and inclusion coverage."
+        },
+        {
+          "refs": [
+            "S35",
+            "B6"
+          ],
+          "title": "Professional development",
+          "coverage": "provider",
+          "book": [
+            "documentation"
+          ],
+          "lessons": [
+            119,
+            120
+          ],
+          "exercise": "handover",
+          "evidence": "Agree and review a development plan and authentic records of planned and unplanned learning with a workplace mentor."
+        }
+      ],
+      "assessmentMethods": [
+        {
+          "title": "Workplace observation with questions",
+          "planning": "Plan an eligible workplace observation with the approved assessment organisation. Review the referenced work preparation, production, inspection, maintenance and reporting skills using authentic work. Use the published grading descriptors when the provider plans assessment.",
+          "refs": [
+            "K4",
+            "K24",
+            "K27",
+            "K29",
+            "K30",
+            "K32",
+            "K39",
+            "K41",
+            "S1",
+            "S2",
+            "S3",
+            "S4",
+            "S6",
+            "S7",
+            "S8",
+            "S9",
+            "S10",
+            "S11",
+            "S12",
+            "S13",
+            "S14",
+            "S15",
+            "S16",
+            "S22",
+            "S23",
+            "S24",
+            "S25",
+            "S27",
+            "S30",
+            "S31",
+            "B1",
+            "B3"
+          ]
+        },
+        {
+          "title": "Interview supported by a portfolio",
+          "planning": "Prepare dated, attributable records, observations and permitted evidence for the portfolio. Practise explaining how you used evidence and made decisions. Keep self-checks and workbook reflections in the separate learning record.",
+          "refs": [
+            "K2",
+            "K6",
+            "K25",
+            "K28",
+            "K35",
+            "K36",
+            "K37",
+            "K38",
+            "K40",
+            "K42",
+            "K43",
+            "S5",
+            "S17",
+            "S18",
+            "S19",
+            "S20",
+            "S21",
+            "S26",
+            "S28",
+            "S29",
+            "S32",
+            "S33",
+            "S34",
+            "S35",
+            "B2",
+            "B4",
+            "B5",
+            "B6"
+          ]
+        },
+        {
+          "title": "Closed-book multiple-choice test",
+          "planning": "The plan uses a 40-question test with 60 minutes. Review the knowledge identifiers below using Book readings and the provider syllabus. The approved assessment organisation controls official questions, assessment arrangements and results.",
+          "refs": [
+            "K1",
+            "K3",
+            "K5",
+            "K7",
+            "K8",
+            "K9",
+            "K10",
+            "K11",
+            "K12",
+            "K13",
+            "K14",
+            "K15",
+            "K16",
+            "K17",
+            "K18",
+            "K19",
+            "K20",
+            "K21",
+            "K22",
+            "K23",
+            "K26",
+            "K31",
+            "K33",
+            "K34"
+          ]
+        }
+      ]
+    },
+    "uk-wales-framework": {
+      "framework": "Wales Polymer Processing Operations, provider-listed Levels 2 and 3",
+      "scope": "Qualifications Wales lists the Level 2 and 3 GQA certificates as available for use in apprenticeship frameworks. The register units are grouped below. The provider confirms the active framework and qualification combination, unit selections, Essential Skills and intake.",
+      "sourceIds": [
+        "wales-library",
+        "wales-fr04316",
+        "uk-register",
+        "wales-provider-gqa"
+      ],
+      "delivery": [
+        "Confirm the current Welsh framework and issuing authority record before agreeing the programme, language of delivery and any prior credit.",
+        "Agree the employer-sponsored workplace evidence, the practical and written assessment schedule and the provider’s portfolio arrangements.",
+        "Record Essential Skills Wales learning and any recognised equivalents through the provider.",
+        "Search the current Qualifications Wales export for C00/1224/9 and C00/1225/0. On the checked export the final start dates are 31 December 2029 and 31 May 2027 respectively. The register lists English delivery for the two awards. Confirm current dates and any learning support with the provider."
+      ],
+      "rows": [
+        {
+          "refs": [
+            "Essential Skills Wales"
+          ],
+          "title": "Communication, number and applicable digital literacy",
+          "coverage": "provider",
+          "book": [
+            "documentation",
+            "capability"
+          ],
+          "lessons": [
+            5,
+            75,
+            98,
+            116
+          ],
+          "exercise": "handover",
+          "evidence": "The provider confirms the current Essential Skills scope, recognised prior results and the separate assessment evidence."
+        },
+        {
+          "refs": [
+            "FR04316 L2 / 603/2760/1 / C00/1224/9"
+          ],
+          "title": "Published Level 2 polymer operations certificate option",
+          "coverage": "provider",
+          "book": [
+            "process-baseline",
+            "documentation"
+          ],
+          "lessons": [
+            41,
+            50,
+            98
+          ],
+          "exercise": "handover",
+          "evidence": "Check with the provider which combined qualification and units it uses for the current Level 2 cohort."
+        },
+        {
+          "refs": [
+            "FR04316 L3 / 603/2792/3 / C00/1225/0"
+          ],
+          "title": "Published Level 3 polymer operations competence option",
+          "coverage": "provider",
+          "book": [
+            "diagnostic-method",
+            "process-window",
+            "documentation"
+          ],
+          "lessons": [
+            60,
+            98,
+            111,
+            118
+          ],
+          "exercise": "fault-review",
+          "evidence": "Confirm the accepted competence qualification, knowledge qualification and current unit documents with the provider."
+        },
+        {
+          "refs": [
+            "603/2760/1 / L/602/1611"
+          ],
+          "title": "Level 2 safety, health and environment",
+          "coverage": "workplace",
+          "book": [
+            "safety-foundations",
+            "documentation"
+          ],
+          "lessons": [
+            6,
+            41,
+            100
+          ],
+          "exercise": "handover",
+          "evidence": "Use the provider’s mandatory safety unit and verify site-approved decisions about risks, protective equipment, housekeeping, alarms and reporting."
+        },
+        {
+          "refs": [
+            "603/2760/1 / D/602/1242",
+            "603/2760/1 / T/602/1442",
+            "603/2760/1 / T/602/1456",
+            "603/2760/1 / T/602/1487"
+          ],
+          "title": "Level 2 materials, preparation, operation and shutdown",
+          "coverage": "workplace",
+          "book": [
+            "material-families",
+            "cycle",
+            "process-baseline",
+            "process-monitoring"
+          ],
+          "lessons": [
+            26,
+            41,
+            42,
+            50,
+            96
+          ],
+          "exercise": "mould-change-evidence",
+          "evidence": "Observe the selected job stages and records for material preparation, set-up readiness, operation, quality and shutdown within workplace procedures."
+        },
+        {
+          "refs": [
+            "603/2760/1 / L/504/9365",
+            "603/2760/1 / Y/504/9367",
+            "603/2760/1 / D/602/1533"
+          ],
+          "title": "Level 2 preparation, tool configuration and ancillaries",
+          "coverage": "workplace",
+          "book": [
+            "machine-anatomy",
+            "mould-anatomy",
+            "safety-foundations"
+          ],
+          "lessons": [
+            11,
+            31,
+            40,
+            41
+          ],
+          "exercise": "mould-change-evidence",
+          "evidence": "Use the selected work orders, equipment and lifting authorisations. Verify planning, communication and observed work under site procedures."
+        },
+        {
+          "refs": [
+            "603/2760/1 / K/602/1521",
+            "603/2760/1 / D/602/1614",
+            "603/2760/1 / R/602/1545",
+            "603/2760/1 / Y/602/1546"
+          ],
+          "title": "Level 2 inspection, quality checks, sampling and testing",
+          "coverage": "workplace",
+          "book": [
+            "documentation",
+            "capability",
+            "dimensional-stability"
+          ],
+          "lessons": [
+            7,
+            75,
+            76,
+            98
+          ],
+          "exercise": "quality-record",
+          "evidence": "Observe the selected inspection or sampling task. Check the method, sample integrity, acceptance requirements, findings and reporting."
+        },
+        {
+          "refs": [
+            "603/2760/1 / M/602/1519",
+            "603/2760/1 / Y/602/1627"
+          ],
+          "title": "Level 2 finishing and assembly",
+          "coverage": "workplace",
+          "book": [
+            "ejection-draft",
+            "documentation",
+            "dimensional-stability"
+          ],
+          "lessons": [
+            36,
+            49,
+            98
+          ],
+          "exercise": "engineering-drawing",
+          "evidence": "Verify selected downstream work against the current instructions, quality rules and disposition evidence."
+        },
+        {
+          "refs": [
+            "603/2792/3 / L/602/1611"
+          ],
+          "title": "Level 3 award safety, health and environment unit",
+          "coverage": "workplace",
+          "book": [
+            "safety-foundations",
+            "documentation"
+          ],
+          "lessons": [
+            6,
+            41,
+            100
+          ],
+          "exercise": "handover",
+          "evidence": "Confirm how the safety unit is met for the selected award. Use authentic workplace evidence and approved rules for recognising prior achievement."
+        },
+        {
+          "refs": [
+            "603/2792/3 / A/602/1555",
+            "603/2792/3 / R/602/1559"
+          ],
+          "title": "Level 3 configuration, process monitoring and optimisation",
+          "coverage": "workplace",
+          "book": [
+            "process-baseline",
+            "process-window",
+            "process-monitoring",
+            "doe"
+          ],
+          "lessons": [
+            50,
+            80,
+            89,
+            96,
+            115
+          ],
+          "exercise": "lean-improvement",
+          "evidence": "Verify the selected configuration and optimisation tasks using approved specifications, records, quality and waste checks, safe running and the limits of authority."
+        },
+        {
+          "refs": [
+            "603/2792/3 / A/602/1622"
+          ],
+          "title": "Level 3 diagnosis and correction of process problems",
+          "coverage": "workplace",
+          "book": [
+            "diagnostic-method",
+            "complex-diagnostics",
+            "process-monitoring"
+          ],
+          "lessons": [
+            60,
+            96,
+            111,
+            118
+          ],
+          "exercise": "fault-review",
+          "evidence": "Review the issue, material or process evidence, authorised corrective action, measured follow-up and communication of findings."
+        },
+        {
+          "refs": [
+            "603/2792/3 / H/602/1548",
+            "603/2792/3 / K/602/1602"
+          ],
+          "title": "Level 3 routine servicing and complex sampling",
+          "coverage": "workplace",
+          "book": [
+            "mould-anatomy",
+            "documentation",
+            "dimensional-stability"
+          ],
+          "lessons": [
+            40,
+            76,
+            98,
+            118
+          ],
+          "exercise": "quality-record",
+          "evidence": "Arrange evidence for the selected unit. Use controlled servicing records or observation of sampling, preparation, sample integrity and reporting."
+        },
+        {
+          "refs": [
+            "603/2792/3 / J/602/1607",
+            "603/2792/3 / J/602/1610"
+          ],
+          "title": "Level 3 technical support and production planning",
+          "coverage": "provider",
+          "book": [
+            "documentation",
+            "process-baseline",
+            "complex-diagnostics"
+          ],
+          "lessons": [
+            5,
+            50,
+            98,
+            119,
+            120
+          ],
+          "exercise": "engineering-drawing",
+          "evidence": "Agree an authentic planning or technical-support activity with the centre. Verify the request, supporting information, communications, decision and outcome."
+        }
+      ]
+    },
+    "uk-northern-ireland-framework-348": {
+      "framework": "Northern Ireland framework 348, issue 6 of August 2025",
+      "scope": "Framework 348 requires competence and knowledge qualifications and the applicable Essential Skills and employment rights evidence. The GQA unit references and relevant Pearson core and polymer options below use the regulated qualification register. The contractor confirms the actual selection and assessment instruments.",
+      "sourceIds": [
+        "ni-pearson",
+        "uk-register"
+      ],
+      "delivery": [
+        "The training contractor and employer agree employment, learner entry, a workplace evidence plan and the approved qualification units.",
+        "Keep separate records for the competence award, technical knowledge award and each required Essential Skills result or accepted equivalent.",
+        "Confirm the employment rights and responsibilities route and framework certification requirements with the training contractor."
+      ],
+      "rows": [
+        {
+          "refs": [
+            "603/2792/3"
+          ],
+          "title": "Polymer operations workplace competence",
+          "coverage": "workplace",
+          "book": [
+            "safety-foundations",
+            "cycle",
+            "mould-anatomy",
+            "process-monitoring",
+            "documentation"
+          ],
+          "lessons": [
+            6,
+            31,
+            41,
+            50,
+            96
+          ],
+          "exercise": "mould-change-evidence",
+          "evidence": "The assessor matches observations and authentic portfolio records to the current GQA units and evidence range."
+        },
+        {
+          "refs": [
+            "601/9049/8"
+          ],
+          "title": "Technical knowledge and applied engineering tasks",
+          "coverage": "provider",
+          "book": [
+            "material-families",
+            "machine-anatomy",
+            "documentation",
+            "capability"
+          ],
+          "lessons": [
+            11,
+            21,
+            40,
+            75,
+            76
+          ],
+          "exercise": "quality-record",
+          "evidence": "The provider maps the selected Pearson technical knowledge units and applies each unit’s current assessment and grading criteria."
+        },
+        {
+          "refs": [
+            "Essential Skills Application of Number L2"
+          ],
+          "title": "Workplace numeracy",
+          "coverage": "provider",
+          "book": [
+            "capability",
+            "documentation"
+          ],
+          "lessons": [
+            75,
+            76,
+            116
+          ],
+          "exercise": "quality-record",
+          "evidence": "Agree the separate Essential Skills requirement or an accepted equivalent with the contractor."
+        },
+        {
+          "refs": [
+            "Essential Skills Communication L2"
+          ],
+          "title": "Workplace communication",
+          "coverage": "provider",
+          "book": [
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            70,
+            119
+          ],
+          "exercise": "handover",
+          "evidence": "Agree the separate communication result or an accepted equivalent with the contractor."
+        },
+        {
+          "refs": [
+            "Essential Skills Digital ICT L1"
+          ],
+          "title": "Digital records and approved tools",
+          "coverage": "provider",
+          "book": [
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            97,
+            98
+          ],
+          "exercise": "handover",
+          "evidence": "The contractor confirms Digital ICT Level 1 or an accepted equivalent and the optional Level 2 progression where applicable."
+        },
+        {
+          "refs": [
+            "Framework 348 employment rights and responsibilities",
+            "601/5072/5",
+            "J/600/0840"
+          ],
+          "title": "Employment rights and responsibilities",
+          "coverage": "provider",
+          "book": [],
+          "lessons": [],
+          "exercise": "handover",
+          "evidence": "Record the approved workbook or qualification route and evidence accepted for framework completion."
+        },
+        {
+          "refs": [
+            "M/508/6084",
+            "T/508/6085",
+            "A/508/6086"
+          ],
+          "title": "Published core engineering knowledge units",
+          "coverage": "provider",
+          "book": [
+            "safety-foundations",
+            "documentation",
+            "capability"
+          ],
+          "lessons": [
+            5,
+            6,
+            41,
+            75,
+            98,
+            119
+          ],
+          "exercise": "engineering-drawing",
+          "evidence": "Confirm the qualification route, then use the provider unit instruments for engineering safety, communications and mathematics. The published Certificate structure lists 540 guided learning hours with three mandatory and at least five optional units."
+        },
+        {
+          "refs": [
+            "Y/602/3457",
+            "D/602/3458",
+            "H/602/3459",
+            "Y/602/3460",
+            "L/505/6011"
+          ],
+          "title": "Published polymer and composites option examples",
+          "coverage": "provider",
+          "book": [
+            "material-families",
+            "polymer-structure",
+            "cycle",
+            "process-window",
+            "fibre-orientation"
+          ],
+          "lessons": [
+            2,
+            21,
+            23,
+            41,
+            80
+          ],
+          "exercise": "polymer-processes",
+          "evidence": "Use these Book readings where a relevant option is selected. Confirm the required unit mix, provider teaching and approved assessment."
+        },
+        {
+          "refs": [
+            "603/2792/3 / L/602/1611"
+          ],
+          "title": "Level 3 award safety, health and environment unit",
+          "coverage": "workplace",
+          "book": [
+            "safety-foundations",
+            "documentation"
+          ],
+          "lessons": [
+            6,
+            41,
+            100
+          ],
+          "exercise": "handover",
+          "evidence": "Confirm how the safety unit is met for the selected award. Use authentic workplace evidence and approved rules for recognising prior achievement."
+        },
+        {
+          "refs": [
+            "603/2792/3 / A/602/1555",
+            "603/2792/3 / R/602/1559"
+          ],
+          "title": "Level 3 configuration, process monitoring and optimisation",
+          "coverage": "workplace",
+          "book": [
+            "process-baseline",
+            "process-window",
+            "process-monitoring",
+            "doe"
+          ],
+          "lessons": [
+            50,
+            80,
+            89,
+            96,
+            115
+          ],
+          "exercise": "lean-improvement",
+          "evidence": "Verify the selected configuration and optimisation tasks using approved specifications, records, quality and waste checks, safe running and the limits of authority."
+        },
+        {
+          "refs": [
+            "603/2792/3 / A/602/1622"
+          ],
+          "title": "Level 3 diagnosis and correction of process problems",
+          "coverage": "workplace",
+          "book": [
+            "diagnostic-method",
+            "complex-diagnostics",
+            "process-monitoring"
+          ],
+          "lessons": [
+            60,
+            96,
+            111,
+            118
+          ],
+          "exercise": "fault-review",
+          "evidence": "Review the issue, material or process evidence, authorised corrective action, measured follow-up and communication of findings."
+        },
+        {
+          "refs": [
+            "603/2792/3 / H/602/1548",
+            "603/2792/3 / K/602/1602"
+          ],
+          "title": "Level 3 routine servicing and complex sampling",
+          "coverage": "workplace",
+          "book": [
+            "mould-anatomy",
+            "documentation",
+            "dimensional-stability"
+          ],
+          "lessons": [
+            40,
+            76,
+            98,
+            118
+          ],
+          "exercise": "quality-record",
+          "evidence": "Arrange evidence for the selected unit. Use controlled servicing records or observation of sampling, preparation, sample integrity and reporting."
+        },
+        {
+          "refs": [
+            "603/2792/3 / J/602/1607",
+            "603/2792/3 / J/602/1610"
+          ],
+          "title": "Level 3 technical support and production planning",
+          "coverage": "provider",
+          "book": [
+            "documentation",
+            "process-baseline",
+            "complex-diagnostics"
+          ],
+          "lessons": [
+            5,
+            50,
+            98,
+            119,
+            120
+          ],
+          "exercise": "engineering-drawing",
+          "evidence": "Agree an authentic planning or technical-support activity with the centre. Verify the request, supporting information, communications, decision and outcome."
+        }
+      ]
+    },
+    "uk-scotland-gp42-gp43": {
+      "framework": "Qualifications Scotland GP42 22 and GP43 23, SCQF Levels 5 and 6",
+      "scope": "The mandatory and optional award codes are grouped by learning and evidence topic. The approved centre selects the award, six valid options and the relevant Modern Apprenticeship Core Skills and enhancements.",
+      "sourceIds": [
+        "scqf",
+        "scqf5",
+        "scqf6"
+      ],
+      "delivery": [
+        "Each SVQ uses three mandatory and six optional units. For GP42 22, select at least one option from each of process, engineering and lab groups A, B and C.",
+        "For GP43 23, select at least one option from group A and at least two options from group B. Confirm the current centre-approved selection and the workplace opportunities to demonstrate it.",
+        "Use the award-specific assessment strategy and occupationally competent assessors and verifiers. Record the Modern Apprenticeship requirements separately."
+      ],
+      "rows": [
+        {
+          "refs": [
+            "GP42 22 / F9JE 04"
+          ],
+          "title": "Level 5 mandatory teamwork",
+          "coverage": "workplace",
+          "book": [
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            119
+          ],
+          "exercise": "handover",
+          "evidence": "Use verified workplace team communication and handover evidence."
+        },
+        {
+          "refs": [
+            "GP42 22 / FY9W 04"
+          ],
+          "title": "Level 5 mandatory safe working",
+          "coverage": "workplace",
+          "book": [
+            "safety-foundations"
+          ],
+          "lessons": [
+            6,
+            41
+          ],
+          "exercise": "handover",
+          "evidence": "Observe working to site safety procedures in the selected role."
+        },
+        {
+          "refs": [
+            "GP42 22 / F9JL 04"
+          ],
+          "title": "Level 5 mandatory problem solving",
+          "coverage": "workplace",
+          "book": [
+            "diagnostic-method",
+            "documentation"
+          ],
+          "lessons": [
+            51,
+            60,
+            111
+          ],
+          "exercise": "fault-review",
+          "evidence": "Use authentic workplace evidence of identifying, investigating and reporting an issue."
+        },
+        {
+          "refs": [
+            "GP42 22 / J1HH 04",
+            "GP42 22 / J1H8 04",
+            "GP42 22 / J1H9 04",
+            "GP42 22 / J1HB 04"
+          ],
+          "title": "Level 5 group A processing, waste and plant condition options",
+          "coverage": "workplace",
+          "book": [
+            "process-baseline",
+            "process-monitoring",
+            "safety-foundations"
+          ],
+          "lessons": [
+            29,
+            41,
+            96,
+            118
+          ],
+          "exercise": "mould-change-evidence",
+          "evidence": "The centre selects the options and checks the actual plant, waste and process evidence required."
+        },
+        {
+          "refs": [
+            "GP42 22 / H3YW 04",
+            "GP42 22 / H3YY 04"
+          ],
+          "title": "Level 5 group A water-system options",
+          "coverage": "provider",
+          "book": [],
+          "lessons": [],
+          "exercise": null,
+          "evidence": "Arrange specialist delivery and evidence if these options are selected."
+        },
+        {
+          "refs": [
+            "GP42 22 / HE9C 04",
+            "GP42 22 / HK5N 04",
+            "GP42 22 / HK68 04"
+          ],
+          "title": "Level 5 group B documentation, handover and production options",
+          "coverage": "workplace",
+          "book": [
+            "documentation",
+            "process-baseline"
+          ],
+          "lessons": [
+            5,
+            40,
+            50,
+            98
+          ],
+          "exercise": "handover",
+          "evidence": "Use the centre-selected engineering documents, observed work and traceable handover."
+        },
+        {
+          "refs": [
+            "GP42 22 / HF45 04",
+            "GP42 22 / HF44 04",
+            "GP42 22 / FP3W 04"
+          ],
+          "title": "Level 5 group B maintenance, installation and instrumentation options",
+          "coverage": "provider",
+          "book": [
+            "machine-anatomy",
+            "safety-foundations",
+            "process-monitoring"
+          ],
+          "lessons": [
+            16,
+            94,
+            96,
+            118
+          ],
+          "exercise": "handover",
+          "evidence": "The centre supplies the selected installation or instrumentation tasks and their technical assessment criteria."
+        },
+        {
+          "refs": [
+            "GP42 22 / F9JH 04",
+            "GP42 22 / F3BB 04"
+          ],
+          "title": "Level 5 group B improvement options",
+          "coverage": "workplace",
+          "book": [
+            "doe",
+            "capability",
+            "documentation"
+          ],
+          "lessons": [
+            80,
+            113,
+            116,
+            117
+          ],
+          "exercise": "lean-improvement",
+          "evidence": "Use an approved improvement activity with observations and checked results."
+        },
+        {
+          "refs": [
+            "GP42 22 / HK5X 04",
+            "GP42 22 / J1GX 04",
+            "GP42 22 / J1GY 04"
+          ],
+          "title": "Level 5 group C inspection and testing options",
+          "coverage": "workplace",
+          "book": [
+            "capability",
+            "dimensional-stability",
+            "documentation"
+          ],
+          "lessons": [
+            7,
+            75,
+            76,
+            98
+          ],
+          "exercise": "quality-record",
+          "evidence": "Observe the selected inspection or testing task with suitable equipment, method and a traceable result."
+        },
+        {
+          "refs": [
+            "GP42 22 / J1HA 04",
+            "GP42 22 / J1H0 04",
+            "GP42 22 / H3YX 04",
+            "GP42 22 / J1H1 04"
+          ],
+          "title": "Level 5 group C specialist lab options",
+          "coverage": "provider",
+          "book": [],
+          "lessons": [],
+          "exercise": null,
+          "evidence": "Provide the actual approved laboratory or water-sampling setting and evidence for the selected units."
+        },
+        {
+          "refs": [
+            "GP43 23 / H00A 04"
+          ],
+          "title": "Level 6 mandatory working relationships",
+          "coverage": "workplace",
+          "book": [
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            70,
+            119
+          ],
+          "exercise": "handover",
+          "evidence": "Verify responsibilities and effective working relationships across an actual technical activity."
+        },
+        {
+          "refs": [
+            "GP43 23 / J1H7 04"
+          ],
+          "title": "Level 6 mandatory risk assessment",
+          "coverage": "workplace",
+          "book": [
+            "safety-foundations"
+          ],
+          "lessons": [
+            6,
+            41,
+            100
+          ],
+          "exercise": "handover",
+          "evidence": "Assess a workplace risk review and how its controls and escalation were agreed under site procedures."
+        },
+        {
+          "refs": [
+            "GP43 23 / F9J6 04"
+          ],
+          "title": "Level 6 mandatory problem solving",
+          "coverage": "workplace",
+          "book": [
+            "diagnostic-method",
+            "complex-diagnostics"
+          ],
+          "lessons": [
+            60,
+            111,
+            120
+          ],
+          "exercise": "fault-review",
+          "evidence": "Review a documented investigation, authorised response and evidence of effectiveness."
+        },
+        {
+          "refs": [
+            "GP43 23 / J1HJ 04",
+            "GP43 23 / J1HM 04",
+            "GP43 23 / J1HN 04"
+          ],
+          "title": "Level 6 group A material preparation and complex processing options",
+          "coverage": "workplace",
+          "book": [
+            "material-families",
+            "process-baseline",
+            "process-monitoring"
+          ],
+          "lessons": [
+            42,
+            50,
+            96,
+            115
+          ],
+          "exercise": "mould-change-evidence",
+          "evidence": "Confirm which complex operations qualify and obtain the observed records defined by the approved unit."
+        },
+        {
+          "refs": [
+            "GP43 23 / FP3J 04",
+            "GP43 23 / FP6X 04",
+            "GP43 23 / FP69 04"
+          ],
+          "title": "Level 6 group A plant handover, maintenance and controls options",
+          "coverage": "provider",
+          "book": [
+            "machine-anatomy",
+            "safety-foundations",
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            96,
+            118
+          ],
+          "exercise": "handover",
+          "evidence": "Supply approved plant and instrumentation activities and verify the technical scope and safe handover."
+        },
+        {
+          "refs": [
+            "GP43 23 / J1HK 04",
+            "GP43 23 / J1HL 04",
+            "GP43 23 / J1HP 04"
+          ],
+          "title": "Level 6 group A problem solving and product integrity options",
+          "coverage": "workplace",
+          "book": [
+            "diagnostic-method",
+            "process-monitoring",
+            "capability"
+          ],
+          "lessons": [
+            75,
+            76,
+            111,
+            113
+          ],
+          "exercise": "fault-review",
+          "evidence": "Use authorised processing or product evidence and verify the chosen option’s technical and reporting requirements."
+        },
+        {
+          "refs": [
+            "GP43 23 / J1HR 04",
+            "GP43 23 / J1HC 04",
+            "GP43 23 / J1HD 04",
+            "GP43 23 / J1HE 04",
+            "GP43 23 / J1HS 04"
+          ],
+          "title": "Level 6 group B engineering maintenance and instrumentation options",
+          "coverage": "provider",
+          "book": [
+            "machine-anatomy",
+            "process-monitoring",
+            "safety-foundations"
+          ],
+          "lessons": [
+            20,
+            94,
+            96,
+            118
+          ],
+          "exercise": "handover",
+          "evidence": "Supply relevant engineering activities, references and authorised observation for the selected options."
+        },
+        {
+          "refs": [
+            "GP43 23 / J1HT 04",
+            "GP43 23 / F9HH 04",
+            "GP43 23 / F9HK 04"
+          ],
+          "title": "Level 6 group B quality systems, statistics and risk options",
+          "coverage": "workplace",
+          "book": [
+            "capability",
+            "doe",
+            "documentation"
+          ],
+          "lessons": [
+            73,
+            75,
+            80,
+            90,
+            113
+          ],
+          "exercise": "quality-record",
+          "evidence": "Review the provider-selected quality system, statistical analysis or failure analysis evidence."
+        },
+        {
+          "refs": [
+            "GP43 23 / J1HF 04",
+            "GP43 23 / J1HG 04",
+            "GP43 23 / J1HV 04",
+            "GP43 23 / J1H6 04"
+          ],
+          "title": "Level 6 group B engineering activity and project options",
+          "coverage": "provider",
+          "book": [
+            "documentation",
+            "complex-diagnostics"
+          ],
+          "lessons": [
+            70,
+            80,
+            119,
+            120
+          ],
+          "exercise": "process-trial",
+          "evidence": "Define the selected project responsibilities and evaluate verified technical information, resource and planning records."
+        },
+        {
+          "refs": [
+            "GP43 23 / F9K0 04",
+            "GP43 23 / F9J0 04",
+            "GP43 23 / F9JY 04",
+            "GP43 23 / F9JA 04",
+            "GP43 23 / F9JX 04"
+          ],
+          "title": "Level 6 group B workplace improvement and team options",
+          "coverage": "workplace",
+          "book": [
+            "documentation",
+            "doe"
+          ],
+          "lessons": [
+            5,
+            80,
+            113,
+            119
+          ],
+          "exercise": "handover",
+          "evidence": "Use an approved team or improvement activity with documented communications, changes and results."
+        },
+        {
+          "refs": [
+            "GP43 23 / J1H5 04",
+            "GP43 23 / J1H1 04",
+            "GP43 23 / J1H2 04",
+            "GP43 23 / J1H3 04",
+            "GP43 23 / J1H4 04"
+          ],
+          "title": "Level 6 group B specialist laboratory options",
+          "coverage": "provider",
+          "book": [],
+          "lessons": [],
+          "exercise": null,
+          "evidence": "Supply the qualified laboratory setting and evidence for any of these selected options."
+        },
+        {
+          "refs": [
+            "Modern Apprenticeship Core Skills"
+          ],
+          "title": "Core Skills and provider-selected enhancements",
+          "coverage": "provider",
+          "book": [
+            "documentation",
+            "capability"
+          ],
+          "lessons": [
+            5,
+            75,
+            119
+          ],
+          "exercise": "handover",
+          "evidence": "Record the current framework requirements and accepted evidence or exemptions through the centre."
+        }
+      ]
+    },
+    "india-cipet-mo-im": {
+      "framework": "CIPET QG-3.5-CP-04117-2025-V2-CIPET, NSQF Level 3.5",
+      "scope": "All mandatory modules and the published assessment-outcome labels are mapped in groups. The qualification annex prints AO11 twice in CPC/N0221. The repeated source row is kept visible for the centre to resolve when issuing its marking schedule. Pages 5 and 22 also report different overall theory and practical mark totals. Use the centre’s controlled assessment instrument to resolve these entries.",
+      "sourceIds": [
+        "cipet-file",
+        "ncvet"
+      ],
+      "delivery": [
+        "Confirm the approved centre, intake version, entry requirements, training language and actual training schedule with CIPET.",
+        "Plan 600 hours in the categories shown by the National Qualification Register. Use 180 theory, 30 employability, 360 practical and 30 mandatory on-the-job hours. The classroom table in the qualification file groups theory and employability into 210 hours.",
+        "The published qualification file uses classroom delivery. Workbooks support the centre’s teaching and practical preparation. The centre verifies attendance, equipment, supervised practical work and workplace time.",
+        "The qualification file gives separate minimum aggregate thresholds of 50% theory and 70% practical. Confirm their application and the approved module mark schedule with CIPET’s Training Assessment Wing. The module summary lists 200 theory and 400 practical marks, while the annex total shows 260 and 340. CPC/N0214 practical marks are shown as 34 in the summary and 24 in the annex subtotal. Check those figures, the annex’s additional 50% outcome wording and the repeated CPC/N0221 AO11 against the current instrument.",
+        "Arrange Hindi or other language support as agreed by the centre. The Hindi workbook notes are draft learning aids for language review.",
+        "Before observation, confirm the qualified trainer, assessor and proctor, current site equipment list and workplace authorisations. Follow the centre’s evidence and privacy arrangements for on-the-job training. Record only authorised evidence references in the shared pack."
+      ],
+      "rows": [
+        {
+          "refs": [
+            "CPC/N0214 AO1",
+            "CPC/N0214 AO2",
+            "CPC/N0214 AO3",
+            "CPC/N0214 AO4"
+          ],
+          "title": "Work order, resources and production planning",
+          "coverage": "mapped",
+          "book": [
+            "documentation",
+            "process-baseline",
+            "cycle"
+          ],
+          "lessons": [
+            2,
+            5,
+            41,
+            50
+          ],
+          "exercise": "handover",
+          "evidence": "Review a confirmed work order, production plan, source revision and how the learner checked available resources."
+        },
+        {
+          "refs": [
+            "CPC/N0214 AO5",
+            "CPC/N0214 AO8",
+            "CPC/N0214 AO9",
+            "CPC/N0214 AO10",
+            "CPC/N0214 AO12",
+            "CPC/N0214 AO13",
+            "CPC/N0214 AO14",
+            "CPC/N0214 AO15"
+          ],
+          "title": "Prepare the cell, mould, auxiliaries and workspace",
+          "coverage": "workplace",
+          "book": [
+            "safety-foundations",
+            "mould-anatomy",
+            "cooling",
+            "process-baseline"
+          ],
+          "lessons": [
+            6,
+            31,
+            35,
+            41
+          ],
+          "exercise": "mould-change-evidence",
+          "evidence": "Use supervised observation of the eligible site tasks and verify work instruction, protective measures, auxiliaries and readiness checks."
+        },
+        {
+          "refs": [
+            "CPC/N0214 AO6",
+            "CPC/N0214 AO7",
+            "CPC/N0214 AO11",
+            "CPC/N0214 AO16"
+          ],
+          "title": "Material and job preparation",
+          "coverage": "workplace",
+          "book": [
+            "material-families",
+            "fillers-additives",
+            "moisture-drying"
+          ],
+          "lessons": [
+            21,
+            26,
+            30,
+            42
+          ],
+          "exercise": "polymer-processes",
+          "evidence": "Observe identification, preparation and traceability using the authorised material and job instructions."
+        },
+        {
+          "refs": [
+            "CPC/N0214 AO17",
+            "CPC/N0214 AO18"
+          ],
+          "title": "Refer and confirm unresolved instructions",
+          "coverage": "mapped",
+          "book": [
+            "safety-foundations",
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            6,
+            41
+          ],
+          "exercise": "handover",
+          "evidence": "Check that the learner identified a question, referred it to the appropriate person and confirmed the instruction before proceeding."
+        },
+        {
+          "refs": [
+            "CPC/N0221 AO1",
+            "CPC/N0221 AO2",
+            "CPC/N0221 AO3",
+            "CPC/N0221 AO9",
+            "CPC/N0221 AO10",
+            "CPC/N0221 AO11",
+            "CPC/N0221 AO13",
+            "CPC/N0221 AO11 (repeated source row)"
+          ],
+          "title": "Machine readiness, job settings and monitoring",
+          "coverage": "workplace",
+          "book": [
+            "machine-anatomy",
+            "process-baseline",
+            "process-monitoring",
+            "diagnostic-method"
+          ],
+          "lessons": [
+            3,
+            11,
+            17,
+            41,
+            50,
+            96
+          ],
+          "exercise": "fault-review",
+          "evidence": "Observe site-authorised operations against the approved checklist and job specification. Confirm the repeated AO11 line with the centre before awarding any marks."
+        },
+        {
+          "refs": [
+            "CPC/N0221 AO4",
+            "CPC/N0221 AO5",
+            "CPC/N0221 AO12"
+          ],
+          "title": "Material conditioning, additions and documented blends",
+          "coverage": "workplace",
+          "book": [
+            "moisture-drying",
+            "fillers-additives",
+            "material-families",
+            "documentation"
+          ],
+          "lessons": [
+            26,
+            29,
+            30,
+            42
+          ],
+          "exercise": "polymer-processes",
+          "evidence": "Observe conditioning and preparation against authorised material instructions, with traceable records of approved materials and blend identity."
+        },
+        {
+          "refs": [
+            "CPC/N0221 AO6",
+            "CPC/N0221 AO7",
+            "CPC/N0221 AO8"
+          ],
+          "title": "Sample run, inspection and authorised production start",
+          "coverage": "workplace",
+          "book": [
+            "fill-study",
+            "dimensional-stability",
+            "capability",
+            "process-baseline"
+          ],
+          "lessons": [
+            44,
+            50,
+            75,
+            76
+          ],
+          "exercise": "quality-record",
+          "evidence": "Use the centre’s practical observation and verified measurements on a controlled job. Record who was authorised to approve the sample and start."
+        },
+        {
+          "refs": [
+            "CPC/N0222 AO1",
+            "CPC/N0222 AO3",
+            "CPC/N0222 AO4",
+            "CPC/N0222 AO8",
+            "CPC/N0222 AO9"
+          ],
+          "title": "Finished-part inspection, laboratory samples and release",
+          "coverage": "workplace",
+          "book": [
+            "dimensional-stability",
+            "capability",
+            "documentation"
+          ],
+          "lessons": [
+            7,
+            75,
+            76,
+            98
+          ],
+          "exercise": "quality-record",
+          "evidence": "Verify inspection against the approved reference, the specified laboratory sample trace and the responsible person’s batch decision."
+        },
+        {
+          "refs": [
+            "CPC/N0222 AO2",
+            "CPC/N0222 AO5",
+            "CPC/N0222 AO6",
+            "CPC/N0222 AO7"
+          ],
+          "title": "Quality issues, approved correction and escalation",
+          "coverage": "workplace",
+          "book": [
+            "diagnostic-method",
+            "dimensional-stability",
+            "process-monitoring"
+          ],
+          "lessons": [
+            60,
+            96,
+            111
+          ],
+          "exercise": "fault-review",
+          "evidence": "Review observed rejection evidence, authorised correction, recheck results and communication to the operator or supervisor."
+        },
+        {
+          "refs": [
+            "CPC/N0411 AO1",
+            "CPC/N0411 AO2",
+            "CPC/N0411 AO4",
+            "CPC/N0411 AO5",
+            "CPC/N0411 AO6",
+            "CPC/N0411 AO7",
+            "CPC/N0411 AO8"
+          ],
+          "title": "Safety decisions, hazard reporting and emergency practice",
+          "coverage": "provider",
+          "book": [
+            "safety-foundations"
+          ],
+          "lessons": [
+            6,
+            41,
+            100
+          ],
+          "exercise": "india-5s",
+          "evidence": "Use the centre’s supervised safety and emergency assessment with qualified instructors and site procedures. Record hazard recognition, reporting and authorised responses."
+        },
+        {
+          "refs": [
+            "CPC/N0411 AO3",
+            "CPC/N0411 AO9",
+            "CPC/N0411 AO10",
+            "CPC/N0411 AO11",
+            "CPC/N0411 AO12",
+            "CPC/N0411 AO13",
+            "CPC/N0411 AO14",
+            "CPC/N0411 AO15",
+            "CPC/N0411 AO16",
+            "CPC/N0411 AO17",
+            "CPC/N0411 AO18",
+            "CPC/N0411 AO19",
+            "CPC/N0411 AO20",
+            "CPC/N0411 AO21"
+          ],
+          "title": "5S organisation, housekeeping and waste handling",
+          "coverage": "workplace",
+          "book": [
+            "safety-foundations",
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            41,
+            113,
+            117
+          ],
+          "exercise": "india-5s",
+          "evidence": "Observe sorting, storage, labelling, waste handling and follow-up against the approved site routine and current provider checklist."
+        },
+        {
+          "refs": [
+            "CPC/N0223 AO1",
+            "CPC/N0223 AO2",
+            "CPC/N0223 AO3",
+            "CPC/N0223 AO4",
+            "CPC/N0223 AO5"
+          ],
+          "title": "Cost, transaction records and enterprise planning",
+          "coverage": "supplement",
+          "book": [
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            116,
+            117
+          ],
+          "exercise": "india-enterprise",
+          "evidence": "Assess a cost and transaction exercise. The centre supplies the current financing and enterprise topics and its approved assessment."
+        },
+        {
+          "refs": [
+            "CPC/N0223 AO6",
+            "CPC/N0223 AO7",
+            "CPC/N0223 AO8",
+            "CPC/N0223 AO9",
+            "CPC/N0223 AO10",
+            "CPC/N0223 AO11"
+          ],
+          "title": "Customers, market information and product quality",
+          "coverage": "provider",
+          "book": [
+            "documentation",
+            "dimensional-stability"
+          ],
+          "lessons": [
+            7,
+            98,
+            116
+          ],
+          "exercise": "india-enterprise",
+          "evidence": "Complete provider-led teaching and assessed evidence of market reasoning, customer needs, quality and sales decisions."
+        },
+        {
+          "refs": [
+            "CPC/N0219 AO1",
+            "CPC/N0219 AO2",
+            "CPC/N0219 AO3"
+          ],
+          "title": "Forms, source capture and data checks",
+          "coverage": "supplement",
+          "book": [
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            97,
+            98
+          ],
+          "exercise": "india-office",
+          "evidence": "Use a provider-approved software task covering the specified forms, document capture and verified correction of data entry."
+        },
+        {
+          "refs": [
+            "CPC/N0219 AO4",
+            "CPC/N0219 AO5",
+            "CPC/N0219 AO6",
+            "CPC/N0219 AO7",
+            "CPC/N0219 AO8"
+          ],
+          "title": "Files, reports, secure records and requests",
+          "coverage": "supplement",
+          "book": [
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            97,
+            98
+          ],
+          "exercise": "india-office",
+          "evidence": "Check a report, filing, a controlled update, handling of an information request and the centre’s records-security tasks."
+        },
+        {
+          "refs": [
+            "DGT/VSQ/N0101 AO1",
+            "DGT/VSQ/N0101 AO2",
+            "DGT/VSQ/N0101 AO7"
+          ],
+          "title": "Employability, basic English and job applications",
+          "coverage": "supplement",
+          "book": [
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            119
+          ],
+          "exercise": "india-employability",
+          "evidence": "Use the centre’s employability activities and verified evidence of communication and preparing and applying for a role."
+        },
+        {
+          "refs": [
+            "DGT/VSQ/N0101 AO3",
+            "DGT/VSQ/N0101 AO4",
+            "DGT/VSQ/N0101 AO5",
+            "DGT/VSQ/N0101 AO6"
+          ],
+          "title": "Financial and digital literacy, enterprise and customer needs",
+          "coverage": "provider",
+          "book": [
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            98,
+            116
+          ],
+          "exercise": "india-enterprise",
+          "evidence": "The centre supplies and assesses the required employability, digital, customer and financial-literacy scope."
+        },
+        {
+          "refs": [
+            "Mandatory OJT 30 h"
+          ],
+          "title": "Supervised on-the-job training",
+          "coverage": "workplace",
+          "book": [
+            "safety-foundations",
+            "process-baseline",
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            6,
+            41,
+            98
+          ],
+          "exercise": "handover",
+          "evidence": "Record approved workplace activities, dates, hours, evidence references and supervisor verification in the centre’s controlled record."
+        }
+      ]
+    }
+  }
+}
