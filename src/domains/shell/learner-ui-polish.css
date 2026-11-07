@@ -4406,7 +4406,7 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   }
 }
 @media(prefers-reduced-motion:reduce){
-  .mm-reference-layout #dashboard .mm-reference-quick-tool,
+  .mm-reference-layout #dashboard .mm-reference-quick-tool{transition:none!important}
 }
 
 
