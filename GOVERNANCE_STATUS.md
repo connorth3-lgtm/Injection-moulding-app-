@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Release 2026.11.08.2 exact-source candidate 0e30c8d395a1ce8f9df718d194dab66d580c409a is bound to retained artifact 13594971527; producer metadata, artifact digest, runtime fingerprint, release contracts and all seven HOLD packets were verified. |
-| Behavioral / browser | **pass** | Exact-source Mobile Browser QA, Question Quality 50-Pass and the 52-screen visual gate passed for release 2026.11.08.2 candidate 0e30c8d395a1ce8f9df718d194dab66d580c409a. Final protected-head merge checks remain independently required. |
+| Static / contract | **pass** | PASS: release 2026.11.08.2 source 0e30c8d395a1ce8f9df718d194dab66d580c409a; producer run 42424109556; artifact 13594971527; fingerprint sha256:643dc080e44732e5c2b4149cc6c20e768de18b2001b67cdcde1d0efe391e7c3a. The exact retained candidate manifest, deployment source, artifact digest, release contracts and seven HOLD packets were verified. |
+| Behavioral / browser | **pass** | PASS: release 2026.11.08.2 source 0e30c8d395a1ce8f9df718d194dab66d580c409a passed exact-source Mobile Browser QA, Question Quality 50-Pass and the strict 52-screen visual gate. Final protected-head merge checks remain required. |
 | External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner and provider/NZQA evidence streams remain HOLD for release 2026.11.08.2. |
