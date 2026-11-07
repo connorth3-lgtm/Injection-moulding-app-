@@ -1,5 +1,5 @@
-const CACHE_VERSION='2026.11.03.2';
-const CACHE_REVISION='book-depth-r2';
+const CACHE_VERSION='2026.11.07.1';
+const CACHE_REVISION='education-pathways-r1';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
 // Release assets are grouped for readability, but activation is atomic across both
@@ -98,6 +98,7 @@ const CORE=[
   './src/domains/learning/book-data/book-material-regional-evidence-v1.json',
   './src/domains/learning/book-data/book-material-search-index-v1.json',
   './src/domains/learning/book-data/nzqa-education-readiness-v1.json',
+  './data/education-pathways-nz-uk-india-v1.json',
   './src/domains/learning/book-data/nzqa-provider-evidence-templates-v1.json',
   './src/domains/quality/data/quality-management-iso9001-v1.json',
   './src/domains/materials/material-registry.js',
