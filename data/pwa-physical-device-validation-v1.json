@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.11.08.2 requires physical iOS/iPadOS and Android evidence for installation, offline restart, reboot, update, storage pressure and zoom. Real assistive-technology validation uses data/accessibility-real-at-validation-v1.json.",
+  "boundary": "Release 2026.11.08.2 requires physical iOS/iPadOS and Android devices to provide evidence for installation, offline restart, reboot, update, storage pressure and zoom. Real assistive-technology validation uses data/accessibility-real-at-validation-v1.json.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
