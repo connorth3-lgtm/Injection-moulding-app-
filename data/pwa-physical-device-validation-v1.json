@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.11.08.2 requires physical iOS/iPadOS and Android devices to provide evidence for installation, offline restart, reboot, update, storage pressure and zoom. Real assistive-technology validation uses data/accessibility-real-at-validation-v1.json.",
+  "boundary": "Retained release 2026.11.08.2 candidate 0e30c8d395a1ce8f9df718d194dab66d580c409a and artifact 13594971527 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -65,5 +65,15 @@
     "artifactDigest": "sha256:34d881128b8a3f59bb0235e61dad090ee96d582c15005f38bede7d13ef50efd8",
     "artifactExpiresAt": "2027-01-20T04:00:42Z"
   },
-  "candidate": null
+  "candidate": {
+    "release": "2026.11.08.2",
+    "sourceSha": "0e30c8d395a1ce8f9df718d194dab66d580c409a",
+    "runtimeFingerprint": "sha256:643dc080e44732e5c2b4149cc6c20e768de18b2001b67cdcde1d0efe391e7c3a",
+    "candidateRunId": 42424109556,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 13594971527,
+    "artifactName": "physical-pwa-candidate-0e30c8d395a1ce8f9df718d194dab66d580c409a",
+    "artifactDigest": "sha256:00590509954dc14fe654fc9094641a5c3440c45c3b4be53984136504ac2843bf",
+    "artifactExpiresAt": "2027-02-05T23:11:32Z"
+  }
 }

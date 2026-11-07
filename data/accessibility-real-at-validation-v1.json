@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "release": "2026.11.08.2",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.08.2.md",
-  "sourceSha": null,
-  "runtimeFingerprint": null,
+  "sourceSha": "0e30c8d395a1ce8f9df718d194dab66d580c409a",
+  "runtimeFingerprint": "sha256:643dc080e44732e5c2b4149cc6c20e768de18b2001b67cdcde1d0efe391e7c3a",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Human review with real NVDA and VoiceOver is pending for release 2026.11.08.2. The reviewer must test the exact retained build.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.11.08.2 is bound to exact retained learner-runtime candidate 0e30c8d395a1ce8f9df718d194dab66d580c409a; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -310,7 +310,7 @@
     "sourceSha": "452334f3260f212fb1eec1bed3f99ffac65f522f",
     "runtimeFingerprint": "sha256:18dc181891537daf93ca8d12c397e646027c639a72aef2a2ebcc0fb2d4dd5718"
   },
-  "technicalCandidateStatus": "HOLD: The exact-source build and its automated release checks are pending.",
+  "technicalCandidateStatus": "PASS: Release 2026.11.08.2 candidate source 0e30c8d395a1ce8f9df718d194dab66d580c409a, producer run 42424109556, and artifact 13594971527 passed exact-source producer, browser, question and visual checks. Real assistive-technology tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",

@@ -2,7 +2,7 @@
 
 **STATUS: HOLD — release 2026.11.08.2 has no completed independent external review. Prior release evidence is historical; no human, device, learner, signing, SME or provider approval is implied.**
 
-> **PENDING 2026.11.08.2 TECHNICAL ARTIFACT — STOP / INDEPENDENT REVIEWS HOLD.** HOLD: The exact-source build and its automated release checks are pending. Human and provider evidence remains pending.
+> **RETAINED 2026.11.08.2 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 42424109556](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/42424109556) created artifact **13594971527**, source 0e30c8d395a1ce8f9df718d194dab66d580c409a, digest sha256:00590509954dc14fe654fc9094641a5c3440c45c3b4be53984136504ac2843bf, expiry 2027-02-05T23:11:32Z, and public-runtime fingerprint sha256:643dc080e44732e5c2b4149cc6c20e768de18b2001b67cdcde1d0efe391e7c3a. Producer success, exact-source Mobile Browser QA, Question Quality 50-Pass and the 52-screen visual gate passed. The retained artifact does not establish any human, real-device, Windows signing, provider, accreditation or production authorization. The retained artifact does not establish any human, real-device, Windows signing, provider, accreditation or production authorization.
 
 ## Required independently reviewed evidence
 

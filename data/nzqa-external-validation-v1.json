@@ -6,7 +6,7 @@
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "boundary": "Release 2026.11.08.1 technical candidate 452334f3260f212fb1eec1bed3f99ffac65f522f does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
+  "boundary": "Release 2026.11.08.2 technical candidate 0e30c8d395a1ce8f9df718d194dab66d580c409a does not establish any of NZQA/provider G1\u2013G8 external gates or assessment/accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -54,7 +54,13 @@
   "previousCandidate": {
     "release": "2026.11.08.1",
     "sourceSha": "452334f3260f212fb1eec1bed3f99ffac65f522f",
-    "runtimeFingerprint": "sha256:18dc181891537daf93ca8d12c397e646027c639a72aef2a2ebcc0fb2d4dd5718"
+    "runtimeFingerprint": "sha256:18dc181891537daf93ca8d12c397e646027c639a72aef2a2ebcc0fb2d4dd5718",
+    "candidateRunId": 42406093540,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 13587781254,
+    "artifactName": "physical-pwa-candidate-452334f3260f212fb1eec1bed3f99ffac65f522f",
+    "artifactDigest": "sha256:19bb9c8730dc3c4b61828c4dc19536f0b7c85c5bcc8a3201da5628e2b9d1ae7a",
+    "artifactExpiresAt": "2027-02-05T19:24:57Z"
   },
   "previousIssueNumber": 379,
   "supersededCandidate": {
@@ -62,5 +68,9 @@
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
     "runtimeFingerprint": "sha256:4767c50814cfe576891a3eb6f4de34a1d451378709c43a8988e2e57c540cf4c9"
   },
-  "candidate": null
+  "candidate": {
+    "release": "2026.11.08.2",
+    "sourceSha": "0e30c8d395a1ce8f9df718d194dab66d580c409a",
+    "runtimeFingerprint": "sha256:643dc080e44732e5c2b4149cc6c20e768de18b2001b67cdcde1d0efe391e7c3a"
+  }
 }

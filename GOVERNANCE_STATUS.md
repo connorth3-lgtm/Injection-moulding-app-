@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: The exact-source build and its automated release checks are pending. |
-| Behavioral / browser | **fail** | HOLD: The exact-source build and its automated release checks are pending. |
-| External human / device | **hold** | Independent human, device and provider evidence remains HOLD for release 2026.11.07.1. |
+| Static / contract | **pass** | Release 2026.11.08.2 exact-source candidate 0e30c8d395a1ce8f9df718d194dab66d580c409a is bound to retained artifact 13594971527; producer metadata, artifact digest, runtime fingerprint, release contracts and all seven HOLD packets were verified. |
+| Behavioral / browser | **pass** | Exact-source Mobile Browser QA, Question Quality 50-Pass and the 52-screen visual gate passed for release 2026.11.08.2 candidate 0e30c8d395a1ce8f9df718d194dab66d580c409a. Final protected-head merge checks remain independently required. |
+| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner and provider/NZQA evidence streams remain HOLD for release 2026.11.08.2. |
