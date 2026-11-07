@@ -92,7 +92,9 @@ need("quality-management-iso9001-v1.json" in runtime and "nzqa-education-readine
 
 # Regional course packs use existing lesson IDs and the governed Book module IDs.
 course_asset="src/domains/learning/book-data/education-course-packs-v1.json"
-courses=load(ROOT/course_asset)
+course_canonical=ROOT/"data/education-course-packs-v1.json"
+need(course_canonical.read_bytes()==(ROOT/course_asset).read_bytes(),"regional course pack source/runtime pair drifted")
+courses=load(course_canonical)
 embedded=json.JSONDecoder().raw_decode(runtime.split("const EDUCATION_DATA=Object.freeze(",1)[1])[0]
 release_version=load(ROOT/"version.json")["education_pathways_version"]
 need(courses["schema"]==1 and courses["id"]=="mouldmaster-education-course-packs","course pack identity mismatch")
