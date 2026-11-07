@@ -1,12 +1,12 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.11.07.1`**.
+Current governed web candidate: **`2026.11.08.1`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.11.07.1, source 40196618576012fb6f2bf682fe39a58dedef55a3, fingerprint sha256:bd69ddd37b7f71b0666cc7cac359be99d73a37dab99a7c897b3a83ce8539ffb3, producer run 42383823100, and retained artifact 13578975898 are bound in the technical release records. |
-| Behavioral / browser | **pass** | PASS: release 2026.11.07.1, source 40196618576012fb6f2bf682fe39a58dedef55a3 passed Mobile Browser QA run 42383823007, Question Quality 50-Pass run 42383823234, Combined Learn Book QA run 42383823086, and Read Aloud QA run 42383823031. The strict 52-screen visual comparison passed. Independent review remains HOLD. |
+| Static / contract | **fail** | HOLD: exact-source candidate retention and automated quality checks are pending. |
+| Behavioral / browser | **fail** | HOLD: exact-source candidate retention and automated quality checks are pending. |
 | External human / device | **hold** | Independent human, device and provider evidence remains HOLD for release 2026.11.07.1. |

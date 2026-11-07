@@ -2,18 +2,18 @@
 (function(){
 'use strict';
 if(window.MM_STANDARDS_READINESS)return;
-const VERSION='2026.11.07.1';
+const VERSION='2026.11.08.1';
 const QMS='./src/domains/quality/data/quality-management-iso9001-v1.json';
 const NZQA='./src/domains/learning/book-data/nzqa-education-readiness-v1.json';
+const COURSE_PACKS='./src/domains/learning/book-data/education-course-packs-v1.json';
 const EDUCATION_DATA=Object.freeze({
   "schema": 1,
   "id": "mouldmaster-regional-education-pathways",
-  "version": "2026.11.07.1",
+  "version": "2026.11.08.1",
   "checked": "2026-11-08",
   "status": "provisional-study-support-crosswalk",
   "purpose": "Give learners in New Zealand, the United Kingdom's four nations, and India a source-linked study pathway through the same MouldMaster Book and app topics.",
   "claimBoundary": "Use this provisional map for study and formative practice. Approved providers and workplaces control credits, assessment, training hours, competence sign-off and machine-operation authority.",
-  "localisation": "MouldMaster's interface and Book remain in English. The cited CIPET qualification file records Hindi as an additional language for its qualification and model curriculum.",
   "regionTabs": [
     {
       "id": "nz",
@@ -254,7 +254,7 @@ const EDUCATION_DATA=Object.freeze({
       "nation": "Wales",
       "title": "Polymer Processing Operations apprenticeships",
       "frameworkRef": "Welsh Polymer Processing Operations · Foundation Apprenticeship and Apprenticeship",
-      "status": "Provider lists Levels 2 and 3. Confirm the framework issue and local intake with the provider.",
+      "status": "Qualifications Wales lists both certificates as available. Confirm the framework and local intake with the provider.",
       "level": "Levels 2 and 3",
       "duration": "Provider and pathway dependent",
       "scopeNote": "The Welsh provider describes a workplace route for polymer and polymer-composite operations. Level 2 study can support safety, machine-based production, sampling and inspection. Level 3 study can support diagnosis, process improvement and routine servicing where the chosen units cover them.",
@@ -297,8 +297,12 @@ const EDUCATION_DATA=Object.freeze({
           "url": "https://www.medr.cymru/en/apprenticeships/"
         },
         {
-          "title": "Apprenticeship Certificates Wales: published Polymer Processing Operations framework reference FR00484",
-          "url": "https://acwcerts.co.uk/web/wp-content/uploads/2018/07/Polymer_Processing_Operat_Wales_FR00484_2.pdf"
+          "title": "Qualifications Wales: qualification register and current exports",
+          "url": "https://www.qiw.wales/export"
+        },
+        {
+          "title": "Apprenticeship Certificates Wales: published framework reference FR04316",
+          "url": "https://acwcerts.co.uk/web/wp-content/uploads/2018/07/ACW-Polymer-Processing-Operations-FR04316.pdf"
         }
       ]
     },
@@ -356,7 +360,7 @@ const EDUCATION_DATA=Object.freeze({
       "frameworkRef": "NCVET / NQR code QG-3.5-CP-04117-2025-V2-CIPET",
       "status": "Approved 2025-05-26; next review date 2028-05-25 in the qualification file",
       "level": "NCrF / NSQF Level 3.5",
-      "duration": "600 hours: 210 theory, 360 practical, and 30 mandatory on-the-job training",
+      "duration": "600 hours · 180 theory, 30 employability, 360 practical and 30 mandatory on-the-job training",
       "scopeNote": "This operator qualification covers job and process basics, injection operations and troubleshooting, finished-part inspection, workplace health and safety, 5S, office software, employability, entrepreneurship and on-the-job training.",
       "studyOutcomes": [
         "Explain production instructions, material and mould readiness, and safe work.",
@@ -390,48 +394,56 @@ const EDUCATION_DATA=Object.freeze({
         {
           "code": "CPC/N0214",
           "title": "Basic concepts, job requirements, and process know-how",
-          "hours": 90
+          "hours": 90,
+          "delivery": {"Theory": 30, "Practical": 60}
         },
         {
           "code": "CPC/N0221",
           "title": "Injection moulding operations, process monitoring, and troubleshooting",
-          "hours": 270
+          "hours": 270,
+          "delivery": {"Theory": 90, "Practical": 180}
         },
         {
           "code": "CPC/N0222",
           "title": "Finished-product quality check and inspection",
-          "hours": 90
+          "hours": 90,
+          "delivery": {"Theory": 30, "Practical": 60}
         },
         {
           "code": "CPC/N0411",
           "title": "Workplace health and safety, 5S",
-          "hours": 30
+          "hours": 30,
+          "delivery": {"Theory": 10, "Practical": 20}
         },
         {
           "code": "CPC/N0223",
           "title": "Entrepreneurship in Injection Moulding",
-          "hours": 30
+          "hours": 30,
+          "delivery": {"Theory": 10, "Practical": 20}
         },
         {
           "code": "CPC/N0219",
           "title": "MS Office / open-source office suite basics",
-          "hours": 30
+          "hours": 30,
+          "delivery": {"Theory": 10, "Practical": 20}
         },
         {
           "code": "DGT/VSQ/N0101",
           "title": "Employability Skills",
-          "hours": 30
+          "hours": 30,
+          "delivery": {"Employability": 30}
         },
         {
           "code": "OJT",
           "title": "Mandatory on-the-job training",
-          "hours": 30
+          "hours": 30,
+          "delivery": {"On-the-job training": 30}
         }
       ],
       "formalRequirements": [
         "A training provider and awarding/assessment arrangements must deliver the official curriculum and assess its practical criteria.",
         "The 360 practical hours and 30 mandatory OJT hours are external training requirements; Book reading or app activities do not count toward them.",
-        "The qualification file names Hindi as an additional language for its qualification/model curriculum; MouldMaster content is currently English."
+        "The training centre selects the delivery language. The India workbook includes draft Hindi study support."
       ],
       "source": {
         "title": "National Qualification Register: CIPET Machine Operator – Injection Molding",
@@ -454,7 +466,7 @@ function titleFor(id){return String(id||'').split('-').map(x=>x?x[0].toUpperCase
 function style(){
  if(document.getElementById('mm-standards-readiness-style'))return;
  const s=document.createElement('style');s.id='mm-standards-readiness-style';s.textContent=`
-.mm-readiness-view{display:grid;gap:14px}.mm-readiness-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mm-readiness-view{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;overflow-wrap:anywhere}.mm-readiness-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .mm-readiness-card{border:1px solid #304b69;border-radius:14px;background:#0e1d31;padding:16px}.mm-readiness-card h3{margin:.25rem 0 .5rem}
 .mm-readiness-card h4{margin:1rem 0 .35rem}.mm-readiness-card ul{margin:.4rem 0 .8rem;padding-left:1.2rem}.mm-readiness-card li{margin:.3rem 0}
 .mm-readiness-boundary{border-left:4px solid var(--accent);padding:10px 12px;background:#10243d;border-radius:8px;line-height:1.45}
@@ -488,12 +500,140 @@ function activitiesHtml(e,p){
  const byId=new Map((e.practiceActivities||[]).map(x=>[x.id,x]));
  return (p.practiceActivityIds||[]).map(id=>byId.get(id)).filter(Boolean).map(x=>'<li><b>'+esc(x.title)+'</b> — '+esc(x.description)+'</li>').join('');
 }
+function moduleHours(module){
+ return Object.entries(module.delivery||{}).map(([category,hours])=>`${category} ${hours} h`).join(' · ');
+}
 function modulesHtml(p){
- if(!(p.modules||[]).length)return '';
- return '<details><summary>Official qualification modules and hours</summary><ul>'+p.modules.map(m=>'<li><b>'+esc(m.code)+'</b> — '+esc(m.title)+' ('+esc(m.hours)+' h)</li>').join('')+'</ul></details>';
+ if(!p.modules?.length)return '';
+ return `<details><summary>Official qualification modules and hours</summary><ul>${p.modules.map(module=>
+  `<li><b>${esc(module.code)}</b> · <span>${esc(module.title)} (${esc(module.hours)} h)</span><br>${esc(moduleHours(module))}</li>`).join('')}</ul></details>`;
+}
+const coverageLabels={
+ mapped:'Mapped study',
+ supplement:'Workbook supplement',
+ workplace:'Workplace evidence',
+ provider:'Provider to complete'
+};
+function courseData(contract){
+ if(contract?.schema!==1||contract.id!=='mouldmaster-education-course-packs'||contract.version!==VERSION||
+    contract.status!=='draft-provider-review'||!contract.boundary||!Array.isArray(contract.forms)||
+    !contract.forms.every(form=>form?.title&&Array.isArray(form.fields))||!Array.isArray(contract.providerChecklist))return null;
+ const isExercise=exercise=>exercise?.title&&exercise.context&&Array.isArray(exercise.reading)&&
+  Array.isArray(exercise.questions)&&exercise.questions.every(question=>question?.prompt&&question.feedback);
+ if(!Object.values(contract.exercises||{}).every(exercise=>isExercise(exercise)&&(!exercise.hi||isExercise(exercise.hi))))return null;
+ const complete=EDUCATION_DATA.pathways.every(({id})=>{
+  const pack=contract.packs?.[id];
+  return pack?.framework&&pack.scope&&Array.isArray(pack.rows)&&Array.isArray(pack.delivery)&&Array.isArray(pack.sourceIds)&&
+   pack.rows.every(row=>Array.isArray(row?.refs)&&Array.isArray(row.book)&&Array.isArray(row.lessons)&&Object.hasOwn(coverageLabels,row.coverage)&&
+    (!row.exercise||Object.hasOwn(contract.exercises||{},row.exercise)))&&
+   pack.sourceIds.every(id=>contract.sources?.[id]?.title&&/^https:\/\//.test(contract.sources[id].url))&&
+   (!pack.assessmentMethods||(Array.isArray(pack.assessmentMethods)&&pack.assessmentMethods.every(method=>
+    method?.title&&method.planning&&Array.isArray(method.refs))))&&
+   (!pack.practical||(Array.isArray(pack.practical)&&pack.practical.every(guide=>guide?.unit&&guide.title&&
+    Array.isArray(guide.range)&&Array.isArray(guide.criteria)&&guide.criteria.every(item=>item?.ref&&item.observation))));
+ });
+ return complete?contract:null;
+}
+function moduleButton(id){
+ return `<button type="button" class="ghost" data-education-book-module="${esc(id)}">${esc(titleFor(id))}</button>`;
+}
+function lessonTitle(id){return window.MM_DATA?.lessons?.find(lesson=>lesson.id===id)?.title||`Lesson ${id}`;}
+function list(values){return `<ul>${values.map(value=>`<li>${esc(value)}</li>`).join('')}</ul>`;}
+function exerciseText({context,reading,questions},answerLabel='Check your reasoning'){
+ return `<p>${esc(context)}</p>${reading.map(paragraph=>`<p>${esc(paragraph)}</p>`).join('')}
+  <ol>${questions.map(({prompt,feedback})=>`<li><p>${esc(prompt)}</p><details><summary>${esc(answerLabel)}</summary><p>${esc(feedback)}</p></details></li>`).join('')}</ol>`;
+}
+function exerciseHtml(id,exercise){
+ return `<details data-education-exercise="${esc(id)}"><summary>${esc(exercise.title)}</summary>
+  ${exerciseText(exercise)}
+  ${exercise.hi?`<details lang="hi"><summary>${esc(exercise.hi.title)}</summary>${exerciseText(exercise.hi,'उत्तर और कारण देखें')}</details>`:''}
+ </details>`;
+}
+function courseSources(p,pack){
+ return [p.source,...(p.additionalSources||[]),...pack.sourceIds.map(id=>data.courses.sources[id])]
+  .filter((source,index,all)=>all.findIndex(other=>other.url===source.url)===index);
+}
+function exerciseIds(pack){return [...new Set(pack.rows.map(row=>row.exercise).filter(Boolean))];}
+function courseHtml(p){
+ if(!data.courses)return '<p class="muted">Course and assessment packs are unavailable. Reconnect and reopen the app to load the complete release.</p>';
+ const {boundary,exercises,forms,providerChecklist}=data.courses,pack=data.courses.packs[p.id];
+ const rows=pack.rows.map(row=>`<li>
+  <h5>${esc(row.title)}</h5>
+  <p><b>${esc(row.refs.join(', '))}</b> · ${esc(coverageLabels[row.coverage])}</p>
+  <div class="mm-readiness-badges">${row.book.map(moduleButton).join('')}
+   ${row.lessons.map(id=>`<button type="button" class="ghost" data-education-lesson="${esc(id)}">Lesson ${esc(id)} · ${esc(lessonTitle(id))}</button>`).join('')}</div>
+  ${row.exercise?`<button type="button" class="ghost" data-education-workbook="${esc(row.exercise)}">Practice · ${esc(exercises[row.exercise].title)}</button>`:''}
+  <p><b>Evidence to discuss with the assessor</b> · ${esc(row.evidence)}</p>
+ </li>`).join('');
+ const practical=(pack.practical||[]).map(guide=>`<details data-education-practical="${esc(guide.unit)}"><summary>${esc(guide.title)}</summary>
+  <p>${esc(guide.entry)}</p>${list(guide.range)}
+  <ol>${guide.criteria.map(({ref,observation})=>`<li><b>${esc(ref)}</b> · ${esc(observation)}</li>`).join('')}</ol>
+ </details>`).join('');
+ return `<details data-education-course="${esc(p.id)}"><summary>Course and assessment pack</summary>
+  <p><b>Draft for provider review</b> · ${esc(pack.framework)}</p><p>${esc(pack.scope)}</p>
+  <p class="mm-readiness-boundary">${esc(boundary)}</p>
+  <details><summary>Study and evidence map · ${pack.rows.length} groups</summary><ul>${rows}</ul></details>
+  <details><summary>Delivery and training records</summary>${list(pack.delivery)}</details>
+  ${pack.assessmentMethods?`<details><summary>End-point assessment methods</summary><ul>${pack.assessmentMethods.map(method=>
+   `<li><h5>${esc(method.title)}</h5><p>${esc(method.planning)}</p><p><b>${esc(method.refs.join(', '))}</b></p></li>`).join('')}</ul></details>`:''}
+  <h4>Practice workbooks</h4>${exerciseIds(pack).map(id=>exerciseHtml(id,exercises[id])).join('')}
+  ${practical}
+  <details><summary>Provider review and blank records</summary>${list(providerChecklist)}
+   <p>Record formal decisions in the provider's authorised system. The download contains blank templates for ${esc(forms.map(form=>form.title.toLowerCase()).join(', '))}.</p>
+   <button type="button" class="secondary" data-education-download="${esc(p.id)}">Download draft assessor pack</button>
+  </details>
+  <h4>Course sources</h4><ul>${courseSources(p,pack).map(({title,url})=>
+   `<li><a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(title)}</a></li>`).join('')}</ul>
+ </details>`;
+}
+function downloadCoursePack(id){
+ const pathway=EDUCATION_DATA.pathways.find(item=>item.id===id),courses=data?.courses;
+ if(!pathway||!courses)return;
+ const pack=courses.packs[id],lines=[`# ${pathway.title}`,'','**Draft for provider review**','',pack.framework,'',pack.scope,'',courses.boundary,'','## Delivery'];
+ pack.delivery.forEach(text=>lines.push(`- ${text}`));
+ if(pathway.modules?.length){
+  lines.push('','### Qualification modules and hours');
+  pathway.modules.forEach(module=>lines.push(`- ${module.code} · ${module.title} (${module.hours} h) · ${moduleHours(module)}`));
+ }
+ if(pack.assessmentMethods){
+  lines.push('','## End-point assessment methods');
+  pack.assessmentMethods.forEach(method=>lines.push('',`### ${method.title}`,'',method.planning,'',method.refs.join(', ')));
+ }
+ lines.push('','## Study and evidence map');
+ pack.rows.forEach(row=>{
+  lines.push('',`### ${row.refs.join(', ')} · ${row.title}`,coverageLabels[row.coverage]);
+  if(row.book.length)lines.push(`Book modules · ${row.book.map(titleFor).join(', ')}`);
+  if(row.lessons.length)lines.push(`App lessons · ${row.lessons.map(lesson=>`${lesson} ${lessonTitle(lesson)}`).join(', ')}`);
+  if(row.exercise)lines.push(`Practice · ${courses.exercises[row.exercise].title}`);
+  lines.push(row.evidence,'Evidence reference __________________','Decision and rationale __________________');
+ });
+ for(const guide of pack.practical||[]){
+  lines.push('',`## ${guide.title}`,guide.entry);
+  guide.range.forEach(text=>lines.push(`- ${text}`));
+  guide.criteria.forEach(({ref,observation})=>lines.push('',`- ${ref} · ${observation}`,'  - Context, evidence reference and decision __________________'));
+ }
+ lines.push('','## Formative workbooks');
+ for(const exerciseId of exerciseIds(pack)){
+  const exercise=courses.exercises[exerciseId];
+  for(const workbook of [exercise,exercise.hi].filter(Boolean)){
+   lines.push('',`### ${workbook.title}`,'',workbook.context,'',workbook.reading.join('\n\n'),'');
+   workbook.questions.forEach(({prompt,feedback},index)=>lines.push(`${index+1}. ${prompt}`,`   - ${feedback}`));
+  }
+ }
+ lines.push('','## Provider review');
+ courses.providerChecklist.forEach(text=>lines.push(`- [ ] ${text}`));
+ courses.forms.forEach(({title,fields})=>{
+  lines.push('',`### ${title}`);
+  fields.forEach(field=>lines.push(`- ${field} __________________`));
+ });
+ lines.push('','## Sources',`MouldMaster pack ${courses.version}, sources checked ${courses.checked}`);
+ courseSources(pathway,pack).forEach(({title,url})=>lines.push(`- [${title}](${url})`));
+ const url=URL.createObjectURL(new Blob([lines.join('\n')+'\n'],{type:'text/markdown;charset=utf-8'}));
+ const link=document.createElement('a');link.href=url;link.download=`mouldmaster-${id}-assessor-draft.md`;
+ document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),0);
 }
 function pathwayHtml(e,p){
- const chapters=p.bookChapterIds.map(id=>`<button type="button" class="ghost" data-education-book-module="${esc(id)}">${esc(titleFor(id))}</button>`).join('');
+ const chapters=p.bookChapterIds.map(moduleButton).join('');
  const outcomes=(p.studyOutcomes||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
  const gates=(p.formalRequirements||[]).map(x=>'<li>'+esc(x)+'</li>').join('');
  const sourceLinks=[p.source,...(p.additionalSources||[])].map(({title,url})=>
@@ -506,6 +646,7 @@ function pathwayHtml(e,p){
   <h4>Open mapped Book modules</h4><div class="mm-readiness-badges">${chapters}</div>
   <h4>Formative practice</h4><ul>${activitiesHtml(e,p)}</ul>
   <button type="button" class="ghost" data-education-practice>Open Practice in the app</button>
+  ${courseHtml(p)}
   <h4>Provider or workplace requirements</h4><ul>${gates}</ul>
   <h4>Official sources</h4><ul>${sourceLinks}</ul>
  </article>`;
@@ -547,6 +688,21 @@ function ensureView(){
    void window.MMBook?.openChapter(moduleButton.dataset.educationBookModule);
    return;
   }
+  const lessonButton=event.target.closest('[data-education-lesson]');
+  if(lessonButton){
+   window.goLesson?.(Number(lessonButton.dataset.educationLesson));
+   window.switchView?.('lesson');
+   return;
+  }
+  const workbookButton=event.target.closest('[data-education-workbook]');
+  if(workbookButton){
+   const workbook=[...workbookButton.closest('[data-education-course]').querySelectorAll('[data-education-exercise]')]
+    .find(item=>item.dataset.educationExercise===workbookButton.dataset.educationWorkbook);
+   if(workbook){workbook.open=true;workbook.querySelector('summary').focus();}
+   return;
+  }
+  const download=event.target.closest('[data-education-download]');
+  if(download){downloadCoursePack(download.dataset.educationDownload);return;}
   if(event.target.closest('[data-education-practice]'))window.switchView?.('scenarios');
  });
  main.appendChild(view);return view;
@@ -557,7 +713,7 @@ function render(){
  educationHtml(data.education)+'<section class="mm-readiness-grid">'+qmsHtml(data.qms)+nzqaHtml(data.nzqa)+'</section>';
  renderEducationRegion();
 }
-function open(region){
+function open(region,courseId){
  if(EDUCATION_DATA.regionTabs.some(tab=>tab.id===region))activeRegion=region;
  const root=ensureView();if(!root)return;
  window.MMBook?.prepareRouteExit?.('standards-readiness');
@@ -568,6 +724,8 @@ function open(region){
  window.scrollTo({top:0,behavior:'instant'});
  const heading=root.querySelector('h2');
  if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true});}
+ const course=[...root.querySelectorAll('[data-education-course]')].find(item=>item.dataset.educationCourse===courseId);
+ if(course){course.open=true;course.querySelector('summary').focus();}
 }
 function install(){
  const shell=window.MM_APP_SHELL;if(!shell?.navigation?.register)return false;
@@ -584,13 +742,28 @@ function mountBookPathwayLink(){
  link.textContent='Regional study pathways: NZ, UK and India';
  link.addEventListener('click',()=>open());
  guide.querySelector('summary').after(link);
+ if(data.courses){
+  const supplements=document.createElement('details');
+  supplements.className='mm-book-reader-guide mm-reading-guide';
+  supplements.dataset.mmBookEducationSupplements='1';
+  supplements.innerHTML=`<summary>Course workbooks and practice</summary><p>${esc(data.courses.boundary)}</p>
+   <ul>${EDUCATION_DATA.pathways.map(pathway=>`<li><button type="button" class="ghost" data-education-course-link="${esc(pathway.id)}">${esc(pathway.nation)} · ${esc(pathway.level)}</button></li>`).join('')}</ul>
+   ${Object.entries(data.courses.exercises).map(([id,exercise])=>exerciseHtml(id,exercise)).join('')}`;
+  supplements.addEventListener('click',event=>{
+   const button=event.target.closest('[data-education-course-link]');
+   if(!button)return;
+   const pathway=EDUCATION_DATA.pathways.find(item=>item.id===button.dataset.educationCourseLink);
+   if(pathway)open(pathway.region,pathway.id);
+  });
+  link.after(supplements);
+ }
 }
 async function init(){
  ensureView();
  try{
-  const [qms,nzqa]=await Promise.all([getJson(QMS),getJson(NZQA)]);
+  const [qms,nzqa,courses]=await Promise.all([getJson(QMS),getJson(NZQA),getJson(COURSE_PACKS).then(courseData).catch(()=>null)]);
   if(qms?.id!=='mouldmaster-iso9001-qms-support'||nzqa?.id!=='mouldmaster-nzqa-education-readiness'||EDUCATION_DATA?.id!=='mouldmaster-regional-education-pathways')throw new Error('readiness contract identity mismatch');
-  data=Object.freeze({qms,nzqa,education:EDUCATION_DATA});render();mountBookPathwayLink();
+  data=Object.freeze({qms,nzqa,courses,education:EDUCATION_DATA});render();mountBookPathwayLink();
  }catch(e){if(view)view.innerHTML='<section class="card"><h2>Standards & readiness unavailable</h2><p>The governed support contracts could not be verified or loaded. No compliance or approval status should be inferred.</p></section>';console.error('[MouldMaster readiness]',e);}
  install();
 }

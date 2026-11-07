@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.07.1",
+  "release": "2026.11.08.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "40196618576012fb6f2bf682fe39a58dedef55a3",
-  "scope": "Regional study pathways connect the Book and app for New Zealand, the four UK nations and India.",
-  "approvalBoundary": "Release 2026.11.07.1 has exact-source technical candidate 40196618576012fb6f2bf682fe39a58dedef55a3 in artifact 13578975898. All seven independent external review streams remain HOLD. Tester distribution remains STOP and production authority is advisory-only.",
+  "candidateSourceSha": null,
+  "scope": "Regional course maps and assessment packs support New Zealand, the four UK nations and India. Each course pack is a draft for provider review.",
+  "approvalBoundary": "Release 2026.11.08.1 awaits an exact-source candidate. External validation and tester distribution remain HOLD.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -45,14 +45,14 @@
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
   "lastReviewedDate": "2026-11-08",
   "previousVerifiedCandidate": {
-    "release": "2026.11.03.2",
-    "sourceSha": "eebd169218d108bfadc8c78898b779ee373e2613",
-    "runtimeFingerprint": "sha256:10e62706fc5ed4bfdf2442172648b53c888c246cb2c9324243b5be284d9878df",
-    "candidateRunId": 41601061912,
+    "release": "2026.11.07.1",
+    "sourceSha": "40196618576012fb6f2bf682fe39a58dedef55a3",
+    "runtimeFingerprint": "sha256:bd69ddd37b7f71b0666cc7cac359be99d73a37dab99a7c897b3a83ce8539ffb3",
+    "candidateRunId": 42383823100,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13214790061,
-    "artifactName": "physical-pwa-candidate-eebd169218d108bfadc8c78898b779ee373e2613",
-    "artifactDigest": "sha256:aab25e849fb9da96066fbe8ea5f3c279a06b3887949b5a836ed4e8b901d378da",
-    "artifactExpiresAt": "2027-02-01T08:08:19Z"
+    "artifactId": 13578975898,
+    "artifactName": "physical-pwa-candidate-40196618576012fb6f2bf682fe39a58dedef55a3",
+    "artifactDigest": "sha256:a8e2592258f7a77dfed39d2b7197f5b19370061d0ce3b5eaac5f018fad390611",
+    "artifactExpiresAt": "2027-02-05T14:54:57Z"
   }
 }
