@@ -123,6 +123,7 @@ test('36 material lessons move to Learn while keeping independent progress and o
   await expect(catalog.locator('[data-mm-material-id="1"]')).toContainText('Done');
   await page.evaluate(()=>switchView('materials'));
   await expect(page.locator('#materials .mat-chapters')).toHaveCount(0);
+  await page.locator('#mmMaterialLearningAnchor > summary').click();
   await expect(page.locator('#materials .mat-tabs')).toBeVisible();
   await expect(page.locator('#materials .mat-tabs button').filter({hasText:'All lessons'})).toHaveCount(1);
   await page.locator('#materials .mat-tabs button').filter({hasText:'All lessons'}).click();

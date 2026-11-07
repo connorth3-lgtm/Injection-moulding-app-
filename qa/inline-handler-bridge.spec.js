@@ -88,6 +88,7 @@ test('the allowlisted Materials All lessons shortcut opens the single Learn cata
   await openApp(page);
   await page.evaluate(()=>switchView('materials'));
   const materials=page.locator('#materials');
+  await materials.locator('#mmMaterialLearningAnchor > summary').click();
   const link=materials.locator('.mm-material-study-tools > .mat-tabs > button').filter({hasText:'All lessons'});
   await expect(link).toBeVisible();
   await expect(link).toHaveAttribute('data-mm-onclick','mmHubOpenMaterialLessons()');

@@ -21,6 +21,12 @@ async function openHub(page,label,selector){
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 
+async function openGuidedPractice(page){
+  await page.locator('#mmPracticeToolResults [data-mm-hub-action="troubleshooting"]').click();
+  await page.locator('#modal:not(.hidden) [data-mm-hub-action="guided-practice"]').click();
+  await expect(page.locator('#mmPracticeGuided')).toBeVisible();
+}
+
 async function expectReadableTiles(page,rootSelector,expectedCount=5){
   const result=await page.evaluate(rootSelector=>{
     const root=document.querySelector(rootSelector);
@@ -223,12 +229,11 @@ for(const width of [360,412]){
   await expect(learn.locator('#mmLearnQuestions .mm-hub-picker-grid>button')).toHaveCount(5);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-item]')).toHaveCount(176);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-query]')).toBeVisible();
-  const learnOrder=await page.evaluate(()=>({
-    library:document.querySelector('#mmLearnCourses').getBoundingClientRect().top,
-    arena:document.querySelector('#mmLearnArena').getBoundingClientRect().top
-  }));
-  expect(learnOrder.library).toBeLessThan(learnOrder.arena);
+  const workshop=learn.locator('#mmLearnCourses .mm-learn-master-lesson');
+  await expect(learn.locator('#mmLearnArena')).toBeHidden();
+  await workshop.locator(':scope > summary').click();
   await learn.locator('[data-mm-catalog-query]').fill('cushion');
+  await expect(workshop).not.toHaveAttribute('open','');
   await expect(learn.locator('[data-mm-catalog-count]')).toContainText('lesson');
   await learn.locator('[data-mm-catalog-query]').fill('');
   if(width===412)await page.screenshot({path:'qa-artifacts/pr640-tidy-learn-412x915.png',animations:'disabled'});
@@ -237,13 +242,8 @@ for(const width of [360,412]){
   const practice=page.locator('#scenarios .mm-practice-hub');
   await expect(practice.locator('.mm-hub-section-head')).toContainText('40 scenarios');
   await expect(practice.locator('.mm-hub-section-head')).toContainText('169 governed prompts');
-  await expect(practice.locator('.mm-practice-guided')).toBeVisible();
+  await expect(practice.locator('.mm-practice-guided, .mm-practice-case, .mm-practice-diagnose-journey')).toHaveCount(0);
   await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(5);
-  const practiceOrder=await page.evaluate(()=>({
-    tools:document.querySelector('#scenarios #mmPracticeToolResults').getBoundingClientRect().top,
-    guided:document.querySelector('#scenarios .mm-practice-guided').getBoundingClientRect().top
-  }));
-  expect(practiceOrder.tools).toBeLessThan(practiceOrder.guided);
   await practice.locator('[data-mm-practice-query]').fill('process data');
   await expect(practice.locator('#mmPracticeToolResults>button:visible')).toHaveCount(1);
   await expect(practice.locator('[data-mm-practice-count]')).toHaveText('1 tool shown');
@@ -322,7 +322,7 @@ test('Unified diagnostic evidence controls remain single-column and readable at 
   await page.evaluate(()=>switchView('scenarios'));
   await page.locator('#scenarios [data-mm-hub-action="troubleshooting"]').click();
   const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
-  await expect(picker.locator('button')).toHaveCount(3);
+  await expect(picker.locator('button')).toHaveCount(4);
   await picker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
   const root=page.locator('#defects');
   await root.locator('[data-mm-dx-action="choose"]').first().click();
@@ -397,14 +397,15 @@ for(const width of [360,412]){
   await openApp(page);
   await page.evaluate(()=>switchView('path'));
   const learn=page.locator('#path .mm-learn-hub');
+  const master=learn.locator('#mmLearnCourses .mm-learn-master-lesson');
+  await expect(master).not.toHaveAttribute('open','');
+  await master.locator(':scope > summary').click();
   await expect(learn.locator('#mmLearnArena')).toBeVisible();
   const tools=learn.locator('#mmLearnQuestions .mm-hub-picker-grid > button');
   await expect(tools).toHaveCount(5);
   await expect(learn.locator('#mmLearnQuestions')).toContainText('169 governed prompts');
   await expect(learn.locator('#mmLearnReasoning, #mmPracticeReasoning, .mm-question-centre-optional')).toHaveCount(0);
   await expect(learn.locator('.mm-learn-reasoning-item, .mm-learn-reasoning-chapter')).toHaveCount(0);
-  const master=learn.locator('.mm-learn-master-lesson');
-  await expect(master).toContainText('32 optional questions inside their relevant core lessons');
   await expect(master.locator('.mm-learn-studio > .mm-learn-step')).toHaveCount(2);
   const practiceReflect=master.locator('.mm-learn-studio > .mm-learn-step-practice');
   await expect(practiceReflect).toHaveCount(1);
@@ -417,28 +418,18 @@ for(const width of [360,412]){
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-group]')).toHaveCount(22);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-item]')).toHaveCount(176);
   await expect(learn.locator('#mmLearnCourses [data-mm-lesson-id]')).toHaveCount(120);
-  const jump=await learn.locator('.mm-learn-jump > a').evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')));
-  expect(new Set(jump).size).toBe(jump.length);
-  expect(jump).not.toContain('#mmLearnReasoning');
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
   expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
  });
 }
-test('Android Learn bottom navigation does not trap the last learning-resource action',async({page})=>{
+test('Learning Resources sits in the lesson catalogue header on Android',async({page})=>{
  await page.setViewportSize({width:390,height:844});
  await openApp(page);
  await openHub(page,'Learn','#path .mm-learn-hub');
  await expect(page.locator('#path #mmLearnReasoning')).toHaveCount(0);
- const footer=page.locator('#path .mm-catalog-extra [data-mm-hub-action="learn-resources"]');
- await footer.scrollIntoViewIfNeeded();
- await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
- const safe=await page.evaluate(()=>{
-   const nav=document.querySelector('.mobile-nav').getBoundingClientRect();
-   const footer=document.querySelector('#path .mm-catalog-extra button').getBoundingClientRect();
-   return {navTop:nav.top,footerBottom:footer.bottom,overflow:document.documentElement.scrollWidth-innerWidth};
- });
- expect(safe.footerBottom).toBeLessThanOrEqual(safe.navTop+2);
- expect(safe.overflow).toBeLessThanOrEqual(2);
+ const resources=page.locator('#mmLearnCourses .mm-catalog-head [data-mm-hub-action="learn-resources"]');
+ await expect(resources).toBeInViewport();
+ await expect(page.locator('#path [data-mm-hub-action="learn-resources"]')).toHaveCount(1);
  expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
 });
 
@@ -446,6 +437,7 @@ test('Learn Arena boss round keeps source-owned feedback and the scenario return
  await page.setViewportSize({width:390,height:844});
  await openApp(page);
  await page.evaluate(()=>switchView('path'));
+ await page.locator('#path .mm-learn-master-lesson > summary').click();
  await page.locator('#path [data-mm-hub-action="boss-round"]').click();
  const boss=page.locator('#modal:not(.hidden)');
  await expect(boss).toContainText('Boss round');
@@ -464,6 +456,7 @@ test('Learn Question Centre lanes invoke canonical assessments and preserve scop
  await page.setViewportSize({width:390,height:844});
  await openApp(page);
  await page.evaluate(()=>switchView('path'));
+ await page.locator('#path .mm-learn-master-lesson > summary').click();
  await page.locator('#path #mmLearnQuestions [data-mm-hub-action="assessments"]').click();
  await expect(page.locator('#exams')).toBeVisible();
  await expect(page.locator('#exams')).toContainText(/knowledge/i);
@@ -616,16 +609,16 @@ test('Practice connects the existing troubleshooting tools in one three-stage le
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
   const root=page.locator('#scenarios .mm-practice-hub');
-  const steps=root.locator('.mm-practice-diagnose-stages > div');
-  await expect(steps).toHaveCount(3);
+  await expect(root.locator('.mm-practice-diagnose-stages')).toHaveCount(0);
   await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(5);
-  await expect(steps.first()).toContainText('Observe');
-  await expect(steps.last()).toContainText('Verify');
   await root.locator('[data-mm-hub-action="troubleshooting"]').click();
   const modal=page.locator('#modal:not(.hidden) .mm-diagnose-chooser');
   await expect(modal).toBeVisible();
-  await expect(modal.locator('.mm-diagnose-step-strip > span')).toHaveCount(3);
-  await expect(modal.locator('.mm-hub-picker-grid > button')).toHaveCount(3);
+  const steps=modal.locator('.mm-diagnose-step-strip > span');
+  await expect(steps).toHaveCount(3);
+  await expect(steps.first()).toContainText('Observe');
+  await expect(steps.last()).toContainText('Verify');
+  await expect(modal.locator('.mm-hub-picker-grid > button')).toHaveCount(4);
   await expect(modal).toContainText('isolation');
 });
 
@@ -633,20 +626,24 @@ test('Materials links native lesson, lab and source-backed grade modes without c
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('materials'));
-  const journey=page.locator('#materials .mm-material-journey');
-  await expect(journey).toBeVisible();
-  await expect(journey.locator('[data-mm-material-journey]')).toHaveCount(3);
-  const guide=journey.locator('.mm-material-journey-reasoning');
+  const study=page.locator('#materials #mmMaterialLearningAnchor');
+  await expect(study).not.toHaveAttribute('open','');
+  await study.locator(':scope > summary').click();
+  const guide=study.locator('.mm-material-journey-reasoning');
   await guide.locator(':scope > summary').click();
   await expect(guide.locator('.mm-material-journey-questions > details')).toHaveCount(5);
   await guide.locator('.mm-material-journey-questions > details').first().locator('summary').click();
   await expect(guide).toContainText('Dryer displays alone');
   await expect(page.locator('#materials [data-mm-all-material-index]')).toHaveCount(1);
-  await journey.locator('[data-mm-material-journey="lessons"]').click();
+  await study.getByRole('button',{name:'Material behaviour labs'}).click();
+  await expect(page.locator('#materialLabs')).toBeVisible();
+  await page.evaluate(()=>switchView('materials'));
+  await study.locator(':scope > summary').click();
+  await study.getByRole('button',{name:'All lessons'}).click();
   await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
   await expect(page.locator('#path [data-mm-lesson-catalog]')).toBeVisible();
   await page.evaluate(()=>switchView('materials'));
-  await expect(page.locator('#materials .mm-material-journey')).toHaveCount(1);
+  await expect(study).toHaveCount(1);
 });
 
 test('Learning Resources consolidates four source-owned destinations without creating an assessment clone',async({page})=>{
@@ -670,6 +667,7 @@ test('Safety teaching and the four-checkpoint capstone remain unscored and have 
   await openApp(page);
   await page.evaluate(()=>switchView('path'));
   const master=page.locator('#path .mm-learn-master-lesson');
+  await master.locator(':scope > summary').click();
   // The previous eight-chapter safety list was intentionally retired.
   // Verify its actual safety prompt in the relevant canonical core lesson.
   await expect(master.locator('.mm-learn-reasoning-chapter')).toHaveCount(0);
@@ -719,24 +717,23 @@ test('all canonical interior routes receive the shared responsive visual skin wi
   await expect(exam.locator('.mm-practice-tool-return')).toHaveCount(1);
 });
 
-test('Materials guided learning does not precede or replace the required exact-grade catalogue',async({page})=>{
+test('Materials keeps learning and grade tools inside its single searchable catalogue',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   await openApp(page);
   await page.evaluate(()=>switchView('materials'));
   const index=page.locator('#mmExactMaterialCatalog');
   await expect(index.locator('[data-mm-all-material-index]')).toBeVisible();
-  // The reference guide is mounted on a later animation frame in WebKit.
-  // Require the actual page state before testing the deterministic first-child contract.
-  await expect(index.locator(':scope > .mm-material-journey')).toHaveCount(1);
+  const tools=index.locator('[data-mm-all-material-index] > .mm-material-catalogue-tools');
+  await expect(tools.locator(':scope > details')).toHaveCount(2);
+  await expect(tools.locator(':scope > details[open]')).toHaveCount(0);
   const structure=await index.evaluate(root=>({
     firstIsIndex:root.firstElementChild?.hasAttribute('data-mm-all-material-index')===true,
-    guideCount:root.querySelectorAll(':scope > .mm-material-journey').length,
     indexCount:root.querySelectorAll(':scope > [data-mm-all-material-index]').length
   }));
-  expect(structure).toEqual({firstIsIndex:true,guideCount:1,indexCount:1});
+  expect(structure).toEqual({firstIsIndex:true,indexCount:1});
   await page.evaluate(()=>switchView('path'));
   await page.evaluate(()=>switchView('materials'));
-  await expect(index.locator(':scope > .mm-material-journey')).toHaveCount(1);
+  await expect(tools).toHaveCount(1);
   await expect(index.locator(':scope > [data-mm-all-material-index]')).toHaveCount(1);
   await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
 });
@@ -760,21 +757,22 @@ test('mobile Practice source-owned choices occupy one readable column at 360 and
   }
 });
 
-test('Practice adds five unscored worked fault reviews with mechanisms, verification and original-tool launches',async({page})=>{
+test('Guided fault practice shows one unscored worked review for the selected fault',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  const cases=page.locator('#scenarios #mmPracticeCases .mm-practice-case');
-  await expect(cases).toHaveCount(5);
-  await expect(page.locator('#scenarios #mmPracticeCases')).toContainText('not five more governed scenarios');
-  await cases.first().locator('summary').click();
+  await openGuidedPractice(page);
+  const review=page.locator('#mmPracticeGuided .mm-practice-case');
+  await expect(review).toHaveCount(1);
+  await expect(review).toHaveAttribute('data-mm-worked-review','PC-01');
+  await review.locator('summary').click();
   // `open` is a reflected boolean property; assert the disclosure state
   // directly instead of relying on a serialized empty attribute in WebKit.
-  await expect(cases.first()).toHaveJSProperty('open',true);
+  await expect(review).toHaveJSProperty('open',true);
   for(const label of ['Observe the evidence','Compare plausible causes','Verify safely','Common mistake to avoid'])
-    await expect(cases.first()).toContainText(label);
+    await expect(review).toContainText(label);
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
-  await cases.first().locator('[data-mm-hub-action="diagnostic-workbench"]').click();
+  await review.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
   await expect(page.locator('#defects')).toBeVisible();
 });
 test('Resources to Materials closes the chooser and leaves source-backed grade search usable',async({page})=>{
@@ -804,6 +802,7 @@ for(const width of [360,412]){
     await page.setViewportSize({width,height:865});
     await openApp(page);
     await page.evaluate(()=>switchView('scenarios'));
+    await openGuidedPractice(page);
     const root=page.locator('#scenarios #mmPracticeGuided');
     await expect(root).toBeVisible();
     await expect(root.locator('.mm-practice-guided-selector button')).toHaveCount(5);
@@ -842,25 +841,31 @@ test('guided Practice preserves previous-step review and changing case resets hy
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
+  await openGuidedPractice(page);
   const root=page.locator('#scenarios #mmPracticeGuided');
   await root.locator('[data-mm-guided-case="PC-04"]').click();
   await expect(root.locator('.mm-practice-guided-context')).toContainText('Case PC-04');
   await expect(root.locator('[data-mm-guided-case="PC-04"]')).toHaveAttribute('aria-pressed','true');
+  const review=root.locator('.mm-practice-case');
+  await expect(review).toHaveAttribute('data-mm-worked-review','PC-04');
+  await review.locator(':scope > summary').click();
   await root.locator('[data-mm-guided-choice="1"]').click();
   await root.locator('[data-mm-guided-next]').click();
   await root.locator('[data-mm-guided-prev]').click();
   await expect(root.locator('[data-mm-guided-choice="1"]')).toHaveAttribute('aria-pressed','true');
   await expect(root.locator('.mm-practice-guided-feedback')).toBeVisible();
-  const workedCase=page.locator('#scenarios .mm-practice-case').last();
-  await workedCase.locator(':scope > summary').click();
-  await expect(workedCase).toHaveAttribute('open','');
-  await workedCase.locator('[data-mm-guided-case]').click();
+  await expect(review).toHaveJSProperty('open',true);
+  await root.locator('[data-mm-guided-case="PC-05"]').click();
   await expect(root.locator('.mm-practice-guided-context')).toContainText('Case PC-05');
   await expect(root.locator('.mm-practice-guided-context')).toContainText('Step 1 of 5');
   await expect(root.locator('[data-mm-guided-next]')).toBeDisabled();
   await expect(root).toContainText('hot-runner');
-  await expect(page.locator('#scenarios .mm-practice-case')).toHaveCount(5);
+  await expect(review).toHaveCount(1);
+  await expect(review).toHaveAttribute('data-mm-worked-review','PC-05');
+  await expect(review).toHaveJSProperty('open',false);
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
+  await page.locator('#scenarios .mm-hub-detail-back button').click();
+  await expect(page.locator('#mmPracticeToolResults [data-mm-hub-action="troubleshooting"]')).toBeFocused();
 });
 
 
@@ -916,6 +921,7 @@ test('small Android Practice stages scroll horizontally with legible full labels
   await page.setViewportSize({width:360,height:800});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
+  await openGuidedPractice(page);
   const guided=page.locator('#scenarios #mmPracticeGuided');
   await expect(guided).toBeVisible();
   const progress=guided.locator('.mm-practice-guided-progress');
@@ -955,10 +961,11 @@ test('Android focus scrolls content above the measured bottom navigation',async(
     if(!page.url().includes('/index.html'))await openApp(page);
     for(const [view,selector] of [
       ['path','#path .mm-hub-continue [data-mm-hub-action="lesson"]'],
-      ['materials','#materials .mm-material-journey-actions button'],
-      ['scenarios','#scenarios .mm-practice-guided-controls button']
+      ['materials','#mmMaterialLearningAnchor > summary'],
+      ['scenarios','#mmPracticeGuided [data-mm-worked-review] > summary']
     ]){
       await page.evaluate(name=>switchView(name),view);
+      if(view==='scenarios')await openGuidedPractice(page);
       const control=page.locator(selector).first();
       await expect(control).toBeVisible();
       // The route creates several long material catalog sections. WebKit
@@ -1027,6 +1034,7 @@ test('Android font scaling keeps bottom-nav clearance source-measured',async({pa
     return Number.isFinite(measured)&&measured>=Math.ceil(nav.getBoundingClientRect().height);
   })).toBe(true);
   await page.evaluate(()=>switchView('scenarios'));
+  await openGuidedPractice(page);
   const next=page.locator('#scenarios .mm-practice-guided-controls button').first();
   await expect(next).toBeVisible();
   // On a zoomed phone, WebKit can finish the long Practice render after the

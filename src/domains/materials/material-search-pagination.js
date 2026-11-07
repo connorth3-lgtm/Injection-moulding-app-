@@ -50,6 +50,16 @@ function installAllIndex(root,index,query,revealExactGrade){
   // The unified searchable catalogue must be the first child in DOM order;
   // the previous indexed-grade engine remains mounted but hidden for deep links.
   root.prepend(section);
+  const filters=section.querySelector('[data-mm-all-material-filters]');
+  const tools=document.createElement('div');
+  tools.className='mm-material-catalogue-tools';
+  tools.append(...root.querySelectorAll(':scope > [data-mm-material-workflows], :scope > #mmMaterialLearningAnchor'));
+  filters.after(tools);
+  const gradeBoundary=root.querySelector(':scope > .mm-exact-boundary');
+  if(gradeBoundary){
+    gradeBoundary.dataset.mmGradeBoundary='';
+    filters.querySelector('[data-mm-catalogue-boundary]').after(gradeBoundary);
+  }
   // Move source-backed coverage counts into the compact catalogue header
   // instead of deleting the only visible copy with the old Grade Library banner.
   const retiredHead=root.querySelector('.mm-exact-head');
@@ -188,22 +198,15 @@ function installAllIndex(root,index,query,revealExactGrade){
     host.querySelectorAll('[data-mm-grade-action]').forEach(button=>button.addEventListener('click',()=>{
       const id=button.dataset.mmGradeAction||'';
       const action=button.dataset.mmMaterialJump||'';
-      const target=document.getElementById(({compare:'mmMaterialCompare',change:'mmMaterialChange',learning:'mmMaterialLearningAnchor'})[action]);
-      const workflows=root.querySelector('[data-mm-material-workflows]');
       const selected=action==='compare'?root.querySelector('[data-mm-compare-a]')
         :action==='change'?root.querySelector('[data-mm-change-before]'):null;
       if(selected){
         selected.value=id;
-        workflows.open=true;
         // Notify the correct selector, so the comparison/delta action can
         // re-evaluate its enabled state when the second grade is chosen.
         selected.dispatchEvent(new Event('change',{bubbles:true}));
       }
-      if(action==='learning'){
-        const guide=root.querySelector('[data-mm-family-science]');
-        if(guide)guide.open=true;
-      }
-      if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'}));
+      window.MM_MATERIAL_REGISTRY.showPageSection(action);
     }));
   }
   // The folder button intentionally uses the same governed family facet

@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.08.1",
+  "release": "2026.11.08.2",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "452334f3260f212fb1eec1bed3f99ffac65f522f",
-  "scope": "Regional course maps and assessment packs support New Zealand, the four UK nations and India. Each course pack is a draft for provider review.",
-  "approvalBoundary": "Release 2026.11.08.1 has exact-source technical candidate 452334f3260f212fb1eec1bed3f99ffac65f522f in artifact 13587781254. All seven independent external review streams remain HOLD. Tester distribution remains STOP and production authority is advisory-only.",
+  "candidateSourceSha": "0e30c8d395a1ce8f9df718d194dab66d580c409a",
+  "scope": "Consolidate repeated controls at the bottom of Learn, Practice and Materials.",
+  "approvalBoundary": "Owner visual approval and exact-source technical candidate checks are recorded for source 0e30c8d395a1ce8f9df718d194dab66d580c409a. The retained candidate producer, browser, question and visual gates passed; final protected-head checks remain required before merge. External validation and tester distribution remain HOLD.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -45,14 +45,14 @@
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
   "lastReviewedDate": "2026-11-08",
   "previousVerifiedCandidate": {
-    "release": "2026.11.07.1",
-    "sourceSha": "40196618576012fb6f2bf682fe39a58dedef55a3",
-    "runtimeFingerprint": "sha256:bd69ddd37b7f71b0666cc7cac359be99d73a37dab99a7c897b3a83ce8539ffb3",
-    "candidateRunId": 42383823100,
+    "release": "2026.11.08.1",
+    "sourceSha": "452334f3260f212fb1eec1bed3f99ffac65f522f",
+    "runtimeFingerprint": "sha256:18dc181891537daf93ca8d12c397e646027c639a72aef2a2ebcc0fb2d4dd5718",
+    "candidateRunId": 42406093540,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13578975898,
-    "artifactName": "physical-pwa-candidate-40196618576012fb6f2bf682fe39a58dedef55a3",
-    "artifactDigest": "sha256:a8e2592258f7a77dfed39d2b7197f5b19370061d0ce3b5eaac5f018fad390611",
-    "artifactExpiresAt": "2027-02-05T14:54:57Z"
+    "artifactId": 13587781254,
+    "artifactName": "physical-pwa-candidate-452334f3260f212fb1eec1bed3f99ffac65f522f",
+    "artifactDigest": "sha256:19bb9c8730dc3c4b61828c4dc19536f0b7c85c5bcc8a3201da5628e2b9d1ae7a",
+    "artifactExpiresAt": "2027-02-05T19:24:57Z"
   }
 }

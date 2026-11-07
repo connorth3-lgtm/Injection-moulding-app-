@@ -125,7 +125,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await openPracticeHub(page);
       await openPracticeAction(page,'troubleshooting');
       const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
-      await expect(picker.locator('button')).toHaveCount(3);
+      await expect(picker.locator('button')).toHaveCount(4);
       await picker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
       await expect(page.locator('#defects').getByRole('heading',{name:'Defect Finder + Troubleshooting Coach'})).toBeVisible();
       await expect(page.locator('#defects [data-mm-dx-action="choose"]').first()).toBeVisible();
