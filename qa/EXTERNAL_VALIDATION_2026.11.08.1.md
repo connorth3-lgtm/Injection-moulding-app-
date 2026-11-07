@@ -1,9 +1,11 @@
 # MouldMaster 2026.11.08.1 — external validation status
 
-**STATUS: HOLD — exact-source technical candidate pending. All seven independent review streams remain HOLD.**
+**STATUS: HOLD — exact-source technical candidate retained by run 42406093540 as artifact 13587781254. All seven independent review streams remain HOLD.**
 
 This release adds seven draft regional course packs, practice workbooks and blank assessment records. Independent reviews cover the curriculum maps, workplace evidence guides and draft Hindi learning support.
 
+
+Mobile Browser QA run 42406093441, Question Quality 50-Pass run 42406093434, Combined Learn Book QA run 42406093449, and Read Aloud QA run 42406093510 passed on source 452334f3260f212fb1eec1bed3f99ffac65f522f. The runtime fingerprint is sha256:18dc181891537daf93ca8d12c397e646027c639a72aef2a2ebcc0fb2d4dd5718.
 
 ## Exact-release review packets
 

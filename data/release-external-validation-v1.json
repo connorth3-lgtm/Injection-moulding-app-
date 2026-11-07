@@ -4,8 +4,8 @@
   "validationIndex": "qa/EXTERNAL_VALIDATION_2026.11.08.1.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "fail",
-    "claim": "HOLD: exact-source candidate retention and automated quality checks are pending."
+    "status": "pass",
+    "claim": "PASS: release 2026.11.08.1 source 452334f3260f212fb1eec1bed3f99ffac65f522f is bound to retained artifact 13587781254, producer run 42406093540, and runtime fingerprint sha256:18dc181891537daf93ca8d12c397e646027c639a72aef2a2ebcc0fb2d4dd5718. Mobile Browser QA run 42406093441, Question Quality 50-Pass run 42406093434, Combined Learn Book QA run 42406093449, and Read Aloud QA run 42406093510 passed on that source."
   },
   "governance": {
     "status": "enforced",
@@ -28,7 +28,11 @@
       "sourceSha": "40196618576012fb6f2bf682fe39a58dedef55a3",
       "runtimeFingerprint": "sha256:bd69ddd37b7f71b0666cc7cac359be99d73a37dab99a7c897b3a83ce8539ffb3"
     },
-    "candidate": null
+    "candidate": {
+      "release": "2026.11.08.1",
+      "sourceSha": "452334f3260f212fb1eec1bed3f99ffac65f522f",
+      "runtimeFingerprint": "sha256:18dc181891537daf93ca8d12c397e646027c639a72aef2a2ebcc0fb2d4dd5718"
+    }
   },
   "pwaPhysicalDevices": {
     "status": "hold",
@@ -46,7 +50,17 @@
       "artifactDigest": "sha256:a8e2592258f7a77dfed39d2b7197f5b19370061d0ce3b5eaac5f018fad390611",
       "artifactExpiresAt": "2027-02-05T14:54:57Z"
     },
-    "currentCandidate": null
+    "currentCandidate": {
+      "release": "2026.11.08.1",
+      "sourceSha": "452334f3260f212fb1eec1bed3f99ffac65f522f",
+      "runtimeFingerprint": "sha256:18dc181891537daf93ca8d12c397e646027c639a72aef2a2ebcc0fb2d4dd5718",
+      "candidateRunId": 42406093540,
+      "candidateWorkflow": "Pre-merge Public Candidate",
+      "artifactId": 13587781254,
+      "artifactName": "physical-pwa-candidate-452334f3260f212fb1eec1bed3f99ffac65f522f",
+      "artifactDigest": "sha256:19bb9c8730dc3c4b61828c4dc19536f0b7c85c5bcc8a3201da5628e2b9d1ae7a",
+      "artifactExpiresAt": "2027-02-05T19:24:57Z"
+    }
   },
   "windowsDistribution": {
     "status": "hold",
@@ -109,7 +123,11 @@
       "sourceSha": "40196618576012fb6f2bf682fe39a58dedef55a3",
       "runtimeFingerprint": "sha256:bd69ddd37b7f71b0666cc7cac359be99d73a37dab99a7c897b3a83ce8539ffb3"
     },
-    "candidate": null
+    "candidate": {
+      "release": "2026.11.08.1",
+      "sourceSha": "452334f3260f212fb1eec1bed3f99ffac65f522f",
+      "runtimeFingerprint": "sha256:18dc181891537daf93ca8d12c397e646027c639a72aef2a2ebcc0fb2d4dd5718"
+    }
   },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
@@ -127,7 +145,7 @@
     "artifactDigest": "sha256:a8e2592258f7a77dfed39d2b7197f5b19370061d0ce3b5eaac5f018fad390611",
     "artifactExpiresAt": "2027-02-05T14:54:57Z"
   },
-  "candidateStatus": "HOLD \u2014 release 2026.11.08.1 awaits an exact-source technical candidate. All seven independent external review streams remain HOLD.",
+  "candidateStatus": "PASS \u2014 exact-source technical candidate 452334f3260f212fb1eec1bed3f99ffac65f522f was retained and the required automated quality gates passed. All seven independent external review streams remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.11.03.2",
     "sourceSha": "eebd169218d108bfadc8c78898b779ee373e2613",
@@ -162,5 +180,15 @@
     "artifactExpiresAt": "2027-02-01T06:25:04Z"
   },
   "supersededCandidateReason": "This earlier 2026.10.22.2 artifact was produced from an ancestor Book runtime. It does not match the current candidate source or computed public-runtime fingerprint and is not current release evidence.",
-  "webCandidate": null
+  "webCandidate": {
+    "release": "2026.11.08.1",
+    "sourceSha": "452334f3260f212fb1eec1bed3f99ffac65f522f",
+    "runtimeFingerprint": "sha256:18dc181891537daf93ca8d12c397e646027c639a72aef2a2ebcc0fb2d4dd5718",
+    "candidateRunId": 42406093540,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 13587781254,
+    "artifactName": "physical-pwa-candidate-452334f3260f212fb1eec1bed3f99ffac65f522f",
+    "artifactDigest": "sha256:19bb9c8730dc3c4b61828c4dc19536f0b7c85c5bcc8a3201da5628e2b9d1ae7a",
+    "artifactExpiresAt": "2027-02-05T19:24:57Z"
+  }
 }

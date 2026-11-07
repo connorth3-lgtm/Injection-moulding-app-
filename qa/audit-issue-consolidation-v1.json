@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.11.08.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
+  "candidateSourceSha": "452334f3260f212fb1eec1bed3f99ffac65f522f",
   "scope": "Regional course maps and assessment packs support New Zealand, the four UK nations and India. Each course pack is a draft for provider review.",
-  "approvalBoundary": "Release 2026.11.08.1 awaits an exact-source candidate. External validation and tester distribution remain HOLD.",
+  "approvalBoundary": "Release 2026.11.08.1 has exact-source technical candidate 452334f3260f212fb1eec1bed3f99ffac65f522f in artifact 13587781254. All seven independent external review streams remain HOLD. Tester distribution remains STOP and production authority is advisory-only.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,

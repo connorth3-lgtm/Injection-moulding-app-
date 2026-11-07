@@ -43,6 +43,13 @@ The qualification file shows a classroom subtotal of 210 hours for theory and em
 
 Providers control formal training hours, assessment, credit and qualification awards. The draft templates support planning and review. Site authorisations and procedures govern practical work.
 
+## Source reconciliation
+
+- For Wales, the 7 November 2026 current Qualifications Wales export lists `C00/1224/9` and `C00/1225/0` as available and eligible for use in apprenticeship frameworks. The published provider pages describe the delivery and assessment. Confirm the active intake and approved qualification combination with the provider.
+- For Wales and Northern Ireland, the 7 November 2026 Ofqual register extract links the exact qualification numbers to unit references. The map groups those registered units by learning topic. The centre confirms unit selection and the complete assessment and grading criteria.
+- For England, compare the Skills England occupational identifiers with the assessment-method appendix of the SIAS v1.0 specification. The allocation covers 32 identifiers in workplace observation, 28 in the portfolio-supported interview, and 24 in the test.
+- For India, use section 2 for module delivery and check the detailed assessment annex for each outcome. Page 5 and page 22 show different mark totals. The centre's current controlled instrument resolves the practical subtotal and duplicate outcome label before formal scoring.
+
 ## Official sources
 
 - [NZQA qualification 4401](https://www.nzqa.govt.nz/nzqf/search/viewQualification.do?selectedItemKey=4401) and [NZQA qualification 4402](https://www.nzqa.govt.nz/nzqf/search/viewQualification.do?selectedItemKey=4402)

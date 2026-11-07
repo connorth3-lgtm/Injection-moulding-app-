@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "release": "2026.11.08.1",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.08.1.md",
-  "sourceSha": null,
-  "runtimeFingerprint": null,
+  "sourceSha": "452334f3260f212fb1eec1bed3f99ffac65f522f",
+  "runtimeFingerprint": "sha256:18dc181891537daf93ca8d12c397e646027c639a72aef2a2ebcc0fb2d4dd5718",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Real NVDA and VoiceOver evidence for release 2026.11.08.1 is pending.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.11.08.1 is bound to exact retained learner-runtime candidate 452334f3260f212fb1eec1bed3f99ffac65f522f; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -310,7 +310,7 @@
     "sourceSha": "40196618576012fb6f2bf682fe39a58dedef55a3",
     "runtimeFingerprint": "sha256:bd69ddd37b7f71b0666cc7cac359be99d73a37dab99a7c897b3a83ce8539ffb3"
   },
-  "technicalCandidateStatus": "HOLD: exact-source candidate retention and automated quality checks are pending.",
+  "technicalCandidateStatus": "PASS: technical candidate producer run 42406093540 retained artifact 13587781254. Independent human NVDA and VoiceOver evidence remains pending.",
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
