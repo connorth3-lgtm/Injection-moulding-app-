@@ -507,7 +507,7 @@ elif visual.get('release')=='2026.11.08.4':
          and '47 unchanged captures' in review_current
          and all(row in review_current for row in reviewed_differences)
          and 'No masks or skipped surfaces were added.' in review_current
-         and 'applies to PR #697 only' in review_current
+         and 'for PR #697 only' in review_current
          and 'remain **HOLD**' in review_current
          and 'owner-directed immutable baseline' in visual.get('policy','').lower()
          and 'owner-approved visual design baseline' in visual.get('policy','').lower()
