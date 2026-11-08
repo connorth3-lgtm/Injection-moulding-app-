@@ -4,7 +4,7 @@
 
 The course-pack version is **2026.11.08.2**. It adds the CIPET Assistant Machine Operator – Injection Moulding route (NQR 14257), preserves the NZQA 4401/4402 availability and review caveats, and states that level numbers do not establish equivalence, credit transfer or recognition. Technical and external-review records are release-bound; provider and workplace decisions remain with the relevant organisations.
 
-**Candidate status:** exact-source release candidate and current release-bound packet checks are pending. No candidate, external validation, provider acceptance, learner efficacy, accreditation, signing or production authority is claimed.
+**Technical candidate:** **PASS — software-only**. The exact-source candidate producer run `42436315695` retained artifact `13599865940` for source `84250f572de4e685dcfdebcf80f02749fd59b2ef`, with runtime fingerprint `sha256:e3da3eb5b804639f95fd5f8e225213996cde0ff37229626b02944700c1a45715`. Mobile Browser QA and Question Quality 50-Pass passed for this source. All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain **HOLD**. No provider acceptance, learner efficacy, accreditation, signing or production authority is claimed.
 
 ## Release-specific review packets
 
