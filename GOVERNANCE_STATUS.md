@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: release 2026.11.08.4 has no retained exact-source candidate or verified release contract. No source, human, device or production approval is implied. |
-| Behavioral / browser | **fail** | HOLD: browser and question gates for release 2026.11.08.4 must be verified on its exact-source candidate; prior green workflows do not transfer to a different source. |
+| Static / contract | **pass** | PASS — release 2026.11.08.4 source 3f4b9e2fcbc0dd28c089d5e486f1fa4c3020f365 producer run 42465108151 retained artifact 13610993444 fingerprint sha256:1ef947c4a9bb9e2effdffa5d1cd7ea23d1a53b7720a73ffd18536b25eea09b29; exact-source software contract, Mobile Browser QA and Question Quality 50-Pass succeeded. Automated software evidence only; independent external review remains HOLD. |
+| Behavioral / browser | **pass** | PASS — release 2026.11.08.4 source 3f4b9e2fcbc0dd28c089d5e486f1fa4c3020f365; Chromium visual and substantive, WebKit, cross-browser and all 500 reliability checks passed; Question Quality 50-Pass succeeded. Automated software evidence only; independent external review remains HOLD. |
 | External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner and provider/NZQA evidence streams remain HOLD for release 2026.11.08.4. |

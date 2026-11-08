@@ -510,8 +510,11 @@ elif visual.get('release')=='2026.11.08.4':
          and 'applies to PR #697 only' in review_current
          and 'remain **HOLD**' in review_current
          and 'owner-directed immutable baseline' in visual.get('policy','').lower()
-         and 'independent human, device, provider' in visual.get('policy','').lower()
-         and 'creates no accessibility' in visual.get('policy','').lower(),
+         and 'owner-approved visual design baseline' in visual.get('policy','').lower()
+         and 'independent human' in visual.get('policy','').lower()
+         and 'provider' in visual.get('policy','').lower()
+         and 'remain separate and hold' in visual.get('policy','').lower()
+         and 'no such authorization is created' in visual.get('policy','').lower(),
          '2026.11.08.4 PR #697 baseline must retain its exact owner-reviewed source, artifact, scope, strict matrix and independent review boundary')
 elif visual.get('release')=='2026.11.08.2':
     # The owner approved the exact Learn / Practice / Materials screenshot changes
