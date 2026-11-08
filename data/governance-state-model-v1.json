@@ -346,7 +346,7 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "PASS — release 2026.11.08.4 source afddce102ee48995bdcf06b9f22bc078992cea3a producer run 42467257528 retained artifact 13612187059 fingerprint sha256:12b0afbcd833614ce5162612b84974e491f5f197cf6d1973b2a522d60b92a54d; exact-source software contract, Mobile Browser QA run 42467257588, and Question Quality 50-Pass run 42467257502 succeeded. Automated software evidence only; independent external review remains HOLD."
+      "meaning": "PASS — release 2026.11.08.4 source afddce102ee48995bdcf06b9f22bc078992cea3a producer run 42467257528 retained artifact 13612187059 fingerprint sha256:12b0afbcd833614ce5162612b84974e491f5f197cf6d1973b2a522d60b92a54d; exact-source software contract, Mobile Browser QA and Question Quality 50-Pass gates succeeded. Automated software evidence only; independent external review remains HOLD."
     },
     "behavioralBrowser": {
       "status": "pass",
