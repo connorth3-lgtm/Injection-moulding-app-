@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: release 2026.11.08.3 exact-source technical candidate is not yet retained; prior release evidence does not transfer. |
-| Behavioral / browser | **fail** | HOLD: browser and question-quality gates for release 2026.11.08.3 remain unverified on its exact candidate. |
+| Static / contract | **pass** | PASS: release 2026.11.08.3 source 84250f572de4e685dcfdebcf80f02749fd59b2ef is bound to the successful exact-source candidate producer run 42436315695; artifact 13599865940; fingerprint sha256:e3da3eb5b804639f95fd5f8e225213996cde0ff37229626b02944700c1a45715. The retained candidate manifest, deployment metadata, artifact digest and release contracts were verified. This is a software-only pass and does not approve human, device, provider, signing or production evidence. |
+| Behavioral / browser | **pass** | PASS: release 2026.11.08.3 source 84250f572de4e685dcfdebcf80f02749fd59b2ef passed exact-source Mobile Browser QA (run 42436315652; Chromium and WebKit suites, visual and reachability checks, and five reliability shards) and Question Quality 50-Pass (run 42436315689). |
 | External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner and provider/NZQA evidence streams remain HOLD for release 2026.11.08.3. |
