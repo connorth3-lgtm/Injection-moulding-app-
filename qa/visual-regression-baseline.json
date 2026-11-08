@@ -41,7 +41,7 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Owner-directed immutable baseline for the requested unified Moulding problem practice UI in PR #697. The exact-source review covers the 52-screen matrix; strict 12-pixel comparison remains unchanged. The recorded approval applies only to the visible Learn/Practice consolidation and creates no accessibility, physical-device, provider, SME, learner-outcome, accreditation or production authorization.",
+  "policy": "Owner-directed immutable baseline for the requested unified Moulding problem practice UI in PR #697. The exact-source review covers the 52-screen matrix; strict 12-pixel comparison remains unchanged. This owner-approved visual design baseline applies only to the visible Learn/Practice consolidation. Independent human, accessibility, physical-device, Windows signing, provider, SME, learner-outcome, accreditation and production reviews remain separate and HOLD; no such authorization is created.",
   "ref": "visual-baseline/2026.11.08.4-pr697",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
