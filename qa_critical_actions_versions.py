@@ -12,6 +12,7 @@ WORKFLOWS = sorted(
 )
 
 PINNED = {
+    "cache": "0057852bfaa89a56745cba8c7296529d2fc39830",
     "checkout": "3d3c42e5aac5ba805825da76410c181273ba90b1",
     "setup-node": "949feb2413d6458794dcd2491c4babbbce0c15c1",
     "setup-python": "6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
@@ -19,6 +20,7 @@ PINNED = {
     "download-artifact": "9000827ccba6bdab643e8b6fd33ac0654aef8333",
 }
 ANNOTATED_MAJOR = {
+    "cache": 4,
     "checkout": 7,
     "setup-node": 7,
     "setup-python": 7,
@@ -83,7 +85,7 @@ def pinned_pip_specs(text, rel):
 
 def governed_refs(text, rel):
     refs = []
-    pattern = re.compile(r"actions/(checkout|setup-python|setup-node|upload-artifact|download-artifact)@([^\s#]+)(?:\s+#\s*v(\d+)(?:\.\d+(?:\.\d+)?)?)?")
+    pattern = re.compile(r"actions/(cache|checkout|setup-python|setup-node|upload-artifact|download-artifact)@([^\s#]+)(?:\s+#\s*v(\d+)(?:\.\d+(?:\.\d+)?)?)?")
     for name, ref, annotated_major in pattern.findall(text):
         need(re.fullmatch(r"[0-9a-f]{40}", ref) is not None, f"mutable core Action reference is forbidden: actions/{name}@{ref} in {rel}")
         need(ref == PINNED[name], f"unreviewed core Action SHA for actions/{name} in {rel}: {ref}")

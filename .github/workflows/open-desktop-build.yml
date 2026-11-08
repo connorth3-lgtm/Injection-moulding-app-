@@ -144,6 +144,8 @@ concurrency:
 jobs:
   build-windows:
     runs-on: windows-latest
+    env:
+      ELECTRON_BUILDER_CACHE: ${{ runner.temp }}\electron-builder-cache
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -160,6 +162,13 @@ jobs:
           node-version: '22.12.0'
           cache: 'npm'
           cache-dependency-path: desktop/electron/package-lock.json
+      - name: Restore Electron Builder tool cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ${{ runner.temp }}\electron-builder-cache
+          key: ${{ runner.os }}-electron-builder-${{ hashFiles('desktop/electron/package.json', 'desktop/electron/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-electron-builder-
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7
         with:
           python-version: '3.12'
