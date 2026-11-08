@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.11.08.3
+/* MouldMaster learner UI polish — 2026.11.08.4
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.11.08.3';
+const VERSION='2026.11.08.4';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
 const STYLE_REV='2026.10.20.2-pr640-materials-parity';
 const DESKTOP_QUERY='(min-width:1101px)';
@@ -539,7 +539,14 @@ function learnPresentation(title){
     {hint:'Open this course and its lessons',art:'training',tile:24};
 }
 function learn(){
-  const root=document.getElementById('path'),hub=root?.querySelector('.mm-learn-hub');
+  const root=document.getElementById('path');
+  const questionGrid=root?.querySelector('.mm-question-centre .mm-hub-picker-grid');
+  if(questionGrid){
+    questionGrid.dataset.mmReferenceLearnPicker='question-centre';
+    questionGrid.querySelectorAll(':scope > button[data-mm-hub-action]').forEach(practiceChoiceArt);
+    return;
+  }
+  const hub=root?.querySelector('.mm-learn-hub');
   const catalogue=hub?.querySelector('[data-mm-lesson-catalog]');
   if(!hub||!catalogue)return;
   sectionHeading('Learn',hub);
@@ -588,11 +595,6 @@ function learn(){
       summary.querySelector('.mm-catalog-group-name')?.insertAdjacentElement('afterend',desc);
     }
   });
-  const learnQuestionGrid=hub.querySelector('.mm-learn-question-centre .mm-hub-picker-grid');
-  if(learnQuestionGrid){
-    learnQuestionGrid.dataset.mmReferenceLearnQuestions='1';
-    learnQuestionGrid.querySelectorAll(':scope > button[data-mm-hub-action]').forEach(practiceChoiceArt);
-  }
   hub.dataset.mmReferenceLearn='1';
 }
 // Use the same user-selected photographic atlas as Learn/Materials for real
@@ -695,9 +697,8 @@ function practiceToolHeaders(){
     head.prepend(art);
   }
 }
-// A consistent Practice exit on inner learning tools. This only adds an
-// accessible navigation control; source-owned evidence/scoring views remain
-// untouched and their native in-tool Back buttons retain their meanings.
+// A consistent return from inner learning tools to the originating Learn or
+// Practice hub. Source-owned evidence/scoring views retain their native Back buttons.
 function practiceSubpageNavigation(){
   const tools=[
     ['#defects','troubleshooting','Troubleshooting'],
@@ -721,7 +722,7 @@ function practiceSubpageNavigation(){
     // No duplicate controls after tool-owned re-renders or app navigation.
     const nav=document.createElement('nav');
     nav.className='mm-practice-tool-return';
-    nav.setAttribute('aria-label','Practice navigation');
+    nav.setAttribute('aria-label','Learning and practice navigation');
     const back=document.createElement('button');
     back.type='button';back.className='mm-practice-tool-back';
     back.textContent=originAction?'← Back to Learn':'← Back to Practice';
@@ -748,13 +749,6 @@ function practiceInside(){
   practiceSubpageNavigation();
   observePracticeToolRoots();
   practiceToolHeaders();
-  // The Question Centre is rendered into the same Practice route but replaces
-  // .mm-practice-hub. Decorate its five real options as they become available.
-  const questionGrid=document.querySelector('#scenarios .mm-question-centre .mm-hub-picker-grid');
-  if(questionGrid){
-    questionGrid.dataset.mmReferencePracticePicker='question-centre';
-    questionGrid.querySelectorAll(':scope > button[data-mm-hub-action]').forEach(practiceChoiceArt);
-  }
   // Lab chooser is modal-owned. Decorate only a Practice picker, never More,
   // search, onboarding or Learn-resource modal controls.
   const modal=document.querySelector('#modal:not(.hidden) .modal-card');
@@ -1104,7 +1098,7 @@ function boot(){
     new window.MutationObserver(refresh).observe(node,{childList:true,subtree:id==='modal'});
   }
   document.addEventListener('click',event=>{
-    if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu],#scenarios [data-mm-hub-action],#modal .mm-hub-picker-grid [data-mm-hub-action],#mmVirtualApprenticeship button[data-mm-onclick],#mmVirtualApprenticeship .hero-buttons button'))refresh();
+    if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu],#scenarios [data-mm-hub-action],#path .mm-question-centre [data-mm-hub-action],#modal .mm-hub-picker-grid [data-mm-hub-action],#mmVirtualApprenticeship button[data-mm-onclick],#mmVirtualApprenticeship .hero-buttons button'))refresh();
   });
   window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.13.1',refresh});
 }

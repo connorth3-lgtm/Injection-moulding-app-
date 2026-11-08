@@ -15,19 +15,21 @@ async function loadLearner(page,{region='ALL'}={}){
 test('Question Centre gathers the main governed question modes and keeps context on common phone widths',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await loadLearner(page);
-  await page.evaluate(()=>switchView('scenarios'));
-  await expect(page.locator('#scenarios')).toContainText('Question Centre');
-  const visibleDescriptions=page.locator('#scenarios .mm-hub-tile small:visible');
-  expect(await visibleDescriptions.count()).toBeGreaterThan(0);
-
-  await page.getByRole('button',{name:'Open Question Centre →'}).click();
-  const modal=page.locator('#modal:not(.hidden)');
-  await expect(modal).toBeVisible();
-  await expect(modal.getByRole('heading',{name:'Choose how you want to be questioned'})).toBeVisible();
+  await page.evaluate(()=>switchView('path'));
+  const learn=page.locator('#path .mm-learn-hub');
+  const launcher=learn.locator('[data-mm-hub-action="question-centre"]');
+  await expect(launcher).toBeVisible();
+  await expect(learn).toContainText('169 governed prompts');
+  await launcher.click();
+  const centre=page.locator('#path .mm-question-centre');
+  await expect(centre.getByRole('heading',{name:'Choose how you want to be questioned'})).toBeVisible();
   for(const name of ['Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions']){
-    await expect(modal.getByRole('button',{name:new RegExp(name)})).toBeVisible();
+    await expect(centre.getByRole('button',{name:new RegExp(name)})).toBeVisible();
   }
-  await expect(modal).toContainText('169 governed question/decision prompts');
+  await expect(centre).toContainText('169 governed question/decision prompts');
+  await expect(page.locator('#path #mmLearnQuestions')).toHaveCount(0);
+  await page.evaluate(()=>switchView('scenarios'));
+  await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
   const counts=await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts());
   expect(counts).toEqual({formal:57,scenarios:40,diagnostic:36,materials:24,measured:12,total:169});
 });

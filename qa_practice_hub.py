@@ -17,15 +17,6 @@ required_hub = {
     "recommended practice region": 'aria-label="Recommended practice"',
     "task-led chooser": "Choose by the job you want to practise",
     "assessment separation": "Practice is for learning; assessments stay separate.",
-    "question centre": "Question Centre",
-    "question centre launcher": 'data-mm-hub-action="question-centre"',
-    "formal question lane": "Formal knowledge checks",
-    "formal attempt contract": "10 questions in one jurisdiction or 16 in Compare All.",
-    "scenario question lane": "Shop-floor scenarios",
-    "diagnostic question lane": "Diagnostic questions",
-    "material question lane": "Material questions",
-    "measured question lane": "Measured-evidence decisions",
-    "question centre registry": "window.MM_QUESTION_CENTRE=Object.freeze",
     "scenario rotation": "nextScenarioIndex",
     "process-data practice": 'data-mm-hub-action="process-data"',
     "troubleshooting practice": 'data-mm-hub-action="troubleshooting"',
@@ -41,6 +32,18 @@ required_hub = {
     "discriminating scenario CTA": "Start discriminating scenario →",
     "retrieval practice CTA": "Start retrieval practice →",
 }
+learn_launcher = 'data-mm-hub-action="question-centre"'
+if learn_launcher not in hub:
+    failures.append("Learn hub Question Centre entry missing")
+if 'id="mmLearnQuestions"' in hub:
+    failures.append("Interactive lesson must not contain a second Question Centre")
+
+practice_markup = hub[hub.index("function practiceHubMarkup()"):hub.index("function renderLearnHub()")]
+if 'data-mm-hub-action="question-centre"' in practice_markup or "169 governed prompts" in practice_markup:
+    failures.append("Practice must not expose a duplicate Question Centre or question-bank count")
+if "4 tools shown" not in practice_markup:
+    failures.append("Practice hub must present its four focused tools after Question Centre consolidation")
+
 required_css = {
     "mobile practice scope": ".mm-practice-hub",
     "mobile explanation visible": ".mm-practice-hub .mm-hub-tile small",

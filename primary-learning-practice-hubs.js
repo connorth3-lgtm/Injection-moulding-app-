@@ -151,7 +151,7 @@ function nextScenarioIndex(){
   return next;
 }
 let learnToolOrigin=null;
-const LEARN_TOOL_ACTIONS=new Set(['assessments','diagnostic-labs','material-labs','measured-decisions','process-data','troubleshooting','scenario-detail','learn-scenarios']);
+const LEARN_TOOL_ACTIONS=new Set(['assessments','diagnostic-labs','material-labs','measured-decisions','process-data','question-centre','troubleshooting','scenario-detail','learn-scenarios']);
 function bind(root){
   if(root?.id==='scenarios')bindPracticeGuided(root);
   if(!root||root.dataset.mmHubActionsBound==='1')return;
@@ -161,7 +161,7 @@ function bind(root){
     const button=event.target?.closest?.('[data-mm-hub-action]');
     if(!button||!root.contains(button))return;
     const action=button.dataset.mmHubAction;
-    if(source==='learn'&&LEARN_TOOL_ACTIONS.has(action))learnToolOrigin=action;
+    if(source==='learn'&&LEARN_TOOL_ACTIONS.has(action))learnToolOrigin=root.dataset.mmHubMode==='question-centre'?'question-centre':action;
     else if(source==='practice')learnToolOrigin=null;
     runAction(action,source==='learn'?'learn':'practice');
   });
@@ -1122,9 +1122,6 @@ function learnWorkshopMarkup(open){
       </section>
       <section class="mm-learn-step mm-learn-step-practice" aria-labelledby="mmLearnPracticeStep">
         <div class="mm-learn-step-head"><span class="mm-learn-step-num" aria-hidden="true">02</span><div><span class="eyebrow">Practise &amp; reflect</span><h3 id="mmLearnPracticeStep">Make the strongest decision</h3></div></div>
-        <section id="mmLearnQuestions" class="mm-learn-question-centre mm-primary-hub-card mm-question-centre-card" aria-label="Five governed question modes in one continuous lesson">
-          ${questionCentreMarkup(true)}
-        </section>
         <!-- The 32 optional teaching checks live in their matching core lessons; this is the separate unscored capstone. -->
       <section class="mm-learn-capstone" id="mmLearnCapstone" aria-labelledby="mmLearnCapstoneTitle"><header><span class="eyebrow">Final case · unscored</span><h3 id="mmLearnCapstoneTitle">One case. Four evidence checkpoints.</h3><p>A new polymer lot arrives. Silver streaks and variable cushion appear during trial shots. Work through this hypothetical case before choosing another activity.</p></header><div class="mm-learn-capstone-steps">
 <details><summary><span>01</span><b>Characterise the change</b><small>What is known versus suspected?</small></summary><p>Separate observed streaks and shot variability from assumptions about wet resin. Compare cavity-labelled parts, timestamps and a suitable known-good baseline.</p></details>
@@ -1139,9 +1136,11 @@ function learnHubMarkup(workshopOpen){
   const c=lessonContext();
   const lesson=c?.lesson;const course=c?.course;
   const lessonLine=course?`${esc(course.name)} · Lesson ${(c.position||0)+1} of ${course.lessonIds.length}`:'Your current lesson';
+  const questionCounts=questionCentreCounts();
   return `<div class="mm-primary-hub mm-learn-hub">
     <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>Lessons</h1><p>Core, material science and specialist lessons in one place.</p></header>
     <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
+    <section class="mm-hub-section mm-learn-question-launch" aria-label="Question Centre"><div class="mm-hub-section-head"><div><span class="eyebrow">${questionCounts.total} governed prompts</span><h2>Question Centre</h2></div><button class="primary" type="button" data-mm-hub-action="question-centre">Open Question Centre →</button></div><p>Explore formal checks, shop-floor scenarios, guided diagnostic and material questions, and measured-evidence decisions from one place. Lesson exercises and Book self-checks stay with their teaching.</p></section>
     <section class="mm-learn-courses" id="mmLearnCourses" aria-label="Search and browse all lessons">${lessonCatalog.markup(learnWorkshopMarkup(workshopOpen))}</section>
   </div>`;
 }
@@ -1221,9 +1220,9 @@ function questionCentreCounts(){
  const measured=window.MM_REAL_MEASURED_ASSESSMENT?.decisionCount||12;
  return {formal,scenarios,diagnostic,materials,measured,total:formal+scenarios+diagnostic+materials+measured};
 }
-function questionCentreMarkup(embeddedLesson=false){
+function questionCentreMarkup(){
  const q=questionCentreCounts();
- return `<span class="eyebrow">${q.total} governed prompts</span><h2>${embeddedLesson?'One lesson, five ways to think':'Choose how you want to be questioned'}</h2><p class="muted">${embeddedLesson?'Follow these five connected decision topics from technical knowledge through shop-floor, diagnostic, material and measured-evidence practice. Choose a topic to open its original questions and feedback.':'Most governed question-based learning is collected here. Formal checks and low-stakes practice keep their existing scoring and evidence boundaries.'}</p><div class="mm-hub-picker-grid">
+ return `<span class="eyebrow">${q.total} governed prompts</span><h2>Choose how you want to be questioned</h2><p class="muted">Most governed question-based learning is collected here. Formal checks and low-stakes practice keep their existing scoring and evidence boundaries.</p><div class="mm-hub-picker-grid">
  <button type="button" data-mm-hub-action="assessments"><b>Formal knowledge checks</b><small>30 approved technical + 27 regional-safety bank items. Attempts use the governed level/region blueprint: 10 questions in one jurisdiction or 16 in Compare All.</small></button>
  <button type="button" data-mm-hub-action="scenario-detail"><b>Shop-floor scenarios</b><small>${q.scenarios} evidence-first decisions with immediate feedback.</small></button>
  <button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic questions</b><small>${q.diagnostic} guided fault-isolation decisions across the diagnostic labs.</small></button>
@@ -1232,14 +1231,14 @@ function questionCentreMarkup(embeddedLesson=false){
  </div><p class="tiny muted" style="margin-top:12px">${q.total} governed question/decision prompts across these five modes. Book chapter self-checks, the 32 optional reasoning questions and lesson exercises stay with the core lessons they belong to.</p>`;
 }
 function openQuestionCentreDetail(){
-  const root=document.getElementById('scenarios');if(!root)return;
   try{window.closeModal?.()}catch(_){}
-  if(typeof switchView==='function'&&typeof currentView==='string'&&currentView!=='scenarios')switchView('scenarios');
+  if(typeof switchView==='function'&&typeof currentView==='string'&&currentView!=='path')switchView('path');
+  const root=document.getElementById('path');if(!root)return;
+  if(!learnToolOrigin)learnToolOrigin='question-centre';
   root.dataset.mmHubMode='question-centre';
-  root.innerHTML=`<div class="mm-primary-hub mm-question-centre"><header class="mm-primary-hub-head"><span class="eyebrow">Practice · Question Centre</span><h1>Questions, checks and decisions</h1><p>Use one place to choose the kind of question you need. Scoring, evidence and safety rules stay with each governed source.</p></header><section class="mm-primary-hub-card mm-question-centre-card">${questionCentreMarkup()}</section></div>`;
-  detailBack(root,'Question Centre','Practice');
+  root.innerHTML=`<div class="mm-primary-hub mm-question-centre"><header class="mm-primary-hub-head"><span class="eyebrow">Learn · Question Centre</span><h1>Questions, checks and decisions</h1><p>Use one place to choose the kind of question you need. Scoring, evidence and safety rules stay with each governed source.</p></header><section class="mm-primary-hub-card mm-question-centre-card">${questionCentreMarkup()}</section></div>`;
+  detailBack(root,'Question Centre','Learn');
   bind(root);
-  window.MM_APP_SHELL?.navigation?.setCustomActive?.('question-centre','practice');
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -1532,12 +1531,11 @@ function practiceHubMarkup(){
     <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1>What should I practise next?</h1><p>${esc(practiceStatusLine(plan))}</p></header>
     ${recommendedPracticeMarkup(plan,done)}
     ${practicePlanRows(plan)}
-    <section class="mm-hub-section"><div class="mm-hub-section-head"><span class="eyebrow">Choose by the job you want to practise</span><h2>Practice tools</h2><p>Practice is for learning; assessments stay separate. ${scenarioCount} scenarios · 5 question modes · 169 governed prompts.</p></div><label class="mm-practice-search"><span>Find practice</span><input type="search" data-mm-practice-query autocomplete="off" placeholder="Search a tool or topic" aria-controls="mmPracticeToolResults"></label><p class="mm-practice-count" aria-live="polite" data-mm-practice-count>5 tools shown</p><div class="mm-hub-grid" id="mmPracticeToolResults">
+    <section class="mm-hub-section"><div class="mm-hub-section-head"><span class="eyebrow">Choose by the job you want to practise</span><h2>Practice tools</h2><p>Practice is for learning; assessments stay separate. ${scenarioCount} shop-floor scenarios.</p></div><label class="mm-practice-search"><span>Find practice</span><input type="search" data-mm-practice-query autocomplete="off" placeholder="Search a tool or topic" aria-controls="mmPracticeToolResults"></label><p class="mm-practice-count" aria-live="polite" data-mm-practice-count>4 tools shown</p><div class="mm-hub-grid" id="mmPracticeToolResults">
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="troubleshooting"><span class="eyebrow">Find the cause · 5–15 min</span><b>Diagnose a moulding problem</b><small>Start from a defect, separate plausible mechanisms and choose the next discriminating check.</small><span class="mm-hub-tile-action">Choose troubleshooting practice →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="scenario-detail"><span class="eyebrow">Make a decision · about 5 min</span><b>Work a shop-floor scenario</b><small>Read the evidence and choose the strongest next action${scenarioCount?` across ${scenarioCount} scenarios`:''}. Each launch rotates the case.</small><span class="mm-hub-tile-action">Start next scenario →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="process-data"><span class="eyebrow">Read evidence · 10–20 min</span><b>Analyse process data</b><small>Prepare local data, verify signal meaning and compare a fault or recovery against a valid baseline.</small><span class="mm-hub-tile-action">Open data diagnosis →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Explore behaviour · 5–15 min</span><b>Use labs & simulators</b><small>Test process and material reasoning in a controlled training environment without changing a real machine.</small><span class="mm-hub-tile-action">Choose a lab or simulator →</span></button>
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="question-centre"><span class="eyebrow">Questions & checks · choose a mode</span><b>Question Centre</b><small>Formal checks, diagnostic and material questions, scenarios and measured-evidence decisions in one place. Lesson exercises and Book self-checks remain beside their teaching.</small><span class="mm-hub-tile-action">Open all question modes →</span></button>
     </div></section>
   </div>`;
 }
@@ -1747,7 +1745,7 @@ document.addEventListener('input',event=>{
 
 function configureMore(){
   const items=window.MM_APP_SHELL?.navigation?.items;
-  const practiceOwned=new Set(['mould-master','diagnostic-labs','process-data','material-labs','question-centre']);
+  const practiceOwned=new Set(['mould-master','diagnostic-labs','process-data','material-labs']);
   if(items?.forEach)items.forEach((item,id)=>{item.mobileMore=id!=='materials-page'&&!practiceOwned.has(id)});
 }
 function pruneMore(){

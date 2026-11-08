@@ -29,12 +29,12 @@ async function closeModal(page){const b=page.getByRole('button',{name:/^close$/i
 async function expectVisible(page,selector){await expect(page.locator(selector)).toBeVisible({timeout:10000})}
 async function expectNoHorizontalOverflow(page,label){const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth+1);expect(overflow,label+' must not introduce horizontal page overflow').toBeFalsy()}
 async function openAssessmentsFromQuestionCentre(page,width){
- if(width<=900)await mobileHub(page,'Practice');
- else{const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click()}
- await expectVisible(page,'#scenarios .mm-practice-hub');
- const centre=page.locator('#scenarios [data-mm-hub-action="question-centre"]');await expect(centre).toBeVisible();await centre.click();
- await expectVisible(page,'#scenarios .mm-question-centre');
- const assessments=page.locator('#scenarios .mm-question-centre [data-mm-hub-action="assessments"]');await expect(assessments).toBeVisible();await assessments.click();
+ if(width<=900)await mobileHub(page,'Learn');
+ else{const learn=page.locator('#nav button[data-view="path"]');await expect(learn).toBeVisible();await learn.click()}
+ await expectVisible(page,'#path .mm-learn-hub');
+ const centre=page.locator('#path [data-mm-hub-action="question-centre"]');await expect(centre).toBeVisible();await centre.click();
+ await expectVisible(page,'#path .mm-question-centre');
+ const assessments=page.locator('#path .mm-question-centre [data-mm-hub-action="assessments"]');await expect(assessments).toBeVisible();await assessments.click();
  await expectVisible(page,'#exams');
 }
 
@@ -276,10 +276,8 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
     for(const name of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks'])await expect(page.locator('#modal .quick-action').filter({hasText:name})).toHaveCount(0);
     await closeModal(page);
     const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click();await expectVisible(page,'#scenarios .mm-practice-hub');
-    for(const action of ['troubleshooting','process-data','labs','question-centre'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
-    await page.locator('#scenarios [data-mm-hub-action="question-centre"]').click();
-    await expectVisible(page,'#scenarios .mm-question-centre');
-    for(const label of ['Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions'])await expect(page.locator('#scenarios .mm-question-centre').getByRole('button',{name:new RegExp(label,'i')})).toBeVisible();
+    for(const action of ['troubleshooting','process-data','labs'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
+    await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
    }
   });
  });

@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.11.08.3`**.
+Current governed web candidate: **`2026.11.08.4`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.11.08.3 source 84250f572de4e685dcfdebcf80f02749fd59b2ef is bound to the successful exact-source candidate producer run 42436315695; artifact 13599865940; fingerprint sha256:e3da3eb5b804639f95fd5f8e225213996cde0ff37229626b02944700c1a45715. The retained candidate manifest, deployment metadata, artifact digest and release contracts were verified. This is a software-only pass and does not approve human, device, provider, signing or production evidence. |
-| Behavioral / browser | **pass** | PASS: release 2026.11.08.3 source 84250f572de4e685dcfdebcf80f02749fd59b2ef passed exact-source Mobile Browser QA (run 42436315652; Chromium and WebKit suites, visual and reachability checks, and five reliability shards) and Question Quality 50-Pass (run 42436315689). |
-| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner and provider/NZQA evidence streams remain HOLD for release 2026.11.08.3. |
+| Static / contract | **fail** | HOLD: release 2026.11.08.4 has no retained exact-source candidate or verified release contract. No source, human, device or production approval is implied. |
+| Behavioral / browser | **fail** | HOLD: browser and question gates for release 2026.11.08.4 must be verified on its exact-source candidate; prior green workflows do not transfer to a different source. |
+| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner and provider/NZQA evidence streams remain HOLD for release 2026.11.08.4. |

@@ -373,11 +373,11 @@ test('primary IA keeps Materials singular and every major destination reachable'
     await expect(page.locator('#modal').getByRole('button',{name:new RegExp(label,'i')})).toHaveCount(0);
   }
   await page.keyboard.press('Escape');
-  await nav.getByRole('button',{name:'Practice'}).click();
-  await page.locator('#scenarios [data-mm-hub-action="question-centre"]').click();
-  await expect(page.locator('#scenarios .mm-question-centre')).toBeVisible();
-  await expect(page.locator('#scenarios .mm-question-centre')).toContainText('169 governed prompts');
-  await expect(page.locator('#scenarios .mm-question-centre')).toContainText('30 approved technical + 27 regional-safety bank items');
+  await nav.getByRole('button',{name:'Learn'}).click();
+  await page.locator('#path [data-mm-hub-action="question-centre"]').click();
+  await expect(page.locator('#path .mm-question-centre')).toBeVisible();
+  await expect(page.locator('#path .mm-question-centre')).toContainText('169 governed prompts');
+  await expect(page.locator('#path .mm-question-centre')).toContainText('30 approved technical + 27 regional-safety bank items');
 
   const desktopOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(desktopOverflow).toBeLessThanOrEqual(1);
