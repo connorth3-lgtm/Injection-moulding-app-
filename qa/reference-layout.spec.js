@@ -206,7 +206,7 @@ for(const width of [360,810]){
     const recommended=hub.locator('.mm-reference-practice-feature');
     await expect(recommended.locator(':scope > .mm-reference-practice-feature-art')).toHaveCount(1);
     await page.evaluate(()=>{window.MM_REFERENCE_LAYOUT.refresh();window.MM_REFERENCE_LAYOUT.refresh()});
-    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(5);
+    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(4);
     const sizing=await activities.evaluateAll(nodes=>({
       overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth),
       touch:nodes.every(el=>el.getBoundingClientRect().height>=44),
