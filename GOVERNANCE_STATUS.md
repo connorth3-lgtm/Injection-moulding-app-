@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD — release 2026.11.08.5 candidate artifact and exact-source software verification are pending; no external approval is implied. |
-| Behavioral / browser | **fail** | HOLD — release 2026.11.08.5 exact-source browser and question-quality checks are pending; no external approval is implied. |
+| Static / contract | **pass** | PASS — release 2026.11.08.5 candidate source f7b703ad06fef540d7773458e0eff8202c253041, artifact 13628146324, fingerprint sha256:5442547dec21641a8284e2644013609d041a5bb41dca33a5e85a5ec578e83eb9, retained by Pre-merge Public Candidate run 42507793793; exact artifact provenance and runtime fingerprint were independently checked. Software-only; this creates no external approval. |
+| Behavioral / browser | **pass** | PASS — release 2026.11.08.5 candidate source f7b703ad06fef540d7773458e0eff8202c253041 passed Mobile Browser QA run 42507793891 and Question Quality 50-Pass run 42507794030; the strict 52-surface visual matrix passed. Software-only; this creates no external approval. |
 | External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.08.5. |

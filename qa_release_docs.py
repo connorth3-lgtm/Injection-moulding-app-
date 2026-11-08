@@ -536,7 +536,7 @@ elif visual.get('release')=='2026.11.08.5':
          and f"- Candidate source: `{current_candidate['sourceSha']}`" in review_current
          and f"- Reference source: `{visual['commit']}`" in review_current
          and f"- Baseline reference: `{visual['ref']}`" in review_current
-         and 'requested APAC materials catalogue content' in review_current.lower()
+         and 'requested apac materials catalogue content' in review_current.lower()
          and 'Human visual-owner decision: **PENDING**' in review_current
          and 'no masking or skipped surfaces' in review_current.lower()
          and 'not human visual-owner approval' in visual.get('policy','').lower()
