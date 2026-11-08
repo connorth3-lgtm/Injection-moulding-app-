@@ -362,7 +362,7 @@ const EDUCATION_DATA=Object.freeze({
       "frameworkRef": "NCVET / NQR code QG-03-CP-04130-2025-V2-CIPET · NQR 14257",
       "status": "Approved 2025-05-26; valid to 2028-05-25 in the NQR record",
       "level": "NCrF / NSQF Level 3",
-      "duration": "480 hours · confirm the theory/employability category split with CIPET",
+      "duration": "480 hours · NQR and qualification-file categories differ; confirm the controlled schedule",
       "scopeNote": "Entry-level injection moulding study for an assistant role working under an operator or supervisor. NQR lists progression to Machine Operator in the injection moulding industry.",
       "studyOutcomes": [
         "Explain the production plan, work instructions, materials, mould identity and safe preparation checks.",
@@ -442,7 +442,7 @@ const EDUCATION_DATA=Object.freeze({
           "title": "Employability skills",
           "hours": 30,
           "delivery": {
-            "Employability": 30
+            "Theory": 30
           }
         },
         {
@@ -458,7 +458,8 @@ const EDUCATION_DATA=Object.freeze({
         "NQR entry routes include Grade 10 pass without experience, Grade 8 with a two-year NTC/NAC, Grade 9 with 1.5 years relevant experience, or Grade 8 with three years relevant experience. CIPET confirms eligibility for the intake.",
         "The NQR page classifies the 480 hours as 120 theory, 300 practical, 30 employability and 30 OJT. The linked qualification-file module table totals 150 theory (including the 30-hour employability module), 300 practical and 30 OJT. The total remains 480 hours; CIPET confirms the controlled delivery schedule and category labels.",
         "The 300 practical hours and 30 mandatory OJT hours require provider-organised, supervised delivery. Book reading and MouldMaster practice do not count toward those hours.",
-        "CIPET and its approved assessors control formal training, evidence, assessment and certification. MouldMaster completion does not award NCrF credits or authorize machine operation."
+        "CIPET and its approved assessors control formal training, evidence, assessment and certification. MouldMaster completion does not award NCrF credits or authorize machine operation.",
+        "The NQR page lists DGT/VSQ/N0101 as V2.0, while the linked May 2025 qualification file lists V1.0. CIPET confirms the active module version and assessment instrument."
       ],
       "source": {
         "title": "National Qualification Register: Assistant Machine Operator – Injection Moulding (NQR 14257)",
