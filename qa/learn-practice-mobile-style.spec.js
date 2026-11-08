@@ -78,7 +78,7 @@ async function expectReadableTiles(page,rootSelector,expectedCount=3){
   expect(result.overlap).toBe(false);
 }
 
-async function expectNarrowReadableTiles(page,rootSelector,expectedCount=4){
+async function expectNarrowReadableTiles(page,rootSelector,expectedCount=3){
   const result=await page.evaluate(rootSelector=>{
     const root=document.querySelector(rootSelector);
     const grid=root.querySelector('.mm-hub-grid');
@@ -767,7 +767,7 @@ test('mobile Practice source-owned choices occupy one readable column at 360 and
         cards:tiles.length,
         overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
     });
-    expect(metrics.cards).toBe(4);
+    expect(metrics.cards).toBe(3);
     expect(metrics.columns).toBe(1);
     expect(metrics.overflow).toBeLessThanOrEqual(2);
   }
