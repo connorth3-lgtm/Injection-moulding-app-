@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 12737)
-Total output lines: 920
-
 /* MouldMaster standards and readiness — governed read-only support. */
 (function(){
 'use strict';
@@ -408,7 +405,232 @@ const EDUCATION_DATA=Object.freeze({
           "code": "CPC/N0215",
           "title": "Assist injection moulding operations, monitoring and troubleshooting",
           "hours": 180,
-          "delivery":…2737 tokens truncated…y:</b> use a licensed copy of ISO 9001 for requirement text. MouldMaster paraphrases support themes and does not replace an organisation’s controlled QMS, competent auditor or certification body.</div></article>';
+          "delivery": {
+            "Theory": 50,
+            "Practical": 130
+          }
+        },
+        {
+          "code": "CPC/N0216",
+          "title": "Basic quality checks against an approved product",
+          "hours": 90,
+          "delivery": {
+            "Theory": 20,
+            "Practical": 70
+          }
+        },
+        {
+          "code": "CPC/N0411",
+          "title": "Basic workplace health, safety and 5S",
+          "hours": 30,
+          "delivery": {
+            "Theory": 10,
+            "Practical": 20
+          }
+        },
+        {
+          "code": "CPC/N0219",
+          "title": "Office-suite basics",
+          "hours": 30,
+          "delivery": {
+            "Theory": 10,
+            "Practical": 20
+          }
+        },
+        {
+          "code": "DGT/VSQ/N0101",
+          "title": "Employability skills",
+          "hours": 30,
+          "delivery": {
+            "Theory": 30
+          }
+        },
+        {
+          "code": "OJT",
+          "title": "Mandatory on-the-job training",
+          "hours": 30,
+          "delivery": {
+            "On-the-job training": 30
+          }
+        }
+      ],
+      "formalRequirements": [
+        "NQR entry routes include Grade 10 pass without experience, Grade 8 with a two-year NTC/NAC, Grade 9 with 1.5 years relevant experience, or Grade 8 with three years relevant experience. CIPET confirms eligibility for the intake.",
+        "The NQR page classifies the 480 hours as 120 theory, 300 practical, 30 employability and 30 OJT. The linked qualification-file module table totals 150 theory (including the 30-hour employability module), 300 practical and 30 OJT. The total remains 480 hours; CIPET confirms the controlled delivery schedule and category labels.",
+        "The 300 practical hours and 30 mandatory OJT hours require provider-organised, supervised delivery. Book reading and MouldMaster practice do not count toward those hours.",
+        "CIPET and its approved assessors control formal training, evidence, assessment and certification. MouldMaster completion does not award NCrF credits or authorize machine operation.",
+        "The NQR page lists DGT/VSQ/N0101 as V2.0, while the linked May 2025 qualification file lists V1.0. CIPET confirms the active module version and assessment instrument."
+      ],
+      "source": {
+        "title": "National Qualification Register: Assistant Machine Operator – Injection Moulding (NQR 14257)",
+        "url": "https://www.nqr.gov.in/qualifications/14257"
+      },
+      "additionalSources": [
+        {
+          "title": "CIPET qualification file: Assistant Machine Operator – Injection Moulding",
+          "url": "https://www.nqr.gov.in/qualification/file/STT_Qualification_File_AMO-IM.pdf"
+        },
+        {
+          "title": "CIPET: NSQF-aligned qualifications and registration",
+          "url": "https://sdcipet.in/NSQFCourses.aspx"
+        }
+      ]
+    },
+    {
+      "id": "india-cipet-mo-im",
+      "region": "india",
+      "nation": "India",
+      "title": "Machine Operator – Injection Molding (MO-IM)",
+      "frameworkRef": "NCVET / NQR code QG-3.5-CP-04117-2025-V2-CIPET",
+      "status": "Approved 2025-05-26; next review date 2028-05-25 in the qualification file",
+      "level": "NCrF / NSQF Level 3.5",
+      "duration": "600 hours · 180 theory, 30 employability, 360 practical and 30 mandatory on-the-job training",
+      "scopeNote": "This operator qualification covers job and process basics, injection operations and troubleshooting, finished-part inspection, workplace health and safety, 5S, office software, employability, entrepreneurship and on-the-job training.",
+      "studyOutcomes": [
+        "Explain production instructions, material and mould readiness, and safe work.",
+        "Describe injection moulding operations, process monitoring, troubleshooting, and escalation.",
+        "Plan inspection of finished products against an approved reference.",
+        "Prepare for the practical training and OJT that the qualification requires."
+      ],
+      "bookChapterIds": [
+        "what-injection-moulding-is",
+        "cycle",
+        "safety-foundations",
+        "machine-anatomy",
+        "mould-anatomy",
+        "material-families",
+        "plasticising-unit",
+        "process-baseline",
+        "process-monitoring",
+        "documentation",
+        "diagnostic-method",
+        "capability",
+        "dimensional-stability"
+      ],
+      "practiceActivityIds": [
+        "process-record",
+        "quality-plan",
+        "safety-5s",
+        "defect-ledger",
+        "handover"
+      ],
+      "modules": [
+        {
+          "code": "CPC/N0214",
+          "title": "Basic concepts, job requirements, and process know-how",
+          "hours": 90,
+          "delivery": {
+            "Theory": 30,
+            "Practical": 60
+          }
+        },
+        {
+          "code": "CPC/N0221",
+          "title": "Injection moulding operations, process monitoring, and troubleshooting",
+          "hours": 270,
+          "delivery": {
+            "Theory": 90,
+            "Practical": 180
+          }
+        },
+        {
+          "code": "CPC/N0222",
+          "title": "Finished-product quality check and inspection",
+          "hours": 90,
+          "delivery": {
+            "Theory": 30,
+            "Practical": 60
+          }
+        },
+        {
+          "code": "CPC/N0411",
+          "title": "Workplace health and safety, 5S",
+          "hours": 30,
+          "delivery": {
+            "Theory": 10,
+            "Practical": 20
+          }
+        },
+        {
+          "code": "CPC/N0223",
+          "title": "Entrepreneurship in Injection Moulding",
+          "hours": 30,
+          "delivery": {
+            "Theory": 10,
+            "Practical": 20
+          }
+        },
+        {
+          "code": "CPC/N0219",
+          "title": "MS Office / open-source office suite basics",
+          "hours": 30,
+          "delivery": {
+            "Theory": 10,
+            "Practical": 20
+          }
+        },
+        {
+          "code": "DGT/VSQ/N0101",
+          "title": "Employability Skills",
+          "hours": 30,
+          "delivery": {
+            "Employability": 30
+          }
+        },
+        {
+          "code": "OJT",
+          "title": "Mandatory on-the-job training",
+          "hours": 30,
+          "delivery": {
+            "On-the-job training": 30
+          }
+        }
+      ],
+      "formalRequirements": [
+        "A training provider and awarding/assessment arrangements must deliver the official curriculum and assess its practical criteria.",
+        "The 360 practical hours and 30 mandatory OJT hours are external training requirements; Book reading or app activities do not count toward them.",
+        "The training centre selects the delivery language. The India workbook includes draft Hindi study support."
+      ],
+      "source": {
+        "title": "National Qualification Register: CIPET Machine Operator – Injection Molding",
+        "url": "https://www.nqr.gov.in/qualifications/14350"
+      },
+      "additionalSources": [
+        {
+          "title": "CIPET: NSQF-aligned qualifications and registration",
+          "url": "https://sdcipet.in/NSQFCourses.aspx"
+        }
+      ]
+    }
+  ]
+});
+let data=null,view=null,navDispose=null,activeRegion='nz';
+
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function getJson(url){const r=await fetch(url,{cache:'no-store',credentials:'same-origin'});if(!r.ok)throw new Error(url+' unavailable ('+r.status+')');return r.json();}
+function titleFor(id){return String(id||'').split('-').map(x=>x?x[0].toUpperCase()+x.slice(1):'').join(' ');}
+function style(){
+ if(document.getElementById('mm-standards-readiness-style'))return;
+ const s=document.createElement('style');s.id='mm-standards-readiness-style';s.textContent=`
+.mm-readiness-view{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;overflow-wrap:anywhere}.mm-readiness-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mm-readiness-card{border:1px solid #304b69;border-radius:14px;background:#0e1d31;padding:16px}.mm-readiness-card h3{margin:.25rem 0 .5rem}
+.mm-readiness-card h4{margin:1rem 0 .35rem}.mm-readiness-card ul{margin:.4rem 0 .8rem;padding-left:1.2rem}.mm-readiness-card li{margin:.3rem 0}
+.mm-readiness-boundary{border-left:4px solid var(--accent);padding:10px 12px;background:#10243d;border-radius:8px;line-height:1.45}
+.mm-readiness-table{width:100%;border-collapse:collapse;font-size:.92rem}.mm-readiness-table th,.mm-readiness-table td{border-bottom:1px solid #29415d;padding:8px;text-align:left;vertical-align:top}
+.mm-readiness-badges{display:flex;gap:7px;flex-wrap:wrap}.mm-readiness-badge{border:1px solid #3a5876;border-radius:999px;padding:4px 8px;font-size:.78rem}
+@media(max-width:760px){.mm-readiness-grid{grid-template-columns:1fr}.mm-readiness-card{padding:14px}.mm-readiness-table{font-size:.84rem}}
+`;document.head.appendChild(s);
+}
+function qmsHtml(q){
+ const current=(q.standards||[]).find(x=>x.role==='current-published-requirements-basis');
+ const vocab=(q.standards||[]).find(x=>x.role==='current-terminology-basis');
+ return '<article class="mm-readiness-card"><span class="eyebrow">Quality management support</span><h3>ISO 9001 support — evidence, not certification</h3>'+
+ '<p>MouldMaster supports evidence discipline and learning relevant to a QMS. It does <b>not</b> establish organisational conformity, certification, accreditation or auditor approval.</p>'+
+ '<div class="mm-readiness-badges"><span class="mm-readiness-badge">'+esc(current?.title||'Current requirements basis unavailable')+'</span><span class="mm-readiness-badge">'+esc(vocab?.title||'Vocabulary basis unavailable')+'</span></div>'+
+ '<h4>Clause-to-feature support</h4><table class="mm-readiness-table"><thead><tr><th>Clause</th><th>Theme</th><th>Support</th></tr></thead><tbody>'+(q.supportMap||[]).map(r=>'<tr><th scope="row">'+esc(r.clause)+'</th><td>'+esc(r.theme)+'</td><td>'+esc(r.supportLevel)+'</td></tr>').join('')+'</tbody></table>'+
+ '<h4>Evidence templates</h4><ul>'+(q.recordTemplates||[]).map(t=>'<li><b>'+esc(t.title)+'</b> — '+esc(t.purpose)+'</li>').join('')+'</ul>'+
+ ((q.packagingExamples||[]).length?'<h4>Real packaging example</h4>'+q.packagingExamples.map(x=>'<section class="mm-readiness-boundary"><b>'+esc(x.title)+'</b><p>'+esc(x.interpretation)+'</p><p><b>Observed:</b> '+esc(x.observedMaterialIdentity?.brand||'Unknown brand')+' · '+esc(x.observedMaterialIdentity?.polymerFamily||'Unknown polymer')+' · exact grade '+esc(x.observedMaterialIdentity?.exactGradeStatus||'unresolved')+'.</p><p><b>Verification:</b> '+esc(x.currentCertificateStatus||x.verificationState||'not independently verified')+'.</p><ul>'+(x.boundaries||[]).map(v=>'<li>'+esc(v)+'</li>').join('')+'</ul></section>').join(''):'')+
+ '<div class="mm-readiness-boundary"><b>Boundary:</b> use a licensed copy of ISO 9001 for requirement text. MouldMaster paraphrases support themes and does not replace an organisation’s controlled QMS, competent auditor or certification body.</div></article>';
 }
 function nzqaHtml(n){
  const current=n.currentInjectionMouldingStandards||[],expired=n.expiredStandardsNotForCurrentAssessmentMapping||[];
