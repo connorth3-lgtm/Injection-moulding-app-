@@ -6,7 +6,7 @@ It does not publish the app publicly or send any release to Play automatically.
 ## App identity
 
 - Package: `org.mouldmaster.academy`
-- Version: `2026.11.03` (`versionCode 20261103`)
+- Version: `2026.11.08.1` (`versionCode 20261108`)
 - Target SDK: 36
 - Book content: hosted technical preview
 - Product status: technical preview; not NZQA/provider approved
