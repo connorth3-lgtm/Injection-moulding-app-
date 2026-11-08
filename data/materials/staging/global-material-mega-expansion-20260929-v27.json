@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "datasetId": "global-material-mega-expansion-20260929-v27",
-  "status": "source-reviewed-staging-ube-nylon-mega-wave",
+  "status": "source-reviewed-ube-identities-with-one-validated-exact-grade",
   "reviewedAt": "2026-09-29",
-  "purpose": "Large current UBE exact-grade acquisition across PA6, PA66, PA12, copolyamides, polyamide blends and bio-based PA56/PA510 injection/tube-coating materials.",
+  "purpose": "Retain the UBE exact-grade identity acquisition while publishing UBESTA 3020GX6 from its exact-grade manufacturer product page.",
   "summary": {
-    "validatedGrades": 0,
-    "sourceReviewedStagingGrades": 98,
+    "validatedGrades": 1,
+    "sourceReviewedStagingGrades": 97,
     "manufacturers": 1,
     "countryFocus": "Japan",
     "familyCounts": {
@@ -22,9 +22,10 @@
     }
   },
   "governance": {
-    "runtimePromotionBlocked": true,
+    "runtimePromotionBlocked": false,
     "noNumericPropertyInference": true,
-    "compositionPercentOnlyFromExplicitGenericMarking": true
+    "compositionPercentOnlyFromExplicitGenericMarking": true,
+    "runtimePromotionNote": "UBE catalogue identities remain staging-only except exact grade 3020GX6, which was promoted after grade-specific source review; the other 97 records remain staging."
   },
   "manufacturers": [
     {
@@ -49,33 +50,98 @@
             "morphology": "unknown"
           },
           "composition": {
-            "notes": "UBE generic identification/marking: PA12-(GF+CF); elemental technology/features: Glass fiber reinforced; Carbon fiber reinforced; Electrical conductivity."
+            "notes": "UBE identifies this exact UBESTA grade as PA12 with glass-fibre and carbon-fibre reinforcement and electrical conductivity; reinforcement percentages are not inferred."
           },
-          "properties": [],
+          "properties": [
+            {
+              "id": "obs-ube-3020gx6-density",
+              "property": "Density",
+              "value": 1.16,
+              "unit": "g/cm³",
+              "testMethod": null,
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "isotropic",
+              "sourceId": "src-ube-3020gx6-20261108",
+              "sourcePage": "exact-grade product table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer-reported typical value; test method/conditioning not normalized in this record."
+            },
+            {
+              "id": "obs-ube-3020gx6-tensile-strength",
+              "property": "Tensile Strength",
+              "value": 130,
+              "unit": "MPa",
+              "testMethod": null,
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-ube-3020gx6-20261108",
+              "sourcePage": "exact-grade product table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer-reported typical value; test method/specimen details are not normalized in this record."
+            },
+            {
+              "id": "obs-ube-3020gx6-tensile-modulus",
+              "property": "Tensile Modulus",
+              "value": 9600,
+              "unit": "MPa",
+              "testMethod": null,
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-ube-3020gx6-20261108",
+              "sourcePage": "exact-grade product table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer-reported typical value; test method/specimen details are not normalized in this record."
+            },
+            {
+              "id": "obs-ube-3020gx6-melting-point",
+              "property": "Melting Point",
+              "value": "175–181",
+              "unit": "°C",
+              "testMethod": null,
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-ube-3020gx6-20261108",
+              "sourcePage": "exact-grade product table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer-reported range; test method is not included in this record."
+            }
+          ],
           "processing": [],
           "approvals": [],
           "lifecycle": {
             "status": "unknown",
-            "checkedAt": "2026-09-29"
+            "checkedAt": "2026-11-08"
           },
           "sources": [
             {
-              "id": "src-ube-nylon-injection-grade-search-20260929",
+              "id": "src-ube-3020gx6-20261108",
               "publisher": "UBE Corporation",
-              "title": "Injection/Tube-coating Grade Search System",
-              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/nylon_injection.html",
-              "kind": "other",
+              "title": "UBESTA 3020GX6 exact-grade product information",
+              "url": "https://www.ube.com/ube/en/contents/chemical/nylon/ubesta_3020gx6.html",
+              "kind": "manufacturer-datasheet",
               "revision": null,
               "documentDate": null,
-              "retrievedAt": "2026-09-29"
+              "retrievedAt": "2026-11-08"
             }
           ],
           "provenance": {
-            "stage": "staging",
-            "ingestedAt": "2026-09-29T00:00:00Z",
-            "reviewedAt": "2026-09-29T00:00:00Z",
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
             "reviewer": "primary-source-web-review",
-            "notes": "Current UBE injection/tube-coating grade search confirms this exact grade identity, polymer type, generic marking and feature tags. Numeric property/process observations remain withheld until exact TDS test conditions are normalized; runtime promotion is blocked."
+            "notes": "UBE exact-grade product data reviewed. Reported density, tensile properties and melting range are source-backed; comparisonReady remains false because test conditions/specimen details are not normalized. No processing recipe or reinforcement percentages are inferred."
           }
         },
         {

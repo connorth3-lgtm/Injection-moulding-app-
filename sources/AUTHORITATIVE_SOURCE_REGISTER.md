@@ -1,6 +1,6 @@
 # MouldMaster Academy — Authoritative Source Register
 
-Status date: 2026-08-24
+Status date: 2026-11-08
 
 Purpose: maintain a transparent source set for lesson enrichment, the searchable reference database, safety/legal reference pages and content review. These sources **support mechanisms and obligations; they do not create universal process recipes**. Grade-specific supplier data, machine manuals, mould documentation, approved site procedures and applicable law control specific production limits.
 
@@ -89,6 +89,34 @@ The in-app **Reference Data** database is deliberately organized as a mechanism-
 - **Safety** → ISO 20430 plus current regulator and legal sources for the applicable jurisdiction.
 - **Troubleshooting** → evidence from the relevant materials, tooling, process, sensor and statistics categories; no troubleshooting card should be read as a universal setting instruction.
 - **Glossary** → terminology distilled from the same technical source families and validated machine/material documentation.
+
+## APAC exact-grade material catalogue sources — 2026-11-08
+
+The Materials catalogue now includes exact-grade records sourced from official supplier pages or catalogues. Each grade record retains its own source URL and any reported test method, conditions and limitations. Manufacturer country is supplier identity context; a specific plant of origin is not inferred unless the source identifies it.
+
+### Japan
+- **Kuraray — GENESTAR PA9T exact-grade pages:** [N1006A](https://genestar.kuraray.com/en/grades/n1006a/), [G1301A](https://genestar.kuraray.com/en/grades/g1301a/), [G1352A](https://genestar.kuraray.com/en/grades/g1352a/), [GL1350A](https://genestar.kuraray.com/en/grades/gl1350a/) and [G1350A-M32T](https://genestar.kuraray.com/en/automotive/type/type02/).
+- **UNITIKA — U-POLYMER and Nylon 66:** [FUN-8520S](https://www.unitika.co.jp/plastics/products/par/upolymer/u-series/us-02.html), [UG-100 composite grades](https://www.unitika.co.jp/plastics/e/products/par/upolymer/u-100/u100-02.html), and [E2000 PA66 TDS](https://www.unitika.co.jp/plastics/e/products/nylon/nylon66/pdf/e2000.pdf).
+- **Polyplastics — DURACON/DURANEX/DURAFIDE exact-grade pages:** product-level Grade Information Database and datasheets are recorded on each exact-grade entry. The expanded grades are POM, PBT and PPS; the existing catalogue also has grade-level LAPEROS and DURACON records.
+- **Teijin — PANLITE:** [PC-related grade catalogue](https://www.teijin-resin.com/-/media/pdf/en/products/pc/pc_related_05.pdf) and [surface-hardness grade catalogue](https://www.teijin-resin.com/-/media/pdf/en/products/pc/pc_related_02.pdf).
+- **TOYOBO — GLAMIDE exact-grade tables:** [Nylon grade/property table](https://cn.toyobo-global.com/seihin/xj/enpla/nylon/grade.htm) and [GLAMIDE characteristics](https://cn.toyobo-global.com/seihin/xj/enpla/glamide/characteristics.html).
+- **Toray — TORELINA PPS:** [grade and technical list](https://www.plastics.toray/technical/torelina/tec_004.html).
+
+### South Korea
+- **LOTTE Chemical — INFINO exact-grade property pages:** GP-2306FC, LW-5300M, AE-3063H and GP-5400G; exact supplier URLs are retained in the grade records at [product.lottechem.com](https://product.lottechem.com/en/advanced_materials/).
+- **LG Chem — LUMID PA6 portfolio:** [engineering-plastics portfolio PDF](https://www.lgchem.com/upload/file/chinaplas2018/Division_Info/EP_vf.pdf) lists the exact grades represented in this wave. It is a 2018 portfolio source; current lifecycle and continued availability are not inferred.
+- **KOLON ENP — KOCETAL and SPESIN:** [2026 KOCETAL catalogue](https://www.kolonplastics.com/en/theme/basic/img/02_KOCETAL%28EN%29_2026.pdf) and [2024 SPESIN catalogue](https://www.kolonplastics.com/en/theme/basic/img/04_SPESIN%28EN%29_2024.pdf).
+
+### Thailand
+- **SCGC — PP, HDPE and PVC exact-grade product pages:** the existing P700J/P701J/P702J/P403J/P686J/P642J/P722JO/P740J/P744J/P750J/P841J/P842J records, plus P443J, P441JU, P483JU, P640J, P945J, P440J, P904J, P951J, P1088J, A10P842J, A10P740J, PCDP01JN, PCDP02JN, PCRP03JB, H5814J, H5818J, H6105JU, P639AT, P739ET, P747WT, P765J, P905J, H567J, H567JA, H568JA, H555J and H555JA. Grade-level pages are linked in each record; injection suitability is retained only where the source names injection or injection/compression. Recycled content and intended-use exclusions remain grade-specific. For PVC, SCGC’s March 2024 SG580 TDS and current product page report K-values 58.0 and 58.3 respectively; both source-version observations are retained. Previously catalogued P840J and P901J were not duplicated.
+
+### Singapore
+- **Arkema — Jurong Island PA11 resin site:** [official Singapore bio-factory source](https://www.arkema.com/global/en/arkema-group/strategy/worldwide-expansion/singapore-bio-factory/) supports family-level PA11 supply context only; it does not establish the origin of a specific BMNO grade, line or batch.
+- **Sumitomo Chemical Asia — SUMIPEX PMMA:** [official PMMA grade/property information](https://sumitomo-chem.com.sg/essential-green-materials/mma-pmma/) covers ME, MH, MGSS, MH5 and EPM. The supplier describes its SUMIPEX PMMA production in Singapore; no facility-specific lot origin is inferred for an individual grade record.
+- **The Polyolefin Company (Singapore) — COSMOPLENE PP:** 12 exact grades were added across homo-, random-copolymer and block-copolymer families: AW161, AW864, AW184, AX191, AX161, AV161, AX668, AS164, H101E, W101E, Y101G and W531L. [TPC’s COSMOPLENE PP overview](https://www.tpc.com.sg/2.23_CosmoplenePP.html) and its [BCP02 SDS](https://www.tpc.com.sg/pdf/TPC-BCP02%28FDA3.2a%29.pdf), [BCP03 SDS](https://www.tpc.com.sg/pdf/TPC-BCP03%28noFDA%29.pdf), [HOMO01 SDS](https://www.tpc.com.sg/pdf/TPC-HOMO01%28FDA1.1a%29.pdf), [HOMO02 SDS](https://www.tpc.com.sg/pdf/TPC-HOMO02%28noFDA%29.pdf) and [RCP01 SDS](https://www.tpc.com.sg/pdf/TPC-RCP01%28FDA3.1a%29.pdf) support TPC Singapore identity and grade membership; injection suitability and grade properties use grade-specific supplier evidence where available. Singapore supplier/manufacturing context is not treated as batch-level origin.
+
+### Philippines
+- **JG Summit Olefins — EVALENE / EVALENE PLUS:** [June 2024 polymer product guide](https://drive.google.com/file/d/15ePBZOwp_g-Zqdvh2P201eloAiNMUsZL/view?usp=sharing) lists HDPE HJ04551, HJ04601, HJ04602, HJ08601, HJ20571 and PP random copolymer PRJ1102. Exact reported MFR conditions and density values are kept with the supported grade records. Eight further exact PP records were added: PHJ0501, PHJ0801, PHJ1201, PHJ1202, PHJ1502, PHJ4501, PRJ1101 and PRJ3501. PHJ grades PHJ0501/0801/1201/1202/1502 rely on the [1999 Philippine Tariff Commission decision](https://www.tariffcommission.gov.ph/ad-99-04) and are explicitly historical, with current lifecycle and availability unknown; PHJ4501 has a supplier listing, PRJ1101 a JG Summit-authored technical sheet, and PRJ3501 the company’s [2024 annual and sustainability report](https://www.jgsummit.com.ph/annualreport2024/sustainability/our-impact). These sources do not establish current local inventory or batch origin.
 
 ## Source-status rules
 

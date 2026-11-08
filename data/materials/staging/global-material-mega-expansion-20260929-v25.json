@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "datasetId": "global-material-mega-expansion-20260929-v25",
-  "status": "polyplastics-lcp-staging-and-conditioned-pom-validation",
+  "status": "source-reviewed-laperos-identities-with-three-validated-exact-grades",
   "reviewedAt": "2026-09-29",
-  "purpose": "Add the current 21-grade LAPEROS LCP catalogue as source-reviewed staging while promoting two DURACON POM exact grades whose manufacturer pages expose fully conditioned ISO 1133 MFR/MVR.",
+  "purpose": "Retain the current 21-grade LAPEROS LCP identity acquisition while publishing three exact Polyplastics grades supported by grade-level manufacturer data.",
   "summary": {
-    "validatedGrades": 2,
-    "sourceReviewedStagingGrades": 21,
+    "validatedGrades": 3,
+    "sourceReviewedStagingGrades": 20,
     "manufacturers": 1,
     "countryFocus": "Japan",
     "families": [
@@ -198,31 +198,128 @@
           "composition": {
             "notes": "Current manufacturer catalogue characteristic: High Strength, High Toughness; GF reinforced. Reinforcement percentage/additive loading is not inferred."
           },
-          "properties": [],
+          "properties": [
+            {
+              "id": "obs-laperos-a130-density",
+              "property": "Density",
+              "value": 1.61,
+              "unit": "g/cm³",
+              "testMethod": "ISO 1183",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "isotropic",
+              "sourceId": "src-polyplastics-laperos-a130-20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer typical value; not a guaranteed specification."
+            },
+            {
+              "id": "obs-laperos-a130-water-absorption",
+              "property": "Water Absorption",
+              "value": 0.02,
+              "unit": "%",
+              "testMethod": "ISO 62",
+              "temperatureC": 23,
+              "loadKg": null,
+              "specimen": "1 mm",
+              "conditioning": "24 h in water",
+              "direction": "isotropic",
+              "sourceId": "src-polyplastics-laperos-a130-20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer typical value; specimen and 24-hour conditioning retained."
+            },
+            {
+              "id": "obs-laperos-a130-tensile-strength",
+              "property": "Tensile Strength",
+              "value": 210,
+              "unit": "MPa",
+              "testMethod": "ASTM D638",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-polyplastics-laperos-a130-20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer typical value; specimen/conditioning details are not normalized here."
+            },
+            {
+              "id": "obs-laperos-a130-flexural-strength",
+              "property": "Flexural Strength",
+              "value": 270,
+              "unit": "MPa",
+              "testMethod": "ISO 178",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-polyplastics-laperos-a130-20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer typical value; specimen/conditioning details are not normalized here."
+            },
+            {
+              "id": "obs-laperos-a130-flexural-modulus",
+              "property": "Flexural Modulus",
+              "value": 15000,
+              "unit": "MPa",
+              "testMethod": "ISO 178",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-polyplastics-laperos-a130-20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer typical value; specimen/conditioning details are not normalized here."
+            },
+            {
+              "id": "obs-laperos-a130-hdt",
+              "property": "Heat Deflection Temperature",
+              "value": 240,
+              "unit": "°C",
+              "testMethod": "ISO 75",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": "1.8 MPa",
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-polyplastics-laperos-a130-20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer typical value at the stated load; not a guaranteed specification."
+            }
+          ],
           "processing": [],
           "approvals": [],
           "lifecycle": {
             "status": "unknown",
-            "checkedAt": "2026-09-29"
+            "checkedAt": "2026-11-08"
           },
           "sources": [
             {
-              "id": "src-polyplastics-laperos-catalogue-20260929",
+              "id": "src-polyplastics-laperos-a130-20261108",
               "publisher": "Polyplastics Co., Ltd.",
-              "title": "LAPEROS® LCP Catalogues — 21 Hit Grades",
-              "url": "https://www.polyplastics.com/Gidb/TopSelectBrandAction.do?_LOCALE=ENGLISH&brandSelected=5.2",
-              "kind": "other",
+              "title": "LAPEROS A130 exact-grade technical data",
+              "url": "https://www.polyplastics.com/Gidb/GradeInfoDownloadAction.do?_LOCALE=ENGLISH&fileNo=1&gradeId=2483&langId=1",
+              "kind": "manufacturer-datasheet",
               "revision": null,
               "documentDate": null,
-              "retrievedAt": "2026-09-29"
+              "retrievedAt": "2026-11-08"
             }
           ],
           "provenance": {
-            "stage": "staging",
-            "ingestedAt": "2026-09-29T00:00:00Z",
-            "reviewedAt": "2026-09-29T00:00:00Z",
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
             "reviewer": "primary-source-web-review",
-            "notes": "Current Polyplastics LAPEROS catalogue confirms the exact grade identity and listed characteristic. Numeric property/process promotion remains blocked until exact-grade test conditions are normalized."
+            "notes": "Polyplastics exact-grade technical data reviewed. Manufacturer-reported typical properties are preserved with their test methods/conditions; comparisonReady remains false where specimen or conditioning details are incomplete. No production recipe is inferred."
           }
         },
         {
