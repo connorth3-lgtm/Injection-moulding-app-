@@ -520,7 +520,7 @@ elif visual.get('release')=='2026.11.08.5':
     # The requested APAC catalogue is the new technical reference. Keep all 52
     # surfaces and the strict threshold; the baseline is not human visual approval.
     review_current=text('qa/VISUAL_REVIEW_2026.11.08.5_APAC.md')
-    need(visual.get('ref')=='visual-baseline/2026.11.08.5-apac'
+    need(visual.get('ref')=='visual-baseline/2026.11.08.5'
          and visual.get('commit')=='5f4992d9898d7676e44229b219b0d8dbd07c9488'
          and visual.get('maxDiffPixels')==12
          and [v.get('name') for v in visual.get('viewports',[])]==[

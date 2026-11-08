@@ -42,7 +42,7 @@
     "book-trace"
   ],
   "policy": "Reference source for the requested APAC materials catalogue additions across Japan, South Korea, Thailand, Singapore and the Philippines. This immutable technical baseline keeps all 52 screens and the 12-pixel threshold; it is not human visual-owner approval. Independent human, accessibility, physical-device, Windows signing, provider, SME, learner-outcome, accreditation and production reviews remain separate and HOLD.",
-  "ref": "visual-baseline/2026.11.08.5-apac",
+  "ref": "visual-baseline/2026.11.08.5",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
