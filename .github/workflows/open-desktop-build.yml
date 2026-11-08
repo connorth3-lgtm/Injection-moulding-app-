@@ -276,7 +276,20 @@ jobs:
         run: python qa_research.py
       - name: Build unsigned portable Windows package
         working-directory: desktop/electron
-        run: npm run dist:portable
+        shell: pwsh
+        env:
+          DEBUG: electron-builder
+        run: |
+          $maxAttempts = 3
+          for ($attempt = 1; $attempt -le $maxAttempts; $attempt++) {
+            Write-Host "Windows package attempt $attempt of $maxAttempts"
+            npm run dist:portable
+            $buildExitCode = $LASTEXITCODE
+            if ($buildExitCode -eq 0) { exit 0 }
+            if ($attempt -eq $maxAttempts) { exit $buildExitCode }
+            Write-Warning "Packaging failed with exit code $buildExitCode. Retrying after 20 seconds."
+            Start-Sleep -Seconds 20
+          }
       - name: Record release hashes
         shell: pwsh
         run: |
