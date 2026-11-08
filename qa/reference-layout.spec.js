@@ -39,7 +39,7 @@ for(const width of [320,360,390,412]){
     await converter.getByRole('button',{name:'Close'}).click();
     await expect(converter).toBeHidden();
     await page.locator('#dashboard .mm-reference-home-practice').click();
-    await expect(page.locator('#scenarios')).toHaveAttribute('data-mm-hub-mode','detail');
+    await expect(page.locator('#scenarios')).toHaveAttribute('data-mm-hub-mode','problem-practice');
     await expect(page.locator('#scenarios .mm-hub-detail-back')).toBeVisible();
     await page.evaluate(()=>switchView('dashboard'));
     await expect(page.locator('#dashboard .mm-reference-home-hero')).toBeVisible();
@@ -160,12 +160,10 @@ for(const width of [320,360,390,412]){
     await expect(page.locator('#scenarios .mm-reference-title')).toHaveText('Practice');
     await expect(page.locator('#scenarios .mm-reference-practice-list')).toHaveCount(0);
     const activities=page.locator('#scenarios .mm-unified-practice-card');
-    await expect(activities).toHaveCount(5);
-    await expect(activities.locator('.mm-reference-photo')).toHaveCount(5);
-    await expect(activities.filter({hasText:'Question Centre'})).toHaveCount(1);
-    await activities.filter({hasText:'Question Centre'}).click();
-    await expect(page.locator('#scenarios .mm-question-centre')).toBeVisible();
-    await page.evaluate(()=>window.MM_PRIMARY_HUBS.renderPracticeHub());
+    await expect(activities).toHaveCount(3);
+    await expect(activities.locator('.mm-reference-photo')).toHaveCount(3);
+    await expect(activities.filter({hasText:'Question Centre'})).toHaveCount(0);
+    await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
 
     await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
     await expect(page.locator('#modal .mm-more-disclosure')).toHaveCount(6);
@@ -185,13 +183,13 @@ test('unified practice illustrations load locally without external dependencies'
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  await expect(page.locator('#scenarios .mm-reference-practice-art')).toHaveCount(5);
+  await expect(page.locator('#scenarios .mm-reference-practice-art')).toHaveCount(3);
   await page.waitForFunction(()=>document.documentElement.classList.contains('mm-reference-photo-ready'));
   const tiles=await page.locator('#scenarios .mm-reference-practice-art.mm-reference-photo').evaluateAll(nodes=>nodes.map(el=>({
     tile:Number(el.dataset.mmPhotoIndex),
     background:getComputedStyle(el).backgroundImage
   })));
-  expect(tiles.map(row=>row.tile)).toEqual([20,22,23,19,27]);
+  expect(tiles.map(row=>row.tile)).toEqual([20,23,19]);
   expect(tiles.every(row=>row.background.includes('mockup-reference-tiles.webp'))).toBe(true);
 });
 
@@ -203,12 +201,12 @@ for(const width of [360,810]){
     const hub=page.locator('#scenarios .mm-practice-hub');
     await expect(hub).toBeVisible();
     const activities=hub.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-reference-practice-choice');
-    await expect(activities).toHaveCount(5);
-    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(5);
+    await expect(activities).toHaveCount(3);
+    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(3);
     const recommended=hub.locator('.mm-reference-practice-feature');
     await expect(recommended.locator(':scope > .mm-reference-practice-feature-art')).toHaveCount(1);
     await page.evaluate(()=>{window.MM_REFERENCE_LAYOUT.refresh();window.MM_REFERENCE_LAYOUT.refresh()});
-    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(5);
+    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(3);
     const sizing=await activities.evaluateAll(nodes=>({
       overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth),
       touch:nodes.every(el=>el.getBoundingClientRect().height>=44),
@@ -231,11 +229,11 @@ for(const width of [360,810]){
     await expect(page.locator('#mmSpatialTwin:not([hidden]) .mm-st-header .mm-reference-practice-tool-art')).toBeVisible();
     await page.locator('#mmSpatialTwin [data-mm-st-close]').click();
 
-    await page.evaluate(()=>switchView('scenarios'));
-    await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="question-centre"]').click();
-    const questions=page.locator('#scenarios .mm-question-centre');
+    await page.evaluate(()=>switchView('path'));
+    await page.locator('#path .mm-learn-hub [data-mm-hub-action="question-centre"]').click();
+    const questions=page.locator('#path .mm-question-centre');
     await expect(questions).toBeVisible();
-    await expect(questions.locator('.mm-hub-picker-grid[data-mm-reference-practice-picker="question-centre"] > .mm-reference-practice-choice')).toHaveCount(5);
+    await expect(questions.locator('.mm-hub-picker-grid[data-mm-reference-learn-picker="question-centre"] > .mm-reference-practice-choice')).toHaveCount(5);
     await expect(questions.locator('.mm-reference-practice-art')).toHaveCount(5);
     // Hover/focus background is animated. Check the entire allowed light
     // contrast range rather than one intermediate CSS interpolation frame.
@@ -264,8 +262,12 @@ for(const width of [360,810]){
     expect(scenarioOverflow).toBeLessThanOrEqual(2);
 
     await page.locator('#scenarios .mm-hub-detail-back button').click();
+    await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
+    await expect(page.locator('#path [data-mm-hub-action="question-centre"]')).toBeFocused();
+    await page.evaluate(()=>switchView('scenarios'));
     await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
-    await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="troubleshooting"]').click();
+    await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="problem-practice"]').click();
+    await page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="diagnose-cause"]').click();
     const troubleshootPicker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid[data-mm-reference-practice-picker="modal"]');
     await expect(troubleshootPicker.locator('button')).toHaveCount(4);
     await troubleshootPicker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
@@ -279,7 +281,7 @@ for(const width of [360,810]){
     await expect(page.locator('#defects .mm-dx-disclaimer')).toContainText('No automatic');
     await page.locator('#defects .mm-practice-tool-back').click();
     await expect(hub).toBeVisible();
-    await expect(hub.locator('[data-mm-hub-action="troubleshooting"]')).toBeFocused();
+    await expect(hub.locator('[data-mm-hub-action="problem-practice"]')).toBeFocused();
   });
 }
 
@@ -429,8 +431,13 @@ test('Practice nested labs, data diagnosis and assessments keep working illustra
   await page.evaluate(()=>switchView('scenarios'));
   await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="process-data"]').click();
   const data=page.locator('#processDataLabs');
+  await expect(data.getByRole('heading',{name:'Practise with process data'})).toBeVisible();
   await expect(data.locator('.pd-hero > .mm-reference-practice-tool-art')).toBeVisible();
   await expect(data.locator(':scope > .mm-practice-tool-return')).toHaveCount(1);
+  await expect(data.locator('[data-pdlab-guided]')).toBeVisible();
+  await expect(data.locator('[data-pdlab-csv]')).toBeVisible();
+  await expect(data.locator('[data-pdlab-saved]')).toBeVisible();
+  await data.locator('[data-pdlab-guided]').click();
   await expect(data.locator('[data-pd-start]').first()).toBeVisible();
   await data.locator('[data-pd-start]').first().click();
   const dataChoice=data.locator('button.pd-choice').first();
@@ -442,14 +449,16 @@ test('Practice nested labs, data diagnosis and assessments keep working illustra
   await expect(data.locator('[data-pd-home]')).toBeVisible();
   await data.locator('[data-pd-home]').click();
   await expect(data.locator('.pd-hero > .mm-reference-practice-tool-art')).toHaveCount(1);
+  await data.locator('[data-pd-lab-home]').click();
+  await expect(data.getByRole('heading',{name:'Practise with process data'})).toBeVisible();
 
   for(const [action,root,hero,start,back] of [
     ['diagnostic-labs','#diagnosticLabs','.dl-hero','[data-dl-start]','[data-dl-home]'],
     ['material-labs','#materialLabs','.ml-hero','[data-ml-start]','[data-ml-home]']
   ]){
-    await page.evaluate(()=>switchView('scenarios'));
-    await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="question-centre"]').click();
-    await page.locator('#scenarios .mm-question-centre [data-mm-hub-action="'+action+'"]').click();
+    await page.evaluate(()=>switchView('path'));
+    await page.locator('#path .mm-learn-hub [data-mm-hub-action="question-centre"]').click();
+    await page.locator('#path .mm-question-centre [data-mm-hub-action="'+action+'"]').click();
     await expect(page.locator(root+' '+hero+' > .mm-reference-practice-tool-art')).toBeVisible();
     await expect(page.locator(root+' > .mm-practice-tool-return')).toHaveCount(1);
     await expect(page.locator(root+' '+start).first()).toBeVisible();
@@ -466,9 +475,9 @@ test('Practice nested labs, data diagnosis and assessments keep working illustra
     await expect(page.locator(root+' '+hero+' > .mm-reference-practice-tool-art')).toHaveCount(1);
   }
 
-  await page.evaluate(()=>switchView('scenarios'));
-  await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="question-centre"]').click();
-  await page.locator('#scenarios .mm-question-centre [data-mm-hub-action="assessments"]').click();
+  await page.evaluate(()=>switchView('path'));
+  await page.locator('#path .mm-learn-hub [data-mm-hub-action="question-centre"]').click();
+  await page.locator('#path .mm-question-centre [data-mm-hub-action="assessments"]').click();
   await expect(page.locator('#exams .section-head > .mm-reference-practice-tool-art')).toBeVisible();
   await expect(page.locator('#exams > .mm-practice-tool-return')).toHaveCount(1);
   const startExam=page.locator('#exams .exam-card button').first();

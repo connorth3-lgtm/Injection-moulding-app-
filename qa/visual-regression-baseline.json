@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.08.2",
-  "commit": "e062c685bac1be2b32ab8564d625e3168042821f",
+  "release": "2026.11.08.4",
+  "commit": "ba7a48b1cee1fdf88accac1d91eb904ffa22f120",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Owner-approved visual design baseline for release 2026.11.08.2, pinned to the exact reviewed UI source e062c685bac1be2b32ab8564d625e3168042821f. Approval covers only the Learn, Practice and Materials changes documented in qa/VISUAL_REVIEW_2026.11.08.2.md. This strict four-viewport, thirteen-surface Chromium comparison remains software regression evidence only; independent accessibility, physical-device, Book SME, provider, learner and production validation remain HOLD.",
-  "ref": "visual-baseline/2026.11.08.2",
+  "policy": "Owner-directed immutable baseline for the requested unified Moulding problem practice UI in PR #697. The exact-source review covers the 52-screen matrix; strict 12-pixel comparison remains unchanged. This owner-approved visual design baseline applies only to the visible Learn/Practice consolidation. Independent human, accessibility, physical-device, Windows signing, provider, SME, learner-outcome, accreditation and production reviews remain separate and HOLD; no such authorization is created.",
+  "ref": "visual-baseline/2026.11.08.4-pr697",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "e062c685bac1be2b32ab8564d625e3168042821f"
+    "referenceSourceSha": "ba7a48b1cee1fdf88accac1d91eb904ffa22f120"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",

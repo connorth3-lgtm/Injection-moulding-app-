@@ -17,6 +17,8 @@ for js in ['src/domains/shell/app-shell-registry.js','src/domains/shell/app-shel
     need(p.returncode==0,f'{js} syntax error: '+(p.stderr or p.stdout))
 
 shell=text('src/domains/shell/app-shell-registry.js')
+need("id:'question-centre'" not in shell and "MM_QUESTION_CENTRE?.open?.()" not in shell,
+     'Question Centre must be reached through Learn, not a duplicate shell/Practice destination')
 for marker in [
     "const VERSION='2026.08.26.4'",
     'dashboardSections=new Map()',
@@ -39,7 +41,6 @@ for marker in [
     "id:'diagnostic-labs'",
     "id:'process-data'",
     "id:'material-labs'",
-    "id:'question-centre'", "Question Centre", "MM_QUESTION_CENTRE?.open?.()",
     "id:'learning-insights'", "id:'repair-app-files'", "Support & app maintenance", "./support.html",
     'aria-current',
     'visibleCoreView',

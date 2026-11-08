@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
-  'web_release':'2026.11.08.3',
+  'web_release':'2026.11.08.4',
  'android_release':'2026.11.08.1',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -19,7 +19,7 @@ expected={
  'assessment_quality_version':'2026.08.24.3',
  'assessment_storage_scope_version':'2026.08.24.4',
  'assessment_evidence_version':'2026.10.05.1',
-  'read_aloud_version':'2026.11.08.3',
+  'read_aloud_version':'2026.11.08.4',
  'windows_recovery_release':'2026.08.21.1',
 }
 for k,v in expected.items(): need(V.get(k)==v,f'version.json {k} drift: {V.get(k)!r} != {v!r}')
@@ -198,6 +198,24 @@ if visual.get('release')=='2026.10.09.4':
          and visual.get('commit')=='fa27bd16525f8cb216654ea524649a3a37a3195c'
          and visual.get('maxDiffPixels')==12,
          '2026.10.09.4 visual baseline must remain bound to approved fa27bd16 at 12px')
+elif visual.get('release')=='2026.11.08.4':
+    # PR #697's owner-directed baseline preserves the previous .4 reference
+    # and pins the requested Learn/Practice consolidation to its exact source.
+    # Keep all 52 captures, four viewports, thirteen surfaces and the 12px limit.
+    review=text('qa/VISUAL_REVIEW_2026.11.08.4_PR697.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.08.4-pr697'
+         and visual.get('commit')=='ba7a48b1cee1fdf88accac1d91eb904ffa22f120'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'STATUS: OWNER VISUAL APPROVAL' in review
+         and '13607855703' in review
+         and '47 unchanged captures' in review,
+         '2026.11.08.4 PR #697 visual reference must remain immutable at its exact owner-authorized source, with 52 captures at 12px')
 elif visual.get('release')=='2026.10.11.10':
     # The owner approved Book-only speech chrome AFTER the earlier .10
     # baseline became immutable. Fail closed on this uniquely pinned
@@ -457,6 +475,47 @@ elif visual.get('release')=='2026.11.03.2':
          and 'Human visual-owner decision: **PENDING**' in review_current
          and 'no masking or skipped surfaces' in review_current.lower(),
          '2026.11.03.2 technical visual baseline must retain strict coverage and explicit owner HOLD')
+elif visual.get('release')=='2026.11.08.4':
+    # PR #697's exact owner review authorizes only this unchanged 52-screen
+    # matrix and the five intended Learn/Practice copy differences. Preserve
+    # independent human/device/provider review boundaries and the strict threshold.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.08.4_PR697.md')
+    reviewed_differences=(
+        '| desktop-1440x900-practice | 4,714 |',
+        '| phone-360x800-practice | 32,066 |',
+        '| phone-412x915-practice | 3,343 |',
+        '| tablet-810x1080-home | 812 |',
+        '| tablet-810x1080-practice | 3,349 |',
+    )
+    need(visual.get('ref')=='visual-baseline/2026.11.08.4-pr697'
+         and visual.get('commit')=='ba7a48b1cee1fdf88accac1d91eb904ffa22f120'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and visual.get('referenceCaptureToolchain')=={
+             'framework':'@playwright/test','version':'1.64.1','browser':'chromium',
+             'referenceSourceSha':visual['commit']}
+         and 'STATUS: OWNER VISUAL APPROVAL' in review_current
+         and '42455576429' in review_current
+         and '13607855703' in review_current
+         and 'sha256:f6eb69e1e85d11275349e3310e37ae84942d3316e29d1b4f4056d3bdd8b2d490' in review_current
+         and '52 expected and 52 captured surfaces' in review_current
+         and '47 unchanged captures' in review_current
+         and all(row in review_current for row in reviewed_differences)
+         and 'No masks or skipped surfaces were added.' in review_current
+         and 'for PR #697 only' in review_current
+         and 'remain **HOLD**' in review_current
+         and 'owner-directed immutable baseline' in visual.get('policy','').lower()
+         and 'owner-approved visual design baseline' in visual.get('policy','').lower()
+         and 'independent human' in visual.get('policy','').lower()
+         and 'provider' in visual.get('policy','').lower()
+         and 'remain separate and hold' in visual.get('policy','').lower()
+         and 'no such authorization is created' in visual.get('policy','').lower(),
+         '2026.11.08.4 PR #697 baseline must retain its exact owner-reviewed source, artifact, scope, strict matrix and independent review boundary')
 elif visual.get('release')=='2026.11.08.2':
     # The owner approved the exact Learn / Practice / Materials screenshot changes
     # after reviewing the comparison artifact. Lock only this source, artifact,

@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.11.08.3
+/* MouldMaster learner UI polish — 2026.11.08.4
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.11.08.3';
+const VERSION='2026.11.08.4';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
 const STYLE_REV='2026.10.20.2-pr640-materials-parity';
 const DESKTOP_QUERY='(min-width:1101px)';
@@ -26,7 +26,11 @@ function safe(fn){try{return typeof fn==='function'?fn():undefined}catch(error){
 
 function runQuickAction(action){
   switch(action){
-    case 'mould-master': return safe(()=>window.MM_MOULD_MASTER_WORKSPACE?.open?.()||window.switchView?.('defects'));
+    case 'mould-master': return safe(()=>{
+      window.switchView?.('scenarios');
+      window.MM_PRIMARY_HUBS?.renderPracticeHub?.();
+      window.requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="problem-practice"]')?.click());
+    });
     case 'process-data': return safe(()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
     case 'recent-case': {
       const row=window.MM_MOULD_MASTER_WORKSPACE?.cases?.()?.[0];
@@ -45,7 +49,7 @@ function homeBalanceMarkup(){
     <summary><span class="mm-home-toolbox-label"><b>Toolbox</b><small>Optional diagnostic and data tools</small></span><span class="mm-home-toolbox-hint">Show / hide <span aria-hidden="true">⌄</span></span></summary>
     <div class="mm-home-toolbox-body">
       <div class="mm-home-balance-grid">
-        <button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Build an evidence-led Mould Master case.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button>
+        <button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Choose a guided diagnosis route for a moulding problem.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button>
         <button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Review measured trends and recovery evidence.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button>
       </div>
       <div data-mm-home-recent-slot hidden></div>
@@ -447,16 +451,15 @@ function home(){
     practice.className='mm-reference-home-practice';
     const play=document.createElement('span');play.className='mm-reference-play';play.textContent='▶';play.setAttribute('aria-hidden','true');
     const copy=document.createElement('span');copy.className='mm-reference-home-practice-copy';
-    const label=document.createElement('b');label.textContent='Continue practice →';
-    const description=document.createElement('small');description.textContent='Work a shop-floor scenario';
+    const label=document.createElement('b');label.textContent='Choose a practice route →';
+    const description=document.createElement('small');description.textContent='Diagnose a defect or decide the next shop-floor action';
     copy.append(label,description);practice.append(play,copy);
     practice.addEventListener('click',()=>{
       window.switchView?.('scenarios');
-      // Continue practice is a direct workflow shortcut, not a redundant
-      // second link back to the Practice chooser.
-      if(!document.querySelector('#scenarios [data-mm-hub-action="scenario-detail"]'))
+      // The single Practice workflow offers both diagnosis and scenario decisions.
+      if(!document.querySelector('#scenarios [data-mm-hub-action="problem-practice"]'))
         window.MM_PRIMARY_HUBS?.renderPracticeHub?.();
-      requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="scenario-detail"]')?.click());
+      requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="problem-practice"]')?.click());
     });
     const hero=root.querySelector('.mm-reference-home-hero');
     // Anchor the action to the hero, not its positioned copy wrapper:
@@ -472,7 +475,7 @@ function home(){
     const tiles=document.createElement('div');tiles.className='mm-reference-quick-grid';
     const options=[
       ['⌕','Material search','Search grades and properties',()=>{window.switchView?.('materials');requestAnimationFrame(()=>document.querySelector('#materials [data-mm-all-material-query]')?.focus({preventScroll:true}))}],
-      ['⚠','Defect guide','Find evidence-led causes',()=>{window.switchView?.('scenarios');requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="troubleshooting"]')?.click())}],
+      ['⚠','Moulding problem practice','Diagnose a defect or choose the next action',()=>{window.switchView?.('scenarios');requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="problem-practice"]')?.click())}],
       ['▥','Process basics','Browse the core lessons',()=>{window.switchView?.('path');requestAnimationFrame(()=>document.querySelector('#path [data-mm-lesson-catalog]')?.scrollIntoView({behavior:'smooth',block:'start'}))}],
       ['▦','Unit converter','Pressure, length and temperature',()=>openReferenceConverter()]
     ];
@@ -539,7 +542,14 @@ function learnPresentation(title){
     {hint:'Open this course and its lessons',art:'training',tile:24};
 }
 function learn(){
-  const root=document.getElementById('path'),hub=root?.querySelector('.mm-learn-hub');
+  const root=document.getElementById('path');
+  const questionGrid=root?.querySelector('.mm-question-centre .mm-hub-picker-grid');
+  if(questionGrid){
+    questionGrid.dataset.mmReferenceLearnPicker='question-centre';
+    questionGrid.querySelectorAll(':scope > button[data-mm-hub-action]').forEach(practiceChoiceArt);
+    return;
+  }
+  const hub=root?.querySelector('.mm-learn-hub');
   const catalogue=hub?.querySelector('[data-mm-lesson-catalog]');
   if(!hub||!catalogue)return;
   sectionHeading('Learn',hub);
@@ -588,17 +598,15 @@ function learn(){
       summary.querySelector('.mm-catalog-group-name')?.insertAdjacentElement('afterend',desc);
     }
   });
-  const learnQuestionGrid=hub.querySelector('.mm-learn-question-centre .mm-hub-picker-grid');
-  if(learnQuestionGrid){
-    learnQuestionGrid.dataset.mmReferenceLearnQuestions='1';
-    learnQuestionGrid.querySelectorAll(':scope > button[data-mm-hub-action]').forEach(practiceChoiceArt);
-  }
   hub.dataset.mmReferenceLearn='1';
 }
 // Use the same user-selected photographic atlas as Learn/Materials for real
 // Practice controls, including the screens *inside* each task. All artwork is
 // decorative: action routing, learner evidence and scoring remain source-owned.
 const practiceArtwork={
+  'problem-practice':['quality',20],
+  'diagnose-cause':['diagnosing',21],
+  'shop-floor-case':['cases',22],
   troubleshooting:['quality',20],
   'scenario-detail':['cases',22],
   'process-data':['challenges',23],
@@ -695,12 +703,11 @@ function practiceToolHeaders(){
     head.prepend(art);
   }
 }
-// A consistent Practice exit on inner learning tools. This only adds an
-// accessible navigation control; source-owned evidence/scoring views remain
-// untouched and their native in-tool Back buttons retain their meanings.
+// A consistent return from inner learning tools to the originating Learn or
+// Practice hub. Source-owned evidence/scoring views retain their native Back buttons.
 function practiceSubpageNavigation(){
   const tools=[
-    ['#defects','troubleshooting','Troubleshooting'],
+    ['#defects','problem-practice','Moulding problem practice'],
     ['#processDataLabs','process-data','Process data'],
     ['#diagnosticLabs','labs','Diagnostic labs'],
     ['#materialLabs','labs','Material labs'],
@@ -721,7 +728,7 @@ function practiceSubpageNavigation(){
     // No duplicate controls after tool-owned re-renders or app navigation.
     const nav=document.createElement('nav');
     nav.className='mm-practice-tool-return';
-    nav.setAttribute('aria-label','Practice navigation');
+    nav.setAttribute('aria-label','Learning and practice navigation');
     const back=document.createElement('button');
     back.type='button';back.className='mm-practice-tool-back';
     back.textContent=originAction?'← Back to Learn':'← Back to Practice';
@@ -748,13 +755,6 @@ function practiceInside(){
   practiceSubpageNavigation();
   observePracticeToolRoots();
   practiceToolHeaders();
-  // The Question Centre is rendered into the same Practice route but replaces
-  // .mm-practice-hub. Decorate its five real options as they become available.
-  const questionGrid=document.querySelector('#scenarios .mm-question-centre .mm-hub-picker-grid');
-  if(questionGrid){
-    questionGrid.dataset.mmReferencePracticePicker='question-centre';
-    questionGrid.querySelectorAll(':scope > button[data-mm-hub-action]').forEach(practiceChoiceArt);
-  }
   // Lab chooser is modal-owned. Decorate only a Practice picker, never More,
   // search, onboarding or Learn-resource modal controls.
   const modal=document.querySelector('#modal:not(.hidden) .modal-card');
@@ -1104,7 +1104,7 @@ function boot(){
     new window.MutationObserver(refresh).observe(node,{childList:true,subtree:id==='modal'});
   }
   document.addEventListener('click',event=>{
-    if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu],#scenarios [data-mm-hub-action],#modal .mm-hub-picker-grid [data-mm-hub-action],#mmVirtualApprenticeship button[data-mm-onclick],#mmVirtualApprenticeship .hero-buttons button'))refresh();
+    if(event.target?.closest?.('.mm-material-index-card summary,.mobile-nav,[data-mm-registry-menu],#scenarios [data-mm-hub-action],#path .mm-question-centre [data-mm-hub-action],#modal .mm-hub-picker-grid [data-mm-hub-action],#mmVirtualApprenticeship button[data-mm-onclick],#mmVirtualApprenticeship .hero-buttons button'))refresh();
   });
   window.MM_REFERENCE_LAYOUT=Object.freeze({version:'2026.10.13.1',refresh});
 }

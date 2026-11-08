@@ -101,7 +101,7 @@ need(str(formal_lane.get('technicalReachability','')).startswith('30/30 approved
 outcomes=formal_lane.get('outcomeMapping') or {}
 need(outcomes.get('proposedTechnicalMappings')=='30/30' and outcomes.get('approvedTechnicalMappings')=='0/30' and outcomes.get('status')=='pending-independent-sme-review','Question Centre must distinguish proposed outcome coverage from independent approval')
 entry=centre.get('canonicalEntryPoint') or {}
-need(entry.get('area')=='Practice' and entry.get('label')=='Question Centre','Question Centre canonical entry point must remain Practice > Question Centre')
+need(entry.get('area')=='Learn' and entry.get('label')=='Question Centre','Question Centre canonical entry point must remain Learn > Question Centre')
 policy=centre.get('policy') or {}
 need(policy.get('centralisesDiscovery') is True and policy.get('duplicatesQuestionText') is False and policy.get('preservesCanonicalScoring') is True,'Question Centre manifest must centralise discovery without copying question content or scoring authority')
 hub=text('primary-learning-practice-hubs.js')
@@ -114,8 +114,12 @@ need('Book chapter self-checks, the 32 optional reasoning questions and lesson e
      and 'id="mmLessonReasoning"' in hub
      and '${optional}' not in hub,
      'Question Centre must preserve all optional teaching questions within mapped core lessons, without duplicating them inside the consolidated launcher')
-need("case 'question-centre': return openQuestionCentreDetail();" in hub,'Question Centre action must open the dedicated Practice surface rather than a transient modal')
+need("case 'question-centre': return openQuestionCentreDetail();" in hub,'Question Centre action must open its dedicated Learn surface rather than a transient modal')
+need("const root=document.getElementById('path');if(!root)return;" in hub and "detailBack(root,'Question Centre','Learn')" in hub,'Question Centre must remain inside Learn and return to its single Learn hub entry')
+need('id="mmLearnQuestions"' not in hub,'Question Centre must not be duplicated inside the interactive lesson')
 need("scope:'Learner-facing consolidated launcher only" in hub,'Question Centre governance boundary must state discovery-only consolidation')
+practice_hub=hub[hub.index('function practiceHubMarkup()'):hub.index('function renderLearnHub()')]
+need('data-mm-hub-action="question-centre"' not in practice_hub,'Practice must not expose a duplicate Question Centre launcher')
 
 reg=text(REGISTER)
 for marker in ['all 57 live exam questions','All 30 technical questions','27 regional','five evidence-reasoning modes','Insufficient evidence is a valid expert answer','ISO 20430:2020','OSHA 29 CFR 1910.147','WorkSafe New Zealand']:

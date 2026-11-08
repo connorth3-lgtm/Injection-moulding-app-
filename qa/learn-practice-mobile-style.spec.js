@@ -22,12 +22,13 @@ async function openHub(page,label,selector){
 }
 
 async function openGuidedPractice(page){
-  await page.locator('#mmPracticeToolResults [data-mm-hub-action="troubleshooting"]').click();
+  await page.locator('#mmPracticeToolResults [data-mm-hub-action="problem-practice"]').click();
+  await page.locator('#scenarios [data-mm-hub-action="diagnose-cause"]').click();
   await page.locator('#modal:not(.hidden) [data-mm-hub-action="guided-practice"]').click();
   await expect(page.locator('#mmPracticeGuided')).toBeVisible();
 }
 
-async function expectReadableTiles(page,rootSelector,expectedCount=5){
+async function expectReadableTiles(page,rootSelector,expectedCount=3){
   const result=await page.evaluate(rootSelector=>{
     const root=document.querySelector(rootSelector);
     const grid=root.querySelector('.mm-hub-grid');
@@ -77,7 +78,7 @@ async function expectReadableTiles(page,rootSelector,expectedCount=5){
   expect(result.overlap).toBe(false);
 }
 
-async function expectNarrowReadableTiles(page,rootSelector,expectedCount=5){
+async function expectNarrowReadableTiles(page,rootSelector,expectedCount=3){
   const result=await page.evaluate(rootSelector=>{
     const root=document.querySelector(rootSelector);
     const grid=root.querySelector('.mm-hub-grid');
@@ -226,7 +227,9 @@ for(const width of [360,412]){
   await expect(learn.locator('#mmLearnCourses .mm-catalog-head')).toBeVisible();
   await expect(learn.locator('#mmLearnCourses .mm-catalog-head')).toContainText('120 core');
   await expect(learn.locator('#mmLearnCourses .mm-catalog-head')).toContainText('36 material science');
-  await expect(learn.locator('#mmLearnQuestions .mm-hub-picker-grid>button')).toHaveCount(5);
+  await expect(learn.locator('[data-mm-hub-action="question-centre"]')).toBeVisible();
+  await expect(learn).toContainText('169 governed prompts');
+  await expect(learn.locator('#mmLearnQuestions')).toHaveCount(0);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-item]')).toHaveCount(176);
   await expect(learn.locator('#mmLearnCourses [data-mm-catalog-query]')).toBeVisible();
   const workshop=learn.locator('#mmLearnCourses .mm-learn-master-lesson');
@@ -240,10 +243,11 @@ for(const width of [360,412]){
 
   await page.evaluate(()=>switchView('scenarios'));
   const practice=page.locator('#scenarios .mm-practice-hub');
-  await expect(practice.locator('.mm-hub-section-head')).toContainText('40 scenarios');
-  await expect(practice.locator('.mm-hub-section-head')).toContainText('169 governed prompts');
+  await expect(practice.locator('.mm-hub-section-head')).toContainText('40 shop-floor scenarios');
+  await expect(practice.locator('.mm-hub-section-head')).not.toContainText('169 governed prompts');
+  await expect(practice.locator('[data-mm-hub-action="question-centre"]')).toHaveCount(0);
   await expect(practice.locator('.mm-practice-guided, .mm-practice-case, .mm-practice-diagnose-journey')).toHaveCount(0);
-  await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(5);
+  await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(3);
   await practice.locator('[data-mm-practice-query]').fill('process data');
   await expect(practice.locator('#mmPracticeToolResults>button:visible')).toHaveCount(1);
   await expect(practice.locator('[data-mm-practice-count]')).toHaveText('1 tool shown');
@@ -320,7 +324,11 @@ test('Unified diagnostic evidence controls remain single-column and readable at 
   await page.setViewportSize({width:360,height:800});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  await page.locator('#scenarios [data-mm-hub-action="troubleshooting"]').click();
+  await page.locator('#scenarios [data-mm-hub-action="problem-practice"]').click();
+  await expect(page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="diagnose-cause"]')).toBeVisible();
+  const pickerRoot=page.locator('#scenarios .mm-problem-practice');
+  await expect(pickerRoot.locator('[data-mm-hub-action="shop-floor-case"]')).toBeVisible();
+  await pickerRoot.locator('[data-mm-hub-action="diagnose-cause"]').click();
   const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
   await expect(picker.locator('button')).toHaveCount(4);
   await picker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
@@ -392,7 +400,7 @@ test('Core dashboard survives a clobbered legacy currentLesson name without rese
 });
 
 for(const width of [360,412]){
- test('Learn offers five governed modes, 120 core lessons and no extra questions section at '+width+'px',async({page})=>{
+ test('Learn keeps Question Centre on its hub and outside the interactive lesson at '+width+'px',async({page})=>{
   await page.setViewportSize({width,height:900});
   await openApp(page);
   await page.evaluate(()=>switchView('path'));
@@ -401,9 +409,8 @@ for(const width of [360,412]){
   await expect(master).not.toHaveAttribute('open','');
   await master.locator(':scope > summary').click();
   await expect(learn.locator('#mmLearnArena')).toBeVisible();
-  const tools=learn.locator('#mmLearnQuestions .mm-hub-picker-grid > button');
-  await expect(tools).toHaveCount(5);
-  await expect(learn.locator('#mmLearnQuestions')).toContainText('169 governed prompts');
+  await expect(learn.locator('[data-mm-hub-action="question-centre"]')).toBeVisible();
+  await expect(master.locator('#mmLearnQuestions')).toHaveCount(0);
   await expect(learn.locator('#mmLearnReasoning, #mmPracticeReasoning, .mm-question-centre-optional')).toHaveCount(0);
   await expect(learn.locator('.mm-learn-reasoning-item, .mm-learn-reasoning-chapter')).toHaveCount(0);
   await expect(master.locator('.mm-learn-studio > .mm-learn-step')).toHaveCount(2);
@@ -411,7 +418,7 @@ for(const width of [360,412]){
   await expect(practiceReflect).toHaveCount(1);
   await expect(practiceReflect.locator('.mm-learn-step-num')).toHaveText('02');
   await expect(practiceReflect.locator('.mm-learn-step-head')).toContainText('Practise & reflect');
-  await expect(practiceReflect.locator('#mmLearnQuestions')).toHaveCount(1);
+  await expect(practiceReflect.locator('#mmLearnQuestions')).toHaveCount(0);
   await expect(practiceReflect.locator('#mmLearnCapstone')).toHaveCount(1);
   await expect(master.locator('.mm-learn-step-reasoning')).toHaveCount(0);
   await expect(master.locator('.mm-learn-capstone-steps > details')).toHaveCount(4);
@@ -453,22 +460,24 @@ test('Learn Arena boss round keeps source-owned feedback and the scenario return
  await expect(page.locator('#path [data-mm-hub-action="learn-scenarios"]')).toBeFocused();
 });
 test('Learn Question Centre lanes invoke canonical assessments and preserve scoped counts',async({page})=>{
- await page.setViewportSize({width:390,height:844});
- await openApp(page);
- await page.evaluate(()=>switchView('path'));
- await page.locator('#path .mm-learn-master-lesson > summary').click();
- await page.locator('#path #mmLearnQuestions [data-mm-hub-action="assessments"]').click();
- await expect(page.locator('#exams')).toBeVisible();
- await expect(page.locator('#exams')).toContainText(/knowledge/i);
- const learnReturn=page.locator('#exams .mm-practice-tool-return .mm-practice-tool-back');
- await expect(learnReturn).toHaveText('← Back to Learn');
- await learnReturn.click();
- await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
- await expect(page.locator('#path #mmLearnQuestions [data-mm-hub-action="assessments"]')).toBeFocused();
- await page.locator('#path #mmLearnQuestions [data-mm-hub-action="scenario-detail"]').click();
- await expect(page.locator('#scenarios .scenario')).toHaveCount(40);
- await page.locator('#scenarios .mm-hub-detail-back button').click();
- await expect(page.locator('#path #mmLearnQuestions')).toBeVisible();
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('path'));
+  await page.locator('#path .mm-learn-hub [data-mm-hub-action="question-centre"]').click();
+  await page.locator('#path .mm-question-centre [data-mm-hub-action="assessments"]').click();
+  await expect(page.locator('#exams')).toBeVisible();
+  await expect(page.locator('#exams')).toContainText(/knowledge/i);
+  const learnReturn=page.locator('#exams .mm-practice-tool-return .mm-practice-tool-back');
+  await expect(learnReturn).toHaveText('← Back to Learn');
+  await learnReturn.click();
+  await expect(page.locator('#path .mm-learn-hub')).toBeVisible();
+  const questionCentre=page.locator('#path [data-mm-hub-action="question-centre"]');
+  await expect(questionCentre).toBeFocused();
+  await questionCentre.click();
+  await page.locator('#path .mm-question-centre [data-mm-hub-action="scenario-detail"]').click();
+  await expect(page.locator('#scenarios .scenario')).toHaveCount(40);
+  await page.locator('#scenarios .mm-hub-detail-back button').click();
+  await expect(page.locator('#path .mm-learn-hub [data-mm-hub-action="question-centre"]')).toBeFocused();
 });
 
 test('all 32 unscored source questions map to distinct existing core lessons without modifying assessment scoring',async({page})=>{
@@ -593,15 +602,17 @@ test('all 32 unscored source questions map to distinct existing core lessons wit
   await expect(page.locator('#lesson #mmLessonReasoning')).toHaveCount(0);
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
 });
-test('Practice Question Centre retains just five governed launchers, without a second copy of lesson checks',async({page})=>{
+test('Learn Question Centre retains the five governed launchers without a Practice or lesson duplicate',async({page})=>{
  await page.setViewportSize({width:390,height:844});
  await openApp(page);
  await page.evaluate(()=>window.MM_QUESTION_CENTRE.open());
- const centre=page.locator('#scenarios .mm-question-centre-card');
+ const centre=page.locator('#path .mm-question-centre-card');
  await expect(centre).toBeVisible();
  await expect(centre.locator('.mm-hub-picker-grid > button')).toHaveCount(5);
  await expect(centre.locator('#mmPracticeReasoning, #mmLearnReasoning, .mm-question-centre-optional')).toHaveCount(0);
  expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts())).toEqual({formal:57,scenarios:40,diagnostic:36,materials:24,measured:12,total:169});
+ await page.evaluate(()=>switchView('scenarios'));
+ await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
 });
 
 test('Practice connects the existing troubleshooting tools in one three-stage learning path',async({page})=>{
@@ -610,8 +621,13 @@ test('Practice connects the existing troubleshooting tools in one three-stage le
   await page.evaluate(()=>switchView('scenarios'));
   const root=page.locator('#scenarios .mm-practice-hub');
   await expect(root.locator('.mm-practice-diagnose-stages')).toHaveCount(0);
-  await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(5);
-  await root.locator('[data-mm-hub-action="troubleshooting"]').click();
+  await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(3);
+  await root.locator('[data-mm-hub-action="problem-practice"]').click();
+  const routes=page.locator('#scenarios .mm-problem-practice');
+  await expect(routes.locator('.mm-hub-grid > button')).toHaveCount(2);
+  await expect(routes).toContainText('Diagnose the cause');
+  await expect(routes).toContainText('Choose the next safe action');
+  await routes.locator('[data-mm-hub-action="diagnose-cause"]').click();
   const modal=page.locator('#modal:not(.hidden) .mm-diagnose-chooser');
   await expect(modal).toBeVisible();
   const steps=modal.locator('.mm-diagnose-step-strip > span');
@@ -751,7 +767,7 @@ test('mobile Practice source-owned choices occupy one readable column at 360 and
         cards:tiles.length,
         overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
     });
-    expect(metrics.cards).toBe(5);
+    expect(metrics.cards).toBe(3);
     expect(metrics.columns).toBe(1);
     expect(metrics.overflow).toBeLessThanOrEqual(2);
   }
@@ -786,14 +802,15 @@ test('Resources to Materials closes the chooser and leaves source-backed grade s
   await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
   await expect(page.locator('#mmExactMaterialCatalog').locator(':scope > [data-mm-all-material-index]')).toHaveCount(1);
 });
-test('Practice scenario review back restores accessible keyboard focus on its entry action',async({page})=>{
+test('Practice scenario review back returns to the combined route and restores focus',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="scenario-detail"]').click();
-  await expect(page.locator('#scenarios .mm-hub-detail-back')).toBeVisible();
+  await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="problem-practice"]').click();
+  await page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="shop-floor-case"]').click();
+  await expect(page.locator('#scenarios .mm-hub-detail-back button')).toHaveText('← Moulding problem practice');
   await page.locator('#scenarios .mm-hub-detail-back button').click();
-  await expect(page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="scenario-detail"]')).toBeFocused();
+  await expect(page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="shop-floor-case"]')).toBeFocused();
 });
 
 
@@ -865,7 +882,7 @@ test('guided Practice preserves previous-step review and changing case resets hy
   await expect(review).toHaveJSProperty('open',false);
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
   await page.locator('#scenarios .mm-hub-detail-back button').click();
-  await expect(page.locator('#mmPracticeToolResults [data-mm-hub-action="troubleshooting"]')).toBeFocused();
+  await expect(page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="diagnose-cause"]')).toBeFocused();
 });
 
 

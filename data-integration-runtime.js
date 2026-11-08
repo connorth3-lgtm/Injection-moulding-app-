@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 
-const VERSION='2026.09.15.4';
+const VERSION='2026.11.08.1';
 const DB_NAME='mouldmaster-process-data-v1';
 const DB_VERSION=1;
 const MAX_ROWS=50000;
@@ -367,7 +367,7 @@ function advancedHost(){return document.getElementById('processDataLabs')}
 function renderAdvancedIntake(prepared=null,error=''){
   ensureStyle();const h=advancedHost();if(!h)return;
   const ready=prepared?.quality?.analysisReady;
-  h.innerHTML=`<div data-di-root><div class="di-actions" style="margin-bottom:12px"><button class="ghost" data-di-back>← Data diagnosis</button><button class="ghost" data-di-template>Download standard CSV template</button><button class="ghost" data-di-library>Local dataset library</button></div>
+  h.innerHTML=`<div data-di-root><div class="di-actions" style="margin-bottom:12px"><button class="ghost" data-di-back>← Process data lab</button><button class="ghost" data-di-template>Download standard CSV template</button><button class="ghost" data-di-library>Local dataset library</button></div>
   <div class="card di-hero"><div class="eyebrow">Connected local process data</div><h2>Prepare, define and validate real shot data</h2><p>Raw CSV stays in this browser/desktop session. Privacy preparation happens first; semantic readiness is checked separately so a clean file cannot be mistaken for an interpretable engineering dataset.</p><div class="di-note"><b>Fail-closed rule:</b> malformed numeric intake review, unresolved meaning, actual/setpoint/command role, engineering unit, sampling basis or sequence integrity blocks baseline and drift intelligence. Saved data can remain locally preserved while blocked.</div></div>
   ${error?`<div class="di-note" style="margin-top:12px"><b>Could not prepare file:</b> ${esc(error)}</div>`:''}
   <div class="di-grid"><section class="card di-panel"><h3>1 · Local CSV and context</h3><div class="di-meta"><label class="wide">CSV<input type="file" accept=".csv,text/csv" data-di-file></label><label>Source label<input data-di-meta="source_label" placeholder="e.g. machine export"></label><label>Confidentiality<select data-di-meta="confidentiality"><option value="local-confidential">local-confidential</option><option value="internal-approved">internal-approved</option><option value="public-cleared">public-cleared</option></select></label><label>Machine context<input data-di-meta="machine_context" placeholder="non-person local alias"></label><label>Mould context<input data-di-meta="mould_context" placeholder="non-person local alias"></label><label>Material context<input data-di-meta="material_context" placeholder="grade/code"></label><label>Job context<input data-di-meta="job_context" placeholder="non-person work-order alias"></label></div><p class="muted">Do not enter operator, employee, customer or contact identifiers.</p></section>
@@ -404,7 +404,7 @@ function wireAdvancedIntake(prepared){
 async function renderDatasetLibrary(){
   ensureStyle();const h=advancedHost();if(!h)return;
   const datasets=await listDatasets().catch(()=>[]);
-  h.innerHTML=`<div data-di-library-root><div class="di-actions" style="margin-bottom:12px"><button class="ghost" data-di-intake>← Process-data intake</button><button class="ghost" data-di-back>Data diagnosis</button><button class="danger" data-di-delete-all>Delete all local process-data evidence</button></div><div class="card di-hero"><div class="eyebrow">Local process-data store</div><h2>Dataset library</h2><p>Prepared datasets are stored in IndexedDB on this device until you delete them here or clear this app/site data. Learner-profile reset does not silently delete engineering evidence. Analysis-blocked datasets remain preserved but cannot be used for baseline or drift calculations until semantics are resolved and re-saved.</p></div><section class="card di-panel" style="margin-top:12px"><div class="di-dataset-list">${datasets.length?datasets.map(d=>`<div class="di-dataset"><b>${esc(d.datasetMeta?.source_label||d.id)}</b><div class="muted">${d.rowCount} rows · ${d.quality?.analysisReady?'analysis-ready':'blocked'} · ${esc(d.entities?.machine||'machine not linked')} · ${esc(d.entities?.mould||'mould not linked')}</div><div class="di-actions" style="margin-top:7px">${d.quality?.analysisReady?`<button class="secondary" data-di-baseline="${esc(d.id)}">Create baseline</button>`:''}<button class="ghost" data-di-delete="${esc(d.id)}">Delete local dataset</button></div></div>`).join(''):'<div class="di-empty">No locally stored datasets yet.</div>'}</div></section></div>`;
+  h.innerHTML=`<div data-di-library-root><div class="di-actions" style="margin-bottom:12px"><button class="ghost" data-di-intake>← Process-data intake</button><button class="ghost" data-di-back>Process data lab</button><button class="danger" data-di-delete-all>Delete all local process-data evidence</button></div><div class="card di-hero"><div class="eyebrow">Local process-data store</div><h2>Dataset library</h2><p>Prepared datasets are stored in IndexedDB on this device until you delete them here or clear this app/site data. Learner-profile reset does not silently delete engineering evidence. Analysis-blocked datasets remain preserved but cannot be used for baseline or drift calculations until semantics are resolved and re-saved.</p></div><section class="card di-panel" style="margin-top:12px"><div class="di-dataset-list">${datasets.length?datasets.map(d=>`<div class="di-dataset"><b>${esc(d.datasetMeta?.source_label||d.id)}</b><div class="muted">${d.rowCount} rows · ${d.quality?.analysisReady?'analysis-ready':'blocked'} · ${esc(d.entities?.machine||'machine not linked')} · ${esc(d.entities?.mould||'mould not linked')}</div><div class="di-actions" style="margin-top:7px">${d.quality?.analysisReady?`<button class="secondary" data-di-baseline="${esc(d.id)}">Create baseline</button>`:''}<button class="ghost" data-di-delete="${esc(d.id)}">Delete local dataset</button></div></div>`).join(''):'<div class="di-empty">No locally stored datasets yet.</div>'}</div></section></div>`;
   const root=h.querySelector('[data-di-library-root]');root.querySelector('[data-di-intake]')?.addEventListener('click',()=>renderAdvancedIntake(preparedSession));root.querySelector('[data-di-back]')?.addEventListener('click',()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
   root.querySelectorAll('[data-di-baseline]').forEach(b=>b.addEventListener('click',async()=>{try{await createBaseline(b.dataset.diBaseline);window.toast?.('Local baseline created')}catch(err){window.toast?.(err?.message||String(err))}}));
   root.querySelectorAll('[data-di-delete]').forEach(b=>b.addEventListener('click',async()=>{if(!confirm('Delete this local dataset, its shots, baselines, interventions, and linked troubleshooting references?'))return;await deleteDataset(b.dataset.diDelete);renderDatasetLibrary()}));
@@ -419,10 +419,6 @@ function patchIntakeApi(){
   api.open=openAdvancedIntake;
   api.enrich=enrichPrepared;api.savePrepared=savePrepared;api.listDatasets=listDatasets;api.openLibrary=renderDatasetLibrary;api.__mmConnectedData=true;
 }
-function interceptLegacyLauncher(e){
-  const b=e.target.closest?.('[data-pdi-launch]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();openAdvancedIntake()
-}
-
 function identifyWorkspaceCase(){
   if(activeWorkspaceCaseId&&window.MM_MOULD_MASTER_WORKSPACE?.getCase?.(activeWorkspaceCaseId))return activeWorkspaceCaseId;
   const title=document.querySelector('#mmMouldMasterWorkspace [data-mw-field="title"]')?.value||'',defect=document.querySelector('#mmMouldMasterWorkspace [data-mw-field="defect"]')?.value||'';
@@ -471,7 +467,6 @@ function scheduleInstall(){
 }
 async function install(){
   ensureStyle();await loadPublicMetadata();patchIntakeApi();patchWorkspaceApi();
-  document.addEventListener('click',interceptLegacyLauncher,true);
   document.addEventListener('click',workspaceCapture,true);
   window.addEventListener?.('mm:domains-ready',scheduleInstall);
   window.MM_APP_SHELL?.events?.onViewChange?.(scheduleInstall);

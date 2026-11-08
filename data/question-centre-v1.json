@@ -78,11 +78,11 @@
   ],
   "governanceBoundary": "This manifest centralises discovery only. Question text, answer keys, feedback, evidence, scoring, human-review status and release authority remain owned by their canonical subsystems. It does not create SME approval or assessment validity evidence.",
   "canonicalEntryPoint": {
-    "area": "Practice",
+    "area": "Learn",
     "label": "Question Centre",
-    "presentation": "dedicated learner surface inside the Practice view",
-    "mobile": "Practice > Question Centre",
-    "desktop": "Practice > Question Centre or Knowledge Checks for direct formal-assessment access"
+    "presentation": "one dedicated learner surface inside the Learn view",
+    "mobile": "Learn > Question Centre",
+    "desktop": "Learn > Question Centre; Knowledge Checks remains a direct formal-assessment route"
   },
   "policy": {
     "centralisesDiscovery": true,

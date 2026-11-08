@@ -66,7 +66,7 @@ test('five mobile tabs start with actionable content instead of oversized introd
 
   await nav.getByRole('button',{name:'Practice'}).click();
   await expect(page.locator('#scenarios .mm-practice-hub>.mm-primary-hub-head')).toBeHidden();
-  await expect(page.locator('#scenarios [data-mm-hub-action="troubleshooting"]')).toBeVisible();
+  await expect(page.locator('#scenarios [data-mm-hub-action="problem-practice"]')).toBeVisible();
 
   await nav.getByRole('button',{name:'More'}).click();
   await expect(page.locator('#modal .modal-card')).toBeVisible();
@@ -154,9 +154,9 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   expect(tablet.lessonBeforeBook).toBeTruthy();
   expect(tablet.bookBeforeTools).toBeTruthy();
 
-  const troubleshoot=tools.getByRole('button',{name:/Troubleshoot/i});
-  await troubleshoot.evaluate(el=>el.dataset.mmQaStableNode='1');
-  await troubleshoot.focus();
+  const practiceRoute=tools.getByRole('button',{name:/Troubleshoot/i});
+  await practiceRoute.evaluate(el=>el.dataset.mmQaStableNode='1');
+  await practiceRoute.focus();
   await page.setViewportSize({width:412,height:915});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   const phone=await page.evaluate(()=>{
@@ -270,18 +270,18 @@ test('desktop navigation stays focused while specialist capabilities remain reac
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(page.locator('#pageTitle')).toHaveText('Book');
   await nav.getByRole('button',{name:'Home'}).click();
-  await expect(nav.getByRole('button',{name:/Data diagnosis/i})).toBeHidden();
+  await expect(nav.getByRole('button',{name:/Process data lab/i})).toBeHidden();
   await expect(nav.getByRole('button',{name:/Mould Master/i})).toBeHidden();
 
   await page.evaluate(()=>switchView('scenarios'));
   await expect(page.locator('#scenarios [data-mm-hub-action="process-data"]')).toBeVisible();
-  await expect(page.locator('#scenarios [data-mm-hub-action="troubleshooting"]')).toBeVisible();
+  await expect(page.locator('#scenarios [data-mm-hub-action="problem-practice"]')).toBeVisible();
 
   await nav.getByRole('button',{name:'More'}).click();
   await expect(page.locator('#modal .modal-card')).toBeVisible();
   // Core specialist actions belong to Practice, not the compact More modal.
   await expect(page.locator('#modal').getByRole('button',{name:/Mould Master/i})).toHaveCount(0);
-  await expect(page.locator('#modal').getByRole('button',{name:/Data diagnosis/i})).toHaveCount(0);
+  await expect(page.locator('#modal').getByRole('button',{name:/Process data lab/i})).toHaveCount(0);
   await expect(page.locator('#modal [data-mm-registry-menu="book"]')).toHaveCount(1);
 });
 
@@ -369,15 +369,15 @@ test('primary IA keeps Materials singular and every major destination reachable'
     if(!(await disclosure.evaluate(el=>el.open)))await disclosure.locator(':scope > summary').click();
     await expect(disclosure.getByRole('button',{name:new RegExp(label,'i')})).toBeVisible();
   }
-  for(const label of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks','Mould Master','Data diagnosis']){
+  for(const label of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks','Mould Master','Process data lab']){
     await expect(page.locator('#modal').getByRole('button',{name:new RegExp(label,'i')})).toHaveCount(0);
   }
   await page.keyboard.press('Escape');
-  await nav.getByRole('button',{name:'Practice'}).click();
-  await page.locator('#scenarios [data-mm-hub-action="question-centre"]').click();
-  await expect(page.locator('#scenarios .mm-question-centre')).toBeVisible();
-  await expect(page.locator('#scenarios .mm-question-centre')).toContainText('169 governed prompts');
-  await expect(page.locator('#scenarios .mm-question-centre')).toContainText('30 approved technical + 27 regional-safety bank items');
+  await nav.getByRole('button',{name:'Learn'}).click();
+  await page.locator('#path [data-mm-hub-action="question-centre"]').click();
+  await expect(page.locator('#path .mm-question-centre')).toBeVisible();
+  await expect(page.locator('#path .mm-question-centre')).toContainText('169 governed prompts');
+  await expect(page.locator('#path .mm-question-centre')).toContainText('30 approved technical + 27 regional-safety bank items');
 
   const desktopOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
   expect(desktopOverflow).toBeLessThanOrEqual(1);
@@ -532,7 +532,8 @@ test('Defect Finder and Troubleshooting Coach share an evidence-gated offline ca
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  await page.locator('#scenarios [data-mm-hub-action="troubleshooting"]').click();
+  await page.locator('#scenarios [data-mm-hub-action="problem-practice"]').click();
+  await page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="diagnose-cause"]').click();
   const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
   await expect(picker.locator('button')).toHaveCount(4);
   await picker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();

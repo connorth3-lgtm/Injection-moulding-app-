@@ -129,12 +129,12 @@ Sources support the **mechanism and study method**. They do not turn synthetic i
 - runtime generation yields exactly 14,400 rows with 24/24/24 phase counts;
 - no network transport, XHR, WebSocket or formal assessment-key mutation is introduced;
 - browser, offline PWA and Electron desktop packaging include every atlas asset;
-- the atlas uses explicit Data Diagnosis lifecycle integration and does not add another document-wide MutationObserver;
+- the atlas is launched from the single Practice **Process data lab** and does not inject a duplicate launcher or add another document-wide MutationObserver;
 - real mobile-browser QA opens, filters and inspects the atlas.
 
 ## Best next data step
 
-More synthetic case count is no longer the highest-value next move after this atlas. The next evidence-quality improvement should be a controlled import/anonymisation path for **real de-identified shot data**, keeping plant information local unless a user explicitly exports it.
+More synthetic case count is no longer the highest-value next move. The Practice **Process data lab** now brings the 14 guided cases, the 50-case deep dive and the 200-case atlas together with a local CSV path. That path separates privacy preparation from semantic and sequence readiness, stores prepared data on-device, and exposes baseline/drift, before/after, cavity, quality-association and energy-per-good-part views when the data support them. The next evidence-quality improvement is a controlled pilot comparing these local analyses with independently human-reviewed real-shot findings.
 
 Highest-value real-data targets are:
 
