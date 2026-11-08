@@ -3,7 +3,7 @@
   "masterIssue": 632,
   "release": "2026.11.08.4",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
+  "candidateSourceSha": "3f4b9e2fcbc0dd28c089d5e486f1fa4c3020f365",
   "scope": "Consolidate Question Centre into one Learn destination: remove the repeated lesson-embedded and Practice copies while preserving its five governed question modes.",
   "approvalBoundary": "HOLD: release 2026.11.08.4 has no retained exact-source candidate. The requested UI consolidation is not yet approved for release; automated and external review evidence must bind to the final source. All seven independent human/device/provider workstreams and tester distribution remain HOLD.",
   "issueGroups": {
