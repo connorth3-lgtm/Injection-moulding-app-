@@ -123,8 +123,12 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       expect(geometry.lastBottom).toBeLessThanOrEqual(geometry.navTop+1);
 
       await openPracticeHub(page);
-      await openPracticeAction(page,'troubleshooting');
-      const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
+      await openPracticeAction(page,'problem-practice');
+      const problem=page.locator('#scenarios .mm-problem-practice');
+      await expect(problem.locator('[data-mm-hub-action="diagnose-cause"]')).toBeVisible();
+      await expect(problem.locator('[data-mm-hub-action="shop-floor-case"]')).toBeVisible();
+      await problem.locator('[data-mm-hub-action="diagnose-cause"]').click();
+      const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid[data-mm-reference-practice-picker="modal"]');
       await expect(picker.locator('button')).toHaveCount(4);
       await picker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
       await expect(page.locator('#defects').getByRole('heading',{name:'Defect Finder + Troubleshooting Coach'})).toBeVisible();
@@ -188,7 +192,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await openPracticeAction(page,'process-data');
       await expect(page.getByRole('button',{name:'Prepare a CSV for analysis'})).toBeVisible();
       await page.getByRole('button',{name:'Prepare a CSV for analysis'}).click();
-      await expect(page.getByRole('heading',{name:'Prepare, define and validate real shot data'})).toBeVisible();
+      await expect(page.getByRole('heading',{name:'Prepare shot data without uploading it'})).toBeVisible();
       const csv='timestamp,machine,mould,material_grade,material_lot,customer_name,fill_time_s,cushion_mm,quality_result,comment\n2026-08-26T10:00:00Z,IMM-SECRET,TOOL-SECRET,PA66-GF30,LOT-SECRET,Customer Secret,1.20,4.5,PASS,private note\n2026-08-26T10:00:30Z,IMM-SECRET,TOOL-SECRET,PA66-GF30,LOT-SECRET,Customer Secret,1.24,4.4,FAIL,private note two\n';
       await page.locator('[data-pdi-file]').setInputFiles({name:'shot-export.csv',mimeType:'text/csv',buffer:Buffer.from(csv)});
       await expect(page.locator('.pdi-kpi').first()).toContainText('2');
