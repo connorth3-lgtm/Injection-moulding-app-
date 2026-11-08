@@ -35,7 +35,7 @@ public final class MainActivity extends Activity {
         settings.setBuiltInZoomControls(false);
         settings.setDisplayZoomControls(false);
         settings.setSupportZoom(false);
-        settings.setUserAgentString(settings.getUserAgentString() + " MouldMasterAndroid/2026.11.03");
+        settings.setUserAgentString(settings.getUserAgentString() + " MouldMasterAndroid/" + BuildConfig.VERSION_NAME);
         webView.setWebViewClient(new PreviewWebViewClient());
         if (Build.VERSION.SDK_INT >= 24) {
             ServiceWorkerController.getInstance().setServiceWorkerClient(new ServiceWorkerClient() {

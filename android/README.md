@@ -30,8 +30,8 @@ The debug APK is for device testing. It is not the Play upload.
 
 ## Private Google Play internal test
 
-The app uses package name `org.mouldmaster.academy`, version name `2026.11.03`,
-and version code `20261103`. See [PLAY_INTERNAL_TESTING.md](PLAY_INTERNAL_TESTING.md)
+The app uses package name `org.mouldmaster.academy`, version name `2026.11.08.1`,
+and version code `20261108`. See [PLAY_INTERNAL_TESTING.md](PLAY_INTERNAL_TESTING.md)
 for the private internal-testing workflow. It builds a signed Android App Bundle
 only when the owner-provided upload-key secrets are configured; it does not publish
 to Google Play automatically.
@@ -57,3 +57,5 @@ The native Android project is a technical preview integration. It still requires
 physical-phone test for lock-screen narration, audio focus, Bluetooth/headset controls,
 offline restart, battery impact and WebView update behavior. It is not NZQA/provider
 approved and does not create production or machine-control authority.
+
+The Android WebView opens the hosted candidate at `/preview/`. The native shell version can be updated independently; after installing, open once online so the WebView loads the current candidate and refreshes its service-worker cache.

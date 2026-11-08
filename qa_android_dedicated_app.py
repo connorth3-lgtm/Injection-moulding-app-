@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Static contract checks for the dedicated Android Book-audio app shell."""
 from pathlib import Path
+import json
 
 ROOT = Path(__file__).resolve().parent
 def need(condition, message):
@@ -53,6 +54,11 @@ for marker in (
 for marker in ("MouldMasterNativeTts", "window.MMNativeTtsEvent", "nativeQueueSupported", "buildNativeQueue", "speakQueue", "if(nativeSupported)return false", "nativeTts.speak(", "Test phone voice", "Reading with phone audio"):
     need(marker in runtime, f"bundled native-aware Read Aloud runtime missing: {marker}")
 need("compileSdk 36" in gradle and "targetSdk 36" in gradle, "Android SDK target must meet current Play requirements")
+version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
+need('versionCode 20261108' in gradle and 'versionName "2026.11.08.1"' in gradle, "Android shell version must match the current app release")
+need('MouldMasterAndroid/" + BuildConfig.VERSION_NAME' in activity, "Android user agent must follow the package version")
+need('"https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/"' in gradle, "Android app must open the current hosted technical-preview candidate")
+need(version.get("android_release") == "2026.11.08.1", "Android release metadata must match the package version")
 need("gradle -p android assembleDebug" in workflow, "Android build workflow missing")
 
 need("android.permission.POST_NOTIFICATIONS" not in manifest, "Android app must not request notification permission for background playback")
