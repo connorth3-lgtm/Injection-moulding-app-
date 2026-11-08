@@ -3181,7 +3181,8 @@
       ],
       "delivery": [
         "Confirm the learner’s entry route, approved centre, intake, training language and current qualification-file version with CIPET.",
-        "The register lists 480 hours as 120 theory, 300 practical, 30 employability and 30 mandatory OJT. The qualification-file module table adds to 150 theory including the 30-hour employability module, 300 practical and 30 OJT. CIPET must confirm the controlled schedule and category labels before recording hours.",
+        "The NQR page classifies the 480 hours as 120 theory, 300 practical, 30 employability and 30 mandatory OJT. The qualification-file module table adds to 150 theory (including the 30-hour employability module), 300 practical and 30 OJT. Both total 480 hours; CIPET confirms the controlled schedule and category labels before recording hours.",
+        "The NQR landing page lists DGT/VSQ/N0101 as V2.0, while the linked May 2025 qualification file lists V1.0. CIPET confirms the active module version and current assessment instrument.",
         "Arrange the prescribed practical work and 30 mandatory OJT hours through the approved centre and workplace. Keep app practice formative; it cannot replace attendance, machine access, supervision or workplace assessment.",
         "Use the provider’s current assessment instrument, qualified trainers and assessors, site controls and record system. Exercise practical safety or machine tasks only under authorised instructor and workplace supervision."
       ],
