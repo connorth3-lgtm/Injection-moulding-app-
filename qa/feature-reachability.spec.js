@@ -112,7 +112,10 @@ test('regional study pathways connect the app and Book on a phone',async({page})
   }
   await expectNoHorizontalOverflow(page,region+' regional study pathways');
  }
- const indiaAssistant=cards.locator('[data-education-pathway="india-cipet-amo-im"]');
+ // Pathway cards are the elements carrying data-education-pathway. Search
+ // from the readiness view so this selector matches the card itself rather
+ // than looking for a nested card inside the collection of cards.
+ const indiaAssistant=readiness.locator('[data-education-pathway="india-cipet-amo-im"]');
  await expect(indiaAssistant.getByRole('link',{name:/National Qualification Register/}).first()).toHaveAttribute('href','https://www.nqr.gov.in/qualifications/14257');
  await indiaAssistant.getByText('Official qualification modules and hours').click();
  await expect(indiaAssistant.getByText('Mandatory on-the-job training (30 h)')).toBeVisible();
@@ -122,7 +125,7 @@ test('regional study pathways connect the app and Book on a phone',async({page})
  await assistantPack.getByText('Delivery and training records',{exact:true}).click();
  await expect(assistantPack.getByText(/NQR page classifies the 480 hours as 120 theory/)).toBeVisible();
  await expect(assistantPack.getByText(/lists DGT\/VSQ\/N0101 as V2.0/)).toBeVisible();
- const indiaOperator=cards.locator('[data-education-pathway="india-cipet-mo-im"]');
+ const indiaOperator=readiness.locator('[data-education-pathway="india-cipet-mo-im"]');
  await expect(indiaOperator.getByRole('link',{name:/National Qualification Register/}).first()).toHaveAttribute('href','https://www.nqr.gov.in/qualifications/14350');
  await indiaOperator.getByText('Official qualification modules and hours').click();
  await expect(indiaOperator.getByText('Mandatory on-the-job training (30 h)')).toBeVisible();
