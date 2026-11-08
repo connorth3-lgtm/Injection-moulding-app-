@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.11.08.4 has no retained candidate. Physical iOS/iPadOS and Android devices still require install, offline restart, reboot, update, storage-pressure and zoom checks. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
+  "boundary": "Release 2026.11.08.4 has no retained candidate; any candidate artifact is not evidence of testing on physical iOS/iPadOS and Android devices. Install, offline restart, reboot, update, storage-pressure and zoom checks remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
