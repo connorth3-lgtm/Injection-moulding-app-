@@ -26,7 +26,11 @@ function safe(fn){try{return typeof fn==='function'?fn():undefined}catch(error){
 
 function runQuickAction(action){
   switch(action){
-    case 'mould-master': return safe(()=>window.MM_MOULD_MASTER_WORKSPACE?.open?.()||window.switchView?.('defects'));
+    case 'mould-master': return safe(()=>{
+      window.switchView?.('scenarios');
+      window.MM_PRIMARY_HUBS?.renderPracticeHub?.();
+      window.requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="problem-practice"]')?.click());
+    });
     case 'process-data': return safe(()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
     case 'recent-case': {
       const row=window.MM_MOULD_MASTER_WORKSPACE?.cases?.()?.[0];
@@ -45,7 +49,7 @@ function homeBalanceMarkup(){
     <summary><span class="mm-home-toolbox-label"><b>Toolbox</b><small>Optional diagnostic and data tools</small></span><span class="mm-home-toolbox-hint">Show / hide <span aria-hidden="true">⌄</span></span></summary>
     <div class="mm-home-toolbox-body">
       <div class="mm-home-balance-grid">
-        <button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Build an evidence-led Mould Master case.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button>
+        <button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Moulding problem practice</b><small>Diagnose a defect or choose the next safe shop-floor action.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button>
         <button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Review measured trends and recovery evidence.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button>
       </div>
       <div data-mm-home-recent-slot hidden></div>
@@ -447,16 +451,15 @@ function home(){
     practice.className='mm-reference-home-practice';
     const play=document.createElement('span');play.className='mm-reference-play';play.textContent='▶';play.setAttribute('aria-hidden','true');
     const copy=document.createElement('span');copy.className='mm-reference-home-practice-copy';
-    const label=document.createElement('b');label.textContent='Continue practice →';
-    const description=document.createElement('small');description.textContent='Work a shop-floor scenario';
+    const label=document.createElement('b');label.textContent='Choose a practice route →';
+    const description=document.createElement('small');description.textContent='Diagnose a defect or decide the next shop-floor action';
     copy.append(label,description);practice.append(play,copy);
     practice.addEventListener('click',()=>{
       window.switchView?.('scenarios');
-      // Continue practice is a direct workflow shortcut, not a redundant
-      // second link back to the Practice chooser.
-      if(!document.querySelector('#scenarios [data-mm-hub-action="scenario-detail"]'))
+      // The single Practice workflow offers both diagnosis and scenario decisions.
+      if(!document.querySelector('#scenarios [data-mm-hub-action="problem-practice"]'))
         window.MM_PRIMARY_HUBS?.renderPracticeHub?.();
-      requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="scenario-detail"]')?.click());
+      requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="problem-practice"]')?.click());
     });
     const hero=root.querySelector('.mm-reference-home-hero');
     // Anchor the action to the hero, not its positioned copy wrapper:
@@ -472,7 +475,7 @@ function home(){
     const tiles=document.createElement('div');tiles.className='mm-reference-quick-grid';
     const options=[
       ['⌕','Material search','Search grades and properties',()=>{window.switchView?.('materials');requestAnimationFrame(()=>document.querySelector('#materials [data-mm-all-material-query]')?.focus({preventScroll:true}))}],
-      ['⚠','Defect guide','Find evidence-led causes',()=>{window.switchView?.('scenarios');requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="troubleshooting"]')?.click())}],
+      ['⚠','Moulding problem practice','Diagnose a defect or choose the next action',()=>{window.switchView?.('scenarios');requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="problem-practice"]')?.click())}],
       ['▥','Process basics','Browse the core lessons',()=>{window.switchView?.('path');requestAnimationFrame(()=>document.querySelector('#path [data-mm-lesson-catalog]')?.scrollIntoView({behavior:'smooth',block:'start'}))}],
       ['▦','Unit converter','Pressure, length and temperature',()=>openReferenceConverter()]
     ];
@@ -601,6 +604,9 @@ function learn(){
 // Practice controls, including the screens *inside* each task. All artwork is
 // decorative: action routing, learner evidence and scoring remain source-owned.
 const practiceArtwork={
+  'problem-practice':['quality',20],
+  'diagnose-cause':['diagnosing',21],
+  'shop-floor-case':['cases',22],
   troubleshooting:['quality',20],
   'scenario-detail':['cases',22],
   'process-data':['challenges',23],
@@ -701,7 +707,7 @@ function practiceToolHeaders(){
 // Practice hub. Source-owned evidence/scoring views retain their native Back buttons.
 function practiceSubpageNavigation(){
   const tools=[
-    ['#defects','troubleshooting','Troubleshooting'],
+    ['#defects','problem-practice','Moulding problem practice'],
     ['#processDataLabs','process-data','Process data'],
     ['#diagnosticLabs','labs','Diagnostic labs'],
     ['#materialLabs','labs','Material labs'],

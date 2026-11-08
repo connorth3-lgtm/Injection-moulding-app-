@@ -19,7 +19,7 @@ required_hub = {
     "assessment separation": "Practice is for learning; assessments stay separate.",
     "scenario rotation": "nextScenarioIndex",
     "process-data practice": 'data-mm-hub-action="process-data"',
-    "troubleshooting practice": 'data-mm-hub-action="troubleshooting"',
+    "combined moulding problem practice": 'data-mm-hub-action="problem-practice"',
     "labs practice": 'data-mm-hub-action="labs"',
     "personalisation refresh": "mm:domains-ready",
     "recommender activity routing": "suggestedActivity",
@@ -41,8 +41,14 @@ if 'id="mmLearnQuestions"' in hub:
 practice_markup = hub[hub.index("function practiceHubMarkup()"):hub.index("function renderLearnHub()")]
 if 'data-mm-hub-action="question-centre"' in practice_markup or "169 governed prompts" in practice_markup:
     failures.append("Practice must not expose a duplicate Question Centre or question-bank count")
-if "4 tools shown" not in practice_markup:
-    failures.append("Practice hub must present its four focused tools after Question Centre consolidation")
+if "3 tools shown" not in practice_markup:
+    failures.append("Practice hub must present three focused tools after Question Centre consolidation")
+problem_start = hub.index("function openProblemPractice()")
+problem_end = hub.index("function openGuidedPractice()", problem_start)
+problem_markup = hub[problem_start:problem_end]
+for route in ['data-mm-hub-action="diagnose-cause"', 'data-mm-hub-action="shop-floor-case"']:
+    if route not in problem_markup:
+        failures.append(f"Combined problem practice must keep both routes available: {route}")
 
 required_css = {
     "mobile practice scope": ".mm-practice-hub",

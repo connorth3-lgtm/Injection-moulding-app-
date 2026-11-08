@@ -66,7 +66,7 @@ test('five mobile tabs start with actionable content instead of oversized introd
 
   await nav.getByRole('button',{name:'Practice'}).click();
   await expect(page.locator('#scenarios .mm-practice-hub>.mm-primary-hub-head')).toBeHidden();
-  await expect(page.locator('#scenarios [data-mm-hub-action="troubleshooting"]')).toBeVisible();
+  await expect(page.locator('#scenarios [data-mm-hub-action="problem-practice"]')).toBeVisible();
 
   await nav.getByRole('button',{name:'More'}).click();
   await expect(page.locator('#modal .modal-card')).toBeVisible();
@@ -91,10 +91,10 @@ test('Home and More use collapsible, mobile-safe panels without losing actions',
   await expect(home.locator('[data-mm-home-book]')).toBeVisible();
   await expect(toolbox).toBeVisible();
   await expect(toolbox).toHaveAttribute('open','');
-  await expect(toolbox.getByRole('button',{name:/Troubleshoot/})).toBeVisible();
+  await expect(toolbox.getByRole('button',{name:/Moulding problem practice/})).toBeVisible();
   await toolbox.locator('summary').click();
   await expect(toolbox).not.toHaveAttribute('open','');
-  await expect(toolbox.getByRole('button',{name:/Troubleshoot/})).toBeHidden();
+  await expect(toolbox.getByRole('button',{name:/Moulding problem practice/})).toBeHidden();
   await toolbox.locator('summary').click();
   await expect(toolbox.getByRole('button',{name:/Analyse data/})).toBeVisible();
 
@@ -135,7 +135,7 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   await expect(tools).toBeVisible();
   await expect(page.locator('#dashboard .mm-home-task-hub,#dashboard .mm-home-utility')).toHaveCount(0);
   await expect(tools.locator('[data-mm-home-action]')).toHaveCount(2);
-  await expect(tools.getByRole('button',{name:/Troubleshoot/i})).toBeVisible();
+  await expect(tools.getByRole('button',{name:/Moulding problem practice/i})).toBeVisible();
   await expect(tools.getByRole('button',{name:/Analyse data/i})).toBeVisible();
   await expect(tools.getByRole('button',{name:/Materials|Practice|Saved lessons|Browse learning|Reference book/i})).toHaveCount(0);
   await expect(focus.getByRole('button',{name:/Continue lesson/i})).toBeVisible();
@@ -154,9 +154,9 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   expect(tablet.lessonBeforeBook).toBeTruthy();
   expect(tablet.bookBeforeTools).toBeTruthy();
 
-  const troubleshoot=tools.getByRole('button',{name:/Troubleshoot/i});
-  await troubleshoot.evaluate(el=>el.dataset.mmQaStableNode='1');
-  await troubleshoot.focus();
+  const practiceRoute=tools.getByRole('button',{name:/Moulding problem practice/i});
+  await practiceRoute.evaluate(el=>el.dataset.mmQaStableNode='1');
+  await practiceRoute.focus();
   await page.setViewportSize({width:412,height:915});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   const phone=await page.evaluate(()=>{
@@ -275,7 +275,7 @@ test('desktop navigation stays focused while specialist capabilities remain reac
 
   await page.evaluate(()=>switchView('scenarios'));
   await expect(page.locator('#scenarios [data-mm-hub-action="process-data"]')).toBeVisible();
-  await expect(page.locator('#scenarios [data-mm-hub-action="troubleshooting"]')).toBeVisible();
+  await expect(page.locator('#scenarios [data-mm-hub-action="problem-practice"]')).toBeVisible();
 
   await nav.getByRole('button',{name:'More'}).click();
   await expect(page.locator('#modal .modal-card')).toBeVisible();
@@ -532,7 +532,8 @@ test('Defect Finder and Troubleshooting Coach share an evidence-gated offline ca
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  await page.locator('#scenarios [data-mm-hub-action="troubleshooting"]').click();
+  await page.locator('#scenarios [data-mm-hub-action="problem-practice"]').click();
+  await page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="diagnose-cause"]').click();
   const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
   await expect(picker.locator('button')).toHaveCount(4);
   await picker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();

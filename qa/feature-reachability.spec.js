@@ -269,14 +269,14 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
     await mobileMore(page);
     for(const id of ['book','learning-insights','repair-app-files'])await revealMoreAction(page,page.locator('[data-mm-registry-menu="'+id+'"]'));
     await closeModal(page);await mobileHub(page,'Practice');
-    for(const action of ['troubleshooting','process-data','labs'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
+    for(const action of ['problem-practice','process-data','labs'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
    }else{
     const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();await expect(page.locator('#modal .modal-card')).toBeVisible();
     for(const name of ['Standards & safety','Profile & data'])await revealMoreAction(page,page.locator('#modal .quick-action').filter({hasText:name}));
     for(const name of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks'])await expect(page.locator('#modal .quick-action').filter({hasText:name})).toHaveCount(0);
     await closeModal(page);
     const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click();await expectVisible(page,'#scenarios .mm-practice-hub');
-    for(const action of ['troubleshooting','process-data','labs'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
+    for(const action of ['problem-practice','process-data','labs'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
     await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
    }
   });

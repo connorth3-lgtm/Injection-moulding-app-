@@ -22,12 +22,13 @@ async function openHub(page,label,selector){
 }
 
 async function openGuidedPractice(page){
-  await page.locator('#mmPracticeToolResults [data-mm-hub-action="troubleshooting"]').click();
+  await page.locator('#mmPracticeToolResults [data-mm-hub-action="problem-practice"]').click();
+  await page.locator('#scenarios [data-mm-hub-action="diagnose-cause"]').click();
   await page.locator('#modal:not(.hidden) [data-mm-hub-action="guided-practice"]').click();
   await expect(page.locator('#mmPracticeGuided')).toBeVisible();
 }
 
-async function expectReadableTiles(page,rootSelector,expectedCount=4){
+async function expectReadableTiles(page,rootSelector,expectedCount=3){
   const result=await page.evaluate(rootSelector=>{
     const root=document.querySelector(rootSelector);
     const grid=root.querySelector('.mm-hub-grid');
@@ -242,11 +243,11 @@ for(const width of [360,412]){
 
   await page.evaluate(()=>switchView('scenarios'));
   const practice=page.locator('#scenarios .mm-practice-hub');
-  await expect(practice.locator('.mm-hub-section-head')).toContainText('40 scenarios');
+  await expect(practice.locator('.mm-hub-section-head')).toContainText('40 shop-floor scenarios');
   await expect(practice.locator('.mm-hub-section-head')).not.toContainText('169 governed prompts');
   await expect(practice.locator('[data-mm-hub-action="question-centre"]')).toHaveCount(0);
   await expect(practice.locator('.mm-practice-guided, .mm-practice-case, .mm-practice-diagnose-journey')).toHaveCount(0);
-  await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(4);
+  await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(3);
   await practice.locator('[data-mm-practice-query]').fill('process data');
   await expect(practice.locator('#mmPracticeToolResults>button:visible')).toHaveCount(1);
   await expect(practice.locator('[data-mm-practice-count]')).toHaveText('1 tool shown');
@@ -323,7 +324,11 @@ test('Unified diagnostic evidence controls remain single-column and readable at 
   await page.setViewportSize({width:360,height:800});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  await page.locator('#scenarios [data-mm-hub-action="troubleshooting"]').click();
+  await page.locator('#scenarios [data-mm-hub-action="problem-practice"]').click();
+  await expect(page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="diagnose-cause"]')).toBeVisible();
+  const pickerRoot=page.locator('#scenarios .mm-problem-practice');
+  await expect(pickerRoot.locator('[data-mm-hub-action="shop-floor-case"]')).toBeVisible();
+  await pickerRoot.locator('[data-mm-hub-action="diagnose-cause"]').click();
   const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
   await expect(picker.locator('button')).toHaveCount(4);
   await picker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
@@ -616,8 +621,13 @@ test('Practice connects the existing troubleshooting tools in one three-stage le
   await page.evaluate(()=>switchView('scenarios'));
   const root=page.locator('#scenarios .mm-practice-hub');
   await expect(root.locator('.mm-practice-diagnose-stages')).toHaveCount(0);
-  await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(4);
-  await root.locator('[data-mm-hub-action="troubleshooting"]').click();
+  await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(3);
+  await root.locator('[data-mm-hub-action="problem-practice"]').click();
+  const routes=page.locator('#scenarios .mm-problem-practice');
+  await expect(routes.locator('.mm-hub-grid > button')).toHaveCount(2);
+  await expect(routes).toContainText('Diagnose the cause');
+  await expect(routes).toContainText('Choose the next safe action');
+  await routes.locator('[data-mm-hub-action="diagnose-cause"]').click();
   const modal=page.locator('#modal:not(.hidden) .mm-diagnose-chooser');
   await expect(modal).toBeVisible();
   const steps=modal.locator('.mm-diagnose-step-strip > span');
@@ -792,14 +802,15 @@ test('Resources to Materials closes the chooser and leaves source-backed grade s
   await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
   await expect(page.locator('#mmExactMaterialCatalog').locator(':scope > [data-mm-all-material-index]')).toHaveCount(1);
 });
-test('Practice scenario review back restores accessible keyboard focus on its entry action',async({page})=>{
+test('Practice scenario review back returns to the combined route and restores focus',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="scenario-detail"]').click();
-  await expect(page.locator('#scenarios .mm-hub-detail-back')).toBeVisible();
+  await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="problem-practice"]').click();
+  await page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="shop-floor-case"]').click();
+  await expect(page.locator('#scenarios .mm-hub-detail-back button')).toHaveText('← Moulding problem practice');
   await page.locator('#scenarios .mm-hub-detail-back button').click();
-  await expect(page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="scenario-detail"]')).toBeFocused();
+  await expect(page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="shop-floor-case"]')).toBeFocused();
 });
 
 
@@ -871,7 +882,7 @@ test('guided Practice preserves previous-step review and changing case resets hy
   await expect(review).toHaveJSProperty('open',false);
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
   await page.locator('#scenarios .mm-hub-detail-back button').click();
-  await expect(page.locator('#mmPracticeToolResults [data-mm-hub-action="troubleshooting"]')).toBeFocused();
+  await expect(page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="diagnose-cause"]')).toBeFocused();
 });
 
 
