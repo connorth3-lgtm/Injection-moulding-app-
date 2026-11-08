@@ -1,10 +1,13 @@
-MOULDMASTER ACADEMY — ANDROID INSTALLABLE APP
+MOULDMASTER ACADEMY — ANDROID AND BROWSER TECHNICAL PREVIEW
 
-LIVE APP
-https://connorth3-lgtm.github.io/Injection-moulding-app-/
+CURRENT LEARNER PREVIEW
+https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/
 
 PUBLISHING
-GitHub Pages: Deploy from branch > main > /(root)
+The protected-main GitHub Pages Actions workflow stages the governed learner build under `/preview/`. The production root remains release-held until its separate physical-device authorization gate passes. Do not enable direct branch publishing or treat `/preview/` as production.
+
+NATIVE ANDROID APP
+The dedicated Android shell is version 2026.11.08.1. It loads the hosted `/preview/` content and uses Android native TextToSpeech for Book narration. Download the `mouldmaster-android-debug` artifact from a successful **MouldMaster Android dedicated app** workflow, or build it using the instructions in `android/README.md`. The debug APK is for private technical-preview testing; it is not published to Google Play. Physical-device, offline and lock-screen audio checks remain HOLD.
 
 PWA / OFFLINE APPLICATION FILES
   index.html
@@ -58,11 +61,13 @@ PWA / OFFLINE APPLICATION FILES
   mouldmaster-512.png
   .nojekyll
 
-INSTALL ON ANDROID
-1. Open the live app in Chrome while online.
+INSTALL THE BROWSER/PWA ON ANDROID
+1. Open the hosted technical preview in Chrome while online.
 2. Let it finish loading once.
 3. Chrome menu > Install app / Add to Home screen.
 4. Confirm Install.
+
+Chrome's installed PWA uses browser speech for Book narration. Use the dedicated native Android app for Android TextToSpeech narration; sustained lock-screen playback still needs physical-device validation.
 
 UPDATE / OFFLINE DESIGN
 - index.html is a direct bootstrap; it does not rely on service-worker text rewriting to pretend the source is current.

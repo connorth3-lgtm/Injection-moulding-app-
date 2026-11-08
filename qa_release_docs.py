@@ -127,6 +127,14 @@ need('node scripts/run-msix-builder.cjs --win msix --x64 --arm64' in store_workf
 need('--ia32' not in store_workflow,'Store MSIX lane must not reintroduce removed Electron 45 ia32 targeting')
 
 android=text('ANDROID_INSTALL_README.txt')
+need('https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/' in android,
+     'Android install guide must point learners to the hosted non-production preview')
+need('mouldmaster-android-debug' in android and 'android/README.md' in android,
+     'Android install guide must distinguish the native debug app from the browser PWA')
+need('production root remains release-held' in android and 'GitHub Pages Actions workflow' in android,
+     'Android install guide must preserve the production-root release boundary')
+need('Chrome\'s installed PWA uses browser speech' in android and 'native Android app' in android,
+     'Android install guide must distinguish browser speech from native app narration')
 for marker in [
  'assessment-storage-scope.js','src/domains/assessment/assessment-final-hardening.js','assessment-evidence-sources.js','assessment-evidence-approval.js',
  'src/domains/research/reference-20x-extension.js','diagnostic-learning-labs.js','material-behaviour-labs.js','process-data-diagnostics.js',
