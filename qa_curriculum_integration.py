@@ -31,7 +31,7 @@ p=subprocess.run(['node','--check',str(ROOT/'curriculum-integration.js')],captur
 need(p.returncode==0,'curriculum-integration.js syntax error: '+(p.stderr or p.stdout))
 
 for marker in [
-    "const VERSION='2026.10.01.2'",
+    "const VERSION='2026.11.08.1'",
     'Mechanism → measurement → discrimination → verification',
     'Apply this lesson',
     '2 linked activities',
@@ -42,6 +42,8 @@ for marker in [
     "D.lessons.length!==120",
     'Lesson ${lesson.id} does not have two valid curriculum practice connections',
     'curriculum_practice_open',
+    'Process data practice',
+    'openGuidedCases?.()',
     'Known-good baseline',
     'Current measured evidence',
     'Rank competing mechanisms',

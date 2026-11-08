@@ -16,7 +16,7 @@ This pass adds **50 additional deterministic synthetic process-data cases** to t
 - 4 linked signals per new case
 - 24 baseline + 24 fault + 24 recovery cycles per case
 - **3,600 new synthetic cycles**
-- existing guided 14-case learning flow remains unchanged
+- the existing 14-case guided reasoning flow remains unchanged and is now reached from the single Practice Process data lab
 
 The numerical magnitudes are deliberately synthetic. Literature and existing MouldMaster sources support the *types of signals, mechanisms and evidence relationships* represented here; they do not make these synthetic values universal process specifications, alarm limits, acceptance criteria or maintenance thresholds.
 

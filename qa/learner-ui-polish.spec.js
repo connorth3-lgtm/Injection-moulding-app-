@@ -270,7 +270,7 @@ test('desktop navigation stays focused while specialist capabilities remain reac
   await expect(page.locator('#mmBookView')).toBeVisible();
   await expect(page.locator('#pageTitle')).toHaveText('Book');
   await nav.getByRole('button',{name:'Home'}).click();
-  await expect(nav.getByRole('button',{name:/Data diagnosis/i})).toBeHidden();
+  await expect(nav.getByRole('button',{name:/Process data lab/i})).toBeHidden();
   await expect(nav.getByRole('button',{name:/Mould Master/i})).toBeHidden();
 
   await page.evaluate(()=>switchView('scenarios'));
@@ -281,7 +281,7 @@ test('desktop navigation stays focused while specialist capabilities remain reac
   await expect(page.locator('#modal .modal-card')).toBeVisible();
   // Core specialist actions belong to Practice, not the compact More modal.
   await expect(page.locator('#modal').getByRole('button',{name:/Mould Master/i})).toHaveCount(0);
-  await expect(page.locator('#modal').getByRole('button',{name:/Data diagnosis/i})).toHaveCount(0);
+  await expect(page.locator('#modal').getByRole('button',{name:/Process data lab/i})).toHaveCount(0);
   await expect(page.locator('#modal [data-mm-registry-menu="book"]')).toHaveCount(1);
 });
 
@@ -369,7 +369,7 @@ test('primary IA keeps Materials singular and every major destination reachable'
     if(!(await disclosure.evaluate(el=>el.open)))await disclosure.locator(':scope > summary').click();
     await expect(disclosure.getByRole('button',{name:new RegExp(label,'i')})).toBeVisible();
   }
-  for(const label of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks','Mould Master','Data diagnosis']){
+  for(const label of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks','Mould Master','Process data lab']){
     await expect(page.locator('#modal').getByRole('button',{name:new RegExp(label,'i')})).toHaveCount(0);
   }
   await page.keyboard.press('Escape');

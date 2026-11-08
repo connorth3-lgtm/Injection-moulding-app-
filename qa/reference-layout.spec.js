@@ -39,7 +39,7 @@ for(const width of [320,360,390,412]){
     await converter.getByRole('button',{name:'Close'}).click();
     await expect(converter).toBeHidden();
     await page.locator('#dashboard .mm-reference-home-practice').click();
-    await expect(page.locator('#scenarios')).toHaveAttribute('data-mm-hub-mode','detail');
+    await expect(page.locator('#scenarios')).toHaveAttribute('data-mm-hub-mode','problem-practice');
     await expect(page.locator('#scenarios .mm-hub-detail-back')).toBeVisible();
     await page.evaluate(()=>switchView('dashboard'));
     await expect(page.locator('#dashboard .mm-reference-home-hero')).toBeVisible();
@@ -430,8 +430,13 @@ test('Practice nested labs, data diagnosis and assessments keep working illustra
   await page.evaluate(()=>switchView('scenarios'));
   await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="process-data"]').click();
   const data=page.locator('#processDataLabs');
+  await expect(data.getByRole('heading',{name:'Process data lab'})).toBeVisible();
   await expect(data.locator('.pd-hero > .mm-reference-practice-tool-art')).toBeVisible();
   await expect(data.locator(':scope > .mm-practice-tool-return')).toHaveCount(1);
+  await expect(data.locator('[data-pdlab-guided]')).toBeVisible();
+  await expect(data.locator('[data-pdlab-csv]')).toBeVisible();
+  await expect(data.locator('[data-pdlab-saved]')).toBeVisible();
+  await data.locator('[data-pdlab-guided]').click();
   await expect(data.locator('[data-pd-start]').first()).toBeVisible();
   await data.locator('[data-pd-start]').first().click();
   const dataChoice=data.locator('button.pd-choice').first();
@@ -443,6 +448,8 @@ test('Practice nested labs, data diagnosis and assessments keep working illustra
   await expect(data.locator('[data-pd-home]')).toBeVisible();
   await data.locator('[data-pd-home]').click();
   await expect(data.locator('.pd-hero > .mm-reference-practice-tool-art')).toHaveCount(1);
+  await data.locator('[data-pd-lab-home]').click();
+  await expect(data.getByRole('heading',{name:'Process data lab'})).toBeVisible();
 
   for(const [action,root,hero,start,back] of [
     ['diagnostic-labs','#diagnosticLabs','.dl-hero','[data-dl-start]','[data-dl-home]'],

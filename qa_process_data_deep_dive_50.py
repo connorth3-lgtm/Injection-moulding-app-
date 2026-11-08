@@ -97,11 +97,12 @@ need('outside formal assessment' in runtime['scope'] and 'not a production recip
 
 engine = text(ENGINE)
 for marker in [
-    'Open 50-case data deep dive', '50-case data deep dive', 'Back to guided 14 cases', 'Export 72-cycle CSV',
+    '50-case data deep dive', 'Process data lab', 'Export 72-cycle CSV',
     '24 baseline, 24 fault and 24 recovery', 'not universal production setpoints', 'maintenance thresholds',
     'Ranked mechanism:', 'Best next evidence:', 'Filter deep-dive cases', 'MM_PROCESS_DATA_DEEP_DIVE_50'
 ]:
     need(marker in engine, f'50-case learner UI/safety marker missing: {marker}')
+need('attachLauncher' not in engine and 'data-dd50-launch' not in engine, '50-case library must not inject a second launcher into the Process data lab')
 
 # Pin source identities to stable publication identifiers rather than a particular resolver endpoint.
 source_identities = {

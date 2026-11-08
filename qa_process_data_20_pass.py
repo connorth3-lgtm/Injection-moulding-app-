@@ -166,7 +166,8 @@ for alias in ['PP','PC','ABS','POM','PET','PBT','TPU','PMMA','PEEK','PPS','LCP',
     need(alias in workspace,f'Mould Master token matching must preserve material alias {alias}')
 
 mobile=text('qa/mobile-viewport.spec.js')
-for marker in ['Open 20-pass · 200-case atlas','200 advanced process-data cases','data-at20-pass','Inspect evidence case','Compensation trap']:
+for marker in ['Browse the 200-case atlas','200 advanced process-data cases','data-at20-pass','Inspect evidence case','Compensation trap']:
     need(marker in mobile,f'real mobile browser QA must exercise atlas marker: {marker}')
+need('attachLauncher' not in engine and 'data-at20-launch' not in engine, '200-case atlas must not inject a second launcher into the Process data lab')
 
 print('MouldMaster 20-pass process-data atlas QA passed (20 passes; 200 unique cases; 4 normalized signals each; 14,400 cycles; root-cause/evidence/verification/compensation separation; local-only; browser/PWA/desktop packaged)')

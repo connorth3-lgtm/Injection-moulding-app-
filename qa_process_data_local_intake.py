@@ -13,8 +13,9 @@ p=subprocess.run(['node','--check',str(ROOT/MODULE)],capture_output=True,text=Tr
 need(p.returncode==0,'local process-data intake syntax error: '+(p.stderr or p.stdout))
 
 body=text(MODULE)
+need('attachLauncher' not in body and 'data-pdi-launch' not in body and 'originalOpen=BASE.open.bind(BASE)' not in body,'local intake must not inject a duplicate process-data launcher')
 for marker in [
-    "VERSION='2026.09.12.1'",'Prepare real shot CSV locally','Prepare shot data without uploading it','pseudonymisation','not guaranteed anonymisation',
+    "VERSION='2026.11.08.1'",'Prepare shot data without uploading it','pseudonymisation','not guaranteed anonymisation',
     'Raw file contents stay in memory only','Export prepared CSV','Export data dictionary','Download CSV template',
     'shot_index','direct/person identifier','operational identifier replaced with stable per-file alias','numeric process/quality signal',
     'unknown labels aliased per file','MM_PROCESS_DATA_LOCAL_INTAKE','MAX_ROWS=50000','operator_id','employee_id',

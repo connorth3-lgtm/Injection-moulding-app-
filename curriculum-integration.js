@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 
-const VERSION='2026.10.01.2';
+const VERSION='2026.11.08.1';
 const RETURN_KEY='mm_curriculum_return_v1';
 const resolvedCurriculumLesson=()=>typeof mmCoreSafeLesson==='function'
   ? mmCoreSafeLesson() : (D.lessons.find(l=>l.id===user.currentLesson)||D.lessons[0]);
@@ -65,7 +65,7 @@ const COURSE_FALLBACKS=Object.freeze({
 
 const TYPE_META=Object.freeze({
   diagnostic:{label:'Diagnostic lab',detail:'Reason through a realistic evidence-first fault case.',selector:'data-dl-start'},
-  data:{label:'Data diagnosis',detail:'Read baseline → fault → recovery evidence from a 72-cycle synthetic dataset.',selector:'data-pd-start'},
+  data:{label:'Process data practice',detail:'Apply this lesson in a guided case using linked baseline → fault → recovery evidence from 72 cycles.',selector:'data-pd-start'},
   material:{label:'Material lab',detail:'Apply grade-aware material evidence and safe handling logic.',selector:'data-ml-start'}
 });
 
@@ -163,7 +163,7 @@ function openPractice(type,id,lessonId){
   setReturn(lessonId);
   window.MM_LEARNING_ANALYTICS?.record?.('curriculum_practice_open',{module:type,id});
   if(type==='diagnostic')window.MM_DIAGNOSTIC_LABS.open();
-  else if(type==='data')window.MM_PROCESS_DATA_DIAGNOSTICS.open();
+  else if(type==='data'){window.MM_PROCESS_DATA_DIAGNOSTICS.open();window.MM_PROCESS_DATA_DIAGNOSTICS.openGuidedCases?.()}
   else if(type==='material')window.MM_MATERIAL_BEHAVIOUR_LABS.open();
   requestAnimationFrame(()=>{
     const button=practiceButton(type,id);

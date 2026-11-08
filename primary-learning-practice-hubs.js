@@ -1240,7 +1240,7 @@ function openQuestionCentreDetail(){
   if(!learnToolOrigin)learnToolOrigin='question-centre';
   root.dataset.mmHubMode='question-centre';
   root.innerHTML=`<div class="mm-primary-hub mm-question-centre"><header class="mm-primary-hub-head"><span class="eyebrow">Learn · Question Centre</span><h1>Questions, checks and decisions</h1><p>Use one place to choose the kind of question you need. Scoring, evidence and safety rules stay with each governed source.</p></header><section class="mm-primary-hub-card mm-question-centre-card">${questionCentreMarkup()}</section></div>`;
-  detailBack(root,'Question Centre','Learn');
+  detailBack(root,'Question Centre','Learn','scenario-detail','question-centre');
   bind(root);
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -1536,7 +1536,7 @@ function practiceHubMarkup(){
     ${practicePlanRows(plan)}
     <section class="mm-hub-section"><div class="mm-hub-section-head"><span class="eyebrow">Choose by the job you want to practise</span><h2>Practice tools</h2><p>Practice is for learning; assessments stay separate. ${scenarioCount} shop-floor scenarios.</p></div><label class="mm-practice-search"><span>Find practice</span><input type="search" data-mm-practice-query autocomplete="off" placeholder="Search a tool or topic" aria-controls="mmPracticeToolResults"></label><p class="mm-practice-count" aria-live="polite" data-mm-practice-count>3 tools shown</p><div class="mm-hub-grid" id="mmPracticeToolResults">
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="problem-practice"><span class="eyebrow">Investigate or decide · 5–15 min</span><b>Moulding problem practice</b><small>Choose one route: diagnose the cause of a defect, or work through the next safe action in a shop-floor scenario.</small><span class="mm-hub-tile-action">Choose a problem practice route →</span></button>
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="process-data"><span class="eyebrow">Read evidence · 10–20 min</span><b>Analyse process data</b><small>Prepare local data, verify signal meaning and compare a fault or recovery against a valid baseline.</small><span class="mm-hub-tile-action">Open data diagnosis →</span></button>
+      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="process-data"><span class="eyebrow">Read evidence · 10–20 min</span><b>Process data lab</b><small>Practise on synthetic evidence or prepare local shot data for baseline, drift, cavity and quality analysis.</small><span class="mm-hub-tile-action">Choose a process-data route →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Explore behaviour · 5–15 min</span><b>Use labs & simulators</b><small>Test process and material reasoning in a controlled training environment without changing a real machine.</small><span class="mm-hub-tile-action">Choose a lab or simulator →</span></button>
     </div></section>
   </div>`;
@@ -1605,8 +1605,12 @@ function detailBack(root,label,back,returnAction='scenario-detail',returnMode='h
     if(back==='Learn'){
       const action=learnToolOrigin||'learn-scenarios';
       switchView('path');
-      learnToolOrigin=null;
-      requestAnimationFrame(()=>document.querySelector(`#path [data-mm-hub-action="${action}"]`)?.focus());
+      if(action==='question-centre'&&returnMode!=='question-centre'){
+        requestAnimationFrame(()=>openQuestionCentreDetail());
+      }else{
+        learnToolOrigin=null;
+        requestAnimationFrame(()=>document.querySelector(`#path [data-mm-hub-action="${action}"]`)?.focus());
+      }
     }else if(returnMode==='problem-practice'){
       openProblemPractice();
       requestAnimationFrame(()=>root.querySelector(`[data-mm-hub-action="${returnAction}"]`)?.focus());

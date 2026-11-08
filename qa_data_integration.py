@@ -55,7 +55,8 @@ def main() -> None:
         "similarCases",
         "process_dataset_saved",
         "process_case_linked",
-        "data-pdi-launch",
+        "openAdvancedIntake",
+        "Process data lab",
         "deleteAllProcessData",
         "referenceScale",
         "insufficient-reference-observations",
@@ -66,6 +67,8 @@ def main() -> None:
     ]
     for token in required_runtime_tokens:
         require(token in runtime, f"connected runtime missing required behavior: {token}")
+
+    require("data-pdi-launch" not in runtime and "interceptLegacyLauncher" not in runtime, "connected runtime must not intercept a duplicate legacy launcher")
 
     require('id:`${id}:row:${rowOrdinal}`' in runtime, 'stored process rows must use immutable row-ordinal identity')
     require('sourceShotIndex' in runtime and 'rowOrdinal' in runtime, 'stored process rows must preserve source shot index separately from row identity')
