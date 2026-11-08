@@ -1240,7 +1240,7 @@ function openQuestionCentreDetail(){
   if(!learnToolOrigin)learnToolOrigin='question-centre';
   root.dataset.mmHubMode='question-centre';
   root.innerHTML=`<div class="mm-primary-hub mm-question-centre"><header class="mm-primary-hub-head"><span class="eyebrow">Learn · Question Centre</span><h1>Questions, checks and decisions</h1><p>Use one place to choose the kind of question you need. Scoring, evidence and safety rules stay with each governed source.</p></header><section class="mm-primary-hub-card mm-question-centre-card">${questionCentreMarkup()}</section></div>`;
-  detailBack(root,'Question Centre','Learn','scenario-detail','question-centre');
+  detailBack(root,'Question Centre','Learn');
   bind(root);
   window.scrollTo({top:0,behavior:'smooth'});
 }
