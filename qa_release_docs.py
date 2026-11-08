@@ -317,6 +317,28 @@ current_ledger=json.loads(text('data/release-external-validation-v1.json'))
 need(current_ledger.get('release')==V['web_release'],
      'current external HOLD ledger release must agree with version.json')
 current_candidate=verify_hold_candidate_identity(current_ledger.get('webCandidate'),V['web_release'])
+external_index=text(current_ledger['validationIndex'])
+technical_claim=(current_ledger.get('technicalAutomation') or {}).get('claim','')
+candidate_record=current_ledger['webCandidate']
+need((current_ledger.get('technicalAutomation') or {}).get('status')=='pass',
+     'external-validation summary must match the exact-source technical PASS')
+for marker in (
+    '**Technical candidate:** **PASS — software-only**',
+    f"run `{candidate_record['candidateRunId']}`",
+    f"artifact `{candidate_record['artifactId']}`",
+    f"source `{candidate_record['sourceSha']}`",
+    f"runtime fingerprint `{candidate_record['runtimeFingerprint']}`",
+    'Mobile Browser QA',
+    'Question Quality 50-Pass',
+    'All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain **HOLD**',
+):
+    need(marker in external_index,
+         f'current external-validation summary is stale or incomplete: {marker}')
+need('exact-source release candidate and current release-bound packet checks are pending' not in external_index
+     and 'No candidate, external validation' not in external_index,
+     'external-validation summary must not contradict the retained candidate producer')
+need(bool(technical_claim) and 'PASS' in current_ledger.get('candidateStatus',''),
+     'canonical technical candidate claim is missing')
 if all((current_ledger.get(area) or {}).get('status')=='hold' for area in CURRENT_HOLD_PACKETS):
     need(verify_all_hold_packets(ROOT,current_ledger)==len(CURRENT_HOLD_PACKETS),
          'all seven current HOLD packets must have exact retained candidate provenance')
