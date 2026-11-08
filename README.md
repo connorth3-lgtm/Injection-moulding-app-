@@ -19,7 +19,7 @@ The project maintainers do not intend to seek patent protection over implementat
 
 - PWA / browser shell: `2026.11.08.3`
 - Open Windows desktop: `2026.09.29.1`
-- Android lane: `2026.08.26.2`
+- Android shell: `2026.11.08.1` (WebView content: hosted `/preview/`, currently web release `2026.11.08.3`)
 - Training content: `2026.08.26.1`
 - Audited assessment bank: `2026.08.30.1`
 - Assessment quality / analytics hardening: `2026.08.24.3`
@@ -29,7 +29,7 @@ The project maintainers do not intend to seek patent protection over implementat
 
 `version.json` is the machine-readable release record and is the source of truth for release identifiers.
 
-Release lanes are not assumed to be feature-parity by date alone. In particular, the older Android lane must not be described as containing newer web/PWA or desktop features unless that exact Android release is rebuilt, tested and governed for them.
+The Android package versions its native shell separately from the web content. Its WebView loads the hosted `/preview/` route, so it receives that route's current standards and Book content when online. This does not prove physical-device installation, offline behavior, audio continuity, or Play Store readiness; those remain separate checks.
 
 ## Run the PWA
 

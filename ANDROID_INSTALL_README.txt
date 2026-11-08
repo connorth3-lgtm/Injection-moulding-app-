@@ -90,7 +90,7 @@ DATA / ASSESSMENT HARDENING
 - Current answer keys, the >=80% overall threshold and the zero-wrong safety-critical regional gate remain unchanged.
 
 VERSIONING
-Android/PWA shell: 2026.08.26.2
+Android/PWA shell: 2026.11.08.1 (hosted WebView content: 2026.11.08.3 preview)
 Training content: 2026.08.26.1
 Audited question bank: 2026.08.30.1
 Assessment quality / analytics hardening: 2026.08.24.3

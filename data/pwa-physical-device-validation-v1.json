@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.11.08.3 requires real iOS/iPadOS and Android device validation. No candidate or artifact is evidence of physical-device testing. Install, offline restart, reboot, update, storage-pressure and zoom checks remain pending; accessibility is separately governed. Production, signing, provider and machine-control authority remain HOLD.",
+  "boundary": "Release 2026.11.08.3 requires independent validation on physical iOS/iPadOS and Android devices. No retained candidate or automated artifact is evidence of physical-device testing. Install, offline restart, reboot, update, storage-pressure and zoom checks remain pending; assistive-technology evidence is separately governed by data/accessibility-real-at-validation-v1.json. Production, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
