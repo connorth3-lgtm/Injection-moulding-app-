@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.08.2",
-  "commit": "e062c685bac1be2b32ab8564d625e3168042821f",
+  "release": "2026.11.08.4",
+  "commit": "5046bc28940c9df68fad67dffe7e048f8b43d2c9",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Owner-approved visual design baseline for release 2026.11.08.2, pinned to the exact reviewed UI source e062c685bac1be2b32ab8564d625e3168042821f. Approval covers only the Learn, Practice and Materials changes documented in qa/VISUAL_REVIEW_2026.11.08.2.md. This strict four-viewport, thirteen-surface Chromium comparison remains software regression evidence only; independent accessibility, physical-device, Book SME, provider, learner and production validation remain HOLD.",
-  "ref": "visual-baseline/2026.11.08.2",
+  "policy": "Regression baseline for the user-requested unified Moulding problem practice design in release 2026.11.08.4. It pins the exact source that combines defect diagnosis and shop-floor decision practice under one Practice entry. Automated comparisons check later changes against this release; the generated comparison evidence does not imply independent human visual approval, accessibility approval, physical-device validation, provider review or production authorization.",
+  "ref": "visual-baseline/2026.11.08.4",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "e062c685bac1be2b32ab8564d625e3168042821f"
+    "referenceSourceSha": "5046bc28940c9df68fad67dffe7e048f8b43d2c9"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",
