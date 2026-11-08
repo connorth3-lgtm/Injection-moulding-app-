@@ -183,13 +183,13 @@ test('unified practice illustrations load locally without external dependencies'
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  await expect(page.locator('#scenarios .mm-reference-practice-art')).toHaveCount(5);
+  await expect(page.locator('#scenarios .mm-reference-practice-art')).toHaveCount(4);
   await page.waitForFunction(()=>document.documentElement.classList.contains('mm-reference-photo-ready'));
   const tiles=await page.locator('#scenarios .mm-reference-practice-art.mm-reference-photo').evaluateAll(nodes=>nodes.map(el=>({
     tile:Number(el.dataset.mmPhotoIndex),
     background:getComputedStyle(el).backgroundImage
   })));
-  expect(tiles.map(row=>row.tile)).toEqual([20,22,23,19,27]);
+  expect(tiles.map(row=>row.tile)).toEqual([20,22,23,19]);
   expect(tiles.every(row=>row.background.includes('mockup-reference-tiles.webp'))).toBe(true);
 });
 
@@ -201,8 +201,8 @@ for(const width of [360,810]){
     const hub=page.locator('#scenarios .mm-practice-hub');
     await expect(hub).toBeVisible();
     const activities=hub.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-reference-practice-choice');
-    await expect(activities).toHaveCount(5);
-    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(5);
+    await expect(activities).toHaveCount(4);
+    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(4);
     const recommended=hub.locator('.mm-reference-practice-feature');
     await expect(recommended.locator(':scope > .mm-reference-practice-feature-art')).toHaveCount(1);
     await page.evaluate(()=>{window.MM_REFERENCE_LAYOUT.refresh();window.MM_REFERENCE_LAYOUT.refresh()});
