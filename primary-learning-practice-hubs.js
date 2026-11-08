@@ -1605,12 +1605,8 @@ function detailBack(root,label,back,returnAction='scenario-detail',returnMode='h
     if(back==='Learn'){
       const action=learnToolOrigin||'learn-scenarios';
       switchView('path');
-      if(action==='question-centre'&&returnMode!=='question-centre'){
-        requestAnimationFrame(()=>openQuestionCentreDetail());
-      }else{
-        learnToolOrigin=null;
-        requestAnimationFrame(()=>document.querySelector(`#path [data-mm-hub-action="${action}"]`)?.focus());
-      }
+      learnToolOrigin=null;
+      requestAnimationFrame(()=>document.querySelector(`#path [data-mm-hub-action="${action}"]`)?.focus());
     }else if(returnMode==='problem-practice'){
       openProblemPractice();
       requestAnimationFrame(()=>root.querySelector(`[data-mm-hub-action="${returnAction}"]`)?.focus());
