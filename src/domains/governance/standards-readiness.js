@@ -875,7 +875,7 @@ function open(region,courseId){
 }
 function install(){
  const shell=window.MM_APP_SHELL;if(!shell?.navigation?.register)return false;
- if(!navDispose)navDispose=shell.navigation.register({id:'standards-readiness',label:'Standards & readiness',icon:'§',description:'Regional study pathways for New Zealand, the UK’s four nations and India, plus ISO 9001 and NZQA readiness.',order:55,group:'progress',mobileGroup:'more',action:()=>open()});
+ if(!navDispose)navDispose=shell.navigation.register({id:'standards-readiness',label:'Standards & readiness',icon:'§',description:'Study paths: NZ, UK nations, India; ISO/NZQA readiness.',order:55,group:'progress',mobileGroup:'more',action:()=>open()});
  return true;
 }
 function mountBookPathwayLink(){
