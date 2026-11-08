@@ -91,10 +91,10 @@ test('Home and More use collapsible, mobile-safe panels without losing actions',
   await expect(home.locator('[data-mm-home-book]')).toBeVisible();
   await expect(toolbox).toBeVisible();
   await expect(toolbox).toHaveAttribute('open','');
-  await expect(toolbox.getByRole('button',{name:/Moulding problem practice/})).toBeVisible();
+  await expect(toolbox.getByRole('button',{name:/Troubleshoot/})).toBeVisible();
   await toolbox.locator('summary').click();
   await expect(toolbox).not.toHaveAttribute('open','');
-  await expect(toolbox.getByRole('button',{name:/Moulding problem practice/})).toBeHidden();
+  await expect(toolbox.getByRole('button',{name:/Troubleshoot/})).toBeHidden();
   await toolbox.locator('summary').click();
   await expect(toolbox.getByRole('button',{name:/Analyse data/})).toBeVisible();
 
@@ -135,7 +135,7 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   await expect(tools).toBeVisible();
   await expect(page.locator('#dashboard .mm-home-task-hub,#dashboard .mm-home-utility')).toHaveCount(0);
   await expect(tools.locator('[data-mm-home-action]')).toHaveCount(2);
-  await expect(tools.getByRole('button',{name:/Moulding problem practice/i})).toBeVisible();
+  await expect(tools.getByRole('button',{name:/Troubleshoot/i})).toBeVisible();
   await expect(tools.getByRole('button',{name:/Analyse data/i})).toBeVisible();
   await expect(tools.getByRole('button',{name:/Materials|Practice|Saved lessons|Browse learning|Reference book/i})).toHaveCount(0);
   await expect(focus.getByRole('button',{name:/Continue lesson/i})).toBeVisible();
@@ -154,7 +154,7 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   expect(tablet.lessonBeforeBook).toBeTruthy();
   expect(tablet.bookBeforeTools).toBeTruthy();
 
-  const practiceRoute=tools.getByRole('button',{name:/Moulding problem practice/i});
+  const practiceRoute=tools.getByRole('button',{name:/Troubleshoot/i});
   await practiceRoute.evaluate(el=>el.dataset.mmQaStableNode='1');
   await practiceRoute.focus();
   await page.setViewportSize({width:412,height:915});
