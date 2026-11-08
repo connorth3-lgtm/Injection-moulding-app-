@@ -81,7 +81,7 @@ test('regional study pathways connect the app and Book on a phone',async({page})
  for(const [region,headings] of [
   ['New Zealand',[/Plastics Processing \(Level 3\)/,/Plastics Processing \(Level 4\)/]],
   ['United Kingdom',[/Polymer processing technician/,/Scientific, Technical and Formulation Processing/,/Polymer Processing Operations apprenticeships/,/Polymer processing operations apprenticeship framework/]],
-  ['India',[/Machine Operator.*Injection Molding/]],
+  ['India',[/Assistant Machine Operator.*Injection Moulding/,/Machine Operator.*Injection Molding/]],
  ]){
   const regionButton=group.getByRole('button',{name:region,exact:true});
   await regionButton.focus();
@@ -112,11 +112,25 @@ test('regional study pathways connect the app and Book on a phone',async({page})
   }
   await expectNoHorizontalOverflow(page,region+' regional study pathways');
  }
- await expect(cards.getByRole('link',{name:/National Qualification Register/})).toHaveAttribute('href','https://www.nqr.gov.in/qualifications/14350');
- await cards.getByText('Official qualification modules and hours').click();
- await expect(cards.getByText('Mandatory on-the-job training (30 h)')).toBeVisible();
- await expect(cards.getByText(/Theory 90 h · Practical 180 h/)).toBeVisible();
- const india=cards.locator('[data-education-course]');
+ // Pathway cards are the elements carrying data-education-pathway. Search
+ // from the readiness view so this selector matches the card itself rather
+ // than looking for a nested card inside the collection of cards.
+ const indiaAssistant=readiness.locator('[data-education-pathway="india-cipet-amo-im"]');
+ await expect(indiaAssistant.getByRole('link',{name:/National Qualification Register/}).first()).toHaveAttribute('href','https://www.nqr.gov.in/qualifications/14257');
+ await indiaAssistant.getByText('Official qualification modules and hours').click();
+ await expect(indiaAssistant.getByText('Mandatory on-the-job training (30 h)')).toBeVisible();
+ await expect(indiaAssistant.getByText(/Theory 50 h · Practical 130 h/)).toBeVisible();
+ const assistantPack=indiaAssistant.locator('[data-education-course="india-cipet-amo-im"]');
+ await assistantPack.locator(':scope > summary').click();
+ await assistantPack.getByText('Delivery and training records',{exact:true}).click();
+ await expect(assistantPack.getByText(/NQR page classifies the 480 hours as 120 theory/)).toBeVisible();
+ await expect(assistantPack.getByText(/lists DGT\/VSQ\/N0101 as V2.0/)).toBeVisible();
+ const indiaOperator=readiness.locator('[data-education-pathway="india-cipet-mo-im"]');
+ await expect(indiaOperator.getByRole('link',{name:/National Qualification Register/}).first()).toHaveAttribute('href','https://www.nqr.gov.in/qualifications/14350');
+ await indiaOperator.getByText('Official qualification modules and hours').click();
+ await expect(indiaOperator.getByText('Mandatory on-the-job training (30 h)')).toBeVisible();
+ await expect(indiaOperator.getByText(/Theory 90 h · Practical 180 h/)).toBeVisible();
+ const india=indiaOperator.locator('[data-education-course="india-cipet-mo-im"]');
  await india.locator(':scope > summary').click();
  await india.getByText('Delivery and training records',{exact:true}).click();
  await expect(india.getByText(/180 theory, 30 employability, 360 practical and 30 mandatory on-the-job hours/)).toBeVisible();
@@ -145,14 +159,14 @@ test('regional study pathways connect the app and Book on a phone',async({page})
   expect(assessorPack).toContain(marker);
  }
  await india.locator(':scope > summary').click();
- await cards.getByRole('button',{name:'What Injection Moulding Is',exact:true}).click();
+ await indiaOperator.getByRole('button',{name:'What Injection Moulding Is',exact:true}).click();
  const book=page.locator('#mmBookView');
  await expect(book.locator('[data-mm-book-reader] h2')).toHaveText('What injection moulding is and what the process must achieve');
  await book.getByRole('button',{name:'Book contents'}).click();
  await book.getByText('Reading guide & editorial notes',{exact:true}).click();
  await book.getByRole('button',{name:'Regional study pathways: NZ, UK and India'}).click();
  await expect(group.getByRole('button',{name:'India',exact:true})).toHaveAttribute('aria-pressed','true');
- await cards.getByRole('button',{name:'Open Practice in the app'}).click();
+ await indiaOperator.getByRole('button',{name:'Open Practice in the app'}).click();
  await expectVisible(page,'#scenarios .mm-practice-hub');
  await mobileMore(page);
  const bookLink=page.locator('[data-mm-registry-menu="book"]');

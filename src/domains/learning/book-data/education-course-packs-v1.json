@@ -1,11 +1,12 @@
 {
   "schema": 1,
   "id": "mouldmaster-education-course-packs",
-  "version": "2026.11.08.1",
+  "version": "2026.11.08.2",
   "checked": "2026-11-08",
   "status": "draft-provider-review",
-  "boundary": "Use these workbooks for study and draft assessment planning. Approved providers control training hours, formal evidence, assessment, moderation and credentials. Only site-authorised staff perform practical work under applicable procedures.",
+  "boundary": "Use these workbooks for study and draft assessment planning. Approved providers control training hours, formal evidence, assessment, moderation and credentials. Only site-authorised staff perform practical work under applicable procedures. Regional framework levels are system-specific; this pack does not establish equivalence, credit transfer or cross-border recognition.",
   "providerChecklist": [
+    "Confirm any cross-border recognition or credit transfer with the receiving provider or competent recognition service; do not infer it from the level number.",
     "Select the active framework and programme version for the cohort. Confirm the mandatory units, optional choices and eligible assessment sites with the awarding body or provider.",
     "Review every mapped reference, the missing teaching and the proposed evidence with a subject specialist and an authorised assessor. Confirm the official assessment instruments and pass rules.",
     "Review any local language workbook with a vocational educator and native speaker before formal teaching or assessment. Use the provider’s approved assessment language and accommodations.",
@@ -177,6 +178,10 @@
     "st1328-sias": {
       "title": "SIAS ST1328 v1.0 assessment method allocation and evidence guidance",
       "url": "https://cogentskills.com/wp-content/uploads/2024/05/L3-Polymer-Processing-Technician-Specification.pdf"
+    },
+    "india-assistant-qualification": {
+      "title": "CIPET qualification file: Assistant Machine Operator – Injection Moulding",
+      "url": "https://www.nqr.gov.in/qualification/file/STT_Qualification_File_AMO-IM.pdf"
     }
   },
   "exercises": {
@@ -3165,6 +3170,232 @@
           ],
           "exercise": "handover",
           "evidence": "Record approved workplace activities, dates, hours, evidence references and supervisor verification in the centre’s controlled record."
+        }
+      ]
+    },
+    "india-cipet-amo-im": {
+      "framework": "CIPET Assistant Machine Operator – Injection Moulding, QG-03-CP-04130-2025-V2-CIPET, NCrF/NSQF Level 3; NQR 14257",
+      "scope": "The module-level map covers the published AOs for CPC/N0214, CPC/N0215, CPC/N0216, CPC/N0411, CPC/N0219 and DGT/VSQ/N0101, plus mandatory OJT. It links study to the Book and existing fictional practice workbooks. The assessment file is a source map, not a MouldMaster assessment instrument.",
+      "sourceIds": [
+        "india-assistant-qualification"
+      ],
+      "delivery": [
+        "Confirm the learner’s entry route, approved centre, intake, training language and current qualification-file version with CIPET.",
+        "The NQR page classifies the 480 hours as 120 theory, 300 practical, 30 employability and 30 mandatory OJT. The qualification-file module table adds to 150 theory (including the 30-hour employability module), 300 practical and 30 OJT. Both total 480 hours; CIPET confirms the controlled schedule and category labels before recording hours.",
+        "The NQR landing page lists DGT/VSQ/N0101 as V2.0, while the linked May 2025 qualification file lists V1.0. CIPET confirms the active module version and current assessment instrument.",
+        "Arrange the prescribed practical work and 30 mandatory OJT hours through the approved centre and workplace. Keep app practice formative; it cannot replace attendance, machine access, supervision or workplace assessment.",
+        "Use the provider’s current assessment instrument, qualified trainers and assessors, site controls and record system. Exercise practical safety or machine tasks only under authorised instructor and workplace supervision."
+      ],
+      "rows": [
+        {
+          "refs": [
+            "CPC/N0214 AO1",
+            "CPC/N0214 AO2",
+            "CPC/N0214 AO3",
+            "CPC/N0214 AO4",
+            "CPC/N0214 AO5",
+            "CPC/N0214 AO6",
+            "CPC/N0214 AO7",
+            "CPC/N0214 AO8",
+            "CPC/N0214 AO9",
+            "CPC/N0214 AO10",
+            "CPC/N0214 AO11",
+            "CPC/N0214 AO12",
+            "CPC/N0214 AO13",
+            "CPC/N0214 AO14",
+            "CPC/N0214 AO15",
+            "CPC/N0214 AO16",
+            "CPC/N0214 AO17",
+            "CPC/N0214 AO18"
+          ],
+          "title": "Work instructions, production preparation and material readiness",
+          "coverage": "mapped",
+          "book": [
+            "documentation",
+            "process-baseline",
+            "cycle",
+            "safety-foundations",
+            "mould-anatomy",
+            "material-families"
+          ],
+          "lessons": [
+            2,
+            5,
+            6,
+            21,
+            31,
+            41,
+            50
+          ],
+          "exercise": "handover",
+          "evidence": "Use a fictional work order to identify the instruction source, planned task, material and mould references, PPE check, consumables and unresolved questions. A provider confirms the official observation and evidence requirements."
+        },
+        {
+          "refs": [
+            "CPC/N0215 AO1",
+            "CPC/N0215 AO2",
+            "CPC/N0215 AO3",
+            "CPC/N0215 AO4",
+            "CPC/N0215 AO5",
+            "CPC/N0215 AO6",
+            "CPC/N0215 AO7",
+            "CPC/N0215 AO8",
+            "CPC/N0215 AO9",
+            "CPC/N0215 AO10",
+            "CPC/N0215 AO11"
+          ],
+          "title": "Assisted setup, process monitoring and troubleshooting under operator guidance",
+          "coverage": "workplace",
+          "book": [
+            "machine-anatomy",
+            "mould-anatomy",
+            "process-baseline",
+            "process-monitoring",
+            "diagnostic-method"
+          ],
+          "lessons": [
+            3,
+            11,
+            17,
+            18,
+            31,
+            41,
+            50,
+            96
+          ],
+          "exercise": "fault-review",
+          "evidence": "The qualification-file AOs include equipment checks, mould fitting, prescribed setting selection, material preparation, a test sample, measurement and assisted running. Practical activity requires the operator’s work instruction, authorised plant and direct site supervision."
+        },
+        {
+          "refs": [
+            "CPC/N0216 AO1",
+            "CPC/N0216 AO2",
+            "CPC/N0216 AO3",
+            "CPC/N0216 AO4"
+          ],
+          "title": "Basic inspection against an approved product and quality escalation",
+          "coverage": "workplace",
+          "book": [
+            "dimensional-stability",
+            "capability",
+            "documentation"
+          ],
+          "lessons": [
+            7,
+            75,
+            76,
+            98
+          ],
+          "exercise": "quality-record",
+          "evidence": "Compare a fictional sample with an approved reference and plan traceable inspection, reporting and lab clearance. Any real adjustment, product release or defect disposition remains with authorised staff."
+        },
+        {
+          "refs": [
+            "CPC/N0411 AO1",
+            "CPC/N0411 AO2",
+            "CPC/N0411 AO3",
+            "CPC/N0411 AO4",
+            "CPC/N0411 AO5",
+            "CPC/N0411 AO6",
+            "CPC/N0411 AO7",
+            "CPC/N0411 AO8",
+            "CPC/N0411 AO9",
+            "CPC/N0411 AO10",
+            "CPC/N0411 AO11",
+            "CPC/N0411 AO12",
+            "CPC/N0411 AO13",
+            "CPC/N0411 AO14",
+            "CPC/N0411 AO15",
+            "CPC/N0411 AO16",
+            "CPC/N0411 AO17",
+            "CPC/N0411 AO18",
+            "CPC/N0411 AO19",
+            "CPC/N0411 AO20",
+            "CPC/N0411 AO21"
+          ],
+          "title": "Workplace safety, hazard response, housekeeping and 5S",
+          "coverage": "workplace",
+          "book": [
+            "safety-foundations",
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            6,
+            41,
+            100,
+            113,
+            117
+          ],
+          "exercise": "india-5s",
+          "evidence": "Use the workbook for study only. PPE selection, emergency response, extinguisher use and shop-floor activities require the provider’s approved instruction, equipment and supervised safe drills."
+        },
+        {
+          "refs": [
+            "CPC/N0219 AO1",
+            "CPC/N0219 AO2",
+            "CPC/N0219 AO3",
+            "CPC/N0219 AO4",
+            "CPC/N0219 AO5",
+            "CPC/N0219 AO6",
+            "CPC/N0219 AO7",
+            "CPC/N0219 AO8"
+          ],
+          "title": "Office-suite records, source checking and data handling",
+          "coverage": "supplement",
+          "book": [
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            97,
+            98
+          ],
+          "exercise": "india-office",
+          "evidence": "Practise source capture, verification, file organisation and reporting with fictional data. Do not enter personal, customer or proprietary workplace data in MouldMaster."
+        },
+        {
+          "refs": [
+            "DGT/VSQ/N0101 AO1",
+            "DGT/VSQ/N0101 AO2",
+            "DGT/VSQ/N0101 AO3",
+            "DGT/VSQ/N0101 AO4",
+            "DGT/VSQ/N0101 AO5",
+            "DGT/VSQ/N0101 AO6",
+            "DGT/VSQ/N0101 AO7"
+          ],
+          "title": "Employability, communication, financial and digital literacy",
+          "coverage": "supplement",
+          "book": [
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            116,
+            119
+          ],
+          "exercise": "india-employability",
+          "evidence": "Use the self-check as draft study support. The centre confirms the approved employability curriculum, delivery language, accessibility support and assessment."
+        },
+        {
+          "refs": [
+            "Mandatory OJT 30 h"
+          ],
+          "title": "Supervised on-the-job training",
+          "coverage": "workplace",
+          "book": [
+            "safety-foundations",
+            "process-baseline",
+            "documentation"
+          ],
+          "lessons": [
+            5,
+            6,
+            41,
+            98
+          ],
+          "exercise": "handover",
+          "evidence": "The approved provider and workplace arrange and verify the full 30 mandatory hours using their controlled OJT and evidence records."
         }
       ]
     }

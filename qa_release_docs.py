@@ -11,14 +11,15 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
-  'web_release':'2026.11.08.2',
- 'android_release':'2026.08.26.2',
+  'web_release':'2026.11.08.3',
+ 'android_release':'2026.11.08.1',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
  'question_bank_version':'2026.08.30.1',
  'assessment_quality_version':'2026.08.24.3',
  'assessment_storage_scope_version':'2026.08.24.4',
  'assessment_evidence_version':'2026.10.05.1',
+  'read_aloud_version':'2026.11.08.3',
  'windows_recovery_release':'2026.08.21.1',
 }
 for k,v in expected.items(): need(V.get(k)==v,f'version.json {k} drift: {V.get(k)!r} != {v!r}')
@@ -126,6 +127,14 @@ need('node scripts/run-msix-builder.cjs --win msix --x64 --arm64' in store_workf
 need('--ia32' not in store_workflow,'Store MSIX lane must not reintroduce removed Electron 45 ia32 targeting')
 
 android=text('ANDROID_INSTALL_README.txt')
+need('https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/' in android,
+     'Android install guide must point learners to the hosted non-production preview')
+need('mouldmaster-android-debug' in android and 'android/README.md' in android,
+     'Android install guide must distinguish the native debug app from the browser PWA')
+need('production root remains release-held' in android and 'GitHub Pages Actions workflow' in android,
+     'Android install guide must preserve the production-root release boundary')
+need('Chrome\'s installed PWA uses browser speech' in android and 'native Android app' in android,
+     'Android install guide must distinguish browser speech from native app narration')
 for marker in [
  'assessment-storage-scope.js','src/domains/assessment/assessment-final-hardening.js','assessment-evidence-sources.js','assessment-evidence-approval.js',
  'src/domains/research/reference-20x-extension.js','diagnostic-learning-labs.js','material-behaviour-labs.js','process-data-diagnostics.js',

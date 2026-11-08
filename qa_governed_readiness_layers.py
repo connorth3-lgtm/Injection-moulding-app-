@@ -98,10 +98,14 @@ courses=load(course_canonical)
 embedded=json.JSONDecoder().raw_decode(runtime.split("const EDUCATION_DATA=Object.freeze(",1)[1])[0]
 release_version=load(ROOT/"version.json")["education_pathways_version"]
 need(courses["schema"]==1 and courses["id"]=="mouldmaster-education-course-packs","course pack identity mismatch")
-need(courses["version"]==embedded["version"]==release_version,"regional study content versions differ")
+need(courses["version"]==embedded["version"]==release_version=="2026.11.08.2","regional study content versions differ")
+need("equal or similar numbers do not mean equivalent awards" in embedded["claimBoundary"],"regional framework levels need an explicit non-equivalence boundary")
+for nz_id in ("nz-nzqa-4401","nz-nzqa-4402"):
+    nz_path=next(p for p in embedded["pathways"] if p["id"]==nz_id)
+    need("none currently offering" in nz_path["status"].lower() and "31 December 2026" in nz_path["scopeNote"],f"{nz_id} availability and review caveat missing")
 need(courses["status"]=="draft-provider-review" and "Approved providers control" in courses["boundary"],"course packs require provider review")
 packs=courses["packs"]
-need(len(packs)==7 and set(packs)=={p["id"] for p in embedded["pathways"]},"each regional pathway requires one course pack")
+need(len(packs)==8 and set(packs)=={p["id"] for p in embedded["pathways"]},"each regional pathway requires one course pack")
 lessons_text=text(ROOT/"src/core-runtime/core-inline-002.js").split("window.MM_DATA = ",1)[1].lstrip()
 lesson_ids={lesson["id"] for lesson in json.JSONDecoder().raw_decode(lessons_text)[0]["lessons"]}
 sources=courses["sources"]
@@ -164,6 +168,16 @@ for category,total in hours.items():
 need(all(sum(module["delivery"].values())==module["hours"] for module in india_path["modules"]),"CIPET per-module breakdown differs from published totals")
 need(any("groups theory and employability into 210 hours" in note for note in india["delivery"]),"CIPET classroom subtotal must remain distinct from theory hours")
 need(any("200 theory and 400 practical marks" in note and "260 and 340" in note and "Training Assessment Wing" in note for note in india["delivery"]),"CIPET conflicting mark totals require centre resolution")
+assistant=packs["india-cipet-amo-im"]
+expected_assistant={f"{module} AO{i}" for module,count in [("CPC/N0214",18),("CPC/N0215",11),("CPC/N0216",4),("CPC/N0411",21),("CPC/N0219",8),("DGT/VSQ/N0101",7)] for i in range(1,count+1)}
+need(refs["india-cipet-amo-im"]==expected_assistant|{"Mandatory OJT 30 h"},"CIPET Assistant Machine Operator outcome map is incomplete")
+assistant_path=next(p for p in embedded["pathways"] if p["id"]=="india-cipet-amo-im")
+need(sum(module["hours"] for module in assistant_path["modules"])==480,"CIPET assistant route must total 480 hours")
+assistant_hours={"Theory":150,"Practical":300,"On-the-job training":30}
+for category,total in assistant_hours.items():
+    need(sum(module["delivery"].get(category,0) for module in assistant_path["modules"])==total,f"CIPET assistant {category} hours differ from the qualification file module table")
+need(any("NQR page classifies the 480 hours as 120 theory" in note and "qualification-file module table adds to 150 theory" in note for note in assistant["delivery"]),"CIPET assistant hour-category difference needs centre resolution")
+need(any("lists DGT/VSQ/N0101 as V2.0" in note and "lists V1.0" in note for note in assistant["delivery"]),"CIPET assistant module-version difference needs centre resolution")
 
 # Book enrichment
 esrc=ROOT/"data/book-evidence-enrichment-v2.json"

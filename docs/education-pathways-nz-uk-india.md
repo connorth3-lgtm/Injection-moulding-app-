@@ -12,17 +12,35 @@ Under **Provider review and blank records**, download the draft assessor pack. I
 
 ## Framework coverage
 
+Framework level numbers are system-specific labels. A shared number does not establish equivalent learning, credit transfer, professional recognition or portability between New Zealand, UK nations and India. Providers or a competent recognition service decide any formal comparison.
+
 | Route | Course pack coverage | Provider decision |
 | --- | --- | --- |
-| New Zealand Level 3 | NZQA 4401 core and Injection Moulding strand outcomes. Separate marking guides cover NZQA 252, 255, 27926 and 29515. | Confirm programme components, relevant standards versions, consent to assess, observation ranges and moderation. Unit 27926 uses two eligible advanced moulds and three different ancillary equipment types. |
-| New Zealand Level 4 | NZQA 4402 core and Injection Moulding strand outcomes. Draft guides for NZQA 260 and 9713 distinguish complex mould service from setting and removal. | Confirm the approved programme, qualifying equipment, workplace observation and trial scope. |
+| New Zealand Level 3 | NZQA 4401 core and Injection Moulding strand outcomes. Separate marking guides cover NZQA 252, 255, 27926 and 29515. | NZQA currently marks 4401 as Current but lists no organisations offering it; its next review is 31 December 2026. Confirm an active provider, programme, standards versions, consent to assess, observation ranges and moderation before planning enrolment. Unit 27926 uses two eligible advanced moulds and three different ancillary equipment types. |
+| New Zealand Level 4 | NZQA 4402 core and Injection Moulding strand outcomes. Draft guides for NZQA 260 and 9713 distinguish complex mould service from setting and removal. | NZQA currently marks 4402 as Current but lists no organisations offering it; its next review is 31 December 2026. Confirm an active provider, approved programme, qualifying equipment, workplace observation and trial scope before relying on this route. |
 | England | ST1328 v1.0. All 43 knowledge, 35 skill and six behaviour identifiers grouped by teaching topic and published assessment method. | Confirm eligible training and the provider's wider polymer syllabus. The end-point assessment includes workplace observation, an interview supported by a portfolio, and a multiple-choice test. |
 | Scotland | Published mandatory and optional SVQ units for GP42 22 at SCQF Level 5 and GP43 23 at Level 6. Each award has three mandatory and six selected optional units. | Select options using the award's group rules. Confirm workplace opportunities, Core Skills, enhancements and the current assessment strategy. |
 | Wales | The current Qualifications Wales register lists both GQA awards. The pack maps all 14 Level 2 and eight Level 3 registered unit references and includes FR04316 for comparison. | Confirm the active framework and qualifications for the intake, selected units, delivery language, workplace assessment and Essential Skills. |
 | Northern Ireland | Framework 348 Issue 6. Maps all eight registered GQA competence unit references, the Pearson core and relevant polymer options, Essential Skills, and employment rights and responsibilities. | Confirm the GQA units, the Pearson unit selection and the contractor's assessment plan. |
-| India | CIPET Machine Operator – Injection Molding. All mandatory modules and published assessment-outcome labels, plus supervised on-the-job training. | Confirm the approved intake, training language and official assessment instruments. Resolve the repeated CPC/N0221 AO11 and conflicting mark totals with the centre before using marks. |
+| India | Two CIPET pathways: Assistant Machine Operator – Injection Moulding (NSQF Level 3, NQR 14257, 480 hours) progresses to Machine Operator – Injection Moulding (NSQF Level 3.5, NQR 14350, 600 hours). Both are mapped to Book modules and practice; the assistant route maps its published assessment outcomes. | Confirm the approved intake, eligibility, training language and controlled assessment instruments. The assistant QF and NQR page group employability hours differently; resolve hour categories with CIPET. For NQR 14350, resolve the repeated CPC/N0221 AO11 and conflicting mark totals with the centre before using marks. |
 
-## India delivery hours
+## India delivery hours by pathway
+
+### Assistant Machine Operator – Injection Moulding (NQR 14257; NSQF Level 3)
+
+The NQR record totals 480 hours and displays 120 theory, 300 practical, 30 employability and 30 mandatory OJT hours:
+
+| Category shown in NQR | Hours |
+| --- | ---: |
+| Theory | 120 |
+| Practical | 300 |
+| Employability | 30 |
+| Mandatory on-the-job training | 30 |
+| Total | 480 |
+
+The linked qualification file’s module table totals 150 theory (including the 30-hour employability module), 300 practical and 30 OJT. Both sources total 480 hours, but they label the theory/employability split differently. The NQR landing page also lists DGT/VSQ/N0101 as V2.0 while the linked May 2025 qualification file lists V1.0. CIPET confirms the controlled schedule, category labels and active module version before training hours or assessment instruments are recorded. The entry routes and the 30 practical/OJT hours are provider-controlled; app reading does not count toward them.
+
+### Machine Operator – Injection Moulding (NQR 14350; NSQF Level 3.5)
 
 | Category | Hours |
 | --- | ---: |
@@ -60,3 +78,4 @@ Providers control formal training hours, assessment, credit and qualification aw
 - [Qualifications Wales current exports](https://www.qiw.wales/export) and [Ofqual unit mapping data](https://www.gov.uk/find-a-regulated-qualification)
 - [Northern Ireland framework 348](https://www.nidirect.gov.uk/articles/polymer-processing-operations-level-3-apprenticeship-framework) and [Pearson 601/9049/8 specification](https://qualifications.pearson.com/content/dam/pdf/BTEC-Specialist-Qualifications/advanced-manufacturing-engineering-development-technical-knowledge/2016/specification/adv-man-eng-spec.pdf)
 - [National Qualification Register CIPET MO-IM qualification record](https://www.nqr.gov.in/qualifications/14350) and [qualification file and assessment annex](https://www.nqr.gov.in/qualification/file/STT_Qualification_File_MO-IM.pdf)
+- [National Qualification Register Assistant Machine Operator – Injection Moulding (NQR 14257)](https://www.nqr.gov.in/qualifications/14257) and [CIPET qualification file](https://www.nqr.gov.in/qualification/file/STT_Qualification_File_AMO-IM.pdf)
