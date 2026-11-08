@@ -1,0 +1,3376 @@
+{
+  "schemaVersion": 1,
+  "datasetId": "apac-material-grade-expansion-20261108-v30",
+  "status": "source-reviewed-and-validated-apac-injection-grade-expansion",
+  "reviewedAt": "2026-11-08",
+  "purpose": "Add a source-backed second wave of Thailand SCGC, Singapore TPC COSMOPLENE, and Philippines EVALENE injection-moulding exact grades to the material catalogue.",
+  "summary": {
+    "validatedGrades": 50,
+    "byCountry": {
+      "Thailand": 30,
+      "Singapore": 12,
+      "Philippines": 8
+    },
+    "manufacturerCount": 3,
+    "notes": "Every entry is an exact commercial grade. Grade-specific process use is sourced; exact lifecycle status remains unknown. Historical Philippine records are labelled as such, and supplier country is not used to infer a particular batch or plant."
+  },
+  "governance": {
+    "noProductionRecipeInference": true,
+    "countryMeansManufacturerIdentityUnlessGradeSpecificOriginIsExplicit": true,
+    "historicalPhilippinesGradesRemainLifecycleUnknown": true,
+    "comparisonReadyOnlyWhenTestMethodAndMeltFlowConditionsAreComplete": true
+  },
+  "manufacturers": [
+    {
+      "id": "mfr-scgc",
+      "name": "SCGC",
+      "country": "Thailand",
+      "website": "https://www.scgchemicals.com/",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-p443j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PP",
+          "grade": "P443J",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Injection and continuous-compression cap/closure grade."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-p443j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 6,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-p443j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-p443j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — P443J",
+              "url": "https://www.scgchemicals.com/en/products-grade/p443j",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-p441ju",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PP",
+          "grade": "P441JU",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Antistatic and UV-stabilized injection impact copolymer."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-p441ju-mfr",
+              "property": "Melt Flow Rate",
+              "value": 5,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-p441ju-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-p441ju-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — P441JU",
+              "url": "https://www.scgchemicals.com/en/products-grade/p441ju",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-p483ju",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PP",
+          "grade": "P483JU",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "High-stiffness, antistatic and UV-stabilized injection impact copolymer."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-p483ju-mfr",
+              "property": "Melt Flow Rate",
+              "value": 5,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-p483ju-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-p483ju-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — P483JU",
+              "url": "https://www.scgchemicals.com/en/products-grade/p483ju",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-p640j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PP",
+          "grade": "P640J",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Injection impact copolymer for impact/stiffness balance."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-p640j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 10,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-p640j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-p640j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — P640J",
+              "url": "https://www.scgchemicals.com/en/products-grade/p640j",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-p945j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PP",
+          "grade": "P945J",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "High-flow injection impact copolymer."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-p945j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 65,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-p945j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-p945j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — P945J",
+              "url": "https://www.scgchemicals.com/en/products-grade/p945j",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-p440j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PP",
+          "grade": "P440J",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Injection impact copolymer for pails, crates and general industrial parts."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-p440j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 5,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-p440j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-p440j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — P440J",
+              "url": "https://www.scgchemicals.com/en/products-grade/1780971414",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-p904j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PP",
+          "grade": "P904J",
+          "aliases": [],
+          "polymer": {
+            "family": "PP homopolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "High-flow homopolymer for thin-wall injection and packaging."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-p904j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 75,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-p904j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-p904j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — P904J",
+              "url": "https://www.scgchemicals.com/en/products-grade/p904j",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-p951j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PP",
+          "grade": "P951J",
+          "aliases": [],
+          "polymer": {
+            "family": "PP random copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "High-clarity antistatic random copolymer for injection molding."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-p951j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 28,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-p951j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-p951j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — P951J",
+              "url": "https://www.scgchemicals.com/en/products-grade/p951j",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-p1088j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PP",
+          "grade": "P1088J",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "High-flow, high-crystallinity impact copolymer designed for thin-wall injection and automotive compounds."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-p1088j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 110,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-p1088j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-p1088j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — P1088J",
+              "url": "https://www.scgchemicals.com/en/products-grade/p1088j",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-a10p842j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC GREEN POLYMER™",
+          "grade": "A10P842J",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Circular PP grade; SCGC reports 10% recycled content from advanced-recycling feedstock; injection application. The source describes advanced-recycling feedstock; it does not establish a mechanically recycled fraction."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-a10p842j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 40,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-a10p842j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-a10p842j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — A10P842J",
+              "url": "https://www.scgchemicals.com/en/products-grade/1737600145",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-a10p740j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC GREEN POLYMER™",
+          "grade": "A10P740J",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Circular PP grade; SCGC reports 10% recycled content from advanced-recycling feedstock; injection application. The source describes advanced-recycling feedstock; it does not establish a mechanically recycled fraction."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-a10p740j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 27,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-a10p740j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-a10p740j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — A10P740J",
+              "url": "https://www.scgchemicals.com/en/products-grade/1737605176",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-pcdp01jn",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC GREEN POLYMER™",
+          "grade": "PCDP01JN",
+          "aliases": [],
+          "polymer": {
+            "family": "PP recycled",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Certified odorless post-consumer recycled PP for injection; do not infer recycle percentage."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-pcdp01jn-mfr",
+              "property": "Melt Flow Rate",
+              "value": 6,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-pcdp01jn-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-pcdp01jn-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — PCDP01JN",
+              "url": "https://www.scgchemicals.com/en/products-grade/pcdp01jn",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-pcdp02jn",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC GREEN POLYMER™",
+          "grade": "PCDP02JN",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Certified odorless post-consumer recycled impact copolymer PP for injection; not intended for food, pharmaceutical or medical applications."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-pcdp02jn-mfr",
+              "property": "Melt Flow Rate",
+              "value": 12,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-pcdp02jn-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-pcdp02jn-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — PCDP02JN",
+              "url": "https://www.scgchemicals.com/en/products-grade/pcdp02jn",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-pcrp03jb",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC GREEN POLYMER™",
+          "grade": "PCRP03JB",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Certified post-consumer recycled impact copolymer PP for injection; not intended for food, pharmaceutical or medical applications."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-pcrp03jb-mfr",
+              "property": "Melt Flow Rate",
+              "value": 12,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-pcrp03jb-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-pcrp03jb-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — PCRP03JB",
+              "url": "https://www.scgchemicals.com/en/products-grade/pcrp03jb",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-h5814j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ HDPE",
+          "grade": "H5814J",
+          "aliases": [],
+          "polymer": {
+            "family": "HDPE",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "General-purpose injection HDPE for housewares, caps, closures and toys."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-h5814j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 14,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 190,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-h5814j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 190°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-h5814j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — H5814J",
+              "url": "https://www.scgchemicals.com/en/products-grade/h5814j",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-h5818j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ HDPE",
+          "grade": "H5818J",
+          "aliases": [],
+          "polymer": {
+            "family": "HDPE",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "General-purpose injection HDPE for housewares, caps, closures and toys."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-h5818j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 18,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 190,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-h5818j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 190°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-h5818j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — H5818J",
+              "url": "https://www.scgchemicals.com/en/products-grade/h5818j",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-h6105ju",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ HDPE",
+          "grade": "H6105JU",
+          "aliases": [],
+          "polymer": {
+            "family": "HDPE",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "UV-resistant injection HDPE for large containers, bins, pallets, crates and outdoor industrial parts."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-h6105ju-mfr",
+              "property": "Melt Flow Rate",
+              "value": 5,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 190,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-h6105ju-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 190°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-h6105ju-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — H6105JU",
+              "url": "https://www.scgchemicals.com/en/products-grade/h6105ju",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-sg500",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PVC Resin",
+          "grade": "SG500",
+          "aliases": [],
+          "polymer": {
+            "family": "PVC",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "Rigid PVC resin listed for injection products/fittings; K-value and bulk density retained as manufacturer-published characteristics."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-sg500-kvalue",
+              "property": "K-Value",
+              "value": 48.6,
+              "unit": "dimensionless",
+              "testMethod": "SCGC published technical data",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-sg500-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer-published resin K-value; test method is not listed on the cited product table."
+            },
+            {
+              "id": "obs-scgc-sg500-bulk-density",
+              "property": "Apparent Bulk Density",
+              "value": 0.59,
+              "unit": "g/ml",
+              "testMethod": "SCGC published technical data",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-sg500-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer-published apparent bulk density; not a solid resin density."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-sg500-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — SG500",
+              "url": "https://www.scgchemicals.com/en/products-grade/sg500",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-sg58j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PVC Resin",
+          "grade": "SG58J",
+          "aliases": [],
+          "polymer": {
+            "family": "PVC",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "PVC resin described by SCGC for other injection products; K-value and bulk density retained as published."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-sg58j-kvalue",
+              "property": "K-Value",
+              "value": 58.3,
+              "unit": "dimensionless",
+              "testMethod": "SCGC published grade table",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-sg58j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer-published resin K-value; test method is not listed on the cited grade table."
+            },
+            {
+              "id": "obs-scgc-sg58j-bulk-density",
+              "property": "Apparent Bulk Density",
+              "value": 0.59,
+              "unit": "g/ml",
+              "testMethod": "SCGC published grade table",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-sg58j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer-published apparent bulk density; not a solid resin density."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-sg58j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — SG58J",
+              "url": "https://www.scgchemicals.com/en/products-grade/sg58j",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-sg580",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PVC Resin",
+          "grade": "SG580",
+          "aliases": [],
+          "polymer": {
+            "family": "PVC",
+            "morphology": "amorphous"
+          },
+          "composition": {
+            "notes": "PVC resin described in SCGC grade information for other injection products; K-value and bulk density retained as published. The March 2024 TDS reports K-value 58.0, while the current official product page reports 58.3; both source-version values are retained separately."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-sg580-kvalue",
+              "property": "K-Value",
+              "value": 58.0,
+              "unit": "dimensionless",
+              "testMethod": "SCGC technical data sheet",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-sg580-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer-published resin K-value; test method is not listed on the cited data sheet."
+            },
+            {
+              "id": "obs-scgc-sg580-bulk-density",
+              "property": "Apparent Bulk Density",
+              "value": 0.59,
+              "unit": "g/ml",
+              "testMethod": "SCGC technical data sheet",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-sg580-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Manufacturer-published apparent bulk density; not a solid resin density."
+            },
+            {
+              "id": "obs-scgc-sg580-kvalue-current-page",
+              "property": "K-Value",
+              "value": 58.3,
+              "unit": "dimensionless",
+              "testMethod": "ISO 1628-2",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-sg580-official-page-20261108",
+              "sourcePage": "official product page property table",
+              "comparisonReady": false,
+              "limitations": "Current official product page reports a typical K-value of 58.3; the March 2024 technical data sheet reports 58.0. Values are kept as separate source-version observations and should be checked against current grade documentation before use."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-sg580-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC Technical Data Sheet — PVC Resin SG580",
+              "url": "https://www.scgchemicals.com/uploads/SCGC%20TDS%20SG580_MAR24.pdf",
+              "kind": "manufacturer-datasheet",
+              "revision": "March 2024",
+              "documentDate": "2024-03",
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-scgc-sg580-official-page-20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC official SG580 product page",
+              "url": "https://www.scgchemicals.com/en/products-grade/sg580",
+              "kind": "manufacturer-product-page",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-p639at",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PP",
+          "grade": "P639AT",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Very-high-flow impact copolymer for compounding and injection molding automotive compounds."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-p639at-mfr",
+              "property": "Melt Flow Rate",
+              "value": 80,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-p639at-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-p639at-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — P639AT",
+              "url": "https://www.scgchemicals.com/en/products-grade/p639at",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-p739et",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PP",
+          "grade": "P739ET",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "High-flow impact copolymer for compounding and injection molding automotive compounds."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-p739et-mfr",
+              "property": "Melt Flow Rate",
+              "value": 55,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-p739et-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-p739et-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — P739ET",
+              "url": "https://www.scgchemicals.com/en/products-grade/p739et",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-p747wt",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PP",
+          "grade": "P747WT",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Low-gloss, medium-flow impact copolymer for compounding and injection-molded automotive parts."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-p747wt-mfr",
+              "property": "Melt Flow Rate",
+              "value": 30,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-p747wt-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-p747wt-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — P747WT",
+              "url": "https://www.scgchemicals.com/en/products-grade/p747wt",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-p765j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PP",
+          "grade": "P765J",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "High-impact PP copolymer for automotive injection applications."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-p765j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 30,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-p765j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-p765j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — P765J",
+              "url": "https://www.scgchemicals.com/en/products-grade/p765j",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-p905j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ PP",
+          "grade": "P905J",
+          "aliases": [],
+          "polymer": {
+            "family": "PP homopolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "High-flow, high-clarity homopolymer for thin-wall transparent-packaging injection."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-p905j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 65,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-p905j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 230°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-p905j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — P905J",
+              "url": "https://www.scgchemicals.com/en/products-grade/p905j",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-h567j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ HDPE",
+          "grade": "H567J",
+          "aliases": [],
+          "polymer": {
+            "family": "HDPE",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "HDPE cap/closure grade for injection and continuous compression molding."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-h567j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 1,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 190,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-h567j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 190°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-h567j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — H567J",
+              "url": "https://www.scgchemicals.com/en/products-grade/h567j",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-h567ja",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ HDPE",
+          "grade": "H567JA",
+          "aliases": [],
+          "polymer": {
+            "family": "HDPE",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "HDPE cap/closure grade for injection and continuous compression molding."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-h567ja-mfr",
+              "property": "Melt Flow Rate",
+              "value": 1,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 190,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-h567ja-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 190°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-h567ja-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — H567JA",
+              "url": "https://www.scgchemicals.com/en/products-grade/h567ja",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-h568ja",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ HDPE",
+          "grade": "H568JA",
+          "aliases": [],
+          "polymer": {
+            "family": "HDPE",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "HDPE cap/closure grade with high stress-cracking resistance for injection and continuous compression molding."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-h568ja-mfr",
+              "property": "Melt Flow Rate",
+              "value": 0.8,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 190,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-h568ja-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 190°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-h568ja-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — H568JA",
+              "url": "https://www.scgchemicals.com/en/products-grade/h568ja",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-h555j",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ HDPE",
+          "grade": "H555J",
+          "aliases": [],
+          "polymer": {
+            "family": "HDPE",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "HDPE carbonated-drink and sparkling-water cap/closure grade for injection and continuous compression molding."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-h555j-mfr",
+              "property": "Melt Flow Rate",
+              "value": 1.8,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 190,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-h555j-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 190°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-h555j-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — H555J",
+              "url": "https://www.scgchemicals.com/en/products-grade/h555j",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-scgc-h555ja",
+          "manufacturer": {
+            "id": "mfr-scgc",
+            "name": "SCGC",
+            "country": "Thailand",
+            "website": "https://www.scgchemicals.com/"
+          },
+          "brand": "SCGC™ HDPE",
+          "grade": "H555JA",
+          "aliases": [],
+          "polymer": {
+            "family": "HDPE",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "HDPE carbonated-drink and sparkling-water cap/closure grade for injection and continuous compression molding."
+          },
+          "properties": [
+            {
+              "id": "obs-scgc-h555ja-mfr",
+              "property": "Melt Flow Rate",
+              "value": 1.8,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D 1238",
+              "temperatureC": 190,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-scgc-h555ja-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "SCGC typical value at ASTM D1238 190°C / 2.16 kg. Verify the current grade sheet before material selection."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-scgc-h555ja-apac20261108",
+              "publisher": "SCG Chemicals",
+              "title": "SCGC exact-grade product and property information — H555JA",
+              "url": "https://www.scgchemicals.com/en/products-grade/h555ja",
+              "kind": "manufacturer-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "SCGC exact-grade source reviewed for injection/continuous-compression suitability and any normalized properties. ComparisonReady is true only for melt-flow values with a stated method, temperature and load. Lifecycle is unknown; no local production batch, formulation percentage beyond explicitly stated recycled content, or production recipe is inferred."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-tpc-singapore",
+      "name": "The Polyolefin Company (Singapore) Pte. Ltd.",
+      "country": "Singapore",
+      "website": "https://www.tpc.com.sg/",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-tpc-singapore-aw161",
+          "manufacturer": {
+            "id": "mfr-tpc-singapore",
+            "name": "The Polyolefin Company (Singapore) Pte. Ltd.",
+            "country": "Singapore",
+            "website": "https://www.tpc.com.sg/"
+          },
+          "brand": "COSMOPLENE® PP",
+          "grade": "AW161",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "TPC COSMOPLENE AW161 exact grade listed in the official TPC BCP02 SDS; TPC identifies its plant in Singapore. Grade-level supplier data describes this as an injection-moulding grade. No specific production line, lot origin, or current availability is inferred."
+          },
+          "properties": [
+            {
+              "id": "obs-tpc-aw161-mfr",
+              "property": "Melt Flow Rate",
+              "value": 9,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-tpc-aw161-datasheet-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Grade-level technical source reports this value, but the melt-flow temperature/load condition is not available in the accessible source text; not suitable for direct cross-grade comparison."
+            },
+            {
+              "id": "obs-tpc-aw161-density",
+              "property": "Density",
+              "value": 0.9,
+              "unit": "g/cm³",
+              "testMethod": "ASTM D792",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-tpc-aw161-datasheet-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Grade-level technical source reports this value; specimen and conditioning details are not stated in the accessible source text."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-tpc-aw161-apac20261108",
+              "publisher": "The Polyolefin Company (Singapore) Pte. Ltd.",
+              "title": "TPC COSMOPLENE BCP02 safety data sheet (exact grade list)",
+              "url": "https://www.tpc.com.sg/pdf/TPC-BCP02%28FDA3.2a%29.pdf",
+              "kind": "manufacturer-sds",
+              "revision": "2014",
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-tpc-aw161-datasheet-apac20261108",
+              "publisher": "The Polyolefin Company (Singapore) Pte. Ltd.",
+              "title": "COSMOPLENE AW161 grade-level technical information",
+              "url": "https://www.santplas.com/uploads/soft/20231214/1-231214150305M1.pdf",
+              "kind": "manufacturer-datasheet-mirror",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "TPC official SDS supports exact grade identity and Singapore manufacturer context. Grade-level injection application is supported by the linked technical data provider or TPC-authored mirrored datasheet. Lifecycle remains unknown; numerical properties with incomplete method conditions are retained as non-comparison-ready."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-tpc-singapore-aw864",
+          "manufacturer": {
+            "id": "mfr-tpc-singapore",
+            "name": "The Polyolefin Company (Singapore) Pte. Ltd.",
+            "country": "Singapore",
+            "website": "https://www.tpc.com.sg/"
+          },
+          "brand": "COSMOPLENE® PP",
+          "grade": "AW864",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "TPC COSMOPLENE AW864 exact grade listed in the official TPC BCP03 SDS; TPC identifies its plant in Singapore. Grade-level supplier data describes this as an injection-moulding grade. No specific production line, lot origin, or current availability is inferred."
+          },
+          "properties": [
+            {
+              "id": "obs-tpc-aw864-mfr",
+              "property": "Melt Flow Rate",
+              "value": 9,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-tpc-aw864-datasheet-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Grade-level technical source reports this value, but the melt-flow temperature/load condition is not available in the accessible source text; not suitable for direct cross-grade comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-tpc-aw864-apac20261108",
+              "publisher": "The Polyolefin Company (Singapore) Pte. Ltd.",
+              "title": "TPC COSMOPLENE BCP03 safety data sheet (exact grade list)",
+              "url": "https://www.tpc.com.sg/pdf/TPC-BCP03%28noFDA%29.pdf",
+              "kind": "manufacturer-sds",
+              "revision": "2014",
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-tpc-aw864-datasheet-apac20261108",
+              "publisher": "Omnexus / SpecialChem",
+              "title": "COSMOPLENE AW864 grade-level technical information",
+              "url": "https://omnexus.specialchem.com/product/t-the-polyolefin-company-singapore-cosmoplene-aw864",
+              "kind": "supplier-grade-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "TPC official SDS supports exact grade identity and Singapore manufacturer context. Grade-level injection application is supported by the linked technical data provider or TPC-authored mirrored datasheet. Lifecycle remains unknown; numerical properties with incomplete method conditions are retained as non-comparison-ready."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-tpc-singapore-aw184",
+          "manufacturer": {
+            "id": "mfr-tpc-singapore",
+            "name": "The Polyolefin Company (Singapore) Pte. Ltd.",
+            "country": "Singapore",
+            "website": "https://www.tpc.com.sg/"
+          },
+          "brand": "COSMOPLENE® PP",
+          "grade": "AW184",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "TPC COSMOPLENE AW184 exact grade listed in the official TPC BCP03 SDS; TPC identifies its plant in Singapore. Grade-level supplier data describes this as an injection-moulding grade. No specific production line, lot origin, or current availability is inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-tpc-aw184-apac20261108",
+              "publisher": "The Polyolefin Company (Singapore) Pte. Ltd.",
+              "title": "TPC COSMOPLENE BCP03 safety data sheet (exact grade list)",
+              "url": "https://www.tpc.com.sg/pdf/TPC-BCP03%28noFDA%29.pdf",
+              "kind": "manufacturer-sds",
+              "revision": "2014",
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-tpc-aw184-datasheet-apac20261108",
+              "publisher": "Omnexus / SpecialChem",
+              "title": "COSMOPLENE AW184 grade-level technical information",
+              "url": "https://omnexus.specialchem.com/product/t-the-polyolefin-company-singapore-cosmoplene-aw184",
+              "kind": "supplier-grade-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "TPC official SDS supports exact grade identity and Singapore manufacturer context. Grade-level injection application is supported by the linked technical data provider or TPC-authored mirrored datasheet. Lifecycle remains unknown; numerical properties with incomplete method conditions are retained as non-comparison-ready."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-tpc-singapore-ax191",
+          "manufacturer": {
+            "id": "mfr-tpc-singapore",
+            "name": "The Polyolefin Company (Singapore) Pte. Ltd.",
+            "country": "Singapore",
+            "website": "https://www.tpc.com.sg/"
+          },
+          "brand": "COSMOPLENE® PP",
+          "grade": "AX191",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "TPC COSMOPLENE AX191 exact grade listed in the official TPC BCP03 SDS; TPC identifies its plant in Singapore. Grade-level supplier data describes this as an injection-moulding grade. No specific production line, lot origin, or current availability is inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-tpc-ax191-apac20261108",
+              "publisher": "The Polyolefin Company (Singapore) Pte. Ltd.",
+              "title": "TPC COSMOPLENE BCP03 safety data sheet (exact grade list)",
+              "url": "https://www.tpc.com.sg/pdf/TPC-BCP03%28noFDA%29.pdf",
+              "kind": "manufacturer-sds",
+              "revision": "2014",
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-tpc-ax191-datasheet-apac20261108",
+              "publisher": "UL Prospector",
+              "title": "COSMOPLENE AX191 grade-level technical information",
+              "url": "https://www.ulprospector.com/plastics/en/datasheet/291524/cosmoplene-ax191?bc=o-0_g-39_gc-964",
+              "kind": "supplier-grade-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "TPC official SDS supports exact grade identity and Singapore manufacturer context. Grade-level injection application is supported by the linked technical data provider or TPC-authored mirrored datasheet. Lifecycle remains unknown; numerical properties with incomplete method conditions are retained as non-comparison-ready."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-tpc-singapore-ax161",
+          "manufacturer": {
+            "id": "mfr-tpc-singapore",
+            "name": "The Polyolefin Company (Singapore) Pte. Ltd.",
+            "country": "Singapore",
+            "website": "https://www.tpc.com.sg/"
+          },
+          "brand": "COSMOPLENE® PP",
+          "grade": "AX161",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "TPC COSMOPLENE AX161 exact grade listed in the official TPC BCP02 SDS; TPC identifies its plant in Singapore. Grade-level supplier data describes this as an injection-moulding grade. No specific production line, lot origin, or current availability is inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-tpc-ax161-apac20261108",
+              "publisher": "The Polyolefin Company (Singapore) Pte. Ltd.",
+              "title": "TPC COSMOPLENE BCP02 safety data sheet (exact grade list)",
+              "url": "https://www.tpc.com.sg/pdf/TPC-BCP02%28FDA3.2a%29.pdf",
+              "kind": "manufacturer-sds",
+              "revision": "2014",
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-tpc-ax161-datasheet-apac20261108",
+              "publisher": "UL Prospector",
+              "title": "COSMOPLENE AX161 grade-level technical information",
+              "url": "https://www.ulprospector.com/plastics/en/datasheet/403993/cosmoplene-ax161?bc=o-0_g-39_gc-964",
+              "kind": "supplier-grade-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "TPC official SDS supports exact grade identity and Singapore manufacturer context. Grade-level injection application is supported by the linked technical data provider or TPC-authored mirrored datasheet. Lifecycle remains unknown; numerical properties with incomplete method conditions are retained as non-comparison-ready."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-tpc-singapore-av161",
+          "manufacturer": {
+            "id": "mfr-tpc-singapore",
+            "name": "The Polyolefin Company (Singapore) Pte. Ltd.",
+            "country": "Singapore",
+            "website": "https://www.tpc.com.sg/"
+          },
+          "brand": "COSMOPLENE® PP",
+          "grade": "AV161",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "TPC COSMOPLENE AV161 exact grade listed in the official TPC BCP02 SDS; TPC identifies its plant in Singapore. Grade-level supplier data describes this as an injection-moulding grade. No specific production line, lot origin, or current availability is inferred."
+          },
+          "properties": [
+            {
+              "id": "obs-tpc-av161-mfr",
+              "property": "Melt Flow Rate",
+              "value": 5,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-tpc-av161-datasheet-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Grade-level technical source reports this value, but the melt-flow temperature/load condition is not available in the accessible source text; not suitable for direct cross-grade comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-tpc-av161-apac20261108",
+              "publisher": "The Polyolefin Company (Singapore) Pte. Ltd.",
+              "title": "TPC COSMOPLENE BCP02 safety data sheet (exact grade list)",
+              "url": "https://www.tpc.com.sg/pdf/TPC-BCP02%28FDA3.2a%29.pdf",
+              "kind": "manufacturer-sds",
+              "revision": "2014",
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-tpc-av161-datasheet-apac20261108",
+              "publisher": "Shanghai Susheng",
+              "title": "COSMOPLENE AV161 grade-level technical information",
+              "url": "https://www.sushengpolymer.com/plasmain/iDeCGS_COSMOPLENE-AV161/",
+              "kind": "supplier-grade-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "TPC official SDS supports exact grade identity and Singapore manufacturer context. Grade-level injection application is supported by the linked technical data provider or TPC-authored mirrored datasheet. Lifecycle remains unknown; numerical properties with incomplete method conditions are retained as non-comparison-ready."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-tpc-singapore-ax668",
+          "manufacturer": {
+            "id": "mfr-tpc-singapore",
+            "name": "The Polyolefin Company (Singapore) Pte. Ltd.",
+            "country": "Singapore",
+            "website": "https://www.tpc.com.sg/"
+          },
+          "brand": "COSMOPLENE® PP",
+          "grade": "AX668",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "TPC COSMOPLENE AX668 exact grade listed in the official TPC BCP03 SDS; TPC identifies its plant in Singapore. Grade-level supplier data describes this as an injection-moulding grade. No specific production line, lot origin, or current availability is inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-tpc-ax668-apac20261108",
+              "publisher": "The Polyolefin Company (Singapore) Pte. Ltd.",
+              "title": "TPC COSMOPLENE BCP03 safety data sheet (exact grade list)",
+              "url": "https://www.tpc.com.sg/pdf/TPC-BCP03%28noFDA%29.pdf",
+              "kind": "manufacturer-sds",
+              "revision": "2014",
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-tpc-ax668-datasheet-apac20261108",
+              "publisher": "UL Prospector",
+              "title": "COSMOPLENE AX668 grade-level technical information",
+              "url": "https://www.ulprospector.com/plastics/en/datasheet/57079/cosmoplene-ax668?bc=o-0_g-39_gc-964",
+              "kind": "supplier-grade-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "TPC official SDS supports exact grade identity and Singapore manufacturer context. Grade-level injection application is supported by the linked technical data provider or TPC-authored mirrored datasheet. Lifecycle remains unknown; numerical properties with incomplete method conditions are retained as non-comparison-ready."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-tpc-singapore-as164",
+          "manufacturer": {
+            "id": "mfr-tpc-singapore",
+            "name": "The Polyolefin Company (Singapore) Pte. Ltd.",
+            "country": "Singapore",
+            "website": "https://www.tpc.com.sg/"
+          },
+          "brand": "COSMOPLENE® PP",
+          "grade": "AS164",
+          "aliases": [],
+          "polymer": {
+            "family": "PP impact copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "TPC COSMOPLENE AS164 exact grade listed in the official TPC BCP02 SDS; TPC identifies its plant in Singapore. Grade-level supplier data describes this as an injection-moulding grade. No specific production line, lot origin, or current availability is inferred."
+          },
+          "properties": [
+            {
+              "id": "obs-tpc-as164-mfr",
+              "property": "Melt Flow Rate",
+              "value": 1.2,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-tpc-as164-datasheet-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Grade-level technical source reports this value, but the melt-flow temperature/load condition is not available in the accessible source text; not suitable for direct cross-grade comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-tpc-as164-apac20261108",
+              "publisher": "The Polyolefin Company (Singapore) Pte. Ltd.",
+              "title": "TPC COSMOPLENE BCP02 safety data sheet (exact grade list)",
+              "url": "https://www.tpc.com.sg/pdf/TPC-BCP02%28FDA3.2a%29.pdf",
+              "kind": "manufacturer-sds",
+              "revision": "2014",
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-tpc-as164-datasheet-apac20261108",
+              "publisher": "Shanghai Susheng",
+              "title": "COSMOPLENE AS164 grade-level technical information",
+              "url": "https://www.sushengpolymer.com/plasmain/8PyA8Q_COSMOPLENE-AS164/",
+              "kind": "supplier-grade-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "TPC official SDS supports exact grade identity and Singapore manufacturer context. Grade-level injection application is supported by the linked technical data provider or TPC-authored mirrored datasheet. Lifecycle remains unknown; numerical properties with incomplete method conditions are retained as non-comparison-ready."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-tpc-singapore-h101e",
+          "manufacturer": {
+            "id": "mfr-tpc-singapore",
+            "name": "The Polyolefin Company (Singapore) Pte. Ltd.",
+            "country": "Singapore",
+            "website": "https://www.tpc.com.sg/"
+          },
+          "brand": "COSMOPLENE® PP",
+          "grade": "H101E",
+          "aliases": [],
+          "polymer": {
+            "family": "PP homopolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "TPC COSMOPLENE H101E exact grade listed in the official TPC HOMO02 SDS; TPC identifies its plant in Singapore. Grade-level supplier data describes this as an injection-moulding grade. No specific production line, lot origin, or current availability is inferred."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-tpc-h101e-apac20261108",
+              "publisher": "The Polyolefin Company (Singapore) Pte. Ltd.",
+              "title": "TPC COSMOPLENE HOMO02 safety data sheet (exact grade list)",
+              "url": "https://www.tpc.com.sg/pdf/TPC-HOMO02%28noFDA%29.pdf",
+              "kind": "manufacturer-sds",
+              "revision": "2014",
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-tpc-h101e-datasheet-apac20261108",
+              "publisher": "UL Prospector",
+              "title": "COSMOPLENE H101E grade-level technical information",
+              "url": "https://www.ulprospector.com/plastics/en/datasheet/92517/cosmoplene-h101e?bc=o-0_g-39_gc-964",
+              "kind": "supplier-grade-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "TPC official SDS supports exact grade identity and Singapore manufacturer context. Grade-level injection application is supported by the linked technical data provider or TPC-authored mirrored datasheet. Lifecycle remains unknown; numerical properties with incomplete method conditions are retained as non-comparison-ready."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-tpc-singapore-w101e",
+          "manufacturer": {
+            "id": "mfr-tpc-singapore",
+            "name": "The Polyolefin Company (Singapore) Pte. Ltd.",
+            "country": "Singapore",
+            "website": "https://www.tpc.com.sg/"
+          },
+          "brand": "COSMOPLENE® PP",
+          "grade": "W101E",
+          "aliases": [],
+          "polymer": {
+            "family": "PP homopolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "TPC COSMOPLENE W101E exact grade listed in the official TPC HOMO02 SDS; TPC identifies its plant in Singapore. Grade-level supplier data describes this as an injection-moulding grade. No specific production line, lot origin, or current availability is inferred."
+          },
+          "properties": [
+            {
+              "id": "obs-tpc-w101e-mfr",
+              "property": "Melt Flow Rate",
+              "value": 8,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-tpc-w101e-datasheet-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Grade-level technical source reports this value, but the melt-flow temperature/load condition is not available in the accessible source text; not suitable for direct cross-grade comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-tpc-w101e-apac20261108",
+              "publisher": "The Polyolefin Company (Singapore) Pte. Ltd.",
+              "title": "TPC COSMOPLENE HOMO02 safety data sheet (exact grade list)",
+              "url": "https://www.tpc.com.sg/pdf/TPC-HOMO02%28noFDA%29.pdf",
+              "kind": "manufacturer-sds",
+              "revision": "2014",
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-tpc-w101e-datasheet-apac20261108",
+              "publisher": "UL Prospector",
+              "title": "COSMOPLENE W101E grade-level technical information",
+              "url": "https://www.ulprospector.com/plastics/en/datasheet/92518/cosmoplene-w101e?bc=o-0_g-39_gc-964",
+              "kind": "supplier-grade-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "TPC official SDS supports exact grade identity and Singapore manufacturer context. Grade-level injection application is supported by the linked technical data provider or TPC-authored mirrored datasheet. Lifecycle remains unknown; numerical properties with incomplete method conditions are retained as non-comparison-ready."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-tpc-singapore-y101g",
+          "manufacturer": {
+            "id": "mfr-tpc-singapore",
+            "name": "The Polyolefin Company (Singapore) Pte. Ltd.",
+            "country": "Singapore",
+            "website": "https://www.tpc.com.sg/"
+          },
+          "brand": "COSMOPLENE® PP",
+          "grade": "Y101G",
+          "aliases": [],
+          "polymer": {
+            "family": "PP homopolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "TPC COSMOPLENE Y101G exact grade listed in the official TPC HOMO01 SDS; TPC identifies its plant in Singapore. Grade-level supplier data describes this as an injection-moulding grade. No specific production line, lot origin, or current availability is inferred."
+          },
+          "properties": [
+            {
+              "id": "obs-tpc-y101g-mfr",
+              "property": "Melt Flow Rate",
+              "value": 13,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-tpc-y101g-datasheet-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Grade-level technical source reports this value, but the melt-flow temperature/load condition is not available in the accessible source text; not suitable for direct cross-grade comparison."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-tpc-y101g-apac20261108",
+              "publisher": "The Polyolefin Company (Singapore) Pte. Ltd.",
+              "title": "TPC COSMOPLENE HOMO01 safety data sheet (exact grade list)",
+              "url": "https://www.tpc.com.sg/pdf/TPC-HOMO01%28FDA1.1a%29.pdf",
+              "kind": "manufacturer-sds",
+              "revision": "2014",
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-tpc-y101g-datasheet-apac20261108",
+              "publisher": "UL Prospector",
+              "title": "COSMOPLENE Y101G grade-level technical information",
+              "url": "https://www.ulprospector.com/plastics/en/datasheet/128174/cosmoplene-y101g?bc=o-0_g-39_gc-964",
+              "kind": "supplier-grade-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "TPC official SDS supports exact grade identity and Singapore manufacturer context. Grade-level injection application is supported by the linked technical data provider or TPC-authored mirrored datasheet. Lifecycle remains unknown; numerical properties with incomplete method conditions are retained as non-comparison-ready."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-tpc-singapore-w531l",
+          "manufacturer": {
+            "id": "mfr-tpc-singapore",
+            "name": "The Polyolefin Company (Singapore) Pte. Ltd.",
+            "country": "Singapore",
+            "website": "https://www.tpc.com.sg/"
+          },
+          "brand": "COSMOPLENE® PP",
+          "grade": "W531L",
+          "aliases": [],
+          "polymer": {
+            "family": "PP random copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "TPC COSMOPLENE W531L exact grade listed in the official TPC RCP01 SDS; TPC identifies its plant in Singapore. Grade-level supplier data describes this as an injection-moulding grade. No specific production line, lot origin, or current availability is inferred."
+          },
+          "properties": [
+            {
+              "id": "obs-tpc-w531l-mfr",
+              "property": "Melt Flow Rate",
+              "value": "6–10",
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-tpc-w531l-datasheet-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Grade-level technical source reports this value, but the melt-flow temperature/load condition is not available in the accessible source text; not suitable for direct cross-grade comparison."
+            },
+            {
+              "id": "obs-tpc-w531l-density",
+              "property": "Density",
+              "value": 0.9,
+              "unit": "g/cm³",
+              "testMethod": "ASTM D1505",
+              "temperatureC": null,
+              "loadKg": null,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-tpc-w531l-datasheet-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": false,
+              "limitations": "Grade-level technical source reports this value; specimen and conditioning details are not stated in the accessible source text."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-tpc-w531l-apac20261108",
+              "publisher": "The Polyolefin Company (Singapore) Pte. Ltd.",
+              "title": "TPC COSMOPLENE RCP01 safety data sheet (exact grade list)",
+              "url": "https://www.tpc.com.sg/pdf/TPC-RCP01%28FDA3.1a%29.pdf",
+              "kind": "manufacturer-sds",
+              "revision": "2014",
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-tpc-w531l-datasheet-apac20261108",
+              "publisher": "The Polyolefin Company (Singapore) Pte. Ltd.",
+              "title": "COSMOPLENE W531L grade-level technical information",
+              "url": "https://www.sunta.hk/uploads/pdf/10609147371532688253.pdf",
+              "kind": "manufacturer-datasheet-mirror",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "TPC official SDS supports exact grade identity and Singapore manufacturer context. Grade-level injection application is supported by the linked technical data provider or TPC-authored mirrored datasheet. Lifecycle remains unknown; numerical properties with incomplete method conditions are retained as non-comparison-ready."
+          }
+        }
+      ]
+    },
+    {
+      "id": "mfr-jg-summit-olefins",
+      "name": "JG Summit Olefins Corporation",
+      "country": "Philippines",
+      "website": "https://jgsoc.com/",
+      "gradeRecords": [
+        {
+          "schemaVersion": 1,
+          "id": "mat-jg-summit-olefins-phj0501",
+          "manufacturer": {
+            "id": "mfr-jg-summit-olefins",
+            "name": "JG Summit Olefins Corporation",
+            "country": "Philippines",
+            "website": "https://jgsoc.com/"
+          },
+          "brand": "EVALENE® PP",
+          "grade": "PHJ0501",
+          "aliases": [],
+          "polymer": {
+            "family": "PP homopolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Historical EVALENE homopolymer PP injection grade. Exact grade/MFR are from the 1999 Philippine Tariff Commission record; current availability, formulation and grade-specific production origin are unknown."
+          },
+          "properties": [
+            {
+              "id": "obs-jg-phj0501-mfr",
+              "property": "Melt Flow Rate",
+              "value": 5,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-jg-phj0501-tariff-apac20261108",
+              "sourcePage": "historical injection-grade table",
+              "comparisonReady": true,
+              "limitations": "Historical Philippine Tariff Commission table lists this EVALENE injection-moulding grade and MFR; current formulation and availability are unverified."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-jg-phj0501-tariff-apac20261108",
+              "publisher": "Philippine Tariff Commission",
+              "title": "Anti-dumping investigation record: locally produced EVALENE PP injection-moulding grades and melt indices",
+              "url": "https://www.tariffcommission.gov.ph/ad-99-04",
+              "kind": "government-record",
+              "revision": null,
+              "documentDate": "1999",
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-jg-phj0501-family-apac20261108",
+              "publisher": "JG Summit Olefins Corporation",
+              "title": "Official EVALENE homopolymer PP product-family page",
+              "url": "https://jgsoc.com/polymers/pph/",
+              "kind": "official-product-family",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "This is a historical grade record. The Philippine Tariff Commission source lists the exact EVALENE grade under injection-moulding PP and its MFR. JG Summit current product-family page confirms the supplier portfolio but not current status of this exact legacy grade. Lifecycle is unknown; do not treat the 1999 value as a current specification."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-jg-summit-olefins-phj0801",
+          "manufacturer": {
+            "id": "mfr-jg-summit-olefins",
+            "name": "JG Summit Olefins Corporation",
+            "country": "Philippines",
+            "website": "https://jgsoc.com/"
+          },
+          "brand": "EVALENE® PP",
+          "grade": "PHJ0801",
+          "aliases": [],
+          "polymer": {
+            "family": "PP homopolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Historical EVALENE homopolymer PP injection grade. Exact grade/MFR are from the 1999 Philippine Tariff Commission record; current availability, formulation and grade-specific production origin are unknown."
+          },
+          "properties": [
+            {
+              "id": "obs-jg-phj0801-mfr",
+              "property": "Melt Flow Rate",
+              "value": 8,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-jg-phj0801-tariff-apac20261108",
+              "sourcePage": "historical injection-grade table",
+              "comparisonReady": true,
+              "limitations": "Historical Philippine Tariff Commission table lists this EVALENE injection-moulding grade and MFR; current formulation and availability are unverified."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-jg-phj0801-tariff-apac20261108",
+              "publisher": "Philippine Tariff Commission",
+              "title": "Anti-dumping investigation record: locally produced EVALENE PP injection-moulding grades and melt indices",
+              "url": "https://www.tariffcommission.gov.ph/ad-99-04",
+              "kind": "government-record",
+              "revision": null,
+              "documentDate": "1999",
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-jg-phj0801-family-apac20261108",
+              "publisher": "JG Summit Olefins Corporation",
+              "title": "Official EVALENE homopolymer PP product-family page",
+              "url": "https://jgsoc.com/polymers/pph/",
+              "kind": "official-product-family",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "This is a historical grade record. The Philippine Tariff Commission source lists the exact EVALENE grade under injection-moulding PP and its MFR. JG Summit current product-family page confirms the supplier portfolio but not current status of this exact legacy grade. Lifecycle is unknown; do not treat the 1999 value as a current specification."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-jg-summit-olefins-phj1201",
+          "manufacturer": {
+            "id": "mfr-jg-summit-olefins",
+            "name": "JG Summit Olefins Corporation",
+            "country": "Philippines",
+            "website": "https://jgsoc.com/"
+          },
+          "brand": "EVALENE® PP",
+          "grade": "PHJ1201",
+          "aliases": [],
+          "polymer": {
+            "family": "PP homopolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Historical EVALENE homopolymer PP injection grade. Exact grade/MFR are from the 1999 Philippine Tariff Commission record; current availability, formulation and grade-specific production origin are unknown."
+          },
+          "properties": [
+            {
+              "id": "obs-jg-phj1201-mfr",
+              "property": "Melt Flow Rate",
+              "value": 12,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-jg-phj1201-tariff-apac20261108",
+              "sourcePage": "historical injection-grade table",
+              "comparisonReady": true,
+              "limitations": "Historical Philippine Tariff Commission table lists this EVALENE injection-moulding grade and MFR; current formulation and availability are unverified."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-jg-phj1201-tariff-apac20261108",
+              "publisher": "Philippine Tariff Commission",
+              "title": "Anti-dumping investigation record: locally produced EVALENE PP injection-moulding grades and melt indices",
+              "url": "https://www.tariffcommission.gov.ph/ad-99-04",
+              "kind": "government-record",
+              "revision": null,
+              "documentDate": "1999",
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-jg-phj1201-family-apac20261108",
+              "publisher": "JG Summit Olefins Corporation",
+              "title": "Official EVALENE homopolymer PP product-family page",
+              "url": "https://jgsoc.com/polymers/pph/",
+              "kind": "official-product-family",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "This is a historical grade record. The Philippine Tariff Commission source lists the exact EVALENE grade under injection-moulding PP and its MFR. JG Summit current product-family page confirms the supplier portfolio but not current status of this exact legacy grade. Lifecycle is unknown; do not treat the 1999 value as a current specification."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-jg-summit-olefins-phj1202",
+          "manufacturer": {
+            "id": "mfr-jg-summit-olefins",
+            "name": "JG Summit Olefins Corporation",
+            "country": "Philippines",
+            "website": "https://jgsoc.com/"
+          },
+          "brand": "EVALENE® PP",
+          "grade": "PHJ1202",
+          "aliases": [],
+          "polymer": {
+            "family": "PP homopolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Historical EVALENE homopolymer PP injection grade. Exact grade/MFR are from the 1999 Philippine Tariff Commission record; current availability, formulation and grade-specific production origin are unknown."
+          },
+          "properties": [
+            {
+              "id": "obs-jg-phj1202-mfr",
+              "property": "Melt Flow Rate",
+              "value": 12,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-jg-phj1202-tariff-apac20261108",
+              "sourcePage": "historical injection-grade table",
+              "comparisonReady": true,
+              "limitations": "Historical Philippine Tariff Commission table lists this EVALENE injection-moulding grade and MFR; current formulation and availability are unverified."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-jg-phj1202-tariff-apac20261108",
+              "publisher": "Philippine Tariff Commission",
+              "title": "Anti-dumping investigation record: locally produced EVALENE PP injection-moulding grades and melt indices",
+              "url": "https://www.tariffcommission.gov.ph/ad-99-04",
+              "kind": "government-record",
+              "revision": null,
+              "documentDate": "1999",
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-jg-phj1202-family-apac20261108",
+              "publisher": "JG Summit Olefins Corporation",
+              "title": "Official EVALENE homopolymer PP product-family page",
+              "url": "https://jgsoc.com/polymers/pph/",
+              "kind": "official-product-family",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "This is a historical grade record. The Philippine Tariff Commission source lists the exact EVALENE grade under injection-moulding PP and its MFR. JG Summit current product-family page confirms the supplier portfolio but not current status of this exact legacy grade. Lifecycle is unknown; do not treat the 1999 value as a current specification."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-jg-summit-olefins-phj1502",
+          "manufacturer": {
+            "id": "mfr-jg-summit-olefins",
+            "name": "JG Summit Olefins Corporation",
+            "country": "Philippines",
+            "website": "https://jgsoc.com/"
+          },
+          "brand": "EVALENE® PP",
+          "grade": "PHJ1502",
+          "aliases": [],
+          "polymer": {
+            "family": "PP homopolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Historical EVALENE homopolymer PP injection grade. Exact grade/MFR are from the 1999 Philippine Tariff Commission record; current availability, formulation and grade-specific production origin are unknown."
+          },
+          "properties": [
+            {
+              "id": "obs-jg-phj1502-mfr",
+              "property": "Melt Flow Rate",
+              "value": 15,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-jg-phj1502-tariff-apac20261108",
+              "sourcePage": "historical injection-grade table",
+              "comparisonReady": true,
+              "limitations": "Historical Philippine Tariff Commission table lists this EVALENE injection-moulding grade and MFR; current formulation and availability are unverified."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-jg-phj1502-tariff-apac20261108",
+              "publisher": "Philippine Tariff Commission",
+              "title": "Anti-dumping investigation record: locally produced EVALENE PP injection-moulding grades and melt indices",
+              "url": "https://www.tariffcommission.gov.ph/ad-99-04",
+              "kind": "government-record",
+              "revision": null,
+              "documentDate": "1999",
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-jg-phj1502-family-apac20261108",
+              "publisher": "JG Summit Olefins Corporation",
+              "title": "Official EVALENE homopolymer PP product-family page",
+              "url": "https://jgsoc.com/polymers/pph/",
+              "kind": "official-product-family",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "This is a historical grade record. The Philippine Tariff Commission source lists the exact EVALENE grade under injection-moulding PP and its MFR. JG Summit current product-family page confirms the supplier portfolio but not current status of this exact legacy grade. Lifecycle is unknown; do not treat the 1999 value as a current specification."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-jg-summit-olefins-phj4501",
+          "manufacturer": {
+            "id": "mfr-jg-summit-olefins",
+            "name": "JG Summit Olefins Corporation",
+            "country": "Philippines",
+            "website": "https://jgsoc.com/"
+          },
+          "brand": "EVALENE® PP",
+          "grade": "PHJ4501",
+          "aliases": [],
+          "polymer": {
+            "family": "PP homopolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "High-flow, nucleated EVALENE homopolymer PP documented for thin-wall injection moulding and reusable food containers."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-jg-phj4501-ul-apac20261108",
+              "publisher": "UL Prospector",
+              "title": "EVALENE PHJ4501 supplier technical datasheet listing",
+              "url": "https://www2.ulprospector.com/plastics/en/datasheet/127803/evalene-pp-phj4501?bc=o-1_g-39_gc-3949",
+              "kind": "supplier-grade-datasheet",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-jg-phj4501-family-apac20261108",
+              "publisher": "JG Summit Olefins Corporation",
+              "title": "Official EVALENE homopolymer PP product-family page",
+              "url": "https://jgsoc.com/polymers/pph/",
+              "kind": "official-product-family",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "UL Prospector supplier technical listing identifies PHJ4501 as a JG Summit PP homopolymer injection-moulding grade. The official JG Summit page confirms the EVALENE homopolymer portfolio. Numeric grade properties are not added because the accessible source page gates them. Current local availability and grade-specific production lot are unknown."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-jg-summit-olefins-prj1101",
+          "manufacturer": {
+            "id": "mfr-jg-summit-olefins",
+            "name": "JG Summit Olefins Corporation",
+            "country": "Philippines",
+            "website": "https://jgsoc.com/"
+          },
+          "brand": "EVALENE® PP",
+          "grade": "PRJ1101",
+          "aliases": [],
+          "polymer": {
+            "family": "PP random copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "Random-copolymer PP grade documented for injection-moulded housewares, lunch boxes and living-hinge products. Source sheet uses the historical JG Summit Petrochemical Corporation name."
+          },
+          "properties": [
+            {
+              "id": "obs-jg-prj1101-mfr",
+              "property": "Melt Flow Rate",
+              "value": 11,
+              "unit": "g/10 min",
+              "testMethod": "ASTM D1238",
+              "temperatureC": 230,
+              "loadKg": 2.16,
+              "specimen": null,
+              "conditioning": null,
+              "direction": "not-applicable",
+              "sourceId": "src-jg-prj1101-tds-apac20261108",
+              "sourcePage": "exact-grade property table",
+              "comparisonReady": true,
+              "limitations": "Manufacturer-authored mirrored data sheet; typical MFR at 230°C / 2.16 kg, not a guaranteed specification."
+            }
+          ],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-jg-prj1101-tds-apac20261108",
+              "publisher": "JG Summit Petrochemical Corporation",
+              "title": "EVALENE PRJ1101 manufacturer technical data sheet (mirror)",
+              "url": "https://www.sushengpolymer.com/media/pdf/yNeZwF_EVALENE-PP-PRJ1101.pdf",
+              "kind": "manufacturer-datasheet-mirror",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact PRJ1101 grade is documented in a JG Summit-authored data sheet mirrored by a technical distributor. The file names the predecessor company and reports injection applications and ASTM D1238 MFR. Current availability and exact production plant/lot are unknown."
+          }
+        },
+        {
+          "schemaVersion": 1,
+          "id": "mat-jg-summit-olefins-prj3501",
+          "manufacturer": {
+            "id": "mfr-jg-summit-olefins",
+            "name": "JG Summit Olefins Corporation",
+            "country": "Philippines",
+            "website": "https://jgsoc.com/"
+          },
+          "brand": "EVALENE PLUS®",
+          "grade": "PRJ3501",
+          "aliases": [],
+          "polymer": {
+            "family": "PP random copolymer",
+            "morphology": "semi-crystalline"
+          },
+          "composition": {
+            "notes": "JG Summit’s 2024 corporate report identifies PRJ3501 as a premium PP grade validated for injection-moulding products; no numeric grade properties were found in that report."
+          },
+          "properties": [],
+          "processing": [],
+          "approvals": [],
+          "lifecycle": {
+            "status": "unknown",
+            "checkedAt": "2026-11-08"
+          },
+          "sources": [
+            {
+              "id": "src-jg-prj3501-report-apac20261108",
+              "publisher": "JG Summit Holdings, Inc.",
+              "title": "2024 Annual and Sustainability Report — EVALENE PLUS PRJ3501",
+              "url": "https://www.jgsummit.com.ph/annualreport2024/documents/JG%20Summit%202024%20Annual%20%26%20Sustainability%20Report%20%5BInteractive%20PDF%5D.pdf",
+              "kind": "manufacturer-report",
+              "revision": "2024",
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            },
+            {
+              "id": "src-jg-prj3501-polymers-apac20261108",
+              "publisher": "JG Summit Olefins Corporation",
+              "title": "Official EVALENE PLUS random-copolymer PP product-family page",
+              "url": "https://jgsoc.com/polymers/pp-r/",
+              "kind": "official-product-family",
+              "revision": null,
+              "documentDate": null,
+              "retrievedAt": "2026-11-08"
+            }
+          ],
+          "provenance": {
+            "stage": "validated",
+            "ingestedAt": "2026-11-08T00:00:00Z",
+            "reviewedAt": "2026-11-08T00:00:00Z",
+            "reviewer": "primary-source-web-review",
+            "notes": "Exact grade and injection-moulding application are reported in the manufacturer parent’s 2024 Annual and Sustainability Report; the official JG Summit page confirms the EVALENE PLUS random-copolymer PP family. No numeric property or plant/lot origin is inferred; lifecycle remains unknown."
+          }
+        }
+      ]
+    }
+  ]
+}

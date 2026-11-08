@@ -346,15 +346,15 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "PASS — release 2026.11.08.4 source afddce102ee48995bdcf06b9f22bc078992cea3a producer run 42467257528 retained artifact 13612187059 fingerprint sha256:12b0afbcd833614ce5162612b84974e491f5f197cf6d1973b2a522d60b92a54d; exact-source software contract, Mobile Browser QA and Question Quality 50-Pass gates succeeded. Automated software evidence only; independent external review remains HOLD."
+      "meaning": "PASS \u2014 release 2026.11.08.5 candidate source f7b703ad06fef540d7773458e0eff8202c253041, artifact 13628146324, fingerprint sha256:5442547dec21641a8284e2644013609d041a5bb41dca33a5e85a5ec578e83eb9, retained by Pre-merge Public Candidate run 42507793793; exact artifact provenance and runtime fingerprint were independently checked. Software-only; this creates no external approval."
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "PASS — release 2026.11.08.4 source afddce102ee48995bdcf06b9f22bc078992cea3a; Mobile Browser QA run 42467257588 passed Chromium visual and substantive, WebKit, cross-browser smoke tests, and all 500 reliability checks; Question Quality 50-Pass run 42467257502 succeeded. Automated software evidence only; independent external review remains HOLD."
+      "meaning": "PASS \u2014 release 2026.11.08.5 candidate source f7b703ad06fef540d7773458e0eff8202c253041 passed Mobile Browser QA run 42507793891 and Question Quality 50-Pass run 42507794030; the strict 52-surface visual matrix passed. Software-only; this creates no external approval."
     },
     "externalHumanDevice": {
       "status": "hold",
-      "meaning": "All seven independent human, device, Windows distribution, SME, learner and provider/NZQA evidence streams remain HOLD for release 2026.11.08.4."
+      "meaning": "All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.08.5."
     }
   }
 }

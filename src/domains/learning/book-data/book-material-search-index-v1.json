@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.10.30.2",
-  "purpose": "lightweight Book material search routing only; technical values remain in governed catalogue/regional evidence",
+  "release": "2026.11.08.2",
+  "purpose": "Lightweight exact-byte-pinned material search terms for canonical catalogue and governed regional evidence.",
   "sourceCounts": {
-    "canonicalExactGrades": 268,
+    "canonicalExactGrades": 394,
     "regionalEvidenceRows": 284,
-    "total": 552
+    "total": 678
   },
   "entries": [
     {
@@ -239,6 +239,11 @@
       "kind": "canonical"
     },
     {
+      "id": "mat-envalior-pocan-b3234hr-s2-m30r1",
+      "search": "envalior pocan b3234hr s2 m30r1 pbt",
+      "kind": "canonical"
+    },
+    {
       "id": "mat-envalior-pocan-b4235",
       "search": "envalior pocan b4235 pbt",
       "kind": "canonical"
@@ -246,11 +251,6 @@
     {
       "id": "mat-envalior-pocan-b4235z",
       "search": "envalior pocan b4235z pbt",
-      "kind": "canonical"
-    },
-    {
-      "id": "mat-envalior-pocan-b3234hr-s2-m30r1",
-      "search": "envalior pocan b3234hr s2 m30r1 pbt",
       "kind": "canonical"
     },
     {
@@ -341,6 +341,46 @@
     {
       "id": "mat-hyosung-pp-pb840-ba",
       "search": "hyosung chemical hyosung polypropylene pb840 ba pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-e700",
+      "search": "hyosung chemical poketone e700 polyketone",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-m330",
+      "search": "hyosung chemical poketone m330 m330f polyketone",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-m410",
+      "search": "hyosung chemical poketone m410 m410f s m410fs polyketone",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-m630",
+      "search": "hyosung chemical poketone m630 m630f polyketone",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-m640",
+      "search": "hyosung chemical poketone m640 m640a polyketone",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-m710",
+      "search": "hyosung chemical poketone m710 m710f polyketone",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-m730",
+      "search": "hyosung chemical poketone m730 m730f polyketone",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-hyosung-poketone-m930",
+      "search": "hyosung chemical poketone m930 m930f polyketone",
       "kind": "canonical"
     },
     {
@@ -684,6 +724,11 @@
       "kind": "canonical"
     },
     {
+      "id": "mat-ineos-luran-388s",
+      "search": "ineos styrolution luran 388s san",
+      "kind": "canonical"
+    },
+    {
       "id": "mat-ineos-luran-s-757g",
       "search": "ineos styrolution luran s 757g asa",
       "kind": "canonical"
@@ -694,13 +739,123 @@
       "kind": "canonical"
     },
     {
-      "id": "mat-ineos-luran-388s",
-      "search": "ineos styrolution luran 388s san",
+      "id": "mat-ineos-terluran-gp35",
+      "search": "ineos styrolution terluran gp 35 abs",
       "kind": "canonical"
     },
     {
-      "id": "mat-ineos-terluran-gp35",
-      "search": "ineos styrolution terluran gp 35 abs",
+      "id": "mat-jg-summit-olefins-evalene-hj04551",
+      "search": "jg summit olefins corporation evalene hj04551 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-jg-summit-olefins-evalene-hj04601",
+      "search": "jg summit olefins corporation evalene hj04601 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-jg-summit-olefins-evalene-hj04602",
+      "search": "jg summit olefins corporation evalene hj04602 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-jg-summit-olefins-evalene-hj08601",
+      "search": "jg summit olefins corporation evalene hj08601 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-jg-summit-olefins-evalene-hj20571",
+      "search": "jg summit olefins corporation evalene hj20571 hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-jg-summit-olefins-evalene-plus-prj1102",
+      "search": "jg summit olefins corporation evalene plus prj1102 pp random copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-jg-summit-olefins-prj3501",
+      "search": "jg summit olefins corporation evalene plus prj3501 pp random copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-jg-summit-olefins-phj0501",
+      "search": "jg summit olefins corporation evalene pp phj0501 pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-jg-summit-olefins-phj0801",
+      "search": "jg summit olefins corporation evalene pp phj0801 pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-jg-summit-olefins-phj1201",
+      "search": "jg summit olefins corporation evalene pp phj1201 pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-jg-summit-olefins-phj1202",
+      "search": "jg summit olefins corporation evalene pp phj1202 pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-jg-summit-olefins-phj1502",
+      "search": "jg summit olefins corporation evalene pp phj1502 pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-jg-summit-olefins-phj4501",
+      "search": "jg summit olefins corporation evalene pp phj4501 pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-jg-summit-olefins-prj1101",
+      "search": "jg summit olefins corporation evalene pp prj1101 pp random copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kolon-enp-kocetal-gf305",
+      "search": "kolon enp kocetal gf305 pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kolon-enp-kocetal-gf705",
+      "search": "kolon enp kocetal gf705 pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kolon-enp-kocetal-k800",
+      "search": "kolon enp kocetal k800 pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kolon-enp-kocetal-m100",
+      "search": "kolon enp kocetal m100 pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kolon-enp-kocetal-m300",
+      "search": "kolon enp kocetal m300 pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kolon-enp-spesin-kp211",
+      "search": "kolon enp spesin kp211 pbt",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kolon-enp-spesin-kp212g30v0",
+      "search": "kolon enp spesin kp212g30v0 pbt",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kolon-enp-spesin-kp213g15",
+      "search": "kolon enp spesin kp213g15 pbt",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kolon-enp-spesin-kp213g30",
+      "search": "kolon enp spesin kp213g30 pbt",
       "kind": "canonical"
     },
     {
@@ -724,6 +879,31 @@
       "kind": "canonical"
     },
     {
+      "id": "mat-kuraray-genestar-g1301a",
+      "search": "kuraray genestar g1301a pa9t",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kuraray-genestar-g1350a-m32t",
+      "search": "kuraray genestar g1350a m32t pa9t",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kuraray-genestar-g1352a",
+      "search": "kuraray genestar g1352a pa9t",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kuraray-genestar-gl1350a",
+      "search": "kuraray genestar gl1350a pa9t",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-kuraray-genestar-n1006a",
+      "search": "kuraray genestar n1006a pa9t",
+      "kind": "canonical"
+    },
+    {
       "id": "mat-kuraray-genestar-g1300a",
       "search": "kuraray genestar g1300a pa9t",
       "kind": "canonical"
@@ -736,6 +916,66 @@
     {
       "id": "mat-kuraray-genestar-n1000a",
       "search": "kuraray genestar n1000a pa9t",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lg-chem-lumid-gn-1001af",
+      "search": "lg chem lumid gn 1001af pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lg-chem-lumid-gp-1100aw",
+      "search": "lg chem lumid gp 1100aw pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lg-chem-lumid-gp-2151af",
+      "search": "lg chem lumid gp 2151af pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lg-chem-lumid-gp-2200aw",
+      "search": "lg chem lumid gp 2200aw pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lg-chem-lumid-gp-2251af",
+      "search": "lg chem lumid gp 2251af pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lg-chem-lumid-gp-2300aw",
+      "search": "lg chem lumid gp 2300aw pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lg-chem-lumid-gp-2330a-w",
+      "search": "lg chem lumid gp 2330a w pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lg-chem-lumid-gp-2500a",
+      "search": "lg chem lumid gp 2500a pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lg-chem-lumid-hi-2302a",
+      "search": "lg chem lumid hi 2302a pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lg-chem-lumid-hi-2402aw",
+      "search": "lg chem lumid hi 2402aw pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lg-chem-lumid-hm-2604aw",
+      "search": "lg chem lumid hm 2604aw pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lg-chem-lumid-sg-2600b",
+      "search": "lg chem lumid sg 2600b pa6",
       "kind": "canonical"
     },
     {
@@ -754,13 +994,28 @@
       "kind": "canonical"
     },
     {
-      "id": "mat-lotte-titanpro-sh611",
-      "search": "lotte chemical titan titanpro sh611 pp",
+      "id": "mat-lotte-infino-ae-3060-h",
+      "search": "lotte chemical infino ae 3060 h ae 3060 h ae 3060 h pc pbt",
       "kind": "canonical"
     },
     {
-      "id": "mat-lotte-infino-ae-3060-h",
-      "search": "lotte chemical infino ae 3060 h ae 3060 h ae 3060 h pc pbt",
+      "id": "mat-lotte-chemical-infino-ae-3063h",
+      "search": "lotte chemical infino ae 3063h pc pbt",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lotte-chemical-infino-gp-2306fc",
+      "search": "lotte chemical infino gp 2306fc pbt",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lotte-chemical-infino-gp-5400g",
+      "search": "lotte chemical infino gp 5400g pbt",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-lotte-chemical-infino-lw-5300m",
+      "search": "lotte chemical infino lw 5300m pbt",
       "kind": "canonical"
     },
     {
@@ -774,6 +1029,11 @@
       "kind": "canonical"
     },
     {
+      "id": "mat-lotte-infino-xp-2140c",
+      "search": "lotte chemical infino xp 2140c pps gf",
+      "kind": "canonical"
+    },
+    {
       "id": "mat-lotte-infino-asf-9860",
       "search": "lotte chemical infino asf 9860 pbt",
       "kind": "canonical"
@@ -784,8 +1044,8 @@
       "kind": "canonical"
     },
     {
-      "id": "mat-lotte-infino-xp-2140c",
-      "search": "lotte chemical infino xp 2140c pps gf",
+      "id": "mat-lotte-titanpro-sh611",
+      "search": "lotte chemical titan titanpro sh611 pp",
       "kind": "canonical"
     },
     {
@@ -989,13 +1249,68 @@
       "kind": "canonical"
     },
     {
+      "id": "mat-polyplastics-duracon-aw-01",
+      "search": "polyplastics co ltd duracon aw 01 pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-polyplastics-duracon-cp15x",
+      "search": "polyplastics co ltd duracon cp15x pom",
+      "kind": "canonical"
+    },
+    {
       "id": "mat-polyplastics-duracon-gb-25r",
       "search": "polyplastics co ltd duracon gb 25r pom",
       "kind": "canonical"
     },
     {
+      "id": "mat-polyplastics-duracon-gm-20",
+      "search": "polyplastics co ltd duracon gm 20 pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-polyplastics-duracon-lu-02",
+      "search": "polyplastics co ltd duracon lu 02 pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-polyplastics-duracon-m140-44",
+      "search": "polyplastics co ltd duracon m140 44 pom",
+      "kind": "canonical"
+    },
+    {
       "id": "mat-polyplastics-duracon-m25lv",
       "search": "polyplastics co ltd duracon m25lv pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-polyplastics-duracon-m450-44",
+      "search": "polyplastics co ltd duracon m450 44 pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-polyplastics-duracon-tf-30",
+      "search": "polyplastics co ltd duracon tf 30 pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-polyplastics-duracon-wr-01",
+      "search": "polyplastics co ltd duracon wr 01 pom",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-polyplastics-durafide-1140a66",
+      "search": "polyplastics co ltd durafide 1140a66 pps",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-polyplastics-duranex-3306",
+      "search": "polyplastics co ltd duranex 3306 pbt",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-polyplastics-laperos-a130",
+      "search": "polyplastics co ltd laperos a130 lcp",
       "kind": "canonical"
     },
     {
@@ -1234,13 +1549,223 @@
       "kind": "canonical"
     },
     {
+      "id": "mat-scgc-a10p740j",
+      "search": "scgc scgc green polymer a10p740j pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-a10p842j",
+      "search": "scgc scgc green polymer a10p842j pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-pcdp01jn",
+      "search": "scgc scgc green polymer pcdp01jn pp recycled",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-pcdp02jn",
+      "search": "scgc scgc green polymer pcdp02jn pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-pcrp03jb",
+      "search": "scgc scgc green polymer pcrp03jb pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-h555j",
+      "search": "scgc scgc hdpe h555j hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-h555ja",
+      "search": "scgc scgc hdpe h555ja hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-h567j",
+      "search": "scgc scgc hdpe h567j hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-h567ja",
+      "search": "scgc scgc hdpe h567ja hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-h568ja",
+      "search": "scgc scgc hdpe h568ja hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-h5814j",
+      "search": "scgc scgc hdpe h5814j hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-h5818j",
+      "search": "scgc scgc hdpe h5818j hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-h6105ju",
+      "search": "scgc scgc hdpe h6105ju hdpe",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p1088j",
+      "search": "scgc scgc pp p1088j pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-scgc-pp-p403j",
+      "search": "scgc scgc pp p403j pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p440j",
+      "search": "scgc scgc pp p440j pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p441ju",
+      "search": "scgc scgc pp p441ju pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p443j",
+      "search": "scgc scgc pp p443j pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p483ju",
+      "search": "scgc scgc pp p483ju pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p639at",
+      "search": "scgc scgc pp p639at pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p640j",
+      "search": "scgc scgc pp p640j pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-scgc-pp-p642j",
+      "search": "scgc scgc pp p642j pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-scgc-pp-p686j",
+      "search": "scgc scgc pp p686j pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-scgc-pp-p700j",
+      "search": "scgc scgc pp p700j pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-scgc-pp-p701j",
+      "search": "scgc scgc pp p701j pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-scgc-pp-p702j",
+      "search": "scgc scgc pp p702j pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-scgc-pp-p722jo",
+      "search": "scgc scgc pp p722jo pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p739et",
+      "search": "scgc scgc pp p739et pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-scgc-pp-p740j",
+      "search": "scgc scgc pp p740j pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-scgc-pp-p744j",
+      "search": "scgc scgc pp p744j pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p747wt",
+      "search": "scgc scgc pp p747wt pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-scgc-pp-p750j",
+      "search": "scgc scgc pp p750j pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p765j",
+      "search": "scgc scgc pp p765j pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
       "id": "mat-scgc-p840j",
       "search": "scgc scgc pp p840j pp",
       "kind": "canonical"
     },
     {
+      "id": "mat-scgc-scgc-pp-p841j",
+      "search": "scgc scgc pp p841j pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-scgc-pp-p842j",
+      "search": "scgc scgc pp p842j pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
       "id": "mat-scgc-p901j",
       "search": "scgc scgc pp p901j pp",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p904j",
+      "search": "scgc scgc pp p904j pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p905j",
+      "search": "scgc scgc pp p905j pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p945j",
+      "search": "scgc scgc pp p945j pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-p951j",
+      "search": "scgc scgc pp p951j pp random copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-sg500",
+      "search": "scgc scgc pvc resin sg500 pvc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-sg580",
+      "search": "scgc scgc pvc resin sg580 pvc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-scgc-sg58j",
+      "search": "scgc scgc pvc resin sg58j pvc",
       "kind": "canonical"
     },
     {
@@ -1264,6 +1789,31 @@
       "kind": "canonical"
     },
     {
+      "id": "mat-sumitomo-chemical-asia-sumipex-epm",
+      "search": "sumitomo chemical asia pte ltd sumipex epm pmma",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sumitomo-chemical-asia-sumipex-me",
+      "search": "sumitomo chemical asia pte ltd sumipex me pmma",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sumitomo-chemical-asia-sumipex-mgss",
+      "search": "sumitomo chemical asia pte ltd sumipex mgss pmma",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sumitomo-chemical-asia-sumipex-mh",
+      "search": "sumitomo chemical asia pte ltd sumipex mh pmma",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-sumitomo-chemical-asia-sumipex-mh5",
+      "search": "sumitomo chemical asia pte ltd sumipex mh5 pmma",
+      "kind": "canonical"
+    },
+    {
       "id": "mat-supreme-sc206",
       "search": "supreme petrochem supreme sc206 gpps",
       "kind": "canonical"
@@ -1279,6 +1829,101 @@
       "kind": "canonical"
     },
     {
+      "id": "mat-teijin-panlite-b-8130r",
+      "search": "teijin limited panlite b 8130r pc alloy",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-teijin-panlite-gv-3430r",
+      "search": "teijin limited panlite gv 3430r pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-teijin-panlite-sh-1126z",
+      "search": "teijin limited panlite sh 1126z pc",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-tpc-singapore-as164",
+      "search": "the polyolefin company singapore pte ltd cosmoplene pp as164 pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-tpc-singapore-av161",
+      "search": "the polyolefin company singapore pte ltd cosmoplene pp av161 pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-tpc-singapore-aw161",
+      "search": "the polyolefin company singapore pte ltd cosmoplene pp aw161 pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-tpc-singapore-aw184",
+      "search": "the polyolefin company singapore pte ltd cosmoplene pp aw184 pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-tpc-singapore-aw864",
+      "search": "the polyolefin company singapore pte ltd cosmoplene pp aw864 pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-tpc-singapore-ax161",
+      "search": "the polyolefin company singapore pte ltd cosmoplene pp ax161 pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-tpc-singapore-ax191",
+      "search": "the polyolefin company singapore pte ltd cosmoplene pp ax191 pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-tpc-singapore-ax668",
+      "search": "the polyolefin company singapore pte ltd cosmoplene pp ax668 pp impact copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-tpc-singapore-h101e",
+      "search": "the polyolefin company singapore pte ltd cosmoplene pp h101e pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-tpc-singapore-w101e",
+      "search": "the polyolefin company singapore pte ltd cosmoplene pp w101e pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-tpc-singapore-w531l",
+      "search": "the polyolefin company singapore pte ltd cosmoplene pp w531l pp random copolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-tpc-singapore-y101g",
+      "search": "the polyolefin company singapore pte ltd cosmoplene pp y101g pp homopolymer",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-toray-torelina-a504x90",
+      "search": "toray industries inc torelina a504x90 pps",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-toyobo-glamide-t-802",
+      "search": "toyobo co ltd glamide t 802 pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-toyobo-glamide-t662",
+      "search": "toyobo co ltd glamide t662 pa66",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-toyobo-glamide-ty-502nz",
+      "search": "toyobo co ltd glamide ty 502nz pa6t",
+      "kind": "canonical"
+    },
+    {
       "id": "mat-ube-1013b",
       "search": "ube ube nylon 1013b pa6",
       "kind": "canonical"
@@ -1286,6 +1931,31 @@
     {
       "id": "mat-ube-1015gc6",
       "search": "ube ube nylon 1015gc6 pa6",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-ube-3020gx6",
+      "search": "ube corporation ubesta 3020gx6 pa12",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-unitika-u-polymer-fun-8520s",
+      "search": "unitika ltd u polymer fun 8520s polyarylate",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-unitika-u-polymer-ug-100-20",
+      "search": "unitika ltd u polymer ug 100 20 polyarylate",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-unitika-u-polymer-ug-100-30",
+      "search": "unitika ltd u polymer ug 100 30 polyarylate",
+      "kind": "canonical"
+    },
+    {
+      "id": "mat-unitika-unitika-nylon-66-e2000",
+      "search": "unitika ltd unitika nylon 66 e2000 pa66",
       "kind": "canonical"
     },
     {
@@ -1306,46 +1976,6 @@
     {
       "id": "mat-victrex-peek-450gl30",
       "search": "victrex victrex peek 450gl30 peek",
-      "kind": "canonical"
-    },
-    {
-      "id": "mat-hyosung-poketone-e700",
-      "search": "hyosung chemical poketone e700 polyketone",
-      "kind": "canonical"
-    },
-    {
-      "id": "mat-hyosung-poketone-m330",
-      "search": "hyosung chemical poketone m330 m330f polyketone",
-      "kind": "canonical"
-    },
-    {
-      "id": "mat-hyosung-poketone-m410",
-      "search": "hyosung chemical poketone m410 m410f s m410fs polyketone",
-      "kind": "canonical"
-    },
-    {
-      "id": "mat-hyosung-poketone-m630",
-      "search": "hyosung chemical poketone m630 m630f polyketone",
-      "kind": "canonical"
-    },
-    {
-      "id": "mat-hyosung-poketone-m640",
-      "search": "hyosung chemical poketone m640 m640a polyketone",
-      "kind": "canonical"
-    },
-    {
-      "id": "mat-hyosung-poketone-m710",
-      "search": "hyosung chemical poketone m710 m710f polyketone",
-      "kind": "canonical"
-    },
-    {
-      "id": "mat-hyosung-poketone-m730",
-      "search": "hyosung chemical poketone m730 m730f polyketone",
-      "kind": "canonical"
-    },
-    {
-      "id": "mat-hyosung-poketone-m930",
-      "search": "hyosung chemical poketone m930 m930f polyketone",
       "kind": "canonical"
     },
     {

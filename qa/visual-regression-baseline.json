@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.08.4",
-  "commit": "ba7a48b1cee1fdf88accac1d91eb904ffa22f120",
+  "release": "2026.11.08.5",
+  "commit": "5f4992d9898d7676e44229b219b0d8dbd07c9488",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Owner-directed immutable baseline for the requested unified Moulding problem practice UI in PR #697. The exact-source review covers the 52-screen matrix; strict 12-pixel comparison remains unchanged. This owner-approved visual design baseline applies only to the visible Learn/Practice consolidation. Independent human, accessibility, physical-device, Windows signing, provider, SME, learner-outcome, accreditation and production reviews remain separate and HOLD; no such authorization is created.",
-  "ref": "visual-baseline/2026.11.08.4-pr697",
+  "policy": "Reference source for the requested APAC materials catalogue additions across Japan, South Korea, Thailand, Singapore and the Philippines. This immutable technical baseline keeps all 52 screens and the 12-pixel threshold; it is not human visual-owner approval. Independent human, accessibility, physical-device, Windows signing, provider, SME, learner-outcome, accreditation and production reviews remain separate and HOLD.",
+  "ref": "visual-baseline/2026.11.08.5",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "ba7a48b1cee1fdf88accac1d91eb904ffa22f120"
+    "referenceSourceSha": "5f4992d9898d7676e44229b219b0d8dbd07c9488"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",

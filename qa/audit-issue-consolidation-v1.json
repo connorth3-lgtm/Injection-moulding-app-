@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.08.4",
+  "release": "2026.11.08.5",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "afddce102ee48995bdcf06b9f22bc078992cea3a",
+  "candidateSourceSha": "f7b703ad06fef540d7773458e0eff8202c253041",
   "scope": "Consolidate Question Centre into one Learn destination: remove the repeated lesson-embedded and Practice copies while preserving its five governed question modes.",
-  "approvalBoundary": "HOLD: exact-source candidate producer run 42467257528 retained artifact 13612187059 (fingerprint sha256:12b0afbcd833614ce5162612b84974e491f5f197cf6d1973b2a522d60b92a54d); Mobile Browser QA run 42467257588 and Question Quality 50-Pass run 42467257502 passed for source afddce102ee48995bdcf06b9f22bc078992cea3a. All seven independent human/device/provider workstreams and tester distribution remain HOLD.",
+  "approvalBoundary": "HOLD: release 2026.11.08.5 exact-source software checks passed; this is a technical PASS only. All seven independent human/device/provider workstreams and tester distribution remain HOLD.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -45,14 +45,14 @@
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
   "lastReviewedDate": "2026-11-08",
   "previousVerifiedCandidate": {
-    "release": "2026.11.08.2",
-    "sourceSha": "0e30c8d395a1ce8f9df718d194dab66d580c409a",
-    "runtimeFingerprint": "sha256:643dc080e44732e5c2b4149cc6c20e768de18b2001b67cdcde1d0efe391e7c3a",
-    "candidateRunId": 42424109556,
+    "release": "2026.11.08.4",
+    "sourceSha": "afddce102ee48995bdcf06b9f22bc078992cea3a",
+    "runtimeFingerprint": "sha256:12b0afbcd833614ce5162612b84974e491f5f197cf6d1973b2a522d60b92a54d",
+    "candidateRunId": 42467257528,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13594971527,
-    "artifactName": "physical-pwa-candidate-0e30c8d395a1ce8f9df718d194dab66d580c409a",
-    "artifactDigest": "sha256:00590509954dc14fe654fc9094641a5c3440c45c3b4be53984136504ac2843bf",
-    "artifactExpiresAt": "2027-02-05T23:11:32Z"
+    "artifactId": 13612187059,
+    "artifactName": "physical-pwa-candidate-afddce102ee48995bdcf06b9f22bc078992cea3a",
+    "artifactDigest": "sha256:77f7d6b8d134c862e6bd1992ab11cfa1df7acb27064ab56d3df2890e1321d056",
+    "artifactExpiresAt": "2027-02-06T09:27:27Z"
   }
 }

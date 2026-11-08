@@ -24,11 +24,11 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     await openMaterialsFromLearn(page);
     await expect(page.locator('#materials')).toBeVisible();
     await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
-    await expect(page.locator('#mmExactMaterialCatalog')).toHaveAttribute('data-mm-material-total','268');
-    await expect(page.locator('[data-mm-material-coverage]')).toContainText('28 manufacturers');
-    await expect(page.locator('[data-mm-material-coverage]')).toContainText('13 countries');
-    await expect(page.locator('[data-mm-material-coverage]')).toContainText('33 polymer families');
-    await expect(page.locator('[data-mm-material-coverage]')).toContainText('209 comparison-ready observations');
+    await expect(page.locator('#mmExactMaterialCatalog')).toHaveAttribute('data-mm-material-total','394');
+    await expect(page.locator('[data-mm-material-coverage]')).toContainText('36 manufacturers');
+    await expect(page.locator('[data-mm-material-coverage]')).toContainText('14 countries');
+    await expect(page.locator('[data-mm-material-coverage]')).toContainText('42 polymer families');
+    await expect(page.locator('[data-mm-material-coverage]')).toContainText('264 comparison-ready observations');
     await expect(page.locator('[data-mm-exact-results] [data-mm-material-grade]')).toHaveCount(24);
     await expect(page.locator('[data-mm-exact-results]')).toBeHidden();
     await page.locator('[data-mm-all-material-filters] > summary').click();
@@ -165,10 +165,10 @@ test('Singapore exact-grade material search exposes Mitsui Elastomers Singapore 
   // Secondary exact-grade index is retained for legacy engine checks only;
   // the public Materials screen has one visible searchable catalogue.
   await search.evaluate(el=>{el.value='Singapore';el.dispatchEvent(new Event('input',{bubbles:true}))});
-  await expect(root).toHaveAttribute('data-mm-material-total','31');
+  await expect(root).toHaveAttribute('data-mm-material-total','48');
   // The hidden legacy exact-grade engine still paginates 24 rows; the unified\n  // visible catalogue includes inline exact-grade details and must not inflate it.\n  await expect(root.locator('[data-mm-exact-results] [data-mm-material-grade]')).toHaveCount(24);
   const status=root.locator('[data-mm-material-page-status]');
-  await expect(status).toContainText('31 matching exact grades');
+  await expect(status).toContainText('48 matching exact grades');
   await expect(status).toContainText('page 1 of 2');
   await expect(root).toContainText('TAFMER');
   await expect(root).toContainText('Mitsui Elastomers Singapore');
