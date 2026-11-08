@@ -27,7 +27,7 @@ async function openGuidedPractice(page){
   await expect(page.locator('#mmPracticeGuided')).toBeVisible();
 }
 
-async function expectReadableTiles(page,rootSelector,expectedCount=5){
+async function expectReadableTiles(page,rootSelector,expectedCount=4){
   const result=await page.evaluate(rootSelector=>{
     const root=document.querySelector(rootSelector);
     const grid=root.querySelector('.mm-hub-grid');
@@ -77,7 +77,7 @@ async function expectReadableTiles(page,rootSelector,expectedCount=5){
   expect(result.overlap).toBe(false);
 }
 
-async function expectNarrowReadableTiles(page,rootSelector,expectedCount=5){
+async function expectNarrowReadableTiles(page,rootSelector,expectedCount=4){
   const result=await page.evaluate(rootSelector=>{
     const root=document.querySelector(rootSelector);
     const grid=root.querySelector('.mm-hub-grid');
@@ -616,7 +616,7 @@ test('Practice connects the existing troubleshooting tools in one three-stage le
   await page.evaluate(()=>switchView('scenarios'));
   const root=page.locator('#scenarios .mm-practice-hub');
   await expect(root.locator('.mm-practice-diagnose-stages')).toHaveCount(0);
-  await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(5);
+  await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(4);
   await root.locator('[data-mm-hub-action="troubleshooting"]').click();
   const modal=page.locator('#modal:not(.hidden) .mm-diagnose-chooser');
   await expect(modal).toBeVisible();
@@ -757,7 +757,7 @@ test('mobile Practice source-owned choices occupy one readable column at 360 and
         cards:tiles.length,
         overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
     });
-    expect(metrics.cards).toBe(5);
+    expect(metrics.cards).toBe(4);
     expect(metrics.columns).toBe(1);
     expect(metrics.overflow).toBeLessThanOrEqual(2);
   }
