@@ -126,7 +126,7 @@ test('Materials displays all results with filters collapsed and clears selection
   await expect(filters).not.toHaveAttribute('open','');
   await expect(search).toBeVisible();
   await expect(results.locator('[data-mm-family-open="PP"]')).toBeVisible();
-  await expect(results.locator('[data-mm-family-open="PP"]')).toContainText('95 published grades');
+  await expect(results.locator('[data-mm-family-open="PP"]')).toContainText('96 published grades');
   await expect(status).toContainText('polymer families');
   await expect(filters.locator('[data-mm-all-material-region]')).toBeHidden();
   await results.locator('[data-mm-family-open="PP"]').click();

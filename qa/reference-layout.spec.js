@@ -89,13 +89,13 @@ for(const width of [320,360,390,412]){
     await study.locator(':scope > summary').click();
     const pp=page.locator('#materials [data-mm-family-open="PP"]');
     await expect(pp).toBeVisible();
-    await expect(pp).toContainText('95 published grades');
+    await expect(pp).toContainText('96 published grades');
     await expect(pp.locator('.mm-reference-family-art')).toBeVisible();
     await pp.click();
     const detail=page.locator('#materials [data-mm-family-detail]');
     await expect(detail).toBeVisible();
     await expect(detail.locator('[data-mm-family-title]')).toContainText('PP · Polypropylene');
-    await expect(detail.locator('[data-mm-family-count]')).toContainText('95 published grades');
+    await expect(detail.locator('[data-mm-family-count]')).toContainText('96 published grades');
     await detail.locator('[data-mm-family-view="overview"]').click();
     await expect(detail.locator('[data-mm-family-info]')).toContainText('Polypropylene');
     await detail.locator('[data-mm-family-view="properties"]').click();
