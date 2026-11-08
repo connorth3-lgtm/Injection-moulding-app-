@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "release": "2026.11.08.4",
-  "commit": "5046bc28940c9df68fad67dffe7e048f8b43d2c9",
+  "commit": "ba7a48b1cee1fdf88accac1d91eb904ffa22f120",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Regression baseline for the user-requested unified Moulding problem practice design in release 2026.11.08.4. It pins the exact source that combines defect diagnosis and shop-floor decision practice under one Practice entry. Automated comparisons check later changes against this release; the generated comparison evidence does not imply independent human visual approval, accessibility approval, physical-device validation, provider review or production authorization.",
-  "ref": "visual-baseline/2026.11.08.4",
+  "policy": "Owner-directed immutable baseline for the requested unified Moulding problem practice UI in PR #697. The exact-source review covers the 52-screen matrix; strict 12-pixel comparison remains unchanged. The recorded approval applies only to the visible Learn/Practice consolidation and creates no accessibility, physical-device, provider, SME, learner-outcome, accreditation or production authorization.",
+  "ref": "visual-baseline/2026.11.08.4-pr697",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "5046bc28940c9df68fad67dffe7e048f8b43d2c9"
+    "referenceSourceSha": "ba7a48b1cee1fdf88accac1d91eb904ffa22f120"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",
