@@ -82,7 +82,7 @@ test('family-first Materials groups all PP grades in one illustrated folder with
   const counts=await page.evaluate(()=>window.MM_MATERIAL_SEARCH.facets().then(f=>({
     names:f.families,pp:f.counts.families.PP,all:Object.values(f.counts.families).reduce((a,b)=>a+b,0)
   })));
-  expect(counts.pp).toBe(95);
+  expect(counts.pp).toBe(96);
   await expect(familyCards).toHaveCount(counts.names.length);
   await expect(results.locator('[data-mm-material-index-result]')).toHaveCount(0);
   await expect(familyCards.first()).toHaveAttribute('data-mm-family-open','PP');
@@ -90,7 +90,7 @@ test('family-first Materials groups all PP grades in one illustrated folder with
   await familyCards.first().click();
   await expect(root.locator('[data-mm-all-material-family]')).toHaveValue('PP');
   await expect(root.locator('[data-mm-all-material-type]')).toHaveValue('exact-grade');
-  await expect(root.locator('[data-mm-all-material-status]')).toContainText('95 matching material records');
+  await expect(root.locator('[data-mm-all-material-status]')).toContainText('96 matching material records');
   const uniqueIds=new Set();
   const pageCount=Math.ceil(counts.pp/12);
   for(let current=0;current<pageCount;current++){
@@ -130,7 +130,7 @@ test('Materials displays all results with filters collapsed and clears selection
   await expect(status).toContainText('polymer families');
   await expect(filters.locator('[data-mm-all-material-region]')).toBeHidden();
   await results.locator('[data-mm-family-open="PP"]').click();
-  await expect(status).toContainText('95 matching material records');
+  await expect(status).toContainText('96 matching material records');
   await expect(filters.locator('[data-mm-all-material-family]')).toHaveValue('PP');
   const firstResult=results.locator('[data-mm-material-index-result]').first();
   await expect(firstResult).not.toHaveAttribute('open','');

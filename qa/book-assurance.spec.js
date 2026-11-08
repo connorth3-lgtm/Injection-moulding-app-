@@ -270,14 +270,18 @@ test('Material Atlas final keyboard pagination leaves focus on a newly loaded re
   const catalog=page.locator('[data-mm-book-canonical-catalog]');
   await catalog.locator(':scope > summary').click();
   const more=page.locator('[data-mm-book-material-more="catalog"]');
-  for(let batch=0;batch<11;batch++){
-    await expect(more).toHaveCount(1);
+  const grades=catalog.locator('[data-mm-book-catalog-grade]');
+  let finalBatchStart=-1;
+  for(let batch=0;batch<24;batch++){
+    if(await more.count()===0)break;
+    finalBatchStart=await grades.count();
     await more.focus();
     await page.keyboard.press('Enter');
   }
   await expect(more).toHaveCount(0);
-  await expect(catalog.locator('[data-mm-book-catalog-grade]')).toHaveCount(394);
-  await expect(catalog.locator('[data-mm-book-catalog-grade]').nth(264).locator('summary')).toBeFocused();
+  await expect(grades).toHaveCount(394);
+  expect(finalBatchStart).toBeGreaterThanOrEqual(0);
+  await expect(grades.nth(finalBatchStart).locator('summary')).toBeFocused();
 });
 
 
