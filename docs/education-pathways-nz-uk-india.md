@@ -38,7 +38,7 @@ The NQR record totals 480 hours and displays 120 theory, 300 practical, 30 emplo
 | Mandatory on-the-job training | 30 |
 | Total | 480 |
 
-The linked qualification file’s module table totals 150 theory (including the 30-hour employability module), 300 practical and 30 OJT. Both sources total 480 hours, but they label the theory/employability split differently. CIPET confirms the controlled schedule and category labels before training hours are recorded. The entry routes and the 30 practical/OJT hours are provider-controlled; app reading does not count toward them.
+The linked qualification file’s module table totals 150 theory (including the 30-hour employability module), 300 practical and 30 OJT. Both sources total 480 hours, but they label the theory/employability split differently. The NQR landing page also lists DGT/VSQ/N0101 as V2.0 while the linked May 2025 qualification file lists V1.0. CIPET confirms the controlled schedule, category labels and active module version before training hours or assessment instruments are recorded. The entry routes and the 30 practical/OJT hours are provider-controlled; app reading does not count toward them.
 
 ### Machine Operator – Injection Moulding (NQR 14350; NSQF Level 3.5)
 
