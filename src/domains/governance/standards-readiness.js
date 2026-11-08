@@ -2,18 +2,18 @@
 (function(){
 'use strict';
 if(window.MM_STANDARDS_READINESS)return;
-const VERSION='2026.11.08.1';
+const VERSION='2026.11.08.2';
 const QMS='./src/domains/quality/data/quality-management-iso9001-v1.json';
 const NZQA='./src/domains/learning/book-data/nzqa-education-readiness-v1.json';
 const COURSE_PACKS='./src/domains/learning/book-data/education-course-packs-v1.json';
 const EDUCATION_DATA=Object.freeze({
   "schema": 1,
   "id": "mouldmaster-regional-education-pathways",
-  "version": "2026.11.08.1",
+  "version": "2026.11.08.2",
   "checked": "2026-11-08",
   "status": "provisional-study-support-crosswalk",
   "purpose": "Give learners in New Zealand, the United Kingdom's four nations, and India a source-linked study pathway through the same MouldMaster Book and app topics.",
-  "claimBoundary": "Use this provisional map for study and formative practice. Approved providers and workplaces control credits, assessment, training hours, competence sign-off and machine-operation authority.",
+  "claimBoundary": "Use this provisional map for study and formative practice. Level labels belong to their named framework: equal or similar numbers do not mean equivalent awards, credit transfer, mutual recognition or portability. Approved providers and workplaces control credits, assessment, hours, competence sign-off and machine-operation authority.",
   "regionTabs": [
     {
       "id": "nz",
@@ -62,10 +62,10 @@ const EDUCATION_DATA=Object.freeze({
       "nation": "New Zealand",
       "title": "New Zealand Certificate in Plastics Processing (Level 3)",
       "frameworkRef": "NZQA qualification 4401 · optional Injection Moulding strand",
-      "status": "Current qualification reference",
+      "status": "Current record · none currently offering",
       "level": "NZQCF Level 3",
       "duration": "95–120 credits; programme duration is provider-set",
-      "scopeNote": "The qualification includes an optional Injection Moulding strand. The MouldMaster mapping uses the existing NZQA readiness contract and Book chapter map as study context.",
+      "scopeNote": "The qualification includes an optional Injection Moulding strand. The MouldMaster mapping uses the existing NZQA readiness contract and Book chapter map as study context. NZQA currently lists no organisations offering this qualification; its next review is 31 December 2026. Confirm enrolment availability and the current programme with a provider before relying on this route.",
       "studyOutcomes": [
         "Explain safe injection moulding work, production instructions, and operating boundaries.",
         "Relate polymer and mould conditions to process behaviour using the current grade, machine, and site evidence.",
@@ -94,6 +94,7 @@ const EDUCATION_DATA=Object.freeze({
         "handover"
       ],
       "formalRequirements": [
+        "NZQA currently lists no organisations offering this qualification; confirm current provider and enrolment availability. The next NZQA review is 31 December 2026.",
         "Provider-selected programme design, delivery, assessment, moderation, and workplace evidence.",
         "Any standards assessment requires the provider's current NZQA consent and moderation arrangements.",
         "MouldMaster completion does not award NZQA credits or show workplace competence."
@@ -109,10 +110,10 @@ const EDUCATION_DATA=Object.freeze({
       "nation": "New Zealand",
       "title": "New Zealand Certificate in Plastics Processing (Level 4)",
       "frameworkRef": "NZQA qualification 4402 · Injection Moulding strand",
-      "status": "Current qualification reference",
+      "status": "Current record · none currently offering",
       "level": "NZQCF Level 4",
       "duration": "125–130 credits across the qualification strands",
-      "scopeNote": "Technician-level study for people working in plastics processing. The Book links cover quality assurance, process management, advanced materials, fault diagnosis and continuous improvement.",
+      "scopeNote": "Technician-level study for people working in plastics processing. The Book links cover quality assurance, process management, advanced materials, fault diagnosis and continuous improvement. NZQA currently lists no organisations offering this qualification; its next review is 31 December 2026. Confirm enrolment availability and the current programme with a provider before relying on this route.",
       "studyOutcomes": [
         "Compare process and quality evidence against a documented baseline and explain what a measurement can establish.",
         "Explain how material behaviour, machine capability and mould conditions can affect the process window.",
@@ -137,6 +138,7 @@ const EDUCATION_DATA=Object.freeze({
         "handover"
       ],
       "formalRequirements": [
+        "NZQA currently lists no organisations offering this qualification; confirm current provider and enrolment availability. The next NZQA review is 31 December 2026.",
         "The provider selects and assesses the programme and its Injection Moulding strand.",
         "Practical setup, fault correction, quality assurance and improvement evidence must meet the provider and workplace requirements."
       ],
@@ -353,6 +355,127 @@ const EDUCATION_DATA=Object.freeze({
       }
     },
     {
+      "id": "india-cipet-amo-im",
+      "region": "india",
+      "nation": "India",
+      "title": "Assistant Machine Operator – Injection Moulding (AMO-IM)",
+      "frameworkRef": "NCVET / NQR code QG-03-CP-04130-2025-V2-CIPET · NQR 14257",
+      "status": "Approved 2025-05-26; valid to 2028-05-25 in the NQR record",
+      "level": "NCrF / NSQF Level 3",
+      "duration": "480 hours · confirm the theory/employability category split with CIPET",
+      "scopeNote": "Entry-level injection moulding study for an assistant role working under an operator or supervisor. NQR lists progression to Machine Operator in the injection moulding industry.",
+      "studyOutcomes": [
+        "Explain the production plan, work instructions, materials, mould identity and safe preparation checks.",
+        "Describe how an assistant supports machine setup, runs, monitoring and basic troubleshooting under operator guidance.",
+        "Use an approved reference and basic measuring method to check finished parts and report defects.",
+        "Practise 5S, record handling, employability and clear escalation without substituting an app exercise for workplace authorisation."
+      ],
+      "bookChapterIds": [
+        "what-injection-moulding-is",
+        "cycle",
+        "safety-foundations",
+        "machine-anatomy",
+        "mould-anatomy",
+        "material-families",
+        "process-baseline",
+        "process-monitoring",
+        "documentation",
+        "diagnostic-method",
+        "capability",
+        "dimensional-stability"
+      ],
+      "practiceActivityIds": [
+        "process-record",
+        "quality-plan",
+        "safety-5s",
+        "defect-ledger",
+        "handover"
+      ],
+      "modules": [
+        {
+          "code": "CPC/N0214",
+          "title": "Basic concepts, job requirements and process know-how",
+          "hours": 90,
+          "delivery": {
+            "Theory": 30,
+            "Practical": 60
+          }
+        },
+        {
+          "code": "CPC/N0215",
+          "title": "Assist injection moulding operations, monitoring and troubleshooting",
+          "hours": 180,
+          "delivery": {
+            "Theory": 50,
+            "Practical": 130
+          }
+        },
+        {
+          "code": "CPC/N0216",
+          "title": "Basic quality checks against an approved product",
+          "hours": 90,
+          "delivery": {
+            "Theory": 20,
+            "Practical": 70
+          }
+        },
+        {
+          "code": "CPC/N0411",
+          "title": "Basic workplace health, safety and 5S",
+          "hours": 30,
+          "delivery": {
+            "Theory": 10,
+            "Practical": 20
+          }
+        },
+        {
+          "code": "CPC/N0219",
+          "title": "Office-suite basics",
+          "hours": 30,
+          "delivery": {
+            "Theory": 10,
+            "Practical": 20
+          }
+        },
+        {
+          "code": "DGT/VSQ/N0101",
+          "title": "Employability skills",
+          "hours": 30,
+          "delivery": {
+            "Employability": 30
+          }
+        },
+        {
+          "code": "OJT",
+          "title": "Mandatory on-the-job training",
+          "hours": 30,
+          "delivery": {
+            "On-the-job training": 30
+          }
+        }
+      ],
+      "formalRequirements": [
+        "NQR entry routes include Grade 10 pass without experience, Grade 8 with a two-year NTC/NAC, Grade 9 with 1.5 years relevant experience, or Grade 8 with three years relevant experience. CIPET confirms eligibility for the intake.",
+        "The NQR page classifies the 480 hours as 120 theory, 300 practical, 30 employability and 30 OJT. The linked qualification-file module table totals 150 theory (including the 30-hour employability module), 300 practical and 30 OJT. The total remains 480 hours; CIPET confirms the controlled delivery schedule and category labels.",
+        "The 300 practical hours and 30 mandatory OJT hours require provider-organised, supervised delivery. Book reading and MouldMaster practice do not count toward those hours.",
+        "CIPET and its approved assessors control formal training, evidence, assessment and certification. MouldMaster completion does not award NCrF credits or authorize machine operation."
+      ],
+      "source": {
+        "title": "National Qualification Register: Assistant Machine Operator – Injection Moulding (NQR 14257)",
+        "url": "https://www.nqr.gov.in/qualifications/14257"
+      },
+      "additionalSources": [
+        {
+          "title": "CIPET qualification file: Assistant Machine Operator – Injection Moulding",
+          "url": "https://www.nqr.gov.in/qualification/file/STT_Qualification_File_AMO-IM.pdf"
+        },
+        {
+          "title": "CIPET: NSQF-aligned qualifications and registration",
+          "url": "https://sdcipet.in/NSQFCourses.aspx"
+        }
+      ]
+    },
+    {
       "id": "india-cipet-mo-im",
       "region": "india",
       "nation": "India",
@@ -395,49 +518,71 @@ const EDUCATION_DATA=Object.freeze({
           "code": "CPC/N0214",
           "title": "Basic concepts, job requirements, and process know-how",
           "hours": 90,
-          "delivery": {"Theory": 30, "Practical": 60}
+          "delivery": {
+            "Theory": 30,
+            "Practical": 60
+          }
         },
         {
           "code": "CPC/N0221",
           "title": "Injection moulding operations, process monitoring, and troubleshooting",
           "hours": 270,
-          "delivery": {"Theory": 90, "Practical": 180}
+          "delivery": {
+            "Theory": 90,
+            "Practical": 180
+          }
         },
         {
           "code": "CPC/N0222",
           "title": "Finished-product quality check and inspection",
           "hours": 90,
-          "delivery": {"Theory": 30, "Practical": 60}
+          "delivery": {
+            "Theory": 30,
+            "Practical": 60
+          }
         },
         {
           "code": "CPC/N0411",
           "title": "Workplace health and safety, 5S",
           "hours": 30,
-          "delivery": {"Theory": 10, "Practical": 20}
+          "delivery": {
+            "Theory": 10,
+            "Practical": 20
+          }
         },
         {
           "code": "CPC/N0223",
           "title": "Entrepreneurship in Injection Moulding",
           "hours": 30,
-          "delivery": {"Theory": 10, "Practical": 20}
+          "delivery": {
+            "Theory": 10,
+            "Practical": 20
+          }
         },
         {
           "code": "CPC/N0219",
           "title": "MS Office / open-source office suite basics",
           "hours": 30,
-          "delivery": {"Theory": 10, "Practical": 20}
+          "delivery": {
+            "Theory": 10,
+            "Practical": 20
+          }
         },
         {
           "code": "DGT/VSQ/N0101",
           "title": "Employability Skills",
           "hours": 30,
-          "delivery": {"Employability": 30}
+          "delivery": {
+            "Employability": 30
+          }
         },
         {
           "code": "OJT",
           "title": "Mandatory on-the-job training",
           "hours": 30,
-          "delivery": {"On-the-job training": 30}
+          "delivery": {
+            "On-the-job training": 30
+          }
         }
       ],
       "formalRequirements": [
