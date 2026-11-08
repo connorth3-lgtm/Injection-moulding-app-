@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS: release 2026.11.08.2 source 0e30c8d395a1ce8f9df718d194dab66d580c409a; producer run 42424109556; artifact 13594971527; fingerprint sha256:643dc080e44732e5c2b4149cc6c20e768de18b2001b67cdcde1d0efe391e7c3a. The exact retained candidate manifest, deployment source, artifact digest, release contracts and seven HOLD packets were verified. |
-| Behavioral / browser | **pass** | PASS: release 2026.11.08.2 source 0e30c8d395a1ce8f9df718d194dab66d580c409a passed exact-source Mobile Browser QA, Question Quality 50-Pass and the strict 52-screen visual gate. Final protected-head merge checks remain required. |
-| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner and provider/NZQA evidence streams remain HOLD for release 2026.11.08.2. |
+| Static / contract | **fail** | HOLD: release 2026.11.08.3 exact-source technical candidate is not yet retained; prior release evidence does not transfer. |
+| Behavioral / browser | **fail** | HOLD: browser and question-quality gates for release 2026.11.08.3 remain unverified on its exact candidate. |
+| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner and provider/NZQA evidence streams remain HOLD for release 2026.11.08.3. |

@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "pass",
+    "technicalAutomation": "fail",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,16 +345,16 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "pass",
-      "meaning": "PASS: release 2026.11.08.2 source 0e30c8d395a1ce8f9df718d194dab66d580c409a; producer run 42424109556; artifact 13594971527; fingerprint sha256:643dc080e44732e5c2b4149cc6c20e768de18b2001b67cdcde1d0efe391e7c3a. The exact retained candidate manifest, deployment source, artifact digest, release contracts and seven HOLD packets were verified."
+      "status": "fail",
+      "meaning": "HOLD: release 2026.11.08.3 exact-source technical candidate is not yet retained; prior release evidence does not transfer."
     },
     "behavioralBrowser": {
-      "status": "pass",
-      "meaning": "PASS: release 2026.11.08.2 source 0e30c8d395a1ce8f9df718d194dab66d580c409a passed exact-source Mobile Browser QA, Question Quality 50-Pass and the strict 52-screen visual gate. Final protected-head merge checks remain required."
+      "status": "fail",
+      "meaning": "HOLD: browser and question-quality gates for release 2026.11.08.3 remain unverified on its exact candidate."
     },
     "externalHumanDevice": {
       "status": "hold",
-      "meaning": "All seven independent human, device, Windows distribution, SME, learner and provider/NZQA evidence streams remain HOLD for release 2026.11.08.2."
+      "meaning": "All seven independent human, device, Windows distribution, SME, learner and provider/NZQA evidence streams remain HOLD for release 2026.11.08.3."
     }
   }
 }
