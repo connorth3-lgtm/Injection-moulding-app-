@@ -49,7 +49,7 @@ function homeBalanceMarkup(){
     <summary><span class="mm-home-toolbox-label"><b>Toolbox</b><small>Optional diagnostic and data tools</small></span><span class="mm-home-toolbox-hint">Show / hide <span aria-hidden="true">⌄</span></span></summary>
     <div class="mm-home-toolbox-body">
       <div class="mm-home-balance-grid">
-        <button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Build an evidence-led Mould Master case.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button>
+        <button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Choose a guided diagnosis route for a moulding problem.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button>
         <button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Review measured trends and recovery evidence.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button>
       </div>
       <div data-mm-home-recent-slot hidden></div>

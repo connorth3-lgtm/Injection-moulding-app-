@@ -135,9 +135,14 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expect(page.locator('#defects [data-mm-dx-action="choose"]').first()).toBeVisible();
       await expect(page.locator('#modal')).toHaveClass(/hidden/);
       await expectOnlyCurrent(page,'Practice');
-      // Mould Master remains separately reachable from the Home specialist tools.
+      // Home uses the same problem-practice route; Mould Master stays available inside diagnosis.
       await page.evaluate(()=>switchView('dashboard'));
       await page.locator('#dashboard [data-mm-home-action="mould-master"]').click();
+      const problemPractice=page.locator('#scenarios .mm-problem-practice');
+      await expect(problemPractice).toBeVisible();
+      await problemPractice.locator('[data-mm-hub-action="diagnose-cause"]').click();
+      const diagnosisPicker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid[data-mm-reference-practice-picker="modal"]');
+      await diagnosisPicker.locator('[data-mm-hub-action="mould-master"]').click();
       await expect(page.locator('#mmMouldMasterWorkspace')).toBeVisible();
       await expect(page.getByRole('heading',{name:'Troubleshooting casebook'})).toBeVisible();
     });
