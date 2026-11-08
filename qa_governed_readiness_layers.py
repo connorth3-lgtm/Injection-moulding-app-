@@ -177,6 +177,7 @@ assistant_hours={"Theory":150,"Practical":300,"On-the-job training":30}
 for category,total in assistant_hours.items():
     need(sum(module["delivery"].get(category,0) for module in assistant_path["modules"])==total,f"CIPET assistant {category} hours differ from the qualification file module table")
 need(any("NQR page classifies the 480 hours as 120 theory" in note and "qualification-file module table adds to 150 theory" in note for note in assistant["delivery"]),"CIPET assistant hour-category difference needs centre resolution")
+need(any("lists DGT/VSQ/N0101 as V2.0" in note and "lists V1.0" in note for note in assistant["delivery"]),"CIPET assistant module-version difference needs centre resolution")
 
 # Book enrichment
 esrc=ROOT/"data/book-evidence-enrichment-v2.json"
