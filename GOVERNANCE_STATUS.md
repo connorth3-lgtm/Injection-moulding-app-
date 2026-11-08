@@ -1,12 +1,12 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.11.08.4`**.
+Current governed web candidate: **`2026.11.08.5`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS — release 2026.11.08.4 source afddce102ee48995bdcf06b9f22bc078992cea3a producer run 42467257528 retained artifact 13612187059 fingerprint sha256:12b0afbcd833614ce5162612b84974e491f5f197cf6d1973b2a522d60b92a54d; exact-source software contract, Mobile Browser QA and Question Quality 50-Pass gates succeeded. Automated software evidence only; independent external review remains HOLD. |
-| Behavioral / browser | **pass** | PASS — release 2026.11.08.4 source afddce102ee48995bdcf06b9f22bc078992cea3a; Mobile Browser QA run 42467257588 passed Chromium visual and substantive, WebKit, cross-browser smoke tests, and all 500 reliability checks; Question Quality 50-Pass run 42467257502 succeeded. Automated software evidence only; independent external review remains HOLD. |
-| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner and provider/NZQA evidence streams remain HOLD for release 2026.11.08.4. |
+| Static / contract | **fail** | HOLD — release 2026.11.08.5 candidate artifact and exact-source software verification are pending; no external approval is implied. |
+| Behavioral / browser | **fail** | HOLD — release 2026.11.08.5 exact-source browser and question-quality checks are pending; no external approval is implied. |
+| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.08.5. |
