@@ -6,13 +6,13 @@ The course-pack version is **2026.11.08.2**. It adds the CIPET Assistant Machine
 
 **Technical candidate:** **PASS — software-only**
 
-Release `2026.11.08.4`; producer run `42465108151`; artifact `13610993444`; source `3f4b9e2fcbc0dd28c089d5e486f1fa4c3020f365`; runtime fingerprint `sha256:1ef947c4a9bb9e2effdffa5d1cd7ea23d1a53b7720a73ffd18536b25eea09b29`; digest `sha256:9b358d21398b4cb2fcd47be24eb44b3b23645832622e9b0a8c35883aa9f6e52f`; expiry `2027-02-06T08:57:34Z`.
+Release `2026.11.08.4`; producer run `42467257528`; artifact `13612187059`; source `afddce102ee48995bdcf06b9f22bc078992cea3a`; runtime fingerprint `sha256:12b0afbcd833614ce5162612b84974e491f5f197cf6d1973b2a522d60b92a54d`; digest `sha256:77f7d6b8d134c862e6bd1992ab11cfa1df7acb27064ab56d3df2890e1321d056`; expiry `2027-02-06T09:27:27Z`.
 
 ## Exact-source software checks
 
-- Pre-merge Public Candidate run [42465108151](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/42465108151) succeeded and retained the exact-source artifact.
-- Mobile Browser QA run [42465108192](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/42465108192) passed the visual comparison, Chromium and WebKit learner suites, cross-browser smoke tests, and all five reliability shards.
-- Question Quality 50-Pass run [42465108090](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/42465108090) passed.
+- Pre-merge Public Candidate run [42467257528](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/42467257528) succeeded and retained the exact-source artifact.
+- Mobile Browser QA run [42467257588](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/42467257588) passed the visual comparison, Chromium and WebKit learner suites, cross-browser smoke tests, and all five reliability shards.
+- Question Quality 50-Pass run [42467257502](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/42467257502) passed.
 - These checks establish software behavior only. The artifact does not establish human, real-device, Windows-signing, provider, accreditation or production authorization.
 
 ## Release-specific review packets

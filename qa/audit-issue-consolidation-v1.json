@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.11.08.4",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "3f4b9e2fcbc0dd28c089d5e486f1fa4c3020f365",
+  "candidateSourceSha": "afddce102ee48995bdcf06b9f22bc078992cea3a",
   "scope": "Consolidate Question Centre into one Learn destination: remove the repeated lesson-embedded and Practice copies while preserving its five governed question modes.",
-  "approvalBoundary": "HOLD: release 2026.11.08.4 has no retained exact-source candidate. The requested UI consolidation is not yet approved for release; automated and external review evidence must bind to the final source. All seven independent human/device/provider workstreams and tester distribution remain HOLD.",
+  "approvalBoundary": "HOLD: exact-source candidate producer run 42467257528 retained artifact 13612187059 (fingerprint sha256:12b0afbcd833614ce5162612b84974e491f5f197cf6d1973b2a522d60b92a54d); Mobile Browser QA run 42467257588 and Question Quality 50-Pass run 42467257502 passed for source afddce102ee48995bdcf06b9f22bc078992cea3a. All seven independent human/device/provider workstreams and tester distribution remain HOLD.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
