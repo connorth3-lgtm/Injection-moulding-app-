@@ -130,7 +130,7 @@ These are **optional further-reading links**. Their presence does not mean that 
 | Governed evidence sources | 58 source records retained; no new governed source record was added. |
 | Editorial ledger | Coverage expanded from 39 to all 46 governed modules. Each module record is bound to its exact authored Git blob and mapped claim IDs. |
 | Further reading | 21/21 chapters have 15 unique source IDs; 315 assignments; 156 distinct catalogue URLs. |
-| Release identity | New Book-content release is 2026.11.09.2. The learner web release in this branch remains 2026.11.09.1; Android release metadata was not changed. |
+| Release identity | Book-content release is 2026.11.09.1, aligned with the learner web release 2026.11.09.1; this report is review revision 2026.11.09.2. Android release metadata remains 2026.11.08.1. |
 | Runtime integrity | Updated authorization fingerprints bind the rewritten canonical data files. The app’s packaged JSON copies are set to mirror those files byte-for-byte. |
 | App/device behaviour | No APK was rebuilt. Locked-screen playback, Chrome speech, Android speech and physical-device accessibility were not retested here. |
 

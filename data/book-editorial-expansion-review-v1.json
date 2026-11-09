@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
-  "release": "2026.11.09.2",
+  "release": "2026.11.09.1",
   "status": "repository-technical-review-complete",
   "reviewType": "book-wide-editorial-rewrite-and-claim-boundary-review",
   "purpose": "Bind the book-wide instructional rewrite, material-science foundations, reader consolidation and repetition reduction to the existing governed claim inventory without implying independent human SME approval.",
   "reviewBoundary": "Repository-level editorial and technical-source review of all 46 authored modules. It checks clarity, progression, terminology, applicability, source fit and consistency with mapped existing claims. It is not independent peer review, external SME approval, device validation, accreditation or production authorization.",
   "readerArchitecture": {
     "path": "data/book-reader-architecture-v2.json",
-    "gitBlobSha1": "741c33068b014eeb1f70188f8df35b12db90bfa9",
+    "gitBlobSha1": "084214a978f50dc962fc73079088b0a9553aa7ac",
     "conclusion": "derived-reader-scaffolding-without-new-technical-claims"
   },
   "reviewedModules": [

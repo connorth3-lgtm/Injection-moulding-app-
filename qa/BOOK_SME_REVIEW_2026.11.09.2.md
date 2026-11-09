@@ -1,10 +1,10 @@
-# Independent Book SME review handoff — content revision 2026.11.09.2
+# Independent Book SME review handoff — review revision 2026.11.09.2
 
 **Status: HOLD — independent human review is not complete.**
 
-This packet is for the rewritten Book content release **2026.11.09.2**, currently staged on PR #700. The planned learner web release remains **2026.11.09.1** until an exact candidate is produced and authorized. Android release metadata remains **2026.11.08.1**; no new APK has been built.
+This packet reviews the rewritten Book content release **2026.11.09.1**, staged on PR #700; packet revision **2026.11.09.2**. The learner web release is also **2026.11.09.1**, but the retained candidate artifact is from a different source commit and does not validate this rewrite. Android release metadata remains **2026.11.08.1**; no new APK has been built.
 
-The retained candidate artifact cited by the earlier 2026.11.09.1 handoff was produced from a different source commit. Treat it as historical: it does not review, fingerprint or validate this rewrite.
+The earlier 2026.11.09.1 candidate artifact remains historical. It does not review, fingerprint or validate this rewrite.
 
 ## Required independent review
 
