@@ -2,7 +2,7 @@
 (function(){
   "use strict";
   const DATA_URL="./src/domains/learning/book-data/book-open-further-reading-v1.json";
-  const EXPECTED_GIT_BLOB_SHA1="30b6c24789ae7e4aa3e15deaa69a2590763ef5dd";
+  const EXPECTED_GIT_BLOB_SHA1="d9d2ec63f107bf9a7bc34eddd7e56506d021984c";
   const EXPECTED_CHAPTER_IDS=["r01","r02","r03","r03a","r04","r05","r06","r07","r08","r09","r10","r11","r12","r13","r14","r15","r16","r17","r18","r19","r20"];
   let dataPromise=null,hydrating=false;
   function validate(data){
