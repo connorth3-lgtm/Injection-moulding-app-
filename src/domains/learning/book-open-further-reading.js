@@ -58,10 +58,12 @@
   }
   async function hydrate(){
     if(hydrating)return;
+    const articles=Array.from(document.querySelectorAll("article[data-mm-book-reader-chapter]"));
+    if(!articles.length)return;
     hydrating=true;
     try{
       const {chapters,byId}=await load(),byChapter=new Map(chapters.map(c=>[c.chapterId,c]));
-      document.querySelectorAll("article[data-mm-book-reader-chapter]").forEach(article=>{
+      articles.forEach(article=>{
         const chapter=byChapter.get(article.dataset.mmBookReaderChapter);
         if(chapter)render(article,chapter,byId);
       });
