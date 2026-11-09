@@ -17,6 +17,12 @@ Producer: [Pre-merge Public Candidate run 42587884172](https://github.com/connor
 Artifact: **13659792379** (`physical-pwa-candidate-74b59afa1f241995cdf7385d6031546a676626a3`), digest sha256:4b6ef2ccc2bb60d685071c1b24fed309d08a51113dc9c185a128ce63bfa19fd0, expires 2027-02-07T08:42:19Z
 Exact-head software gates: Mobile Browser QA run 42587883746 and Question Quality 50-Pass run 42587883685 — **PASS**.
 
+## Technical candidate status
+
+**Technical candidate:** **PASS — software-only**. Pre-merge Public Candidate run `42587884172` retained artifact `13659792379`, source `74b59afa1f241995cdf7385d6031546a676626a3`, runtime fingerprint `sha256:91a398caef841e7202e5425d3388dcb47557d89b618eca83d4c7b29e16ebd827`. Mobile Browser QA run `42587883746` and Question Quality 50-Pass run `42587883685` passed on that exact source.
+
+All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain **HOLD**.
+
 ## Release-specific review packets — all HOLD
 
 - Accessibility / real assistive technology: `qa/ACCESSIBILITY_REAL_AT_2026.11.09.1.md` — HOLD
