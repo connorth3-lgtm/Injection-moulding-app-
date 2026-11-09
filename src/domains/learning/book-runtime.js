@@ -1,7 +1,7 @@
 /* MouldMaster Book runtime — evidence-governed publication authorization. */
 (function(){
   'use strict';
-  const VERSION='2026.10.22.2';
+  const VERSION='2026.11.09.2';
   if(window.MMBook?.version===VERSION)return;
   const BOOK_DATA='./src/domains/learning/book-data/';
   const AUTH_PATH=`${BOOK_DATA}book-publication-authorization-v1.json`;
@@ -316,8 +316,8 @@
   }
   function validateEditorialExpansionReview(data,declared,auth){
     if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='repository-technical-review-complete'||!Array.isArray(data.reviewedModules))throw new Error('Book editorial expansion review identity check failed');
-    const permit=auth?.editorialExpansionAuthorization;if(permit?.status!=='authorized-repository-technical-source-review'||permit?.release!==VERSION||permit?.ledger!=='data/book-editorial-expansion-review-v1.json'||permit?.moduleCount!==39||permit?.noNewClaimIds!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion authorization missing');
-    if(data.reviewedModules.length!==39||data?.acceptanceRules?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion review coverage mismatch');
+    const permit=auth?.editorialExpansionAuthorization;if(permit?.status!=='authorized-repository-technical-source-review'||permit?.release!==VERSION||permit?.ledger!=='data/book-editorial-expansion-review-v1.json'||permit?.moduleCount!==46||permit?.noNewClaimIds!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion authorization missing');
+    if(data.reviewedModules.length!==46||data?.acceptanceRules?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion review coverage mismatch');
     const seen=new Set();
     for(const item of data.reviewedModules){
       if(!item?.moduleId||seen.has(item.moduleId)||!declared.has(item.moduleId)||!Array.isArray(item.governedClaimIds)||!item.governedClaimIds.length||item.conclusion!=='compatible-with-existing-governed-claim-scope')throw new Error('Invalid Book editorial expansion review record');
