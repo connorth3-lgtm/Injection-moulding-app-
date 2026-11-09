@@ -32,7 +32,7 @@
     const heading=article.querySelector("h2");
     if(!heading||heading.textContent.trim()!==chapter.title)return;
     const details=document.createElement("details");
-    details.className="mm-book-reader-notes mm-book-further-reading";
+    details.className="mm-book-further-reading";
     const summary=document.createElement("summary");
     summary.textContent="15 open further-reading sources";
     details.appendChild(summary);
