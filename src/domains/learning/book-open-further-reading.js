@@ -2,6 +2,7 @@
 (function(){
   "use strict";
   const DATA_URL="./src/domains/learning/book-data/book-open-further-reading-v1.json";
+  const EXPECTED_GIT_BLOB_SHA1="30b6c24789ae7e4aa3e15deaa69a2590763ef5dd";
   const EXPECTED_CHAPTER_IDS=["r01","r02","r03","r03a","r04","r05","r06","r07","r08","r09","r10","r11","r12","r13","r14","r15","r16","r17","r18","r19","r20"];
   let dataPromise=null,hydrating=false;
   function validate(data){
@@ -18,12 +19,23 @@
     }
     return {chapters,byId};
   }
+  async function verifiedCatalogue(response){
+    if(!globalThis.crypto?.subtle)throw new Error("further-reading integrity verification is unavailable");
+    const bytes=await response.arrayBuffer(),body=new Uint8Array(bytes);
+    const header=new TextEncoder().encode("blob "+body.byteLength+"\\0");
+    const payload=new Uint8Array(header.byteLength+body.byteLength);
+    payload.set(header,0);payload.set(body,header.byteLength);
+    const digest=new Uint8Array(await crypto.subtle.digest("SHA-1",payload));
+    const actual=Array.from(digest,b=>b.toString(16).padStart(2,"0")).join("");
+    if(actual!==EXPECTED_GIT_BLOB_SHA1)throw new Error("further-reading catalogue failed exact-byte integrity");
+    return validate(JSON.parse(new TextDecoder("utf-8",{fatal:true}).decode(body)));
+  }
   function load(){
     if(!dataPromise){
-      dataPromise=fetch(DATA_URL,{cache:"no-cache"}).then(response=>{
+      dataPromise=fetch(DATA_URL,{cache:"no-store",credentials:"same-origin"}).then(response=>{
         if(!response.ok)throw new Error("further-reading list unavailable ("+response.status+")");
-        return response.json();
-      }).then(validate).catch(error=>{dataPromise=null;throw error;});
+        return verifiedCatalogue(response);
+      }).catch(error=>{dataPromise=null;throw error;});
     }
     return dataPromise;
   }
