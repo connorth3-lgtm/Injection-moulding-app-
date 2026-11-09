@@ -92,7 +92,7 @@ assert editorial.get("schemaVersion")==1 and editorial.get("bookId")=="mouldmast
 assert editorial.get("release")==book_release
 assert editorial.get("status")=="repository-technical-review-complete"
 reviews=editorial.get("reviewedModules") or []
-assert len(reviews)==39 and len({x.get("moduleId") for x in reviews})==39
+assert len(reviews)==46 and len({x.get("moduleId") for x in reviews})==46
 for row in reviews:
     mid=row["moduleId"]
     assert mid in set(module_ids)
@@ -122,7 +122,7 @@ assert first_read.get("keyTermsAreNavigationLabelsOnly") is True
 assert first_read.get("readingThreadsAreOrientationOnly") is True
 edit_permit=auth.get("editorialExpansionAuthorization") or {}
 assert edit_permit.get("status")=="authorized-repository-technical-source-review"
-assert edit_permit.get("release")==book_release and edit_permit.get("moduleCount")==39 and edit_permit.get("noNewClaimIds") is True
+assert edit_permit.get("release")==book_release and edit_permit.get("moduleCount")==46 and edit_permit.get("noNewClaimIds") is True
 hashes=auth.get("runtimeIntegrity",{}).get("gitBlobSha1ByFile",{})
 for name in ("book-reader-architecture-v2.json","book-editorial-expansion-review-v1.json"):
     assert hashes.get(name)==git_blob(PACKAGED/name), f"authorization hash drift for {name}"
