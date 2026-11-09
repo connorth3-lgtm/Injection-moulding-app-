@@ -59,7 +59,7 @@
       "sections": [
         {
           "title": "Transfer is a control transition, not a universal percentage",
-          "text": "The useful transfer point is the point at which the process should stop being governed primarily by filling motion and begin controlling the post-fill response. Position, pressure, time or cavity-based methods can all be meaningful in the right system, but a copied percentage has no universal authority. Evaluate repeatability, cavity response, part mass and defect behaviour while preserving machine and mould limits."
+          "text": "Transfer is the point at which the control strategy changes from filling the cavity to holding pressure while the part packs and cools. It is not automatically a fixed percentage or a universal position. If transfer occurs too early or too late for a particular process, the evidence may include fill progression, cushion, pressure traces, part weight, flash or dimensional response. First learn what the machine’s transfer signal represents; then compare repeatable cycles and parts. Any adjustment belongs to an approved process-development study, not a generic percentage rule."
         },
         {
           "title": "Look for evidence of early or late transfer",
@@ -88,7 +88,7 @@
       "sections": [
         {
           "title": "What clamp force resists",
-          "text": "Melt pressure acting over the projected area tends to separate the mould halves. The clamp system must resist opening while the mould and machine remain within their rated limits."
+          "text": "Clamp force resists the pressure-driven tendency for the mould halves to separate, but the demand is distributed over the projected area exposed to cavity pressure. The pressure is not uniform everywhere, so nominal tonnage alone cannot diagnose a local flash mark. Mould support, alignment, parting-line condition, local pressure, material response and machine behaviour all affect the result. Learn the difference between mould protection and production clamp force, and never treat increasing force as an unlimited corrective action. Inspect and measure through authorised procedures."
         },
         {
           "title": "Mould protection is different",
@@ -121,7 +121,7 @@
       "sections": [
         {
           "title": "Flow path",
-          "text": "The feed system carries melt from the machine nozzle to the cavity. Its restrictions consume pressure and influence shear, temperature history and balance."
+          "text": "The feed system carries melt from the machine nozzle through the sprue and runners to the gate. Every change in channel size, length, surface, junction or temperature affects the pressure and thermal history needed to move material. A cavity may therefore fill differently even when the machine command is unchanged. Follow the path from nozzle to gate and use the observed cavity pattern to locate where differences begin. Tool changes or hot-runner interventions require qualified review of the specific mould and system documentation."
         },
         {
           "title": "Gates are process boundaries",
@@ -150,7 +150,7 @@
       "sections": [
         {
           "title": "Air must leave",
-          "text": "As melt advances, displaced air and process gases need escape paths. If gas is trapped or compressed faster than it can leave, filling behavior and surface quality can deteriorate."
+          "text": "As melt enters a cavity, it displaces air and other gases. Vents provide an escape path, but vent performance depends on location, cleanliness, geometry and how the flow front approaches the feature. A burn mark at end of fill can fit trapped gas, yet a similar mark can also arise from degraded material or contamination. Map where the mark appears and whether it follows a cavity, flow-front or material pattern. Vent cleaning or steel changes are tooling work governed by the mould drawing and authorised maintenance process."
         },
         {
           "title": "Burns are not one mechanism",
@@ -179,7 +179,7 @@
       "sections": [
         {
           "title": "Cooling governs both cycle readiness and dimensional state",
-          "text": "The cooling stage removes heat non-uniformly from a three-dimensional part and mould. Local wall thickness, coolant layout, mould material, contact, crystallisation where applicable and part geometry can create different temperature histories across the component. Ejection readiness and later dimensions therefore depend on more than one timer value."
+          "text": "Cooling removes heat until the part is sufficiently stable for the next stage and release. The controller’s coolant setpoint is not the same as the mould’s actual temperature field, and a single outlet reading cannot describe every cavity or channel. Flow, deposits, leaks, contact, wall thickness and channel layout can all affect heat removal. Compare equivalent cycles, cavity locations and measurements; then relate thermal evidence to cycle time, ejection and dimensions. Cooling changes can alter several outcomes at once, so record the process and part response."
         },
         {
           "title": "Diagnose the thermal system with trends, not one reading",
@@ -212,7 +212,7 @@
       "sections": [
         {
           "title": "Release force carries information",
-          "text": "Ejection marks, distortion, sticking and changing ejector load can reflect part temperature, shrinkage onto cores, surface condition, draft, texture, vacuum effects, mould contamination or mechanical alignment. Treat release behaviour as evidence about the part-mould interface rather than automatically increasing ejection force or cooling time."
+          "text": "Ejection is the final handoff from moulded geometry to the outside world. Draft, surface texture, undercuts, core layout, ejector support and the part’s local shrinkage influence how easily it releases. High release force may reflect the mould, but distortion can also be created earlier by cooling or packing and only become visible during ejection. Record the exact location and direction of witness marks, drag or deformation, and compare cavities and equivalent parts. Any tooling or ejection adjustment must be assessed against the approved mould design and safety procedure."
         },
         {
           "title": "Separate geometry from process effects",
@@ -257,7 +257,7 @@
       "sections": [
         {
           "title": "A heated feed system is part of the process",
-          "text": "Hot runners keep material molten in some or all of the feed path, reducing cold-runner solidification but adding thermal zones, flow restrictions and control elements."
+          "text": "A hot runner keeps part of the feed system heated so that material can remain molten between the machine and cavity. Each zone becomes part of the polymer’s temperature and residence-time history. A controller setpoint is not proof that the manifold, nozzle or gate has the intended thermal condition; a sensor can be offset or a zone can respond differently. Identify which circuit and location a signal represents, then compare startup, steady-state and interruption history with the exact system manual. Hot-runner work is system-specific."
         },
         {
           "title": "Thermal history can differ by location",
@@ -290,7 +290,7 @@
       "sections": [
         {
           "title": "Define the baseline as an evidence package",
-          "text": "A useful baseline is more than a screenshot of machine settings. It identifies material and lot condition, relevant preparation, machine and mould identity, controller meanings, key process conditions, units, cavity or sampling context and measured part results. The record should allow another competent person to understand what physical state was being evaluated."
+          "text": "A baseline is a defined record of a process that repeatedly makes parts meeting the stated checks under stated conditions. It includes exact material and lot, machine and mould identity, commands, measured signals, cycle conditions, cavity identity, inspection method and known limits. A single good part or a copied recipe is not a baseline. Establish what “normal” means by observing enough comparable cycles and parts to see natural variation. Mark what has not been verified so later comparisons do not treat assumptions as facts."
         },
         {
           "title": "Establish repeatability before comparing small effects",
@@ -323,15 +323,15 @@
       "sections": [
         {
           "title": "Purpose",
-          "text": "A fill study deliberately separates cavity filling from later packing effects so the engineer can observe how the flow front progresses under controlled conditions."
+          "text": "A fill study records progressive cavity filling under a defined, approved comparison. It helps reveal where the flow front travels and whether cavities or regions fill at different rates. It is descriptive evidence: it does not by itself prove a root cause, establish a production recipe or show that a short-filled sample represents normal production."
         },
         {
           "title": "Control the comparison",
-          "text": "Keep material preparation, melt condition, mould thermal condition and injection profile consistent while changing the selected fill endpoint or shot contribution."
+          "text": "State the question, the machine and mould identities, exact material and lot, sample sequence, cavity labels and measurement method. Keep relevant conditions constant and change only the authorized study factor. Capture the machine traces and part photographs alongside each sample. Work under site procedures and an approved study plan; never use this text to choose a setting or bypass a safeguard."
         },
         {
           "title": "Interpret cautiously",
-          "text": "Part weight, visual fill pattern, screw position and pressure traces can reveal trends, but none alone proves cavity pressure or gate behavior without appropriate measurement."
+          "text": "Look for a progression that fits the hypothesized flow path, then compare it with pressure or motion signals where available. Check whether the pattern repeats and whether one cavity differs. A single incomplete sample may reflect handling, material delivery or a transient event. If the evidence does not distinguish those possibilities, revise the study rather than presenting an uncertain interpretation as fact."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -347,16 +347,16 @@
       ],
       "sections": [
         {
-          "title": "Every restriction consumes pressure",
-          "text": "Pressure is required to move melt through the nozzle, sprue, runners, gates and cavity. The amount depends on geometry, flow rate, material rheology and thermal condition."
+          "title": "Every restriction changes the pressure demand",
+          "text": "As melt moves through a channel, pressure is needed to overcome viscous resistance and local losses. Smaller or longer paths, turns, junctions and gates can increase demand, but the result also depends on grade, temperature and flow rate. A larger pressure reading therefore does not point to one unique restriction. Compare equivalent states and use a model or measurement with clearly stated assumptions."
         },
         {
           "title": "Segment the path",
-          "text": "Compare controlled states that add successive portions of the flow path, or use appropriately located sensors, to identify where pressure demand increases."
+          "text": "Draw the route from the machine nozzle to the part and identify where pressure is measured: machine-side, nozzle, runner or cavity. Separate the path into segments such as nozzle, sprue, runner, junction, gate and cavity. Ask which measured signal can observe each segment and what remains inferred. A known geometry change or cavity pattern can guide the next measurement, but do not assume pressure losses can be apportioned exactly without appropriate data."
         },
         {
           "title": "Do not equate machine pressure with cavity pressure",
-          "text": "Displayed injection pressure is upstream of multiple restrictions. Use it as one signal in a pressure-loss analysis, not as a direct substitute for pressure inside the cavity."
+          "text": "Machine hydraulic pressure, screw pressure, nozzle pressure and cavity pressure are different quantities or signals, with different conversion and measurement locations. A controller may display a calculated value. Confirm units, sensor type, calibration and timing before comparison. Use cavity pressure only for the location where the sensor is installed. Treat discrepancies as evidence about the measurement chain and path, not as a reason to copy another machine’s limit."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -373,15 +373,15 @@
       "sections": [
         {
           "title": "Why gate state matters",
-          "text": "Post-fill pressure can influence the cavity only while the feed path remains capable of transmitting material or pressure effectively."
+          "text": "The gate connects the runner to the cavity. While it transmits useful flow, hold pressure can continue to feed material as the part contracts. As the gate cools or otherwise closes to flow, further hold time may no longer change the part’s mass or a chosen response. Gate sealing depends on grade, gate geometry, thermal conditions and the measurement method, so no universal time applies."
         },
         {
           "title": "Use part response",
-          "text": "A common experimental approach is to vary hold duration under controlled conditions and observe whether a stable response such as part mass or a critical dimension reaches a plateau."
+          "text": "A controlled gate-seal study commonly compares part mass across planned hold-time conditions, with consistent cavity, conditioning, weighing and material history. Repeat measurements to establish whether a difference is larger than measurement variation. Part mass is a useful proxy for continued feeding but does not directly show gate temperature or internal quality. Use other product measurements when mass alone cannot answer the product question."
         },
         {
           "title": "Plateau is evidence, not a universal constant",
-          "text": "The result is specific to gate geometry, material, thermal state and process. Changes to those conditions can change the effective seal behavior."
+          "text": "A plateau means the chosen response no longer changed detectably over the tested range for that mould, material, machine and conditions. It does not prove every cavity seals identically or that all critical dimensions have stabilized. Check cavity identity, sample size, balance, process stability and measurement resolution. Record the tested range and uncertainty, and keep the conclusion limited to that study."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -398,7 +398,7 @@
       "sections": [
         {
           "title": "A setting is not a process window",
-          "text": "A robust process has a region in which normal input variation still produces acceptable outputs, instead of one preferred nominal point."
+          "text": "A process window is a tested region in which a defined output remains acceptable despite expected variation. It is more than one successful setting. Start by naming the part characteristics, measurements, cavities, material lot and conditions that define success; then challenge meaningful boundaries under a controlled, approved study. The edges matter because they show sensitivity and robustness. A window applies only to the tested system and ranges, so document what changed, what remained fixed, uncertainty and conditions that would require revalidation."
         },
         {
           "title": "Define outputs first",
@@ -427,7 +427,7 @@
       "sections": [
         {
           "title": "Record the reasoning, not only the final setting",
-          "text": "A useful engineering record captures the problem statement, observations, hypothesis, controlled change, expected outcome, actual result and decision. Recording only the final parameter values loses the evidence needed to understand why the change was made or whether it remains appropriate after material, mould, machine or product changes."
+          "text": "Useful process records let another person reconstruct what was asked, what the machine did and what the parts showed. Record the meaning and units of signals, sensor location, machine and mould identity, material and lot, cavity labels, measurement method, date, operator context and study purpose. Include unsuccessful or inconclusive trials because they constrain explanations. Keep observations separate from interpretations, and mark uncertainty explicitly. A set of final numbers without context is difficult to reproduce and can be unsafe to transfer to another machine or part."
         },
         {
           "title": "Make records comparable over time",
@@ -464,39 +464,39 @@
       "sections": [
         {
           "title": "Use chronology to reduce the search space",
-          "text": "Ask what changed before the symptom appeared: material lot, drying history, colour change, mould maintenance, machine change, start-up state, ambient condition, operator sequence or production interruption. Chronology does not prove causation, but it can identify boundaries that make one mechanism more plausible than another. A symptom that appears immediately after one controlled change deserves a different first test from a symptom that drifts gradually over many hours."
+          "text": "Start with the last known good part or cycle, then mark when the defect or signal changed. Record shifts, interruptions, material lot changes, tool interventions and measurement changes in order. Chronology helps divide the problem into earlier and later conditions, but correlation with a date or shift does not prove cause. Keep the timeline factual and attach evidence to each event."
         },
         {
           "title": "Prefer tests that can falsify a favourite explanation",
-          "text": "Troubleshooting becomes more reliable when a test is chosen because it could show the leading hypothesis is wrong. If the suspected cause predicts a cavity pattern, time trend or signal change, look for that pattern explicitly. A test that can only confirm what the investigator already expects has weak diagnostic value. Good engineering preserves the possibility of being wrong and updates the working model when observations fail the prediction."
+          "text": "For each plausible mechanism, write down what you expect to observe if it is true and what result would weaken it. A useful test separates competing explanations; a change that merely makes the part look better can leave the cause unknown. Choose the least risky measurement that can answer the question, and have the authorized process owner approve any trial."
         },
         {
           "title": "Escalate when the evidence boundary is reached",
-          "text": "Some problems cannot be resolved from controller data and visual inspection alone. When competing mechanisms remain plausible, escalate to evidence capable of separating them: tooling inspection, material testing, cavity sensing, metrology, microscopy, maintenance history, supplier support or validated simulation. The correct outcome of a disciplined investigation can be 'not yet distinguished' rather than a falsely precise root-cause statement."
+          "text": "Pause the investigation if the next step requires entering a guarded area, changing tooling, exceeding a documented limit, handling a hazardous material or accepting uncertain product risk. Route the evidence to the qualified person responsible for machine safety, tooling, material or product approval. Escalation is a decision point, not a failure of diagnosis."
         },
         {
           "title": "Characterise the defect before naming a cause",
-          "text": "Describe where the symptom appears, which cavity or cavities are affected, how often it occurs, whether it changes during start-up or steady running, and how severity is measured. A useful problem statement is specific enough that another person could recognise the same failure pattern without being told the suspected cause. This prevents labels such as moisture, pressure, venting or tooling from being embedded in the observation itself."
+          "text": "Describe the symptom by location, direction, size, frequency, cavity, time of appearance and measurement method. Photograph or map it against a part drawing and keep representative samples. Words such as “burn,” “splay” or “short” describe appearances; they do not prove mechanism. A precise description gives different investigators the same starting point."
         },
         {
           "title": "Use boundaries to shrink the search space",
-          "text": "Ask whether the symptom follows a material lot, one cavity, the whole mould, one machine, a shift, a maintenance intervention or elapsed running time. These boundaries are often more informative than immediately changing a setpoint. A defect that stays with one cavity supports a different investigation from a defect that moves with material or appears simultaneously in every cavity."
+          "text": "Compare affected and unaffected populations: cavity, shift, material lot, start-up versus steady state, before versus after a pause, or one geometry region versus another. Keep the comparison fair by checking that the samples were produced and measured under comparable conditions. A boundary is useful only when the group labels are reliable."
         },
         {
           "title": "Write predicted observations for competing mechanisms",
-          "text": "For each plausible mechanism, state what else should be true if it is important. A restriction hypothesis might predict increased upstream pressure demand and a repeatable location; a material-condition hypothesis may follow a lot or handling history; a thermal hypothesis may change during warm-up. Predictions make hypotheses testable and expose explanations that merely fit the symptom after the fact."
+          "text": "An upstream delivery problem might affect several cavities together; a local vent or gate issue might follow one region. Those are possible predictions, not universal rules. Write the expected pattern for each hypothesis using the actual mould layout and machine signals. Also state what else could create the same pattern. This makes the test plan explicit and guards against post-hoc storytelling."
         },
         {
           "title": "Choose tests that discriminate, not merely improve",
-          "text": "A process change can improve the part while leaving the true mechanism unresolved. Prefer tests that make different hypotheses predict different outcomes. Where practical, change one justified factor or collect one new measurement at a time, remain within authorised limits, and record both the predicted and observed response."
+          "text": "Prefer a measurement whose possible outcomes point in different directions. Examples include cavity-resolved part mass, fill progression, pressure traces at known locations, or dimensional checks at a defined conditioning time. Each method has limitations; record resolution and uncertainty. If a test cannot distinguish the leading explanations, do not overstate its result."
         },
         {
           "title": "Confirm recovery and record uncertainty",
-          "text": "A single acceptable part is not enough to establish root cause or durable recovery. Confirm the result across a meaningful repeat run and check that the evidence still matches the proposed mechanism. If two explanations remain plausible, preserve both in the record and identify the next observation that would separate them instead of forcing a definitive conclusion."
+          "text": "After a controlled correction, verify that the part meets the required checks over the population and time window relevant to the decision. Confirm the original symptom has not moved or been replaced by another defect. Record what changed, what stayed constant, the evidence supporting the conclusion and remaining uncertainty. A successful run is evidence of recovery under those conditions, not proof that no other mechanism exists."
         },
         {
           "title": "Worked example (hypothetical): a short shot appears after an interruption",
-          "text": "A short shot appears in one cavity after a production interruption, while the other cavities appear complete. The symptom is now specific: cavity identity, onset time and fill pattern are recorded. Do not begin by increasing a setting. Write down several explanations and what each predicts.\n\nA local flow-path or venting explanation predicts that the affected region or cavity will recur in a consistent location. A material or feed condition may follow the lot, handling path or restart timing. A transfer or delivery explanation should fit the actual machine response and the point at which filling stops. A thermal explanation should be considered against the mould's state before and after the interruption. These are candidate mechanisms, not conclusions.\n\nChoose observations that separate them. Compare the affected cavity with an unaffected one in the same run; preserve cycle order rather than averaging good and bad parts together. Review the transfer event and available actual-motion signals. Map the short-fill boundary against the cavity and flow path. Check the interruption and material-handling record. Any inspection or machine intervention must stay within approved procedures.\n\nBefore looking at the result, write what would raise or lower confidence in each explanation. If the short shot remains fixed to one cavity while common machine signals remain stable, that changes the priority of questions but does not prove a tooling fault. If all cavities change together after a material or thermal transition, a shared cause becomes more plausible. If the observations contradict every prediction, record that fact and widen the hypothesis set.\n\nThe investigation can end with “not yet distinguished” if available evidence cannot separate the mechanisms. A useful next step is the safest measurement or review that would divide the remaining possibilities. This example demonstrates a reasoning sequence; it does not prescribe a machine adjustment or product-disposition decision."
+          "text": "In a hypothetical case, short shots begin after a production pause. The timeline suggests several candidates: material residence, a restart sequence, a transient machine condition or a sensor issue. The investigator first compares affected cavities and restart cycles, then checks approved traces and the exact material instructions. A test is selected to distinguish a common upstream shift from a local flow restriction. No one changes settings until the machine owner approves the study. The example demonstrates reasoning order, not a restart recipe."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -513,7 +513,7 @@
       "sections": [
         {
           "title": "What it tells you",
-          "text": "A short shot means the cavity did not receive enough effective flow to reproduce the intended geometry. It does not identify why."
+          "text": "A short shot is an incompletely filled part, which tells you where the flow stopped but not why it stopped. Possible causes include insufficient delivered material, restricted flow, trapped gas, a machine limit, unstable material condition or a process transition occurring at the wrong point. Map the missing region, compare cavities and cycles, and inspect the fill trace and material path. Distinguish repeatable shortage from intermittent loss before changing the process. Do not hide a restriction by indiscriminately raising settings."
         },
         {
           "title": "Mechanisms to distinguish",
@@ -562,7 +562,7 @@
       "sections": [
         {
           "title": "What flash means",
-          "text": "Flash is material outside the intended cavity boundary. It can occur when local melt pressure opens or enters a gap large enough for the material under the actual thermal and rheological condition."
+          "text": "Flash is excess material at a mould boundary or opening. Its location and timing help distinguish a local parting-line or support issue from pressure, viscosity, alignment or damage-related mechanisms. Map the flash on the actual part and mould location, then compare it with cavity-pressure or machine evidence where available. A change that reduces flash can still create an underfilled part, damage the tool or mask a mechanical problem. Use approved containment and have tooling and process specialists review the evidence before changing force or steel."
         },
         {
           "title": "Competing causes",
@@ -611,7 +611,7 @@
       "sections": [
         {
           "title": "Sink and internal voids are related but not identical",
-          "text": "Both can arise when volumetric contraction is not adequately accommodated, but the visible or internal result depends on geometry, pressure transmission, gate isolation, material behaviour and cooling. External sink, internal voiding and acceptable surface with hidden porosity can therefore require different measurements even when they share part of the same physical story."
+          "text": "A sink mark is a visible surface depression; a void is an internal gap. Both can be associated with contraction in a thick region, but one does not prove the other. Geometry, local cooling, gate location and the ability to feed material during packing influence where the symptom develops. Compare part section, location, weight and time response; use suitable internal inspection when product risk warrants it. Learn to distinguish visible evidence from internal structure before deciding whether the problem is cosmetic, dimensional or structural."
         },
         {
           "title": "Use section location and time response",
@@ -644,7 +644,7 @@
       "sections": [
         {
           "title": "Material evidence first",
-          "text": "Confirm material identity, storage history and the grade supplier's drying/moisture requirements using suitable measurement where required."
+          "text": "Splay is a surface appearance that often looks like streaks or silvering, but it is a symptom rather than a diagnosis. Moisture, volatile material, shear, trapped gas, contamination and degradation can produce overlapping appearances. Start by recording the pattern and cavity distribution, then trace the exact grade and material handling history. Check supplier drying and storage limits rather than guessing or over-drying. A controlled comparison should predict what changes if the leading explanation is true and preserve evidence about material, machine and mould conditions."
         },
         {
           "title": "Avoid over-drying by guesswork",
@@ -681,7 +681,7 @@
       "sections": [
         {
           "title": "Distinguish compressed gas from thermal degradation",
-          "text": "Dark or scorched marks near end-of-fill regions can be consistent with trapped gas heating, while degraded material can also create dark contamination. Location, vent condition, fill pattern, residence history and whether the mark follows the mould or material path help distinguish the mechanisms. The visual symptom alone is insufficient."
+          "text": "A dark or scorched end-of-fill mark may result from compressed trapped gas, but thermal degradation, contamination and other material histories can create similar defects. The part location is a clue: relate it to the last area filled, vent paths, cavity pattern and recent process interruptions. Ask whether the symptom follows one cavity or all cavities and whether it appears after a hot wait. Keep vent hypotheses separate from material hypotheses, and do not alter tooling or purge procedures without qualified approval."
         },
         {
           "title": "Vent work is tooling work",
@@ -710,7 +710,7 @@
       "sections": [
         {
           "title": "A weld line records a flow-front meeting event",
-          "text": "Weld or knit lines form where separate melt fronts meet after flowing around features, through multiple gates or across interrupted paths. Their appearance and strength can depend on local temperature, pressure, orientation, contamination, venting and geometry. The line is therefore a process-and-design interaction, not merely a cosmetic mark."
+          "text": "A weld line forms where separated flow fronts meet, for example after flowing around a hole or joining from multiple gates. Its visible appearance alone does not reveal bond strength. Front temperature, pressure, contamination, geometry, venting, material formulation and orientation can all affect the interface. Locate the line on the part drawing, identify the flow paths that meet there and define the actual performance requirement. Cosmetic improvement is not proof of structural adequacy; testing must match the product risk and specification."
         },
         {
           "title": "When to reconsider the weld-line mechanism",
@@ -760,7 +760,7 @@
       "sections": [
         {
           "title": "Warpage is differential deformation",
-          "text": "Warpage occurs when different regions or directions of a moulded part do not contract or relax by the same amount. The visible shape error is therefore an outcome of differential shrinkage, residual stress, anisotropy and constraint rather than a single setting being universally too high or too low."
+          "text": "Warpage is a shape change caused by unequal shrinkage, stiffness or restraint across a part. Cooling gradients, packing differences, molecular or fibre orientation, geometry and post-ejection conditioning can all contribute, often together. First describe the direction and magnitude of the shape change, when it is measured, and how the part is supported. Compare cavities and locations before selecting a mechanism. A process adjustment can move the distortion rather than remove it, so connect every trial to a measured shape profile and intended product requirement."
         },
         {
           "title": "Build a mechanism map before changing the process",
@@ -809,7 +809,7 @@
       "sections": [
         {
           "title": "What the defect suggests",
-          "text": "Black specks are evidence of foreign or degraded material. Possible sources include contamination, thermally degraded polymer, stagnant material, incompatible changeover residue or external debris."
+          "text": "Black specks are visible contamination or discoloration, not a single root cause. They may originate in degraded material, retained residue, external contamination, a hot runner, the screw or barrel, or handling. Map whether specks occur in every cavity, at one location, only after a pause or throughout the run. Preserve representative samples and timeline evidence before repeated purging or cleaning removes clues. Never use a diagnostic action that bypasses a site safety procedure or the material supplier’s system-specific instructions."
         },
         {
           "title": "Do not create a safety problem while diagnosing",
@@ -841,7 +841,7 @@
       "sections": [
         {
           "title": "Sensor location defines what the trace means",
-          "text": "A cavity-pressure sensor observes pressure at its installation location, not a uniform pressure for the entire cavity. Gate distance, local geometry, sensor type and mounting influence interpretation. Compare traces at the same sensor and process state before using absolute values across different moulds or locations."
+          "text": "A cavity-pressure trace measures pressure at the sensor’s particular location and through its specific signal chain. Its value depends on sensor position, calibration, response, cavity and timing reference; it is not a universal picture of pressure everywhere in the mould. Establish a representative trace and check sensor health before setting limits. Compare meaningful features—such as onset, peak, transfer relation or decay—with cavity identity and part response. A changed trace is a prompt to investigate the process, not an automatic instruction to alter the machine."
         },
         {
           "title": "Establish a reference trace before using limits",
@@ -885,7 +885,7 @@
       "sections": [
         {
           "title": "Why designed experiments help",
-          "text": "Designed experiments are useful when several controllable factors may affect the same response and interactions are plausible. A structured design can separate effects more efficiently than informal one-factor-at-a-time adjustment, but only within ranges that are safe, technically justified and relevant to the real process window."
+          "text": "Design of experiments (DOE) studies several planned factors together so their effects and interactions can be separated more efficiently than by informal trial and error. A sound study begins with a real engineering question, measurable outputs, bounded factor ranges and a plan to handle nuisance variation. The model only speaks for the materials, machine, mould, ranges and conditions tested. Statistical significance does not automatically mean a useful or safe production change. Confirm conclusions with new runs and the required part checks before updating a baseline."
         },
         {
           "title": "Start with a process question, not a software design",
@@ -929,7 +929,7 @@
       "sections": [
         {
           "title": "Stability and measurement credibility come first",
-          "text": "Capability indices summarize observed process performance against specification limits only when the underlying process and measurement system are sufficiently understood. A drifting mean, changing variation or weak measurement system can make a precise-looking index misleading."
+          "text": "Capability describes the relationship between a stable process distribution and a specified product requirement. It does not establish that the measurement is trustworthy, the sample is representative or the process will stay stable. Confirm the measurement system, specification, time period, cavity mix and material/condition traceability first. Then examine the distribution and report the assumptions behind any index. A good number can conceal a cavity or time effect, and a high capability value cannot make an unsuitable tolerance or measurement method appropriate."
         },
         {
           "title": "Distinguish specification, control and process behavior",
@@ -978,7 +978,7 @@
       "sections": [
         {
           "title": "Monitor signals tied to mechanisms",
-          "text": "Useful process monitoring starts from signals that have a defensible relationship to material preparation, plasticising, filling, transfer, packing, cooling, machine function or measured part quality. A signal is more valuable when a deviation has an interpretable physical meaning."
+          "text": "Process monitoring is useful when each signal has a defined meaning and a decision attached to it. Choose signals that plausibly track the failure mechanism, verify the measurement chain and establish a representative baseline across normal variation. Separate an isolated event from a persistent shift, and retain cavity, time and material context. A threshold copied from another machine or product may create false alarms or miss meaningful change. Monitoring flags evidence for review; it does not diagnose root cause or authorize automatic machine control."
         },
         {
           "title": "Define the measurement chain",
@@ -1020,7 +1020,7 @@
       "sections": [
         {
           "title": "Dimensions can continue to change after ejection",
-          "text": "A moulded part is not necessarily dimensionally final when it leaves the mould. Continued cooling, residual-stress relaxation, crystallisation where applicable, moisture uptake or loss, and mechanical restraint can change measured dimensions over time."
+          "text": "A moulded part can change dimensions after ejection as it cools, relaxes, absorbs moisture or responds to its storage and test environment. Before comparing measurements, define when and how the part is conditioned, which datums are used, how it is supported and which instrument or fixture measures it. Then distinguish immediate moulding shrinkage from later movement. A dimension without measurement time, condition and method is incomplete evidence. Look at direction and location as well as the reported value."
         },
         {
           "title": "Define the reference condition before comparing parts",
@@ -1074,43 +1074,43 @@
       "sections": [
         {
           "title": "Orientation creates anisotropy",
-          "text": "Shrinkage, stiffness and strength can differ by direction, so reinforced parts may warp or perform differently from unfilled materials even with the same nominal geometry."
+          "text": "Anisotropy means a material’s measured response depends on direction. In a short-fibre moulding compound, flow can align fibres, so a tensile result along the dominant direction may differ from one across it. The pattern is created locally as material moves around gates, ribs, bosses and holes, then freezes at different rates through the wall. Treat direction as part of every test result: state specimen location, flow direction and loading direction."
         },
         {
           "title": "Orientation connects flow history to directional properties",
-          "text": "Reinforcing fibres tend to develop orientation patterns influenced by local flow, geometry and the through-thickness velocity field. The resulting part can shrink, stiffen and distort differently by direction. A single nominal material property therefore cannot represent every local direction in a complex moulding."
+          "text": "The gate establishes an initial flow field, but local geometry changes it. Fibres rotate, bend, break or reorient as the melt accelerates, turns, splits and rejoins. Near a wall, shear often produces a layer with fibres aligned more parallel to flow; the core can have a different, sometimes more transverse distribution. That is a useful conceptual model, not a fixed number of layers. The part’s mechanical and dimensional response follows the spatial distribution, not simply the nominal fibre percentage."
         },
         {
           "title": "Infer carefully and measure where it matters",
-          "text": "Flow direction and geometry can suggest likely orientation, but they do not uniquely determine the final distribution. Dimensional vectors, mechanical testing, microscopy or validated simulation may be needed when orientation is critical. Treat orientation-based explanations as hypotheses until the evidence matches the required decision."
+          "text": "A flow-path sketch and part geometry can identify likely high-risk regions, but they cannot prove the fibre orientation in a production part. Validate the directions that carry load or control fit using suitable specimens, microscopy, tomography or a calibrated simulation. Keep sample location and orientation traceable. If a result disagrees with the flow hypothesis, revisit the gate, geometry, process history and measurement method instead of forcing the interpretation."
         },
         {
           "title": "Skin-core structure can create competing directions",
-          "text": "Flow near the mould wall and flow in the core can develop different fibre orientations, particularly around changes in section or converging fronts. The final dimensional and mechanical behaviour reflects the combined local structure, not a single global flow arrow. This is one reason warpage in reinforced parts can be difficult to infer from surface flow marks alone."
+          "text": "The material next to a cooled mould wall experiences a different velocity and cooling history from the central flow. This can create a skin/core orientation profile, and the core response may differ from the surface. The profile can vary with wall thickness, material, gate, flow rate and thermal boundary conditions. A surface observation alone cannot establish the through-thickness structure. Consider cross-sections or a validated model when the component risk depends on this gradient."
         },
         {
           "title": "Geometry changes can redirect orientation",
-          "text": "Gates, ribs, holes, thickness transitions and weld regions change the local flow field and therefore can change orientation patterns. When a dimensional or strength problem is tied to one feature, consider whether the geometry creates a local orientation mechanism rather than assuming the material behaves uniformly through the part."
+          "text": "Ribs, bosses, corners, holes and thickness transitions redirect flow and change local fibre alignment. These features can create stress concentrations at the same locations where orientation and shrinkage differ. Draw the flow paths around each feature, identify where fronts split and reunite, then connect the expected directions to the component’s load case. A gate relocation or geometry change can alter the entire local distribution, so compare the part after any approved change."
         },
         {
           "title": "Validate simulations against physical evidence",
-          "text": "Flow and orientation simulation can be valuable for comparing designs and forming hypotheses, but its prediction depends on material models, mesh, boundary conditions and process inputs. Where the decision is important, compare simulation trends with measurements, microscopy, mechanical tests or observed dimensional directionality. Simulation should strengthen an evidence chain, not replace it."
+          "text": "A simulation predicts orientation from its material model, mesh, boundary conditions and process inputs. Its result is conditional on those assumptions and should not be presented as a direct measurement. Check the exact grade data, gate and cooling representation, and whether predicted flow and orientation agree with physical observations. Use sectioning, microscopy or micro-CT where justified, and record the sampled region. A validated model can help compare design options; it does not eliminate product testing."
         },
         {
           "title": "Worked example (hypothetical): map directions before explaining a result",
-          "text": "Consider a made-up glass-fibre-reinforced cover with a gate near one edge, a long rib, two mounting holes and a flat sealing face. This is a teaching example, not measured production evidence. Begin with a drawing of the part and identify the function of each feature. Mark the gate, the broad flow route, the places where flow turns or divides, and the dimensions or surfaces that matter to the product.\n\nNow make a direction map. For each important feature, note the likely local flow direction and the direction in which the feature will be measured or loaded. A long dimension along the broad flow route asks a different question from the same dimension across it. Around a hole or rib, the local flow can turn; the direction near the surface can differ from the direction deeper in the wall. Mark those as hypotheses until a suitable measurement or validated model supports them.\n\nNext, keep the evidence in separate rows. Record the exact material grade and supplier information. Record the part location and measurement direction. Record the specimen’s conditioning and measurement time. If orientation is directly examined, record the sampled region and method. If a model is used, record its material data, geometry and assumptions. Do not combine a model estimate and a physical measurement into one unlabeled result.\n\nSuppose the sealing face is outside its dimensional requirement while the mounting holes appear acceptable. The direction map can suggest where orientation might be relevant, but it does not prove the cause. Compare other explanations too, such as the local moulding and cooling history, mould condition, measurement method and the product’s conditioning requirements. Use evidence that can distinguish those possibilities.\n\nThe useful outcome is a testable explanation tied to a feature, location and direction, together with a verification plan. This example contains no shrinkage factor, process setting or predicted outcome. A generic arrow across the whole part cannot replace grade-specific evidence or the product’s own acceptance checks."
+          "text": "A hypothetical reinforced bracket cracks along one rib after assembly. First draw the local flow direction and expected fibre directions at the rib root, weld front and gate. Then compare the crack plane with those directions, inspect the fractured surface and confirm the material and conditioning. If the evidence supports an orientation-related weakness, a design or material review may be warranted; if it does not, investigate weld quality, stress concentration, process history and assembly load. The example is a reasoning exercise, not a diagnosis of a real component."
         },
         {
           "title": "Orientation is a spatial field, not one arrow",
-          "text": "A short-fibre-reinforced part does not usually have one single fibre direction that describes every point. “Orientation” is shorthand for a local distribution: at a particular place, many fibres have different directions, with some directions more common than others. The distribution can change across the part and through its thickness.\n\nThe melt’s local motion helps form that pattern. Flow near a wall, through a narrow region, around a rib or past a hole can differ from flow in a broad section. Fibres can tend to follow local flow, while the way the flow changes around geometry creates different local orientation patterns. The exact result depends on the grade, fibre characteristics, part design and filling history. A line drawn from gate to end of fill is therefore a useful sketch, not a measured orientation map.\n\nFor a detailed engineering question, keep three scales distinct. The global flow path describes how material travelled through the cavity. A local orientation distribution describes reinforcement directions in a region. A part-level measurement describes the response of a feature or dimension. One can help form a hypothesis about another, but none substitutes for the others.\n\nThis spatial view explains why a reinforced part can behave differently along two directions or at two locations. It also explains why a single “shrinkage direction” or one averaged property may hide important local variation. The magnitude is grade- and geometry-dependent; the direction map is a question to investigate, not a universal prediction."
+          "text": "For engineering use, orientation is better represented as a distribution of fibre directions at each location. A second-order orientation tensor, often written as an average of direction-vector products, compresses that distribution into a mathematical summary. It can represent preferred alignment and spread, but it does not retain every detail of fibre length, clustering or local damage. An orientation tensor is not a single fibre direction and cannot, by itself, prove strength. Interpret it with the constitutive model and the measurement or simulation method that produced it."
         },
         {
           "title": "What micro-CT and simulation can contribute",
-          "text": "X-ray micro-computed tomography, often shortened to micro-CT, can create a three-dimensional view of internal structure in a suitable specimen. In a 2024 study of short-glass-fibre-reinforced polyamide, researchers compared orientation-model predictions with micro-CT observations. The study found that local flow regions and through-thickness structure mattered when describing orientation. Its material, geometry and test setup define the scope of that result.\n\nA simulation offers a different kind of evidence. It estimates a pattern from an input material model, geometry and process description. A measured image records a sampled physical specimen. Comparing the two can show where a model is useful and where it differs from the observed material. A match in one region or specimen does not automatically validate every part feature, every grade or every condition.\n\nA careful engineering record therefore says which question was asked, which exact material and sample were examined, what the model assumed, where measurements were taken and how differences were judged. If orientation is critical to a product decision, add the physical tests or measurements that answer that product question. A flow arrow or simulation colour map is a guide for investigation; it is not proof of part performance.\n\nThis method is useful beyond fibre orientation: keep predictions, measurements and product acceptance evidence in separate categories, then connect them explicitly."
+          "text": "Micro-computed tomography can reconstruct fibre geometry in a small sampled volume and estimate local orientation, subject to resolution, segmentation and sample-preparation limits. Simulation can estimate a larger field across the part, subject to the material model, mesh and process inputs. The methods answer different questions and have different uncertainties. Cross-check them where possible: sample a region the model predicts to be critical, then compare the measured and predicted distributions. Neither method substitutes for testing the component’s required performance."
         },
         {
           "title": "Plan measurements in the directions that matter",
-          "text": "A directional study begins with the product question, not with a preferred test instrument. Identify the function of the part, the features carrying load or setting fit, and the directions in which those requirements apply. Mark those locations and directions on a drawing before collecting data. If the part has multiple cavities, keep each cavity identified so a difference in one location is not hidden in a pooled average.\n\nChoose measurements that answer the stated question. A dimensional study might compare defined distances in different directions and at specified conditioning and measurement times. A mechanical test might need specimens or features aligned with the direction of interest. An orientation image can describe a sampled internal region. These are different observations: one does not automatically substitute for another.\n\nRecord the exact grade, sample history, part or specimen location, cavity, measurement direction, method and conditions. If a simulation is used, record the material model, geometry, process inputs and region compared with physical evidence. A result should be traceable to the feature and direction it describes.\n\nFinally, state what the evidence supports and what remains open. A measured directional difference can show that the two directions respond differently under the test conditions. It may not identify why. Orientation is one possible mechanism; mould geometry, cooling, material condition, measurement method and product use can also matter. This plan is a way to frame a study, not a universal test specification or acceptance limit."
+          "text": "Start with the component load case and identify locations where failure, fit or distortion matters. Select specimens or extracted regions that preserve relevant flow and through-thickness direction; record gate distance and orientation. Measure the property tied to the product requirement rather than collecting a generic tensile value. Use enough locations to expose gradients and cavity differences. The plan should state what result would change the design decision and what uncertainty remains."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -1127,7 +1127,7 @@
       "sections": [
         {
           "title": "Machine capability matters",
-          "text": "Available injection rate, pressure, acceleration, control response and shot-size suitability can become limiting. A nominal pressure rating alone does not prove capability."
+          "text": "A thin-wall feature creates a short time and pressure path for the melt to reach the end of the cavity before cooling raises resistance. Success depends on the exact material, wall geometry, gate design, venting, machine response and mould thermal condition. A label such as “thin-wall” does not prescribe a high-speed setting. Define the feature and quality requirement, verify what the machine can actually deliver, and build a bounded process study with the approved equipment and supplier guidance."
         },
         {
           "title": "Avoid universal high-speed rules",
@@ -1160,7 +1160,7 @@
       "sections": [
         {
           "title": "Equal nominal geometry does not guarantee equal cavity behavior",
-          "text": "Small differences in runner resistance, gate geometry or wear, venting, cavity temperature, cooling, local pressure transmission and mould construction can create systematic cavity-to-cavity variation even when cavities were designed to be identical."
+          "text": "In a multi-cavity mould, each cavity shares the machine but may see a different flow, thermal and mechanical history. Runner length, gate dimensions, venting, cooling balance, cavity geometry and wear can create repeatable cavity-to-cavity differences. Label measurements by cavity rather than averaging them away. Compare at equivalent cycle states to separate a stable imbalance from a drifting process. Tooling changes need evidence because a process compensation may improve one cavity while moving another away from its requirement."
         },
         {
           "title": "Preserve cavity identity in the data",
@@ -1197,27 +1197,27 @@
       "sections": [
         {
           "title": "Use grade documents as controlling evidence",
-          "text": "Obtain the current TDS/processing guide/SDS for the exact grade and verify machine, screw, barrel, nozzle, mould and ancillary equipment compatibility."
+          "text": "A high-temperature polymer family name is not enough to establish a processing route. Exact grades can differ in melt transitions, viscosity, reinforcement, moisture sensitivity and recommended handling. Read the supplier’s current technical datasheet, processing guide and safety information for the exact grade and form. Check revision dates, stated test methods and whether the document addresses the machine or mould condition you need. Treat this chapter’s examples as questions to ask, never as production settings."
         },
         {
           "title": "High temperature increases the importance of system limits",
-          "text": "High-performance polymers can require processing conditions that place greater demands on dryers, barrel/nozzle capability, hot runners, mould temperature control, seals and safe handling. Generic family knowledge is not enough to define those conditions. Current grade and equipment documentation must establish the permitted window."
+          "text": "A grade processed at elevated temperature places demands on the barrel, screw, seals, nozzle, hot runner, mould, temperature-control unit, sensors and ventilation system. Compatibility and safe operating limits must be checked across that full system. A machine displaying a temperature setpoint does not establish that every component can safely reach or sustain it. Confirm the equipment manual, risk assessment, material supplier instructions and qualified site review before any trial."
         },
         {
           "title": "Worked example (hypothetical): review a proposed material change",
-          "text": "Suppose a team proposes a higher-temperature polymer because the part’s intended service has changed. The label “high-performance” does not identify which exact grade to use or prove that the existing machine and mould system can support it. This hypothetical example contains no process values and does not approve a material change.\n\n**1. Confirm the material identity.** Record the manufacturer, complete grade designation, formulation or colour suffix if present, and current document revision. Obtain the supplier’s technical data sheet, processing guide and safety data sheet for that exact grade. If the material on a quotation, label or document has a different designation, resolve the mismatch before using its data.\n\n**2. Extract the actual requirements.** From the grade documents, list the applicable handling, drying, temperature, residence or other stated limits, and note their units and conditions. Keep a direct link to each document. Do not fill a blank with a value from a different family, an old setup sheet or a generic training example.\n\n**3. Check the material path and equipment.** Compare the stated requirements with the machine, screw, barrel, nozzle, hot runner if present, mould and temperature-control system, plus any other components named by the responsible manuals. Record which document confirms each capability. If no document answers a compatibility question, keep it open and refer it to the equipment supplier or qualified site specialist.\n\n**4. Connect the change to the part.** Identify the product requirements affected by the new material and the inspections or tests that will show whether they are met. Record how sample identity, cavity, measurement conditions and the chosen grade will be kept linked. A material property on a standard specimen is not itself proof that the finished product meets its requirements.\n\n**5. Follow the authorised change path.** Keep the old and proposed grade identities, current supplier documents, compatibility findings, unresolved questions and verification plan together. Only the site’s controlled process can decide whether a trial or change is permitted. Supplier information, equipment capability and a successful-looking sample each answer different questions; none alone proves full product qualification.\n\nThe checklist makes missing evidence visible. It supplies no generic settings, safe-processing values or substitute for the supplier’s current instructions, equipment manuals or workplace controls."
+          "text": "A hypothetical engineer proposes replacing a standard engineering thermoplastic with a higher-temperature grade because a component softened in service. The review first confirms the actual failure temperature, load, duration, environment and conditioning. It then compares exact-grade evidence, mouldability, shrinkage, anisotropy, assembly and ageing. The candidate may solve one service limitation while creating new tooling, dimensional or safety constraints. The decision is a controlled engineering qualification, not a swap based on a family label."
         },
         {
           "title": "A high-performance grade is a complete system question",
-          "text": "“High-performance polymer” is a broad category, not one chemical structure or a common processing window. Different families and exact grades can have different temperature demands, moisture sensitivities, thermal stability and handling requirements. A supplier family guide can introduce a material class; the current instructions for the exact commercial grade control its processing information.\n\nTreat a proposed grade as a system-compatibility question. The review should identify the machine and the material-contact parts, such as the screw, barrel and nozzle. Where used, include the hot runner, gates, temperature-control equipment, seals and other ancillary components named by the equipment and supplier documentation. A component’s display reading or a general equipment rating does not establish that every part of the system is suitable for the chosen grade.\n\nMake a simple matrix before a decision: list each requirement from the current supplier documents in one column, the component or site procedure that must meet it in another, and the evidence that confirms it in a third. Add a final column for unresolved questions and the person or supplier who must answer them. Keep exact document titles and revisions with the matrix.\n\nThis is a way to organise a review, not an approval form that authorises production. The site’s controlled change process, product qualification and safety procedures remain in force. If the grade, equipment or requirement is unclear, mark it unresolved rather than inferring compatibility from the words “high-performance.”"
+          "text": "Before a material trial, check whether the machine and screw are suitable, temperature zones and sensors are rated, the hot runner is compatible, the mould can tolerate the thermal cycle, and local extraction and handling arrangements are adequate. Review wear, corrosion, residence history and cleaning requirements for the specific polymer. A material supplier can define grade-specific requirements, but the equipment owner and qualified personnel must authorize the setup and operation."
         },
         {
           "title": "Follow the material’s entire thermal history",
-          "text": "A high-temperature material is not defined by one temperature displayed on a controller. The resin may experience different conditions during storage, drying or other preparation, plasticising, residence in the barrel, movement through a nozzle or hot runner, filling and cooling. The exact stages and limits depend on the grade, machine and mould system. The supplier’s current guidance and equipment manuals identify which conditions must be controlled.\n\nResidence describes how long material remains in a heated region; the material does not necessarily spend the same time there as every other portion of the shot. A small amount held in a low-turnover region can have a different history from material moving through the main flow path. This is why the supplier may specify time-related limits or handling precautions as well as temperature information. Do not infer those limits from a family name.\n\nFor a review, map the material path from the controlled feedstock through each heated component to the cavity. For every stage, note the source of the requirement, the available measurement or record, and any uncertainty about what that measurement represents. If a hot-runner or machine document controls a part of the system, keep it alongside the grade document rather than assuming the material supplier speaks for all equipment.\n\nThis map identifies evidence to review. It does not create setpoints, establish a safe hold time or authorise a trial. Actual values and actions must come from current grade-specific and equipment-specific documentation and the site’s approved process."
+          "text": "High melt temperatures can make waiting time and stagnant regions consequential. Track startup, interruptions, purge and recovery using the supplier’s procedures; do not extrapolate a general residence-time rule from another polymer. A defect that appears after a pause may point to material history, but it still needs evidence from colour, appearance, cavity pattern and process timeline. Avoid repeated purge or temperature actions until the approved procedure and material safety limits are known."
         },
         {
           "title": "Read each supplier document for the question it answers",
-          "text": "A technical data sheet, processing guide and safety data sheet have different jobs. A technical data sheet presents selected grade properties and the conditions attached to them. A processing guide gives supplier instructions relevant to handling and processing that grade. A safety data sheet addresses hazards and safe handling information. None should be treated as a substitute for the others, and an old copy may describe a different revision or formulation.\n\nWhen reviewing a property, copy the exact grade identity, method, specimen, direction, conditioning, temperature, units and other stated conditions into the comparison record. A value without its test conditions is easy to misread. A supplier test specimen can help compare material data when the bases are understood; it does not prove a finished part will pass a product requirement.\n\nWhen reviewing processing information, note which exact grade and equipment context the supplier addresses, and identify every condition or limit the document states. Then compare those statements with the machine, mould, hot-runner and ancillary equipment documents that apply at the site. A supplier guide cannot establish the capability of an unrelated machine component that it does not cover.\n\nFor a formal review, keep the documents with their revision or publication dates, record any conflicts, and ask the supplier or equipment maker to resolve an unclear requirement. Mark unsupported assumptions as open questions. This document-by-question method helps preserve the boundary between material evidence, equipment evidence, safety instructions and product qualification."
+          "text": "A datasheet provides selected properties under stated tests; a processing guide gives supplier recommendations for a grade and equipment class; a safety data sheet describes hazards and handling; a machine or hot-runner manual controls equipment use. One document does not replace the others. Record the exact revision and unresolved questions. Where documents conflict or omit a critical limit, stop the transfer decision and ask the supplier or qualified engineer."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
@@ -1234,63 +1234,63 @@
       "sections": [
         {
           "title": "Several mechanisms can fit the same symptom",
-          "text": "Advanced troubleshooting begins by accepting that one symptom can have several plausible causes. Dimensional drift, for example, may be consistent with material condition, thermal drift, packing response, cooling, measurement timing, cavity effects or tooling condition."
+          "text": "When the basic diagnostic loop leaves several plausible causes, treat the investigation as a system problem. Material history, flow resistance, temperature, tool condition, machine response and measurement error may interact. List mechanisms separately and note where they could produce similar evidence. The goal is not to name the most familiar cause but to identify which evidence can distinguish the alternatives safely."
         },
         {
           "title": "Create competing hypotheses with predicted observations",
-          "text": "For each plausible mechanism, write down what else should be true if that mechanism is important: where the defect should occur, which cavities should be affected, how it should change with time, which signal should move, and which controlled comparison should alter the outcome."
+          "text": "For each hypothesis, write its causal path, expected affected population, timing, location and signal pattern. Include at least one observation that would weaken it. Keep predictions specific to the actual material, machine and mould, because a general rule may not hold for this setup. This makes uncertainty visible before new data arrives."
         },
         {
           "title": "Prioritise discriminating evidence",
-          "text": "Choose observations or experiments that produce different predictions for the leading hypotheses. A test that improves the part but is consistent with every hypothesis has low diagnostic value; a test that separates two plausible causes can be more informative even if it does not immediately fix production."
+          "text": "Rank the next measurements by how much they could change the decision, how reliable they are and what risk they involve. A high-value measurement may be cavity-resolved, time-aligned or independent of the signal that first raised concern. Avoid collecting many correlated metrics that all reflect the same sensor or assumption."
         },
         {
           "title": "Beware of correlated signals and successful-but-wrong fixes",
-          "text": "Two variables can move together because both respond to a third mechanism. Likewise, a process change may suppress a symptom without correcting the underlying cause. Treat correlation and temporary improvement as evidence, not proof of causation."
+          "text": "Two signals can move together because they share a sensor, calculation or common upstream cause. Treating them as independent confirmation exaggerates confidence. A change can also suppress a symptom while leaving the initiating cause in place—for example, one effect may compensate for another. Check whether the fix remains effective across the affected population and whether it creates a new risk."
         },
         {
           "title": "Preserve an evidence ledger",
-          "text": "Record the hypothesis, observation, test, predicted outcome, actual result and resulting confidence. This prevents repeated experiments, makes handover defensible and exposes when a conclusion rests on assumption instead of measurement."
+          "text": "For each observation, record source, time, sample identity, method, units, conditions, uncertainty and the hypothesis it supports or challenges. Distinguish direct observation from interpretation and supplier guidance from local measurement. Retain contradictory evidence rather than discarding it. An evidence ledger lets another engineer reconstruct why the conclusion was reached."
         },
         {
           "title": "What should lower confidence in the leading hypothesis",
-          "text": "Reduce confidence when a prediction fails, the effect cannot be repeated, the symptom crosses the supposed boundary, or new evidence supports an alternative mechanism. When available evidence cannot discriminate among causes, document the unresolved set and hold the root-cause claim rather than inventing certainty."
+          "text": "Confidence should fall when predicted evidence is absent, the pattern crosses an unexpected boundary, the measurement is unreliable, an alternative explains more observations, or the intervention changes several factors at once. Also lower confidence when a result comes from a different grade, geometry, sensor location or conditioning state. Revise the hypothesis explicitly instead of explaining away every contradiction."
         },
         {
           "title": "Build a causal timeline",
-          "text": "For difficult problems, reconstruct the sequence from the last known-good state to the current symptom. Include material changes, mould maintenance, machine intervention, parameter revisions, environmental shifts, stoppages and quality measurements. A timeline can reveal whether the effect begins before or after a suspected event and whether recovery follows the reverse sequence."
+          "text": "Align material batches, machine events, mould maintenance, alarms, environmental changes and part measurements on one timeline. Include when the condition began and when it was detected, since those may differ. Use source records rather than recollection where possible. The timeline narrows possible initiating events, but it remains a map of evidence and not a causal proof."
         },
         {
           "title": "Use population boundaries as experiments",
-          "text": "Compare what is affected and what is not: one cavity versus all cavities, one machine versus another, one material lot versus the next, one shift versus all shifts, or one insert versus its neighbour. An unaffected comparison group can be as informative as the failing group because it constrains where the mechanism can plausibly exist."
+          "text": "Compare affected and unaffected cavities, shifts, lots, time periods or part regions while controlling important differences. A boundary can reveal whether the cause is shared or local. Check that labels, sampling and measurement methods are consistent; otherwise the apparent boundary may be an artifact. When possible, collect paired observations under the same conditions."
         },
         {
           "title": "Beware compensating mechanisms",
-          "text": "Two problems can partly cancel each other. One change may reduce a dimensional bias while another increases it, producing an apparently stable result until either condition moves. When evidence does not fit a simple one-cause model, consider whether multiple mechanisms are interacting rather than assuming the remaining unexplained variation is random noise."
+          "text": "A process can appear stable because two changes offset one another. For example, a higher flow resistance and a different temperature history might produce a similar fill time while changing pressure demand or part structure. A single output can hide this interaction. Track mechanism-relevant signals and product characteristics together, and avoid declaring recovery from one metric alone."
         },
         {
           "title": "Define the stopping rule for investigation",
-          "text": "An investigation should stop when the evidence is sufficient for the decision being made, not when every conceivable uncertainty is removed. Define what must be demonstrated for containment, corrective action and verification. If the consequence of being wrong is high, require stronger evidence and independent review. If evidence remains inadequate, preserve the unresolved status instead of declaring certainty."
+          "text": "Before continuing, state what evidence would be sufficient for containment, correction, release or a request for outside expertise. Include the level of residual risk that requires escalation and who has authority to accept it. Stop when the evidence supports the permitted decision, not when every uncertainty has disappeared. Keep unresolved questions visible in the handover."
         },
         {
           "title": "Independent review is valuable when the evidence is ambiguous",
-          "text": "Complex investigations are vulnerable to confirmation bias, especially after significant time has been invested in one explanation. A second engineer or specialist can challenge assumptions, inspect the evidence chain and identify missing alternatives. Independent review is particularly valuable before irreversible tooling changes, broad process-window revisions or high-consequence product dispositions."
+          "text": "A second reviewer is especially useful when the leading explanation is consequential, the evidence is contradictory, or the proposed correction affects safety, tooling or product qualification. Provide the reviewer with the actual records, assumptions, uncertainty and alternative hypotheses. This chapter’s internal review does not substitute for an independent materials, process, tooling or product specialist."
         },
         {
           "title": "Rank hypotheses by evidence, consequence and testability",
-          "text": "Not every plausible mechanism deserves equal attention. Give priority to explanations that fit the observed boundaries, have a credible physical pathway and can be tested safely with discriminating evidence. Also consider consequence: a low-probability safety or tooling-damage mechanism may deserve earlier exclusion than a more likely cosmetic mechanism."
+          "text": "A practical ranking considers how well each hypothesis explains the observations, the consequence if it is wrong, and whether a safe test can discriminate it. Do not rank by familiarity alone. Keep the ranking provisional and update it as evidence changes. High-consequence possibilities may need containment even when they are not the most likely explanation."
         },
         {
           "title": "Distinguish containment, correction and root-cause evidence",
-          "text": "Containment protects product or production while the cause is uncertain. A corrective action changes a condition believed to contribute to the problem. Root-cause evidence shows that the proposed mechanism explains the symptom and survives attempts to falsify it. Keeping these levels separate prevents a successful containment action from being mislabeled as a proven cause."
+          "text": "Containment limits exposure while the cause is uncertain. A correction restores an acceptable condition under a defined scope. Root-cause evidence explains why the failure occurred and why the control failed to prevent or detect it. These are different outcomes and may require different evidence. Do not present a temporary containment or a successful adjustment as a complete corrective action."
         },
         {
           "title": "Use contradictions as valuable data",
-          "text": "The most useful observation may be the one that the preferred hypothesis cannot explain. When a cavity expected to fail remains good, a predicted pressure feature is absent or a material change has no effect, record that contradiction prominently. Strong diagnostic practice rewards evidence that narrows the hypothesis set, even when it overturns the team's first explanation."
+          "text": "When a trace suggests one mechanism and the part result suggests another, check alignment, timing, calibration, cavity identity and sample conditioning. The conflict may expose a hidden process stage or measurement problem. Preserve both results and ask what model assumption connects them. Do not discard the measurement that fails to fit the preferred explanation."
         },
         {
           "title": "Worked example (hypothetical): choose the next measurement when evidence conflicts",
-          "text": "Suppose a dimension drifts over a shift, but the first review finds three mixed signals: parts from one cavity look more affected, the mould temperature record also changes with time, and the measurement fixture was replaced during the same period. None of these observations can be ignored, and the coincidence does not identify the cause.\n\nWrite three live hypotheses: a cavity-specific moulding difference, a shared thermal drift, and a measurement-fixture change. For each, record what should be observed if it is important. The cavity hypothesis predicts a repeatable difference by cavity under comparable measurement conditions. The thermal hypothesis predicts a time relationship across the population. The fixture hypothesis predicts that the reported change may follow the measurement method rather than the parts.\n\nThe next step should preserve sample identity and repeat the measurement using the defined method, then compare cavity and time patterns. If the measurement result changes with the fixture, confidence in a process-only explanation should fall. If the drift remains and follows time across cavities, investigate the shared process state. If one cavity remains different, retain the local hypothesis. More than one may be contributing.\n\nRecord the contradiction and the result even if the product decision still requires escalation. The goal is to choose a measurement that separates explanations, not to force a root-cause label from incomplete evidence."
+          "text": "In a hypothetical multi-cavity case, machine pressure is stable, but one cavity shows intermittent weight loss and a downstream dimension shifts after conditioning. The team separates the machine signal’s location from the cavity response, checks sensor and measurement repeatability, and compares material lot and cooling conditions. They select a cavity-specific measurement that can test a local-flow explanation against a later dimensional-change explanation. No single result proves the cause; the example shows how to pick the next question and retain uncertainty."
         }
       ],
       "reviewBoundary": "Technical-review draft. Use the actual material, machine, mould, hot-runner and site documentation before applying production changes."
