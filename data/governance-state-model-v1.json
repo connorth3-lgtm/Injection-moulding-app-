@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "fail",
+    "technicalAutomation": "pass",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "fail",
-      "meaning": "HOLD: release 2026.11.09.1 has not completed exact-head software verification or candidate-artifact retention. No source, human, device or production approval is implied."
+      "status": "pass",
+      "meaning": "PASS — release 2026.11.09.1 candidate source 74b59afa1f241995cdf7385d6031546a676626a3, artifact 13659792379, fingerprint sha256:91a398caef841e7202e5425d3388dcb47557d89b618eca83d4c7b29e16ebd827, retained by Pre-merge Public Candidate run 42587884172; exact artifact provenance and runtime fingerprint are recorded. Software-only; this creates no external approval."
     },
     "behavioralBrowser": {
-      "status": "fail",
-      "meaning": "HOLD: browser and question quality checks for release 2026.11.09.1 have not completed on the exact candidate. Prior release checks do not transfer to this source."
+      "status": "pass",
+      "meaning": "PASS — release 2026.11.09.1 candidate source 74b59afa1f241995cdf7385d6031546a676626a3 passed Mobile Browser QA run 42587883746 and Question Quality 50-Pass run 42587883685. Software-only; this creates no external approval."
     },
     "externalHumanDevice": {
       "status": "hold",

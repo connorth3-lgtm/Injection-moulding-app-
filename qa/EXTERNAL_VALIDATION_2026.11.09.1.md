@@ -1,6 +1,6 @@
 # MouldMaster 2026.11.09.1 — external validation status
 
-**STATUS: CANDIDATE PENDING — exact-head software checks and a retained runtime artifact are not yet recorded for this release. All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain HOLD.**
+**STATUS: SOFTWARE CANDIDATE RETAINED — exact-head software checks passed. All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain HOLD.**
 
 > **PENDING 2026.11.09.1 TECHNICAL ARTIFACT — STOP: independent reviews remain HOLD.**
 
@@ -10,7 +10,12 @@ This candidate adds optional open further-reading links to the Book: 15 sources 
 
 ## Candidate identity
 
-No exact-head candidate artifact is recorded in this packet yet. Source SHA, runtime fingerprint, producer run, artifact digest and expiry must be populated only from a successful current-release candidate workflow. Evidence from earlier releases does not transfer.
+Release: 2026.11.09.1
+Candidate source SHA: 74b59afa1f241995cdf7385d6031546a676626a3
+Public runtime fingerprint: sha256:91a398caef841e7202e5425d3388dcb47557d89b618eca83d4c7b29e16ebd827
+Producer: [Pre-merge Public Candidate run 42587884172](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/42587884172)
+Artifact: **13659792379** (`physical-pwa-candidate-74b59afa1f241995cdf7385d6031546a676626a3`), digest sha256:4b6ef2ccc2bb60d685071c1b24fed309d08a51113dc9c185a128ce63bfa19fd0, expires 2027-02-07T08:42:19Z
+Exact-head software gates: Mobile Browser QA run 42587883746 and Question Quality 50-Pass run 42587883685 — **PASS**.
 
 ## Release-specific review packets — all HOLD
 
