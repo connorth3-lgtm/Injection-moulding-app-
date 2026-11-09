@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.08.5",
+  "release": "2026.11.09.1",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.08.5.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.09.1.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "boundary": "Release 2026.11.08.5 technical candidate f7b703ad06fef540d7773458e0eff8202c253041 does not establish any of NZQA/provider G1\u2013G8 external gates or assessment/accreditation authority.",
+  "boundary": "Release 2026.11.09.1 has no current retained candidate yet and establishes none of the NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -52,15 +52,15 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.11.08.4",
-    "sourceSha": "afddce102ee48995bdcf06b9f22bc078992cea3a",
-    "runtimeFingerprint": "sha256:12b0afbcd833614ce5162612b84974e491f5f197cf6d1973b2a522d60b92a54d",
-    "candidateRunId": 42467257528,
+    "release": "2026.11.08.5",
+    "sourceSha": "f7b703ad06fef540d7773458e0eff8202c253041",
+    "runtimeFingerprint": "sha256:5442547dec21641a8284e2644013609d041a5bb41dca33a5e85a5ec578e83eb9",
+    "candidateRunId": 42507793793,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13612187059,
-    "artifactName": "physical-pwa-candidate-afddce102ee48995bdcf06b9f22bc078992cea3a",
-    "artifactDigest": "sha256:77f7d6b8d134c862e6bd1992ab11cfa1df7acb27064ab56d3df2890e1321d056",
-    "artifactExpiresAt": "2027-02-06T09:27:27Z"
+    "artifactId": 13628146324,
+    "artifactName": "physical-pwa-candidate-f7b703ad06fef540d7773458e0eff8202c253041",
+    "artifactDigest": "sha256:53dbe966781563e25779a785a664efe5b768e550473fe47820f60cfd652aec45",
+    "artifactExpiresAt": "2027-02-06T18:00:46Z"
   },
   "previousIssueNumber": 379,
   "supersededCandidate": {
@@ -68,9 +68,5 @@
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
     "runtimeFingerprint": "sha256:4767c50814cfe576891a3eb6f4de34a1d451378709c43a8988e2e57c540cf4c9"
   },
-  "candidate": {
-    "release": "2026.11.08.5",
-    "sourceSha": "f7b703ad06fef540d7773458e0eff8202c253041",
-    "runtimeFingerprint": "sha256:5442547dec21641a8284e2644013609d041a5bb41dca33a5e85a5ec578e83eb9"
-  }
+  "candidate": null
 }
