@@ -44,7 +44,7 @@
         "HSE_RESOURCES",
         "CA_IMM_RULE",
         "OREGON_GUARDING",
-        "AUTODESK_FEED_SYSTEM"
+        "HSE_INJECTION_MACHINES"
       ]
     },
     {
@@ -531,6 +531,13 @@
       "publisher": "UK HSE",
       "kind": "Regulator guidance index",
       "url": "https://www.hse.gov.uk/plastics/resources.htm"
+    },
+    {
+      "id": "HSE_INJECTION_MACHINES",
+      "title": "Safety at injection moulding machines",
+      "publisher": "UK Health and Safety Executive",
+      "kind": "Open regulator information sheet (2015)",
+      "url": "https://www.hse.gov.uk/pubns/ppis4.pdf"
     },
     {
       "id": "CA_IMM_RULE",
