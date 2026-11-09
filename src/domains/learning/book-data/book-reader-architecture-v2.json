@@ -116,25 +116,14 @@
       "scenarioPrompt": "A learner calls a grade “semi-amorphous” because it has both ordered and disordered regions. Explain the standard beginner distinction, then use a hypothetical injection-moulded PP part to show how local cooling and flow can create different structures without treating one published experiment as a universal rule.",
       "readingThread": "Move from the words used for feedstock to chain architecture, then to amorphous and semi-crystalline morphology. Follow how Tg, crystallisation and melting differ; see how the mould’s thermal and flow history can shape local structure; finish with what DSC and grade data can—and cannot—say about a finished part.",
       "keyTerms": [
-        "polymer",
-        "plastic formulation",
+        "polymer and plastic",
+        "thermoplastic and thermoset",
         "repeat unit",
         "molecular-weight distribution",
-        "branching",
-        "entanglement",
-        "amorphous",
-        "semi-crystalline",
-        "lamella",
-        "spherulite",
+        "amorphous and semi-crystalline",
         "glass transition (Tg)",
-        "crystallisation temperature (Tc)",
-        "melting temperature (Tm)",
-        "degree of crystallinity",
-        "differential scanning calorimetry (DSC)",
-        "thermoplastic",
-        "thermoset",
-        "copolymer",
-        "tacticity"
+        "crystallisation and melting (Tc/Tm)",
+        "crystallinity and DSC"
       ]
     },
     {
@@ -168,14 +157,11 @@
         "fibre orientation",
         "orientation distribution",
         "anisotropy",
-        "micro-CT",
-        "simulation validation",
-        "exact grade",
-        "thermal history",
-        "equipment compatibility",
-        "orientation tensor",
         "skin-core structure",
-        "micro-computed tomography (micro-CT)"
+        "orientation tensor",
+        "micro-computed tomography (micro-CT)",
+        "simulation validation",
+        "exact-grade system review"
       ],
       "scenarioPrompt": "A reinforced grade is proposed for a part with a dimension that changes by direction, and the same project is considering a high-temperature alternative. Separate the two reviews: list orientation evidence for the existing part, then list exact-grade supplier and equipment evidence for the proposed material. Mark hypotheses separately from measured facts."
     },

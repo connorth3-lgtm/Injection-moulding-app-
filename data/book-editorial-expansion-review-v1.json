@@ -8,7 +8,7 @@
   "reviewBoundary": "Repository-level editorial and technical-source review of all 46 authored modules. It checks clarity, progression, terminology, applicability, source fit and consistency with mapped existing claims. It is not independent peer review, external SME approval, device validation, accreditation or production authorization.",
   "readerArchitecture": {
     "path": "data/book-reader-architecture-v2.json",
-    "gitBlobSha1": "084214a978f50dc962fc73079088b0a9553aa7ac",
+    "gitBlobSha1": "cd913f6228cd2eab9f48f7c98b3668a850f26c64",
     "conclusion": "derived-reader-scaffolding-without-new-technical-claims"
   },
   "reviewedModules": [
