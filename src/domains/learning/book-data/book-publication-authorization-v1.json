@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "bookId": "mouldmaster-book",
-  "version": "2026.10.22.2",
+  "version": "2026.11.09.2",
   "status": "authorized",
   "authorizationType": "governed-book-publication",
   "authorizedAt": "2026-10-06",
@@ -24,21 +24,21 @@
     "scope": "Exact served bytes for every payload that can influence Book publication promotion, reader composition, claim-evidence transparency, complete claim-history rendering, editorial expansion review or independent-SME status. Git object identity is checked in-browser before JSON parsing; any mismatch fails closed.",
     "gitBlobSha1ByFile": {
       "book-manifest-v1.json": "59efb8048451389ebb610566e13607d2d9c47cdd",
-      "book-sme-review-v1.json": "36130deb9c3ffb5299d120991d5c71cc0b8377fc",
+      "book-sme-review-v1.json": "5721b35347173ccfd62f7b7488909e212a71e06e",
       "book-qualification-resolution-all-v1.json": "c6da26d0c4ed3608b1a19b1551856c1d80c03a8f",
       "book-claim-resolution-high-risk-v1.json": "84d007a72c16b60e01ba392f9ca6e0f6d487cc85",
-      "book-authored-foundations-v1.json": "c983d1e910089bde2ee4a679418803821bd3f765",
+      "book-authored-foundations-v1.json": "cacdd6d3e116f33595392ff3fc61b40526ebf20e",
       "book-evidence-registry-v1.json": "02151763ce680f85a3e50152f3eeb2549e4d050c",
-      "book-authored-remaining-v1.json": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
-      "book-worked-engineering-cases-v1.json": "e66b2c6a77bfc2135b404013e3838fa537178e86",
-      "book-evidence-enrichment-v2.json": "bef9c879cd387c3e74a4df8dd37adccb1558a0a7",
+      "book-authored-remaining-v1.json": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
+      "book-worked-engineering-cases-v1.json": "e610770d661453934631df87c8e68e9c4afa3ef8",
+      "book-evidence-enrichment-v2.json": "ff5fbd13b8f98ddcd713540df50d438c6e001447",
       "book-material-grade-atlas-v1.json": "95e04cf7669131e93ea552ea92707c72df007319",
       "book-material-regional-evidence-v1.json": "4a42fa97f737b13271518d63672d3c4a01421e14",
       "material-catalog-v1.json": "6b8796b74895a2d68530f16567450cd5e04d40ac",
       "book-engineering-diagrams-v1.json": "b4e0265cc5e78c861c68b4a6caefcddedfe3ba10",
-      "book-reader-architecture-v2.json": "605d1b4fd92b03f1b11fc9a79f2cd2b8bbdd409e",
-      "book-editorial-expansion-review-v1.json": "feaae08c1505c2f1e6ce8d406359cdb978b7d739",
-      "book-claim-evidence-reference-v1.json": "8b17e88c54b4456e8d0d5afa0a26f8ec0ebb3081",
+      "book-reader-architecture-v2.json": "741c33068b014eeb1f70188f8df35b12db90bfa9",
+      "book-editorial-expansion-review-v1.json": "7c8e49ac10b973266f57ef2a7a46351e026cee76",
+      "book-claim-evidence-reference-v1.json": "ee222204864493c260efca7bd886bc927cc0c1bf",
       "book-claim-review-foundations-materials-machine-v1.json": "a3f8246ca5cbf5a099f32885953fadd722141785",
       "book-claim-review-process-tooling-v1.json": "525a946af21ea069ab7c3c003c5d7a6963d01707",
       "book-claim-review-troubleshooting-v1.json": "6689c3d697631e3cc0a3da5edf2ee49029e1489a",
@@ -46,7 +46,7 @@
       "book-claim-review-high-risk-v1.json": "ba46cdf63811e4df1bd274df240756586380b406",
       "book-claim-resolution-high-risk-v2.json": "bbced00a8b699809fb1c4e55132d2265021bb278",
       "book-claim-resolution-all-v1.json": "1f3e6495947727f9ca73e3cf13b550aa24b38764",
-      "book-chapters-materials-machine-v1.json": "bda17841e8a6d271f1afda1ec5587fd944130668",
+      "book-chapters-materials-machine-v1.json": "21d42fde460291d84f270d511e4796cd36b1811c",
       "book-open-further-reading-v1.json": "30b6c24789ae7e4aa3e15deaa69a2590763ef5dd"
     }
   },
@@ -161,7 +161,7 @@
   "workedCasesAuthorization": {
     "status": "authorized",
     "authorizedAt": "2026-10-03",
-    "release": "2026.10.22.2",
+    "release": "2026.11.09.2",
     "ledger": "data/book-worked-engineering-cases-v1.json",
     "caseCount": 27,
     "claimCount": 27,
@@ -173,7 +173,7 @@
   "evidenceEnrichmentAuthorization": {
     "status": "authorized",
     "authorizedAt": "2026-09-18",
-    "release": "2026.10.22.2",
+    "release": "2026.11.09.2",
     "ledger": "data/book-evidence-enrichment-v2.json",
     "ledgerId": "book-evidence-enrichment-2026-09-18-v2",
     "chapterCount": 10,
@@ -222,7 +222,7 @@
   "diagramAuthorization": {
     "status": "authorized-instructional-diagrams",
     "authorizedAt": "2026-10-06",
-    "release": "2026.10.22.2",
+    "release": "2026.11.09.2",
     "ledger": "data/book-engineering-diagrams-v1.json",
     "diagramCount": 25,
     "scope": "Twenty-five generic explanatory SVG diagrams bound to governed Book modules; each asset hash is recorded in the governed diagram ledger.",
@@ -232,7 +232,7 @@
   },
   "readerArchitectureAuthorization": {
     "status": "authorized-derived-structure",
-    "release": "2026.10.22.2",
+    "release": "2026.11.09.2",
     "ledger": "data/book-reader-architecture-v2.json",
     "readerChapterCount": 21,
     "governedModuleCount": 46,
@@ -249,7 +249,7 @@
     },
     "caseFinderAuthorization": {
       "status": "authorized-derived-navigation",
-      "release": "2026.10.22.2",
+      "release": "2026.11.09.2",
       "ledger": "data/book-reader-architecture-v2.json",
       "caseCount": 27,
       "groupCount": 5,
@@ -259,16 +259,16 @@
   },
   "editorialExpansionAuthorization": {
     "status": "authorized-repository-technical-source-review",
-    "release": "2026.10.22.2",
+    "release": "2026.11.09.2",
     "ledger": "data/book-editorial-expansion-review-v1.json",
-    "moduleCount": 39,
+    "moduleCount": 46,
     "noNewClaimIds": true,
     "independentSmeStatus": "hold",
-    "authorityBoundary": "Expanded prose across 39 governed modules is reviewed only within each module's mapped existing governed claim scope; the 13 new worked examples are hypothetical and add no independent technical claims, human SME approval, universal recipe or production authority."
+    "authorityBoundary": "Expanded prose across all 46 governed modules is reviewed only within each module's mapped existing governed claim scope; hypothetical teaching examples add no independent technical claims, human SME approval, universal recipe or production authority."
   },
   "claimEvidenceReferenceAuthorization": {
     "status": "authorized-derived-evidence-index",
-    "release": "2026.10.22.2",
+    "release": "2026.11.09.2",
     "ledger": "data/book-claim-evidence-reference-v1.json",
     "chapterCount": 46,
     "sourceCount": 58,
