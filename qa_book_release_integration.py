@@ -115,7 +115,7 @@ for name in book_data:
 
 need((ROOT / 'data/asian-aus-nz-material-grade-extraction-wave2-v1.json').read_bytes() == (PACKAGED_ROOT / 'book-material-regional-evidence-v1.json').read_bytes(), 'packaged regional Book material evidence drifted from governed source wave')
 
-const FURTHER_READING_NAME='book-open-further-reading-v1.json'
+FURTHER_READING_NAME='book-open-further-reading-v1.json'
 further_path=PACKAGED_ROOT/FURTHER_READING_NAME
 further=json.loads(further_path.read_text(encoding='utf-8'))
 further_sources=further.get('sources') or []
