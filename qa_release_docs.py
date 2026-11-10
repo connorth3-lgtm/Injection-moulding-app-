@@ -542,6 +542,33 @@ elif visual.get('release')=='2026.11.08.5':
          and 'not human visual-owner approval' in visual.get('policy','').lower()
          and 'remain separate and hold' in visual.get('policy','').lower(),
          '2026.11.08.5 APAC baseline must retain exact source, requested scope, strict matrix and independent visual-review HOLD')
+elif visual.get('release')=='2026.11.09.1':
+    # This is a technical baseline for the rewritten Book, not owner visual approval.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.09.1_PR700.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.09.1'
+         and visual.get('commit')=='58180fe3a6a92c88c33ea3a375feb163a925b168'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and visual.get('referenceCaptureToolchain')=={
+             'framework':'@playwright/test','version':'1.64.1','browser':'chromium',
+             'referenceSourceSha':visual['commit']}
+         and 'STATUS: TECHNICAL BASELINE UPDATED — HUMAN VISUAL-OWNER DECISION PENDING' in review_current
+         and f"- Candidate source: `{visual['commit']}`" in review_current
+         and f"- Reference source: `{visual['commit']}`" in review_current
+         and f"- Baseline reference: `{visual['ref']}`" in review_current
+         and '52 candidate captures and 52 baseline captures' in review_current
+         and '32 of 52 comparisons matched' in review_current
+         and '20 of 52 differed' in review_current
+         and 'No masking or skipped surfaces' in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and 'not human visual-owner approval' in visual.get('policy','').lower()
+         and 'remain separate and hold' in visual.get('policy','').lower(),
+         '2026.11.09.1 Book baseline must retain exact source, scope, strict matrix and independent visual-review HOLD')
 elif visual.get('release')=='2026.11.08.2':
     # The owner approved the exact Learn / Practice / Materials screenshot changes
     # after reviewing the comparison artifact. Lock only this source, artifact,
