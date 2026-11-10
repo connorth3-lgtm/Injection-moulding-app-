@@ -1,0 +1,1544 @@
+{
+  "schemaVersion": 1,
+  "bookId": "mouldmaster-book",
+  "status": "supplemental-open-further-reading",
+  "checked": "2026-11-09",
+  "boundary": "Optional chapter further reading only. These references do not count as claim evidence, do not change any governed module source list, and do not establish SME approval. Open means that the linked full article, full public guidance, or open educational text was publicly readable when checked. Supplier guidance is grade-specific; regulatory guidance is jurisdiction-specific; neither replaces the current material data sheet, machine manual, workplace procedure, or qualified review.",
+  "chapters": [
+    {
+      "chapterId": "r01",
+      "title": "From Plastic Pellets to a Finished Part",
+      "sourceIds": [
+        "WS_INJECTION",
+        "AUTODESK_FILL_PHASES",
+        "POLYMER_MELT_FLOW",
+        "FILLING_MODELING_REVIEW",
+        "AUTODESK_CYCLE_TIME",
+        "AUTODESK_FEED_SYSTEM",
+        "AVIENT_PROCESS",
+        "POLYSURE_GUIDE",
+        "XOMETRY_DESIGN",
+        "OPENLEARN_POLYMERS",
+        "NPTEL_POLYMER_PHYSICS",
+        "PMC_COOLING_CAVITY",
+        "AUTODESK_PRESSURE_DROP",
+        "BASF_TROUBLESHOOTER",
+        "RJG_DECOUPLED"
+      ]
+    },
+    {
+      "chapterId": "r02",
+      "title": "The Machine, the Mould and Safety",
+      "sourceIds": [
+        "WS_INJECTION",
+        "WS_PLASTICS",
+        "WS_MACHINERY",
+        "WS_LOCKOUT",
+        "WS_FACTSHEET",
+        "OSHA_HORIZONTAL",
+        "OSHA_PLASTICS",
+        "OSHA_TOUR_1",
+        "OSHA_TOUR_3",
+        "OSHA_PLASTICS_INDUSTRY",
+        "HSE_PLASTICS",
+        "HSE_RESOURCES",
+        "CA_IMM_RULE",
+        "OREGON_GUARDING",
+        "HSE_INJECTION_MACHINES"
+      ]
+    },
+    {
+      "chapterId": "r03",
+      "title": "Polymer Foundations: Chains, Amorphous and Semi-Crystalline Structure",
+      "sourceIds": [
+        "OPENLEARN_POLYMERS",
+        "NPTEL_POLYMER_PHYSICS",
+        "LIBRE_GLASS_TRANSITION",
+        "LIBRE_CRYSTALLINITY",
+        "LIBRE_SEMICRYSTALLINE",
+        "PACIFIC_POLYMER_TEXT",
+        "WILEY_CRYSTALLIZATION",
+        "FRACTIONATED_CRYSTALLIZATION",
+        "PA_AMORPHOUS_SEMICRYSTALLINE",
+        "CRYSTALLIZATION_KINETICS",
+        "PP_COOLING_CRYSTALLIZATION",
+        "RHEO_MEASUREMENTS",
+        "ROLE_RHEOLOGY",
+        "LDPE_RHEOLOGY",
+        "BASF_ULTRADUR"
+      ]
+    },
+    {
+      "chapterId": "r03a",
+      "title": "Advanced Materials: Fibre Orientation and High-Performance Polymers",
+      "sourceIds": [
+        "FIBER_FRONTIERS",
+        "FIBER_GATE_DESIGN",
+        "FIBER_UNCERTAINTY",
+        "FIBER_MODEL_ACCURACY",
+        "AUTODESK_FIBER_ANALYSIS",
+        "AUTODESK_FIBER_BASIS",
+        "AUTODESK_FIBER_TENSOR",
+        "AUTODESK_FIBER_MODELS",
+        "PEEK_CRYSTALLINITY",
+        "PEEK_REPROCESSING",
+        "VICTREX_PEEK_GUIDE",
+        "VICTREX_GUIDE_PAGE",
+        "BASF_ULTRASON_GUIDE",
+        "BASF_ULTRASON_PAGE",
+        "BASF_PPA"
+      ]
+    },
+    {
+      "chapterId": "r04",
+      "title": "How Melted Plastic Flows—and Why Moisture and Heat Matter",
+      "sourceIds": [
+        "RHEO_MEASUREMENTS",
+        "ROLE_RHEOLOGY",
+        "LDPE_RHEOLOGY",
+        "PP_PRETREATMENT",
+        "EXTENSIONAL_FLOW",
+        "POLYMER_MELT_FLOW",
+        "FILLING_MODELING_REVIEW",
+        "MOISTURE_BIOPOLYESTER",
+        "MOISTURE_POLYAMIDE",
+        "PLA_DEGRADATION",
+        "PLA_PROCESSING",
+        "PP_COOLING_CRYSTALLIZATION",
+        "BASF_ULTRAMID_B3Z1",
+        "BASF_ULTRADUR",
+        "BASF_TROUBLESHOOTER"
+      ]
+    },
+    {
+      "chapterId": "r05",
+      "title": "How the Machine Prepares and Delivers Melt",
+      "sourceIds": [
+        "POLYMER_MELT_FLOW",
+        "SCREW_CONVEYING",
+        "SCREW_MOTION",
+        "NOZZLE_SCREW_SETUP",
+        "AVIENT_PROCESS",
+        "POLYSURE_GUIDE",
+        "AUTODESK_FILL_PHASES",
+        "AUTODESK_CYCLE_TIME",
+        "AUTODESK_FLOW_TEMP",
+        "AUTODESK_PRESSURE_DROP",
+        "SWITCHOVER_REVIEW",
+        "AUTODESK_FILL_SETTINGS",
+        "AUTODESK_FAST_FILL",
+        "EASTMAN_TROUBLESHOOTER",
+        "BASF_TROUBLESHOOTER"
+      ]
+    },
+    {
+      "chapterId": "r06",
+      "title": "Transfer, Packing and Clamp Behaviour",
+      "sourceIds": [
+        "SWITCHOVER_REVIEW",
+        "NOZZLE_SCREW_SETUP",
+        "PRESSURE_DIAGNOSIS",
+        "INMOLD_SENSORS",
+        "BARREL_NOZZLE_SENSING",
+        "OPEN_SOURCE_MONITOR",
+        "AUTODESK_CLAMP_FORCE",
+        "AUTODESK_CLAMP_RESULT",
+        "AUTODESK_CLAMP_MODEL",
+        "RJG_DECOUPLED",
+        "AUTODESK_FILL_PHASES",
+        "AUTODESK_FAST_FILL",
+        "PROCESS_WINDOW",
+        "NIST_CONTROL_METHODS",
+        "PROCESS_STABILITY_WEIGHT"
+      ]
+    },
+    {
+      "chapterId": "r07",
+      "title": "Feed Systems, Venting and Hot Runners",
+      "sourceIds": [
+        "AUTODESK_FEED_SYSTEM",
+        "AUTODESK_RUNNERS",
+        "AUTODESK_RUNNER_LAYOUT",
+        "AUTODESK_RUNNER_BALANCE",
+        "AUTODESK_UNBALANCED",
+        "MDPI_MULTI_CAVITY",
+        "MDPI_RUNNER_DESIGN",
+        "OPEN_RUNNER_OPTIMIZATION",
+        "SYNVENTIVE_HOTRUNNER",
+        "MOLDMASTERS_MANUAL",
+        "AUTODESK_AIR_TRAPS",
+        "AUTODESK_AIR_TROUBLE",
+        "VACUUM_VENTING",
+        "VACUUM_VENTING_REPO",
+        "MICRO_VENTING"
+      ]
+    },
+    {
+      "chapterId": "r08",
+      "title": "Cooling, Release and Cycle Stability",
+      "sourceIds": [
+        "PMC_COOLING_CAVITY",
+        "PMC_TEMP_CONTROL",
+        "PMC_CLOSE_CONTOUR",
+        "PMC_SLENDER_COOLING",
+        "PMC_CONFORMAL_REVIEW",
+        "PMC_COOLING_TIME",
+        "KUO_COOLING_WARPAGE",
+        "AUTODESK_COOL_CIRCUIT",
+        "AUTODESK_COOL_FEATURES",
+        "AUTODESK_FREEZE_TIME",
+        "AUTODESK_COOL_STAGE",
+        "AUTODESK_COOLANT",
+        "AUTODESK_DRAFT",
+        "DEMOLDING_REVIEW",
+        "XOMETRY_DESIGN"
+      ]
+    },
+    {
+      "chapterId": "r09",
+      "title": "Establishing a Defensible Process Baseline",
+      "sourceIds": [
+        "NIST_HANDBOOK",
+        "NIST_MPC_GAUGE",
+        "NIST_REPEATABILITY",
+        "NIST_CAPABILITY",
+        "NIST_CONTROL_METHODS",
+        "NIST_CONTROL_CHARTS",
+        "NIST_UNCERTAINTY",
+        "PROCESS_STABILITY_WEIGHT",
+        "OPEN_SOURCE_MONITOR",
+        "INMOLD_SENSORS",
+        "PRESSURE_DIAGNOSIS",
+        "AVIENT_PROCESS",
+        "EASTMAN_TROUBLESHOOTER",
+        "WS_MACHINERY",
+        "WS_LOCKOUT"
+      ]
+    },
+    {
+      "chapterId": "r10",
+      "title": "Scientific Process Development",
+      "sourceIds": [
+        "NIST_DOE_SELECT",
+        "NIST_RESPONSE_SURFACE",
+        "NIST_DOE_MODEL",
+        "NATURE_ADAPTIVE_DOE",
+        "AUTODESK_DOE",
+        "AUTODESK_DOE_SETUP",
+        "PROCESS_WINDOW",
+        "FILLING_MODELING_REVIEW",
+        "PRESSURE_DIAGNOSIS",
+        "SWITCHOVER_REVIEW",
+        "MDPI_MULTI_CAVITY",
+        "PMC_MULTIOBJECTIVE",
+        "NIST_PROCESS_OPTIMIZATION",
+        "RJG_DECOUPLED",
+        "AUTODESK_PRESSURE_DROP"
+      ]
+    },
+    {
+      "chapterId": "r11",
+      "title": "A Diagnostic Method for Moulding Problems",
+      "sourceIds": [
+        "BASF_TROUBLESHOOTER",
+        "EASTMAN_TROUBLESHOOTER",
+        "ENTEC_TROUBLESHOOTER",
+        "AVIENT_PROCESS",
+        "POLYSURE_GUIDE",
+        "AUTODESK_SHORT_SHOT",
+        "AUTODESK_SINK",
+        "AUTODESK_BURN",
+        "AUTODESK_AIR_TROUBLE",
+        "WELD_AUTODESK",
+        "AUTODESK_WARP_TROUBLE",
+        "AUTODESK_STREAK",
+        "NIST_EXPLORATORY",
+        "NIST_CONTROL_METHODS",
+        "PRESSURE_DIAGNOSIS"
+      ]
+    },
+    {
+      "chapterId": "r12",
+      "title": "Filling and Boundary Defects",
+      "sourceIds": [
+        "AUTODESK_SHORT_SHOT",
+        "AUTODESK_PRESSURE_DROP",
+        "AUTODESK_FILL_PHASES",
+        "AUTODESK_FAST_FILL",
+        "AUTODESK_CLAMP_FORCE",
+        "AUTODESK_CLAMP_MODEL",
+        "AUTODESK_FILL_SETTINGS",
+        "AUTODESK_FLASH",
+        "BASF_TROUBLESHOOTER",
+        "EASTMAN_TROUBLESHOOTER",
+        "ENTEC_TROUBLESHOOTER",
+        "POLYSURE_GUIDE",
+        "XOMETRY_DESIGN",
+        "FILLING_MODELING_REVIEW",
+        "PRESSURE_DIAGNOSIS"
+      ]
+    },
+    {
+      "chapterId": "r13",
+      "title": "Shrinkage, Voids and Warpage",
+      "sourceIds": [
+        "PMC_WARPAGE_REVIEW",
+        "PMC_WARPAGE_INVERSE",
+        "PMC_THERMOELASTICITY",
+        "PMC_MULTIOBJECTIVE",
+        "PMC_COOLING_CAVITY",
+        "PMC_TEMP_CONTROL",
+        "PMC_CLOSE_CONTOUR",
+        "PMC_COOLING_TIME",
+        "AUTODESK_WARP",
+        "AUTODESK_WARP_TROUBLE",
+        "AUTODESK_WARP_PREP",
+        "AUTODESK_SINK",
+        "AUTODESK_SINK_INDEX",
+        "PVT_MEASUREMENT",
+        "THINWALL_WARPAGE"
+      ]
+    },
+    {
+      "chapterId": "r14",
+      "title": "Surface Defects, Gas and Degradation",
+      "sourceIds": [
+        "AUTODESK_BURN",
+        "AUTODESK_STREAK",
+        "ENTEC_TROUBLESHOOTER",
+        "EASTMAN_TROUBLESHOOTER",
+        "BASF_TROUBLESHOOTER",
+        "LYONDELL_OXIDATION",
+        "PLA_DEGRADATION",
+        "PLA_PROCESSING",
+        "MOISTURE_BIOPOLYESTER",
+        "MOISTURE_POLYAMIDE",
+        "MICRO_VENTING",
+        "VACUUM_VENTING",
+        "VACUUM_VENTING_REPO",
+        "MDPI_BURN",
+        "SILVER_STREAKS"
+      ]
+    },
+    {
+      "chapterId": "r15",
+      "title": "Weld Lines and Flow-Front Interaction",
+      "sourceIds": [
+        "WELD_REVIEW",
+        "WELD_MICRO",
+        "WELD_GF",
+        "WELD_PA6",
+        "WELD_AUTODESK",
+        "WELD_AUTODESK_RESULT",
+        "PLOS_THINWALL",
+        "FIBER_GATE_DESIGN",
+        "FIBER_FRONTIERS",
+        "FIBER_MODEL_ACCURACY",
+        "MDPI_MULTI_CAVITY",
+        "FILLING_MODELING_REVIEW",
+        "PMC_TEMP_CONTROL",
+        "INMOLD_SENSORS",
+        "XOMETRY_DESIGN"
+      ]
+    },
+    {
+      "chapterId": "r16",
+      "title": "Cavity Pressure and Process Monitoring",
+      "sourceIds": [
+        "INMOLD_SENSORS",
+        "OPEN_SOURCE_MONITOR",
+        "PRESSURE_DIAGNOSIS",
+        "BARREL_NOZZLE_SENSING",
+        "ONLINE_QUALITY",
+        "MDPI_ADAPTIVE_SENSORS",
+        "NIST_CONTROL_METHODS",
+        "NIST_CONTROL_CHARTS",
+        "NIST_HANDBOOK",
+        "NIST_UNCERTAINTY",
+        "SWITCHOVER_REVIEW",
+        "NOZZLE_SCREW_SETUP",
+        "AUTODESK_CLAMP_RESULT",
+        "PROCESS_STABILITY_WEIGHT",
+        "NATURE_ADAPTIVE_DOE"
+      ]
+    },
+    {
+      "chapterId": "r17",
+      "title": "DOE, Measurement and Capability",
+      "sourceIds": [
+        "NIST_HANDBOOK",
+        "NIST_MPC_GAUGE",
+        "NIST_REPEATABILITY",
+        "NIST_CAPABILITY",
+        "NIST_CONTROL_METHODS",
+        "NIST_CONTROL_CHARTS",
+        "NIST_UNCERTAINTY",
+        "NIST_DOE_SELECT",
+        "NIST_RESPONSE_SURFACE",
+        "NIST_DOE_MODEL",
+        "AUTODESK_DOE",
+        "NATURE_ADAPTIVE_DOE",
+        "PROCESS_STABILITY_WEIGHT",
+        "MICRO_ACCURACY",
+        "PMC_MULTIOBJECTIVE"
+      ]
+    },
+    {
+      "chapterId": "r18",
+      "title": "Dimensional Stability and Measurement Conditions",
+      "sourceIds": [
+        "PVT_MEASUREMENT",
+        "PMC_COOLING_TIME",
+        "PMC_WARPAGE_REVIEW",
+        "PMC_THERMOELASTICITY",
+        "PMC_WARPAGE_INVERSE",
+        "PMC_MULTIOBJECTIVE",
+        "MICRO_ACCURACY",
+        "PROCESS_STABILITY_WEIGHT",
+        "NIST_MPC_GAUGE",
+        "NIST_REPEATABILITY",
+        "NIST_UNCERTAINTY",
+        "NIST_CAPABILITY",
+        "MOISTURE_BIOPOLYESTER",
+        "PA_AMORPHOUS_SEMICRYSTALLINE",
+        "PP_COOLING_CRYSTALLIZATION"
+      ]
+    },
+    {
+      "chapterId": "r19",
+      "title": "Thin-Wall and Multi-Cavity Processing",
+      "sourceIds": [
+        "THINWALL_WARPAGE",
+        "THINWALL_PP",
+        "MDPI_THINWALL",
+        "PLOS_THINWALL",
+        "SAGE_THINWALL",
+        "MICRO_INJECTION_REVIEW",
+        "MDPI_MULTI_CAVITY",
+        "MDPI_RUNNER_DESIGN",
+        "OPEN_RUNNER_OPTIMIZATION",
+        "AUTODESK_UNBALANCED",
+        "AUTODESK_RUNNER_BALANCE",
+        "AUTODESK_FEED_SYSTEM",
+        "PMC_SLENDER_COOLING",
+        "FILLING_MODELING_REVIEW",
+        "AUTODESK_PRESSURE_DROP"
+      ]
+    },
+    {
+      "chapterId": "r20",
+      "title": "Complex Diagnostics and Engineering Judgment",
+      "sourceIds": [
+        "NIST_EXPLORATORY",
+        "NIST_DOE_SELECT",
+        "NIST_RESPONSE_SURFACE",
+        "NIST_MPC_GAUGE",
+        "NIST_UNCERTAINTY",
+        "NIST_CONTROL_METHODS",
+        "OPEN_SOURCE_MONITOR",
+        "INMOLD_SENSORS",
+        "PRESSURE_DIAGNOSIS",
+        "FILLING_MODELING_REVIEW",
+        "BASF_TROUBLESHOOTER",
+        "EASTMAN_TROUBLESHOOTER",
+        "ENTEC_TROUBLESHOOTER",
+        "AVIENT_PROCESS",
+        "PMC_WARPAGE_REVIEW"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "WS_INJECTION",
+      "title": "Injection and blow moulding presses",
+      "publisher": "WorkSafe New Zealand",
+      "kind": "Regulator guidance",
+      "url": "https://www.worksafe.govt.nz/topic-and-industry/machinery/working-safely-with-plastic-production-machinery/injection-blow-moulding/"
+    },
+    {
+      "id": "WS_PLASTICS",
+      "title": "Working safely with plastic production machinery",
+      "publisher": "WorkSafe New Zealand",
+      "kind": "Regulator guidance",
+      "url": "https://www.worksafe.govt.nz/topic-and-industry/machinery/working-safely-with-plastic-production-machinery/"
+    },
+    {
+      "id": "WS_MACHINERY",
+      "title": "Safe use of machinery",
+      "publisher": "WorkSafe New Zealand",
+      "kind": "Regulator guidance",
+      "url": "https://www.worksafe.govt.nz/topic-and-industry/machinery/safe-use-of-machinery/"
+    },
+    {
+      "id": "WS_LOCKOUT",
+      "title": "Keeping workers safe with machine lockouts",
+      "publisher": "WorkSafe New Zealand",
+      "kind": "Regulator guidance",
+      "url": "https://www.worksafe.govt.nz/topic-and-industry/machinery/keeping-workers-safe-with-machine-lockouts/"
+    },
+    {
+      "id": "WS_FACTSHEET",
+      "title": "Injection and blow moulding presses — fact sheet",
+      "publisher": "WorkSafe New Zealand",
+      "kind": "Regulator fact sheet",
+      "url": "https://www.worksafe.govt.nz/dmsdocument/548-injection-and-blow-moulding-presses/"
+    },
+    {
+      "id": "OSHA_HORIZONTAL",
+      "title": "Horizontal injection molding machines — machine guarding",
+      "publisher": "US OSHA",
+      "kind": "Regulator guidance",
+      "url": "https://www.osha.gov/etools/machine-guarding/plastics-machinery/horizontal-injection-molding-machines"
+    },
+    {
+      "id": "OSHA_PLASTICS",
+      "title": "Machine guarding — plastics machinery",
+      "publisher": "US OSHA",
+      "kind": "Regulator guidance",
+      "url": "https://www.osha.gov/etools/machine-guarding/plastics-machinery"
+    },
+    {
+      "id": "OSHA_TOUR_1",
+      "title": "Horizontal injection molding machine safety tour — view 1",
+      "publisher": "US OSHA",
+      "kind": "Regulator safety tour",
+      "url": "https://www.osha.gov/etools/machine-guarding/plastics-machinery/horizontal-injection-molding-machines/safety-tour-view-1"
+    },
+    {
+      "id": "OSHA_TOUR_3",
+      "title": "Horizontal injection molding machine safety tour — view 3",
+      "publisher": "US OSHA",
+      "kind": "Regulator safety tour",
+      "url": "https://www.osha.gov/etools/machine-guarding/plastics-machinery/horizontal-injection-molding-machines/safety-tour-view-3"
+    },
+    {
+      "id": "OSHA_PLASTICS_INDUSTRY",
+      "title": "Plastics industry — overview",
+      "publisher": "US OSHA",
+      "kind": "Regulator overview",
+      "url": "https://www.osha.gov/plastic-industry/"
+    },
+    {
+      "id": "HSE_PLASTICS",
+      "title": "Plastics industry safety publications",
+      "publisher": "UK HSE",
+      "kind": "Regulator guidance index",
+      "url": "https://www.hse.gov.uk/PuBns/plasindx.htm"
+    },
+    {
+      "id": "HSE_RESOURCES",
+      "title": "Plastics industry safety resources",
+      "publisher": "UK HSE",
+      "kind": "Regulator guidance index",
+      "url": "https://www.hse.gov.uk/plastics/resources.htm"
+    },
+    {
+      "id": "HSE_INJECTION_MACHINES",
+      "title": "Safety at injection moulding machines",
+      "publisher": "UK Health and Safety Executive",
+      "kind": "Open regulator information sheet (2015)",
+      "url": "https://www.hse.gov.uk/pubns/ppis4.pdf"
+    },
+    {
+      "id": "CA_IMM_RULE",
+      "title": "Injection molding machine safety rule — California Title 8, §4600",
+      "publisher": "California DIR",
+      "kind": "Jurisdiction-specific regulation",
+      "url": "https://www.dir.ca.gov/title8/4600.html"
+    },
+    {
+      "id": "OREGON_GUARDING",
+      "title": "Machine safeguarding at the point of operation",
+      "publisher": "Oregon OSHA",
+      "kind": "Regulator safety guide",
+      "url": "https://osha.oregon.gov/OSHAPubs/2980.pdf"
+    },
+    {
+      "id": "OPENLEARN_POLYMERS",
+      "title": "Introduction to polymers",
+      "publisher": "The Open University OpenLearn",
+      "kind": "Open university text",
+      "url": "https://www.open.edu/openlearn/science-maths-technology/chemistry/introduction-polymers"
+    },
+    {
+      "id": "NPTEL_POLYMER_PHYSICS",
+      "title": "Introduction to Polymer Physics — course",
+      "publisher": "NPTEL / IIT",
+      "kind": "Open university course",
+      "url": "https://onlinecourses-archive.nptel.ac.in/noc18_ph13/preview"
+    },
+    {
+      "id": "LIBRE_GLASS_TRANSITION",
+      "title": "Polymer chemistry: the glass transition",
+      "publisher": "Engineering LibreTexts",
+      "kind": "Open textbook chapter",
+      "url": "https://eng.libretexts.org/Bookshelves/Materials_Science/Polymer_Chemistry_%28Whisnant%29/08%3A_Transitions/8.03%3A_The_Glass_Transition"
+    },
+    {
+      "id": "LIBRE_CRYSTALLINITY",
+      "title": "Polymer chemistry: polymer crystallinity",
+      "publisher": "Engineering LibreTexts",
+      "kind": "Open textbook chapter",
+      "url": "https://eng.libretexts.org/Bookshelves/Materials_Science/Polymer_Chemistry_%28Whisnant%29/06%3A_Morphology/6.03%3A_Polymer_Crystallinity"
+    },
+    {
+      "id": "LIBRE_SEMICRYSTALLINE",
+      "title": "Amorphous and semi-crystalline polymers",
+      "publisher": "Engineering LibreTexts",
+      "kind": "Open textbook chapter",
+      "url": "https://eng.libretexts.org/Bookshelves/Materials_Science/Polymer_Physics_%28Steimel%29/Chapter_10%3A_Amorphous_and_Semi-Crystalline_Polymers"
+    },
+    {
+      "id": "PACIFIC_POLYMER_TEXT",
+      "title": "Polymers and Composite Materials",
+      "publisher": "University of the Pacific Open Textbooks",
+      "kind": "Open textbook",
+      "url": "https://scholarlycommons.pacific.edu/open-textbooks/18/"
+    },
+    {
+      "id": "WILEY_CRYSTALLIZATION",
+      "title": "Recent progress in understanding polymer crystallization",
+      "publisher": "Macromolecular Chemistry and Physics",
+      "kind": "Open-access review",
+      "url": "https://onlinelibrary.wiley.com/doi/full/10.1002/macp.202200424"
+    },
+    {
+      "id": "FRACTIONATED_CRYSTALLIZATION",
+      "title": "Fractionated crystallization in semicrystalline polymers",
+      "publisher": "Progress in Polymer Science",
+      "kind": "Open-access review",
+      "url": "https://doi.org/10.1016/J.PROGPOLYMSCI.2021.101376"
+    },
+    {
+      "id": "PA_AMORPHOUS_SEMICRYSTALLINE",
+      "title": "Mechanical properties of amorphous and semi-crystalline semi-aromatic polyamides",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7184259/"
+    },
+    {
+      "id": "CRYSTALLIZATION_KINETICS",
+      "title": "Activation energies and temperature dependencies of polymer crystallization and melting",
+      "publisher": "Polymers",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7284786/"
+    },
+    {
+      "id": "PP_COOLING_CRYSTALLIZATION",
+      "title": "Influence of cooling rate on crystallization behavior of semi-crystalline polypropylene",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://www.mdpi.com/2073-4360/14/17/3646"
+    },
+    {
+      "id": "RHEO_MEASUREMENTS",
+      "title": "Rheological measurements and structural analysis of polymeric materials",
+      "publisher": "Polymers",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8038039/"
+    },
+    {
+      "id": "ROLE_RHEOLOGY",
+      "title": "The role of structure in polymer rheology",
+      "publisher": "Polymers",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8951770/"
+    },
+    {
+      "id": "LDPE_RHEOLOGY",
+      "title": "Connecting LDPE microstructure to rheology and processing properties",
+      "publisher": "RSC Advances",
+      "kind": "Open-access research article",
+      "url": "https://doi.org/10.1039/D1RA03749H"
+    },
+    {
+      "id": "PP_PRETREATMENT",
+      "title": "Pretreatment effects on molecular and rheological properties of polypropylene",
+      "publisher": "Rheologica Acta",
+      "kind": "Open-access research article",
+      "url": "https://link.springer.com/article/10.1007/s00397-024-01437-z"
+    },
+    {
+      "id": "EXTENSIONAL_FLOW",
+      "title": "Recoverable extensional flow of polymer melts and its relevance for processing",
+      "publisher": "Polymers",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7408504/"
+    },
+    {
+      "id": "MOISTURE_BIOPOLYESTER",
+      "title": "Effect of moisture content on processing and mechanical properties of a biodegradable polyester",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8156231/"
+    },
+    {
+      "id": "MOISTURE_POLYAMIDE",
+      "title": "Effect of moisture on polyamide processing and properties",
+      "publisher": "Applied Sciences",
+      "kind": "Open-access research article",
+      "url": "https://www.mdpi.com/2076-3417/12/3/1410"
+    },
+    {
+      "id": "PLA_DEGRADATION",
+      "title": "Review on degradation of polylactic acid during melt processing",
+      "publisher": "Polymers",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10181416/"
+    },
+    {
+      "id": "PLA_PROCESSING",
+      "title": "Impact of melt processing conditions on degradation of polylactic acid",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9320002/"
+    },
+    {
+      "id": "POLYMER_MELT_FLOW",
+      "title": "Modeling and experimental studies on polymer melting and flow in injection molding",
+      "publisher": "Polymers",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9145449/"
+    },
+    {
+      "id": "FILLING_MODELING_REVIEW",
+      "title": "Numerical modeling and simulation of the injection molding filling phase: a review",
+      "publisher": "Polymers",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10649546/"
+    },
+    {
+      "id": "SCREW_CONVEYING",
+      "title": "Melt conveying in single-screw extruders: modeling and simulation",
+      "publisher": "Polymers",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8912815/"
+    },
+    {
+      "id": "SCREW_MOTION",
+      "title": "Control strategy of screw motion during plasticizing in an all-electric injection molding machine",
+      "publisher": "International Journal of Automation Technology",
+      "kind": "Open-access research article",
+      "url": "https://www.jstage.jst.go.jp/article/ijat/12/2/12_215/_article/-char/ja"
+    },
+    {
+      "id": "SWITCHOVER_REVIEW",
+      "title": "From manual to automated: switchover methods in injection molding processes",
+      "publisher": "Polymers",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12030100/"
+    },
+    {
+      "id": "NOZZLE_SCREW_SETUP",
+      "title": "Nozzle-pressure and screw-position methods for scientific injection molding setup",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11769299/"
+    },
+    {
+      "id": "AVIENT_PROCESS",
+      "title": "Injection molding: mold processing",
+      "publisher": "Avient",
+      "kind": "Public manufacturer technical article",
+      "url": "https://www.avient.com/resources/knowledge-base/article/injection-molding-mold-processing"
+    },
+    {
+      "id": "POLYSURE_GUIDE",
+      "title": "Technical guide to the injection molding process",
+      "publisher": "Polysure",
+      "kind": "Public manufacturer guide",
+      "url": "https://www.hmel.in/wp-content/uploads/2025/08/technical_guide_to_Injection_moulding_process__polysure_products-final_small.pdf"
+    },
+    {
+      "id": "XOMETRY_DESIGN",
+      "title": "Injection molding design guide",
+      "publisher": "Xometry",
+      "kind": "Public manufacturing design guide",
+      "url": "https://xometry.pro/wp-content/uploads/2025/03/EN-eBook_-Injection-Molding-Design-Guide.pdf"
+    },
+    {
+      "id": "BASF_TROUBLESHOOTER",
+      "title": "Injection-molding problems in engineering thermoplastics: causes and solutions",
+      "publisher": "BASF",
+      "kind": "Public manufacturer troubleshooting guide",
+      "url": "https://download.basf.com/p1/8a8082587fd4b608017fd6631d5a24b1/en/Injection-Molding_Problems_in_Engineering_Thermoplastics_-_Causes_and_Solutions_Brochure_English.pdf?view="
+    },
+    {
+      "id": "EASTMAN_TROUBLESHOOTER",
+      "title": "Injection molding troubleshooting guide for Eastman copolyesters",
+      "publisher": "Eastman",
+      "kind": "Public manufacturer troubleshooting guide",
+      "url": "https://www.eastman.com/content/dam/eastman/corporate/en/literature/p/ppd407.pdf"
+    },
+    {
+      "id": "ENTEC_TROUBLESHOOTER",
+      "title": "Troubleshooting guide for injection molding",
+      "publisher": "Entec Polymers",
+      "kind": "Public manufacturer guide",
+      "url": "https://s3.amazonaws.com/entecpolymers.com/v3/uploads/content/Troubleshooting-Guide-For-Injection-Molding.pdf"
+    },
+    {
+      "id": "LYONDELL_OXIDATION",
+      "title": "Minimizing oxidation during injection molding",
+      "publisher": "LyondellBasell",
+      "kind": "Public manufacturer technical tip",
+      "url": "https://www-prod.lyondellbasell.com/492c52/globalassets/documents/polymers-technical-literature/tech-topic-minimize-oxidation.pdf"
+    },
+    {
+      "id": "BASF_ULTRADUR",
+      "title": "Ultradur PBT: injection molding processing guide",
+      "publisher": "BASF",
+      "kind": "Public manufacturer processing guide",
+      "url": "https://download.basf.com/p1/8a8081c57fd4b609017fdf6cfd252296/en/Ultradur%3Csup%3E%C2%AE%3Csup%3E_Product_Brochure_Brochure_ingl%C3%AAs.pdf?view="
+    },
+    {
+      "id": "BASF_ULTRAMID_B3Z1",
+      "title": "Ultramid B3Z1: processing data sheet",
+      "publisher": "BASF",
+      "kind": "Public grade-specific processing data",
+      "url": "https://download.basf.com/p1/8a8081c57fd4b609017fd65fb4f9262d/en/ULTRAMID%25C2%25AE_B3Z1"
+    },
+    {
+      "id": "BASF_PPA",
+      "title": "Ultramid Advanced PPA portfolio",
+      "publisher": "BASF",
+      "kind": "Public manufacturer materials guide",
+      "url": "https://plastics-rubber.basf.com/global/en/performance_polymers/fpgs/polyphthalamides"
+    },
+    {
+      "id": "BASF_ULTRASON_GUIDE",
+      "title": "Ultrason: injection molding guide",
+      "publisher": "BASF",
+      "kind": "Public manufacturer processing guide",
+      "url": "https://download.basf.com/p1/8a8082587fd4b608017fd63a5b89232b/en/Ultrason%3Csup%3E%C2%AE%3Csup%3E_Injection_Molding"
+    },
+    {
+      "id": "BASF_ULTRASON_PAGE",
+      "title": "Ultrason PSU, PESU and PPSU product family",
+      "publisher": "BASF",
+      "kind": "Public manufacturer materials guide",
+      "url": "https://plastics-rubber.basf.com/global/en/performance_polymers/products/ultrason"
+    },
+    {
+      "id": "PEEK_CRYSTALLINITY",
+      "title": "Crystallinity and rheological behavior of PEEK during non-isothermal conditions",
+      "publisher": "Journal of Applied Polymer Science",
+      "kind": "Open-access research article",
+      "url": "https://onlinelibrary.wiley.com/doi/10.1002/app.56039"
+    },
+    {
+      "id": "PEEK_REPROCESSING",
+      "title": "Effects of non-isothermal molding and reprocessing on crystallinity and properties of PEEK and CF/PEEK",
+      "publisher": "Scientific Reports",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12066722/"
+    },
+    {
+      "id": "VICTREX_PEEK_GUIDE",
+      "title": "VICTREX PEEK injection molding processing guide",
+      "publisher": "Victrex",
+      "kind": "Public manufacturer processing guide",
+      "url": "https://www.victrex.com/-/media/downloads/technical-guides/victrex_injection-molding-brochure_jan2022.pdf?rev=a42395690d1a47ebbb400d3760b12a90"
+    },
+    {
+      "id": "VICTREX_GUIDE_PAGE",
+      "title": "VICTREX PEEK injection molding brochure",
+      "publisher": "Victrex",
+      "kind": "Public manufacturer guide page",
+      "url": "https://www.victrex.com/en/downloads/technical-guides/victrex-peek-injection-molding-brochure"
+    },
+    {
+      "id": "FIBER_FRONTIERS",
+      "title": "Fiber-orientation model parameters for injection molding simulation",
+      "publisher": "Frontiers in Materials",
+      "kind": "Open-access research article",
+      "url": "https://www.frontiersin.org/journals/materials/articles/10.3389/fmats.2023.1152471/full"
+    },
+    {
+      "id": "FIBER_GATE_DESIGN",
+      "title": "Gate-design optimization for fiber reinforcement in thermoplastic injection molding",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10383589/"
+    },
+    {
+      "id": "FIBER_UNCERTAINTY",
+      "title": "Fiber-orientation states under manufacturing uncertainties in injection-molded parts",
+      "publisher": "Applied Composite Materials",
+      "kind": "Open-access research article",
+      "url": "https://link.springer.com/article/10.1007/s10443-024-10268-3"
+    },
+    {
+      "id": "FIBER_MODEL_ACCURACY",
+      "title": "Modeling fiber orientation and properties in injection-molded glass-fiber thermoplastics",
+      "publisher": "Materials",
+      "kind": "Open-access research article",
+      "url": "https://www.mdpi.com/1996-1944/15/13/4720"
+    },
+    {
+      "id": "AUTODESK_FIBER_ANALYSIS",
+      "title": "Fiber orientation analysis",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2023/ENU/MoldflowInsight-CLC-Analyses/files/analysis-sequences/MoldflowInsight_CLC_Analyses_analysis_sequences_Fiber_orientation_analysis_html.html"
+    },
+    {
+      "id": "AUTODESK_FIBER_BASIS",
+      "title": "Theoretical basis for fiber-orientation prediction",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2024/ENU/MoldflowInsight-CLC-Analyses/files/analysis-sequences/Fiber-orientation-analysis/MoldflowInsight_CLC_Analyses_analysis_sequences_Fiber_orientation_analysis_Theoretical_basis_for_fiber_html.html"
+    },
+    {
+      "id": "AUTODESK_FIBER_TENSOR",
+      "title": "Fiber-orientation tensor result",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2024/ENU/MoldflowInsight-CLC-Results/files/Fiber-orientation-results/MoldflowInsight_CLC_Results_Fiber_orientation_results_Fiber_orientation_tensor_result_html.html"
+    },
+    {
+      "id": "AUTODESK_FIBER_MODELS",
+      "title": "Moldflow fiber-orientation models",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2024/ENU/MoldflowInsight-CLC-Analyses/files/analysis-sequences/Fiber-orientation-analysis/MoldflowInsight_CLC_Analyses_analysis_sequences_Fiber_orientation_analysis_Moldflow_s_fiber_orientation_html.html"
+    },
+    {
+      "id": "PMC_COOLING_CAVITY",
+      "title": "Injection-mold cavity materials and cooling rates: a review",
+      "publisher": "Materials",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8658370/"
+    },
+    {
+      "id": "PMC_TEMP_CONTROL",
+      "title": "Temperature-control strategies for injection molding: a review",
+      "publisher": "Polymers",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9230000/"
+    },
+    {
+      "id": "PMC_CLOSE_CONTOUR",
+      "title": "Optimized close-contour cooling for injection molding tools",
+      "publisher": "Materials",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8234209/"
+    },
+    {
+      "id": "PMC_SLENDER_COOLING",
+      "title": "Conformal cooling for complex slender injection-molded parts",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9921164/"
+    },
+    {
+      "id": "PMC_CONFORMAL_REVIEW",
+      "title": "Conformal cooling, models and optimization for injection molding: a review",
+      "publisher": "Energies",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11991609/"
+    },
+    {
+      "id": "PMC_COOLING_TIME",
+      "title": "Cooling time, demolding temperature, shrinkage and warpage of injection-molded polypropylene parts",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13467870/"
+    },
+    {
+      "id": "KUO_COOLING_WARPAGE",
+      "title": "Improving warpage and cooling time of injection molded parts",
+      "publisher": "International Journal of Advanced Manufacturing Technology",
+      "kind": "Open-access research article",
+      "url": "https://doi.org/10.1007/s00170-022-09925-3"
+    },
+    {
+      "id": "DEMOLDING_REVIEW",
+      "title": "Demolding forces in injection molding: a review",
+      "publisher": "International Journal of Advanced Manufacturing Technology",
+      "kind": "Open-access review",
+      "url": "https://link.springer.com/article/10.1007/s00170-024-14748-5"
+    },
+    {
+      "id": "AUTODESK_FILL_PHASES",
+      "title": "How plastic fills a mold",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2023/ENU/MoldflowInsight-CLC-Processing-Cond/files/GUID-66A1762F-CC20-486D-8EAA-3001A7FFD39C.html"
+    },
+    {
+      "id": "AUTODESK_CYCLE_TIME",
+      "title": "Cycle time",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2023/ENU/MoldflowInsight-CLC-Processing-Cond/files/GUID-0D68C3B7-B64C-419C-B114-C5DABF71FECA.html"
+    },
+    {
+      "id": "AUTODESK_FEED_SYSTEM",
+      "title": "Feed system",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2026/ENU/MoldflowInsight-CLC-Modelprep/files/GUID-B9F7BCFF-6129-4759-A7F0-DBD72DFB6F5D.html"
+    },
+    {
+      "id": "AUTODESK_RUNNERS",
+      "title": "Runners",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2019/ENU/MoldflowComm-Modelprep/files/GUID-650F0B0C-9FC6-43BF-AC1D-62851DFFE23A.htm"
+    },
+    {
+      "id": "AUTODESK_RUNNER_LAYOUT",
+      "title": "Designing the runner layout",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2018/ENU/MoldflowInsight/files/GUID-339E4DFC-4EE1-419E-8192-244CA5B6F09E.htm"
+    },
+    {
+      "id": "AUTODESK_UNBALANCED",
+      "title": "Unbalanced flow in multi-cavity molds",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2026/ENU/MoldflowComm-CLC-Modelprep/files/Feed-system/Runners/Runner-systems-for-multi-cavity/MoldflowComm_CLC_Modelprep_Feed_system_Runners_Runner_systems_for_multi_cavity_Unbalanced_flow_in_multi_cavity_html.html"
+    },
+    {
+      "id": "AUTODESK_RUNNER_BALANCE",
+      "title": "Runner balance analysis",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2024/ENU/MoldflowAdviser-CLC-Analyses/files/analysis-sequences/MoldflowAdviser_CLC_Analyses_analysis_sequences_Runner_Balance_analysis_html.html"
+    },
+    {
+      "id": "MDPI_MULTI_CAVITY",
+      "title": "Runner, gate, viscosity and process effects on multi-cavity filling imbalance",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://www.mdpi.com/2073-4360/16/20/2874"
+    },
+    {
+      "id": "MDPI_RUNNER_DESIGN",
+      "title": "Semi-analytical design of a multi-cavity injection mold runner system",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://www.mdpi.com/2073-4360/14/24/5442"
+    },
+    {
+      "id": "OPEN_RUNNER_OPTIMIZATION",
+      "title": "Pressure-controlled runner optimization for multi-cavity molds",
+      "publisher": "European Journal of Research and Development",
+      "kind": "Open-access research article",
+      "url": "https://doi.org/10.56038/ejrnd.v5i1.720"
+    },
+    {
+      "id": "SYNVENTIVE_HOTRUNNER",
+      "title": "The hot runner guide: layout and design",
+      "publisher": "Synventive",
+      "kind": "Public manufacturer design guide",
+      "url": "https://20046132.fs1.hubspotusercontent-na1.net/hubfs/20046132/CAT-14-0001_EN-Hot%20Runner%20Guide-1.pdf"
+    },
+    {
+      "id": "MOLDMASTERS_MANUAL",
+      "title": "Hot runner system user manual",
+      "publisher": "Mold-Masters",
+      "kind": "Public manufacturer user manual",
+      "url": "https://www.moldmasters.com/sites/default/files/2021-11/ENG%20HR%20UM.pdf"
+    },
+    {
+      "id": "AUTODESK_AIR_TRAPS",
+      "title": "Air traps and vents result",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2018/ENU/MoldflowComm-Results/files/GUID-2CD58A67-4D86-4975-B07C-F91EE32CE65D.htm"
+    },
+    {
+      "id": "AUTODESK_AIR_TROUBLE",
+      "title": "Air traps troubleshooting",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2019/ENU/MoldflowComm-Troubleshooting/files/GUID-7BD14FDA-D344-4131-87A0-37FFB8B8FA39.htm"
+    },
+    {
+      "id": "VACUUM_VENTING",
+      "title": "Efficient injection molding using active vacuum venting",
+      "publisher": "Procedia CIRP",
+      "kind": "Open-access research article",
+      "url": "https://www.sciencedirect.com/science/article/pii/S2212827125003890"
+    },
+    {
+      "id": "VACUUM_VENTING_REPO",
+      "title": "Seal-less vacuum venting for injection molding",
+      "publisher": "University of Malta Open Access Repository",
+      "kind": "Open research paper",
+      "url": "https://www.um.edu.mt/library/oar/handle/123456789/146775"
+    },
+    {
+      "id": "MICRO_VENTING",
+      "title": "High-temperature adiabatic heating in micro-injection-mold cavities: venting design",
+      "publisher": "Swansea University repository",
+      "kind": "Open-access research article",
+      "url": "https://cronfa.swansea.ac.uk/Record/cronfa53889"
+    },
+    {
+      "id": "AUTODESK_COOL_CIRCUIT",
+      "title": "Cooling circuit design",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2026/ENU/MoldflowComm-CLC-Modelprep/files/Cooling-system/Cooling-circuits/MoldflowComm_CLC_Modelprep_Cooling_system_Cooling_circuits_Cooling_circuit_design_html.html"
+    },
+    {
+      "id": "AUTODESK_COOL_FEATURES",
+      "title": "Features of Cool analysis",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2025/ENU/MoldflowComm-CLC-Analyses/files/analysis-sequences/Cool-analysis-products/MoldflowComm_CLC_Analyses_analysis_sequences_Cool_analysis_products_Features_of_Cool_analysis_html.html"
+    },
+    {
+      "id": "AUTODESK_FREEZE_TIME",
+      "title": "Time to freeze is much greater than average",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2024/ENU/MoldflowAdviser-CLC-Results/files/Cooling-Quality-analysis-results/Cooling-quality-result-1/Low-Cooling-Quality/MoldflowAdviser_CLC_Results_Cooling_Quality_analysis_results_Cooling_quality_result_1_Low_Cooling_Quality_Time_to_freeze_is_much_greater_html.html"
+    },
+    {
+      "id": "AUTODESK_COOL_STAGE",
+      "title": "Cooling stage",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2024/ENU/MoldflowAdviser-CLC-Ref-Materials/files/glossary-of-terminology/MoldflowAdviser_CLC_Ref_Materials_glossary_of_terminology_Cooling_stage_html.html"
+    },
+    {
+      "id": "AUTODESK_COOLANT",
+      "title": "About coolant inlet temperature",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2025/ENU/MoldflowComm-CLC-Modelprep/files/Cooling-system/About-coolants/MFLO_ABOUT_COOLANT_INLET_TEMPERATURE.html"
+    },
+    {
+      "id": "AUTODESK_DRAFT",
+      "title": "Draft angle result",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2025/ENU/MoldflowAdviser-CLC-Results/files/Design-Adviser-results/MoldflowAdviser_CLC_Results_Design_Adviser_results_Draft_Angle_result_html.html"
+    },
+    {
+      "id": "PMC_WARPAGE_REVIEW",
+      "title": "Review of shrinkage and warpage in injection-molded plastics",
+      "publisher": "Polymers",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8831005/"
+    },
+    {
+      "id": "PMC_THERMOELASTICITY",
+      "title": "Thermoelasticity of injection-molded parts",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10347053/"
+    },
+    {
+      "id": "PMC_WARPAGE_INVERSE",
+      "title": "Warpage optimization of molded parts using inverse contouring",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC12431507/"
+    },
+    {
+      "id": "PMC_MULTIOBJECTIVE",
+      "title": "Multi-objective optimization of injection molding using a dashboard study",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11467200/"
+    },
+    {
+      "id": "PVT_MEASUREMENT",
+      "title": "Specific-volume measurement of polymers under simulated injection molding conditions",
+      "publisher": "Materials & Design",
+      "kind": "Open-access research article",
+      "url": "https://doi.org/10.1016/j.matdes.2020.109136"
+    },
+    {
+      "id": "THINWALL_WARPAGE",
+      "title": "Experimental and numerical study of warpage in thin-wall injection molding",
+      "publisher": "Advances in Polymer Technology",
+      "kind": "Open-access research article",
+      "url": "https://doi.org/10.1155/2020/2914801"
+    },
+    {
+      "id": "THINWALL_PP",
+      "title": "Simulation of unfilled and reinforced polypropylene in thin-wall injection molding",
+      "publisher": "Advances in Polymer Technology",
+      "kind": "Open-access research article",
+      "url": "https://doi.org/10.1155/2015/659321"
+    },
+    {
+      "id": "PLOS_THINWALL",
+      "title": "Mold-temperature control and weld-line strength in thin-wall injection molding",
+      "publisher": "PLOS ONE",
+      "kind": "Open-access research article",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0337889"
+    },
+    {
+      "id": "MDPI_THINWALL",
+      "title": "Optimization of injection molding parameters for thin-wall automotive parts",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://www.mdpi.com/2073-4360/18/1/91"
+    },
+    {
+      "id": "SAGE_THINWALL",
+      "title": "External gas-assisted mold-temperature control for thin-wall injection molding",
+      "publisher": "Advances in Mechanical Engineering",
+      "kind": "Open-access research article",
+      "url": "https://journals.sagepub.com/doi/10.1177/1687814018806102"
+    },
+    {
+      "id": "MICRO_INJECTION_REVIEW",
+      "title": "Micro-injection molding of polymeric micro-devices: a review",
+      "publisher": "Polymers",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9504769/"
+    },
+    {
+      "id": "WELD_REVIEW",
+      "title": "Weld lines and their strength in injection-molded parts: a review",
+      "publisher": "Polymer Engineering & Science",
+      "kind": "Open-access review",
+      "url": "https://4spepublications.onlinelibrary.wiley.com/doi/10.1002/pen.26470"
+    },
+    {
+      "id": "WELD_MICRO",
+      "title": "Analysis of weld lines in micro-injection molding",
+      "publisher": "Materials",
+      "kind": "Open-access research article",
+      "url": "https://www.mdpi.com/1996-1944/16/17/6053"
+    },
+    {
+      "id": "WELD_GF",
+      "title": "Tensile strength of weld lines in glass-fiber composite injection molding",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11277594/"
+    },
+    {
+      "id": "WELD_PA6",
+      "title": "Mold-temperature control and weld-line strength in polyamide injection molding",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11340943/"
+    },
+    {
+      "id": "AUTODESK_FLOW_TEMP",
+      "title": "Flow-front temperature result",
+      "publisher": "Autodesk Fusion Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/ENU/Fusion-Simulate/files/SIM-FIM-FLOW-FRONT-TEMP-CPT.htm"
+    },
+    {
+      "id": "AUTODESK_SHORT_SHOT",
+      "title": "Troubleshooting short-shot problems",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2021/ENU/MoldflowInsight-CLC-Troubleshoot/files/Troubleshooting-molding-problems/MoldflowInsight_CLC_Troubleshoot_Troubleshooting_molding_problems_Troubleshooting_short_shot_html.html"
+    },
+    {
+      "id": "AUTODESK_FLASH",
+      "title": "Flash: injection-molding defect glossary",
+      "publisher": "Autodesk Inventor Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2026/ENU/Inventor-Help/files/GUID-63A5DCE8-2B43-494F-8F56-7A7CBBAD41FC.htm"
+    },
+    {
+      "id": "AUTODESK_BURN",
+      "title": "Troubleshooting burn-mark problems",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2021/ENU/MoldflowInsight-CLC-Troubleshoot/files/Troubleshooting-molding-problems/MoldflowInsight_CLC_Troubleshoot_Troubleshooting_molding_problems_Troubleshooting_burn_marks_html.html"
+    },
+    {
+      "id": "AUTODESK_STREAK",
+      "title": "White streak marks / silver streaks",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2015/ENU/MoldflowInsight360/files/GUID-01820913-9E00-4F09-9DF3-53F1F4D2583C.htm"
+    },
+    {
+      "id": "AUTODESK_SINK",
+      "title": "Troubleshooting sink marks and voids",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2024/ENU/MoldflowComm-CLC-Troubleshoot/files/Troubleshooting-molding-problems/LM_SINK_MARKS_AND_VOIDS.html"
+    },
+    {
+      "id": "AUTODESK_SINK_INDEX",
+      "title": "Sink-marks index result",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2025/ENU/MoldflowComm-CLC-Results/files/Fill-or-flow-results/CONC_ANALYSIS_RESULT_PACK_SINK_INDEX.html"
+    },
+    {
+      "id": "AUTODESK_WARP",
+      "title": "Warp analysis",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2026/ENU/MoldflowComm-CLC-Analyses/files/analysis-sequences/MoldflowComm_CLC_Analyses_analysis_sequences_Warp_analysis_html.html"
+    },
+    {
+      "id": "AUTODESK_WARP_TROUBLE",
+      "title": "Warpage problems troubleshooting",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2017/ENU/MoldflowComm-UsersGuide/files/GUID-D16B2E77-76D7-469C-B707-E8F3564D2488.htm"
+    },
+    {
+      "id": "AUTODESK_WARP_PREP",
+      "title": "Preparing a model for warp analysis",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2025/ENU/MoldflowInsight-CLC-Analyses/files/analysis-sequences/Warp-analysis/MFLO_PREPARING_THE_MODEL_FOR_WARP_ANALYSIS.html"
+    },
+    {
+      "id": "MDPI_BURN",
+      "title": "Reducing burn marks in injection-molded parts",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://www.mdpi.com/2073-4360/13/23/4087"
+    },
+    {
+      "id": "SILVER_STREAKS",
+      "title": "Silver-streak formation in recycled polypropylene injection molding",
+      "publisher": "Journal of Manufacturing Processes",
+      "kind": "Open-access research article",
+      "url": "https://www.sciencedirect.com/science/article/pii/S1755581725001592"
+    },
+    {
+      "id": "OPEN_SOURCE_MONITOR",
+      "title": "Open-source injection-mold monitoring system",
+      "publisher": "Machines",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10098985/"
+    },
+    {
+      "id": "INMOLD_SENSORS",
+      "title": "In-mold sensors for injection molding: on the way to Industry 4.0",
+      "publisher": "Sensors",
+      "kind": "Open-access review",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC6720700/"
+    },
+    {
+      "id": "PRESSURE_DIAGNOSIS",
+      "title": "In-cavity pressure measurements for failure diagnosis in injection molding",
+      "publisher": "International Journal of Advanced Manufacturing Technology",
+      "kind": "Open-access research article",
+      "url": "https://link.springer.com/article/10.1007/s00170-023-11100-1"
+    },
+    {
+      "id": "BARREL_NOZZLE_SENSING",
+      "title": "Real-time sensing in barrel, nozzle and mold cavity for injection molding",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9268792/"
+    },
+    {
+      "id": "ONLINE_QUALITY",
+      "title": "Online quality control for injection molding processes",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC9025472/"
+    },
+    {
+      "id": "MDPI_ADAPTIVE_SENSORS",
+      "title": "Scientific molding and adaptive process-quality control with external sensors",
+      "publisher": "Technologies",
+      "kind": "Open-access research article",
+      "url": "https://www.mdpi.com/2227-7080/13/3/97"
+    },
+    {
+      "id": "PROCESS_WINDOW",
+      "title": "Experimental determination of an injection-molding process window",
+      "publisher": "Polymers",
+      "kind": "Open-access research article",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC10422203/"
+    },
+    {
+      "id": "PROCESS_STABILITY_WEIGHT",
+      "title": "Process stability in injection molding based on part weight",
+      "publisher": "Journal of Mechanical and Energy Engineering",
+      "kind": "Open research article",
+      "url": "https://www.jmee.tu.koszalin.pl/ojs/index.php/jmee/article/view/290"
+    },
+    {
+      "id": "MICRO_ACCURACY",
+      "title": "Precision and accuracy in micro and conventional injection molding",
+      "publisher": "Procedia CIRP",
+      "kind": "Open-access research article",
+      "url": "https://www.sciencedirect.com/science/article/pii/S2212827118305626"
+    },
+    {
+      "id": "NIST_HANDBOOK",
+      "title": "NIST/SEMATECH Engineering Statistics Handbook",
+      "publisher": "US National Institute of Standards and Technology",
+      "kind": "Open technical handbook",
+      "url": "https://www.nist.gov/programs-projects/nistsematech-engineering-statistics-handbook"
+    },
+    {
+      "id": "NIST_MPC_GAUGE",
+      "title": "Gauge R&R studies",
+      "publisher": "NIST/SEMATECH Handbook",
+      "kind": "Open technical handbook chapter",
+      "url": "https://www.itl.nist.gov/div898/handbook/mpc/section4/mpc4.htm"
+    },
+    {
+      "id": "NIST_REPEATABILITY",
+      "title": "Analysis of repeatability in gauge studies",
+      "publisher": "NIST/SEMATECH Handbook",
+      "kind": "Open technical handbook chapter",
+      "url": "https://itl.nist.gov/div898/handbook/mpc/section4/mpc441.htm"
+    },
+    {
+      "id": "NIST_CAPABILITY",
+      "title": "What is process capability?",
+      "publisher": "NIST/SEMATECH Handbook",
+      "kind": "Open technical handbook chapter",
+      "url": "https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc16.htm"
+    },
+    {
+      "id": "NIST_CONTROL_METHODS",
+      "title": "Process-control techniques",
+      "publisher": "NIST/SEMATECH Handbook",
+      "kind": "Open technical handbook chapter",
+      "url": "https://www.itl.nist.gov/div898/handbook/pmc/section1/pmc12.htm"
+    },
+    {
+      "id": "NIST_CONTROL_CHARTS",
+      "title": "What are control charts?",
+      "publisher": "NIST/SEMATECH Handbook",
+      "kind": "Open technical handbook chapter",
+      "url": "https://www.itl.nist.gov/div898/handbook/pmc/section3/pmc31.htm"
+    },
+    {
+      "id": "NIST_UNCERTAINTY",
+      "title": "Measurement uncertainty resources",
+      "publisher": "US National Institute of Standards and Technology",
+      "kind": "Open technical guidance",
+      "url": "https://www.nist.gov/itl/sed/topic-areas/measurement-uncertainty"
+    },
+    {
+      "id": "NIST_DOE_SELECT",
+      "title": "How to select an experimental design",
+      "publisher": "NIST/SEMATECH Handbook",
+      "kind": "Open technical handbook chapter",
+      "url": "https://itl.nist.gov/div898/handbook/pri/section3/pri33.htm"
+    },
+    {
+      "id": "NIST_RESPONSE_SURFACE",
+      "title": "Response-surface designs",
+      "publisher": "NIST/SEMATECH Handbook",
+      "kind": "Open technical handbook chapter",
+      "url": "https://www.itl.nist.gov/div898/handbook/pri/section3/pri336.htm"
+    },
+    {
+      "id": "NIST_DOE_MODEL",
+      "title": "How to model DOE data",
+      "publisher": "NIST/SEMATECH Handbook",
+      "kind": "Open technical handbook chapter",
+      "url": "https://itl.nist.gov/div898/handbook/pri/section4/pri43.htm"
+    },
+    {
+      "id": "NIST_PROCESS_OPTIMIZATION",
+      "title": "Process optimization using fitted models",
+      "publisher": "NIST/SEMATECH Handbook",
+      "kind": "Open technical handbook chapter",
+      "url": "https://itl.nist.gov/div898/handbook/pmd/section5/pmd53.htm"
+    },
+    {
+      "id": "NIST_EXPLORATORY",
+      "title": "Exploratory data analysis",
+      "publisher": "NIST/SEMATECH Handbook",
+      "kind": "Open technical handbook chapter",
+      "url": "https://www.itl.nist.gov/div898/handbook/eda/eda.htm"
+    },
+    {
+      "id": "AUTODESK_CLAMP_FORCE",
+      "title": "Clamp force",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2015/ENU/MoldflowAdvisor/files/GUID-73BF9FA2-9CBE-46F4-B324-58FB7EB6E853.htm"
+    },
+    {
+      "id": "AUTODESK_CLAMP_RESULT",
+      "title": "Clamp-force result",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2023/ENU/MoldflowInsight-CLC-Results/files/Fill-or-flow-results/MoldflowInsight_CLC_Results_Fill_or_flow_results_Clamp_force_result_html.html"
+    },
+    {
+      "id": "AUTODESK_CLAMP_MODEL",
+      "title": "Modeling for accurate clamp-force prediction",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2019/ENU/MoldflowInsight-Modelprep/files/GUID-5C97629F-C5C5-4A6D-BD2A-55FE6A4A5EE2.htm"
+    },
+    {
+      "id": "AUTODESK_PRESSURE_DROP",
+      "title": "Pressure-drop result",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2025/ENU/MoldflowAdviser-CLC-Results/files/Fill-or-flow-results/GUID-940E6422-400B-4C92-823B-C00A0E1AD6B5.html"
+    },
+    {
+      "id": "AUTODESK_FILL_SETTINGS",
+      "title": "Fill-process settings",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2025/ENU/MoldflowInsight-CLC-Analyses/files/analysis-sequences/Fill-analysis/MoldflowInsight_CLC_Analyses_analysis_sequences_Fill_analysis_Process_Settings_Wizard_dialog_12_html.html"
+    },
+    {
+      "id": "AUTODESK_FAST_FILL",
+      "title": "Fast-fill process settings",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2026/ENU/MoldflowComm-CLC-Analyses/files/analysis-sequences/Fill-analysis/Fast-fill-analysis/MoldflowComm_CLC_Analyses_analysis_sequences_Fill_analysis_Fast_fill_analysis_Process_Settings_Wizard_dialog_14_html.html"
+    },
+    {
+      "id": "AUTODESK_DOE",
+      "title": "Design-of-experiments analysis",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2024/ENU/MoldflowInsight-CLC-Optimize-Analyses/files/GUID-2ED35719-4C81-4CFC-AF24-952CAFD2CC30.html"
+    },
+    {
+      "id": "AUTODESK_DOE_SETUP",
+      "title": "Setting up a DOE analysis",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2017/ENU/MoldflowInsight/files/GUID-0E1FA8D8-8E82-40EE-AEEC-A7731C7218DF.htm"
+    },
+    {
+      "id": "NATURE_ADAPTIVE_DOE",
+      "title": "Bayesian adaptive design of experiments for injection molding optimization",
+      "publisher": "Scientific Reports",
+      "kind": "Open-access research article",
+      "url": "https://www.nature.com/articles/s41598-024-80405-2"
+    },
+    {
+      "id": "WELD_AUTODESK",
+      "title": "Weld and meld line troubleshooting",
+      "publisher": "Autodesk Moldflow Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/2019/ENU/MoldflowComm-Troubleshooting/files/GUID-099634AE-DB7A-41BA-B70C-5A23FB013B06.htm"
+    },
+    {
+      "id": "WELD_AUTODESK_RESULT",
+      "title": "Weld-line result",
+      "publisher": "Autodesk Fusion Help",
+      "kind": "Public technical help",
+      "url": "https://help.autodesk.com/cloudhelp/ENU/Fusion-Simulate/files/SIM-FIM-WELD-LINE-RESULT-CPT.htm"
+    },
+    {
+      "id": "RJG_DECOUPLED",
+      "title": "Decoupled molding workshop — public course outline",
+      "publisher": "RJG, Inc.",
+      "kind": "Public training outline",
+      "url": "https://rjginc.com/training/registration/decoupled-molding-workshop/"
+    }
+  ]
+}

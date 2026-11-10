@@ -17,7 +17,7 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.11.08.5`
+- PWA / browser shell: `2026.11.09.1`
 - Open Windows desktop: `2026.09.29.1`
 - Android shell: `2026.11.08.1` (WebView content: hosted `/preview/`, currently web release `2026.11.08.5`)
 - Training content: `2026.08.26.1`

@@ -1,21 +1,21 @@
 {
   "schemaVersion": 1,
   "bookId": "mouldmaster-book",
-  "release": "2026.10.22.2",
+  "release": "2026.11.09.1",
   "status": "repository-technical-review-complete",
-  "reviewType": "editorial-expansion-claim-boundary-review",
-  "purpose": "Bind chapter-depth additions, reader consolidation and redundancy cleanup to the existing governed claim inventory without implying independent human SME approval.",
-  "reviewBoundary": "Repository-controlled content and source review only. It records editorial deletions and additions, and checks new explanations against existing governed claim scopes; it is not independent human SME validation and cannot create machine-, mould-, grade-, product- or site-specific production authority.",
+  "reviewType": "book-wide-editorial-rewrite-and-claim-boundary-review",
+  "purpose": "Bind the book-wide instructional rewrite, material-science foundations, reader consolidation and repetition reduction to the existing governed claim inventory without implying independent human SME approval.",
+  "reviewBoundary": "Repository-level editorial and technical-source review of all 46 authored modules. It checks clarity, progression, terminology, applicability, source fit and consistency with mapped existing claims. It is not independent peer review, external SME approval, device validation, accreditation or production authorization.",
   "readerArchitecture": {
     "path": "data/book-reader-architecture-v2.json",
-    "gitBlobSha1": "605d1b4fd92b03f1b11fc9a79f2cd2b8bbdd409e",
+    "gitBlobSha1": "cd913f6228cd2eab9f48f7c98b3668a850f26c64",
     "conclusion": "derived-reader-scaffolding-without-new-technical-claims"
   },
   "reviewedModules": [
     {
       "moduleId": "what-injection-moulding-is",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "c983d1e910089bde2ee4a679418803821bd3f765",
+      "authoredGitBlobSha1": "cacdd6d3e116f33595392ff3fc61b40526ebf20e",
       "governedClaimIds": [
         "what-injection-moulding-is-01",
         "what-injection-moulding-is-02",
@@ -34,7 +34,7 @@
     {
       "moduleId": "cycle",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "c983d1e910089bde2ee4a679418803821bd3f765",
+      "authoredGitBlobSha1": "cacdd6d3e116f33595392ff3fc61b40526ebf20e",
       "governedClaimIds": [
         "cycle-01",
         "cycle-02",
@@ -54,7 +54,7 @@
     {
       "moduleId": "machine-anatomy",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "c983d1e910089bde2ee4a679418803821bd3f765",
+      "authoredGitBlobSha1": "cacdd6d3e116f33595392ff3fc61b40526ebf20e",
       "governedClaimIds": [
         "machine-anatomy-01",
         "machine-anatomy-02",
@@ -73,7 +73,7 @@
     {
       "moduleId": "mould-anatomy",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "c983d1e910089bde2ee4a679418803821bd3f765",
+      "authoredGitBlobSha1": "cacdd6d3e116f33595392ff3fc61b40526ebf20e",
       "governedClaimIds": [
         "mould-anatomy-01",
         "mould-anatomy-02",
@@ -93,7 +93,7 @@
     {
       "moduleId": "safety-foundations",
       "authoredPath": "data/book-authored-foundations-v1.json",
-      "authoredGitBlobSha1": "c983d1e910089bde2ee4a679418803821bd3f765",
+      "authoredGitBlobSha1": "cacdd6d3e116f33595392ff3fc61b40526ebf20e",
       "governedClaimIds": [
         "safety-foundations-01",
         "safety-foundations-02",
@@ -111,6 +111,7 @@
     {
       "moduleId": "polymer-structure",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
+      "authoredGitBlobSha1": "21d42fde460291d84f270d511e4796cd36b1811c",
       "governedClaimIds": [
         "polymer-structure-01",
         "polymer-structure-02"
@@ -122,12 +123,64 @@
         "No correlation or successful intervention is represented as proof of causation.",
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "rheology",
+      "authoredPath": "data/book-chapters-materials-machine-v1.json",
+      "authoredGitBlobSha1": "21d42fde460291d84f270d511e4796cd36b1811c",
+      "governedClaimIds": [
+        "rheology-01",
+        "rheology-02"
       ],
-      "authoredGitBlobSha1": "bda17841e8a6d271f1afda1ec5587fd944130668"
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "moisture-drying",
+      "authoredPath": "data/book-chapters-materials-machine-v1.json",
+      "authoredGitBlobSha1": "21d42fde460291d84f270d511e4796cd36b1811c",
+      "governedClaimIds": [
+        "moisture-drying-01",
+        "moisture-drying-02",
+        "moisture-drying-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "thermal-history",
+      "authoredPath": "data/book-chapters-materials-machine-v1.json",
+      "authoredGitBlobSha1": "21d42fde460291d84f270d511e4796cd36b1811c",
+      "governedClaimIds": [
+        "thermal-history-01",
+        "thermal-history-02"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
     },
     {
       "moduleId": "material-families",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
+      "authoredGitBlobSha1": "21d42fde460291d84f270d511e4796cd36b1811c",
       "governedClaimIds": [
         "material-families-01",
         "material-families-02"
@@ -142,12 +195,12 @@
         "The property guide explains test families and limits; it adds no grade-specific performance guarantee, production setting, acceptance criterion or product approval.",
         "The datasheet comparison uses invented values and fictional grades; it adds no supplier claim, production setting, acceptance criterion or part-performance guarantee.",
         "Regrind or recycled-content percentages are not universal allowances; the cited PP and PCR-HDPE studies apply only to their tested feedstocks, histories and conditions."
-      ],
-      "authoredGitBlobSha1": "bda17841e8a6d271f1afda1ec5587fd944130668"
+      ]
     },
     {
       "moduleId": "fillers-additives",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
+      "authoredGitBlobSha1": "21d42fde460291d84f270d511e4796cd36b1811c",
       "governedClaimIds": [
         "fillers-additives-01",
         "fillers-additives-02"
@@ -159,100 +212,12 @@
         "No correlation or successful intervention is represented as proof of causation.",
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
-      ],
-      "authoredGitBlobSha1": "bda17841e8a6d271f1afda1ec5587fd944130668"
-    },
-    {
-      "moduleId": "fibre-orientation",
-      "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
-      "governedClaimIds": [
-        "fibre-orientation-01",
-        "fibre-orientation-02",
-        "fibre-orientation-03"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
       ]
-    },
-    {
-      "moduleId": "high-performance-polymers",
-      "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
-      "governedClaimIds": [
-        "high-performance-polymers-01",
-        "high-performance-polymers-02",
-        "high-performance-polymers-03"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
-      ]
-    },
-    {
-      "moduleId": "rheology",
-      "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "governedClaimIds": [
-        "rheology-01",
-        "rheology-02"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
-      ],
-      "authoredGitBlobSha1": "bda17841e8a6d271f1afda1ec5587fd944130668"
-    },
-    {
-      "moduleId": "moisture-drying",
-      "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "governedClaimIds": [
-        "moisture-drying-01",
-        "moisture-drying-02",
-        "moisture-drying-03"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
-      ],
-      "authoredGitBlobSha1": "bda17841e8a6d271f1afda1ec5587fd944130668"
-    },
-    {
-      "moduleId": "thermal-history",
-      "authoredPath": "data/book-chapters-materials-machine-v1.json",
-      "governedClaimIds": [
-        "thermal-history-01",
-        "thermal-history-02"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
-      ],
-      "authoredGitBlobSha1": "bda17841e8a6d271f1afda1ec5587fd944130668"
     },
     {
       "moduleId": "plasticising-unit",
       "authoredPath": "data/book-chapters-materials-machine-v1.json",
+      "authoredGitBlobSha1": "21d42fde460291d84f270d511e4796cd36b1811c",
       "governedClaimIds": [
         "plasticising-unit-01",
         "plasticising-unit-02",
@@ -265,13 +230,47 @@
         "No correlation or successful intervention is represented as proof of causation.",
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "shot-utilisation",
+      "authoredPath": "data/book-chapters-materials-machine-v1.json",
+      "authoredGitBlobSha1": "21d42fde460291d84f270d511e4796cd36b1811c",
+      "governedClaimIds": [
+        "shot-utilisation-01",
+        "shot-utilisation-02"
       ],
-      "authoredGitBlobSha1": "bda17841e8a6d271f1afda1ec5587fd944130668"
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "velocity-pressure",
+      "authoredPath": "data/book-chapters-materials-machine-v1.json",
+      "authoredGitBlobSha1": "21d42fde460291d84f270d511e4796cd36b1811c",
+      "governedClaimIds": [
+        "velocity-pressure-01",
+        "velocity-pressure-02",
+        "velocity-pressure-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
     },
     {
       "moduleId": "vp-transfer",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "vp-transfer-01",
         "vp-transfer-02",
@@ -289,7 +288,7 @@
     {
       "moduleId": "clamp",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "clamp-01",
         "clamp-02",
@@ -305,28 +304,45 @@
       ]
     },
     {
-      "moduleId": "hot-runners",
+      "moduleId": "feed-system",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
-        "hot-runners-01",
-        "hot-runners-02",
-        "hot-runners-03"
+        "feed-system-01",
+        "feed-system-02",
+        "feed-system-03"
       ],
       "conclusion": "compatible-with-existing-governed-claim-scope",
       "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the added example.",
-        "No machine, mould, hot-runner, material-grade, product or site instruction is promoted from generic guidance.",
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
         "No correlation or successful intervention is represented as proof of causation.",
         "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "The new worked example is explicitly hypothetical and adds no machine-specific procedure.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "venting",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
+      "governedClaimIds": [
+        "venting-01",
+        "venting-02",
+        "venting-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
         "Independent human SME status remains HOLD."
       ]
     },
     {
       "moduleId": "cooling",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "cooling-01",
         "cooling-02",
@@ -344,7 +360,7 @@
     {
       "moduleId": "ejection-draft",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "ejection-draft-01",
         "ejection-draft-02",
@@ -360,9 +376,28 @@
       ]
     },
     {
+      "moduleId": "hot-runners",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
+      "governedClaimIds": [
+        "hot-runners-01",
+        "hot-runners-02",
+        "hot-runners-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the added example.",
+        "No machine, mould, hot-runner, material-grade, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "The new worked example is explicitly hypothetical and adds no machine-specific procedure.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
       "moduleId": "process-baseline",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "process-baseline-01",
         "process-baseline-02",
@@ -378,13 +413,49 @@
       ]
     },
     {
-      "moduleId": "documentation",
+      "moduleId": "fill-study",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
-        "documentation-01",
-        "documentation-02",
-        "documentation-03"
+        "fill-study-01",
+        "fill-study-02",
+        "fill-study-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "pressure-loss",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
+      "governedClaimIds": [
+        "pressure-loss-01",
+        "pressure-loss-02",
+        "pressure-loss-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "gate-seal",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
+      "governedClaimIds": [
+        "gate-seal-01",
+        "gate-seal-02",
+        "gate-seal-03"
       ],
       "conclusion": "compatible-with-existing-governed-claim-scope",
       "restrictions": [
@@ -398,7 +469,7 @@
     {
       "moduleId": "process-window",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "process-window-01",
         "process-window-02",
@@ -415,9 +486,27 @@
       ]
     },
     {
+      "moduleId": "documentation",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
+      "governedClaimIds": [
+        "documentation-01",
+        "documentation-02",
+        "documentation-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
       "moduleId": "diagnostic-method",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "diagnostic-method-01",
         "diagnostic-method-02",
@@ -435,7 +524,7 @@
     {
       "moduleId": "short-shot",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "short-shot-01",
         "short-shot-02",
@@ -453,7 +542,7 @@
     {
       "moduleId": "flash",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "flash-01",
         "flash-02",
@@ -471,7 +560,7 @@
     {
       "moduleId": "sink-voids",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "sink-voids-01",
         "sink-voids-02",
@@ -487,27 +576,9 @@
       ]
     },
     {
-      "moduleId": "warpage",
-      "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
-      "governedClaimIds": [
-        "warpage-01",
-        "warpage-02",
-        "warpage-03"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
-      ]
-    },
-    {
       "moduleId": "splay",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "splay-01",
         "splay-02",
@@ -525,7 +596,7 @@
     {
       "moduleId": "burns",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "burns-01",
         "burns-02",
@@ -541,27 +612,9 @@
       ]
     },
     {
-      "moduleId": "black-specks",
-      "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
-      "governedClaimIds": [
-        "black-specks-01",
-        "black-specks-02",
-        "black-specks-03"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
-      ]
-    },
-    {
       "moduleId": "weld-lines",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "weld-lines-01",
         "weld-lines-02",
@@ -577,9 +630,45 @@
       ]
     },
     {
+      "moduleId": "warpage",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
+      "governedClaimIds": [
+        "warpage-01",
+        "warpage-02",
+        "warpage-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
+      "moduleId": "black-specks",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
+      "governedClaimIds": [
+        "black-specks-01",
+        "black-specks-02",
+        "black-specks-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
       "moduleId": "cavity-pressure",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "cavity-pressure-01",
         "cavity-pressure-02",
@@ -595,27 +684,9 @@
       ]
     },
     {
-      "moduleId": "process-monitoring",
-      "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
-      "governedClaimIds": [
-        "process-monitoring-01",
-        "process-monitoring-02",
-        "process-monitoring-03"
-      ],
-      "conclusion": "compatible-with-existing-governed-claim-scope",
-      "restrictions": [
-        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
-        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
-        "No correlation or successful intervention is represented as proof of causation.",
-        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
-        "Independent human SME status remains HOLD."
-      ]
-    },
-    {
       "moduleId": "doe",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "doe-01",
         "doe-02",
@@ -633,7 +704,7 @@
     {
       "moduleId": "capability",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "capability-01",
         "capability-02",
@@ -649,9 +720,27 @@
       ]
     },
     {
+      "moduleId": "process-monitoring",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
+      "governedClaimIds": [
+        "process-monitoring-01",
+        "process-monitoring-02",
+        "process-monitoring-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
       "moduleId": "dimensional-stability",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "dimensional-stability-01",
         "dimensional-stability-02",
@@ -667,9 +756,27 @@
       ]
     },
     {
+      "moduleId": "fibre-orientation",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
+      "governedClaimIds": [
+        "fibre-orientation-01",
+        "fibre-orientation-02",
+        "fibre-orientation-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
       "moduleId": "thin-wall",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "thin-wall-01",
         "thin-wall-02",
@@ -687,7 +794,7 @@
     {
       "moduleId": "multi-cavity",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "multi-cavity-01",
         "multi-cavity-02",
@@ -703,9 +810,27 @@
       ]
     },
     {
+      "moduleId": "high-performance-polymers",
+      "authoredPath": "data/book-authored-remaining-v1.json",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
+      "governedClaimIds": [
+        "high-performance-polymers-01",
+        "high-performance-polymers-02",
+        "high-performance-polymers-03"
+      ],
+      "conclusion": "compatible-with-existing-governed-claim-scope",
+      "restrictions": [
+        "No universal setpoint, timing value or production recipe is introduced by the expansion.",
+        "No machine, mould, hot-runner, product or site instruction is promoted from generic guidance.",
+        "No correlation or successful intervention is represented as proof of causation.",
+        "Measurement location, uncertainty and evidence-changing conditions remain explicit where relevant.",
+        "Independent human SME status remains HOLD."
+      ]
+    },
+    {
       "moduleId": "complex-diagnostics",
       "authoredPath": "data/book-authored-remaining-v1.json",
-      "authoredGitBlobSha1": "5536f6bf6f5206b8830303d9c1c89e98e96cdd6f",
+      "authoredGitBlobSha1": "0a0dea7fedd08757477e927bd68747c55f8c2c9e",
       "governedClaimIds": [
         "complex-diagnostics-01",
         "complex-diagnostics-02",
@@ -735,58 +860,71 @@
     "independentSmeStatus": "hold"
   },
   "latestRevision": {
-    "id": "remove-duplicate-grade-substitution-summary-2026-11-03",
-    "date": "2026-11-03",
+    "id": "book-wide-rewrite-and-peer-review-2026-11-09",
+    "date": "2026-11-09",
     "scope": [
-      "r03"
+      "r01",
+      "r02",
+      "r03",
+      "r03a",
+      "r04",
+      "r05",
+      "r06",
+      "r07",
+      "r08",
+      "r09",
+      "r10",
+      "r11",
+      "r12",
+      "r13",
+      "r14",
+      "r15",
+      "r16",
+      "r17",
+      "r18",
+      "r19",
+      "r20"
     ],
-    "previousRevisionId": "thermoplastic-scope-and-pressure-signal-clarity-2026-11-03",
-    "firstReadVisibleWords": {
-      "r01": 1243,
-      "r02": 1921,
-      "r03": 3877,
-      "r03a": 2616,
-      "r04": 1709,
-      "r05": 1587,
-      "r06": 898,
-      "r07": 923,
-      "r08": 955,
-      "r09": 930,
-      "r10": 945,
-      "r11": 877,
-      "r12": 970,
-      "r13": 1009,
-      "r14": 1011,
-      "r15": 941,
-      "r16": 984,
-      "r17": 918,
-      "r18": 886,
-      "r19": 880,
-      "r20": 1003
+    "previousRevisionId": "remove-duplicate-grade-substitution-summary-2026-11-03",
+    "reviewedModuleCount": 46,
+    "changedModules": 46,
+    "changedSectionCount": 99,
+    "addedSectionCount": 14,
+    "removedSectionCount": 8,
+    "authoredModuleWordsByReaderChapter": {
+      "r01": 954,
+      "r02": 1625,
+      "r03": 2446,
+      "r03a": 1187,
+      "r04": 1439,
+      "r05": 1298,
+      "r06": 859,
+      "r07": 955,
+      "r08": 892,
+      "r09": 882,
+      "r10": 1211,
+      "r11": 536,
+      "r12": 928,
+      "r13": 926,
+      "r14": 1000,
+      "r15": 879,
+      "r16": 923,
+      "r17": 837,
+      "r18": 818,
+      "r19": 856,
+      "r20": 853
     },
-    "firstReadVisibleWordDeltaByChapter": {
-      "r03": -63
-    },
-    "firstReadVisibleWordDeltaTotal": -63,
-    "firstReadVisibleWordTotal": 27083,
-    "changedSectionCount": 1,
-    "addedSectionCount": 0,
-    "removedSectionCount": 1,
-    "removedSectionsByModule": {
-      "material-families": [
-        "Do not infer interchangeability from similar labels"
-      ]
-    },
+    "authoredModuleWordTotal": 22304,
     "newClaimIdCount": 0,
     "newSourceRecordCount": 0,
     "addedSourceRecordIds": [],
-    "belowSoftTargetChapterCount": 0,
-    "belowSoftTargetChapterIds": [],
-    "conclusion": "Removed a short standalone interchangeability summary because the opening grade explanation and the longer substitution-review section already teach the same comparison rule. The claim inventory and claim conclusions are unchanged; independent SME and device review remain on HOLD.",
-    "rationale": "Reduce repetition in the material-family chapter while retaining the full exact-grade, like-for-like comparison, supplier-document and product-verification guidance in its longer sections.",
+    "openFurtherReadingSourcesPerChapter": 15,
+    "readerChapterCount": 21,
+    "conclusion": "Rewrote the teaching lead-in in all 46 governed modules; reconstructed polymer foundations in a fourteen-part sequence; and rewrote the material-family, additive, fibre-orientation, high-performance-polymer, diagnostic and short process-study sections. Repetition was reduced while the 137 existing claim IDs and 58 governed source records were retained. This is an internal repository review only; independent Book SME, device and external validation remain on HOLD.",
+    "rationale": "Make the learning path beginner-readable before advanced details; teach polymer/plastic and thermoplastic/thermoset distinctions, amorphous and semi-crystalline structure, chain architecture, Tg/Tc/Tm, crystallinity and DSC; connect chain structure, flow, cooling and part properties; and keep examples, grade evidence and process boundaries precise.",
     "independentSmeStatus": "hold",
     "humanDeviceValidationStatus": "hold",
-    "readerPromptsUpdated": false
+    "readerPromptsUpdated": true
   },
   "revisionHistory": [
     {
@@ -1484,6 +1622,140 @@
       "independentSmeStatus": "hold",
       "humanDeviceValidationStatus": "hold",
       "readerPromptsUpdated": false
+    },
+    {
+      "id": "book-wide-rewrite-and-peer-review-2026-11-09",
+      "date": "2026-11-09",
+      "scope": [
+        "r01",
+        "r02",
+        "r03",
+        "r03a",
+        "r04",
+        "r05",
+        "r06",
+        "r07",
+        "r08",
+        "r09",
+        "r10",
+        "r11",
+        "r12",
+        "r13",
+        "r14",
+        "r15",
+        "r16",
+        "r17",
+        "r18",
+        "r19",
+        "r20"
+      ],
+      "previousRevisionId": "remove-duplicate-grade-substitution-summary-2026-11-03",
+      "reviewedModuleCount": 46,
+      "changedModules": 46,
+      "changedSectionCount": 99,
+      "addedSectionCount": 14,
+      "removedSectionCount": 8,
+      "authoredModuleWordsByReaderChapter": {
+        "r01": 954,
+        "r02": 1625,
+        "r03": 2385,
+        "r03a": 1187,
+        "r04": 1439,
+        "r05": 1298,
+        "r06": 859,
+        "r07": 955,
+        "r08": 892,
+        "r09": 882,
+        "r10": 1211,
+        "r11": 536,
+        "r12": 928,
+        "r13": 926,
+        "r14": 1000,
+        "r15": 879,
+        "r16": 923,
+        "r17": 837,
+        "r18": 818,
+        "r19": 856,
+        "r20": 853
+      },
+      "authoredModuleWordTotal": 22243,
+      "newClaimIdCount": 0,
+      "newSourceRecordCount": 0,
+      "addedSourceRecordIds": [],
+      "openFurtherReadingSourcesPerChapter": 15,
+      "readerChapterCount": 21,
+      "conclusion": "Rewrote the teaching lead-in in all 46 governed modules; reconstructed polymer foundations in a fourteen-part sequence; and rewrote the material-family, additive, fibre-orientation, high-performance-polymer, diagnostic and short process-study sections. Repetition was reduced while the 137 existing claim IDs and 58 governed source records were retained. This is an internal repository review only; independent Book SME, device and external validation remain on HOLD.",
+      "rationale": "Make the learning path beginner-readable before advanced details; teach polymer/plastic and thermoplastic/thermoset distinctions, amorphous and semi-crystalline structure, chain architecture, Tg/Tc/Tm, crystallinity and DSC; connect chain structure, flow, cooling and part properties; and keep examples, grade evidence and process boundaries precise.",
+      "independentSmeStatus": "hold",
+      "humanDeviceValidationStatus": "hold",
+      "readerPromptsUpdated": true
+    },
+    {
+      "id": "book-wide-rewrite-and-peer-review-2026-11-09",
+      "date": "2026-11-09",
+      "scope": [
+        "r01",
+        "r02",
+        "r03",
+        "r03a",
+        "r04",
+        "r05",
+        "r06",
+        "r07",
+        "r08",
+        "r09",
+        "r10",
+        "r11",
+        "r12",
+        "r13",
+        "r14",
+        "r15",
+        "r16",
+        "r17",
+        "r18",
+        "r19",
+        "r20"
+      ],
+      "previousRevisionId": "remove-duplicate-grade-substitution-summary-2026-11-03",
+      "reviewedModuleCount": 46,
+      "changedModules": 46,
+      "changedSectionCount": 99,
+      "addedSectionCount": 14,
+      "removedSectionCount": 8,
+      "authoredModuleWordsByReaderChapter": {
+        "r01": 954,
+        "r02": 1625,
+        "r03": 2385,
+        "r03a": 1187,
+        "r04": 1439,
+        "r05": 1298,
+        "r06": 859,
+        "r07": 955,
+        "r08": 892,
+        "r09": 882,
+        "r10": 1211,
+        "r11": 536,
+        "r12": 928,
+        "r13": 926,
+        "r14": 1000,
+        "r15": 879,
+        "r16": 923,
+        "r17": 837,
+        "r18": 818,
+        "r19": 856,
+        "r20": 853
+      },
+      "authoredModuleWordTotal": 22243,
+      "newClaimIdCount": 0,
+      "newSourceRecordCount": 0,
+      "addedSourceRecordIds": [],
+      "openFurtherReadingSourcesPerChapter": 15,
+      "readerChapterCount": 21,
+      "conclusion": "Rewrote the teaching lead-in in all 46 governed modules; reconstructed polymer foundations in a fourteen-part sequence; and rewrote the material-family, additive, fibre-orientation, high-performance-polymer, diagnostic and short process-study sections. Repetition was reduced while the 137 existing claim IDs and 58 governed source records were retained. This is an internal repository review only; independent Book SME, device and external validation remain on HOLD.",
+      "rationale": "Make the learning path beginner-readable before advanced details; teach polymer/plastic and thermoplastic/thermoset distinctions, amorphous and semi-crystalline structure, chain architecture, Tg/Tc/Tm, crystallinity and DSC; connect chain structure, flow, cooling and part properties; and keep examples, grade evidence and process boundaries precise.",
+      "independentSmeStatus": "hold",
+      "humanDeviceValidationStatus": "hold",
+      "readerPromptsUpdated": true
     }
   ]
 }

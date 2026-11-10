@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Retained release 2026.11.08.5 candidate f7b703ad06fef540d7773458e0eff8202c253041 and artifact 13628146324 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
+  "boundary": "Retained release 2026.11.09.1 candidate cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392 and artifact 13737976183 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -41,19 +41,19 @@
     }
   },
   "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier.",
-  "release": "2026.11.08.5",
+  "release": "2026.11.09.1",
   "previousCandidate": {
-    "release": "2026.11.08.4",
-    "sourceSha": "afddce102ee48995bdcf06b9f22bc078992cea3a",
-    "runtimeFingerprint": "sha256:12b0afbcd833614ce5162612b84974e491f5f197cf6d1973b2a522d60b92a54d",
-    "candidateRunId": 42467257528,
+    "release": "2026.11.09.1",
+    "sourceSha": "74b59afa1f241995cdf7385d6031546a676626a3",
+    "runtimeFingerprint": "sha256:91a398caef841e7202e5425d3388dcb47557d89b618eca83d4c7b29e16ebd827",
+    "candidateRunId": 42587884172,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13612187059,
-    "artifactName": "physical-pwa-candidate-afddce102ee48995bdcf06b9f22bc078992cea3a",
-    "artifactDigest": "sha256:77f7d6b8d134c862e6bd1992ab11cfa1df7acb27064ab56d3df2890e1321d056",
-    "artifactExpiresAt": "2027-02-06T09:27:27Z"
+    "artifactId": 13659792379,
+    "artifactName": "physical-pwa-candidate-74b59afa1f241995cdf7385d6031546a676626a3",
+    "artifactDigest": "sha256:4b6ef2ccc2bb60d685071c1b24fed309d08a51113dc9c185a128ce63bfa19fd0",
+    "artifactExpiresAt": "2027-02-07T08:42:19Z"
   },
-  "packet": "qa/PWA_PHYSICAL_DEVICE_2026.11.08.5.md",
+  "packet": "qa/PWA_PHYSICAL_DEVICE_2026.11.09.1.md",
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
@@ -66,15 +66,25 @@
     "artifactExpiresAt": "2027-01-20T04:00:42Z"
   },
   "candidate": {
-    "release": "2026.11.08.5",
-    "sourceSha": "f7b703ad06fef540d7773458e0eff8202c253041",
-    "runtimeFingerprint": "sha256:5442547dec21641a8284e2644013609d041a5bb41dca33a5e85a5ec578e83eb9",
-    "candidateRunId": 42507793793,
+    "release": "2026.11.09.1",
+    "sourceSha": "cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392",
+    "runtimeFingerprint": "sha256:0e68700ff76eef0eee8cd488aa42e35d4b46501a1fcf795e8e7b09dfa168e7cd",
+    "candidateRunId": 42760878572,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13628146324,
-    "artifactName": "physical-pwa-candidate-f7b703ad06fef540d7773458e0eff8202c253041",
-    "artifactDigest": "sha256:53dbe966781563e25779a785a664efe5b768e550473fe47820f60cfd652aec45",
-    "artifactExpiresAt": "2027-02-06T18:00:46Z"
+    "artifactId": 13737976183,
+    "artifactName": "physical-pwa-candidate-cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392",
+    "artifactDigest": "sha256:224196c1abec5786cacc245ab1a67ae5757c56e3a6fbba85cb3815ff25b95813",
+    "artifactExpiresAt": "2027-02-08T05:14:31Z"
   },
-  "currentCandidate": null
+  "currentCandidate": {
+    "release": "2026.11.09.1",
+    "sourceSha": "74b59afa1f241995cdf7385d6031546a676626a3",
+    "runtimeFingerprint": "sha256:91a398caef841e7202e5425d3388dcb47557d89b618eca83d4c7b29e16ebd827",
+    "candidateRunId": 42587884172,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 13659792379,
+    "artifactName": "physical-pwa-candidate-74b59afa1f241995cdf7385d6031546a676626a3",
+    "artifactDigest": "sha256:4b6ef2ccc2bb60d685071c1b24fed309d08a51113dc9c185a128ce63bfa19fd0",
+    "artifactExpiresAt": "2027-02-07T08:42:19Z"
+  }
 }

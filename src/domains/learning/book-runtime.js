@@ -1,7 +1,7 @@
 /* MouldMaster Book runtime — evidence-governed publication authorization. */
 (function(){
   'use strict';
-  const VERSION='2026.10.22.2';
+  const VERSION='2026.11.09.1';
   if(window.MMBook?.version===VERSION)return;
   const BOOK_DATA='./src/domains/learning/book-data/';
   const AUTH_PATH=`${BOOK_DATA}book-publication-authorization-v1.json`;
@@ -21,8 +21,8 @@
   const MATERIAL_SEARCH_INDEX_GIT_BLOB_SHA1='e5933d98025ad11bb9864b36ae80844b88de8e48';
   const MATERIAL_PAGE_SIZE=24;
   const BATCH_PATHS=[`${BOOK_DATA}book-authored-foundations-v1.json`,`${BOOK_DATA}book-evidence-registry-v1.json`,`${BOOK_DATA}book-chapters-materials-machine-v1.json`,`${BOOK_DATA}book-authored-remaining-v1.json`];
-  const AUTH_GIT_BLOB_SHA1='008083994fee47c2729f340b580c68e15d36508b';
-  const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-claim-resolution-high-risk-v2.json','book-claim-resolution-all-v1.json','book-claim-review-foundations-materials-machine-v1.json','book-claim-review-process-tooling-v1.json','book-claim-review-troubleshooting-v1.json','book-claim-review-engineering-advanced-v1.json','book-claim-review-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-engineering-diagrams-v1.json','book-evidence-enrichment-v2.json','book-claim-evidence-reference-v1.json','book-reader-architecture-v2.json','book-editorial-expansion-review-v1.json','book-material-grade-atlas-v1.json','book-material-regional-evidence-v1.json','material-catalog-v1.json'];
+  const AUTH_GIT_BLOB_SHA1='c29ec394696b298ccbf488a901cd3ea1b6400e52';
+  const REQUIRED_INTEGRITY_FILES=['book-manifest-v1.json','book-sme-review-v1.json','book-qualification-resolution-all-v1.json','book-claim-resolution-high-risk-v1.json','book-claim-resolution-high-risk-v2.json','book-claim-resolution-all-v1.json','book-claim-review-foundations-materials-machine-v1.json','book-claim-review-process-tooling-v1.json','book-claim-review-troubleshooting-v1.json','book-claim-review-engineering-advanced-v1.json','book-claim-review-high-risk-v1.json','book-authored-foundations-v1.json','book-evidence-registry-v1.json','book-chapters-materials-machine-v1.json','book-authored-remaining-v1.json','book-worked-engineering-cases-v1.json','book-engineering-diagrams-v1.json','book-evidence-enrichment-v2.json','book-claim-evidence-reference-v1.json','book-reader-architecture-v2.json','book-editorial-expansion-review-v1.json','book-material-grade-atlas-v1.json','book-material-regional-evidence-v1.json','book-open-further-reading-v1.json','material-catalog-v1.json'];
   const CANONICAL_SOURCE_URLS=Object.freeze({
     'OUBELLAOUCH-2024-FIBRE-ORIENTATION':'https://doi.org/10.1007/s00170-024-12990-5',
     'BIELENBERG-2025-SWITCHOVER-REVIEW':'https://doi.org/10.3390/polym17081096',
@@ -316,8 +316,8 @@
   }
   function validateEditorialExpansionReview(data,declared,auth){
     if(data?.schemaVersion!==1||data?.bookId!=='mouldmaster-book'||data?.release!==VERSION||data?.status!=='repository-technical-review-complete'||!Array.isArray(data.reviewedModules))throw new Error('Book editorial expansion review identity check failed');
-    const permit=auth?.editorialExpansionAuthorization;if(permit?.status!=='authorized-repository-technical-source-review'||permit?.release!==VERSION||permit?.ledger!=='data/book-editorial-expansion-review-v1.json'||permit?.moduleCount!==39||permit?.noNewClaimIds!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion authorization missing');
-    if(data.reviewedModules.length!==39||data?.acceptanceRules?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion review coverage mismatch');
+    const permit=auth?.editorialExpansionAuthorization;if(permit?.status!=='authorized-repository-technical-source-review'||permit?.release!==VERSION||permit?.ledger!=='data/book-editorial-expansion-review-v1.json'||permit?.moduleCount!==46||permit?.noNewClaimIds!==true||permit?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion authorization missing');
+    if(data.reviewedModules.length!==46||data?.acceptanceRules?.independentSmeStatus!=='hold')throw new Error('Book editorial expansion review coverage mismatch');
     const seen=new Set();
     for(const item of data.reviewedModules){
       if(!item?.moduleId||seen.has(item.moduleId)||!declared.has(item.moduleId)||!Array.isArray(item.governedClaimIds)||!item.governedClaimIds.length||item.conclusion!=='compatible-with-existing-governed-claim-scope')throw new Error('Invalid Book editorial expansion review record');

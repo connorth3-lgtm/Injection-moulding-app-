@@ -103,6 +103,7 @@ book_data = [
     'book-material-grade-atlas-v1.json',
     'book-material-regional-evidence-v1.json',
     'book-material-search-index-v1.json',
+    'book-open-further-reading-v1.json',
 ]
 for name in book_data:
     packaged = f'./src/domains/learning/book-data/{name}'
@@ -113,6 +114,28 @@ for name in book_data:
         need(source.read_bytes() == target.read_bytes(), f'packaged Book data drifted from governed source: {name}')
 
 need((ROOT / 'data/asian-aus-nz-material-grade-extraction-wave2-v1.json').read_bytes() == (PACKAGED_ROOT / 'book-material-regional-evidence-v1.json').read_bytes(), 'packaged regional Book material evidence drifted from governed source wave')
+
+FURTHER_READING_NAME='book-open-further-reading-v1.json'
+further_path=PACKAGED_ROOT/FURTHER_READING_NAME
+further=json.loads(further_path.read_text(encoding='utf-8'))
+further_sources=further.get('sources') or []
+further_chapters=further.get('chapters') or []
+further_ids=[row.get('id') for row in further_sources]
+further_urls=[row.get('url') for row in further_sources]
+need(further.get('schemaVersion')==1 and further.get('bookId')=='mouldmaster-book' and further.get('status')=='supplemental-open-further-reading', 'supplemental further-reading identity drift')
+need(len(further_sources)==156 and len(set(further_ids))==156, 'supplemental further-reading source catalogue must contain 156 distinct sources')
+need(len(set(further_urls))==156 and all(str(url).startswith('https://') for url in further_urls), 'supplemental source URLs must be secure and globally distinct')
+need([row.get('chapterId') for row in further_chapters]==[row.get('id') for row in reader_architecture.get('readerChapters',[])], 'supplemental source chapter mapping drifted from the 21-chapter reader')
+further_by_id={row.get('id'):row for row in further_sources}
+need(all(row.get('title') and row.get('publisher') and row.get('kind') for row in further_sources), 'supplemental source metadata is incomplete')
+for row in further_chapters:
+    source_ids=row.get('sourceIds') or []
+    need(len(source_ids)==15 and len(set(source_ids))==15 and all(source_id in further_by_id for source_id in source_ids), f"supplemental source coverage must be 15 unique sources for {row.get('chapterId')}")
+further_hash=git_blob_sha(further_path)
+need(authorization.get('runtimeIntegrity',{}).get('gitBlobSha1ByFile',{}).get(FURTHER_READING_NAME)==further_hash, 'supplemental further-reading catalogue is not byte-bound by Book authorization')
+further_reader_js=(ROOT/'src/domains/learning/book-open-further-reading.js').read_text(encoding='utf-8')
+need(f"const EXPECTED_GIT_BLOB_SHA1=\"{further_hash}\"" in further_reader_js and 'crypto.subtle.digest("SHA-1",payload)' in further_reader_js, 'supplemental reader must fail closed on a catalogue byte mismatch')
+need("Optional further-reading links are supplemental and byte-bound" in " ".join(authorization.get('publicationBoundaries',[])), 'Book authorization must keep supplemental links outside claim evidence and SME approval')
 
 # One canonical Book implementation: the legacy root path is now only a stable compatibility loader.
 need("script.src=runtimeScriptUrl('./src/domains/learning/book-runtime.js')" in compat_loader, 'root Book compatibility loader must delegate to canonical packaged runtime through explicit release versioning')
@@ -192,7 +215,7 @@ required_integrity = {
     'book-authored-foundations-v1.json',
     'book-evidence-registry-v1.json', 'book-chapters-materials-machine-v1.json', 'book-authored-remaining-v1.json',
     'book-worked-engineering-cases-v1.json', 'book-engineering-diagrams-v1.json', 'book-evidence-enrichment-v2.json', 'book-claim-evidence-reference-v1.json', 'book-reader-architecture-v2.json', 'book-editorial-expansion-review-v1.json', 'book-material-grade-atlas-v1.json',
-    'book-material-regional-evidence-v1.json', 'material-catalog-v1.json',
+    'book-material-regional-evidence-v1.json', 'book-open-further-reading-v1.json', 'material-catalog-v1.json',
 }
 need(required_integrity <= set(sha_by_file), f'Book byte-integrity coverage incomplete: {sorted(required_integrity - set(sha_by_file))}')
 for name in required_integrity:
@@ -241,7 +264,7 @@ need(authorization.get('revocationRules', {}).get('diagramLedgerOrAssetMismatch'
 reader_auth=authorization.get('readerArchitectureAuthorization') or {}
 need(reader_auth.get('status')=='authorized-derived-structure' and reader_auth.get('readerChapterCount')==21 and reader_auth.get('governedModuleCount')==46 and reader_auth.get('noNewTechnicalClaims') is True and reader_auth.get('independentSmeStatus')=='hold', 'reader architecture authorization boundary drift')
 editorial_auth=authorization.get('editorialExpansionAuthorization') or {}
-need(editorial_auth.get('status')=='authorized-repository-technical-source-review' and editorial_auth.get('moduleCount')==39 and editorial_auth.get('noNewClaimIds') is True and editorial_auth.get('independentSmeStatus')=='hold', 'editorial expansion authorization boundary drift')
+need(editorial_auth.get('status')=='authorized-repository-technical-source-review' and editorial_auth.get('moduleCount')==46 and editorial_auth.get('noNewClaimIds') is True and editorial_auth.get('independentSmeStatus')=='hold', 'editorial expansion authorization boundary drift')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('release') == enrichment.get('release'), 'evidence-enrichment authorization must remain bound to the reviewed content release')
 need((authorization.get('evidenceEnrichmentAuthorization') or {}).get('sectionCount') == 14, 'evidence-enrichment authorization section count drifted')
 need(sum(len(x.get('sections') or []) for x in enrichment.get('chapterPatches', []) if isinstance(x, dict)) == 14, 'evidence-enrichment ledger section count drifted')

@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 if(window.MM_BOOK_CLAIM_TRACE)return;
-const VERSION='2026.10.22.2';
+const VERSION='2026.11.09.1';
 const ROOT='./src/domains/learning/book-data/';
 const REVIEW_FILES=[
  'book-claim-review-foundations-materials-machine-v1.json',

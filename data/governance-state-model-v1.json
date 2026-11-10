@@ -346,15 +346,15 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "PASS \u2014 release 2026.11.08.5 candidate source f7b703ad06fef540d7773458e0eff8202c253041, artifact 13628146324, fingerprint sha256:5442547dec21641a8284e2644013609d041a5bb41dca33a5e85a5ec578e83eb9, retained by Pre-merge Public Candidate run 42507793793; exact artifact provenance and runtime fingerprint were independently checked. Software-only; this creates no external approval."
+      "meaning": "PASS \u2014 release 2026.11.09.1 candidate source cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392, artifact 13737976183, fingerprint sha256:0e68700ff76eef0eee8cd488aa42e35d4b46501a1fcf795e8e7b09dfa168e7cd, retained by Pre-merge Public Candidate run 42760878572; exact artifact provenance and runtime fingerprint are recorded. Software-only; this creates no external approval."
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "PASS \u2014 release 2026.11.08.5 candidate source f7b703ad06fef540d7773458e0eff8202c253041 passed Mobile Browser QA run 42507793891 and Question Quality 50-Pass run 42507794030; the strict 52-surface visual matrix passed. Software-only; this creates no external approval."
+      "meaning": "PASS \u2014 release 2026.11.09.1 candidate source cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392 passed Mobile Browser QA run 42760878892 and Question Quality 50-Pass run 42760878736. Software-only; this creates no external approval."
     },
     "externalHumanDevice": {
       "status": "hold",
-      "meaning": "All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.08.5."
+      "meaning": "All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.09.1."
     }
   }
 }
