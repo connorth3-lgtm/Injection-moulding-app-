@@ -41,7 +41,7 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Reference source for the rewritten Book release 2026.11.09.1. This versioned technical baseline includes the new chapter titles, polymer foundations, and expanded material-science explanations while retaining all 52 viewport/surface captures and the 12-pixel threshold. It records visual comparison only and does not imply human visual-owner approval. Independent physical-device, real assistive-technology, Windows signing, provider, SME, learner-outcome, accreditation and production reviews remain separate and HOLD.",
+  "policy": "Reference source for the rewritten Book release 2026.11.09.1. This versioned technical baseline includes the new chapter titles, polymer foundations, and expanded material-science explanations while retaining all 52 viewport/surface captures and the 12-pixel threshold. This is not human visual-owner approval. Independent physical-device, real assistive-technology, Windows signing, provider, SME, learner-outcome, accreditation and production reviews remain separate and HOLD.",
   "ref": "visual-baseline/2026.11.09.1",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
