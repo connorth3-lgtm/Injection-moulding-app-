@@ -2,7 +2,7 @@
 
 **STATUS: HOLD — release 2026.11.09.1 has no completed independent external review. Review this exact release; prior release evidence and approvals remain historical.**
 
-> **RETAINED 2026.11.09.1 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 42587884172](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/42587884172) created artifact **13659792379**, source 74b59afa1f241995cdf7385d6031546a676626a3, digest sha256:4b6ef2ccc2bb60d685071c1b24fed309d08a51113dc9c185a128ce63bfa19fd0, expiry 2027-02-07T08:42:19Z, and public-runtime fingerprint sha256:91a398caef841e7202e5425d3388dcb47557d89b618eca83d4c7b29e16ebd827. Producer quality must be independently verified. The retained artifact does not establish any human, real-device, Windows signing, provider, accreditation or production authorization.
+> **RETAINED 2026.11.09.1 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 42760878572](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/42760878572) created artifact **13737976183**, source cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392, digest sha256:224196c1abec5786cacc245ab1a67ae5757c56e3a6fbba85cb3815ff25b95813, expiry 2027-02-08T05:14:31Z, and public-runtime fingerprint sha256:0e68700ff76eef0eee8cd488aa42e35d4b46501a1fcf795e8e7b09dfa168e7cd. Producer quality must be independently verified. The retained artifact does not establish any human, real-device, Windows signing, provider, accreditation or production authorization.
 
 ## Required independently reviewed evidence
 

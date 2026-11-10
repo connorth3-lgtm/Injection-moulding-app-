@@ -3,7 +3,7 @@
   "masterIssue": 632,
   "release": "2026.11.09.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "74b59afa1f241995cdf7385d6031546a676626a3",
+  "candidateSourceSha": "cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392",
   "scope": "Consolidate Question Centre into one Learn destination: remove the repeated lesson-embedded and Practice copies while preserving its five governed question modes.",
   "approvalBoundary": "HOLD: release 2026.11.09.1 exact-source software checks passed; this is a technical PASS only. All seven independent human/device/provider workstreams and tester distribution remain HOLD.",
   "issueGroups": {

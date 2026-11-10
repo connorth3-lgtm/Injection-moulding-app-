@@ -2,7 +2,7 @@
 
 **STATUS: SOFTWARE CANDIDATE RETAINED — exact-head software checks passed. All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain HOLD.**
 
-> **PENDING 2026.11.09.1 TECHNICAL ARTIFACT — STOP: independent reviews remain HOLD.**
+> **RETAINED 2026.11.09.1 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 42760878572](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/42760878572) created artifact **13737976183**, source cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392, digest sha256:224196c1abec5786cacc245ab1a67ae5757c56e3a6fbba85cb3815ff25b95813, expiry 2027-02-08T05:14:31Z, and public-runtime fingerprint sha256:0e68700ff76eef0eee8cd488aa42e35d4b46501a1fcf795e8e7b09dfa168e7cd. Producer quality was verified on the exact source; the artifact does not establish any human, real-device, Windows signing, provider, accreditation or production authorization.
 
 ## Release scope
 
@@ -11,15 +11,15 @@ This candidate adds optional open further-reading links to the Book: 15 sources 
 ## Candidate identity
 
 Release: 2026.11.09.1
-Candidate source SHA: 74b59afa1f241995cdf7385d6031546a676626a3
-Public runtime fingerprint: sha256:91a398caef841e7202e5425d3388dcb47557d89b618eca83d4c7b29e16ebd827
-Producer: [Pre-merge Public Candidate run 42587884172](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/42587884172)
-Artifact: **13659792379** (`physical-pwa-candidate-74b59afa1f241995cdf7385d6031546a676626a3`), digest sha256:4b6ef2ccc2bb60d685071c1b24fed309d08a51113dc9c185a128ce63bfa19fd0, expires 2027-02-07T08:42:19Z
-Exact-head software gates: Mobile Browser QA run 42587883746 and Question Quality 50-Pass run 42587883685 — **PASS**.
+Candidate source SHA: cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392
+Public runtime fingerprint: sha256:0e68700ff76eef0eee8cd488aa42e35d4b46501a1fcf795e8e7b09dfa168e7cd
+Producer: [Pre-merge Public Candidate run 42760878572](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/42760878572)
+Artifact: **13737976183** (`physical-pwa-candidate-cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392`), digest sha256:224196c1abec5786cacc245ab1a67ae5757c56e3a6fbba85cb3815ff25b95813, expires 2027-02-08T05:14:31Z
+Exact-head software gates: Mobile Browser QA run 42760878892 and Question Quality 50-Pass run 42760878736 — **PASS**.
 
 ## Technical candidate status
 
-**Technical candidate:** **PASS — software-only**. Pre-merge Public Candidate run `42587884172` retained artifact `13659792379`, source `74b59afa1f241995cdf7385d6031546a676626a3`, runtime fingerprint `sha256:91a398caef841e7202e5425d3388dcb47557d89b618eca83d4c7b29e16ebd827`. Mobile Browser QA run `42587883746` and Question Quality 50-Pass run `42587883685` passed on that exact source.
+**Technical candidate:** **PASS — software-only**. Pre-merge Public Candidate run `42760878572` retained artifact `13737976183`, source `cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392`, runtime fingerprint `sha256:0e68700ff76eef0eee8cd488aa42e35d4b46501a1fcf795e8e7b09dfa168e7cd`. Mobile Browser QA run `42760878892` and Question Quality 50-Pass run `42760878736` passed on that exact source.
 
 All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain **HOLD**.
 
