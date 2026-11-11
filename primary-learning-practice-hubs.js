@@ -7,7 +7,7 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.11.11.2';
+const VERSION='2026.11.11.3';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
 const originalRenderScenarios=renderScenarios;
 
@@ -533,14 +533,20 @@ function createLessonCatalog(){
   }
   function markup(workshop){
     const active=Number(user?.currentLesson);
-    const groups=courses().map(course=>{
+    const courseGroups=courses().map(course=>{
       const lessons=(course.lessonIds||[]).map(id=>core().find(l=>l.id===id)).filter(Boolean);
       const complete=lessons.filter(l=>done(l.id)).length;
-      return `<details class="mm-catalog-group" data-mm-catalog-group ${course.lessonIds?.includes(active)?'open':''}>
+      const materialsTrack=/^materials$/i.test(String(course.name||'').trim());
+      const markup=`<details class="mm-catalog-group" data-mm-catalog-group ${course.lessonIds?.includes(active)?'open':''}>
         <summary><span class="mm-catalog-group-name">${course.id}. ${esc(course.name)}</span><span class="mm-catalog-group-meta">${complete}/${lessons.length} · ${esc(course.level||'Core')}</span></summary>
-        <div class="mm-catalog-rows">${lessons.map(l=>`<button type="button" class="mm-catalog-lesson${l.id===active?' is-current':''}" data-mm-lesson-id="${l.id}" data-mm-catalog-item data-mm-catalog-type="core" data-mm-catalog-done="${done(l.id)?'1':'0'}" data-mm-catalog-saved="${saved(l.id)?'1':'0'}" data-mm-catalog-text="${esc([l.title,l.summary,course.name,l.level,l.id].join(' ').toLowerCase())}" ${l.id===active?'aria-current="step"':''}><span class="mm-catalog-num">${l.id}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">${done(l.id)?'✓ Done':saved(l.id)?'★ Saved':l.id===active?'Reading':'Open'}</span></button>`).join('')}</div></details>`;
-    }).join('');
-    const materialGroups=materialChapters().map(chapter=>{
+        <div class="mm-catalog-rows">${lessons.map(l=>`<button type="button" class="mm-catalog-lesson${l.id===active?' is-current':''}" data-mm-lesson-id="${l.id}" data-mm-catalog-item data-mm-catalog-type="core" data-mm-catalog-track="${materialsTrack?'materials':'core'}" data-mm-catalog-done="${done(l.id)?'1':'0'}" data-mm-catalog-saved="${saved(l.id)?'1':'0'}" data-mm-catalog-text="${esc([l.title,l.summary,course.name,l.level,l.id].join(' ').toLowerCase())}" ${l.id===active?'aria-current="step"':''}><span class="mm-catalog-num">${l.id}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">${done(l.id)?'✓ Done':saved(l.id)?'★ Saved':l.id===active?'Reading':'Open'}</span></button>`).join('')}</div></details>`;
+      return {course,markup};
+    });
+    const materialsIndex=courseGroups.findIndex(entry=>/^materials$/i.test(String(entry.course.name||'').trim()));
+    const foundations=materialsIndex<0?courseGroups:courseGroups.slice(0,materialsIndex);
+    const coreMaterials=materialsIndex<0?[]:[courseGroups[materialsIndex]];
+    const engineering=materialsIndex<0?[]:courseGroups.slice(materialsIndex+1);
+    const materialGroups=materialChapters().slice().sort((a,b)=>Number(a.id)-Number(b.id)).map(chapter=>{
       const lessons=materialLessons().filter(l=>l.chapter===chapter.id);
       const completed=lessons.filter(l=>materialDone(l.id)).length;
       return `<details class="mm-catalog-group" data-mm-catalog-group>
@@ -549,15 +555,25 @@ function createLessonCatalog(){
     }).join('');
     const extra=specialists();
     const extraGroup=extra.length?`<details class="mm-catalog-group" data-mm-catalog-group><summary><span class="mm-catalog-group-name">Optional specialist lessons</span><span class="mm-catalog-group-meta">${extra.filter(l=>specialistDone(l.id)).length}/${extra.length} · specialist progress</span></summary><div class="mm-catalog-rows">${extra.map(l=>`<button type="button" class="mm-catalog-lesson" data-mm-specialist-id="${esc(l.id)}" data-mm-catalog-item data-mm-catalog-type="specialist" data-mm-catalog-done="${specialistDone(l.id)?'1':'0'}" data-mm-catalog-text="${esc([l.id,l.title,l.level].join(' ').toLowerCase())}"><span class="mm-catalog-num">${esc(l.id)}</span><span class="mm-catalog-title">${esc(l.title)}</span><span class="mm-catalog-state">${specialistDone(l.id)?'✓ Done':'Open'}</span></button>`).join('')}</div></details>`:'';
+    const sequence=(key,title,description,groupsMarkup)=>groupsMarkup?`<section class="mm-catalog-sequence" data-mm-catalog-sequence="${key}" aria-labelledby="mmCatalogSequence-${key}"><header class="mm-catalog-sequence-head"><h3 id="mmCatalogSequence-${key}">${title}</h3><p>${description}</p></header><div class="mm-catalog-sequence-groups">${groupsMarkup}</div></section>`:'';
+    const materialsDescription=materialsIndex<0
+      ?'Follow the nine polymer-science chapters in order, from polymer structure and transitions through flow, processing, performance and material selection.'
+      :'Start with the core Materials course, then follow polymer science in order: foundations; morphology and transitions; rheology and flow; thermal behaviour and cooling; moisture, drying and degradation; mechanical and long-term properties; shrinkage, orientation and warpage; fillers, fibres, additives and recyclate; material selection and data interpretation.';
+    const orderedGroups=[
+      sequence('foundations','Part 1 · Foundations','Learn the machine and moulding-cycle basics before moving into material behaviour.',foundations.map(entry=>entry.markup).join('')),
+      sequence('materials','Part 2 · Materials & polymer science',materialsDescription,[...coreMaterials.map(entry=>entry.markup),materialGroups].join('')),
+      sequence('engineering','Part 3 · Process, tooling & engineering','Continue from mould design and process setup through troubleshooting, scientific studies and advanced engineering.',engineering.map(entry=>entry.markup).join('')),
+      sequence('specialist','Optional specialist extensions','Explore these advanced topics when you are ready. Their completion is tracked separately.',extraGroup)
+    ].join('');
     const {complete,total}=progressCounts();
     return `<section class="mm-all-lessons" data-mm-lesson-catalog aria-label="All lessons">
-      <div class="mm-catalog-head"><h2 tabindex="-1">All lessons</h2><p>${total} lessons in one library: ${core().length} core · ${materialLessons().length} material science · ${extra.length} optional specialist lessons. Overall progress includes all three tracks; course progress stays visible below.</p>
+      <div class="mm-catalog-head"><h2 tabindex="-1">All lessons</h2><p>${total} lessons: ${core().length} core · ${materialLessons().length} material science · ${extra.length} optional specialist. Follow the sequence below; each track keeps separate progress.</p>
         <div class="mm-catalog-progress" aria-label="All-library lesson progress"><div class="mm-catalog-progress-copy"><span>Completed across the full library</span><strong data-mm-catalog-progress-label>${complete} of ${total} complete</strong></div><progress data-mm-catalog-progress-bar aria-label="Lesson library completion" aria-valuetext="${complete} of ${total} lessons complete" value="${complete}" max="${Math.max(1,total)}"></progress></div>
         <button class="secondary mm-catalog-resources" type="button" data-mm-hub-action="learn-resources">Learning resources</button></div>
-      <div class="mm-catalog-controls"><label><span>Find a lesson</span><input type="search" autocomplete="off" placeholder="Search topics or lessons" data-mm-catalog-query value="${esc(state.query)}"></label><label><span>Show</span><select data-mm-catalog-filter><option value="all"${state.filter==='all'?' selected':''}>All lessons</option><option value="todo"${state.filter==='todo'?' selected':''}>Not finished</option><option value="done"${state.filter==='done'?' selected':''}>Completed</option><option value="saved"${state.filter==='saved'?' selected':''}>Saved</option><option value="material"${state.filter==='material'?' selected':''}>Material science</option><option value="specialist"${state.filter==='specialist'?' selected':''}>Specialist</option></select></label></div>
+      <div class="mm-catalog-controls"><label><span>Find a lesson</span><input type="search" autocomplete="off" placeholder="Search topics or lessons" data-mm-catalog-query value="${esc(state.query)}"></label><label><span>Show</span><select data-mm-catalog-filter><option value="all"${state.filter==='all'?' selected':''}>All lessons</option><option value="todo"${state.filter==='todo'?' selected':''}>Not finished</option><option value="done"${state.filter==='done'?' selected':''}>Completed</option><option value="saved"${state.filter==='saved'?' selected':''}>Saved</option><option value="material"${state.filter==='material'?' selected':''}>Materials &amp; polymer science</option><option value="specialist"${state.filter==='specialist'?' selected':''}>Specialist</option></select></label></div>
       ${workshop}
       <p class="mm-catalog-results" aria-live="polite" data-mm-catalog-count></p>
-      <div class="mm-catalog-groups">${groups}${materialGroups}${extraGroup}</div>
+      <div class="mm-catalog-groups">${orderedGroups}</div>
       <p class="mm-catalog-empty" data-mm-catalog-empty hidden>No matching lessons. Try another search or filter.</p>
     </section>`;
   }
@@ -581,7 +597,7 @@ function createLessonCatalog(){
         const type=button.dataset.mmCatalogType;
         const matchesStatus=state.filter==='all'||
           (state.filter==='specialist'?type==='specialist':
-           state.filter==='material'?type==='material':
+           state.filter==='material'?(type==='material'||button.dataset.mmCatalogTrack==='materials'):
            state.filter==='saved'?type==='core'&&button.dataset.mmCatalogSaved==='1':
            (type==='core'||type==='material'||type==='specialist')&&
             (state.filter==='todo'?button.dataset.mmCatalogDone==='0':button.dataset.mmCatalogDone==='1'));
@@ -596,6 +612,9 @@ function createLessonCatalog(){
         delete group.dataset.mmCatalogPrevOpen;
       }
       count+=visible;
+    });
+    box.querySelectorAll('[data-mm-catalog-sequence]').forEach(sequence=>{
+      sequence.hidden=!sequence.querySelector('[data-mm-catalog-group]:not([hidden])');
     });
     box.dataset.mmCatalogFiltering=filtering?'1':'0';
     const counter=box.querySelector('[data-mm-catalog-count]');

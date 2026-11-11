@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.11.11.2`**.
+Current governed web candidate: **`2026.11.11.3`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Production Pages candidate for release 2026.11.11.2 source 7c6587c5488bd764a6ae0a7afb2cbdfb252857d5 was built and retained as artifact 13833053386 in run 42970827493, with fingerprint sha256:1f3ee0bed1077c91562f83050e6642d80a01b39f9077f54a6b06c84be1f17c09. Exact-source candidate integrity and its required quality gates passed; external approvals remain HOLD. |
-| Behavioral / browser | **pass** | Automated browser and question quality checks passed for release 2026.11.11.2 source 7c6587c5488bd764a6ae0a7afb2cbdfb252857d5: Question Quality 50-Pass run 42970827534 and Mobile Browser QA run 42970827511 passed. These checks do not establish human, device, provider or production approval. |
-| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.11.2. |
+| Static / contract | **pass** | PASS — release 2026.11.11.3 source e230bfd9347b8d5e93adca1b8b61d6d35a25a9ac producer run 42997543719 retained artifact 13844541774 with runtime fingerprint sha256:a8674ff28178339b66c82b09a716d4deeee21d3934c66c36ff662e1397a9bc61 and artifact digest sha256:12d7491c5e9e8a92593011ccffc400e14815fa61d98ebdfa43e8149771b84bd4. Exact-source producer and artifact provenance are verified; all seven external review streams remain HOLD. |
+| Behavioral / browser | **pass** | PASS — release 2026.11.11.3 source e230bfd9347b8d5e93adca1b8b61d6d35a25a9ac passed Mobile Browser QA run 42997543658 and Question Quality 50-Pass run 42997543951 on the exact source. Software checks only; all seven external review streams remain HOLD. |
+| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.11.3. |

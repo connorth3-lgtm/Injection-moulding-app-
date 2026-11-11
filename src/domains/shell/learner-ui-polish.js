@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.11.11.2
+/* MouldMaster learner UI polish — 2026.11.11.3
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.11.11.2';
+const VERSION='2026.11.11.3';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
 const STYLE_REV='2026.10.20.2-pr640-materials-parity';
 const DESKTOP_QUERY='(min-width:1101px)';
@@ -531,10 +531,13 @@ const coursePresentation=[
  [/^materials$/i,'Polymers, properties and material selection','materials',3],
  [/^mould\s*design$/i,'Tooling, runners, gates and cooling','mould',4],
  [/^process\s*setup$/i,'Establishing and verifying process settings','setup',19],
- [/optimis|optimiz/i,'Monitoring and improving process repeatability','process',5],
- [/troubleshoot|defect/i,'Identify defects and test likely causes','defects',6],
- [/maintenan/i,'Equipment care and preventive maintenance','maintenance',7],
- [/case\s*stud|quality|advanced/i,'Apply evidence to worked examples','cases',8]
+ [/^defect\s*troubleshooting$/i,'Use evidence to identify defects and test likely causes','defects',6],
+ [/^scientific\s*moulding$/i,'Build repeatable processes through measured studies','process',5],
+ [/^capability\s*(?:&|and)\s*validation$/i,'Validate process performance and capability','quality',20],
+ [/^doe\s*(?:&|and)\s*statistics$/i,'Plan studies and interpret process variation','evidence',27],
+ [/^automation\s*(?:&|and)\s*sensors$/i,'Understand sensors, automation and machine response','controls',2],
+ [/^advanced\s*tooling\s*(?:&|and)\s*simulation$/i,'Explore advanced tooling and simulation','mould',4],
+ [/^expert\s*process\s*engineering$/i,'Connect materials, machines, tooling and evidence','process',5]
 ];
 function learnPresentation(title){
   const row=coursePresentation.find(([pattern])=>pattern.test(title));
@@ -558,32 +561,38 @@ function learn(){
   hub.querySelector('.mm-reference-learn-list')?.remove();
   const groups=Array.from(catalogue.querySelectorAll('[data-mm-catalog-group]'));
   // All 12 core tracks, all nine Material Science chapters and the optional
-  // specialist track share the same image-led card. The previous first-nine
-  // slice left the bottom of the catalogue as large unillustrated boxes.
+  // specialist track share the same image-led card. Chapter cards carry
+  // their own ordered explanations; core-card descriptions are title-based.
   const materialTiles=[
     ['materials',3],['materials',11],['process',5],
     ['thermal',26],['materials',12],['mould',4],
     ['quality',20],['evidence',27],['controls',2]
   ];
-  groups.forEach((group,index)=>{
+  const materialHints={
+    1:'Start with polymer chains, repeat units, molecular weight and the main polymer families.',
+    2:'Learn amorphous and semicrystalline structure, glass transition and melting behaviour.',
+    3:'Connect melt viscosity, shear and temperature to polymer flow.',
+    4:'Follow heat history, solidification and cooling behaviour.',
+    5:'Understand moisture, drying evidence and heat-related material degradation.',
+    6:'Relate mechanical loading, impact, creep and ageing to performance over time.',
+    7:'See how flow orientation, packing and cooling affect shrinkage and warpage.',
+    8:'Learn how fillers, fibres, additives and recyclate change properties and processing.',
+    9:'Compare material data and select a grade for a defined application.'
+  };
+  groups.forEach(group=>{
     const summary=group.querySelector(':scope > summary');
     if(!summary||summary.querySelector('.mm-reference-course-art'))return;
     const fullTitle=group.querySelector('.mm-catalog-group-name')?.textContent||'Learning module';
     const title=fullTitle.replace(/^[0-9]+[.] */, '');
     const isMaterial=fullTitle.startsWith('Material science ·');
     const isSpecialist=fullTitle.startsWith('Optional specialist');
-    const focus=materialTiles[Math.max(0,index-12)%materialTiles.length];
+    const chapterNumber=Number(fullTitle.match(/^Material science ·\s*(\d+)/i)?.[1])||1;
+    const focus=materialTiles[(chapterNumber-1)%materialTiles.length];
     const present=isMaterial
-      ? {art:focus[0],tile:focus[1],hint:'Explore polymer behaviour and its evidence'}
+      ? {art:focus[0],tile:focus[1],hint:materialHints[chapterNumber]||'Explore polymer behaviour and its evidence'}
       :isSpecialist
         ? {art:'training',tile:24,hint:'Optional advanced topics'}
-        :index===9
-          ? {art:'controls',tile:2,hint:'Sensors, automation and control'}
-          :index===10
-            ? {art:'mould',tile:4,hint:'Advanced tooling and simulation'}
-            :index===11
-              ? {art:'process',tile:5,hint:'Expert process engineering'}
-              :learnPresentation(title);
+        :learnPresentation(title);
     group.classList.toggle('mm-catalog-material-track',isMaterial);
     group.classList.toggle('mm-catalog-specialist-track',isSpecialist);
     const art=picture(present.art,'',present.tile);

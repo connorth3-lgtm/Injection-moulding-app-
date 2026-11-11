@@ -54,16 +54,33 @@ for(const width of [320,360,390,412]){
     const illustratedCourses=page.locator('#path .mm-unified-course-summary');
     await expect(illustratedCourses).toHaveCount(22);
     await expect(illustratedCourses.locator('.mm-reference-course-art')).toHaveCount(22);
-    // The formerly missed courses 10–12 and all Material Science chapters
-    // must have the SAME accessible, illustrated compact summary treatment.
-    await expect(illustratedCourses.nth(9)).toContainText('Automation & Sensors');
-    await expect(illustratedCourses.nth(10)).toContainText('Advanced Tooling');
-    await expect(illustratedCourses.nth(11)).toContainText('Expert Process Engineering');
+    // Core Materials is followed immediately by all nine numbered chapters;
+    // the process and tooling courses continue after the complete materials run.
+    const orderedCourseNames=await illustratedCourses.locator('.mm-catalog-group-name').allTextContents();
+    expect(orderedCourseNames.slice(0,13)).toEqual([
+      '1. Foundations',
+      '2. Machine & Controls',
+      '3. Materials',
+      'Material science · 1. Polymer foundations',
+      'Material science · 2. Morphology & transitions',
+      'Material science · 3. Rheology & flow',
+      'Material science · 4. Thermal behaviour & cooling',
+      'Material science · 5. Moisture, drying & degradation',
+      'Material science · 6. Mechanical & long-term properties',
+      'Material science · 7. Shrinkage, orientation & warpage',
+      'Material science · 8. Fillers, fibres, additives & recyclate',
+      'Material science · 9. Material selection & data interpretation',
+      '4. Mould Design'
+    ]);
+    for(const courseName of ['Automation & Sensors','Advanced Tooling & Simulation','Expert Process Engineering']){
+      const course=illustratedCourses.filter({hasText:courseName});
+      await expect(course).toHaveCount(1);
+      await expect(course.locator('.mm-reference-course-art')).toBeVisible();
+    }
     await expect(page.locator('#path .mm-catalog-material-track')).toHaveCount(9);
     await expect(illustratedCourses.last()).toContainText('Optional specialist');
     await expect(illustratedCourses.nth(1)).toContainText('Machine');
     await expect(illustratedCourses.nth(2)).toContainText('Materials');
-    await expect(illustratedCourses.nth(3)).toContainText('Mould');
     expect(await illustratedCourses.nth(2).locator('.mm-reference-photo').getAttribute('data-mm-photo-index')).toBe('3');
     await expect(page.locator('#path [data-mm-lesson-catalog]')).toHaveCount(1);
     await page.locator('#path [data-mm-catalog-query]').fill('injection');
