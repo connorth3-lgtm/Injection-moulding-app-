@@ -100,7 +100,7 @@
       "id": "material-science-checks",
       "label": "Material science chapter checks",
       "count": 45,
-      "source": "MATERIALS.quiz in src/core-runtime/core-inline-005.js",
+      "source": "27 core MATERIALS.quiz questions tagged by primary-learning-practice-hubs.js plus 18 chapter-tagged additions in that file",
       "launcherAction": "material-science-checks",
       "coverage": "Five material-science check questions for each of the nine chapters",
       "attemptPattern": "Randomly selects two questions from each of the nine chapters (18 total)",
