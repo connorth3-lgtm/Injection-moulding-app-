@@ -7,7 +7,7 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.10.10.4';
+const VERSION='2026.11.11.1';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
 const originalRenderScenarios=renderScenarios;
 
@@ -151,7 +151,7 @@ function nextScenarioIndex(){
   return next;
 }
 let learnToolOrigin=null;
-const LEARN_TOOL_ACTIONS=new Set(['assessments','diagnostic-labs','material-labs','measured-decisions','process-data','question-centre','troubleshooting','scenario-detail','learn-scenarios']);
+const LEARN_TOOL_ACTIONS=new Set(['assessments','diagnostic-labs','material-labs','material-science-checks','measured-decisions','process-data','question-centre','specialist','troubleshooting','scenario-detail','learn-scenarios']);
 function bind(root){
   if(root?.id==='scenarios')bindPracticeGuided(root);
   if(!root||root.dataset.mmHubActionsBound==='1')return;
@@ -447,6 +447,19 @@ window.MM_DIAGNOSTIC_WORKBENCH=Object.freeze({
   noProductionControl:true
 });
 
+function openMaterialScienceCheck(){
+  ensureMaterialScienceQuestionBank();
+  closePicker();
+  switchView('materials');
+  if(typeof switchMaterialTab==='function')switchMaterialTab('quiz');
+  const root=document.getElementById('materials');
+  if(!root||root.querySelector('[data-mm-question-centre-return]'))return;
+  const bar=document.createElement('div');bar.className='mm-hub-detail-back';bar.dataset.mmQuestionCentreReturn='1';
+  const button=document.createElement('button');button.type='button';button.textContent='← Back to Question Centre';button.dataset.mmHubAction='question-centre';
+  const label=document.createElement('span');label.textContent='Material science checks';
+  bar.append(button,label);root.prepend(bar);bind(root);
+}
+
 function runAction(action,source='practice'){
   switch(action){
     case 'boss-round': return typeof startBossRound==='function'?startBossRound():openScenarioDetail();
@@ -478,6 +491,7 @@ function runAction(action,source='practice'){
     case 'spatial-twin': closePicker(); return safeOpen('MM_SPATIAL_TWIN',()=>switchView('simulator'));
     case 'simulator': closePicker(); return switchView('simulator');
     case 'material-labs': closePicker(); return safeOpen('MM_MATERIAL_BEHAVIOUR_LABS',()=>switchView('materials'));
+    case 'material-science-checks': return openMaterialScienceCheck();
     case 'measured-decisions': closePicker(); return safeOpen('MM_REAL_MEASURED_ASSESSMENT');
     case 'question-centre': return openQuestionCentreDetail();
     case 'assessments': closePicker(); return switchView('exams');
@@ -1140,10 +1154,11 @@ function learnHubMarkup(workshopOpen){
   const lesson=c?.lesson;const course=c?.course;
   const lessonLine=course?`${esc(course.name)} · Lesson ${(c.position||0)+1} of ${course.lessonIds.length}`:'Your current lesson';
   const questionCounts=questionCentreCounts();
+  const questionSupplemental=questionCentreSupplementalCounts();
   return `<div class="mm-primary-hub mm-learn-hub">
     <header class="mm-primary-hub-head"><span class="eyebrow">Learn</span><h1>Lessons</h1><p>Core, material science and specialist lessons in one place.</p></header>
     <section class="mm-hub-continue mm-primary-hub-card" aria-label="Continue learning"><div class="mm-hub-continue-copy"><span class="eyebrow">Continue</span><h2>${esc(lesson?.title||'Your next lesson')}</h2><p>${lessonLine}</p><div class="mm-hub-progress"><div class="mini-bar" aria-hidden="true"><span style="width:${c?.overall||0}%"></span></div><strong>${c?.overall||0}% complete</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="lesson">Continue lesson →</button></section>
-    <section class="mm-hub-section mm-learn-question-launch" aria-label="Question Centre"><div class="mm-hub-section-head"><div><span class="eyebrow">${questionCounts.total} governed prompts</span><h2>Question Centre</h2></div><button class="primary" type="button" data-mm-hub-action="question-centre">Open Question Centre →</button></div><p>Explore formal checks, shop-floor scenarios, guided diagnostic and material questions, and measured-evidence decisions from one place. Lesson exercises and Book self-checks stay with their teaching.</p></section>
+    <section class="mm-hub-section mm-learn-question-launch" aria-label="Question Centre"><div class="mm-hub-section-head"><div><span class="eyebrow">${questionSupplemental.totalLearnerQuestionPrompts} total question prompts · ${questionCounts.total} governed prompts</span><h2>Question Centre</h2></div><button class="primary" type="button" data-mm-hub-action="question-centre">Open Question Centre →</button></div><p>Explore governed checks, shop-floor scenarios, diagnostic and material questions, measured-evidence decisions and material-science chapter checks from one place. Lesson exercises and Book self-checks stay with their teaching.</p></section>
     <section class="mm-learn-courses" id="mmLearnCourses" aria-label="Search and browse all lessons">${lessonCatalog.markup(learnWorkshopMarkup(workshopOpen))}</section>
   </div>`;
 }
@@ -1223,15 +1238,68 @@ function questionCentreCounts(){
  const measured=window.MM_REAL_MEASURED_ASSESSMENT?.decisionCount||12;
  return {formal,scenarios,diagnostic,materials,measured,total:formal+scenarios+diagnostic+materials+measured};
 }
+const MATERIAL_SCIENCE_BASE_CHAPTER_IDS=[2,2,2,3,3,4,3,3,7,8,5,5,5,5,6,6,6,7,8,9,9,8,2,7,8,9,1];
+const MATERIAL_SCIENCE_CHAPTER_CHECK_ADDITIONS=[["What change best distinguishes a conventional thermoset after cure from a thermoplastic?",["It forms a network that does not simply soften and remelt; excessive heat can degrade it","It always has a lower melting point than any thermoplastic","It must be fully crystalline after moulding","It can be reprocessed by repeated heating without changing its network"],0,"Curing forms a crosslinked network in a thermoset, so it does not simply melt and flow again like a conventional thermoplastic. Heating beyond its stability limits can cause chemical degradation.",1],["What does a polymer repeat unit represent?",["One complete moulded component before it is cut from the runner","A recurring structural unit along a polymer chain, derived from one or more monomer species","A temporary group of chains that exists only while the polymer is molten","A fixed amount of additive mixed into each pellet"],1,"A repeat unit is the recurring structural motif along a macromolecular chain. Polymer architecture and chemistry arise from how those units and any comonomers are arranged.",1],["At otherwise comparable chemistry and test conditions, how can higher molecular weight affect melt flow?",["It always lowers viscosity because longer chains slide more easily","It has no influence once the resin has been pelletised","It often raises viscosity through greater chain entanglement, though distribution and architecture also matter","It fixes one universal melt-temperature setting for every grade"],2,"Longer chains often create more entanglements and higher melt viscosity, but molecular-weight distribution, branching, comonomers and formulation also influence a grade's behaviour.",1],["Which statement about elastomers and thermoplastic elastomers (TPEs) is most accurate?",["All elastomers are one polymer chemistry and use the same moulding settings","All elastomers are thermosets, so none can be reshaped by heating","Elastomer means the material must be fully crystalline at room temperature","Elastomer describes a rubber-like mechanical response that can come from different chemistries; TPEs are a broad family that can be processed thermoplastically"],3,"Elastomeric behaviour is a mechanical response, not one chemistry. Thermoplastic elastomers are a broad group that combines rubber-like behaviour with thermoplastic processing, while material and process details remain grade-specific.",1],["Why may a semi-crystalline polymer's melting behaviour span a temperature range?",["Crystalline regions can differ in thickness and perfection, and the observed response depends on material and thermal history","Every chain melts at the glass-transition temperature, but the instrument averages the readings","The range is caused only by moisture absorbed after moulding","The polymer has one exact melting point that is independent of how the sample was prepared"],0,"Crystalline lamellae can differ in thickness and perfection, so melting may occur over a range. Test conditions and prior thermal history also affect the observed response; Tm is not a machine setpoint.",2],["Why can required injection pressure rise when fill speed increases, even though many thermoplastic melts are shear-thinning?",["Shear-thinning stops as soon as the screw begins moving","The higher flow demand can increase pressure losses through the cavity faster than shear-thinning reduces apparent viscosity","Higher speed removes all pressure losses at the gate","Pressure must fall whenever apparent viscosity falls, regardless of flow rate"],1,"A higher flow rate can increase viscous pressure loss through the runner, gate and cavity. Shear-thinning affects viscosity, but the net pressure response also depends on geometry, temperature and the requested fill rate.",3],["Why does the centre of a thick moulded section usually cool more slowly than a thin section?",["The centre contains no polymer chains, so it cannot transfer heat","The mould surface always heats thick sections more than thin sections","Heat must travel a greater distance from the centre to a cooled surface, while the result also depends on material and tool design","Cooling time depends only on the water-in temperature, not part thickness"],2,"Heat from the centre must conduct through more material before reaching a cooled boundary. Thickness, thermal properties, mould contact, channel layout and process conditions all affect the actual cooling history.",4],["What is the most useful way to think about mould temperature during cooling?",["A hotter mould always shortens cycle time without affecting the part","Mould temperature changes only the steel and cannot affect polymer morphology","A colder mould always improves dimensional stability for every resin","It changes the thermal boundary condition and can affect solidification, crystallisation and surface formation; the result is grade- and part-dependent"],3,"Mould temperature influences heat transfer and the time-temperature history experienced by the polymer. It can affect solidification, crystallisation, surface quality and cycle time, so evaluate it against the actual grade and part requirements.",4],["Why should a barrel-zone setpoint not automatically be treated as the actual melt temperature?",["The material also experiences shear heating, residence-time effects and machine-specific heat transfer","The melt temperature is always equal to the hopper-air temperature","The setpoint measures the polymer's temperature at every point in the screw channel","Setpoints cannot influence melt temperature once the screw starts rotating"],0,"Barrel setpoints describe control targets at selected locations. The polymer's actual temperature also depends on screw work, throughput, residence time, machine design and material; use an appropriate measurement when the decision requires it.",4],["Why can two cooling circuits with the same inlet-water temperature remove different amounts of heat?",["Inlet-water temperature uniquely determines cooling capacity","Flow rate, circuit balance, channel layout and heat-transfer condition can differ","Cooling circuits remove heat only after the mould opens","Channel scale and restrictions affect pressure but never flow or heat transfer"],1,"Inlet temperature is only one part of cooling performance. Flow, circuit balance, channel placement, contact and deposits or restrictions can change heat removal and cavity-to-cavity consistency.",4],["After a moisture-sensitive resin has been dried, why can transfer and storage still matter?",["Drying permanently removes every source of moisture from the polymer","Pellets cannot take up moisture once they have been heated above room temperature","Pellets can absorb moisture again if exposed to humid air, so handling should follow the grade-specific instructions","A dry-air dew-point reading proves that the resin stays dry after leaving the dryer"],2,"Some resins can reabsorb moisture after drying. A controlled, suitably enclosed transfer and grade-specific handling instructions help preserve the verified condition until processing.",5],["A polymer specimen is held at a fixed strain and its measured force gradually falls. What behaviour does this describe?",["Creep","Fatigue","Elastic recovery","Stress relaxation"],3,"Stress relaxation is the decrease in stress over time when deformation is held approximately constant. Creep instead describes time-dependent deformation under sustained load.",6],["Why can fatigue matter even when each load cycle is below a short-term static strength value?",["Repeated loading can initiate and grow damage over many cycles; life depends on material, geometry and environment","A part cannot fail unless one cycle exceeds its tensile-strength value","Fatigue is another name for creep under a constant load","Passing one static test proves unlimited life under cyclic loading"],0,"Cyclic loading can initiate and grow damage over time even when peak stress is below a short-term static strength result. Fatigue life depends on the material, design, load history, environment and test method.",6],["Why should shrinkage measurements use a consistent time and conditioning procedure?",["A moulded part reaches final dimensions at the exact instant the mould opens","Part dimensions can continue to change after ejection as temperature, moisture and internal morphology or stress equilibrate","Conditioning changes only colour and never dimensions","A measurement taken at any time is directly comparable if the same caliper is used"],1,"Dimensions can evolve after ejection through cooling, conditioning, moisture change and stress relaxation. Comparable trials therefore need consistent measurement timing, conditioning and method.",7],["Why may a moulded part shrink differently along the flow direction and across it?",["Polymer shrinkage is always identical in every direction once the material is solid","The parting line alone determines all directional shrinkage","Flow-induced molecular or fibre orientation can create directional behaviour, alongside geometry, packing and cooling effects","Orientation affects strength but cannot influence dimensions"],2,"Molecular and fibre orientation can make properties and shrinkage direction-dependent. Geometry, pressure history and cooling also matter, so measure the actual part in relevant directions rather than assuming isotropic shrinkage.",7],["When a filler or reinforcement level changes, what is safest to review besides stiffness?",["Only colour can change if the base polymer family stays the same","The machine recipe and mould response are guaranteed to remain identical","Reinforcement always lowers melt viscosity and shrinkage by the same amount","The change may also affect flow, shrinkage, thermal response, surface quality and equipment wear"],3,"Fillers and fibres can influence several material and process responses, including rheology, shrinkage, thermal behaviour, surface appearance, anisotropy and wear. The actual grade data and validated application determine the effect.",8],["A supplier datasheet lists a property as a 'typical value'. What is the soundest interpretation?",["It is a guaranteed minimum for every production lot unless a footnote says otherwise","It predicts the finished component's exact property without part testing","It is representative information under stated test conditions, not automatically a guaranteed acceptance limit for every lot or part","It can be compared directly with any other supplier's value regardless of test method"],2,"Typical datasheet values help describe a grade but do not automatically form a contractual specification or guarantee for every lot or finished part. Check stated methods, limits, supplier documentation and application validation.",9],["Why is room-temperature tensile strength alone an inadequate material-selection basis for a long-life component?",["Tensile strength already includes every environmental and long-term effect","Room-temperature tensile strength directly predicts creep and fatigue life","Only the resin's colour matters after a tensile value has been reported","Service temperature, time under load, impact, chemicals, moisture, UV and other requirements can change performance"],3,"A short-term room-temperature tensile result describes only part of performance. Selection should address the component's real service environment, loading history, design, regulatory needs and appropriate validation.",9]];
+function ensureMaterialScienceQuestionBank(){
+  try{
+    if(typeof MATERIALS==='undefined'||!Array.isArray(MATERIALS.quiz)||!Array.isArray(MATERIALS.chapters))return 0;
+    MATERIAL_SCIENCE_BASE_CHAPTER_IDS.forEach((chapterId,index)=>{
+      const row=MATERIALS.quiz[index];if(Array.isArray(row)&&!Number.isInteger(row[4]))row[4]=chapterId;
+    });
+    if(MATERIALS.quiz.length===MATERIAL_SCIENCE_BASE_CHAPTER_IDS.length){
+      MATERIALS.quiz.push(...MATERIAL_SCIENCE_CHAPTER_CHECK_ADDITIONS.map(row=>row.slice()));
+    }
+    if(MATERIALS.quiz.length!==45)return MATERIALS.quiz.length;
+    if(!window.__MM_MATERIAL_SCIENCE_BALANCE_PATCH__&&typeof shuffleMaterial==='function'){
+      const baseShuffle=shuffleMaterial;
+      window.shuffleMaterial=function(rows){
+        const isQuestionBank=Array.isArray(rows)&&rows.length===MATERIALS.quiz.length&&rows.every(item=>item&&Number.isInteger(item.i)&&Array.isArray(item.q)&&Number.isInteger(item.q[4]));
+        if(!isQuestionBank)return baseShuffle(rows);
+        const selected=[];
+        for(const chapter of MATERIALS.chapters){
+          const pool=rows.filter(item=>Number(item.q[4])===Number(chapter.id));
+          if(pool.length<2)return baseShuffle(rows);
+          selected.push(...baseShuffle(pool).slice(0,2));
+        }
+        return baseShuffle(selected);
+      };
+      window.__MM_MATERIAL_SCIENCE_BALANCE_PATCH__=true;
+    }
+    if(!window.__MM_MATERIAL_SCIENCE_RENDER_PATCH__&&typeof renderMaterialQuiz==='function'){
+      const baseRender=renderMaterialQuiz;
+      window.renderMaterialQuiz=function(){
+        const html=baseRender.apply(this,arguments);
+        return String(html).replace(/<div class="mat-q" data-source="(\d+)">/g,(_match,source)=>{
+          const chapter=MATERIALS.quiz[Number(source)]?.[4];
+          return '<div class="mat-q" data-source="'+source+'" data-chapter="'+String(chapter??'')+'">';
+        });
+      };
+      window.__MM_MATERIAL_SCIENCE_RENDER_PATCH__=true;
+    }
+    return MATERIALS.quiz.length;
+  }catch(error){
+    console.warn('[MouldMaster] Material-science chapter checks could not be attached.',error);
+    return 0;
+  }
+}
+function questionCentreSupplementalCounts(){
+ ensureMaterialScienceQuestionBank();
+ let materialScience=0;
+ try{if(typeof MATERIALS!=='undefined'&&Array.isArray(MATERIALS.quiz))materialScience=MATERIALS.quiz.length}catch(_){}
+ const specialists=Array.isArray(window.MM_SPECIALIST_CURRICULUM?.lessons)?window.MM_SPECIALIST_CURRICULUM.lessons.length:0;
+ return {materialScience,specialists,totalLearnerQuestionPrompts:questionCentreCounts().total+materialScience};
+}
 function questionCentreMarkup(){
- const q=questionCentreCounts();
- return `<span class="eyebrow">${q.total} governed prompts</span><h2>Choose how you want to be questioned</h2><p class="muted">Most governed question-based learning is collected here. Formal checks and low-stakes practice keep their existing scoring and evidence boundaries.</p><div class="mm-hub-picker-grid">
+ const q=questionCentreCounts(),supplemental=questionCentreSupplementalCounts();
+ const chapterCount=typeof MATERIALS!=='undefined'&&Array.isArray(MATERIALS.chapters)?MATERIALS.chapters.length:9;
+ return `<span class="eyebrow">${supplemental.totalLearnerQuestionPrompts} total question prompts · ${q.total} governed prompts + ${supplemental.materialScience} formative material-science checks</span><h2>Choose how you want to be questioned</h2><p class="muted">Choose a governed practice mode or open the separate material-science learning check. Scoring, evidence and safety rules stay with each source.</p><div class="mm-hub-picker-grid">
  <button type="button" data-mm-hub-action="assessments"><b>Formal knowledge checks</b><small>30 approved technical + 27 regional-safety bank items. Attempts use the governed level/region blueprint: 10 questions in one jurisdiction or 16 in Compare All.</small></button>
  <button type="button" data-mm-hub-action="scenario-detail"><b>Shop-floor scenarios</b><small>${q.scenarios} evidence-first decisions with immediate feedback.</small></button>
  <button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic questions</b><small>${q.diagnostic} guided fault-isolation decisions across the diagnostic labs.</small></button>
  <button type="button" data-mm-hub-action="material-labs"><b>Material questions</b><small>${q.materials} resin/evidence decisions across the material labs.</small></button>
  <button type="button" data-mm-hub-action="measured-decisions"><b>Measured-evidence decisions</b><small>${q.measured} decisions grounded in audited measured-data contracts.</small></button>
- </div><p class="tiny muted" style="margin-top:12px">${q.total} governed question/decision prompts across these five modes. Book chapter self-checks, the 32 optional reasoning questions and lesson exercises stay with the core lessons they belong to.</p>`;
+ <button type="button" data-mm-hub-action="material-science-checks"><b>Material science chapter checks</b><small>${supplemental.materialScience} questions: five per chapter across all ${chapterCount} chapters; 18 per attempt, with two from each chapter. Formative learning only, separate from certification.</small></button>
+ </div><p class="tiny muted" style="margin-top:12px">${q.total} governed question/decision prompts across these five modes. Book chapter self-checks, the 32 optional reasoning questions and lesson exercises stay with the core lessons they belong to. The balanced ${supplemental.materialScience}-question material-science bank is formative and does not add to the governed count.</p><p class="tiny muted mm-question-centre-related">For optional advanced depth, browse ${supplemental.specialists} specialist lessons. They are lessons, not question prompts. <button type="button" class="ghost" data-mm-hub-action="specialist">Browse optional specialist lessons →</button></p>`;
 }
 function openQuestionCentreDetail(){
   try{window.closeModal?.()}catch(_){}
@@ -1806,6 +1874,6 @@ window.MM_LESSON_REASONING=Object.freeze({
     id:q.id,lessonId:LEARN_REASONING_TO_CORE_LESSON[q.id],topic:q.topic
   }))
 });
-window.MM_QUESTION_CENTRE=Object.freeze({version:VERSION,open:openQuestionCentreDetail,counts:questionCentreCounts,scope:'Learner-facing consolidated launcher only; governed question sources, scoring, outcome-review status and evidence remain in their canonical subsystems.'});
+window.MM_QUESTION_CENTRE=Object.freeze({version:VERSION,open:openQuestionCentreDetail,counts:questionCentreCounts,supplementalCounts:questionCentreSupplementalCounts,scope:'Learner-facing consolidated launcher only; governed question sources, scoring, outcome-review status and evidence remain in their canonical subsystems.'});
 window.MM_PRIMARY_HUBS={version:VERSION,renderLearnHub,renderPracticeHub,openCurrentLesson,openLearningPathDetail,openScenarioDetail,nextScenarioIndex,learnerPracticePlan,openLearningResources:()=>openPicker('learn-resources'),learnToolOrigin:()=>learnToolOrigin,clearLearnToolOrigin:()=>{learnToolOrigin=null;}};
 })();

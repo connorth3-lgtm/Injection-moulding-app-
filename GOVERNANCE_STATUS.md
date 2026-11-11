@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.11.09.1`**.
+Current governed web candidate: **`2026.11.11.1`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS — release 2026.11.09.1 candidate source cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392, artifact 13737976183, fingerprint sha256:0e68700ff76eef0eee8cd488aa42e35d4b46501a1fcf795e8e7b09dfa168e7cd, retained by Pre-merge Public Candidate run 42760878572; exact artifact provenance and runtime fingerprint are recorded. Software-only; this creates no external approval. |
-| Behavioral / browser | **pass** | PASS — release 2026.11.09.1 candidate source cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392 passed Mobile Browser QA run 42760878892 and Question Quality 50-Pass run 42760878736. Software-only; this creates no external approval. |
-| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.09.1. |
+| Static / contract | **pass** | Production Pages candidate for release 2026.11.11.1 source 8c98fb97b6cfaea468bd702296c7b16b0c68deee was built and retained as artifact 13825611364 in run 42952112263, with fingerprint sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74. Exact-source candidate integrity and its quality gates passed; external approvals remain HOLD. |
+| Behavioral / browser | **pass** | Automated browser and question quality checks passed for release 2026.11.11.1 source 8c98fb97b6cfaea468bd702296c7b16b0c68deee: Question Quality 50-Pass run 42952112424 and Mobile Browser QA run 42952112268 passed. Curriculum coverage run 42952112262 and Deep Dive v2 run 42952112310 also passed. These checks do not establish human, device, provider or production approval. |
+| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.11.1. |
