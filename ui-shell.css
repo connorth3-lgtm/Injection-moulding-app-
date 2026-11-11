@@ -676,3 +676,10 @@ button:disabled,[aria-disabled="true"]{
     outline-color:Highlight;
   }
 }
+/* Ordered lesson-library sections keep all polymer topics together. */
+.mm-catalog-sequence{display:grid;gap:7px;min-width:0;margin:4px 0 8px}
+.mm-catalog-sequence[hidden]{display:none!important}
+.mm-catalog-sequence-head{min-width:0;padding:4px 9px 5px;border-left:2px solid #5fe0c6}
+.mm-catalog-sequence-head h3{margin:0;color:#82e8d7;font-size:13px;line-height:1.3;font-weight:850}
+.mm-catalog-sequence-head p{margin:3px 0 0;color:#afc5d6;font-size:11px;line-height:1.4}
+.mm-catalog-sequence-groups{display:grid;gap:8px;min-width:0}
