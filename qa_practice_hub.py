@@ -128,7 +128,7 @@ for required in (
     "Evidence gaps to resolve",
     "data-mm-dx-hypothesis",
     "case 'troubleshooting': return source==='learn'?dxOpen():openProblemPractice();",
-    "case 'diagnostic-workbench': return dxOpen();",
+    "case 'diagnostic-workbench': dxReturnMode='hub';return dxOpen();",
     "renderDefects=renderUnifiedDefects",
     "renderCoach=renderUnifiedCoach",
 ):
