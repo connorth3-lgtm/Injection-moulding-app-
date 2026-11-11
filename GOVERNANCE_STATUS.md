@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -45,7 +45,7 @@ Publication authorization and independent validation are separate namespaces. Th
 These layers are reported separately. Passing static/contract or automated browser QA does not convert the external human/device layer into a pass.
 
 | Layer | State | Meaning |
-| --- | --- | --- |
-| Static / contract | **fail** | HOLD — release 2026.11.11.1 exact-source technical candidate has not yet been retained. |
-| Behavioral / browser | **fail** | HOLD — release 2026.11.11.1 exact-source browser and question-quality gates are pending. |
+| --- | --- |
+| Static / contract | **pass** | Exact-source production Pages candidate for release 2026.11.11.1 (source 8c98fb97b6cfaea468bd702296c7b16b0c68deee, artifact 13825611364, producer run 42952112263) was built and retained with public-runtime fingerprint sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74. This confirms software candidate integrity only; external approvals remain HOLD. |
+| Behavioral / browser | **pass** | Exact-source Question Quality 50-Pass run 42952112424 and Mobile Browser QA run 42952112268 passed for 8c98fb97b6cfaea468bd702296c7b16b0c68deee. Curriculum coverage run 42952112262 and Deep Dive v2 run 42952112310 also passed. These are automated checks only and do not establish human, device, provider or production approval. |
 | External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.11.1. |

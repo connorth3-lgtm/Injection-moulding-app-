@@ -1,8 +1,10 @@
 # MouldMaster 2026.11.11.1 — external validation status
 
-**STATUS: HOLD — new release documentation is staged; technical candidate retention and all seven independent review streams remain pending.**
+**STATUS: HOLD — exact-source technical candidate and automated QA are verified; all seven independent review streams remain HOLD.**
 
-> **PENDING 2026.11.11.1 TECHNICAL ARTIFACT — STOP; all external acceptance remains HOLD.** This index records no completed software, human, device, Windows distribution, SME, learner-outcome or provider validation.
+> **RETAINED 2026.11.11.1 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 42952112263](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/42952112263) created artifact **13825611364**, source 8c98fb97b6cfaea468bd702296c7b16b0c68deee, digest sha256:fe6b00ef50917b853ae8bf297f7bcda8a586b8562eb6a1c4999e8b99165ff3d0, expiry 2027-02-09T03:20:35Z, and public-runtime fingerprint sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74. Exact-source candidate and exact-head browser/question quality gates passed. The artifact does not establish human, real-device, Windows signing, provider, accreditation or production authorization.
+
+This index records successful exact-source automated checks; it records no completed human, device, Windows distribution, SME, learner-outcome or provider validation.
 
 ## Release scope
 
@@ -10,7 +12,22 @@ This web release adds a formative, chapter-balanced material-science question ch
 
 ## Candidate identity
 
-No retained exact-source candidate is recorded in this staged index. Add the candidate and runtime fingerprint only from the Pre-merge Public Candidate workflow artifact. Report exact-head Mobile Browser QA and Question Quality 50-Pass results separately.
+- Release: 2026.11.11.1
+- Source: 8c98fb97b6cfaea468bd702296c7b16b0c68deee
+- Public-runtime fingerprint: sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74
+- Producer workflow: Pre-merge Public Candidate, run 42952112263 (success)
+- Retained artifact: physical-pwa-candidate-8c98fb97b6cfaea468bd702296c7b16b0c68deee, ID 13825611364
+- Artifact digest: sha256:fe6b00ef50917b853ae8bf297f7bcda8a586b8562eb6a1c4999e8b99165ff3d0
+- Artifact expiry: 2027-02-09T03:20:35Z
+
+## Exact-source automated checks — PASS
+
+- Pre-merge Public Candidate — run 42952112263; exact-source Pages artifact built and retained.
+- Mobile Browser QA — run 42952112268; Chromium and WebKit substantive suites, visual/reachability checks, cross-browser check and all five reliability shards passed.
+- Question Quality 50-Pass — run 42952112424; passed.
+- Assessment and Curriculum Coverage Audit — run 42952112262; passed.
+- MouldMaster Deep Dive v2 QA — run 42952112310; passed.
+- Deep Audit Governance — run 42952112056; passed.
 
 ## Release-specific review packets — all HOLD
 

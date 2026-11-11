@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.11.11.1 is staged without claiming physical-device evidence. Real install, offline restart, reboot, update, storage-pressure and zoom remain pending on physical iOS/iPadOS and Android devices. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
+  "boundary": "Retained release 2026.11.11.1 candidate 8c98fb97b6cfaea468bd702296c7b16b0c68deee and artifact 13825611364 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -65,6 +65,26 @@
     "artifactDigest": "sha256:34d881128b8a3f59bb0235e61dad090ee96d582c15005f38bede7d13ef50efd8",
     "artifactExpiresAt": "2027-01-20T04:00:42Z"
   },
-  "candidate": null,
-  "currentCandidate": null
+  "candidate": {
+    "release": "2026.11.11.1",
+    "sourceSha": "8c98fb97b6cfaea468bd702296c7b16b0c68deee",
+    "runtimeFingerprint": "sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74",
+    "candidateRunId": 42952112263,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 13825611364,
+    "artifactName": "physical-pwa-candidate-8c98fb97b6cfaea468bd702296c7b16b0c68deee",
+    "artifactDigest": "sha256:fe6b00ef50917b853ae8bf297f7bcda8a586b8562eb6a1c4999e8b99165ff3d0",
+    "artifactExpiresAt": "2027-02-09T03:20:35Z"
+  },
+  "currentCandidate": {
+    "release": "2026.11.11.1",
+    "sourceSha": "8c98fb97b6cfaea468bd702296c7b16b0c68deee",
+    "runtimeFingerprint": "sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74",
+    "candidateRunId": 42952112263,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 13825611364,
+    "artifactName": "physical-pwa-candidate-8c98fb97b6cfaea468bd702296c7b16b0c68deee",
+    "artifactDigest": "sha256:fe6b00ef50917b853ae8bf297f7bcda8a586b8562eb6a1c4999e8b99165ff3d0",
+    "artifactExpiresAt": "2027-02-09T03:20:35Z"
+  }
 }
