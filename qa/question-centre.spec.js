@@ -23,15 +23,40 @@ test('Question Centre gathers the main governed question modes and keeps context
   await launcher.click();
   const centre=page.locator('#path .mm-question-centre');
   await expect(centre.getByRole('heading',{name:'Choose how you want to be questioned'})).toBeVisible();
-  for(const name of ['Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions']){
+  for(const name of ['Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions','Material science chapter checks']){
     await expect(centre.getByRole('button',{name:new RegExp(name)})).toBeVisible();
   }
+  await expect(centre).toContainText('196 total question prompts');
   await expect(centre).toContainText('169 governed question/decision prompts');
+  await expect(centre.locator('.mm-hub-picker-grid > button')).toHaveCount(6);
+  await expect(centre).toContainText('27 questions from the 9-chapter bank; 18 per attempt');
+  await expect(centre.locator('[data-mm-hub-action="specialist"]')).toContainText('Browse optional specialist lessons');
   await expect(page.locator('#path #mmLearnQuestions')).toHaveCount(0);
   await page.evaluate(()=>switchView('scenarios'));
   await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
   const counts=await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts());
   expect(counts).toEqual({formal:57,scenarios:40,diagnostic:36,materials:24,measured:12,total:169});
+  expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.supplementalCounts())).toEqual({materialScience:27,specialists:20,totalLearnerQuestionPrompts:196});
+});
+
+
+test('Question Centre opens the material-science quiz and optional specialist catalogue',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await loadLearner(page);
+  await page.evaluate(()=>window.MM_QUESTION_CENTRE.open());
+  await page.locator('#path .mm-question-centre [data-mm-hub-action="material-science-checks"]').click();
+  const materials=page.locator('#materials');
+  await expect(materials.locator('[data-mm-question-centre-return]')).toBeVisible();
+  await expect(materials.locator('.mat-q')).toHaveCount(18);
+  await expect(materials).toContainText('Material Science knowledge check');
+  await expect(materials).toContainText('does not replace the regional safety-gated certification exams');
+  await materials.locator('[data-mm-question-centre-return] button').click();
+  const centre=page.locator('#path .mm-question-centre');
+  await expect(centre).toBeVisible();
+  await centre.locator('[data-mm-hub-action="specialist"]').click();
+  await expect(page.locator('#path [data-mm-lesson-catalog]')).toBeVisible();
+  await expect(page.locator('#path [data-mm-catalog-filter]')).toHaveValue('specialist');
+  await expect(page.locator('#path [data-mm-catalog-count]')).toHaveText('20 lessons shown');
 });
 
 test('learner-scoped competency blueprint makes all 30 technical items reachable across repeated forms',async({page})=>{
