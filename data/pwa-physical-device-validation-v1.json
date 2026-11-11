@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.11.11.3 has not been validated on physical iOS/iPadOS or Android devices. All device checks remain pending; production and distribution authority remain HOLD.",
+  "boundary": "Release 2026.11.11.3 has not been validated on physical iOS/iPadOS or Android devices. All device checks remain pending; production and distribution authority remain HOLD. Real assistive-technology checks are tracked separately in accessibility-real-at-validation-v1.json.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
