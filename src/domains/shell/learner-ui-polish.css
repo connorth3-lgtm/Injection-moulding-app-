@@ -4788,3 +4788,14 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   #mmBookView .mm-book-material-property-guide-body{padding:0 9px 10px}
   #mmBookView .mm-book-material-property-guide-body table{min-width:800px}
 }
+
+
+/* Respect the phone status-bar/notch inset on the Learn screen. The screenshots
+   showed the first chapter card beginning underneath Android system indicators. */
+@media(max-width:700px){
+  body[data-mm-view="path"] .main{
+    padding-top:max(12px,env(safe-area-inset-top,0px))!important;
+    padding-left:max(12px,env(safe-area-inset-left,0px))!important;
+    padding-right:max(12px,env(safe-area-inset-right,0px))!important;
+  }
+}
