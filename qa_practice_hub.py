@@ -32,6 +32,8 @@ required_hub = {
     "discriminating scenario CTA": "Start discriminating scenario →",
     "retrieval practice CTA": "Start retrieval practice →",
 }
+failures = []
+
 learn_launcher = 'data-mm-hub-action="question-centre"'
 if learn_launcher not in hub:
     failures.append("Learn hub Question Centre entry missing")
@@ -62,7 +64,6 @@ required_css = {
     "reduced motion": "@media(prefers-reduced-motion:reduce)",
 }
 
-failures = []
 for label, needle in required_hub.items():
     if needle not in hub:
         failures.append(f"Practice hub missing: {label}")
