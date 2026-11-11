@@ -115,7 +115,7 @@ function section(){let x=document.getElementById('mmMouldMasterWorkspace');if(x)
 function hideViews(){document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'))}
 function header(){const h=document.getElementById('pageTitle'),p=document.getElementById('pageSubtitle');if(h)h.textContent='Mould Master';if(p)p.textContent='Build an evidence-led troubleshooting case from symptom to verified conclusion.'}
 function mark(){window.MM_APP_SHELL?.navigation?.setCustomActive?.('','practice')}
-function returnToPractice(){if(typeof switchView==='function'&&currentView!=='scenarios')switchView('scenarios');const hubs=window.MM_PRIMARY_HUBS;if(typeof hubs?.renderPracticeHub==='function')return hubs.renderPracticeHub();if(typeof switchView==='function')return switchView('scenarios')}
+function returnToPractice(){if(typeof switchView==='function')switchView('scenarios');const hubs=window.MM_PRIMARY_HUBS;if(typeof hubs?.renderPracticeHub==='function')return hubs.renderPracticeHub();if(typeof switchView==='function')return switchView('scenarios')}
 
 function defectOptions(c){return `<option value="">Select a defect / symptom…</option>${defects().map(d=>`<option ${d.name===c.defect?'selected':''}>${esc(d.name)}</option>`).join('')}`}
 function onsetOptions(c){const vals=['Unknown / not yet defined','Just started','After material change','After mould maintenance','After machine change','After restart / setup','Gradually over time','Intermittent'];return vals.map(x=>`<option ${x===c.onset?'selected':''}>${esc(x)}</option>`).join('')}
