@@ -115,6 +115,8 @@ chapter_counts=Counter(int(row[4]) for row in quiz if isinstance(row,list) and l
 need(len(chapters)==9 and len(base_quiz)==27 and len(base_chapter_ids)==27 and len(additions)==18 and len(quiz)==45,'core plus extension must provide 45 questions across nine chapters')
 need(chapter_counts==Counter({chapter_id:5 for chapter_id in chapter_ids}),'every material-science chapter must have exactly five tagged questions')
 need(len({str(row[0]).strip().casefold() for row in quiz})==45,'material-science question wording must be unique')
+key_counts=Counter(int(row[2]) for row in quiz)
+need(key_counts==Counter({0:11,1:11,2:12,3:11}),'material-science keyed answer positions must be balanced across the 45-question bank')
 need(all(isinstance(row,list) and len(row)>=5 and len(row[1])==4 and row[2] in range(4) and len(set(row[1]))==4 and str(row[3]).strip() and row[4] in chapter_ids for row in quiz),'material-science questions require four unique options, one keyed answer, an explanation and a chapter tag')
 need('function ensureMaterialScienceQuestionBank()' in hub and 'selected.push(...baseShuffle(pool).slice(0,2));' in hub,'each material-science attempt must sample two questions from every chapter')
 need('window.renderMaterialQuiz=function()' in hub and 'data-chapter=' in hub,'chapter IDs must remain available to the learner-facing quiz and coverage QA')
