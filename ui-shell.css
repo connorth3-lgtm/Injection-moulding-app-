@@ -517,6 +517,13 @@ button:disabled,[aria-disabled="true"]{
 .mm-all-lessons{margin:20px 0;padding:18px;border:1px solid #304a68;border-radius:17px;background:#0f2035;min-width:0}
 .mm-catalog-head h2{margin:0 0 5px;font-size:clamp(21px,3vw,26px);line-height:1.2}
 .mm-catalog-head p{margin:0 0 15px;color:#bccfe3;line-height:1.5}
+.mm-catalog-progress{display:grid;gap:8px;margin:0 0 15px;padding:11px 13px;border:1px solid #315267;border-radius:11px;background:#0b1b2b}
+.mm-catalog-progress-copy{display:flex;justify-content:space-between;align-items:center;gap:8px;color:#bed3e1;font-size:13px;line-height:1.4}
+.mm-catalog-progress-copy strong{color:#88e0d0;font-weight:800;text-align:right}
+.mm-catalog-progress progress{display:block;width:100%;height:9px;border:0;border-radius:99px;overflow:hidden;background:#1b3447;accent-color:#69d9c6}
+.mm-catalog-progress progress::-webkit-progress-bar{border-radius:99px;background:#1b3447}
+.mm-catalog-progress progress::-webkit-progress-value{border-radius:99px;background:#69d9c6}
+.mm-catalog-progress progress::-moz-progress-bar{border-radius:99px;background:#69d9c6}
 .mm-catalog-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(150px,210px);gap:10px}
 .mm-catalog-controls label{display:flex;flex-direction:column;gap:5px;min-width:0;color:#cde0f3;font-size:13px;font-weight:700}
 .mm-catalog-controls input,.mm-catalog-controls select{width:100%;min-width:0;min-height:46px;background:#09182a;border:1px solid #466584;border-radius:11px;color:#f1f7ff;padding:10px 12px;font:inherit;font-size:15px}
