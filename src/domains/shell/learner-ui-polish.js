@@ -5,7 +5,7 @@
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.11.09.1';
+const VERSION='2026.11.11.1';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
 const STYLE_REV='2026.10.20.2-pr640-materials-parity';
 const DESKTOP_QUERY='(min-width:1101px)';
