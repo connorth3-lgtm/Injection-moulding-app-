@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | HOLD: release 2026.11.11.2 source bfe8394e3b7b80d6c22992674ff91e5500cadc06 artifact 13832153021 and producer 42968696414 are staged as technical metadata only; producer success and quality are NOT independently verified. No source, human, device or production approval is implied. |
-| Behavioral / browser | **pass** | HOLD: browser and question gates for release 2026.11.11.2 source bfe8394e3b7b80d6c22992674ff91e5500cadc06 must be independently verified on the staged candidate; prior green workflows do not transfer to a different exact source. |
+| Static / contract | **fail** | HOLD: release 2026.11.11.2 source bfe8394e3b7b80d6c22992674ff91e5500cadc06 artifact 13832153021 and producer 42968696414 are staged as technical metadata only; producer success and quality are NOT independently verified. No source, human, device or production approval is implied. |
+| Behavioral / browser | **fail** | HOLD: browser and question gates for release 2026.11.11.2 source bfe8394e3b7b80d6c22992674ff91e5500cadc06 must be independently verified on the staged candidate; prior green workflows do not transfer to a different exact source. |
 | External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.11.2. |
