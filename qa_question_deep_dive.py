@@ -93,6 +93,11 @@ lanes=centre.get('lanes') or []
 need([row.get('id') for row in lanes]==['formal','scenarios','diagnostic','materials','measured'],'Question Centre lane order/identity drift')
 need([row.get('count') for row in lanes]==[57,40,36,24,12],'Question Centre lane counts drift')
 need(sum(int(row.get('count') or 0) for row in lanes)==169,'Question Centre lane counts must sum to 169')
+supplemental=centre.get('supplementalQuestionSets') or []
+need(len(supplemental)==1 and supplemental[0].get('id')=='material-science-checks' and supplemental[0].get('count')==27,'Question Centre must expose the 27-item material-science learning check separately')
+need(supplemental[0].get('governed') is False and centre.get('totalLearnerQuestionPrompts')==196,'material-science checks must remain outside the 169 governed prompt count')
+related=centre.get('relatedLearningDestinations') or []
+need(len(related)==1 and related[0].get('id')=='optional-specialist-lessons' and related[0].get('count')==20 and related[0].get('countsAsQuestionPrompt') is False,'Question Centre related specialist link must preserve lesson-only status')
 formal_lane=lanes[0]
 patterns=formal_lane.get('attemptPatterns') or {}
 need(patterns.get('singleJurisdiction')=='10 questions: 7 technical + 3 regional safety/compliance','Question Centre single-jurisdiction attempt contract drift')
@@ -105,7 +110,7 @@ need(entry.get('area')=='Learn' and entry.get('label')=='Question Centre','Quest
 policy=centre.get('policy') or {}
 need(policy.get('centralisesDiscovery') is True and policy.get('duplicatesQuestionText') is False and policy.get('preservesCanonicalScoring') is True,'Question Centre manifest must centralise discovery without copying question content or scoring authority')
 hub=text('primary-learning-practice-hubs.js')
-for marker in ['window.MM_QUESTION_CENTRE=Object.freeze','function openQuestionCentreDetail()','mm-question-centre','Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions','${q.total} governed question/decision prompts']:
+for marker in ['window.MM_QUESTION_CENTRE=Object.freeze','function openQuestionCentreDetail()','mm-question-centre','Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions','${q.total} governed question/decision prompts','Material science chapter checks','function questionCentreSupplementalCounts()','supplementalCounts:questionCentreSupplementalCounts']:
     need(marker in hub,f'Question Centre learner launcher missing: {marker}')
 need('Book chapter self-checks, the 32 optional reasoning questions and lesson exercises stay with the core lessons they belong to.' in hub
      and 'window.MM_LESSON_REASONING=Object.freeze' in hub
@@ -115,6 +120,7 @@ need('Book chapter self-checks, the 32 optional reasoning questions and lesson e
      and '${optional}' not in hub,
      'Question Centre must preserve all optional teaching questions within mapped core lessons, without duplicating them inside the consolidated launcher')
 need("case 'question-centre': return openQuestionCentreDetail();" in hub,'Question Centre action must open its dedicated Learn surface rather than a transient modal')
+need("case 'material-science-checks': return openMaterialScienceCheck();" in hub,'material-science learning check must open its canonical quiz route')
 need("const root=document.getElementById('path');if(!root)return;" in hub and "detailBack(root,'Question Centre','Learn')" in hub,'Question Centre must remain inside Learn and return to its single Learn hub entry')
 need('id="mmLearnQuestions"' not in hub,'Question Centre must not be duplicated inside the interactive lesson')
 need("scope:'Learner-facing consolidated launcher only" in hub,'Question Centre governance boundary must state discovery-only consolidation')
