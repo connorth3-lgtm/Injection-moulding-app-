@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "version": "2026.10.07.3",
+  "version": "2026.11.11.1",
   "status": "governed-launcher-index",
-  "purpose": "One learner-facing inventory for the main question and decision activities without duplicating or re-authoring their governed source content.",
+  "purpose": "One learner-facing inventory for the main governed question and decision activities, plus source-owned formative material-science checks and related optional lesson access.",
   "primaryPromptCount": 169,
   "lanes": [
     {
@@ -76,11 +76,11 @@
       "reason": "Optional material practice remains inside its specialist material-learning surface rather than competing with the five primary Question Centre lanes."
     }
   ],
-  "governanceBoundary": "This manifest centralises discovery only. Question text, answer keys, feedback, evidence, scoring, human-review status and release authority remain owned by their canonical subsystems. It does not create SME approval or assessment validity evidence.",
+  "governanceBoundary": "This manifest centralises discovery only. Question text, answer keys, feedback, evidence, scoring, human-review status and release authority remain owned by their canonical subsystems. The 27-question material-science bank is formative learning content outside the 169 governed prompt total; listing it here does not create independent approval, qualification evidence or production authority.",
   "canonicalEntryPoint": {
     "area": "Learn",
     "label": "Question Centre",
-    "presentation": "one dedicated learner surface inside the Learn view",
+    "presentation": "One learner-facing surface inside Learn, with five governed question modes, a separate formative material-science check and a related optional specialist-lessons shortcut.",
     "mobile": "Learn > Question Centre",
     "desktop": "Learn > Question Centre; Knowledge Checks remains a direct formal-assessment route"
   },
@@ -89,6 +89,34 @@
     "duplicatesQuestionText": false,
     "preservesCanonicalScoring": true,
     "preservesEvidenceOwnership": true,
-    "preservesHumanReviewState": true
-  }
+    "preservesHumanReviewState": true,
+    "supplementalMaterialScienceCheckIsGoverned": false,
+    "supplementalMaterialScienceCheckIncludedInQuestionCentre": true,
+    "relatedSpecialistLessonsCountAsPrompts": false
+  },
+  "totalLearnerQuestionPrompts": 196,
+  "supplementalQuestionSets": [
+    {
+      "id": "material-science-checks",
+      "label": "Material science chapter checks",
+      "count": 27,
+      "source": "MATERIALS.quiz in src/core-runtime/core-inline-005.js",
+      "launcherAction": "material-science-checks",
+      "coverage": "Material Science course across nine chapters",
+      "attemptPattern": "Randomly selects 18 questions from the 27-question bank",
+      "scoring": "Formative local learning feedback only; does not enter regional certification or the governed assessment count",
+      "governed": false
+    }
+  ],
+  "relatedLearningDestinations": [
+    {
+      "id": "optional-specialist-lessons",
+      "label": "Optional specialist lessons",
+      "count": 20,
+      "source": "MM_SPECIALIST_CURRICULUM.lessons",
+      "launcherAction": "specialist",
+      "countsAsQuestionPrompt": false,
+      "scoring": "Optional lesson catalogue with separate completion progress"
+    }
+  ]
 }
