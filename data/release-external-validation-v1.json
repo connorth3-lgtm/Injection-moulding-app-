@@ -151,7 +151,7 @@
     "artifactDigest": "sha256:4b6ef2ccc2bb60d685071c1b24fed309d08a51113dc9c185a128ce63bfa19fd0",
     "artifactExpiresAt": "2027-02-07T08:42:19Z"
   },
-  "candidateStatus": "RETAINED — exact-source candidate and exact-head technical quality gates passed for 2026.11.11.1; all seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain HOLD.",
+  "candidateStatus": "PASS — software-only technical candidate for 2026.11.11.1 is retained and exact-source automated quality gates passed; all seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.11.08.3",
     "sourceSha": "84250f572de4e685dcfdebcf80f02749fd59b2ef",

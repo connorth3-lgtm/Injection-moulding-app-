@@ -12,22 +12,25 @@ This web release adds a formative, chapter-balanced material-science question ch
 
 ## Candidate identity
 
+**Technical candidate:** **PASS — software-only**
+
 - Release: 2026.11.11.1
-- Source: 8c98fb97b6cfaea468bd702296c7b16b0c68deee
-- Public-runtime fingerprint: sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74
-- Producer workflow: Pre-merge Public Candidate, run 42952112263 (success)
-- Retained artifact: physical-pwa-candidate-8c98fb97b6cfaea468bd702296c7b16b0c68deee, ID 13825611364
-- Artifact digest: sha256:fe6b00ef50917b853ae8bf297f7bcda8a586b8562eb6a1c4999e8b99165ff3d0
-- Artifact expiry: 2027-02-09T03:20:35Z
+- Producer workflow: Pre-merge Public Candidate, run `42952112263` (success)
+- Artifact: `13825611364`
+- Source: `8c98fb97b6cfaea468bd702296c7b16b0c68deee`
+- Runtime fingerprint: `sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74`
+- Artifact digest: `sha256:fe6b00ef50917b853ae8bf297f7bcda8a586b8562eb6a1c4999e8b99165ff3d0`
+- Artifact expiry: `2027-02-09T03:20:35Z`
 
 ## Exact-source automated checks — PASS
 
-- Pre-merge Public Candidate — run 42952112263; exact-source Pages artifact built and retained.
-- Mobile Browser QA — run 42952112268; Chromium and WebKit substantive suites, visual/reachability checks, cross-browser check and all five reliability shards passed.
-- Question Quality 50-Pass — run 42952112424; passed.
-- Assessment and Curriculum Coverage Audit — run 42952112262; passed.
-- MouldMaster Deep Dive v2 QA — run 42952112310; passed.
-- Deep Audit Governance — run 42952112056; passed.
+- Mobile Browser QA run `42952112268` — Chromium and WebKit substantive suites, visual/reachability checks, cross-browser check and all five reliability shards passed.
+- Question Quality 50-Pass run `42952112424` — passed.
+- Assessment and Curriculum Coverage Audit run `42952112262` — passed.
+- MouldMaster Deep Dive v2 QA run `42952112310` — passed.
+- Deep Audit Governance run `42952112056` — passed.
+
+All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain **HOLD**. The technical candidate does not create independent approval or production authority.
 
 ## Release-specific review packets — all HOLD
 
