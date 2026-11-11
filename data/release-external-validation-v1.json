@@ -5,7 +5,7 @@
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "fail",
-    "claim": "HOLD \u2014 exact-source technical candidate for release 2026.11.11.3 is not yet retained; all external validations remain HOLD."
+    "claim": "HOLD — exact-source technical candidate for release 2026.11.11.3 is not yet retained; all external validations remain HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -34,11 +34,7 @@
       "artifactDigest": "sha256:fe6b00ef50917b853ae8bf297f7bcda8a586b8562eb6a1c4999e8b99165ff3d0",
       "artifactExpiresAt": "2027-02-09T03:20:35Z"
     },
-    "candidate": {
-      "release": "2026.11.11.2",
-      "sourceSha": "7c6587c5488bd764a6ae0a7afb2cbdfb252857d5",
-      "runtimeFingerprint": "sha256:1f3ee0bed1077c91562f83050e6642d80a01b39f9077f54a6b06c84be1f17c09"
-    }
+    "candidate": null
   },
   "pwaPhysicalDevices": {
     "status": "hold",
@@ -56,24 +52,14 @@
       "artifactDigest": "sha256:fe6b00ef50917b853ae8bf297f7bcda8a586b8562eb6a1c4999e8b99165ff3d0",
       "artifactExpiresAt": "2027-02-09T03:20:35Z"
     },
-    "currentCandidate": {
-      "release": "2026.11.11.2",
-      "sourceSha": "7c6587c5488bd764a6ae0a7afb2cbdfb252857d5",
-      "runtimeFingerprint": "sha256:1f3ee0bed1077c91562f83050e6642d80a01b39f9077f54a6b06c84be1f17c09",
-      "candidateRunId": 42970827493,
-      "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 13833053386,
-      "artifactName": "physical-pwa-candidate-7c6587c5488bd764a6ae0a7afb2cbdfb252857d5",
-      "artifactDigest": "sha256:1c95065510d5b702c669b63630f50ac3f50ed662b77151c50a738859cf1d39a0",
-      "artifactExpiresAt": "2027-02-09T06:12:41Z"
-    }
+    "currentCandidate": null
   },
   "windowsDistribution": {
     "status": "hold",
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
     "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.11.11.3.md",
-    "sourceSha": "bfe8394e3b7b80d6c22992674ff91e5500cadc06",
+    "sourceSha": null,
     "desktopRelease": "2026.09.29.1",
     "evidence": null,
     "required": [
@@ -135,11 +121,7 @@
       "artifactDigest": "sha256:fe6b00ef50917b853ae8bf297f7bcda8a586b8562eb6a1c4999e8b99165ff3d0",
       "artifactExpiresAt": "2027-02-09T03:20:35Z"
     },
-    "candidate": {
-      "release": "2026.11.11.2",
-      "sourceSha": "7c6587c5488bd764a6ae0a7afb2cbdfb252857d5",
-      "runtimeFingerprint": "sha256:1f3ee0bed1077c91562f83050e6642d80a01b39f9077f54a6b06c84be1f17c09"
-    }
+    "candidate": null
   },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
@@ -157,7 +139,7 @@
     "artifactDigest": "sha256:1c95065510d5b702c669b63630f50ac3f50ed662b77151c50a738859cf1d39a0",
     "artifactExpiresAt": "2027-02-09T06:12:41Z"
   },
-  "candidateStatus": "HOLD \u2014 release 2026.11.11.3 candidate not yet retained; all seven external review streams remain HOLD.",
+  "candidateStatus": "HOLD — release 2026.11.11.3 candidate not yet retained; all seven external review streams remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.11.08.3",
     "sourceSha": "84250f572de4e685dcfdebcf80f02749fd59b2ef",
