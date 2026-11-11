@@ -11,6 +11,6 @@
 
 The Learn page now presents one combined count and progress bar for the 120 core lessons, 36 material-science lessons, and 20 optional specialist lessons. Existing per-track completion records and progress remain intact. The change does not expand the canonical 120-lesson completion pathway.
 
-The first exact-head visual comparison found differences only on the Learn surface at the four viewport sizes; the other 48 captures matched. This technical reference preserves strict comparison for future changes. It does not record owner approval.
+The first exact-head visual comparison found differences only on the Learn surface at the four viewport sizes; the other 48 captures matched. This technical reference preserves strict comparison for future changes. No masks or skipped surfaces were added. It does not record owner approval.
 
 **Human visual-owner decision: PENDING.** The app release remains subject to the separate physical-device, accessibility, learner-outcome, SME, provider, signing, and production HOLDs.
