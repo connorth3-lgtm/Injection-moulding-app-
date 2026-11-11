@@ -864,6 +864,7 @@ async function hydrateCaseEvidence(host,c){
   const panel=host.querySelector('[data-mw-case-evidence]');if(!panel)return;
   const store=await resolveStore();if(!store?.listCaseEvidence){panel.innerHTML='<h3>Closed-loop evidence</h3><div class="mw-empty">Structured evidence store unavailable.</div>';return}
   const items=await store.listCaseEvidence(c.id,store.learnerToken()),summary=await store.evidenceSummary(c.id,store.learnerToken());
+  if(items.length)panel.closest('details')?.setAttribute('open','');
   panel.innerHTML=`<h3>Closed-loop evidence</h3><div class="mw-kpi"><span>Active evidence</span><b>${summary.activeCount} / ${summary.count}</b><div class="mw-help">${summary.completeCount} complete · ${summary.incompleteCount} incomplete · ${summary.voidedCount} voided. Site-local records tied to stable engineering identities.</div></div>
   <div class="mw-form">
     <label>Evidence type<select data-mw-evidence-field="kind">${evidenceKindOptions()}</select></label>
