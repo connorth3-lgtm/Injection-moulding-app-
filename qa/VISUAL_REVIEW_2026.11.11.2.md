@@ -4,7 +4,7 @@
 
 ## Candidate scope
 
-- Candidate source: `bfe8394e3b7b80d6c22992674ff91e5500cadc06`
+- Candidate source: `7c6587c5488bd764a6ae0a7afb2cbdfb252857d5`
 - Reference source: `bfe8394e3b7b80d6c22992674ff91e5500cadc06`
 - Baseline ref: `visual-baseline/2026.11.11.2`
 - Comparison: Chromium, Playwright 1.64.1, four viewports and thirteen surfaces (52 captures), maximum 12 differing pixels.

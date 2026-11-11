@@ -6,7 +6,7 @@
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "boundary": "Release 2026.11.11.2 technical candidate bfe8394e3b7b80d6c22992674ff91e5500cadc06 does not establish any NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
+  "boundary": "Release 2026.11.11.2 technical candidate 7c6587c5488bd764a6ae0a7afb2cbdfb252857d5 does not establish any of NZQA/provider G1\u2013G8 external gates or assessment/accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -52,9 +52,15 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.11.11.1",
-    "sourceSha": "8c98fb97b6cfaea468bd702296c7b16b0c68deee",
-    "runtimeFingerprint": "sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74"
+    "release": "2026.11.11.2",
+    "sourceSha": "bfe8394e3b7b80d6c22992674ff91e5500cadc06",
+    "runtimeFingerprint": "sha256:1f3ee0bed1077c91562f83050e6642d80a01b39f9077f54a6b06c84be1f17c09",
+    "candidateRunId": 42968696414,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 13832153021,
+    "artifactName": "physical-pwa-candidate-bfe8394e3b7b80d6c22992674ff91e5500cadc06",
+    "artifactDigest": "sha256:c8dc45e51a71b3fe13502c392df60e393a37c7fa5464dfbbfea9039c914328e0",
+    "artifactExpiresAt": "2027-02-09T05:53:40Z"
   },
   "previousIssueNumber": 379,
   "supersededCandidate": {
@@ -64,7 +70,7 @@
   },
   "candidate": {
     "release": "2026.11.11.2",
-    "sourceSha": "bfe8394e3b7b80d6c22992674ff91e5500cadc06",
+    "sourceSha": "7c6587c5488bd764a6ae0a7afb2cbdfb252857d5",
     "runtimeFingerprint": "sha256:1f3ee0bed1077c91562f83050e6642d80a01b39f9077f54a6b06c84be1f17c09"
   }
 }
