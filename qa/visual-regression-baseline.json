@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.09.1",
-  "commit": "58180fe3a6a92c88c33ea3a375feb163a925b168",
+  "release": "2026.11.11.2",
+  "commit": "bfe8394e3b7b80d6c22992674ff91e5500cadc06",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Reference source for the rewritten Book release 2026.11.09.1. This versioned technical baseline includes the new chapter titles, polymer foundations, and expanded material-science explanations while retaining all 52 viewport/surface captures and the 12-pixel threshold. This is not human visual-owner approval. Independent physical-device, real assistive-technology, Windows signing, provider, SME, learner-outcome, accreditation and production reviews remain separate and HOLD.",
-  "ref": "visual-baseline/2026.11.09.1",
+  "policy": "Technical comparison baseline for the unified 176-lesson library and its all-library progress display. The 12-pixel limit and all 52 viewport/surface captures remain active. The Learn page changes are intentional; this technical reference is not visual-owner approval. Human visual-owner decision remains pending. Independent physical-device, real assistive-technology, Windows signing, provider, SME, learner-outcome, accreditation and production reviews remain separate and HOLD.",
+  "ref": "visual-baseline/2026.11.11.2",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "58180fe3a6a92c88c33ea3a375feb163a925b168"
+    "referenceSourceSha": "bfe8394e3b7b80d6c22992674ff91e5500cadc06"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",

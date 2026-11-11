@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
-'web_release':'2026.11.11.1',
+'web_release':'2026.11.11.2',
  'android_release':'2026.11.08.1',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -19,7 +19,7 @@ expected={
  'assessment_quality_version':'2026.08.24.3',
  'assessment_storage_scope_version':'2026.08.24.4',
  'assessment_evidence_version':'2026.10.05.1',
-  'read_aloud_version':'2026.11.11.1',
+  'read_aloud_version':'2026.11.11.2',
  'windows_recovery_release':'2026.08.21.1',
 }
 for k,v in expected.items(): need(V.get(k)==v,f'version.json {k} drift: {V.get(k)!r} != {v!r}')
@@ -569,6 +569,32 @@ elif visual.get('release')=='2026.11.09.1':
          and 'not human visual-owner approval' in visual.get('policy','').lower()
          and 'remain separate and hold' in visual.get('policy','').lower(),
          '2026.11.09.1 Book baseline must retain exact source, scope, strict matrix and independent visual-review HOLD')
+elif visual.get('release')=='2026.11.11.2':
+    # The unified 176-lesson library has a release-specific technical baseline.
+    # Keep all 52 captures and the 12-pixel threshold; this is not owner approval.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.11.2.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.11.2'
+         and visual.get('commit')=='bfe8394e3b7b80d6c22992674ff91e5500cadc06'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and visual.get('referenceCaptureToolchain')=={
+             'framework':'@playwright/test','version':'1.64.1','browser':'chromium',
+             'referenceSourceSha':visual['commit']}
+         and 'STATUS: VISUAL BASELINE HOLD' in review_current
+         and f"- Candidate source: `{current_candidate['sourceSha']}`" in review_current
+         and f"- Reference source: `{visual['commit']}`" in review_current
+         and f"- Baseline reference: `{visual['ref']}`" in review_current
+         and 'other 48 captures matched' in review_current.lower()
+         and 'No masks or skipped surfaces were added.' in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and 'not visual-owner approval' in visual.get('policy','').lower()
+         and 'remain separate and hold' in visual.get('policy','').lower(),
+         '2026.11.11.2 unified lesson baseline must retain the exact candidate, strict 52-surface matrix and visual-owner HOLD')
 elif visual.get('release')=='2026.11.08.2':
     # The owner approved the exact Learn / Practice / Materials screenshot changes
     # after reviewing the comparison artifact. Lock only this source, artifact,

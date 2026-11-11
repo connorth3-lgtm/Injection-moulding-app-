@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.11.11.1`**.
+Current governed web candidate: **`2026.11.11.2`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Production Pages candidate for release 2026.11.11.1 source 8c98fb97b6cfaea468bd702296c7b16b0c68deee was built and retained as artifact 13825611364 in run 42952112263, with fingerprint sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74. Exact-source candidate integrity and its quality gates passed; external approvals remain HOLD. |
-| Behavioral / browser | **pass** | Automated browser and question quality checks passed for release 2026.11.11.1 source 8c98fb97b6cfaea468bd702296c7b16b0c68deee: Question Quality 50-Pass run 42952112424 and Mobile Browser QA run 42952112268 passed. Curriculum coverage run 42952112262 and Deep Dive v2 run 42952112310 also passed. These checks do not establish human, device, provider or production approval. |
-| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.11.1. |
+| Static / contract | **pass** | Production Pages candidate for release 2026.11.11.2 source 7c6587c5488bd764a6ae0a7afb2cbdfb252857d5 was built and retained as artifact 13833053386 in run 42970827493, with fingerprint sha256:1f3ee0bed1077c91562f83050e6642d80a01b39f9077f54a6b06c84be1f17c09. Exact-source candidate integrity and its required quality gates passed; external approvals remain HOLD. |
+| Behavioral / browser | **pass** | Automated browser and question quality checks passed for release 2026.11.11.2 source 7c6587c5488bd764a6ae0a7afb2cbdfb252857d5: Question Quality 50-Pass run 42970827534 and Mobile Browser QA run 42970827511 passed. These checks do not establish human, device, provider or production approval. |
+| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.11.2. |
