@@ -1,9 +1,9 @@
 # Learn Materials sequence — technical visual baseline 2026.11.11.3
 
-**STATUS: TECHNICAL CAPTURE PENDING — HUMAN VISUAL-OWNER DECISION PENDING.**
+**STATUS: TECHNICAL VISUAL BASELINE — HUMAN VISUAL-OWNER DECISION PENDING.**
 
 - Candidate source: pending exact-head browser capture
-- Reference source: `7d9217f873dd8b03b23bac3dabd520d0b9770d80`
+- Reference source: `d7119ea4a325aa731cb805e8f9a6e277c5c33d3a`
 - Baseline reference: `visual-baseline/2026.11.11.3`
 - Comparison: Chromium, Playwright 1.64.1, four viewports and thirteen surfaces (52 captures), maximum 12 differing pixels.
 

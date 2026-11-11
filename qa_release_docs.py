@@ -572,7 +572,7 @@ elif visual.get('release')=='2026.11.09.1':
 elif visual.get('release')=='2026.11.11.3':
     review_current=text('qa/VISUAL_REVIEW_2026.11.11.3.md')
     need(visual.get('ref')=='visual-baseline/2026.11.11.3'
-         and visual.get('commit')=='7d9217f873dd8b03b23bac3dabd520d0b9770d80'
+         and visual.get('commit')=='d7119ea4a325aa731cb805e8f9a6e277c5c33d3a'
          and visual.get('maxDiffPixels')==12
          and [v.get('name') for v in visual.get('viewports',[])]==[
              'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
