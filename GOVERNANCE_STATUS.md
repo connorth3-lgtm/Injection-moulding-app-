@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Production Pages candidate for release 2026.11.11.1 source 8c98fb97b6cfaea468bd702296c7b16b0c68deee was built and retained as artifact 13825611364 in run 42952112263, with fingerprint sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74. Exact-source candidate integrity and its quality gates passed; external approvals remain HOLD. |
-| Behavioral / browser | **pass** | Automated browser and question quality checks passed for release 2026.11.11.1 source 8c98fb97b6cfaea468bd702296c7b16b0c68deee: Question Quality 50-Pass run 42952112424 and Mobile Browser QA run 42952112268 passed. Curriculum coverage run 42952112262 and Deep Dive v2 run 42952112310 also passed. These checks do not establish human, device, provider or production approval. |
-| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.11.1. |
+| Static / contract | **pass** | HOLD: release 2026.11.11.2 source bfe8394e3b7b80d6c22992674ff91e5500cadc06 artifact 13832153021 and producer 42968696414 are staged as technical metadata only; producer success and quality are NOT independently verified. No source, human, device or production approval is implied. |
+| Behavioral / browser | **pass** | HOLD: browser and question gates for release 2026.11.11.2 source bfe8394e3b7b80d6c22992674ff91e5500cadc06 must be independently verified on the staged candidate; prior green workflows do not transfer to a different exact source. |
+| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.11.2. |

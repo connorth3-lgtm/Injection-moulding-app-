@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.11.1",
+  "release": "2026.11.11.2",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.11.1.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.11.2.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "boundary": "Release 2026.11.11.1 technical candidate 8c98fb97b6cfaea468bd702296c7b16b0c68deee does not establish any NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
+  "boundary": "Release 2026.11.11.2 technical candidate bfe8394e3b7b80d6c22992674ff91e5500cadc06 does not establish any NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -52,15 +52,9 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.11.09.1",
-    "sourceSha": "74b59afa1f241995cdf7385d6031546a676626a3",
-    "runtimeFingerprint": "sha256:91a398caef841e7202e5425d3388dcb47557d89b618eca83d4c7b29e16ebd827",
-    "candidateRunId": 42587884172,
-    "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13659792379,
-    "artifactName": "physical-pwa-candidate-74b59afa1f241995cdf7385d6031546a676626a3",
-    "artifactDigest": "sha256:4b6ef2ccc2bb60d685071c1b24fed309d08a51113dc9c185a128ce63bfa19fd0",
-    "artifactExpiresAt": "2027-02-07T08:42:19Z"
+    "release": "2026.11.11.1",
+    "sourceSha": "8c98fb97b6cfaea468bd702296c7b16b0c68deee",
+    "runtimeFingerprint": "sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74"
   },
   "previousIssueNumber": 379,
   "supersededCandidate": {
@@ -69,8 +63,8 @@
     "runtimeFingerprint": "sha256:4767c50814cfe576891a3eb6f4de34a1d451378709c43a8988e2e57c540cf4c9"
   },
   "candidate": {
-    "release": "2026.11.11.1",
-    "sourceSha": "8c98fb97b6cfaea468bd702296c7b16b0c68deee",
-    "runtimeFingerprint": "sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74"
+    "release": "2026.11.11.2",
+    "sourceSha": "bfe8394e3b7b80d6c22992674ff91e5500cadc06",
+    "runtimeFingerprint": "sha256:1f3ee0bed1077c91562f83050e6642d80a01b39f9077f54a6b06c84be1f17c09"
   }
 }

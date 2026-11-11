@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "pass",
+    "technicalAutomation": "fail",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "pass",
-      "meaning": "Production Pages candidate for release 2026.11.11.1 source 8c98fb97b6cfaea468bd702296c7b16b0c68deee was built and retained as artifact 13825611364 in run 42952112263, with fingerprint sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74. Exact-source candidate integrity and its quality gates passed; external approvals remain HOLD."
+      "status": "fail",
+      "meaning": "HOLD: release 2026.11.11.2 source bfe8394e3b7b80d6c22992674ff91e5500cadc06 artifact 13832153021 and producer 42968696414 are staged as technical metadata only; producer success and quality are NOT independently verified. No source, human, device or production approval is implied."
     },
     "behavioralBrowser": {
-      "status": "pass",
-      "meaning": "Automated browser and question quality checks passed for release 2026.11.11.1 source 8c98fb97b6cfaea468bd702296c7b16b0c68deee: Question Quality 50-Pass run 42952112424 and Mobile Browser QA run 42952112268 passed. Curriculum coverage run 42952112262 and Deep Dive v2 run 42952112310 also passed. These checks do not establish human, device, provider or production approval."
+      "status": "fail",
+      "meaning": "HOLD: browser and question gates for release 2026.11.11.2 source bfe8394e3b7b80d6c22992674ff91e5500cadc06 must be independently verified on the staged candidate; prior green workflows do not transfer to a different exact source."
     },
     "externalHumanDevice": {
       "status": "hold",
