@@ -3,7 +3,7 @@
   "masterIssue": 632,
   "release": "2026.11.11.3",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
+  "candidateSourceSha": "e230bfd9347b8d5e93adca1b8b61d6d35a25a9ac",
   "scope": "Reorder Learn into foundations, core Materials plus the nine polymer-science chapters, process/tooling/engineering, and optional specialist lessons; preserve all per-track progress.",
   "approvalBoundary": "HOLD: release 2026.11.11.3 is a technical-preview candidate only. Human, device, provider, SME, learner-outcome, signing, and production approvals remain separate and pending.",
   "issueGroups": {
