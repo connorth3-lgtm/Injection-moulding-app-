@@ -916,12 +916,16 @@ function renderCase(c){activeId=c.id;syncMissionContext(c);const host=section();
 <div class="mw-toolbar"><div><b>${esc(c.title||c.defect||'Untitled case')}</b><div class="mw-help">Saved locally for this learner only.</div></div><div class="mw-actions"><button class="ghost" type="button" data-mw-practice>← Practice</button><button class="secondary" type="button" data-mw-new>New case</button><button class="ghost" type="button" data-mw-list>Case list</button><button class="ghost" type="button" data-mw-export>Export case</button></div></div>
 <div class="mw-layout">
   <div class="mw-panel card"><h3>Case evidence record</h3><div class="mw-form">
+    <h4 class="mw-form-step">1 · Define and localise</h4>
+    <p class="mw-help mw-form-step-copy">Record what is wrong, when it started and where it appears before choosing a cause.</p>
     ${textField('Case title','title',c,false,'Use a short identifier such as “Cavity 3 flash after insert change”.')}
     <label>Defect / symptom<select data-mw-field="defect">${defectOptions(c)}</select><div class="mw-help">Select the closest visible symptom; the mechanism still has to be proven.</div></label>
-        ${textField('Material / grade','material',c,false,'Record the exact grade and lot when known.')}
+    <label>When did it start?<select data-mw-field="onset">${onsetOptions(c)}</select><div class="mw-help">Timing around a change event is often strong localisation evidence.</div></label>
+    ${textField('Where / how often','location',c,true,'e.g. cavity-specific, one side of part, every cycle, intermittent, after warm-up.')}
+    ${textField('Material / grade','material',c,false,'Record the exact grade and lot when known.')}
     ${textField('Machine / cell','machine',c,false,'Record the actual machine/cell, not only a recipe name.')}
     ${textField('Mould / tool / cavity','mould',c,false,'Include cavity, gate, insert or local area where relevant.')}
-    <details class="mw-form-details"><summary>Optional links · IDs, product and part</summary><div class="mw-form-optional">
+    <details class="mw-form-details"${c.materialGradeId||c.machineId||c.mouldId||c.product||c.productId||c.part||c.partId?' open':''}><summary>Optional links · exact IDs, product and part</summary><div class="mw-form-optional">
       ${textField('Exact material grade ID','materialGradeId',c,false,'Use the catalogue grade ID when this case is tied to a published exact grade.')}
       ${textField('Machine / cell ID','machineId',c,false,'Use a stable plant identifier such as IMM-07 or CELL-2.')}
       ${textField('Mould / tool ID','mouldId',c,false,'Use a stable mould/tool identifier so cases can be grouped over time.')}
@@ -930,14 +934,14 @@ function renderCase(c){activeId=c.id;syncMissionContext(c);const host=section();
       ${textField('Part / component','part',c,false,'Record the moulded component or part name.')}
       ${textField('Part / component ID','partId',c,false,'Use the drawing, SKU or internal part identifier when known.')}
     </div></details>
-    <label>When did it start?<select data-mw-field="onset">${onsetOptions(c)}</select><div class="mw-help">Timing around a change event is often strong localisation evidence.</div></label>
-    ${textField('Where / how often','location',c,true,'e.g. cavity-specific, one side of part, every cycle, intermittent, after warm-up.')}
-    ${area('Known-good baseline','baseline',c,'Record the last verified-good condition: actuals, material state, tool/cooling condition and part response as applicable.')}
-    ${area('Current measured evidence','evidence',c,'Use actual measurements, alarms, trends, part location/pattern and physical inspection. Separate facts from assumptions.',true)}
-    ${area('Ranked mechanism / hypothesis','hypothesis',c,'State the mechanism and why the evidence supports it more strongly than alternatives. Do not write a setting change as the diagnosis.')}
-    ${area('Smallest controlled discriminating test','controlledTest',c,'Define one safe test or inspection that separates plausible mechanisms while staying inside approved limits.',true)}
-    ${area('Test result','testResult',c,'Record what actually changed and whether the result supported or weakened the mechanism.')}
-        <details class="mw-form-details"${c.afterChange||c.verification||c.conclusion?' open':''}><summary>After the test · verify recovery and close the case</summary><div class="mw-form-optional">
+    <details class="mw-form-details"${c.baseline||c.evidence||c.hypothesis?' open':''}><summary>2 · Compare evidence and rank the likely cause</summary><div class="mw-form-optional">
+      ${area('Known-good baseline','baseline',c,'Record the last verified-good condition: actuals, material state, tool/cooling condition and part response as applicable.')}
+      ${area('Current measured evidence','evidence',c,'Use actual measurements, alarms, trends, part location/pattern and physical inspection. Separate facts from assumptions.',true)}
+      ${area('Ranked mechanism / hypothesis','hypothesis',c,'State the mechanism and why the evidence supports it more strongly than alternatives. Do not write a setting change as the diagnosis.',true)}
+    </div></details>
+    <details class="mw-form-details"${c.controlledTest||c.testResult||c.afterChange||c.verification||c.conclusion?' open':''}><summary>3 · Choose a controlled test and verify the result</summary><div class="mw-form-optional">
+      ${area('Smallest controlled discriminating test','controlledTest',c,'Define one safe test or inspection that separates plausible mechanisms while staying inside approved limits.',true)}
+      ${area('Test result','testResult',c,'Record what actually changed and whether the result supported or weakened the mechanism.')}
       ${area('After-change / recovery evidence','afterChange',c,'Compare the same signals and part response used in the baseline. Recovery toward baseline strengthens causal confidence.')}
       ${area('Verification & repeatability','verification',c,'Record repeat cycles, independent quality checks, measurement confidence and any maintenance/tooling confirmation.')}
       ${area('Conclusion / standardisation','conclusion',c,'State what was proven, what remains uncertain, and what approved standard/work instruction/change-control action follows.',true)}
