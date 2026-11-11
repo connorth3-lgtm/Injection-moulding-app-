@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.11.09.1`**.
+Current governed web candidate: **`2026.11.11.1`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS — release 2026.11.09.1 candidate source cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392, artifact 13737976183, fingerprint sha256:0e68700ff76eef0eee8cd488aa42e35d4b46501a1fcf795e8e7b09dfa168e7cd, retained by Pre-merge Public Candidate run 42760878572; exact artifact provenance and runtime fingerprint are recorded. Software-only; this creates no external approval. |
-| Behavioral / browser | **pass** | PASS — release 2026.11.09.1 candidate source cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392 passed Mobile Browser QA run 42760878892 and Question Quality 50-Pass run 42760878736. Software-only; this creates no external approval. |
-| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.09.1. |
+| Static / contract | **fail** | HOLD — release 2026.11.11.1 exact-source technical candidate has not yet been retained. |
+| Behavioral / browser | **fail** | HOLD — release 2026.11.11.1 exact-source browser and question-quality gates are pending. |
+| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.11.1. |
