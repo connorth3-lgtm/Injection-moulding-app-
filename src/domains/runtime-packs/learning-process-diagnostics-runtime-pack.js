@@ -432,7 +432,7 @@ function ensureSection(){
 }
 function hideOtherViews(){document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'))}
 function setHeader(t,s){const h=document.getElementById('pageTitle'),p=document.getElementById('pageSubtitle');if(h)h.textContent=t;if(p)p.textContent=s}
-function returnToPractice(){if(typeof window.MM_PRIMARY_HUBS?.renderPracticeHub==='function')return window.MM_PRIMARY_HUBS.renderPracticeHub();if(typeof switchView==='function')return switchView('scenarios')}
+function returnToPractice(){if(typeof switchView==='function'&&currentView!=='scenarios')switchView('scenarios');if(typeof window.MM_PRIMARY_HUBS?.renderPracticeHub==='function')return window.MM_PRIMARY_HUBS.renderPracticeHub();if(typeof switchView==='function')return switchView('scenarios')}
 function stats(){const state=readState();let done=0,attempted=0,total=0;for(const ds of DATASETS){const s=state[ds.id];if(s?.completed)done++;if(s?.attempts){attempted++;total+=Number(s.bestScore||0)}}return {done,attempted,avg:attempted?Math.round(total/attempted):0}}
 
 function openHome(){
