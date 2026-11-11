@@ -602,7 +602,7 @@ test('all 32 unscored source questions map to distinct existing core lessons wit
   await expect(page.locator('#lesson #mmLessonReasoning')).toHaveCount(0);
   expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts().total)).toBe(169);
 });
-test('Learn Question Centre retains the five governed launchers without a Practice or lesson duplicate',async({page})=>{
+test('Learn Question Centre retains five governed launchers plus balanced material-science checks without duplicates',async({page})=>{
  await page.setViewportSize({width:390,height:844});
  await openApp(page);
  await page.evaluate(()=>window.MM_QUESTION_CENTRE.open());
@@ -611,7 +611,7 @@ test('Learn Question Centre retains the five governed launchers without a Practi
  await expect(centre.locator('.mm-hub-picker-grid > button')).toHaveCount(6);
  await expect(centre.locator('#mmPracticeReasoning, #mmLearnReasoning, .mm-question-centre-optional')).toHaveCount(0);
  expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts())).toEqual({formal:57,scenarios:40,diagnostic:36,materials:24,measured:12,total:169});
- expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.supplementalCounts())).toEqual({materialScience:27,specialists:20,totalLearnerQuestionPrompts:196});
+ expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.supplementalCounts())).toEqual({materialScience:45,specialists:20,totalLearnerQuestionPrompts:214});
  await page.evaluate(()=>switchView('scenarios'));
  await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
 });
