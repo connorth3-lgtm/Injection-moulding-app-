@@ -1,7 +1,7 @@
 /* MouldMaster evidence-led troubleshooting workspace — 2026.09.29.6 */
 (function(){
 'use strict';
-const VERSION='2026.09.29.6';
+const VERSION='2026.11.12.1';
 const MAX_CASES=80;
 let activeId='';
 let caseCache=[];
@@ -114,7 +114,7 @@ function style(){if(document.getElementById('mm-mould-master-style'))return;cons
 function section(){let x=document.getElementById('mmMouldMasterWorkspace');if(x)return x;x=document.createElement('section');x.id='mmMouldMasterWorkspace';x.className='view hidden';(document.getElementById('mainContent')||document.querySelector('main.main'))?.appendChild(x);return x}
 function hideViews(){document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'))}
 function header(){const h=document.getElementById('pageTitle'),p=document.getElementById('pageSubtitle');if(h)h.textContent='Mould Master';if(p)p.textContent='Build an evidence-led troubleshooting case from symptom to verified conclusion.'}
-function mark(){document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));window.MM_APP_SHELL?.navigation?.setCustomActive?.('mould-master','practice')}
+function mark(){window.MM_APP_SHELL?.navigation?.setCustomActive?.('','practice')}
 
 function defectOptions(c){return `<option value="">Select a defect / symptom…</option>${defects().map(d=>`<option ${d.name===c.defect?'selected':''}>${esc(d.name)}</option>`).join('')}`}
 function onsetOptions(c){const vals=['Unknown / not yet defined','Just started','After material change','After mould maintenance','After machine change','After restart / setup','Gradually over time','Intermittent'];return vals.map(x=>`<option ${x===c.onset?'selected':''}>${esc(x)}</option>`).join('')}
@@ -128,8 +128,9 @@ function relatedHtml(c){
   const spec=ss.length?`<div class="mw-chip-row">${ss.map(x=>`<span class="mw-chip">${esc(x.id+' · '+x.title)}</span>`).join('')}</div>`:'';
   const data=ds.length?ds.map(x=>`<button class="ghost" type="button" data-mw-data="${esc(x.id)}" data-mw-data-origin="${esc(x.origin||'Guided 14')}">${esc(x.origin||'Data case')} · ${esc(x.title)}</button>`).join(''):'';
   const mat=ms.length?ms.map(x=>`<button class="ghost" type="button" data-mw-material="${esc(x.id)}">Material lab · ${esc(x.title)}</button>`).join(''):'';
-  return `<div class="mw-related"><h3>Learning & evidence links</h3>${lessonButtons}${spec}${data}${mat}<button class="ghost" type="button" data-mw-defects>Open Defect Finder</button><button class="ghost" type="button" data-mw-diagnostic>Open Diagnostic Labs</button><button class="ghost" type="button" data-mw-data-home>Open Data Diagnosis</button><p class="mw-help">Use these links to learn the mechanism or test your reasoning. Case notes remain your own local evidence record.</p></div>`
+  return `<div class="mw-related"><details><summary>Related lessons, evidence cases and tools</summary><div class="mw-related-body"><p class="mw-help">Open these only when you want a second source or practice route. Your case notes remain local to this learner.</p>${lessonButtons}${spec}${data}${mat}<button class="ghost" type="button" data-mw-defects>Open Defect Finder</button><button class="ghost" type="button" data-mw-diagnostic>Open Diagnostic Labs</button><button class="ghost" type="button" data-mw-data-home>Open Data Diagnosis</button></div></details></div>`
 }
+
 async function hydrateEngineeringContext(host,c){
   const panel=host.querySelector('[data-mw-engineering-context]');if(!panel)return;
   const rows=[
@@ -249,6 +250,7 @@ function renderCase(c){activeId=c.id;syncMissionContext(c);const host=section();
 
 function collect(c){document.querySelectorAll('#mmMouldMasterWorkspace [data-mw-field]').forEach(el=>{c[el.dataset.mwField]=el.value});c.status=status(c);return c}
 function wire(host,c){
+  host.querySelector('[data-mw-practice]')?.addEventListener('click',returnToPractice);
   let timer=null;host.querySelectorAll('[data-mw-field]').forEach(el=>el.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(async()=>{try{await saveCase(collect(c))}catch(err){persistenceError(err)}},500)}));
   host.querySelector('[data-mw-save]')?.addEventListener('click',async()=>{try{const saved=await saveCase(collect(c));renderCase(saved);window.toast?.('Mould Master case saved')}catch(err){persistenceError(err)}});
   host.querySelector('[data-mw-new]')?.addEventListener('click',async()=>{try{const n=await saveCase(blank());renderCase(n)}catch(err){persistenceError(err)}});
