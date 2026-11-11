@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 import subprocess
+from collections import Counter
 
 ROOT=Path(__file__).resolve().parent
 PATCH='assessment-deep-dive.js'
@@ -94,8 +95,22 @@ need([row.get('id') for row in lanes]==['formal','scenarios','diagnostic','mater
 need([row.get('count') for row in lanes]==[57,40,36,24,12],'Question Centre lane counts drift')
 need(sum(int(row.get('count') or 0) for row in lanes)==169,'Question Centre lane counts must sum to 169')
 supplemental=centre.get('supplementalQuestionSets') or []
-need(len(supplemental)==1 and supplemental[0].get('id')=='material-science-checks' and supplemental[0].get('count')==27,'Question Centre must expose the 27-item material-science learning check separately')
-need(supplemental[0].get('governed') is False and centre.get('totalLearnerQuestionPrompts')==196,'material-science checks must remain outside the 169 governed prompt count')
+need(len(supplemental)==1 and supplemental[0].get('id')=='material-science-checks' and supplemental[0].get('count')==45,'Question Centre must expose the 45-item material-science learning check separately')
+need(supplemental[0].get('governed') is False and centre.get('totalLearnerQuestionPrompts')==214,'material-science checks must remain outside the 169 governed prompt count')
+coverage=supplemental[0].get('chapterCoverage') or {}
+need(coverage=={'chapters':9,'questionsPerChapter':5,'questionsPerAttempt':2},'material-science chapter coverage contract drift')
+core=text('src/core-runtime/core-inline-005.js')
+material_start=core.index('const MATERIALS =')+len('const MATERIALS =')
+materials,_=json.JSONDecoder().raw_decode(core[material_start:].lstrip())
+chapters=materials.get('chapters') or []
+quiz=materials.get('quiz') or []
+chapter_ids=[int(row.get('id')) for row in chapters]
+chapter_counts=Counter(int(row[4]) for row in quiz if isinstance(row,list) and len(row)>4 and isinstance(row[4],int))
+need(len(chapters)==9 and len(quiz)==45,'core material-science source must contain nine chapters and 45 questions')
+need(chapter_counts==Counter({chapter_id:5 for chapter_id in chapter_ids}),'every material-science chapter must have exactly five tagged questions')
+need(len({str(row[0]).strip().casefold() for row in quiz})==45,'material-science question wording must be unique')
+need(all(isinstance(row,list) and len(row)>=5 and len(row[1])==4 and row[2] in range(4) and str(row[3]).strip() and row[4] in chapter_ids for row in quiz),'material-science questions require four options, one keyed answer, an explanation and a chapter tag')
+need('function selectMaterialQuizQuestions()' in core and 'selected.push(...shuffleMaterial(pool).slice(0,2));' in core,'each material-science attempt must sample two questions from every chapter')
 related=centre.get('relatedLearningDestinations') or []
 need(len(related)==1 and related[0].get('id')=='optional-specialist-lessons' and related[0].get('count')==20 and related[0].get('countsAsQuestionPrompt') is False,'Question Centre related specialist link must preserve lesson-only status')
 formal_lane=lanes[0]
@@ -110,7 +125,7 @@ need(entry.get('area')=='Learn' and entry.get('label')=='Question Centre','Quest
 policy=centre.get('policy') or {}
 need(policy.get('centralisesDiscovery') is True and policy.get('duplicatesQuestionText') is False and policy.get('preservesCanonicalScoring') is True,'Question Centre manifest must centralise discovery without copying question content or scoring authority')
 hub=text('primary-learning-practice-hubs.js')
-for marker in ['window.MM_QUESTION_CENTRE=Object.freeze','function openQuestionCentreDetail()','mm-question-centre','Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions','${q.total} governed question/decision prompts','Material science chapter checks','function questionCentreSupplementalCounts()','supplementalCounts:questionCentreSupplementalCounts']:
+for marker in ['window.MM_QUESTION_CENTRE=Object.freeze','function openQuestionCentreDetail()','mm-question-centre','Formal knowledge checks','Shop-floor scenarios','Diagnostic questions','Material questions','Measured-evidence decisions','${q.total} governed question/decision prompts','Material science chapter checks','${supplemental.totalLearnerQuestionPrompts} total question prompts','function questionCentreSupplementalCounts()','supplementalCounts:questionCentreSupplementalCounts']:
     need(marker in hub,f'Question Centre learner launcher missing: {marker}')
 need('Book chapter self-checks, the 32 optional reasoning questions and lesson exercises stay with the core lessons they belong to.' in hub
      and 'window.MM_LESSON_REASONING=Object.freeze' in hub
