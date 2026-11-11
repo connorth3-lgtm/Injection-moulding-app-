@@ -608,9 +608,10 @@ test('Learn Question Centre retains the five governed launchers without a Practi
  await page.evaluate(()=>window.MM_QUESTION_CENTRE.open());
  const centre=page.locator('#path .mm-question-centre-card');
  await expect(centre).toBeVisible();
- await expect(centre.locator('.mm-hub-picker-grid > button')).toHaveCount(5);
+ await expect(centre.locator('.mm-hub-picker-grid > button')).toHaveCount(6);
  await expect(centre.locator('#mmPracticeReasoning, #mmLearnReasoning, .mm-question-centre-optional')).toHaveCount(0);
  expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.counts())).toEqual({formal:57,scenarios:40,diagnostic:36,materials:24,measured:12,total:169});
+ expect(await page.evaluate(()=>window.MM_QUESTION_CENTRE.supplementalCounts())).toEqual({materialScience:27,specialists:20,totalLearnerQuestionPrompts:196});
  await page.evaluate(()=>switchView('scenarios'));
  await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
 });
