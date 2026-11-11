@@ -1269,7 +1269,7 @@ function ensureMaterialScienceQuestionBank(){
       const baseRender=renderMaterialQuiz;
       window.renderMaterialQuiz=function(){
         const html=baseRender.apply(this,arguments);
-        return String(html).replace(/<div class="mat-q" data-source="(\\d+)">/g,(_match,source)=>{
+        return String(html).replace(/<div class="mat-q" data-source="(\d+)">/g,(_match,source)=>{
           const chapter=MATERIALS.quiz[Number(source)]?.[4];
           return '<div class="mat-q" data-source="'+source+'" data-chapter="'+String(chapter??'')+'">';
         });
