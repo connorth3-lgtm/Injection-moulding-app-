@@ -73,7 +73,7 @@
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
     "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.11.11.3.md",
-    "sourceSha": null,
+    "sourceSha": "e230bfd9347b8d5e93adca1b8b61d6d35a25a9ac",
     "desktopRelease": "2026.09.29.1",
     "evidence": null,
     "required": [
