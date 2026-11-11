@@ -14,7 +14,7 @@ This release brings the 120 core lessons, 36 material-science lessons and 20 opt
 
 - Release: 2026.11.11.2
 - Producer workflow: Pre-merge Public Candidate, run `42970827493`
-- Artifact `13833053386`
+- artifact `13833053386`
 - source `7c6587c5488bd764a6ae0a7afb2cbdfb252857d5`
 - runtime fingerprint `sha256:1f3ee0bed1077c91562f83050e6642d80a01b39f9077f54a6b06c84be1f17c09`
 - Artifact digest `sha256:1c95065510d5b702c669b63630f50ac3f50ed662b77151c50a738859cf1d39a0`
