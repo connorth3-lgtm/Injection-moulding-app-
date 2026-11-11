@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.09.1",
+  "release": "2026.11.11.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "cc9c7264adbffbe3e1b8386a7afe9f2df5e6b392",
-  "scope": "Consolidate Question Centre into one Learn destination: remove the repeated lesson-embedded and Practice copies while preserving its five governed question modes.",
-  "approvalBoundary": "HOLD: release 2026.11.09.1 exact-source software checks passed; this is a technical PASS only. All seven independent human/device/provider workstreams and tester distribution remain HOLD.",
+  "candidateSourceSha": "8c98fb97b6cfaea468bd702296c7b16b0c68deee",
+  "scope": "Add a balanced, chapter-tagged material-science knowledge check to the main Learn Question Centre while preserving the five governed question modes.",
+  "approvalBoundary": "HOLD: release 2026.11.11.1 has a retained exact-source software candidate and technical PASS evidence only. All seven independent human/device/provider workstreams, tester distribution and production authority remain HOLD.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -43,7 +43,7 @@
   "productionAuthority": "advisory-only",
   "humanEvidenceStatus": "hold",
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
-  "lastReviewedDate": "2026-11-09",
+  "lastReviewedDate": "2026-11-11",
   "previousVerifiedCandidate": {
     "release": "2026.11.08.5",
     "sourceSha": "f7b703ad06fef540d7773458e0eff8202c253041",
