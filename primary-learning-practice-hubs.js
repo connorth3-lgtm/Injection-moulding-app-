@@ -168,7 +168,7 @@ function bind(root){
 }
 function safeOpen(apiName,fallback,options){
   const api=window[apiName];
-  if(api&&typeof api.open==='function')return api.open(options);
+  if(api&&typeof api.open==='function')return options===undefined?api.open():api.open(options);
   if(fallback)return fallback();
   if(typeof toast==='function')toast('This activity is still loading. Try again in a moment.');
 }
@@ -498,9 +498,6 @@ function runAction(action,source='practice'){
       return safeOpen('MM_DIAGNOSTIC_LABS',()=>switchView('scenarios'),{
         returnTo:source==='practice'&&!learnToolOrigin&&document.getElementById('scenarios')?.dataset.mmHubMode==='problem-practice'?'problem-practice':'hub'
       });
-    case 'case-process-data':
-    case 'process-data': return safeOpen('MM_PROCESS_DATA_DIAGNOSTICS');
-    case 'scenario-detail': closePicker();if(source==='learn')switchView('scenarios');return openScenarioDetail(nextScenarioIndex(),source==='learn'?'Learn':'Practice'); 
     case 'case-process-data':
     case 'process-data': return safeOpen('MM_PROCESS_DATA_DIAGNOSTICS');
     case 'scenario-detail': closePicker();if(source==='learn')switchView('scenarios');return openScenarioDetail(nextScenarioIndex(),source==='learn'?'Learn':'Practice');
