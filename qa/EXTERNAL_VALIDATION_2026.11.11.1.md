@@ -14,12 +14,12 @@ No retained exact-source candidate is recorded in this staged index. Add the can
 
 ## Release-specific review packets — all HOLD
 
-- Accessibility / real assistive technology: [ACCESSIBILITY_REAL_AT_2026.11.11.1.md](ACCESSIBILITY_REAL_AT_2026.11.11.1.md) — HOLD
-- Physical iOS/iPadOS and Android PWA: [PWA_PHYSICAL_DEVICE_2026.11.11.1.md](PWA_PHYSICAL_DEVICE_2026.11.11.1.md) — HOLD
-- Windows distribution: [WINDOWS_SIGNING_READINESS_2026.11.11.1.md](../certification/WINDOWS_SIGNING_READINESS_2026.11.11.1.md) — HOLD
-- Book SME: [BOOK_SME_REVIEW_2026.11.11.1.md](BOOK_SME_REVIEW_2026.11.11.1.md) — HOLD
-- Curriculum SME: [CURRICULUM_SME_REVIEW_2026.11.11.1.md](CURRICULUM_SME_REVIEW_2026.11.11.1.md) — HOLD
-- Learner outcomes: [LEARNER_PILOT_2026.11.11.1.md](LEARNER_PILOT_2026.11.11.1.md) — HOLD
-- NZQA/provider G1–G8: [NZQA_EXTERNAL_VALIDATION_2026.11.11.1.md](NZQA_EXTERNAL_VALIDATION_2026.11.11.1.md) — HOLD
+- `qa/ACCESSIBILITY_REAL_AT_2026.11.11.1.md` — [Open packet](ACCESSIBILITY_REAL_AT_2026.11.11.1.md) — HOLD
+- `qa/PWA_PHYSICAL_DEVICE_2026.11.11.1.md` — [Open packet](PWA_PHYSICAL_DEVICE_2026.11.11.1.md) — HOLD
+- `certification/WINDOWS_SIGNING_READINESS_2026.11.11.1.md` — [Open packet](../certification/WINDOWS_SIGNING_READINESS_2026.11.11.1.md) — HOLD
+- `qa/BOOK_SME_REVIEW_2026.11.11.1.md` — [Open packet](BOOK_SME_REVIEW_2026.11.11.1.md) — HOLD
+- `qa/CURRICULUM_SME_REVIEW_2026.11.11.1.md` — [Open packet](CURRICULUM_SME_REVIEW_2026.11.11.1.md) — HOLD
+- `qa/LEARNER_PILOT_2026.11.11.1.md` — [Open packet](LEARNER_PILOT_2026.11.11.1.md) — HOLD
+- `qa/NZQA_EXTERNAL_VALIDATION_2026.11.11.1.md` — [Open packet](NZQA_EXTERNAL_VALIDATION_2026.11.11.1.md) — HOLD
 
 These packets are release-scoped work instructions only; none asserts that a reviewer, device, learner cohort, provider or signing authority completed validation.
