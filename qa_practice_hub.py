@@ -41,14 +41,18 @@ if 'id="mmLearnQuestions"' in hub:
 practice_markup = hub[hub.index("function practiceHubMarkup()"):hub.index("function renderLearnHub()")]
 if 'data-mm-hub-action="question-centre"' in practice_markup or "169 governed prompts" in practice_markup:
     failures.append("Practice must not expose a duplicate Question Centre or question-bank count")
-if "3 tools shown" not in practice_markup:
-    failures.append("Practice hub must present three focused tools after Question Centre consolidation")
+if "3 tools shown" in practice_markup:
+    failures.append("Practice hub must not show a stale tool count")
+if "Three clear practice areas" not in practice_markup:
+    failures.append("Practice hub must explain its three focused practice areas")
 problem_start = hub.index("function openProblemPractice()")
 problem_end = hub.index("function openGuidedPractice()", problem_start)
 problem_markup = hub[problem_start:problem_end]
 for route in ['data-mm-hub-action="diagnose-cause"', 'data-mm-hub-action="shop-floor-case"']:
     if route not in problem_markup:
         failures.append(f"Combined problem practice must keep both routes available: {route}")
+if "<details class=\"mm-practice-more-tools\">" not in problem_markup or "More diagnosis and case tools" not in problem_markup:
+    failures.append("Specialist diagnosis tools must remain available behind a clear optional disclosure")
 
 required_css = {
     "mobile practice scope": ".mm-practice-hub",
@@ -122,7 +126,7 @@ for required in (
     "No cause confirmed.",
     "Evidence gaps to resolve",
     "data-mm-dx-hypothesis",
-    "case 'troubleshooting': return openPicker('troubleshooting');",
+    "case 'troubleshooting': return source==='learn'?dxOpen():openProblemPractice();",
     "case 'diagnostic-workbench': return dxOpen();",
     "renderDefects=renderUnifiedDefects",
     "renderCoach=renderUnifiedCoach",
