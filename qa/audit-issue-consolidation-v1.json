@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.11.2",
+  "release": "2026.11.11.3",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "7c6587c5488bd764a6ae0a7afb2cbdfb252857d5",
-  "scope": "Combine the 120 core, 36 Material Science, and 20 optional specialist lessons into one 176-lesson library while keeping each track's saved progress separate.",
-  "approvalBoundary": "HOLD: release 2026.11.11.2 has a retained exact-source software candidate and technical PASS evidence only. All seven independent human/device/provider workstreams, tester distribution and production authority remain HOLD.",
+  "candidateSourceSha": null,
+  "scope": "Reorder Learn into foundations, core Materials plus the nine polymer-science chapters, process/tooling/engineering, and optional specialist lessons; preserve all per-track progress.",
+  "approvalBoundary": "HOLD: release 2026.11.11.3 is a technical-preview candidate only. Human, device, provider, SME, learner-outcome, signing, and production approvals remain separate and pending.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,

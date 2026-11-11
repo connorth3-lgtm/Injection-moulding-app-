@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.11.2",
-  "commit": "bfe8394e3b7b80d6c22992674ff91e5500cadc06",
+  "release": "2026.11.11.3",
+  "commit": "7d9217f873dd8b03b23bac3dabd520d0b9770d80",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Technical comparison baseline for the unified 176-lesson library and its all-library progress display. The 12-pixel limit and all 52 viewport/surface captures remain active. The Learn page changes are intentional; this technical reference is not visual-owner approval. Human visual-owner decision remains pending. Independent physical-device, real assistive-technology, Windows signing, provider, SME, learner-outcome, accreditation and production reviews remain separate and HOLD.",
-  "ref": "visual-baseline/2026.11.11.2",
+  "policy": "Technical comparison baseline for the reordered Materials and polymer-science Learn sequence in release 2026.11.11.3. Keep the 12-pixel threshold and all 52 viewport/surface captures. This exact reference is not visual-owner approval; the human visual decision and all independent human, device, Windows, provider, SME, learner-outcome and production reviews remain separate and HOLD.",
+  "ref": "visual-baseline/2026.11.11.3",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "bfe8394e3b7b80d6c22992674ff91e5500cadc06"
+    "referenceSourceSha": "7d9217f873dd8b03b23bac3dabd520d0b9770d80"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",

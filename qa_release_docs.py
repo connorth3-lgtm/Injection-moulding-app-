@@ -569,6 +569,30 @@ elif visual.get('release')=='2026.11.09.1':
          and 'not human visual-owner approval' in visual.get('policy','').lower()
          and 'remain separate and hold' in visual.get('policy','').lower(),
          '2026.11.09.1 Book baseline must retain exact source, scope, strict matrix and independent visual-review HOLD')
+elif visual.get('release')=='2026.11.11.3':
+    review_current=text('qa/VISUAL_REVIEW_2026.11.11.3.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.11.3'
+         and visual.get('commit')=='7d9217f873dd8b03b23bac3dabd520d0b9770d80'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and visual.get('referenceCaptureToolchain')=={
+             'framework':'@playwright/test','version':'1.64.1','browser':'chromium',
+             'referenceSourceSha':visual['commit']}
+         and 'STATUS: TECHNICAL VISUAL BASELINE' in review_current
+         and f"- Candidate source: `{current_candidate['sourceSha']}`" in review_current
+         and f"- Reference source: `{visual['commit']}`" in review_current
+         and f"- Baseline reference: `{visual['ref']}`" in review_current
+         and '52 expected and 52 captured surfaces' in review_current
+         and 'No masks or skipped surfaces were added.' in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and 'not visual-owner approval' in visual.get('policy','').lower()
+         and 'remain separate and hold' in visual.get('policy','').lower(),
+         '2026.11.11.3 Learn Materials baseline must retain its exact technical reference, strict 52-surface matrix and separate human visual HOLD')
 elif visual.get('release')=='2026.11.11.2':
     # The unified 176-lesson library has a release-specific technical baseline.
     # Keep all 52 captures and the 12-pixel threshold; this is not owner approval.

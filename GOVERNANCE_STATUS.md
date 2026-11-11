@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Production Pages candidate for release 2026.11.11.2 source 7c6587c5488bd764a6ae0a7afb2cbdfb252857d5 was built and retained as artifact 13833053386 in run 42970827493, with fingerprint sha256:1f3ee0bed1077c91562f83050e6642d80a01b39f9077f54a6b06c84be1f17c09. Exact-source candidate integrity and its required quality gates passed; external approvals remain HOLD. |
-| Behavioral / browser | **pass** | Automated browser and question quality checks passed for release 2026.11.11.2 source 7c6587c5488bd764a6ae0a7afb2cbdfb252857d5: Question Quality 50-Pass run 42970827534 and Mobile Browser QA run 42970827511 passed. These checks do not establish human, device, provider or production approval. |
-| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.11.2. |
+| Static / contract | **fail** | HOLD: new release candidate metadata and producer evidence have not yet been independently verified. |
+| Behavioral / browser | **fail** | HOLD: exact-head browser and question-quality evidence for the new release is pending. |
+| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.11.3. |
