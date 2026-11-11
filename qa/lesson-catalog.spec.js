@@ -102,13 +102,14 @@ test('legacy specialist launch opens the filtered Learn catalogue, not a second 
   await expect(page.locator('#mmSpecialistModal')).toBeHidden();
   await expect(page.locator('#path [data-mm-catalog-filter]')).toHaveValue('specialist');
 });
-test('36 material lessons move to Learn while keeping independent progress and original content',async({page})=>{
+test('36 Material Science lessons join the Materials course in Learn with independent progress and original content',async({page})=>{
   await ready(page);
   await page.evaluate(()=>window.MM_LESSON_CATALOG.open({filter:'material'}));
   const catalog=page.locator('#path .mm-all-lessons');
-  await expect(catalog.locator('[data-mm-catalog-count]')).toHaveText('36 lessons shown');
+  await expect(catalog.locator('[data-mm-catalog-count]')).toHaveText('46 lessons shown');
+  await expect(catalog.locator('[data-mm-catalog-track="materials"]:visible')).toHaveCount(10);
   await expect(catalog.locator('[data-mm-material-id]')).toHaveCount(36);
-  await expect(catalog.locator('[data-mm-catalog-group]:not([hidden])')).toHaveCount(9);
+  await expect(catalog.locator('[data-mm-catalog-group]:not([hidden])')).toHaveCount(10);
   await catalog.locator('[data-mm-material-id="1"]').click();
   await expect(page.locator('#materials article.mat-lesson')).toBeVisible();
   await expect(page.locator('#materials .mat-chapters,#materials .mat-lesson-list')).toHaveCount(0);
