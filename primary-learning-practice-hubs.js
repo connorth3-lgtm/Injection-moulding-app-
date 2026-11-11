@@ -7,7 +7,7 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.10.10.4';
+const VERSION='2026.11.11.1';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
 const originalRenderScenarios=renderScenarios;
 
@@ -151,7 +151,7 @@ function nextScenarioIndex(){
   return next;
 }
 let learnToolOrigin=null;
-const LEARN_TOOL_ACTIONS=new Set(['assessments','diagnostic-labs','material-labs','measured-decisions','process-data','question-centre','troubleshooting','scenario-detail','learn-scenarios']);
+const LEARN_TOOL_ACTIONS=new Set(['assessments','diagnostic-labs','material-labs','material-science-checks','measured-decisions','process-data','question-centre','specialist','troubleshooting','scenario-detail','learn-scenarios']);
 function bind(root){
   if(root?.id==='scenarios')bindPracticeGuided(root);
   if(!root||root.dataset.mmHubActionsBound==='1')return;
@@ -447,6 +447,18 @@ window.MM_DIAGNOSTIC_WORKBENCH=Object.freeze({
   noProductionControl:true
 });
 
+function openMaterialScienceCheck(){
+  closePicker();
+  switchView('materials');
+  if(typeof switchMaterialTab==='function')switchMaterialTab('quiz');
+  const root=document.getElementById('materials');
+  if(!root||root.querySelector('[data-mm-question-centre-return]'))return;
+  const bar=document.createElement('div');bar.className='mm-hub-detail-back';bar.dataset.mmQuestionCentreReturn='1';
+  const button=document.createElement('button');button.type='button';button.textContent='← Back to Question Centre';button.dataset.mmHubAction='question-centre';
+  const label=document.createElement('span');label.textContent='Material science checks';
+  bar.append(button,label);root.prepend(bar);bind(root);
+}
+
 function runAction(action,source='practice'){
   switch(action){
     case 'boss-round': return typeof startBossRound==='function'?startBossRound():openScenarioDetail();
@@ -478,6 +490,7 @@ function runAction(action,source='practice'){
     case 'spatial-twin': closePicker(); return safeOpen('MM_SPATIAL_TWIN',()=>switchView('simulator'));
     case 'simulator': closePicker(); return switchView('simulator');
     case 'material-labs': closePicker(); return safeOpen('MM_MATERIAL_BEHAVIOUR_LABS',()=>switchView('materials'));
+    case 'material-science-checks': return openMaterialScienceCheck();
     case 'measured-decisions': closePicker(); return safeOpen('MM_REAL_MEASURED_ASSESSMENT');
     case 'question-centre': return openQuestionCentreDetail();
     case 'assessments': closePicker(); return switchView('exams');
@@ -1223,15 +1236,23 @@ function questionCentreCounts(){
  const measured=window.MM_REAL_MEASURED_ASSESSMENT?.decisionCount||12;
  return {formal,scenarios,diagnostic,materials,measured,total:formal+scenarios+diagnostic+materials+measured};
 }
+function questionCentreSupplementalCounts(){
+ let materialScience=0;
+ try{if(typeof MATERIALS!=='undefined'&&Array.isArray(MATERIALS.quiz))materialScience=MATERIALS.quiz.length}catch(_){}
+ const specialists=Array.isArray(window.MM_SPECIALIST_CURRICULUM?.lessons)?window.MM_SPECIALIST_CURRICULUM.lessons.length:0;
+ return {materialScience,specialists,totalLearnerQuestionPrompts:questionCentreCounts().total+materialScience};
+}
 function questionCentreMarkup(){
- const q=questionCentreCounts();
- return `<span class="eyebrow">${q.total} governed prompts</span><h2>Choose how you want to be questioned</h2><p class="muted">Most governed question-based learning is collected here. Formal checks and low-stakes practice keep their existing scoring and evidence boundaries.</p><div class="mm-hub-picker-grid">
+ const q=questionCentreCounts(),supplemental=questionCentreSupplementalCounts();
+ const chapterCount=typeof MATERIALS!=='undefined'&&Array.isArray(MATERIALS.chapters)?MATERIALS.chapters.length:9;
+ return `<span class="eyebrow">${supplemental.totalLearnerQuestionPrompts} total question prompts · ${q.total} governed + ${supplemental.materialScience} formative material-science checks</span><h2>Choose how you want to be questioned</h2><p class="muted">Choose a governed practice mode or open the separate material-science learning check. Scoring, evidence and safety rules stay with each source.</p><div class="mm-hub-picker-grid">
  <button type="button" data-mm-hub-action="assessments"><b>Formal knowledge checks</b><small>30 approved technical + 27 regional-safety bank items. Attempts use the governed level/region blueprint: 10 questions in one jurisdiction or 16 in Compare All.</small></button>
  <button type="button" data-mm-hub-action="scenario-detail"><b>Shop-floor scenarios</b><small>${q.scenarios} evidence-first decisions with immediate feedback.</small></button>
  <button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic questions</b><small>${q.diagnostic} guided fault-isolation decisions across the diagnostic labs.</small></button>
  <button type="button" data-mm-hub-action="material-labs"><b>Material questions</b><small>${q.materials} resin/evidence decisions across the material labs.</small></button>
  <button type="button" data-mm-hub-action="measured-decisions"><b>Measured-evidence decisions</b><small>${q.measured} decisions grounded in audited measured-data contracts.</small></button>
- </div><p class="tiny muted" style="margin-top:12px">${q.total} governed question/decision prompts across these five modes. Book chapter self-checks, the 32 optional reasoning questions and lesson exercises stay with the core lessons they belong to.</p>`;
+ <button type="button" data-mm-hub-action="material-science-checks"><b>Material science chapter checks</b><small>${supplemental.materialScience} questions from the ${chapterCount}-chapter bank; 18 per attempt. Formative learning only, separate from certification.</small></button>
+ </div><p class="tiny muted" style="margin-top:12px">${q.total} governed question/decision prompts across these five modes. Book chapter self-checks, the 32 optional reasoning questions and lesson exercises stay with the core lessons they belong to. The separate ${supplemental.materialScience}-question material-science knowledge check is formative and does not add to the governed count.</p><p class="tiny muted mm-question-centre-related">For optional advanced depth, browse ${supplemental.specialists} specialist lessons. They are lessons, not question prompts. <button type="button" class="ghost" data-mm-hub-action="specialist">Browse optional specialist lessons →</button></p>`;
 }
 function openQuestionCentreDetail(){
   try{window.closeModal?.()}catch(_){}
@@ -1806,6 +1827,6 @@ window.MM_LESSON_REASONING=Object.freeze({
     id:q.id,lessonId:LEARN_REASONING_TO_CORE_LESSON[q.id],topic:q.topic
   }))
 });
-window.MM_QUESTION_CENTRE=Object.freeze({version:VERSION,open:openQuestionCentreDetail,counts:questionCentreCounts,scope:'Learner-facing consolidated launcher only; governed question sources, scoring, outcome-review status and evidence remain in their canonical subsystems.'});
+window.MM_QUESTION_CENTRE=Object.freeze({version:VERSION,open:openQuestionCentreDetail,counts:questionCentreCounts,supplementalCounts:questionCentreSupplementalCounts,scope:'Learner-facing consolidated launcher only; governed question sources, scoring, outcome-review status and evidence remain in their canonical subsystems.'});
 window.MM_PRIMARY_HUBS={version:VERSION,renderLearnHub,renderPracticeHub,openCurrentLesson,openLearningPathDetail,openScenarioDetail,nextScenarioIndex,learnerPracticePlan,openLearningResources:()=>openPicker('learn-resources'),learnToolOrigin:()=>learnToolOrigin,clearLearnToolOrigin:()=>{learnToolOrigin=null;}};
 })();
