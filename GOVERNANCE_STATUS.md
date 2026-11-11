@@ -45,7 +45,7 @@ Publication authorization and independent validation are separate namespaces. Th
 These layers are reported separately. Passing static/contract or automated browser QA does not convert the external human/device layer into a pass.
 
 | Layer | State | Meaning |
-| --- | --- |
+| --- | --- | --- |
 | Static / contract | **pass** | Production Pages candidate for release 2026.11.11.1 source 8c98fb97b6cfaea468bd702296c7b16b0c68deee was built and retained as artifact 13825611364 in run 42952112263, with fingerprint sha256:b8289edfb0281c816a9c9393787086a65cf6c057d4e639c6a962c2de3bdd9c74. Exact-source candidate integrity and its quality gates passed; external approvals remain HOLD. |
 | Behavioral / browser | **pass** | Automated browser and question quality checks passed for release 2026.11.11.1 source 8c98fb97b6cfaea468bd702296c7b16b0c68deee: Question Quality 50-Pass run 42952112424 and Mobile Browser QA run 42952112268 passed. Curriculum coverage run 42952112262 and Deep Dive v2 run 42952112310 also passed. These checks do not establish human, device, provider or production approval. |
 | External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.11.1. |
