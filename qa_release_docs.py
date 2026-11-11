@@ -588,7 +588,7 @@ elif visual.get('release')=='2026.11.11.2':
          and 'STATUS: VISUAL BASELINE HOLD' in review_current
          and f"- Candidate source: `{current_candidate['sourceSha']}`" in review_current
          and f"- Reference source: `{visual['commit']}`" in review_current
-         and f"- Baseline ref: `{visual['ref']}`" in review_current
+         and f"- Baseline reference: `{visual['ref']}`" in review_current
          and 'other 48 captures matched' in review_current.lower()
          and 'No masks or skipped surfaces were added.' in review_current
          and 'Human visual-owner decision: **PENDING**' in review_current
