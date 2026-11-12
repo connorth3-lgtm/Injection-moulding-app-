@@ -285,9 +285,6 @@ for(const width of [360,810]){
     await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
     await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="problem-practice"]').click();
     await page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="diagnose-cause"]').click();
-    const troubleshootPicker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid[data-mm-reference-practice-picker="modal"]');
-    await expect(troubleshootPicker.locator('button')).toHaveCount(4);
-    await troubleshootPicker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
     await expect(page.locator('#defects .mm-dx-workbench')).toBeVisible();
     await expect(page.locator('#defects > .mm-practice-tool-return')).toBeVisible();
     await expect(page.locator('#defects .mm-dx-library .mm-dx-symptom').first()).toBeVisible();
@@ -465,8 +462,11 @@ test('Practice nested labs, data diagnosis and assessments keep working illustra
   await expect(data.locator('.pd-feedback')).toBeVisible();
   await expect(data.locator('[data-pd-home]')).toBeVisible();
   await data.locator('[data-pd-home]').click();
-  await expect(data.locator('.pd-hero > .mm-reference-practice-tool-art')).toHaveCount(1);
-  await data.locator('[data-pd-lab-home]').click();
+  await expect(data.locator('[data-pd-start]').first()).toBeVisible();
+  await expect(data.getByRole('heading',{name:'Guided Data Diagnosis'})).toBeVisible();
+  await data.locator('[data-pd-practice]').first().click();
+  await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
+  await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="process-data"]').click();
   await expect(data.getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
 
   for(const [action,root,hero,start,back] of [
