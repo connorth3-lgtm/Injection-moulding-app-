@@ -6,6 +6,7 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parent
 JS = (ROOT / 'diagnostic-learning-labs.js').read_text(encoding='utf-8')
+HUBS = (ROOT / 'primary-learning-practice-hubs.js').read_text(encoding='utf-8')
 INDEX = (ROOT / 'index.html').read_text(encoding='utf-8')
 SW = (ROOT / 'service-worker.js').read_text(encoding='utf-8')
 PKG = (ROOT / 'desktop' / 'electron' / 'package.json').read_text(encoding='utf-8')
@@ -140,8 +141,22 @@ need("'./src/domains/runtime-packs/evidence-runtime-pack.js'" in SW, 'evidence r
 need('../../diagnostic-learning-labs.js' in PKG, 'desktop package does not include diagnostic learning labs')
 need("'diagnostic-learning-labs.js'" in INTEGRITY, 'desktop integrity manifest generator does not cover diagnostic learning labs')
 
-need('mmDiagnosticLabs' in JS, 'desktop/sidebar launcher missing')
-need('mmDiagnosticMenu' in JS, 'mobile More-menu launcher missing')
+problem_start = HUBS.find('function openProblemPractice(){')
+problem_end = HUBS.find('\nfunction renderLearnHub(){', problem_start)
+need(problem_start >= 0 and problem_end > problem_start, 'Practice problem-practice route missing')
+problem = HUBS[problem_start:problem_end]
+tools_start = problem.find('<details class="mm-practice-more-tools">')
+tools_end = problem.find('</details>', tools_start)
+lab_action = problem.find('data-mm-hub-action="diagnostic-labs"', tools_start)
+need(tools_start >= 0 and tools_end > tools_start and tools_start < lab_action < tools_end, 'diagnostic labs must be inside the optional Practice tools disclosure')
+need('>Diagnostic labs</b>' in problem[lab_action:tools_end], 'optional Practice launcher label missing')
+action_start = HUBS.find("case 'diagnostic-labs':")
+action_end = HUBS.find("case 'case-process-data':", action_start)
+need(action_start >= 0 and action_end > action_start, 'Practice action route for diagnostic labs missing')
+action = HUBS[action_start:action_end]
+need("safeOpen('MM_DIAGNOSTIC_LABS'" in action and "returnTo:source==='practice'" in action and "?'problem-practice':'hub'" in action, 'Practice launcher must preserve a return path into the correct Practice level')
+need("returnToPractice=options?.returnTo==='problem-practice'?'problem-practice':'hub'" in JS and 'window.MM_PRIMARY_HUBS?.openProblemPractice' in JS, 'diagnostic lab back action must return to its Practice entry point')
+need('data-mm-diagnostic-labs' not in JS and 'data-mm-diagnostic-menu' not in JS, 'duplicate legacy navigation must stay removed')
 need("button[data-view=\"scenarios\"]" in JS, 'practice-area return path missing')
 need('localStorage' in JS and 'fetch(' not in JS, 'diagnostic progress must not upload or fetch production data')
 
