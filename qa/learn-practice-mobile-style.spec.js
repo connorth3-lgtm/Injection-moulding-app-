@@ -284,6 +284,9 @@ test('Practice hub keeps compact left-aligned mobile cards under strict CSP',asy
   await expectFullWidthPrimaryAction(page,'#scenarios .mm-practice-hub');
   await expect(page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="material-labs"]')).toHaveCount(0);
   await page.screenshot({path:'qa-artifacts/mobile-practice-hub-412x915.png',fullPage:true});
+  await openMaterials(page);
+  const materialLabs=page.locator('#materials .mat-tabs button').filter({hasText:'Material behaviour labs'});
+  await expect(materialLabs).toHaveCount(1);
   await materialLabs.click();
   await expect(page.locator('#materialLabs')).toBeVisible();
   await expect(page.locator('#materialLabs')).toContainText('Choose a material case');
