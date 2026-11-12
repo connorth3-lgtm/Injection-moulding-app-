@@ -103,6 +103,8 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   let links=await page.evaluate(id=>window.MM_ENGINEERING_STORE.linksForCase(id),materialCase);
   expect(links.some(x=>x.kind==='material-grade'&&x.targetId==='mat-lotte-infino-nh-1033')).toBeTruthy();
 
+  const evidenceSection=page.locator('#mmMouldMasterWorkspace details.mw-form-details').nth(1);
+  await evidenceSection.locator('summary').click();
   const evidence=page.locator('[data-mw-field="evidence"]');
   await evidence.fill('Measured evidence retained after exact-grade case creation.');
   await page.getByRole('button',{name:'Save case'}).click();
@@ -164,6 +166,9 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   await expect(page.locator('[data-mw-engineering-context]')).toContainText('Pump housing');
   await expect(page.locator('[data-mw-engineering-context]')).toContainText('Exact-grade evidence');
 
+  const evidenceDisclosure=page.locator('#mmMouldMasterWorkspace .mw-context-fold').filter({hasText:'Linked trial, quality and maintenance evidence'});
+  await expect(evidenceDisclosure).toHaveCount(1);
+  await evidenceDisclosure.locator('summary').click();
   const evidencePanel=page.locator('[data-mw-case-evidence]');
   await expect(evidencePanel).toContainText('Closed-loop evidence');
   await evidencePanel.locator('[data-mw-evidence-field="kind"]').selectOption('dimensional-check');

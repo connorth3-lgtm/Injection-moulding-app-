@@ -22,9 +22,12 @@ async function openHub(page,label,selector){
 }
 
 async function openGuidedPractice(page){
-  await page.locator('#mmPracticeToolResults [data-mm-hub-action="problem-practice"]').click();
-  await page.locator('#scenarios [data-mm-hub-action="diagnose-cause"]').click();
-  await page.locator('#modal:not(.hidden) [data-mm-hub-action="guided-practice"]').click();
+  const problemPractice=page.locator('#scenarios .mm-problem-practice');
+  if(!(await problemPractice.count()))
+    await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="problem-practice"]').click();
+  const more=page.locator('#scenarios .mm-problem-practice .mm-practice-more-tools');
+  if(!(await more.evaluate(el=>el.open)))await more.locator(':scope > summary').click();
+  await more.locator('[data-mm-hub-action="guided-practice"]').click();
   await expect(page.locator('#mmPracticeGuided')).toBeVisible();
 }
 
@@ -248,11 +251,13 @@ for(const width of [360,412]){
   await expect(practice.locator('[data-mm-hub-action="question-centre"]')).toHaveCount(0);
   await expect(practice.locator('.mm-practice-guided, .mm-practice-case, .mm-practice-diagnose-journey')).toHaveCount(0);
   await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(3);
-  await practice.locator('[data-mm-practice-query]').fill('process data');
-  await expect(practice.locator('#mmPracticeToolResults>button:visible')).toHaveCount(1);
-  await expect(practice.locator('[data-mm-practice-count]')).toHaveText('1 tool shown');
-  await practice.locator('[data-mm-practice-query]').fill('');
+  await expect(practice.locator('[data-mm-hub-action="problem-practice"]')).toBeVisible();
+  await expect(practice.locator('[data-mm-hub-action="process-data"]')).toBeVisible();
+  await expect(practice.locator('[data-mm-practice-query], #mmPracticeToolResults, [data-mm-practice-count]')).toHaveCount(0);
   if(width===412)await page.screenshot({path:'qa-artifacts/pr640-tidy-practice-412x915.png',animations:'disabled'});
+  await practice.locator('[data-mm-hub-action="process-data"]').click();
+  await expect(page.locator('#processDataLabs')).toBeVisible();
+  await expect(page.locator('#processDataLabs').getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
 
   await page.evaluate(()=>switchView('materials'));
   await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
@@ -324,15 +329,17 @@ test('Unified diagnostic evidence controls remain single-column and readable at 
   await page.setViewportSize({width:360,height:800});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  await page.locator('#scenarios [data-mm-hub-action="problem-practice"]').click();
-  await expect(page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="diagnose-cause"]')).toBeVisible();
-  const pickerRoot=page.locator('#scenarios .mm-problem-practice');
-  await expect(pickerRoot.locator('[data-mm-hub-action="shop-floor-case"]')).toBeVisible();
-  await pickerRoot.locator('[data-mm-hub-action="diagnose-cause"]').click();
-  const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
-  await expect(picker.locator('button')).toHaveCount(4);
-  await picker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
+  await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="problem-practice"]').click();
+  const problemPage=page.locator('#scenarios .mm-problem-practice');
+  await expect(problemPage.locator('[data-mm-hub-action="diagnose-cause"]')).toBeVisible();
+  await expect(problemPage.locator('[data-mm-hub-action="shop-floor-case"]')).toBeVisible();
+  const optionalTools=problemPage.locator('.mm-practice-more-tools');
+  await expect(optionalTools).not.toHaveAttribute('open','');
+  await expect(optionalTools.locator('.mm-hub-grid > button')).toHaveCount(3);
+  await expect(optionalTools.locator('.mm-hub-grid > button:visible')).toHaveCount(0);
+  await problemPage.locator('[data-mm-hub-action="diagnose-cause"]').click();
   const root=page.locator('#defects');
+  await expect(root.locator('.mm-dx-workbench')).toBeVisible();
   await root.locator('[data-mm-dx-action="choose"]').first().click();
   const labels=root.locator('.mm-dx-check');
   await expect(labels).toHaveCount(6);
@@ -616,7 +623,7 @@ test('Learn Question Centre retains five governed launchers plus balanced materi
  await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
 });
 
-test('Practice connects the existing troubleshooting tools in one three-stage learning path',async({page})=>{
+test('Practice leads with two common tasks and keeps specialist tools optional',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
@@ -625,18 +632,19 @@ test('Practice connects the existing troubleshooting tools in one three-stage le
   await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(3);
   await root.locator('[data-mm-hub-action="problem-practice"]').click();
   const routes=page.locator('#scenarios .mm-problem-practice');
-  await expect(routes.locator('.mm-hub-grid > button')).toHaveCount(2);
-  await expect(routes).toContainText('Diagnose the cause');
+  const commonTasks=routes.locator('.mm-hub-section[aria-label="Moulding problem practice"] > .mm-hub-grid > button');
+  await expect(commonTasks).toHaveCount(2);
+  await expect(routes).toContainText('Diagnose an observed defect');
   await expect(routes).toContainText('Choose the next safe action');
+  const optionalTools=routes.locator('.mm-practice-more-tools');
+  await expect(optionalTools).not.toHaveAttribute('open','');
+  await expect(optionalTools.locator('.mm-hub-grid > button')).toHaveCount(3);
+  await expect(optionalTools.locator('.mm-hub-grid > button:visible')).toHaveCount(0);
+  await optionalTools.locator(':scope > summary').click();
+  await expect(optionalTools.locator('.mm-hub-grid > button:visible')).toHaveCount(3);
   await routes.locator('[data-mm-hub-action="diagnose-cause"]').click();
-  const modal=page.locator('#modal:not(.hidden) .mm-diagnose-chooser');
-  await expect(modal).toBeVisible();
-  const steps=modal.locator('.mm-diagnose-step-strip > span');
-  await expect(steps).toHaveCount(3);
-  await expect(steps.first()).toContainText('Observe');
-  await expect(steps.last()).toContainText('Verify');
-  await expect(modal.locator('.mm-hub-picker-grid > button')).toHaveCount(4);
-  await expect(modal).toContainText('isolation');
+  await expect(page.locator('#defects .mm-dx-workbench')).toBeVisible();
+  await expect(page.locator('#defects .mm-dx-hero')).toContainText('Defect Finder + Troubleshooting Coach');
 });
 
 test('Materials links native lesson, lab and source-backed grade modes without copying grade records',async({page})=>{

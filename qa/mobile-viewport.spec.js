@@ -128,21 +128,18 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expect(problem.locator('[data-mm-hub-action="diagnose-cause"]')).toBeVisible();
       await expect(problem.locator('[data-mm-hub-action="shop-floor-case"]')).toBeVisible();
       await problem.locator('[data-mm-hub-action="diagnose-cause"]').click();
-      const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid[data-mm-reference-practice-picker="modal"]');
-      await expect(picker.locator('button')).toHaveCount(4);
-      await picker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
       await expect(page.locator('#defects').getByRole('heading',{name:'Defect Finder + Troubleshooting Coach'})).toBeVisible();
       await expect(page.locator('#defects [data-mm-dx-action="choose"]').first()).toBeVisible();
       await expect(page.locator('#modal')).toHaveClass(/hidden/);
       await expectOnlyCurrent(page,'Practice');
-      // Home uses the same problem-practice route; Mould Master stays available inside diagnosis.
-      await page.evaluate(()=>switchView('dashboard'));
-      await page.locator('#dashboard [data-mm-home-action="mould-master"]').click();
+      // Mould Master remains available under the optional Practice tools disclosure.
+      await openPracticeHub(page);
+      await openPracticeAction(page,'problem-practice');
       const problemPractice=page.locator('#scenarios .mm-problem-practice');
       await expect(problemPractice).toBeVisible();
-      await problemPractice.locator('[data-mm-hub-action="diagnose-cause"]').click();
-      const diagnosisPicker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid[data-mm-reference-practice-picker="modal"]');
-      await diagnosisPicker.locator('[data-mm-hub-action="mould-master"]').click();
+      const moreTools=problemPractice.locator('details.mm-practice-more-tools');
+      await moreTools.locator('summary').click();
+      await moreTools.locator('[data-mm-hub-action="mould-master"]').click();
       await expect(page.locator('#mmMouldMasterWorkspace')).toBeVisible();
       await expect(page.getByRole('heading',{name:'Troubleshooting casebook'})).toBeVisible();
     });
@@ -152,12 +149,17 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await openPracticeHub(page);
       await openPracticeAction(page,'process-data');
       await expect(page.locator('#processDataLabs')).toBeVisible();
-      await expect(page.getByRole('heading',{name:'Process data lab'})).toBeVisible();
-      await expect(page.getByRole('button',{name:'Browse 50 cases'})).toBeVisible();
-      await expect(page.getByRole('button',{name:'Start a guided case'})).toBeVisible();
+      await expect(page.locator('#processDataLabs').getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
+      const root=page.locator('#processDataLabs');
+      const more=root.locator('.pd-more-libraries');
+      await expect(root.locator('[data-pdlab-guided]')).toBeVisible();
+      await expect(more.locator('summary')).toBeVisible();
+      await expect(more.getByRole('button',{name:/Browse 50 cases/})).toBeHidden();
       await expectOnlyCurrent(page,'Practice');
 
-      await page.getByRole('button',{name:'Browse 50 cases'}).click();
+      await more.locator('summary').click();
+      await expect(more.getByRole('button',{name:/Browse 50 cases/})).toBeVisible();
+      await more.getByRole('button',{name:/Browse 50 cases/}).click();
       await expect(page.getByRole('heading',{name:'50-case data deep dive'})).toBeVisible();
       await expect(page.locator('.dd50-card')).toHaveCount(50);
       await page.locator('[data-dd50-kind]').selectOption('quality-sensor');
@@ -174,8 +176,14 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await openApp(page);
       await openPracticeHub(page);
       await openPracticeAction(page,'process-data');
-      await expect(page.getByRole('button',{name:'Browse the 200-case atlas'})).toBeVisible();
-      await page.getByRole('button',{name:'Browse the 200-case atlas'}).click();
+      const root=page.locator('#processDataLabs');
+      const more=root.locator('.pd-more-libraries');
+      await expect(root.getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
+      await expect(more.locator('summary')).toBeVisible();
+      await expect(more.getByRole('button',{name:/Browse the 200-case atlas/})).toBeHidden();
+      await more.locator('summary').click();
+      await expect(more.getByRole('button',{name:/Browse the 200-case atlas/})).toBeVisible();
+      await more.getByRole('button',{name:/Browse the 200-case atlas/}).click();
       await expect(page.getByRole('heading',{name:'200 advanced process-data cases'})).toBeVisible();
       await expect(page.locator('.at20-card')).toHaveCount(200);
       await page.locator('[data-at20-pass]').selectOption('16');
@@ -195,8 +203,9 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await openApp(page);
       await openPracticeHub(page);
       await openPracticeAction(page,'process-data');
-      await expect(page.getByRole('button',{name:'Prepare a CSV for analysis'})).toBeVisible();
-      await page.getByRole('button',{name:'Prepare a CSV for analysis'}).click();
+      const prepareCsv=page.locator('#processDataLabs [data-pdlab-csv]');
+      await expect(prepareCsv).toBeVisible();
+      await prepareCsv.click();
       await expect(page.getByRole('heading',{name:'Prepare shot data without uploading it'})).toBeVisible();
       const csv='timestamp,machine,mould,material_grade,material_lot,customer_name,fill_time_s,cushion_mm,quality_result,comment\n2026-08-26T10:00:00Z,IMM-SECRET,TOOL-SECRET,PA66-GF30,LOT-SECRET,Customer Secret,1.20,4.5,PASS,private note\n2026-08-26T10:00:30Z,IMM-SECRET,TOOL-SECRET,PA66-GF30,LOT-SECRET,Customer Secret,1.24,4.4,FAIL,private note two\n';
       await page.locator('[data-pdi-file]').setInputFiles({name:'shot-export.csv',mimeType:'text/csv',buffer:Buffer.from(csv)});

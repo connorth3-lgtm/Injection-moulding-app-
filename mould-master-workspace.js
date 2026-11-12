@@ -1,7 +1,7 @@
 /* MouldMaster evidence-led troubleshooting workspace — 2026.09.29.6 */
 (function(){
 'use strict';
-const VERSION='2026.09.29.6';
+const VERSION='2026.11.12.1';
 const MAX_CASES=80;
 let activeId='';
 let caseCache=[];
@@ -114,7 +114,8 @@ function style(){if(document.getElementById('mm-mould-master-style'))return;cons
 function section(){let x=document.getElementById('mmMouldMasterWorkspace');if(x)return x;x=document.createElement('section');x.id='mmMouldMasterWorkspace';x.className='view hidden';(document.getElementById('mainContent')||document.querySelector('main.main'))?.appendChild(x);return x}
 function hideViews(){document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'))}
 function header(){const h=document.getElementById('pageTitle'),p=document.getElementById('pageSubtitle');if(h)h.textContent='Mould Master';if(p)p.textContent='Build an evidence-led troubleshooting case from symptom to verified conclusion.'}
-function mark(){document.querySelectorAll('#nav button').forEach(b=>b.classList.remove('active'));window.MM_APP_SHELL?.navigation?.setCustomActive?.('mould-master','practice')}
+function mark(){window.MM_APP_SHELL?.navigation?.setCustomActive?.('','practice')}
+function returnToPractice(){if(typeof switchView==='function')switchView('scenarios');const hubs=window.MM_PRIMARY_HUBS;if(typeof hubs?.renderPracticeHub==='function')return hubs.renderPracticeHub();if(typeof switchView==='function')return switchView('scenarios')}
 
 function defectOptions(c){return `<option value="">Select a defect / symptom…</option>${defects().map(d=>`<option ${d.name===c.defect?'selected':''}>${esc(d.name)}</option>`).join('')}`}
 function onsetOptions(c){const vals=['Unknown / not yet defined','Just started','After material change','After mould maintenance','After machine change','After restart / setup','Gradually over time','Intermittent'];return vals.map(x=>`<option ${x===c.onset?'selected':''}>${esc(x)}</option>`).join('')}
@@ -128,8 +129,9 @@ function relatedHtml(c){
   const spec=ss.length?`<div class="mw-chip-row">${ss.map(x=>`<span class="mw-chip">${esc(x.id+' · '+x.title)}</span>`).join('')}</div>`:'';
   const data=ds.length?ds.map(x=>`<button class="ghost" type="button" data-mw-data="${esc(x.id)}" data-mw-data-origin="${esc(x.origin||'Guided 14')}">${esc(x.origin||'Data case')} · ${esc(x.title)}</button>`).join(''):'';
   const mat=ms.length?ms.map(x=>`<button class="ghost" type="button" data-mw-material="${esc(x.id)}">Material lab · ${esc(x.title)}</button>`).join(''):'';
-  return `<div class="mw-related"><h3>Learning & evidence links</h3>${lessonButtons}${spec}${data}${mat}<button class="ghost" type="button" data-mw-defects>Open Defect Finder</button><button class="ghost" type="button" data-mw-diagnostic>Open Diagnostic Labs</button><button class="ghost" type="button" data-mw-data-home>Open Data Diagnosis</button><p class="mw-help">Use these links to learn the mechanism or test your reasoning. Case notes remain your own local evidence record.</p></div>`
+  return `<div class="mw-related"><details><summary>Related lessons, evidence cases and tools</summary><div class="mw-related-body"><p class="mw-help">Open these only when you want a second source or practice route. Your case notes remain local to this learner.</p>${lessonButtons}${spec}${data}${mat}<button class="ghost" type="button" data-mw-defects>Open Defect Finder</button><button class="ghost" type="button" data-mw-diagnostic>Open Diagnostic Labs</button><button class="ghost" type="button" data-mw-data-home>Open Data Diagnosis</button></div></details></div>`
 }
+
 async function hydrateEngineeringContext(host,c){
   const panel=host.querySelector('[data-mw-engineering-context]');if(!panel)return;
   const rows=[
@@ -163,6 +165,7 @@ async function hydrateCaseEvidence(host,c){
   const panel=host.querySelector('[data-mw-case-evidence]');if(!panel)return;
   const store=await resolveStore();if(!store?.listCaseEvidence){panel.innerHTML='<h3>Closed-loop evidence</h3><div class="mw-empty">Structured evidence store unavailable.</div>';return}
   const items=await store.listCaseEvidence(c.id,store.learnerToken()),summary=await store.evidenceSummary(c.id,store.learnerToken());
+  if(items.length)panel.closest('details')?.setAttribute('open','');
   panel.innerHTML=`<h3>Closed-loop evidence</h3><div class="mw-kpi"><span>Active evidence</span><b>${summary.activeCount} / ${summary.count}</b><div class="mw-help">${summary.completeCount} complete · ${summary.incompleteCount} incomplete · ${summary.voidedCount} voided. Site-local records tied to stable engineering identities.</div></div>
   <div class="mw-form">
     <label>Evidence type<select data-mw-evidence-field="kind">${evidenceKindOptions()}</select></label>
@@ -211,36 +214,44 @@ async function hydrateCaseEvidence(host,c){
 function casesHtml(active){const cs=all();if(!cs.length)return '<div class="mw-empty">No saved cases yet.</div>';return `<div class="mw-cases">${cs.slice(0,12).map(c=>`<div class="mw-case"><div><b>${esc(c.title||c.defect||'Untitled case')}</b><small>${esc(status(c))} · ${new Date(c.updatedAt).toLocaleDateString()}</small></div><button class="ghost" type="button" data-mw-open="${esc(c.id)}">${c.id===active?'Open':'View'}</button></div>`).join('')}</div>`}
 
 function renderCase(c){activeId=c.id;syncMissionContext(c);const host=section();c.status=status(c);const pct=completeness(c);host.innerHTML=`
-<div class="mw-hero card"><div class="eyebrow">Evidence-led troubleshooting workspace</div><h2>Mould Master case</h2><p>Define the symptom, localise where and when it occurs, compare against a known-good baseline, rank mechanisms, run the smallest controlled discriminating test, then verify the before/after result.</p><div class="mw-loop"><span>1 Define</span><span>2 Localise</span><span>3 Collect evidence</span><span>4 Rank mechanism</span><span>5 Controlled test</span><span>6 Verify</span></div><div class="mw-boundary"><b>Production boundary:</b> this workspace organises evidence and learning. It does not provide universal temperatures, pressures, speeds, force limits or authorisation to defeat safeguards. Verify the exact resin, machine, mould, validated process, approved site procedure and applicable safety requirements before real changes.</div></div>
-<div class="mw-toolbar"><div><b>${esc(c.title||c.defect||'Untitled case')}</b><div class="mw-help">Saved locally for this learner only.</div></div><div class="mw-actions"><button class="secondary" type="button" data-mw-new>New case</button><button class="ghost" type="button" data-mw-list>Case list</button><button class="ghost" type="button" data-mw-export>Export case</button></div></div>
+<div class="mw-hero card"><div class="eyebrow">Evidence-led troubleshooting workspace</div><h2>Mould Master case</h2><p>Start with the symptom, timing, location, baseline and measured evidence. Add a hypothesis, a controlled test and its result. Optional identifiers and post-test verification are grouped below.</p><div class="mw-loop"><span>1 Define</span><span>2 Localise</span><span>3 Collect evidence</span><span>4 Rank mechanism</span><span>5 Controlled test</span><span>6 Verify</span></div><div class="mw-boundary"><b>Production boundary:</b> this workspace organises evidence and learning. It does not provide universal temperatures, pressures, speeds, force limits or authorisation to defeat safeguards. Verify the exact resin, machine, mould, validated process, approved site procedure and applicable safety requirements before real changes.</div></div>
+<div class="mw-toolbar"><div><b>${esc(c.title||c.defect||'Untitled case')}</b><div class="mw-help">Saved locally for this learner only.</div></div><div class="mw-actions"><button class="ghost" type="button" data-mw-practice>← Practice</button><button class="secondary" type="button" data-mw-new>New case</button><button class="ghost" type="button" data-mw-list>Case list</button><button class="ghost" type="button" data-mw-export>Export case</button></div></div>
 <div class="mw-layout">
   <div class="mw-panel card"><h3>Case evidence record</h3><div class="mw-form">
+    <h4 class="mw-form-step">1 · Define and localise</h4>
+    <p class="mw-help mw-form-step-copy">Record what is wrong, when it started and where it appears before choosing a cause.</p>
     ${textField('Case title','title',c,false,'Use a short identifier such as “Cavity 3 flash after insert change”.')}
     <label>Defect / symptom<select data-mw-field="defect">${defectOptions(c)}</select><div class="mw-help">Select the closest visible symptom; the mechanism still has to be proven.</div></label>
-    ${textField('Material / grade','material',c,false,'Record the exact grade and lot when known.')}
-    ${textField('Exact material grade ID','materialGradeId',c,false,'Use the catalogue grade ID when this case is tied to a published exact grade.')}
-    ${textField('Machine / cell','machine',c,false,'Record the actual machine/cell, not only a recipe name.')}
-    ${textField('Machine / cell ID','machineId',c,false,'Use a stable plant identifier such as IMM-07 or CELL-2.')}
-    ${textField('Mould / tool / cavity','mould',c,false,'Include cavity, gate, insert or local area where relevant.')}
-    ${textField('Mould / tool ID','mouldId',c,false,'Use a stable mould/tool identifier so cases can be grouped over time.')}
-    ${textField('Product / assembly','product',c,false,'Record the customer/product or assembly this part belongs to.')}
-    ${textField('Product / assembly ID','productId',c,false,'Use the controlled product/assembly identifier when known.')}
-    ${textField('Part / component','part',c,false,'Record the moulded component or part name.')}
-    ${textField('Part / component ID','partId',c,false,'Use the drawing, SKU or internal part identifier when known.')}
     <label>When did it start?<select data-mw-field="onset">${onsetOptions(c)}</select><div class="mw-help">Timing around a change event is often strong localisation evidence.</div></label>
     ${textField('Where / how often','location',c,true,'e.g. cavity-specific, one side of part, every cycle, intermittent, after warm-up.')}
-    ${area('Known-good baseline','baseline',c,'Record the last verified-good condition: actuals, material state, tool/cooling condition and part response as applicable.')}
-    ${area('Current measured evidence','evidence',c,'Use actual measurements, alarms, trends, part location/pattern and physical inspection. Separate facts from assumptions.',true)}
-    ${area('Ranked mechanism / hypothesis','hypothesis',c,'State the mechanism and why the evidence supports it more strongly than alternatives. Do not write a setting change as the diagnosis.')}
-    ${area('Smallest controlled discriminating test','controlledTest',c,'Define one safe test or inspection that separates plausible mechanisms while staying inside approved limits.',true)}
-    ${area('Test result','testResult',c,'Record what actually changed and whether the result supported or weakened the mechanism.')}
-    ${area('After-change / recovery evidence','afterChange',c,'Compare the same signals and part response used in the baseline. Recovery toward baseline strengthens causal confidence.')}
-    ${area('Verification & repeatability','verification',c,'Record repeat cycles, independent quality checks, measurement confidence and any maintenance/tooling confirmation.')}
-    ${area('Conclusion / standardisation','conclusion',c,'State what was proven, what remains uncertain, and what approved standard/work instruction/change-control action follows.',true)}
+    ${textField('Material / grade','material',c,false,'Record the exact grade and lot when known.')}
+    ${textField('Machine / cell','machine',c,false,'Record the actual machine/cell, not only a recipe name.')}
+    ${textField('Mould / tool / cavity','mould',c,false,'Include cavity, gate, insert or local area where relevant.')}
+    <details class="mw-form-details"${c.materialGradeId||c.machineId||c.mouldId||c.product||c.productId||c.part||c.partId?' open':''}><summary>Optional links · exact IDs, product and part</summary><div class="mw-form-optional">
+      ${textField('Exact material grade ID','materialGradeId',c,false,'Use the catalogue grade ID when this case is tied to a published exact grade.')}
+      ${textField('Machine / cell ID','machineId',c,false,'Use a stable plant identifier such as IMM-07 or CELL-2.')}
+      ${textField('Mould / tool ID','mouldId',c,false,'Use a stable mould/tool identifier so cases can be grouped over time.')}
+      ${textField('Product / assembly','product',c,false,'Record the customer/product or assembly this part belongs to.')}
+      ${textField('Product / assembly ID','productId',c,false,'Use the controlled product/assembly identifier when known.')}
+      ${textField('Part / component','part',c,false,'Record the moulded component or part name.')}
+      ${textField('Part / component ID','partId',c,false,'Use the drawing, SKU or internal part identifier when known.')}
+    </div></details>
+    <details class="mw-form-details"${c.baseline||c.evidence||c.hypothesis?' open':''}><summary>2 · Compare evidence and rank the likely cause</summary><div class="mw-form-optional">
+      ${area('Known-good baseline','baseline',c,'Record the last verified-good condition: actuals, material state, tool/cooling condition and part response as applicable.')}
+      ${area('Current measured evidence','evidence',c,'Use actual measurements, alarms, trends, part location/pattern and physical inspection. Separate facts from assumptions.',true)}
+      ${area('Ranked mechanism / hypothesis','hypothesis',c,'State the mechanism and why the evidence supports it more strongly than alternatives. Do not write a setting change as the diagnosis.',true)}
+    </div></details>
+    <details class="mw-form-details"${c.controlledTest||c.testResult||c.afterChange||c.verification||c.conclusion?' open':''}><summary>3 · Choose a controlled test and verify the result</summary><div class="mw-form-optional">
+      ${area('Smallest controlled discriminating test','controlledTest',c,'Define one safe test or inspection that separates plausible mechanisms while staying inside approved limits.',true)}
+      ${area('Test result','testResult',c,'Record what actually changed and whether the result supported or weakened the mechanism.')}
+      ${area('After-change / recovery evidence','afterChange',c,'Compare the same signals and part response used in the baseline. Recovery toward baseline strengthens causal confidence.')}
+      ${area('Verification & repeatability','verification',c,'Record repeat cycles, independent quality checks, measurement confidence and any maintenance/tooling confirmation.')}
+      ${area('Conclusion / standardisation','conclusion',c,'State what was proven, what remains uncertain, and what approved standard/work instruction/change-control action follows.',true)}
+    </div></details>
   </div><div class="mw-actions"><button class="primary" type="button" data-mw-save>Save case</button><button class="danger mw-danger" type="button" data-mw-delete>Archive case</button></div></div>
   <aside class="mw-summary">
-    <div class="mw-panel card" data-mw-engineering-context><h3>Engineering context</h3><div class="mw-empty">Loading linked material, machine, mould and product/part context…</div></div>
-    <div class="mw-panel card" data-mw-case-evidence><h3>Closed-loop evidence</h3><div class="mw-empty">Loading trial, quality, maintenance, lot and acceptance evidence…</div></div>
+    <details class="mw-context-fold"><summary>Linked engineering context</summary><div class="mw-panel card" data-mw-engineering-context><h3>Engineering context</h3><div class="mw-empty">Loading linked material, machine, mould and product/part context…</div></div></details>
+    <details class="mw-context-fold"><summary>Linked trial, quality and maintenance evidence</summary><div class="mw-panel card" data-mw-case-evidence><h3>Closed-loop evidence</h3><div class="mw-empty">Loading trial, quality, maintenance, lot and acceptance evidence…</div></div></details>
     <div class="mw-panel card"><h3>Case status</h3><div class="mw-kpi"><span>Evidence chain</span><b>${esc(c.status)}</b></div><div class="mw-kpi"><span>Record completeness</span><b>${pct}%</b><div class="mw-progress"><i style="width:${pct}%"></i></div></div><div class="mw-kpi"><span>Decision rule</span><b>${c.verification.trim()?'Verification recorded':'Do not standardise yet'}</b></div></div>
     <div class="mw-panel card"><h3>Defect evidence board</h3>${evidenceBoard(c)}</div>
     <div class="mw-panel card">${relatedHtml(c)}</div>
@@ -249,6 +260,7 @@ function renderCase(c){activeId=c.id;syncMissionContext(c);const host=section();
 
 function collect(c){document.querySelectorAll('#mmMouldMasterWorkspace [data-mw-field]').forEach(el=>{c[el.dataset.mwField]=el.value});c.status=status(c);return c}
 function wire(host,c){
+  host.querySelector('[data-mw-practice]')?.addEventListener('click',returnToPractice);
   let timer=null;host.querySelectorAll('[data-mw-field]').forEach(el=>el.addEventListener('input',()=>{clearTimeout(timer);timer=setTimeout(async()=>{try{await saveCase(collect(c))}catch(err){persistenceError(err)}},500)}));
   host.querySelector('[data-mw-save]')?.addEventListener('click',async()=>{try{const saved=await saveCase(collect(c));renderCase(saved);window.toast?.('Mould Master case saved')}catch(err){persistenceError(err)}});
   host.querySelector('[data-mw-new]')?.addEventListener('click',async()=>{try{const n=await saveCase(blank());renderCase(n)}catch(err){persistenceError(err)}});
@@ -283,8 +295,8 @@ async function importCaseFile(file){
   const result=await store.importCaseBundle(parsed,store.learnerToken());
   await hydrate({force:true});await open(result.caseId);return result
 }
-function renderList(){activeId='';const host=section();host.innerHTML=`<div class="mw-hero card"><div class="eyebrow">Mould Master</div><h2>Troubleshooting casebook</h2><p>Keep diagnosis tied to the evidence chain rather than a sequence of unrecorded machine adjustments.</p><div class="mw-boundary"><b>Local-only record:</b> cases stay in this browser/desktop profile unless you explicitly export a case JSON file. Restores create a new learner-owned case rather than overwriting an existing case. No case data is uploaded by this module.</div></div><div class="mw-toolbar"><div><h2 style="margin:0">Saved cases</h2><p class="muted" style="margin:4px 0 0">${all().length} local case${all().length===1?'':'s'}</p></div><div class="mw-actions"><button class="primary" type="button" data-mw-new>New case</button><button class="ghost" type="button" data-mw-import>Import case</button></div></div><div class="mw-panel card">${casesHtml('')}</div>`;host.querySelector('[data-mw-new]')?.addEventListener('click',async()=>{try{const c=await saveCase(blank());renderCase(c)}catch(err){persistenceError(err)}});host.querySelector('[data-mw-import]')?.addEventListener('click',()=>{const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.addEventListener('change',async()=>{try{const result=await importCaseFile(input.files?.[0]);window.toast?.(`Imported case with ${result.evidenceImported} evidence record${result.evidenceImported===1?'':'s'}`)}catch(err){persistenceError(err)}});input.click()});host.querySelectorAll('[data-mw-open]').forEach(b=>b.addEventListener('click',()=>{const c=get(b.dataset.mwOpen);if(c)renderCase(c)}))}
-async function open(id){style();await hydrate();const host=section();hideViews();host.classList.remove('hidden');header();mark();const c=id&&get(id)||get(activeId);if(c)renderCase(c);else renderList();window.scrollTo?.({top:0,behavior:'smooth'})}
+function renderList(){activeId='';const host=section();host.innerHTML=`<div class="mw-hero card"><div class="eyebrow">Mould Master</div><h2>Troubleshooting casebook</h2><p>Keep diagnosis tied to the evidence chain rather than a sequence of unrecorded machine adjustments.</p><div class="mw-boundary"><b>Local-only record:</b> cases stay in this browser/desktop profile unless you explicitly export a case JSON file. Restores create a new learner-owned case rather than overwriting an existing case. No case data is uploaded by this module.</div></div><div class="mw-toolbar"><div><h2 style="margin:0">Saved cases</h2><p class="muted" style="margin:4px 0 0">${all().length} local case${all().length===1?'':'s'}</p></div><div class="mw-actions"><button class="ghost" type="button" data-mw-practice>← Practice</button><button class="primary" type="button" data-mw-new>New case</button><button class="ghost" type="button" data-mw-import>Import case</button></div></div><div class="mw-panel card">${casesHtml('')}</div>`;host.querySelector('[data-mw-practice]')?.addEventListener('click',returnToPractice);host.querySelector('[data-mw-new]')?.addEventListener('click',async()=>{try{const c=await saveCase(blank());renderCase(c)}catch(err){persistenceError(err)}});host.querySelector('[data-mw-import]')?.addEventListener('click',()=>{const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.addEventListener('change',async()=>{try{const result=await importCaseFile(input.files?.[0]);window.toast?.(`Imported case with ${result.evidenceImported} evidence record${result.evidenceImported===1?'':'s'}`)}catch(err){persistenceError(err)}});input.click()});host.querySelectorAll('[data-mw-open]').forEach(b=>b.addEventListener('click',()=>{const c=get(b.dataset.mwOpen);if(c)renderCase(c)}))}
+async function open(id,options={}){style();await hydrate({force:options?.force===true});const host=section();hideViews();host.classList.remove('hidden');header();mark();const c=id&&get(id)||get(activeId);if(c)renderCase(c);else renderList();window.scrollTo?.({top:0,behavior:'smooth'})}
 async function newCase(seed={}){await hydrate();const c=await saveCase({...blank(),...seed,id:uid(),createdAt:now(),updatedAt:now()});await open(c.id);return c.id}
 
 style();section();

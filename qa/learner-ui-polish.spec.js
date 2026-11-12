@@ -534,9 +534,8 @@ test('Defect Finder and Troubleshooting Coach share an evidence-gated offline ca
   await page.evaluate(()=>switchView('scenarios'));
   await page.locator('#scenarios [data-mm-hub-action="problem-practice"]').click();
   await page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="diagnose-cause"]').click();
-  const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
-  await expect(picker.locator('button')).toHaveCount(4);
-  await picker.locator('[data-mm-hub-action="diagnostic-workbench"]').click();
+  // The common diagnosis task opens the unified workbench directly; the
+  // four-choice picker belongs to an older Practice flow.
   const root=page.locator('#defects');
   await expect(root.getByRole('heading',{name:'Defect Finder + Troubleshooting Coach'})).toBeVisible();
   await expect(page.locator('#modal')).toHaveClass(/hidden/);

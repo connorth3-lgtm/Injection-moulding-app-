@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.11.3",
-  "commit": "d7119ea4a325aa731cb805e8f9a6e277c5c33d3a",
+  "release": "2026.11.11.4",
+  "commit": "f4169ae6227d1e827cdf6ef9ebe0cb23db754b29",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Technical comparison baseline for the reordered Materials and polymer-science Learn sequence in release 2026.11.11.3. Keep the 12-pixel threshold and all 52 viewport/surface captures. This exact reference is not visual-owner approval; the human visual decision and all independent human, device, Windows, provider, SME, learner-outcome and production reviews remain separate and HOLD.",
-  "ref": "visual-baseline/2026.11.11.3",
+  "policy": "Owner-authorized technical visual baseline for the requested Practice-tab redesign in release 2026.11.11.4. Preserve the 12-pixel threshold and all 52 viewport/surface captures. The exact scope is recorded in qa/VISUAL_REVIEW_2026.11.11.4_PR707.md; independent human, device, Windows, SME, learner-outcome, provider and production reviews remain HOLD.",
+  "ref": "visual-baseline/2026.11.11.4",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "d7119ea4a325aa731cb805e8f9a6e277c5c33d3a"
+    "referenceSourceSha": "f4169ae6227d1e827cdf6ef9ebe0cb23db754b29"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",

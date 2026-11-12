@@ -18,6 +18,32 @@ def git_blob_text(sha):
     need(p.returncode==0,f'cannot resolve approved Git blob {sha}: {p.stderr.strip()}')
     return p.stdout
 
+def authored_lab_payload(source):
+    # Compare the final authored lab records against the last reviewed blob.
+    # Launcher, page-version and return-path changes do not alter evidence content.
+    node = r'''
+const fs=require('fs'),vm=require('vm');
+let src=fs.readFileSync(0,'utf8');
+const anchor="install();window.addEventListener('load',schedule);";
+if(!src.includes(anchor))throw new Error('authored lab capture point missing');
+src=src.replace(anchor,"window.addEventListener('load',schedule);");
+const store={};
+const localStorage={getItem:k=>Object.prototype.hasOwnProperty.call(store,k)?store[k]:null,setItem:(k,v)=>store[k]=String(v),removeItem:k=>delete store[k]};
+const document={documentElement:null,getElementById:()=>null,querySelector:()=>null,querySelectorAll:()=>[],createElement:()=>({}),head:{appendChild(){}},body:{appendChild(){}}};
+function MutationObserver(){this.observe=()=>{};this.disconnect=()=>{}}
+const window={addEventListener(){},requestAnimationFrame:fn=>fn&&fn(),scrollTo(){}};
+const sandbox={window,document,localStorage,MutationObserver,console,JSON,Math,Date,setTimeout,clearTimeout};
+window.window=window;window.document=document;window.localStorage=localStorage;window.MutationObserver=MutationObserver;
+vm.createContext(sandbox);vm.runInContext(src,sandbox,{filename:'approved-lab-source.js'});
+const labs=window.MM_DIAGNOSTIC_LABS?.labs||window.MM_MATERIAL_BEHAVIOUR_LABS?.labs;
+if(!Array.isArray(labs))throw new Error('authored lab records not exposed');
+process.stdout.write(JSON.stringify(labs));
+'''
+    p = subprocess.run(['node', '-e', node], cwd=ROOT, input=source,
+                       capture_output=True, text=True, encoding='utf-8', errors='replace')
+    need(p.returncode == 0, f'cannot extract approved lab question/evidence payload: {p.stderr.strip()}')
+    return json.loads(p.stdout)
+
 def core_assessment_payload(core_text):
     marker='window.MM_DATA = '
     need(marker in core_text,'MM_DATA marker missing')
@@ -58,6 +84,12 @@ for path,sha in approved_inputs.items():
         canonical=json.dumps(current_payload,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')
         actual_payload_sha='sha256:'+hashlib.sha256(canonical).hexdigest()
         need(actual_payload_sha==semantic_approval.get('sha256'),f'evidence approval stale for {path}: assessment-bearing semantic fingerprint changed from {semantic_approval.get("sha256")} to {actual_payload_sha}; re-review evidence and update semantic approval')
+        continue
+    if path in ('diagnostic-learning-labs.js', 'material-behaviour-labs.js'):
+        approved_payload = authored_lab_payload(git_blob_text(sha))
+        current_payload = authored_lab_payload(text(path))
+        need(current_payload == approved_payload,
+             f'{path} prompts, choices, keys or feedback changed; re-review evidence and update approval')
         continue
     need(actual==sha,f'evidence approval stale for {path}: approved {sha}, current {actual}; re-review evidence and update approval')
 

@@ -103,6 +103,10 @@ need(curriculum.get("release") == evidence_release, "curriculum SME contract rel
 need(curriculum.get("packet") == ledger["curriculumSme"].get("reviewPacket"), "curriculum SME packet binding drifted")
 need(len(curriculum.get("lessonIds") or []) == 120, "curriculum SME contract must retain 120 lessons")
 
+physical_contract = load("data/pwa-physical-device-validation-v1.json")
+need(physical_contract.get("candidate") == physical_contract.get("currentCandidate"),
+     "physical PWA contract candidate aliases drifted")
+
 pwa = ledger.get("pwaPhysicalDevices") or {}
 candidate = pwa.get("currentCandidate") or {}
 need(candidate.get("release") == evidence_release, "physical PWA candidate release does not match evidence ledger")

@@ -7,7 +7,7 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.11.11.3';
+const VERSION='2026.11.12.1';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
 const originalRenderScenarios=renderScenarios;
 
@@ -166,9 +166,9 @@ function bind(root){
     runAction(action,source==='learn'?'learn':'practice');
   });
 }
-function safeOpen(apiName,fallback){
+function safeOpen(apiName,fallback,options){
   const api=window[apiName];
-  if(api&&typeof api.open==='function')return api.open();
+  if(api&&typeof api.open==='function')return options===undefined?api.open():api.open(options);
   if(fallback)return fallback();
   if(typeof toast==='function')toast('This activity is still loading. Try again in a moment.');
 }
@@ -188,9 +188,9 @@ function openPicker(kind){
   if(kind==='learn-resources'){
     openModal(`<section class="mm-learning-resource-chooser"><span class="eyebrow">Learning Resources</span><h2>One reference shelf</h2><p class="muted">Choose a source-owned reference for definitions, diagrams, long-form reading and verified material grades.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="visuals"><b>Process visuals & charts</b><small>Explore the real interactive phase and engineering concept visuals.</small></button><button type="button" data-mm-hub-action="glossary"><b>Injection moulding glossary</b><small>Find clear technical definitions before reading in depth.</small></button><button type="button" data-mm-hub-action="book"><b>Technical Book</b><small>Open governed chapters, worked examples and primary-source context.</small></button><button type="button" data-mm-hub-action="materials"><b>Materials & exact grades</b><small>Review supplier-backed grade records and the family-level teaching guide.</small></button></div><p class="tiny muted">Education and reference only. Supplier guidance and site procedures remain authoritative.</p></section>`);
   }else if(kind==='troubleshooting'){
-    openModal(`<div class="mm-diagnose-chooser"><span class="eyebrow">Practice · diagnosis routes</span><h2>Choose a diagnosis route</h2><p class="muted">Start with the observed defect. Use Mould Master to record and review a case; use Defect Finder for a session-only evidence investigation; or practise with a short guided case or diagnostic question set.</p><div class="mm-diagnose-step-strip"><span><b>1</b> Observe</span><span><b>2</b> Isolate</span><span><b>3</b> Verify</span></div><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="mould-master"><b>Mould Master</b><small>Record and review an evidence-led case with observations, evidence and follow-up.</small></button><button type="button" data-mm-hub-action="diagnostic-workbench"><b>Defect Finder + Troubleshooting Coach</b><small>Use a session-only workspace to compare symptoms and mechanisms, then plan the next useful measurement.</small></button><button type="button" data-mm-hub-action="guided-practice"><b>Guided fault practice</b><small>Work through five decisions in a training case, with a worked review for each fault.</small></button><button type="button" data-mm-hub-action="diagnostic-labs"><b>Diagnostic labs</b><small>Answer short evidence-first fault-isolation questions.</small></button></div><p class="tiny muted">Training only. Use authorised site isolation and qualified supervision for real machinery.</p></div>`);
+    return openProblemPractice();
   }else if(kind==='labs'){
-    openModal(`<span class="eyebrow">Practice</span><h2>Labs & simulators</h2><p class="muted">Choose a controlled learning tool.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="spatial-twin"><b>Spatial Twin</b><small>Enter an explorable moulding cell, switch evidence modes and time-travel through a governed diagnostic case.</small></button><button type="button" data-mm-hub-action="simulator"><b>Virtual apprenticeship</b><small>Investigate authored shop-floor cases, justify the next evidence, then explore relative process changes in the simulator.</small></button><button type="button" data-mm-hub-action="material-labs"><b>Material labs</b><small>Compare resin behaviour and evidence.</small></button></div>`);
+    openModal(`<span class="eyebrow">Practice</span><h2>Practice labs</h2><p class="muted">Choose the kind of guided exploration you want.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="spatial-twin"><b>Explore a virtual moulding cell</b><small>Inspect the cell, switch evidence views and follow an authored case timeline. This is a visual training model, not a validated physics twin.</small></button><button type="button" data-mm-hub-action="simulator"><b>Run a guided case and simulator</b><small>Investigate a training case, choose supporting evidence and compare relative process changes.</small></button><button type="button" data-mm-hub-action="material-labs"><b>Practise material behaviour</b><small>Work through six resin-specific cases about moisture, thermal history, reinforcement and recycled material.</small></button></div><p class="tiny muted">All activities are for learning; they do not control or set a production machine.</p>`);
   }else if(kind==='questions'){
     return openQuestionCentreDetail();
   }
@@ -220,6 +220,7 @@ function dxLearnerId(){
   try{return typeof user!=='undefined'&&user?.id!=null?String(user.id):''}catch(_){return ''}
 }
 let dxOwnerId=dxLearnerId();
+let dxReturnMode='hub';
 function dxClearEvidence(){
   dxState.evidence=[];
   dxState.hypotheses={};
@@ -362,6 +363,7 @@ function dxRender(view){
   const root=document.getElementById(view);if(!root)return;
   root.dataset.mmDxMode='unified';
   root.innerHTML='<div class="mm-dx-workbench"><header class="mm-dx-hero"><span class="eyebrow">Practice · Unified diagnostic workbench</span>'+
+    '<div class="mm-dx-back"><button type="button" class="ghost" data-mm-dx-action="return">'+(learnToolOrigin?'← Back to Learn':dxReturnMode==='problem-practice'?'← Moulding problem practice':'← Practice')+'</button></div>'+
     '<h1>Defect Finder + Troubleshooting Coach</h1>'+
     '<p>Find the physical symptom, develop competing hypotheses, choose the next measurement and document a recovery criterion — in one guided, offline learning workspace.</p>'+
     '<div class="mm-dx-disclaimer">Educational advisory only · No automatic root-cause ranking · No machine settings or production control</div></header>'+
@@ -372,6 +374,12 @@ function dxRender(view){
       const el=event.target.closest('[data-mm-dx-action]');if(!el||!root.contains(el))return;
       if(dxGuardInteraction(view))return;
       const action=el.dataset.mmDxAction;
+      if(action==='return'){
+        if(learnToolOrigin){const origin=learnToolOrigin;learnToolOrigin=null;switchView('path');requestAnimationFrame(()=>document.querySelector(`#path [data-mm-hub-action="${origin}"]`)?.focus())}
+        else if(dxReturnMode==='problem-practice')openProblemPractice();
+        else{switchView('scenarios');renderPracticeHub()}
+        return;
+      }
       if(action==='choose'){
         const index=Number(el.dataset.mmDxId);
         if(!Number.isInteger(index)||!dxDefects()[index])return;
@@ -474,16 +482,22 @@ function runAction(action,source='practice'){
     case 'glossary': closePicker(); return switchView('glossary');
     case 'saved': closePicker(); return lessonCatalog.open({filter:'saved'});
     case 'daily': return openDaily();
-    case 'troubleshooting': return openPicker('troubleshooting');
+    case 'troubleshooting': return source==='learn'?dxOpen():openProblemPractice();
     case 'problem-practice': return openProblemPractice();
-    case 'diagnose-cause': return openPicker('troubleshooting');
+    case 'diagnose-cause':
+      dxReturnMode=document.getElementById('scenarios')?.dataset.mmHubMode==='problem-practice'?'problem-practice':'hub';
+      closePicker();return dxOpen();
     case 'shop-floor-case': closePicker();return openScenarioDetail(nextScenarioIndex(),'Moulding problem practice','shop-floor-case','problem-practice');
     case 'guided-practice': return openGuidedPractice();
     case 'mould-master': closePicker(); return safeOpen('MM_MOULD_MASTER_WORKSPACE',()=>switchView('defects'));
-    case 'diagnostic-workbench': return dxOpen();
+    case 'diagnostic-workbench': dxReturnMode='hub';return dxOpen();
     case 'defects': return dxOpen();
     case 'coach': return dxOpen();
-    case 'diagnostic-labs': closePicker(); return safeOpen('MM_DIAGNOSTIC_LABS',()=>switchView('scenarios'));
+    case 'diagnostic-labs':
+      closePicker();
+      return safeOpen('MM_DIAGNOSTIC_LABS',()=>switchView('scenarios'),{
+        returnTo:source==='practice'&&!learnToolOrigin&&document.getElementById('scenarios')?.dataset.mmHubMode==='problem-practice'?'problem-practice':'hub'
+      });
     case 'case-process-data':
     case 'process-data': return safeOpen('MM_PROCESS_DATA_DIAGNOSTICS');
     case 'scenario-detail': closePicker();if(source==='learn')switchView('scenarios');return openScenarioDetail(nextScenarioIndex(),source==='learn'?'Learn':'Practice');
@@ -1277,7 +1291,7 @@ function recommendedPracticeMarkup(plan,done){
 function practicePlanRows(plan){
   const rows=(plan?.recommendations||[]).slice(1,3);
   if(!rows.length)return '';
-  return `<section class="mm-hub-section" aria-label="More recommended practice"><div class="mm-hub-section-head"><h2>Next after that</h2><p>Optional follow-up based on your learning evidence.</p></div><div class="mm-hub-grid">${rows.map(rec=>{const action=practiceActionFor(rec);return `<button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="${esc(action)}"><span class="eyebrow">${esc(practiceRecommendationLabel(rec))}</span><b>${esc(practiceTopicLabel(rec.topic))}</b><small>${esc(rec.reason||'Use another practice format to strengthen transfer.')}</small><span class="mm-hub-tile-action">${esc(practiceRecommendationCta(action,rec))}</span></button>`}).join('')}</div></section>`;
+  return `<details class="mm-practice-follow-ups" aria-label="More recommended practice"><summary>Show ${rows.length} more suggestions</summary><div class="mm-hub-grid">${rows.map(rec=>{const action=practiceActionFor(rec);return `<button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="${esc(action)}"><span class="eyebrow">${esc(practiceRecommendationLabel(rec))}</span><b>${esc(practiceTopicLabel(rec.topic))}</b><small>${esc(rec.reason||'Use another practice format to strengthen transfer.')}</small><span class="mm-hub-tile-action">${esc(practiceRecommendationCta(action,rec))}</span></button>`}).join('')}</div></details>`;
 }
 function questionCentreCounts(){
  const formal=(D?.exams?Object.values(D.exams).reduce((n,rows)=>n+(rows?.length||0),0):0)+(D?.regionalQuestions?Object.values(D.regionalQuestions).reduce((n,levels)=>n+Object.values(levels||{}).reduce((m,rows)=>m+(rows?.length||0),0),0):0);
@@ -1651,10 +1665,10 @@ function practiceHubMarkup(){
     <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1>What should I practise next?</h1><p>${esc(practiceStatusLine(plan))}</p></header>
     ${recommendedPracticeMarkup(plan,done)}
     ${practicePlanRows(plan)}
-    <section class="mm-hub-section"><div class="mm-hub-section-head"><span class="eyebrow">Choose by the job you want to practise</span><h2>Practice tools</h2><p>Practice is for learning; assessments stay separate. ${scenarioCount} shop-floor scenarios.</p></div><label class="mm-practice-search"><span>Find practice</span><input type="search" data-mm-practice-query autocomplete="off" placeholder="Search a tool or topic" aria-controls="mmPracticeToolResults"></label><p class="mm-practice-count" aria-live="polite" data-mm-practice-count>3 tools shown</p><div class="mm-hub-grid" id="mmPracticeToolResults">
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="problem-practice"><span class="eyebrow">Investigate or decide · 5–15 min</span><b>Moulding problem practice</b><small>Choose one route: diagnose the cause of a defect, or work through the next safe action in a shop-floor scenario.</small><span class="mm-hub-tile-action">Choose a problem practice route →</span></button>
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="process-data"><span class="eyebrow">Read evidence · 10–20 min</span><b>Process data lab</b><small>Practise on synthetic evidence or prepare local shot data for baseline, drift, cavity and quality analysis.</small><span class="mm-hub-tile-action">Choose a process-data route →</span></button>
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Explore behaviour · 5–15 min</span><b>Use labs & simulators</b><small>Test process and material reasoning in a controlled training environment without changing a real machine.</small><span class="mm-hub-tile-action">Choose a lab or simulator →</span></button>
+    <section class="mm-hub-section"><div class="mm-hub-section-head"><span class="eyebrow">Choose by the job you want to practise</span><h2>Three clear practice areas</h2><p>Pick a task below. Practice is for learning; assessments stay separate. ${scenarioCount} shop-floor scenarios are available.</p></div><div class="mm-hub-grid">
+      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="problem-practice"><span class="eyebrow">Investigate a fault · 5–15 min</span><b>Moulding problem practice</b><small>Investigate an observed defect or make a decision in a training scenario.</small><span class="mm-hub-tile-action">Choose a problem activity →</span></button>
+      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="process-data"><span class="eyebrow">Read process evidence · 10–20 min</span><b>Process data lab</b><small>Start with synthetic examples, or prepare and analyse a local shot-data file.</small><span class="mm-hub-tile-action">Work with process data →</span></button>
+      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Explore materials and the cell · 5–15 min</span><b>Material and virtual labs</b><small>Explore resin-specific cases, a visual moulding-cell model or the guided simulator.</small><span class="mm-hub-tile-action">Choose a lab →</span></button>
     </div></section>
   </div>`;
 }
@@ -1666,17 +1680,7 @@ function renderLearnHub(){
 function renderPracticeHub(){
   const root=document.getElementById('scenarios');if(!root)return;
   root.dataset.mmHubMode='hub';root.innerHTML=practiceHubMarkup();bind(root);
-  const input=root.querySelector('[data-mm-practice-query]');
-  const count=root.querySelector('[data-mm-practice-count]');
-  input?.addEventListener('input',()=>{
-    const query=input.value.trim().toLowerCase();let shown=0;
-    root.querySelectorAll('#mmPracticeToolResults > button').forEach(button=>{
-      const match=!query||button.textContent.toLowerCase().includes(query);
-      button.hidden=!match;if(match)shown++;
-    });
-    if(count)count.textContent=shown?`${shown} tool${shown===1?'':'s'} shown`:'No matching tools. Try another search.';
-  });
-  window.MM_APP_SHELL?.navigation?.setCustomActive?.('');
+  window.MM_APP_SHELL?.navigation?.setCustomActive?.('','practice');
 }
 function openProblemPractice(){
   closePicker();
@@ -1685,18 +1689,24 @@ function openProblemPractice(){
   root.dataset.mmHubMode='problem-practice';
   const count=D?.scenarios?.length||0;
   root.innerHTML=`<div class="mm-primary-hub mm-practice-hub mm-problem-practice">
-    <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1 tabindex="-1">Moulding problem practice</h1><p>Choose whether to investigate a likely cause or decide what to do next in a training case.</p></header>
+    <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1 tabindex="-1">Moulding problem practice</h1><p>Start with one of the two common tasks. More tools are available below if you need them.</p></header>
     <section class="mm-hub-section" aria-label="Moulding problem practice">
-      <div class="mm-hub-section-head"><span class="eyebrow">Two ways to practise</span><h2>Choose your route</h2><p>${count} authored shop-floor scenarios are available. All examples are for learning and do not authorize changes to a production machine.</p></div>
+      <div class="mm-hub-section-head"><span class="eyebrow">Start here</span><h2>What do you need to do?</h2><p>${count} authored shop-floor scenarios are available. Examples are for learning and do not authorize production-machine changes.</p></div>
       <div class="mm-hub-grid">
-        <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="diagnose-cause"><span class="eyebrow">Investigate evidence · 5–15 min</span><b>Diagnose the cause</b><small>Start with an observed defect, compare plausible mechanisms and choose the next check that best separates them.</small><span class="mm-hub-tile-action">Open diagnosis tools →</span></button>
-        <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="shop-floor-case"><span class="eyebrow">Make a decision · about 5 min</span><b>Choose the next safe action</b><small>Read one rotating scenario, weigh the available evidence and select the strongest next step.</small><span class="mm-hub-tile-action">Start a shop-floor scenario →</span></button>
+        <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="diagnose-cause"><span class="eyebrow">Investigate evidence · 5–15 min</span><b>Diagnose an observed defect</b><small>Choose a symptom, record available evidence, compare possible mechanisms and plan the next useful check.</small><span class="mm-hub-tile-action">Open Defect Finder →</span></button>
+        <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="shop-floor-case"><span class="eyebrow">Make a decision · about 5 min</span><b>Choose the next safe action</b><small>Read one rotating scenario, weigh the evidence and select the strongest next step.</small><span class="mm-hub-tile-action">Start a shop-floor scenario →</span></button>
       </div>
+      <details class="mm-practice-more-tools"><summary>More diagnosis and case tools</summary><div class="mm-hub-grid">
+        <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="guided-practice"><span class="eyebrow">Worked example · five decisions</span><b>Guided fault practice</b><small>Follow an authored fault from observation through verification, with feedback at each step.</small><span class="mm-hub-tile-action">Start a guided case →</span></button>
+        <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="diagnostic-labs"><span class="eyebrow">Several fault types · scored steps</span><b>Diagnostic labs</b><small>Choose from nine evidence-first cases and review your reasoning after each decision.</small><span class="mm-hub-tile-action">Browse diagnostic cases →</span></button>
+        <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="mould-master"><span class="eyebrow">Keep a case record</span><b>Mould Master casebook</b><small>Save and revisit a troubleshooting case with its evidence and follow-up.</small><span class="mm-hub-tile-action">Open the casebook →</span></button>
+      </div></details>
       <p class="tiny muted">Training only. Follow site procedures, isolation rules and qualified supervision for real machinery.</p>
     </section>
   </div>`;
   detailBack(root,'Moulding problem practice','Practice','problem-practice');
   bind(root);
+  window.MM_APP_SHELL?.navigation?.setCustomActive?.('','practice');
   window.scrollTo({top:0,behavior:'instant'});
   root.querySelector('.mm-primary-hub-head h1')?.focus({preventScroll:true});
 }
@@ -1924,5 +1934,5 @@ window.MM_LESSON_REASONING=Object.freeze({
   }))
 });
 window.MM_QUESTION_CENTRE=Object.freeze({version:VERSION,open:openQuestionCentreDetail,counts:questionCentreCounts,supplementalCounts:questionCentreSupplementalCounts,scope:'Learner-facing consolidated launcher only; governed question sources, scoring, outcome-review status and evidence remain in their canonical subsystems.'});
-window.MM_PRIMARY_HUBS={version:VERSION,renderLearnHub,renderPracticeHub,openCurrentLesson,openLearningPathDetail,openScenarioDetail,nextScenarioIndex,learnerPracticePlan,openLearningResources:()=>openPicker('learn-resources'),learnToolOrigin:()=>learnToolOrigin,clearLearnToolOrigin:()=>{learnToolOrigin=null;}};
+window.MM_PRIMARY_HUBS={version:VERSION,renderLearnHub,renderPracticeHub,openProblemPractice,openCurrentLesson,openLearningPathDetail,openScenarioDetail,nextScenarioIndex,learnerPracticePlan,openLearningResources:()=>openPicker('learn-resources'),learnToolOrigin:()=>learnToolOrigin,clearLearnToolOrigin:()=>{learnToolOrigin=null;}};
 })();

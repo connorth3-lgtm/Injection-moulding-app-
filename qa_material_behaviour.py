@@ -10,7 +10,7 @@ def text(path): return (ROOT/path).read_text(encoding='utf-8')
 def option_len(value): return len(re.sub(r'\s+',' ',str(value or '').strip()))
 
 js=text('material-behaviour-labs.js')
-need("const VERSION='2026.08.25.1'" in js,'material lab version marker missing')
+need("const VERSION='2026.11.12.1'" in js,'material lab version marker missing')
 need('Scenario-specific education; verify exact grade' in js,'material lab training boundary missing')
 need('fetch(' not in js,'material labs must remain local-only')
 need("typeof db!=='undefined'" in js and "STORAGE_BASE='mm_material_behaviour_labs_v1'" in js,'learner-scoped local storage handling missing')

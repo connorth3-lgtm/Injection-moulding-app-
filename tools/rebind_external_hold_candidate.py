@@ -217,6 +217,7 @@ def main():
              "real-AT boundary must contain exact current candidate without rewriting human notes")
     nzqa["candidate"]=identity.copy()
     pwa["candidate"]=candidate.copy()
+    pwa["currentCandidate"]=candidate.copy()
     if changed and not a.check:
         pwa["boundary"]=(
             f"Retained release {a.release} candidate {a.source_sha} and artifact {a.artifact_id} are NOT "

@@ -56,6 +56,9 @@ async function startMouldMasterCase(materialGradeId){
   const name=displayName(grade);
   const caseId=await workspace.newCase({title:`${grade.grade} material investigation`,material:name,materialGradeId});
   const store=window.MM_ENGINEERING_STORE;if(store?.linkCaseMaterial)await store.linkCaseMaterial(caseId,materialGradeId,name);
+  // Linking the exact grade updates the saved case after newCase has rendered it.
+  // Force a fresh read so the visible form reflects the canonical linked record.
+  await workspace.open(caseId,{force:true});
   return caseId;
 }
 
