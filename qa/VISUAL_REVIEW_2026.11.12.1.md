@@ -10,7 +10,7 @@
 - Pixel threshold: 12 pixels.
 - Scope: the Practice hub has a direct Material Behaviour Labs choice and a separate virtual-tools choice.
 
-This branch pins a deterministic technical comparison reference for the requested Practice change. It does not record visual-owner approval. The new code must pass all 52 current-versus-reference comparisons without masking or skipping surfaces.
+This branch pins a deterministic technical comparison reference for the requested Practice change. It does not record visual-owner approval. The new code must pass all 52 current-versus-reference comparisons with no masking or skipped surfaces.
 
 ## Review boundary
 
