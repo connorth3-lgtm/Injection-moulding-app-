@@ -5,7 +5,7 @@
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "pass",
-    "claim": "PASS — exact-source software-only checks passed for release 2026.11.12.2: successful Pre-merge Public Candidate run 43288606116 retained artifact 13975757245 from source f8b334ee4316051848dc7f6b55114547ba79a44e; Mobile Browser QA run 43288605917 and Question Quality 50-Pass run 43288606017 also passed on that exact source. All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain HOLD; no production or machine-control authority is created."
+    "claim": "PASS — exact-source software-only checks passed for release 2026.11.12.2: successful Pre-merge Public Candidate run 43317536795 retained artifact 13988512830 from source b68fd00eb9cc929556a22923ee3c354eefd25158; Mobile Browser QA run 43317536437 and Question Quality 50-Pass run 43317536413 also passed on that exact source. All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain HOLD; no production or machine-control authority is created."
   },
   "governance": {
     "status": "enforced",
@@ -30,8 +30,8 @@
     },
     "candidate": {
       "release": "2026.11.12.2",
-      "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
-      "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4"
+      "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
+      "runtimeFingerprint": "sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7"
     },
     "previousPreviousCandidate": {
       "release": "2026.11.11.1",
@@ -63,14 +63,14 @@
     },
     "currentCandidate": {
       "release": "2026.11.12.2",
-      "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
-      "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4",
-      "candidateRunId": 43288606116,
+      "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
+      "runtimeFingerprint": "sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7",
+      "candidateRunId": 43317536795,
       "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 13975757245,
-      "artifactName": "physical-pwa-candidate-f8b334ee4316051848dc7f6b55114547ba79a44e",
-      "artifactDigest": "sha256:204c63278f6813a74aae31aac51d66c368064093db5991a38a8fe5c8add5db87",
-      "artifactExpiresAt": "2027-02-10T19:17:20Z"
+      "artifactId": 13988512830,
+      "artifactName": "physical-pwa-candidate-b68fd00eb9cc929556a22923ee3c354eefd25158",
+      "artifactDigest": "sha256:c3a0c49520e6d0052c1ba08c8a1f8b089ce6a82d2585f12492a0040e4fa157b6",
+      "artifactExpiresAt": "2027-02-10T22:11:13Z"
     },
     "previousPreviousCandidate": {
       "release": "2026.11.11.1",
@@ -89,7 +89,7 @@
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
     "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.11.12.2.md",
-    "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
+    "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
     "desktopRelease": "2026.09.29.1",
     "evidence": null,
     "required": [
@@ -147,8 +147,8 @@
     },
     "candidate": {
       "release": "2026.11.12.2",
-      "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
-      "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4"
+      "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
+      "runtimeFingerprint": "sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7"
     },
     "previousPreviousCandidate": {
       "release": "2026.11.11.1",
@@ -178,7 +178,7 @@
     "artifactDigest": "sha256:aaf1c9ae1c9f0a6e4331cf7da6b20d693932a4135fed4868c07bc33b1de28dd2",
     "artifactExpiresAt": "2027-02-10T04:37:58Z"
   },
-  "candidateStatus": "PASS — exact-source producer run 43288606116, Mobile Browser QA run 43288605917, and Question Quality 50-Pass run 43288606017 passed for source f8b334ee4316051848dc7f6b55114547ba79a44e; all seven independent review streams remain HOLD.",
+  "candidateStatus": "PASS — exact-source producer run 43317536795, Mobile Browser QA run 43317536437, and Question Quality 50-Pass run 43317536413 passed for source b68fd00eb9cc929556a22923ee3c354eefd25158; all seven independent review streams remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.11.11.2",
     "sourceSha": "7c6587c5488bd764a6ae0a7afb2cbdfb252857d5",
@@ -215,14 +215,14 @@
   "supersededCandidateReason": "This earlier 2026.10.22.2 artifact was produced from an ancestor Book runtime. It does not match the current candidate source or computed public-runtime fingerprint and is not current release evidence.",
   "webCandidate": {
     "release": "2026.11.12.2",
-    "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
-    "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4",
-    "candidateRunId": 43288606116,
+    "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
+    "runtimeFingerprint": "sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7",
+    "candidateRunId": 43317536795,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13975757245,
-    "artifactName": "physical-pwa-candidate-f8b334ee4316051848dc7f6b55114547ba79a44e",
-    "artifactDigest": "sha256:204c63278f6813a74aae31aac51d66c368064093db5991a38a8fe5c8add5db87",
-    "artifactExpiresAt": "2027-02-10T19:17:20Z"
+    "artifactId": 13988512830,
+    "artifactName": "physical-pwa-candidate-b68fd00eb9cc929556a22923ee3c354eefd25158",
+    "artifactDigest": "sha256:c3a0c49520e6d0052c1ba08c8a1f8b089ce6a82d2585f12492a0040e4fa157b6",
+    "artifactExpiresAt": "2027-02-10T22:11:13Z"
   },
   "previousPreviousPreviousCandidate": {
     "release": "2026.11.08.3",

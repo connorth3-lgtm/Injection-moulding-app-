@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Retained release 2026.11.12.2 candidate f8b334ee4316051848dc7f6b55114547ba79a44e and artifact 13975757245 are software provenance, not evidence of testing on physical iOS/iPadOS and Android devices. Real-device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
+  "boundary": "Retained release 2026.11.12.2 candidate b68fd00eb9cc929556a22923ee3c354eefd25158 and artifact 13988512830 are software provenance, not evidence of testing on physical iOS/iPadOS and Android devices. Real-device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -67,25 +67,25 @@
   },
   "candidate": {
     "release": "2026.11.12.2",
-    "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
-    "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4",
-    "candidateRunId": 43288606116,
+    "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
+    "runtimeFingerprint": "sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7",
+    "candidateRunId": 43317536795,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13975757245,
-    "artifactName": "physical-pwa-candidate-f8b334ee4316051848dc7f6b55114547ba79a44e",
-    "artifactDigest": "sha256:204c63278f6813a74aae31aac51d66c368064093db5991a38a8fe5c8add5db87",
-    "artifactExpiresAt": "2027-02-10T19:17:20Z"
+    "artifactId": 13988512830,
+    "artifactName": "physical-pwa-candidate-b68fd00eb9cc929556a22923ee3c354eefd25158",
+    "artifactDigest": "sha256:c3a0c49520e6d0052c1ba08c8a1f8b089ce6a82d2585f12492a0040e4fa157b6",
+    "artifactExpiresAt": "2027-02-10T22:11:13Z"
   },
   "currentCandidate": {
     "release": "2026.11.12.2",
-    "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
-    "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4",
-    "candidateRunId": 43288606116,
+    "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
+    "runtimeFingerprint": "sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7",
+    "candidateRunId": 43317536795,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13975757245,
-    "artifactName": "physical-pwa-candidate-f8b334ee4316051848dc7f6b55114547ba79a44e",
-    "artifactDigest": "sha256:204c63278f6813a74aae31aac51d66c368064093db5991a38a8fe5c8add5db87",
-    "artifactExpiresAt": "2027-02-10T19:17:20Z"
+    "artifactId": 13988512830,
+    "artifactName": "physical-pwa-candidate-b68fd00eb9cc929556a22923ee3c354eefd25158",
+    "artifactDigest": "sha256:c3a0c49520e6d0052c1ba08c8a1f8b089ce6a82d2585f12492a0040e4fa157b6",
+    "artifactExpiresAt": "2027-02-10T22:11:13Z"
   },
   "previousPreviousCandidate": {
     "release": "2026.11.11.4",
