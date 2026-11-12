@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.12.1",
+  "release": "2026.11.12.2",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.12.1.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.12.2.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "boundary": "Release 2026.11.12.1 exact-source software candidate f8b334ee4316051848dc7f6b55114547ba79a44e (producer run 43288606116, artifact 13975757245) is retained, but it does not establish any NZQA/provider G1–G8 external gate or assessment/accreditation authority. G1–G8 remain pending-external.",
+  "boundary": "Release 2026.11.12.2 exact-source software candidate f8b334ee4316051848dc7f6b55114547ba79a44e (producer run 43288606116, artifact 13975757245) is retained, but it does not establish any NZQA/provider G1–G8 external gate or assessment/accreditation authority. G1–G8 remain pending-external.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -63,7 +63,7 @@
     "runtimeFingerprint": "sha256:4767c50814cfe576891a3eb6f4de34a1d451378709c43a8988e2e57c540cf4c9"
   },
   "candidate": {
-    "release": "2026.11.12.1",
+    "release": "2026.11.12.2",
     "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
     "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4"
   },
