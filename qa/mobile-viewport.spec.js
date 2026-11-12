@@ -136,6 +136,11 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await page.evaluate(()=>switchView('dashboard'));
       await page.locator('#dashboard [data-mm-home-action="mould-master"]').click();
       await page.locator('#dashboard [data-mm-home-action="mould-master"]').click();
+      const problemPractice=page.locator('#scenarios .mm-problem-practice');
+      await expect(problemPractice).toBeVisible();
+      const moreTools=problemPractice.locator('details.mm-practice-more-tools');
+      await moreTools.locator('summary').click();
+      await moreTools.locator('[data-mm-hub-action="mould-master"]').click();
       await expect(page.locator('#mmMouldMasterWorkspace')).toBeVisible();
       await expect(page.getByRole('heading',{name:'Troubleshooting casebook'})).toBeVisible();
     });
