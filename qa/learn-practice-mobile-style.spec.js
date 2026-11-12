@@ -629,13 +629,13 @@ test('Learn Question Centre retains five governed launchers plus balanced materi
  await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
 });
 
-test('Practice leads with two common tasks and keeps specialist tools optional',async({page})=>{
+test('Practice adds a direct Material Labs task and keeps specialist tools optional',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
   const root=page.locator('#scenarios .mm-practice-hub');
   await expect(root.locator('.mm-practice-diagnose-stages')).toHaveCount(0);
-  await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(3);
+  await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(4);
   await root.locator('[data-mm-hub-action="problem-practice"]').click();
   const routes=page.locator('#scenarios .mm-problem-practice');
   const commonTasks=routes.locator('.mm-hub-section[aria-label="Moulding problem practice"] > .mm-hub-grid > button');
