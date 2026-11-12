@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
-'web_release':'2026.11.11.4',
+'web_release':'2026.11.12.1',
  'android_release':'2026.11.08.1',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -19,7 +19,7 @@ expected={
  'assessment_quality_version':'2026.08.24.3',
  'assessment_storage_scope_version':'2026.08.24.4',
  'assessment_evidence_version':'2026.10.05.1',
-  'read_aloud_version':'2026.11.11.4',
+  'read_aloud_version':'2026.11.12.1',
  'windows_recovery_release':'2026.08.21.1',
 }
 for k,v in expected.items(): need(V.get(k)==v,f'version.json {k} drift: {V.get(k)!r} != {v!r}')
@@ -616,6 +616,25 @@ elif visual.get('release')=='2026.11.11.4':
          and 'Owner-authorized technical visual baseline' in visual.get('policy','')
          and 'remain HOLD' in visual.get('policy',''),
          '2026.11.11.4 PR #707 visual baseline must retain its exact owner-approved Practice source, full strict matrix and separate external-review HOLDs')
+elif visual.get('release')=='2026.11.12.1':
+    # The requested Material Behaviour Labs route is a technical preview baseline.
+    # Keep the exact 52-surface matrix and 12px limit; do not imply visual-owner approval.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.12.1.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.12.1'
+         and visual.get('commit')=='3e7b0832557fe5e38db1d63aa74c59b3fcef6a31'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'STATUS: VISUAL BASELINE HOLD' in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and '52 viewport/surface captures' in review_current
+         and 'no masking or skipped surfaces' in review_current.lower()
+         and 'remain HOLD' in visual.get('policy',''),
+         '2026.11.12.1 technical Practice baseline must retain all 52 captures and explicit visual-owner HOLD')
 elif visual.get('release')=='2026.11.11.3':
     review_current=text('qa/VISUAL_REVIEW_2026.11.11.3.md')
     need(visual.get('ref')=='visual-baseline/2026.11.11.3'

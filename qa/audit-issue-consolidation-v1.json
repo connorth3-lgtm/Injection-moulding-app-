@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.11.4",
+  "release": "2026.11.12.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "3ed5fe6f02496f5a15be0629f7d467dd152e05bf",
-  "scope": "Streamline common problem practice entry points, keep specialist tools optional, reorder process-data practice around a guided starter, and make Mould Master case entry a clearer three-stage flow while preserving per-track progress.",
-  "approvalBoundary": "HOLD: release 2026.11.11.4 is an educational technical-preview candidate only. The software-only candidate does not establish human, physical-device, accessibility, Windows-signing, SME, learner-outcome, provider/NZQA or production approval; all seven external review streams remain HOLD and production authority remains advisory-only.",
+  "candidateSourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
+  "scope": "Add Material Behaviour Labs as a direct Practice entry, keep the virtual moulding cell and simulator in their own picker, and preserve the six existing material cases, completion records and non-production boundaries.",
+  "approvalBoundary": "HOLD: release 2026.11.12.1 is a software-only educational technical-preview candidate, source f8b334ee4316051848dc7f6b55114547ba79a44e, with successful automated producer, browser and question-quality checks. It does not establish human, physical-device, accessibility, Windows-signing, SME, learner-outcome, provider/NZQA or production approval; all seven external review streams remain HOLD and production authority remains advisory-only.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -46,13 +46,13 @@
   "lastReviewedDate": "2026-11-12",
   "previousVerifiedCandidate": {
     "release": "2026.11.11.4",
-    "sourceSha": "e407281018e898aab4034f73885468ec019489c0",
-    "runtimeFingerprint": "sha256:582a5e621d4e7d07dcdc60d4c223a27727c54d8f6376e43e9e76e1156a444661",
-    "candidateRunId": 43094122600,
+    "sourceSha": "3ed5fe6f02496f5a15be0629f7d467dd152e05bf",
+    "runtimeFingerprint": "sha256:28412c1891c7c7b93045892515aaab2a6a361b861f79714140f560e1340f245d",
+    "candidateRunId": 43156072826,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13888639947,
-    "artifactName": "physical-pwa-candidate-e407281018e898aab4034f73885468ec019489c0",
-    "artifactDigest": "sha256:36668f5710fa0843f791f0320637bdd7041be7799b6d6701f7ae4c8c5b9c68d1",
-    "artifactExpiresAt": "2027-02-09T20:11:15Z"
+    "artifactId": 13916345882,
+    "artifactName": "physical-pwa-candidate-3ed5fe6f02496f5a15be0629f7d467dd152e05bf",
+    "artifactDigest": "sha256:aaf1c9ae1c9f0a6e4331cf7da6b20d693932a4135fed4868c07bc33b1de28dd2",
+    "artifactExpiresAt": "2027-02-10T04:37:58Z"
   }
 }

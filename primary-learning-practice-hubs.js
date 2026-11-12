@@ -7,7 +7,7 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.11.12.1';
+const VERSION='2026.11.12.2';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
 const originalRenderScenarios=renderScenarios;
 
@@ -190,7 +190,7 @@ function openPicker(kind){
   }else if(kind==='troubleshooting'){
     return openProblemPractice();
   }else if(kind==='labs'){
-    openModal(`<span class="eyebrow">Practice</span><h2>Practice labs</h2><p class="muted">Choose the kind of guided exploration you want.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="spatial-twin"><b>Explore a virtual moulding cell</b><small>Inspect the cell, switch evidence views and follow an authored case timeline. This is a visual training model, not a validated physics twin.</small></button><button type="button" data-mm-hub-action="simulator"><b>Run a guided case and simulator</b><small>Investigate a training case, choose supporting evidence and compare relative process changes.</small></button><button type="button" data-mm-hub-action="material-labs"><b>Practise material behaviour</b><small>Work through six resin-specific cases about moisture, thermal history, reinforcement and recycled material.</small></button></div><p class="tiny muted">All activities are for learning; they do not control or set a production machine.</p>`);
+    openModal(`<span class="eyebrow">Practice</span><h2>Virtual moulding tools</h2><p class="muted">Choose a visual training model or guided simulator.</p><div class="mm-hub-picker-grid"><button type="button" data-mm-hub-action="spatial-twin"><b>Explore a virtual moulding cell</b><small>Inspect the cell, switch evidence views and follow an authored case timeline. This is a visual training model, not a validated physics twin.</small></button><button type="button" data-mm-hub-action="simulator"><b>Run a guided case and simulator</b><small>Investigate a training case, choose supporting evidence and compare relative process changes.</small></button></div><p class="tiny muted">All activities are for learning; they do not control or set a production machine.</p>`);
   }else if(kind==='questions'){
     return openQuestionCentreDetail();
   }
@@ -1665,10 +1665,11 @@ function practiceHubMarkup(){
     <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1>What should I practise next?</h1><p>${esc(practiceStatusLine(plan))}</p></header>
     ${recommendedPracticeMarkup(plan,done)}
     ${practicePlanRows(plan)}
-    <section class="mm-hub-section"><div class="mm-hub-section-head"><span class="eyebrow">Choose by the job you want to practise</span><h2>Three clear practice areas</h2><p>Pick a task below. Practice is for learning; assessments stay separate. ${scenarioCount} shop-floor scenarios are available.</p></div><div class="mm-hub-grid">
+    <section class="mm-hub-section"><div class="mm-hub-section-head"><span class="eyebrow">Choose by the job you want to practise</span><h2>Four clear practice areas</h2><p>Pick a task below. Practice is for learning; assessments stay separate. ${scenarioCount} shop-floor scenarios are available.</p></div><div class="mm-hub-grid">
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="problem-practice"><span class="eyebrow">Investigate a fault · 5–15 min</span><b>Moulding problem practice</b><small>Investigate an observed defect or make a decision in a training scenario.</small><span class="mm-hub-tile-action">Choose a problem activity →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="process-data"><span class="eyebrow">Read process evidence · 10–20 min</span><b>Process data lab</b><small>Start with synthetic examples, or prepare and analyse a local shot-data file.</small><span class="mm-hub-tile-action">Work with process data →</span></button>
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Explore materials and the cell · 5–15 min</span><b>Material and virtual labs</b><small>Explore resin-specific cases, a visual moulding-cell model or the guided simulator.</small><span class="mm-hub-tile-action">Choose a lab →</span></button>
+      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="material-labs"><span class="eyebrow">Material-specific practice · 5–15 min</span><b>Material Behaviour Labs</b><small>Compare how polymer family, moisture, reinforcement, thermal history and recycled-feedstock variability change the diagnostic decision.</small><span class="mm-hub-tile-action">Choose a material case →</span></button>
+      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Visual and simulator practice · 5–15 min</span><b>Virtual moulding cell and simulator</b><small>Inspect a training cell or investigate a guided case using the visual model and simulator.</small><span class="mm-hub-tile-action">Choose a virtual tool →</span></button>
     </div></section>
   </div>`;
 }
