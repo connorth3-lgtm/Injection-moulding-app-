@@ -6,7 +6,7 @@
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "boundary": "No exact-source technical candidate is retained for 2026.11.12.1; this does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority. G1–G8 remain pending-external.",
+  "boundary": "Release 2026.11.12.1 exact-source software candidate f8b334ee4316051848dc7f6b55114547ba79a44e (producer run 43288606116, artifact 13975757245) is retained, but it does not establish any NZQA/provider G1–G8 external gate or assessment/accreditation authority. G1–G8 remain pending-external.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -62,7 +62,11 @@
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
     "runtimeFingerprint": "sha256:4767c50814cfe576891a3eb6f4de34a1d451378709c43a8988e2e57c540cf4c9"
   },
-  "candidate": null,
+  "candidate": {
+    "release": "2026.11.12.1",
+    "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
+    "runtimeFingerprint": "sha256:961e0c5bfebab888150950fd77efd1415cb51e83c0288877dfcf94aa59c1789a"
+  },
   "previousPreviousCandidate": {
     "release": "2026.11.11.4",
     "sourceSha": "e407281018e898aab4034f73885468ec019489c0",

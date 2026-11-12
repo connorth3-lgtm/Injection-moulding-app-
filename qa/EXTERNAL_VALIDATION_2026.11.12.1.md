@@ -1,18 +1,26 @@
 # MouldMaster 2026.11.12.1 — external validation status
 
-**STATUS: EXACT-SOURCE SOFTWARE CANDIDATE PENDING — all seven independent review streams remain HOLD.**
+**STATUS: SOFTWARE-ONLY EXACT-SOURCE PASS — all seven independent review streams remain HOLD.**
+
+> **RETAINED 2026.11.12.1 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 43288606116](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43288606116) created artifact **13975757245**, source f8b334ee4316051848dc7f6b55114547ba79a44e, digest sha256:204c63278f6813a74aae31aac51d66c368064093db5991a38a8fe5c8add5db87, expiry `2027-02-10T19:17:20Z`, and public-runtime fingerprint sha256:961e0c5bfebab888150950fd77efd1415cb51e83c0288877dfcf94aa59c1789a. Mobile Browser QA and Question Quality 50-Pass passed on this exact source; this does not establish human, real-device, Windows signing, provider, accreditation or production authorization.
 
 ## Release scope
 
 The Practice hub adds a direct Material Behaviour Labs choice and separates the virtual moulding cell and simulator into their own picker. Existing material cases, completion records and training boundaries remain in their current runtime.
 
-## Candidate identity
+## Exact-source software checks
 
-No exact-source software candidate has been retained for release 2026.11.12.1. The release-bound contracts are being staged for the new release. Automated QA must pass and the Pre-merge Public Candidate workflow must retain its artifact before this index can record a technical PASS.
+Pre-merge Public Candidate run [43288606116](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43288606116) retained the exact-source production Pages artifact. Mobile Browser QA run [43288605917](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43288605917) and Question Quality 50-Pass run [43288606017](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43288606017) passed on source `f8b334ee4316051848dc7f6b55114547ba79a44e`. This is software QA only.
 
-## Independent review status
+## Seven independent review packets — all HOLD
 
-Accessibility, physical-device, Windows distribution, Book SME, curriculum SME, real-learner outcomes and NZQA/provider validation remain **HOLD** until genuine release-specific evidence is completed and recorded.
+- `qa/ACCESSIBILITY_REAL_AT_2026.11.12.1.md` — real NVDA and VoiceOver review remains HOLD.
+- `qa/PWA_PHYSICAL_DEVICE_2026.11.12.1.md` — physical iOS/iPadOS and Android validation remains HOLD.
+- `certification/WINDOWS_SIGNING_READINESS_2026.11.12.1.md` — signing and physical Windows execution remain HOLD.
+- `qa/BOOK_SME_REVIEW_2026.11.12.1.md` — independent Book SME review remains HOLD.
+- `qa/CURRICULUM_SME_REVIEW_2026.11.12.1.md` — independent curriculum SME review remains HOLD.
+- `qa/LEARNER_PILOT_2026.11.12.1.md` — real-learner outcome evidence remains HOLD.
+- `qa/NZQA_EXTERNAL_VALIDATION_2026.11.12.1.md` — provider/NZQA G1–G8 evidence remains HOLD.
 
 ## Authorization boundary
 

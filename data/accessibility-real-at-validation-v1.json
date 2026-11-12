@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "release": "2026.11.12.1",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.12.1.md",
-  "sourceSha": null,
-  "runtimeFingerprint": null,
+  "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
+  "runtimeFingerprint": "sha256:961e0c5bfebab888150950fd77efd1415cb51e83c0288877dfcf94aa59c1789a",
   "status": "pending-real-at-validation",
-  "boundary": "Release 2026.11.12.1 has no retained exact-source software candidate yet. All real assistive-technology tasks remain pending until the candidate is produced and genuine human NVDA and VoiceOver evidence is recorded. Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer.",
+  "boundary": "Release 2026.11.12.1 is bound to retained exact-source software candidate f8b334ee4316051848dc7f6b55114547ba79a44e with public-runtime fingerprint sha256:961e0c5bfebab888150950fd77efd1415cb51e83c0288877dfcf94aa59c1789a. Automated software checks passed; all real assistive-technology tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded. Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -310,7 +310,7 @@
     "sourceSha": "3ed5fe6f02496f5a15be0629f7d467dd152e05bf",
     "runtimeFingerprint": "sha256:28412c1891c7c7b93045892515aaab2a6a361b861f79714140f560e1340f245d"
   },
-  "technicalCandidateStatus": "PENDING — the exact-source software candidate for 2026.11.12.1 has not yet been retained; genuine real assistive-technology validation remains pending.",
+  "technicalCandidateStatus": "PASS — exact-source software-only candidate f8b334ee4316051848dc7f6b55114547ba79a44e passed automated producer, mobile-browser and question-quality gates; genuine real assistive-technology validation remains pending.",
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
