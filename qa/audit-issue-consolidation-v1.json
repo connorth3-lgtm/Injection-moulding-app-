@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.12.1",
+  "release": "2026.11.12.2",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
-  "scope": "Add Material Behaviour Labs as a direct Practice entry, keep the virtual moulding cell and simulator in their own picker, and preserve the six existing material cases, completion records and non-production boundaries.",
-  "approvalBoundary": "HOLD: release 2026.11.12.1 is a software-only educational technical-preview candidate, source f8b334ee4316051848dc7f6b55114547ba79a44e, with successful automated producer, browser and question-quality checks. It does not establish human, physical-device, accessibility, Windows-signing, SME, learner-outcome, provider/NZQA or production approval; all seven external review streams remain HOLD and production authority remains advisory-only.",
+  "candidateSourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
+  "scope": "Remove the duplicate Material Behaviour Labs choice from Practice, keep the labs grouped under Materials, and preserve all six material cases, completion records and non-production boundaries.",
+  "approvalBoundary": "HOLD: release 2026.11.12.2 is a software-only educational technical-preview candidate; independent human, physical-device, accessibility, Windows-signing, SME, learner-outcome, provider/NZQA and production reviews remain HOLD and production authority remains advisory-only. It does not establish human, physical-device, accessibility, Windows-signing, SME, learner-outcome, provider/NZQA or production approval; all seven external review streams remain HOLD and production authority remains advisory-only.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,

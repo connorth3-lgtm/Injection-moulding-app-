@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.11.12.1`**.
+Current governed web candidate: **`2026.11.12.2`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Software-only exact-source contract and retained candidate identity passed for release 2026.11.12.1, source f8b334ee4316051848dc7f6b55114547ba79a44e, fingerprint sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4, producer run 43288606116, artifact 13975757245. No human, device, provider, Windows distribution or production authorization is implied. |
-| Behavioral / browser | **pass** | Mobile Browser QA run 43288605917 and Question Quality 50-Pass run 43288606017 passed on exact source f8b334ee4316051848dc7f6b55114547ba79a44e for release 2026.11.12.1. Chromium and WebKit substantive suites, visual and cross-browser QA, reachability, and all five reliability shards passed. Automated browser and question checks do not establish physical-device, real assistive-technology, learner-outcome, provider, accreditation or production approval. |
-| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.12.1. |
+| Static / contract | **pass** | Software-only exact-source contract and retained candidate identity passed for release 2026.11.12.2, source b68fd00eb9cc929556a22923ee3c354eefd25158, fingerprint sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7, producer run 43317536795, artifact 13988512830. No human, device, provider, Windows distribution or production authorization is implied. |
+| Behavioral / browser | **pass** | Mobile Browser QA run 43317536437 and Question Quality 50-Pass run 43317536413 passed on exact source b68fd00eb9cc929556a22923ee3c354eefd25158 for release 2026.11.12.2. Chromium and WebKit substantive suites, visual and cross-browser QA, reachability, and all five reliability shards passed. Automated browser and question checks do not establish physical-device, real assistive-technology, learner-outcome, provider, accreditation or production approval. |
+| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.12.2. |

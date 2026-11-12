@@ -250,7 +250,7 @@ for(const width of [360,412]){
   await expect(practice.locator('.mm-hub-section-head')).not.toContainText('169 governed prompts');
   await expect(practice.locator('[data-mm-hub-action="question-centre"]')).toHaveCount(0);
   await expect(practice.locator('.mm-practice-guided, .mm-practice-case, .mm-practice-diagnose-journey')).toHaveCount(0);
-  await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(4);
+  await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(3);
   await expect(practice.locator('[data-mm-hub-action="problem-practice"]')).toBeVisible();
   await expect(practice.locator('[data-mm-hub-action="process-data"]')).toBeVisible();
   await expect(practice.locator('[data-mm-practice-query], #mmPracticeToolResults, [data-mm-practice-count]')).toHaveCount(0);
@@ -280,12 +280,16 @@ test('Learn hub shows the unified compact lesson catalogue under strict CSP',asy
 test('Practice hub keeps compact left-aligned mobile cards under strict CSP',async({page})=>{
   await openApp(page);
   await openHub(page,'Practice','#scenarios .mm-practice-hub');
-  await expectReadableTiles(page,'#scenarios .mm-practice-hub',4);
+  await expectReadableTiles(page,'#scenarios .mm-practice-hub',3);
   await expectFullWidthPrimaryAction(page,'#scenarios .mm-practice-hub');
-  const materialLabs=page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="material-labs"]');
-  await expect(materialLabs).toContainText('Material Behaviour Labs');
-  await expect(materialLabs).toContainText('Choose a material case');
+  await expect(page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="material-labs"]')).toHaveCount(0);
   await page.screenshot({path:'qa-artifacts/mobile-practice-hub-412x915.png',fullPage:true});
+  await openMaterials(page);
+  const study=page.locator('#materials #mmMaterialLearningAnchor');
+  await expect(study).toBeVisible();
+  await study.locator(':scope > summary').click();
+  const materialLabs=study.getByRole('button',{name:'Material behaviour labs'});
+  await expect(materialLabs).toHaveCount(1);
   await materialLabs.click();
   await expect(page.locator('#materialLabs')).toBeVisible();
   await expect(page.locator('#materialLabs')).toContainText('Choose a material case');
@@ -307,7 +311,7 @@ test.describe('360px narrow-phone hubs',()=>{
     await expectUnifiedLessonCatalog(page);
 
     await openHub(page,'Practice','#scenarios .mm-practice-hub');
-    await expectNarrowReadableTiles(page,'#scenarios .mm-practice-hub',4);
+    await expectNarrowReadableTiles(page,'#scenarios .mm-practice-hub',3);
     await page.screenshot({path:'qa-artifacts/mobile-practice-hub-360x800.png',fullPage:true});
   });
 
@@ -629,13 +633,13 @@ test('Learn Question Centre retains five governed launchers plus balanced materi
  await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
 });
 
-test('Practice adds a direct Material Labs task and keeps specialist tools optional',async({page})=>{
+test('Practice keeps three core choices and specialist tools optional',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
   const root=page.locator('#scenarios .mm-practice-hub');
   await expect(root.locator('.mm-practice-diagnose-stages')).toHaveCount(0);
-  await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(4);
+  await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(3);
   await root.locator('[data-mm-hub-action="problem-practice"]').click();
   const routes=page.locator('#scenarios .mm-problem-practice');
   const commonTasks=routes.locator('.mm-hub-section[aria-label="Moulding problem practice"] > .mm-hub-grid > button');
@@ -782,7 +786,7 @@ test('mobile Practice source-owned choices occupy one readable column at 360 and
         cards:tiles.length,
         overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
     });
-    expect(metrics.cards).toBe(4);
+    expect(metrics.cards).toBe(3);
     expect(metrics.columns).toBe(1);
     expect(metrics.overflow).toBeLessThanOrEqual(2);
   }
