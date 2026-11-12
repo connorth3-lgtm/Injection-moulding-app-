@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.11.4",
-  "commit": "f4169ae6227d1e827cdf6ef9ebe0cb23db754b29",
+  "release": "2026.11.12.1",
+  "commit": "3e7b0832557fe5e38db1d63aa74c59b3fcef6a31",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Owner-authorized technical visual baseline for the requested Practice-tab redesign in release 2026.11.11.4. Preserve the 12-pixel threshold and all 52 viewport/surface captures. The exact scope is recorded in qa/VISUAL_REVIEW_2026.11.11.4_PR707.md; independent human, device, Windows, SME, learner-outcome, provider and production reviews remain HOLD.",
-  "ref": "visual-baseline/2026.11.11.4",
+  "policy": "Technical preview reference for the requested Practice route: compare all 52 viewport/surface captures at the unchanged 12-pixel threshold. This baseline is not visual-owner approval; the human visual-owner decision and all independent real-device, accessibility, SME, learner-outcome, provider and production reviews remain HOLD.",
+  "ref": "visual-baseline/2026.11.12.1",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "f4169ae6227d1e827cdf6ef9ebe0cb23db754b29"
+    "referenceSourceSha": "3e7b0832557fe5e38db1d63aa74c59b3fcef6a31"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",
