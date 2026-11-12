@@ -18,6 +18,29 @@ def git_blob_text(sha):
     need(p.returncode==0,f'cannot resolve approved Git blob {sha}: {p.stderr.strip()}')
     return p.stdout
 
+def diagnostic_lab_payload(source):
+    # The reviewed lab data is immutable here; this PR only changes release labeling and navigation.
+    # Compare the evaluated authored questions against the original approved blob instead of
+    # treating Practice launcher/back-button changes as new evidence content.
+    node = r'''
+const fs=require('fs'),vm=require('vm');
+let src=fs.readFileSync(0,'utf8');
+const anchor="install();window.addEventListener('load',schedule);";
+if(!src.includes(anchor))throw new Error('diagnostic lab capture point missing');
+src=src.replace(anchor,"window.__QA_DIAGNOSTIC_LABS=JSON.parse(JSON.stringify(LABS));window.addEventListener('load',schedule);");
+const document={documentElement:null,getElementById:()=>null,querySelector:()=>null,querySelectorAll:()=>[],createElement:()=>({}),head:{appendChild(){}},body:{appendChild(){}}};
+function MutationObserver(){this.observe=()=>{};this.disconnect=()=>{}}
+const window={addEventListener(){},requestAnimationFrame:fn=>fn&&fn(),scrollTo(){}};
+const sandbox={window,document,MutationObserver,console,JSON,Math,Date,setTimeout,clearTimeout};
+window.window=window;window.document=document;window.MutationObserver=MutationObserver;
+vm.createContext(sandbox);vm.runInContext(src,sandbox,{filename:'diagnostic-learning-labs.js'});
+process.stdout.write(JSON.stringify(window.__QA_DIAGNOSTIC_LABS));
+'''
+    p = subprocess.run(['node', '-e', node], cwd=ROOT, input=source,
+                       capture_output=True, text=True, encoding='utf-8', errors='replace')
+    need(p.returncode == 0, f'cannot extract approved diagnostic lab question/evidence payload: {p.stderr.strip()}')
+    return json.loads(p.stdout)
+
 def core_assessment_payload(core_text):
     marker='window.MM_DATA = '
     need(marker in core_text,'MM_DATA marker missing')
@@ -58,6 +81,12 @@ for path,sha in approved_inputs.items():
         canonical=json.dumps(current_payload,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode('utf-8')
         actual_payload_sha='sha256:'+hashlib.sha256(canonical).hexdigest()
         need(actual_payload_sha==semantic_approval.get('sha256'),f'evidence approval stale for {path}: assessment-bearing semantic fingerprint changed from {semantic_approval.get("sha256")} to {actual_payload_sha}; re-review evidence and update semantic approval')
+        continue
+    if path == 'diagnostic-learning-labs.js':
+        approved_payload = diagnostic_lab_payload(git_blob_text(sha))
+        current_payload = diagnostic_lab_payload(text(path))
+        need(current_payload == approved_payload,
+             'diagnostic lab prompts, choices, keys or feedback changed; re-review evidence and update approval')
         continue
     need(actual==sha,f'evidence approval stale for {path}: approved {sha}, current {actual}; re-review evidence and update approval')
 
