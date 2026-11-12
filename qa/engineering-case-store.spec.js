@@ -166,6 +166,8 @@ test('Mould Master uses one owner-scoped IndexedDB store with one-time legacy im
   await expect(page.locator('[data-mw-engineering-context]')).toContainText('Pump housing');
   await expect(page.locator('[data-mw-engineering-context]')).toContainText('Exact-grade evidence');
 
+  const evidenceDisclosure=page.locator('#mmMouldMasterWorkspace .mw-context-fold');
+  await evidenceDisclosure.locator('summary').click();
   const evidencePanel=page.locator('[data-mw-case-evidence]');
   await expect(evidencePanel).toContainText('Closed-loop evidence');
   await evidencePanel.locator('[data-mw-evidence-field="kind"]').selectOption('dimensional-check');
