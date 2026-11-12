@@ -250,7 +250,7 @@ for(const width of [360,412]){
   await expect(practice.locator('.mm-hub-section-head')).not.toContainText('169 governed prompts');
   await expect(practice.locator('[data-mm-hub-action="question-centre"]')).toHaveCount(0);
   await expect(practice.locator('.mm-practice-guided, .mm-practice-case, .mm-practice-diagnose-journey')).toHaveCount(0);
-  await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(3);
+  await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(4);
   await expect(practice.locator('[data-mm-hub-action="problem-practice"]')).toBeVisible();
   await expect(practice.locator('[data-mm-hub-action="process-data"]')).toBeVisible();
   await expect(practice.locator('[data-mm-practice-query], #mmPracticeToolResults, [data-mm-practice-count]')).toHaveCount(0);
@@ -782,7 +782,7 @@ test('mobile Practice source-owned choices occupy one readable column at 360 and
         cards:tiles.length,
         overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
     });
-    expect(metrics.cards).toBe(3);
+    expect(metrics.cards).toBe(4);
     expect(metrics.columns).toBe(1);
     expect(metrics.overflow).toBeLessThanOrEqual(2);
   }
