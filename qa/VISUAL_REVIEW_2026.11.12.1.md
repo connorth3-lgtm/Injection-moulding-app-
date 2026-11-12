@@ -14,4 +14,4 @@ This branch pins a deterministic technical comparison reference for the requeste
 
 ## Review boundary
 
-**Human visual-owner decision: PENDING.** Automated screenshots are regression evidence only. Real-device, assistive-technology, Book/curriculum SME, learner-outcome, provider/NZQA, Windows distribution and production reviews remain HOLD.
+Human visual-owner decision: **PENDING**. Automated screenshots are regression evidence only. Real-device, assistive-technology, Book/curriculum SME, learner-outcome, provider/NZQA, Windows distribution and production reviews remain HOLD.
