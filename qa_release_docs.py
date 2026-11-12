@@ -216,6 +216,24 @@ elif visual.get('release')=='2026.11.08.4':
          and '13607855703' in review
          and '47 unchanged captures' in review,
          '2026.11.08.4 PR #697 visual reference must remain immutable at its exact owner-authorized source, with 52 captures at 12px')
+elif visual.get('release')=='2026.11.11.4':
+    # PR #707 owner-directed Practice redesign: pin the exact requested layout source.
+    # Keep every viewport/surface and the strict 12px comparison boundary.
+    review=text('qa/VISUAL_REVIEW_2026.11.11.4_PR707.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.11.4'
+         and visual.get('commit')=='f4169ae6227d1e827cdf6ef9ebe0cb23db754b29'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'STATUS: OWNER VISUAL APPROVAL' in review
+         and '43139395342' in review
+         and '13908843044' in review
+         and '48 unchanged captures' in review,
+         '2026.11.11.4 PR #707 visual reference must stay pinned to its exact owner-authorized source with 52 captures at 12px')
 elif visual.get('release')=='2026.10.11.10':
     # The owner approved Book-only speech chrome AFTER the earlier .10
     # baseline became immutable. Fail closed on this uniquely pinned

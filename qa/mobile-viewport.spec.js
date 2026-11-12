@@ -152,7 +152,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await openPracticeHub(page);
       await openPracticeAction(page,'process-data');
       await expect(page.locator('#processDataLabs')).toBeVisible();
-      await expect(page.getByRole('heading',{name:'Process data lab'})).toBeVisible();
+      await expect(page.locator('#processDataLabs').getByRole('heading',{name:'Practise with process data'})).toBeVisible();
       await expect(page.getByRole('button',{name:'Browse 50 cases'})).toBeVisible();
       await expect(page.getByRole('button',{name:'Start a guided case'})).toBeVisible();
       await expectOnlyCurrent(page,'Practice');
