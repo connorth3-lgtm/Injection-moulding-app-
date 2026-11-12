@@ -31,7 +31,7 @@
     "candidate": {
       "release": "2026.11.12.1",
       "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
-      "runtimeFingerprint": "sha256:961e0c5bfebab888150950fd77efd1415cb51e83c0288877dfcf94aa59c1789a"
+      "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4"
     },
     "previousPreviousCandidate": {
       "release": "2026.11.11.1",
@@ -64,7 +64,7 @@
     "currentCandidate": {
       "release": "2026.11.12.1",
       "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
-      "runtimeFingerprint": "sha256:961e0c5bfebab888150950fd77efd1415cb51e83c0288877dfcf94aa59c1789a",
+      "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4",
       "candidateRunId": 43288606116,
       "candidateWorkflow": "Pre-merge Public Candidate",
       "artifactId": 13975757245,
@@ -148,7 +148,7 @@
     "candidate": {
       "release": "2026.11.12.1",
       "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
-      "runtimeFingerprint": "sha256:961e0c5bfebab888150950fd77efd1415cb51e83c0288877dfcf94aa59c1789a"
+      "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4"
     },
     "previousPreviousCandidate": {
       "release": "2026.11.11.1",
@@ -216,7 +216,7 @@
   "webCandidate": {
     "release": "2026.11.12.1",
     "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
-    "runtimeFingerprint": "sha256:961e0c5bfebab888150950fd77efd1415cb51e83c0288877dfcf94aa59c1789a",
+    "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4",
     "candidateRunId": 43288606116,
     "candidateWorkflow": "Pre-merge Public Candidate",
     "artifactId": 13975757245,
