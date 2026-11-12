@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.12.1",
-  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.11.12.1.md",
+  "release": "2026.11.12.2",
+  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.11.12.2.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
     "status": "pass",
-    "claim": "PASS — exact-source software-only checks passed for release 2026.11.12.1: successful Pre-merge Public Candidate run 43288606116 retained artifact 13975757245 from source f8b334ee4316051848dc7f6b55114547ba79a44e; Mobile Browser QA run 43288605917 and Question Quality 50-Pass run 43288606017 also passed on that exact source. All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain HOLD; no production or machine-control authority is created."
+    "claim": "PASS — exact-source software-only checks passed for release 2026.11.12.2: successful Pre-merge Public Candidate run 43288606116 retained artifact 13975757245 from source f8b334ee4316051848dc7f6b55114547ba79a44e; Mobile Browser QA run 43288605917 and Question Quality 50-Pass run 43288606017 also passed on that exact source. All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain HOLD; no production or machine-control authority is created."
   },
   "governance": {
     "status": "enforced",
@@ -21,7 +21,7 @@
   "accessibility": {
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
-    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.11.12.1.md",
+    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.11.12.2.md",
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
     "previousCandidate": {
       "release": "2026.11.11.4",
@@ -29,7 +29,7 @@
       "runtimeFingerprint": "sha256:28412c1891c7c7b93045892515aaab2a6a361b861f79714140f560e1340f245d"
     },
     "candidate": {
-      "release": "2026.11.12.1",
+      "release": "2026.11.12.2",
       "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
       "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4"
     },
@@ -48,7 +48,7 @@
   "pwaPhysicalDevices": {
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
-    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.11.12.1.md",
+    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.11.12.2.md",
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
     "previousCandidate": {
       "release": "2026.11.11.4",
@@ -62,7 +62,7 @@
       "artifactExpiresAt": "2027-02-10T04:37:58Z"
     },
     "currentCandidate": {
-      "release": "2026.11.12.1",
+      "release": "2026.11.12.2",
       "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
       "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4",
       "candidateRunId": 43288606116,
@@ -88,7 +88,7 @@
     "status": "hold",
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
-    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.11.12.1.md",
+    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.11.12.2.md",
     "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
     "desktopRelease": "2026.09.29.1",
     "evidence": null,
@@ -102,20 +102,20 @@
   "bookSme": {
     "status": "hold",
     "evidenceContract": "data/book-sme-review-v1.json",
-    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.11.12.1.md",
+    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.11.12.2.md",
     "required": "Independent human SME approval of all 46 governed Book modules across the six required review dimensions; the 21 reader chapters are structural groupings only. Review the separate draft Book workbooks for the regional education routes. Review the 15 optional further-reading resources in each of the 21 reader chapters for fit, credibility, openness, currency and applicability; these links remain supplemental and are not claim evidence.",
     "contentRelease": "2026.11.09.1"
   },
   "curriculumSme": {
     "status": "hold",
     "evidenceContract": "qa/curriculum-semantic-review.json",
-    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.11.12.1.md",
+    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.11.12.2.md",
     "required": "Traceable human SME semantic approval of all 120 canonical lessons. Review the seven draft regional curriculum and assessment packs, including the Hindi study notes."
   },
   "learnerOutcomes": {
     "status": "hold",
     "pilotContract": "data/learner-pilot-v1.json",
-    "pilotPacket": "qa/LEARNER_PILOT_2026.11.12.1.md",
+    "pilotPacket": "qa/LEARNER_PILOT_2026.11.12.2.md",
     "evidence": null,
     "required": "Longitudinal real-learner outcome evidence before efficacy or genuine psychometric-validity claims."
   },
@@ -138,7 +138,7 @@
   "nzqaProvider": {
     "status": "hold",
     "evidenceContract": "data/nzqa-external-validation-v1.json",
-    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.12.1.md",
+    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.12.2.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "previousCandidate": {
       "release": "2026.11.11.4",
@@ -146,7 +146,7 @@
       "runtimeFingerprint": "sha256:28412c1891c7c7b93045892515aaab2a6a361b861f79714140f560e1340f245d"
     },
     "candidate": {
-      "release": "2026.11.12.1",
+      "release": "2026.11.12.2",
       "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
       "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4"
     },
@@ -214,7 +214,7 @@
   },
   "supersededCandidateReason": "This earlier 2026.10.22.2 artifact was produced from an ancestor Book runtime. It does not match the current candidate source or computed public-runtime fingerprint and is not current release evidence.",
   "webCandidate": {
-    "release": "2026.11.12.1",
+    "release": "2026.11.12.2",
     "sourceSha": "f8b334ee4316051848dc7f6b55114547ba79a44e",
     "runtimeFingerprint": "sha256:bf859d1d7cc5c864ae3d59d89c41d3234e4b81c2969ed56d6d5c5a471919f3a4",
     "candidateRunId": 43288606116,
