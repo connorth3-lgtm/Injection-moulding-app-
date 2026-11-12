@@ -280,9 +280,15 @@ test('Learn hub shows the unified compact lesson catalogue under strict CSP',asy
 test('Practice hub keeps compact left-aligned mobile cards under strict CSP',async({page})=>{
   await openApp(page);
   await openHub(page,'Practice','#scenarios .mm-practice-hub');
-  await expectReadableTiles(page,'#scenarios .mm-practice-hub');
+  await expectReadableTiles(page,'#scenarios .mm-practice-hub',4);
   await expectFullWidthPrimaryAction(page,'#scenarios .mm-practice-hub');
+  const materialLabs=page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="material-labs"]');
+  await expect(materialLabs).toContainText('Material Behaviour Labs');
+  await expect(materialLabs).toContainText('Choose a material case');
   await page.screenshot({path:'qa-artifacts/mobile-practice-hub-412x915.png',fullPage:true});
+  await materialLabs.click();
+  await expect(page.locator('#materialLabs')).toBeVisible();
+  await expect(page.locator('#materialLabs')).toContainText('Choose a material case');
 });
 
 test('Materials catalogue remains readable and enters at the top on 412px phones',async({page})=>{
@@ -301,7 +307,7 @@ test.describe('360px narrow-phone hubs',()=>{
     await expectUnifiedLessonCatalog(page);
 
     await openHub(page,'Practice','#scenarios .mm-practice-hub');
-    await expectNarrowReadableTiles(page,'#scenarios .mm-practice-hub');
+    await expectNarrowReadableTiles(page,'#scenarios .mm-practice-hub',4);
     await page.screenshot({path:'qa-artifacts/mobile-practice-hub-360x800.png',fullPage:true});
   });
 
