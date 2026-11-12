@@ -218,14 +218,13 @@ for(const width of [360,810]){
     const hub=page.locator('#scenarios .mm-practice-hub');
     await expect(hub).toBeVisible();
     const activities=hub.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-reference-practice-choice');
-    await expect(activities).toHaveCount(4);
-    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(4);
-    await expect(hub.locator('[data-mm-hub-action="material-labs"]')).toContainText('Material Behaviour Labs');
-    await expect(hub.locator('[data-mm-hub-action="material-labs"]')).toContainText('Choose a material case');
+    await expect(activities).toHaveCount(3);
+    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(3);
+    await expect(hub.locator('[data-mm-hub-action="material-labs"]')).toHaveCount(0);
     const recommended=hub.locator('.mm-reference-practice-feature');
     await expect(recommended.locator(':scope > .mm-reference-practice-feature-art')).toHaveCount(1);
     await page.evaluate(()=>{window.MM_REFERENCE_LAYOUT.refresh();window.MM_REFERENCE_LAYOUT.refresh()});
-    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(4);
+    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(3);
     const sizing=await activities.evaluateAll(nodes=>({
       overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth),
       touch:nodes.every(el=>el.getBoundingClientRect().height>=44),
