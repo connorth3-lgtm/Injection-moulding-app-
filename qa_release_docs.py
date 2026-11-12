@@ -587,6 +587,35 @@ elif visual.get('release')=='2026.11.09.1':
          and 'not human visual-owner approval' in visual.get('policy','').lower()
          and 'remain separate and hold' in visual.get('policy','').lower(),
          '2026.11.09.1 Book baseline must retain exact source, scope, strict matrix and independent visual-review HOLD')
+elif visual.get('release')=='2026.11.11.4':
+    # PR #707 has a distinct owner-approved Practice visual reference.
+    # Bind it to the exact source and strict full-screen matrix while keeping
+    # every independent accessibility/device/SME/provider/production gate separate.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.11.4_PR707.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.11.4'
+         and visual.get('commit')=='f4169ae6227d1e827cdf6ef9ebe0cb23db754b29'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and visual.get('referenceCaptureToolchain')=={
+             'framework':'@playwright/test','version':'1.64.1','browser':'chromium',
+             'referenceSourceSha':visual['commit']}
+         and 'STATUS: OWNER VISUAL APPROVAL' in review_current
+         and visual['commit'] in review_current
+         and '43139395342' in review_current
+         and '13908843044' in review_current
+         and 'sha256:9d4fdd44b0507e3c099110480f0946727ec71524a045c5a1c011dd8183a28580' in review_current
+         and '48 unchanged captures match the existing reference' in review_current
+         and 'All four viewports, thirteen surfaces, and the strict 12-pixel limit are retained' in review_current
+         and 'visualOwnerApproved=false' in review_current
+         and 'Real assistive-technology, physical-device, Windows signing, SME, learner-outcome, provider/NZQA, and production reviews remain **HOLD**.' in review_current
+         and 'Owner-authorized technical visual baseline' in visual.get('policy','')
+         and 'remain HOLD' in visual.get('policy',''),
+         '2026.11.11.4 PR #707 visual baseline must retain its exact owner-approved Practice source, full strict matrix and separate external-review HOLDs')
 elif visual.get('release')=='2026.11.11.3':
     review_current=text('qa/VISUAL_REVIEW_2026.11.11.3.md')
     need(visual.get('ref')=='visual-baseline/2026.11.11.3'
