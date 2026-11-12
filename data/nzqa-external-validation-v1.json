@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.11.4",
+  "release": "2026.11.12.1",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.11.4.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.12.1.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "boundary": "Release 2026.11.11.4 technical candidate 3ed5fe6f02496f5a15be0629f7d467dd152e05bf does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority; G1–G8 remain pending-external.",
+  "boundary": "No exact-source technical candidate is retained for 2026.11.12.1; this does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority. G1–G8 remain pending-external.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -53,6 +53,18 @@
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
     "release": "2026.11.11.4",
+    "sourceSha": "3ed5fe6f02496f5a15be0629f7d467dd152e05bf",
+    "runtimeFingerprint": "sha256:28412c1891c7c7b93045892515aaab2a6a361b861f79714140f560e1340f245d"
+  },
+  "previousIssueNumber": 379,
+  "supersededCandidate": {
+    "release": "2026.10.22.2",
+    "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
+    "runtimeFingerprint": "sha256:4767c50814cfe576891a3eb6f4de34a1d451378709c43a8988e2e57c540cf4c9"
+  },
+  "candidate": null,
+  "previousPreviousCandidate": {
+    "release": "2026.11.11.4",
     "sourceSha": "e407281018e898aab4034f73885468ec019489c0",
     "runtimeFingerprint": "sha256:582a5e621d4e7d07dcdc60d4c223a27727c54d8f6376e43e9e76e1156a444661",
     "candidateRunId": 43094122600,
@@ -61,27 +73,5 @@
     "artifactName": "physical-pwa-candidate-e407281018e898aab4034f73885468ec019489c0",
     "artifactDigest": "sha256:36668f5710fa0843f791f0320637bdd7041be7799b6d6701f7ae4c8c5b9c68d1",
     "artifactExpiresAt": "2027-02-09T20:11:15Z"
-  },
-  "previousIssueNumber": 379,
-  "supersededCandidate": {
-    "release": "2026.10.22.2",
-    "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
-    "runtimeFingerprint": "sha256:4767c50814cfe576891a3eb6f4de34a1d451378709c43a8988e2e57c540cf4c9"
-  },
-  "candidate": {
-    "release": "2026.11.11.4",
-    "sourceSha": "3ed5fe6f02496f5a15be0629f7d467dd152e05bf",
-    "runtimeFingerprint": "sha256:28412c1891c7c7b93045892515aaab2a6a361b861f79714140f560e1340f245d"
-  },
-  "previousPreviousCandidate": {
-    "release": "2026.11.11.2",
-    "sourceSha": "7c6587c5488bd764a6ae0a7afb2cbdfb252857d5",
-    "runtimeFingerprint": "sha256:1f3ee0bed1077c91562f83050e6642d80a01b39f9077f54a6b06c84be1f17c09",
-    "candidateRunId": 42970827493,
-    "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13833053386,
-    "artifactName": "physical-pwa-candidate-7c6587c5488bd764a6ae0a7afb2cbdfb252857d5",
-    "artifactDigest": "sha256:1c95065510d5b702c669b63630f50ac3f50ed662b77151c50a738859cf1d39a0",
-    "artifactExpiresAt": "2027-02-09T06:12:41Z"
   }
 }
