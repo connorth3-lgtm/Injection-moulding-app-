@@ -280,11 +280,9 @@ test('Learn hub shows the unified compact lesson catalogue under strict CSP',asy
 test('Practice hub keeps compact left-aligned mobile cards under strict CSP',async({page})=>{
   await openApp(page);
   await openHub(page,'Practice','#scenarios .mm-practice-hub');
-  await expectReadableTiles(page,'#scenarios .mm-practice-hub',4);
+  await expectReadableTiles(page,'#scenarios .mm-practice-hub',3);
   await expectFullWidthPrimaryAction(page,'#scenarios .mm-practice-hub');
-  const materialLabs=page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="material-labs"]');
-  await expect(materialLabs).toContainText('Material Behaviour Labs');
-  await expect(materialLabs).toContainText('Choose a material case');
+  await expect(page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="material-labs"]')).toHaveCount(0);
   await page.screenshot({path:'qa-artifacts/mobile-practice-hub-412x915.png',fullPage:true});
   await materialLabs.click();
   await expect(page.locator('#materialLabs')).toBeVisible();
