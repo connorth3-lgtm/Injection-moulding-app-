@@ -1,27 +1,27 @@
 # MouldMaster 2026.11.11.4 — external validation status
 
-**STATUS: TECHNICAL HOLD — exact-head producer and browser/quality gates are not yet independently verified. All seven external review streams remain HOLD.**
+**STATUS: SOFTWARE-ONLY PASS — all seven external review streams remain HOLD.**
 
-This index records the Practice tab reorganization and release-specific software evidence. Staged artifact metadata does not establish a completed software candidate or any human, device, Windows distribution, SME, learner-outcome or provider validation.
+This index records the Practice tab reorganization and release-specific software evidence. Automated checks verified the exact-source technical candidate; this record does not establish any human, device, Windows distribution, SME, learner-outcome or provider validation.
 
 ## Release scope
 
-The Practice hub now presents the common troubleshooting entry points first, keeps specialist tools in an optional section, and removes duplicated navigation. Process Data practice starts with a guided 14-case path; the larger 50- and 200-case libraries remain available as advanced options. Mould Master case entry is split into three steps, with optional identifiers and linked context kept out of the main path. Saved linked evidence opens automatically when present.
+The Practice hub now presents the common troubleshooting entry points first, keeps specialist tools in an optional section, and removes duplicated navigation. Process Data practice starts with a guided 14-case path; the larger 50- and 200-case libraries remain available as advanced options. Mould Master case entry is split into three steps, with optional identifiers and linked context kept out of the main path. Saved linked evidence is loaded for the selected case; optional evidence stays behind its disclosure.
 
 ## Candidate identity
 
-**Technical candidate: HOLD — software-only evidence is pending.**
+**Technical candidate:** **PASS — software-only**
 
 - Release: 2026.11.11.4
-- Producer workflow: Pre-merge Public Candidate, run `43094122600` — still in progress when this record was staged.
-- Artifact: `13888639947` — retained from the producer run; retention alone is not a pass.
-- Source: `e407281018e898aab4034f73885468ec019489c0`
-- Runtime fingerprint: `sha256:582a5e621d4e7d07dcdc60d4c223a27727c54d8f6376e43e9e76e1156a444661`
-- Artifact digest: `sha256:36668f5710fa0843f791f0320637bdd7041be7799b6d6701f7ae4c8c5b9c68d1`
-- Artifact expiry: `2027-02-09T20:11:15Z`
-- Exact-head Mobile Browser QA and Question Quality 50-Pass are not yet both verified for the staged candidate.
+- Producer workflow: Pre-merge Public Candidate, run `43156072826`.
+- Artifact: `13916345882` — retained from the exact-source producer run.
+- Source: `3ed5fe6f02496f5a15be0629f7d467dd152e05bf`
+- Runtime fingerprint: `sha256:28412c1891c7c7b93045892515aaab2a6a361b861f79714140f560e1340f245d`
+- Artifact digest: `sha256:aaf1c9ae1c9f0a6e4331cf7da6b20d693932a4135fed4868c07bc33b1de28dd2`
+- Artifact expiry: `2027-02-10T04:37:58Z`
+- Mobile Browser QA run `43156072811` and Question Quality 50-Pass run `43156072829` passed on this exact source.
 
-The retained artifact is bound to its stated source. It does not create human, physical-device, assistive-technology, Windows signing, provider, accreditation or production authorization. Exact-source producer success and software quality must be confirmed before a technical PASS is recorded.
+The retained candidate establishes software-controlled readiness for this exact source only. It does not create human, physical-device, assistive-technology, Windows signing, provider, accreditation or production authorization.
 
 ## Release-specific review packets
 

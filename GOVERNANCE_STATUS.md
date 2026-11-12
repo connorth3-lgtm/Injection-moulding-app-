@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: release 2026.11.11.4 source e407281018e898aab4034f73885468ec019489c0 artifact 13888639947 and producer run 43094122600 are staged as technical metadata only; producer success and quality are NOT independently verified. No source, human, device or production approval is implied. |
-| Behavioral / browser | **fail** | HOLD: browser and question gates for release 2026.11.11.4 source e407281018e898aab4034f73885468ec019489c0 must be independently verified on the staged candidate; prior green workflows do not transfer to a different exact source. |
+| Static / contract | **pass** | Software-only exact-source contract and retained candidate identity passed for release 2026.11.11.4, source 3ed5fe6f02496f5a15be0629f7d467dd152e05bf, producer run 43156072826, artifact 13916345882. No human, device, provider, Windows distribution or production authorization is implied. |
+| Behavioral / browser | **pass** | Mobile Browser QA run 43156072811 and Question Quality 50-Pass run 43156072829 passed on exact source 3ed5fe6f02496f5a15be0629f7d467dd152e05bf for release 2026.11.11.4. Browser emulation and automated question checks do not establish physical-device, real assistive-technology, learner-outcome, provider, accreditation or production approval. |
 | External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.11.4. |

@@ -6,7 +6,7 @@
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "boundary": "Release 2026.11.11.4 technical candidate source e407281018e898aab4034f73885468ec019489c0 does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
+  "boundary": "Release 2026.11.11.4 technical candidate 3ed5fe6f02496f5a15be0629f7d467dd152e05bf does not establish any of NZQA/provider G1–G8 external gates or assessment/accreditation authority; G1–G8 remain pending-external.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -52,9 +52,15 @@
   "evidence": null,
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
-    "release": "2026.11.11.3",
-    "sourceSha": "e230bfd9347b8d5e93adca1b8b61d6d35a25a9ac",
-    "runtimeFingerprint": "sha256:a8674ff28178339b66c82b09a716d4deeee21d3934c66c36ff662e1397a9bc61"
+    "release": "2026.11.11.4",
+    "sourceSha": "e407281018e898aab4034f73885468ec019489c0",
+    "runtimeFingerprint": "sha256:582a5e621d4e7d07dcdc60d4c223a27727c54d8f6376e43e9e76e1156a444661",
+    "candidateRunId": 43094122600,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 13888639947,
+    "artifactName": "physical-pwa-candidate-e407281018e898aab4034f73885468ec019489c0",
+    "artifactDigest": "sha256:36668f5710fa0843f791f0320637bdd7041be7799b6d6701f7ae4c8c5b9c68d1",
+    "artifactExpiresAt": "2027-02-09T20:11:15Z"
   },
   "previousIssueNumber": 379,
   "supersededCandidate": {
@@ -64,8 +70,8 @@
   },
   "candidate": {
     "release": "2026.11.11.4",
-    "sourceSha": "e407281018e898aab4034f73885468ec019489c0",
-    "runtimeFingerprint": "sha256:582a5e621d4e7d07dcdc60d4c223a27727c54d8f6376e43e9e76e1156a444661"
+    "sourceSha": "3ed5fe6f02496f5a15be0629f7d467dd152e05bf",
+    "runtimeFingerprint": "sha256:28412c1891c7c7b93045892515aaab2a6a361b861f79714140f560e1340f245d"
   },
   "previousPreviousCandidate": {
     "release": "2026.11.11.2",

@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "fail",
+    "technicalAutomation": "pass",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "fail",
-      "meaning": "HOLD: release 2026.11.11.4 source e407281018e898aab4034f73885468ec019489c0 artifact 13888639947 and producer run 43094122600 are staged as technical metadata only; producer success and quality are NOT independently verified. No source, human, device or production approval is implied."
+      "status": "pass",
+      "meaning": "Software-only exact-source contract and retained candidate identity passed for release 2026.11.11.4, source 3ed5fe6f02496f5a15be0629f7d467dd152e05bf, producer run 43156072826, artifact 13916345882. No human, device, provider, Windows distribution or production authorization is implied."
     },
     "behavioralBrowser": {
-      "status": "fail",
-      "meaning": "HOLD: browser and question gates for release 2026.11.11.4 source e407281018e898aab4034f73885468ec019489c0 must be independently verified on the staged candidate; prior green workflows do not transfer to a different exact source."
+      "status": "pass",
+      "meaning": "Mobile Browser QA run 43156072811 and Question Quality 50-Pass run 43156072829 passed on exact source 3ed5fe6f02496f5a15be0629f7d467dd152e05bf for release 2026.11.11.4. Browser emulation and automated question checks do not establish physical-device, real assistive-technology, learner-outcome, provider, accreditation or production approval."
     },
     "externalHumanDevice": {
       "status": "hold",
