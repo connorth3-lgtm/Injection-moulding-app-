@@ -95,7 +95,7 @@ for(let run=1;run<=500;run++){
       await expect(page.locator('#lesson')).toBeVisible();await expect(page.locator('#lesson .mm-simple-lesson-hero')).toBeVisible();
     }else if(family==='process-data'){
       await page.evaluate(()=>switchView('scenarios'));const b=page.locator('#scenarios [data-mm-hub-action="process-data"]');await expect(b).toBeVisible();await b.click();
-      await expect(page.locator('#processDataLabs')).toBeVisible();await expect(page.locator('#processDataLabs').getByRole('heading',{name:'Practise with process data'})).toBeVisible();
+      await expect(page.locator('#processDataLabs')).toBeVisible();await expect(page.locator('#processDataLabs').getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
     }else if(family==='shell'){
       await page.evaluate(()=>{window.MM_APP_SHELL.dashboard.compose();window.MM_APP_SHELL.dashboard.compose()});
       await expect(page.locator('#dashboard .mm-today-focus')).toHaveCount(1);

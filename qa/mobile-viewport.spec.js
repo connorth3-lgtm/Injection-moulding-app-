@@ -152,12 +152,17 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await openPracticeHub(page);
       await openPracticeAction(page,'process-data');
       await expect(page.locator('#processDataLabs')).toBeVisible();
-      await expect(page.locator('#processDataLabs').getByRole('heading',{name:'Practise with process data'})).toBeVisible();
-      await expect(page.getByRole('button',{name:'Browse 50 cases'})).toBeVisible();
-      await expect(page.getByRole('button',{name:'Start a guided case'})).toBeVisible();
+      await expect(page.locator('#processDataLabs').getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
+      const root=page.locator('#processDataLabs');
+      const more=root.locator('.pd-more-libraries');
+      await expect(root.locator('[data-pdlab-guided]')).toBeVisible();
+      await expect(more.locator('summary')).toBeVisible();
+      await expect(more.getByRole('button',{name:/Browse 50 cases/})).toBeHidden();
       await expectOnlyCurrent(page,'Practice');
 
-      await page.getByRole('button',{name:'Browse 50 cases'}).click();
+      await more.locator('summary').click();
+      await expect(more.getByRole('button',{name:/Browse 50 cases/})).toBeVisible();
+      await more.getByRole('button',{name:/Browse 50 cases/}).click();
       await expect(page.getByRole('heading',{name:'50-case data deep dive'})).toBeVisible();
       await expect(page.locator('.dd50-card')).toHaveCount(50);
       await page.locator('[data-dd50-kind]').selectOption('quality-sensor');
@@ -174,8 +179,14 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await openApp(page);
       await openPracticeHub(page);
       await openPracticeAction(page,'process-data');
-      await expect(page.getByRole('button',{name:'Browse the 200-case atlas'})).toBeVisible();
-      await page.getByRole('button',{name:'Browse the 200-case atlas'}).click();
+      const root=page.locator('#processDataLabs');
+      const more=root.locator('.pd-more-libraries');
+      await expect(root.getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
+      await expect(more.locator('summary')).toBeVisible();
+      await expect(more.getByRole('button',{name:/Browse the 200-case atlas/})).toBeHidden();
+      await more.locator('summary').click();
+      await expect(more.getByRole('button',{name:/Browse the 200-case atlas/})).toBeVisible();
+      await more.getByRole('button',{name:/Browse the 200-case atlas/}).click();
       await expect(page.getByRole('heading',{name:'200 advanced process-data cases'})).toBeVisible();
       await expect(page.locator('.at20-card')).toHaveCount(200);
       await page.locator('[data-at20-pass]').selectOption('16');

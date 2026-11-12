@@ -448,7 +448,7 @@ test('Practice nested labs, data diagnosis and assessments keep working illustra
   await page.evaluate(()=>switchView('scenarios'));
   await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="process-data"]').click();
   const data=page.locator('#processDataLabs');
-  await expect(data.getByRole('heading',{name:'Practise with process data'})).toBeVisible();
+  await expect(data.getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
   await expect(data.locator('.pd-hero > .mm-reference-practice-tool-art')).toBeVisible();
   await expect(data.locator(':scope > .mm-practice-tool-return')).toHaveCount(1);
   await expect(data.locator('[data-pdlab-guided]')).toBeVisible();
@@ -467,7 +467,7 @@ test('Practice nested labs, data diagnosis and assessments keep working illustra
   await data.locator('[data-pd-home]').click();
   await expect(data.locator('.pd-hero > .mm-reference-practice-tool-art')).toHaveCount(1);
   await data.locator('[data-pd-lab-home]').click();
-  await expect(data.getByRole('heading',{name:'Practise with process data'})).toBeVisible();
+  await expect(data.getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
 
   for(const [action,root,hero,start,back] of [
     ['diagnostic-labs','#diagnosticLabs','.dl-hero','[data-dl-start]','[data-dl-home]'],
