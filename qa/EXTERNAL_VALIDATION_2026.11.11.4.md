@@ -14,14 +14,16 @@ The Practice hub now presents the common troubleshooting entry points first, kee
 
 - Release: 2026.11.11.4
 - Producer workflow: Pre-merge Public Candidate, run `43156072826`.
-- Artifact: `13916345882` — retained from the exact-source producer run.
-- Source: `3ed5fe6f02496f5a15be0629f7d467dd152e05bf`
-- Runtime fingerprint: `sha256:28412c1891c7c7b93045892515aaab2a6a361b861f79714140f560e1340f245d`
+- artifact `13916345882` — retained from the exact-source producer run.
+- source `3ed5fe6f02496f5a15be0629f7d467dd152e05bf`
+- runtime fingerprint `sha256:28412c1891c7c7b93045892515aaab2a6a361b861f79714140f560e1340f245d`
 - Artifact digest: `sha256:aaf1c9ae1c9f0a6e4331cf7da6b20d693932a4135fed4868c07bc33b1de28dd2`
 - Artifact expiry: `2027-02-10T04:37:58Z`
 - Mobile Browser QA run `43156072811` and Question Quality 50-Pass run `43156072829` passed on this exact source.
 
 The retained candidate establishes software-controlled readiness for this exact source only. It does not create human, physical-device, assistive-technology, Windows signing, provider, accreditation or production authorization.
+
+All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain **HOLD**.
 
 ## Release-specific review packets
 
