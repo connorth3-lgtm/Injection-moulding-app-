@@ -7,7 +7,7 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.11.12.2';
+const VERSION='2026.11.12.3';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
 const originalRenderScenarios=renderScenarios;
 
@@ -1233,7 +1233,7 @@ function practiceTopicLabel(topic){
 function practiceActionFor(rec){
   const topic=String(rec?.topic||'').toLowerCase();
   const suggested=String(rec?.suggestedActivity||'').toLowerCase();
-  if(/material|moisture|dry|rheolog|viscos|polymer|resin/.test(topic))return 'material-labs';
+  if(/material|moisture|dry|rheolog|viscos|polymer|resin/.test(topic))return 'materials';
   if(['discriminating-scenario-practice','retrieval-practice','timestamped-practice-or-assessment','different-context-scenario'].includes(suggested))return 'scenario-detail';
   if(suggested==='guided-retrieval-and-feedback'||rec?.actionType==='stabilize-regression')return 'diagnostic-labs';
   if(suggested==='different-practice-format'||rec?.actionType==='evidence-confirmation')return 'labs';
@@ -1250,6 +1250,7 @@ function practiceRecommendationLabel(rec){
   })[rec?.actionType]||'Recommended next';
 }
 function practiceRecommendationCta(action,rec){
+  if(action==='materials')return 'Open Materials →';
   if(action==='material-labs')return 'Start material practice →';
   if(action==='diagnostic-labs')return 'Start diagnostic practice →';
   if(action==='labs')return 'Choose a practice lab →';
@@ -1665,10 +1666,9 @@ function practiceHubMarkup(){
     <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1>What should I practise next?</h1><p>${esc(practiceStatusLine(plan))}</p></header>
     ${recommendedPracticeMarkup(plan,done)}
     ${practicePlanRows(plan)}
-    <section class="mm-hub-section"><div class="mm-hub-section-head"><span class="eyebrow">Choose by the job you want to practise</span><h2>Four clear practice areas</h2><p>Pick a task below. Practice is for learning; assessments stay separate. ${scenarioCount} shop-floor scenarios are available.</p></div><div class="mm-hub-grid">
+    <section class="mm-hub-section"><div class="mm-hub-section-head"><span class="eyebrow">Choose by the job you want to practise</span><h2>Three clear practice areas</h2><p>Pick a task below. Practice is for learning; assessments stay separate. ${scenarioCount} shop-floor scenarios are available.</p></div><div class="mm-hub-grid">
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="problem-practice"><span class="eyebrow">Investigate a fault · 5–15 min</span><b>Moulding problem practice</b><small>Investigate an observed defect or make a decision in a training scenario.</small><span class="mm-hub-tile-action">Choose a problem activity →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="process-data"><span class="eyebrow">Read process evidence · 10–20 min</span><b>Process data lab</b><small>Start with synthetic examples, or prepare and analyse a local shot-data file.</small><span class="mm-hub-tile-action">Work with process data →</span></button>
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="material-labs"><span class="eyebrow">Material-specific practice · 5–15 min</span><b>Material Behaviour Labs</b><small>Compare how polymer family, moisture, reinforcement, thermal history and recycled-feedstock variability change the diagnostic decision.</small><span class="mm-hub-tile-action">Choose a material case →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Visual and simulator practice · 5–15 min</span><b>Virtual moulding cell and simulator</b><small>Inspect a training cell or investigate a guided case using the visual model and simulator.</small><span class="mm-hub-tile-action">Choose a virtual tool →</span></button>
     </div></section>
   </div>`;
