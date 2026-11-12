@@ -177,8 +177,8 @@ for(const width of [320,360,390,412]){
     await expect(page.locator('#scenarios .mm-reference-title')).toHaveText('Practice');
     await expect(page.locator('#scenarios .mm-reference-practice-list')).toHaveCount(0);
     const activities=page.locator('#scenarios .mm-unified-practice-card');
-    await expect(activities).toHaveCount(3);
-    await expect(activities.locator('.mm-reference-photo')).toHaveCount(3);
+    await expect(activities).toHaveCount(4);
+    await expect(activities.locator('.mm-reference-photo')).toHaveCount(4);
     await expect(activities.filter({hasText:'Question Centre'})).toHaveCount(0);
     await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
 
@@ -200,13 +200,13 @@ test('unified practice illustrations load locally without external dependencies'
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  await expect(page.locator('#scenarios .mm-reference-practice-art')).toHaveCount(3);
+  await expect(page.locator('#scenarios .mm-reference-practice-art')).toHaveCount(4);
   await page.waitForFunction(()=>document.documentElement.classList.contains('mm-reference-photo-ready'));
   const tiles=await page.locator('#scenarios .mm-reference-practice-art.mm-reference-photo').evaluateAll(nodes=>nodes.map(el=>({
     tile:Number(el.dataset.mmPhotoIndex),
     background:getComputedStyle(el).backgroundImage
   })));
-  expect(tiles.map(row=>row.tile)).toEqual([20,23,19]);
+  expect(tiles.map(row=>row.tile)).toEqual([20,23,3,19]);
   expect(tiles.every(row=>row.background.includes('mockup-reference-tiles.webp'))).toBe(true);
 });
 
@@ -218,12 +218,14 @@ for(const width of [360,810]){
     const hub=page.locator('#scenarios .mm-practice-hub');
     await expect(hub).toBeVisible();
     const activities=hub.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-reference-practice-choice');
-    await expect(activities).toHaveCount(3);
-    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(3);
+    await expect(activities).toHaveCount(4);
+    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(4);
+    await expect(hub.locator('[data-mm-hub-action="material-labs"]')).toContainText('Material Behaviour Labs');
+    await expect(hub.locator('[data-mm-hub-action="material-labs"]')).toContainText('Choose a material case');
     const recommended=hub.locator('.mm-reference-practice-feature');
     await expect(recommended.locator(':scope > .mm-reference-practice-feature-art')).toHaveCount(1);
     await page.evaluate(()=>{window.MM_REFERENCE_LAYOUT.refresh();window.MM_REFERENCE_LAYOUT.refresh()});
-    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(3);
+    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(4);
     const sizing=await activities.evaluateAll(nodes=>({
       overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth),
       touch:nodes.every(el=>el.getBoundingClientRect().height>=44),
@@ -233,11 +235,11 @@ for(const width of [360,810]){
     expect(sizing.overflow).toBeLessThanOrEqual(2);
     expect(sizing.touch&&sizing.descriptions&&sizing.actions).toBe(true);
 
-    // Actual Lab button and modal action listeners must survive decoration.
+    // Virtual lab button and modal action listeners must survive decoration.
     await hub.locator('[data-mm-hub-action="labs"]').click();
     const labPicker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid[data-mm-reference-practice-picker="modal"]');
-    await expect(labPicker.locator('button.mm-reference-practice-choice')).toHaveCount(3);
-    await expect(labPicker.locator(':scope > button > .mm-reference-practice-art')).toHaveCount(3);
+    await expect(labPicker.locator('button.mm-reference-practice-choice')).toHaveCount(2);
+    await expect(labPicker.locator(':scope > button > .mm-reference-practice-art')).toHaveCount(2);
     await expect(labPicker.locator('button').first()).toHaveCSS('color','rgb(9, 43, 66)');
     await labPicker.locator('[data-mm-hub-action="simulator"]').click();
     await expect(page.locator('#simulator')).toBeVisible();
