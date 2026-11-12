@@ -20,7 +20,7 @@ required_hub = {
     "scenario rotation": "nextScenarioIndex",
     "process-data practice": 'data-mm-hub-action="process-data"',
     "combined moulding problem practice": 'data-mm-hub-action="problem-practice"',
-    "material behaviour practice": 'data-mm-hub-action="material-labs"',
+    "material recommendations return to Materials": "return 'materials'",
     "virtual labs practice": 'data-mm-hub-action="labs"',
     "personalisation refresh": "mm:domains-ready",
     "recommender activity routing": "suggestedActivity",
@@ -46,10 +46,10 @@ if 'data-mm-hub-action="question-centre"' in practice_markup or "169 governed pr
     failures.append("Practice must not expose a duplicate Question Centre or question-bank count")
 if "3 tools shown" in practice_markup:
     failures.append("Practice hub must not show a stale tool count")
-if "Four clear practice areas" not in practice_markup:
-    failures.append("Practice hub must explain its four focused practice areas")
-if 'data-mm-hub-action="material-labs"' not in practice_markup or "Material Behaviour Labs" not in practice_markup or "Choose a material case" not in practice_markup:
-    failures.append("Practice hub must provide a direct entry to Material Behaviour Labs")
+if "Three clear practice areas" not in practice_markup:
+    failures.append("Practice hub must explain its three focused practice areas")
+if 'data-mm-hub-action="material-labs"' in practice_markup or "Material Behaviour Labs" in practice_markup or "Choose a material case" in practice_markup:
+    failures.append("Practice hub must keep Material Behaviour Labs out of Practice and grouped under Materials")
 picker_start = hub.index("}else if(kind==='labs'){")
 picker_end = hub.index("}else if(kind==='questions'){", picker_start)
 if 'data-mm-hub-action="material-labs"' in hub[picker_start:picker_end]:
