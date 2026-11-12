@@ -132,10 +132,9 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expect(page.locator('#defects [data-mm-dx-action="choose"]').first()).toBeVisible();
       await expect(page.locator('#modal')).toHaveClass(/hidden/);
       await expectOnlyCurrent(page,'Practice');
-      // Home uses the same problem-practice route; Mould Master stays available inside diagnosis.
-      await page.evaluate(()=>switchView('dashboard'));
-      await page.locator('#dashboard [data-mm-home-action="mould-master"]').click();
-      await page.locator('#dashboard [data-mm-home-action="mould-master"]').click();
+      // Mould Master remains available under the optional Practice tools disclosure.
+      await openPracticeHub(page);
+      await openPracticeAction(page,'problem-practice');
       const problemPractice=page.locator('#scenarios .mm-problem-practice');
       await expect(problemPractice).toBeVisible();
       const moreTools=problemPractice.locator('details.mm-practice-more-tools');
