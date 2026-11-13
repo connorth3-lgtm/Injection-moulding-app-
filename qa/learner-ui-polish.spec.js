@@ -572,7 +572,7 @@ test('Defect Finder and Troubleshooting Coach share an evidence-gated offline ca
 });
 
 
-test('tablet bottom navigation keeps five touch targets on one row and clears the page content',async({page})=>{
+test('tablet bottom navigation keeps six touch targets on one row and clears the page content',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
   for(const width of [701,768,810,900]){
@@ -597,9 +597,9 @@ test('tablet bottom navigation keeps five touch targets on one row and clears th
         overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
       };
     });
-    expect(data.count,'primary button count at '+width).toBe(5);
+    expect(data.count,'primary button count at '+width).toBe(6);
     expect(data.rows,'one visual row at '+width).toBe(1);
-    expect(data.tracks,'five CSS tracks at '+width).toBe(5);
+    expect(data.tracks,'six CSS tracks at '+width).toBe(6);
     expect(data.minimumHeight,'minimum touch height at '+width).toBeGreaterThanOrEqual(44);
     expect(data.minimumWidth,'minimum touch width at '+width).toBeGreaterThanOrEqual(44);
     expect(data.contained,'all buttons inside bottom nav at '+width).toBeTruthy();
