@@ -51,6 +51,10 @@ If Listen reports a speech engine or voice problem, open Android Settings > Acce
 Text-to-speech output, select an installed engine, and download an English voice. Return to
 the app and tap Listen again; the app now reports setup failures instead of waiting silently.
 
+## Current hosted content
+
+The Android shell remains version `2026.11.08.1` and loads the governed learner preview at `https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/`. The hosted web release is `2026.11.13.2`, which includes the injection-moulding maths practice from PR #712. Open the app online and refresh to load the latest hosted content; web-only content updates do not require a new native shell version.
+
 ## Validation boundary
 
 The native Android project is a technical preview integration. It still requires a real
