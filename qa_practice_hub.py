@@ -41,6 +41,8 @@ if "group:'materials'" not in material_nav or "mobileGroup:'materials'" not in m
     failures.append("Material Behaviour Labs must keep Materials as its parent navigation area")
 if "practiceOwned" in hub:
     failures.append("Primary navigation ownership must not misclassify Material Behaviour Labs as Practice")
+if "if(action==='material-labs')" in hub:
+    failures.append("Practice recommendations must not add a separate Material Behaviour Labs CTA")
 
 learn_launcher = 'data-mm-hub-action="question-centre"'
 if learn_launcher not in hub:

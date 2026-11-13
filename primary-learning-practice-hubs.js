@@ -1239,7 +1239,6 @@ function practiceRecommendationLabel(rec){
 }
 function practiceRecommendationCta(action,rec){
   if(action==='materials')return 'Open Materials →';
-  if(action==='material-labs')return 'Start material practice →';
   if(action==='diagnostic-labs')return 'Start diagnostic practice →';
   if(action==='labs')return 'Choose a practice lab →';
   const suggested=String(rec?.suggestedActivity||'').toLowerCase();
