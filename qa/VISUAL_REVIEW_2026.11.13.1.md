@@ -10,7 +10,7 @@
 - Pixel threshold: 12 pixels.
 - Scope: remove the generic unpersonalized quick-practice card, keep learner-specific recommendations, clarify that the shop-floor route opens the full scenario bank, and distinguish unscored guided walkthroughs from scored diagnostic labs.
 
-This packet records a technical comparison reference for the Practice entry-point and label cleanup. It does not record visual-owner approval. Comparison rule: all 52 current-versus-reference captures must be retained; masking or skipped surfaces invalidate the matrix. The current candidate's result is recorded below.
+This packet records a technical comparison reference for the Practice entry-point and label cleanup. It does not record visual-owner approval. Comparison rule: all 52 current-versus-reference captures must be retained; masking or skipped surfaces invalidate the matrix. The automated candidate run retained all 52 comparisons with no masking or skipped surfaces.
 
 ## Review boundary
 
