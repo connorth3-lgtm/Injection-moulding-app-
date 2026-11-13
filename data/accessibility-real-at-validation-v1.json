@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.13.1",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.13.1.md",
-  "sourceSha": "0e1bb220a7a98638b56b65d8af5aa9aa553c6fbb",
-  "runtimeFingerprint": "sha256:08f87546f51734c15ea5bce2243937350a6bc3f49a617a38e9f8b44a369ee4b9",
+  "release": "2026.11.13.2",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.13.2.md",
+  "sourceSha": "21fac3dc056af2989fda93dcafd4b6235f6313ea",
+  "runtimeFingerprint": "sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb",
   "status": "pending-real-at-validation",
-  "boundary": "Release 2026.11.13.1 is bound to retained exact-source software candidate 0e1bb220a7a98638b56b65d8af5aa9aa553c6fbb with public-runtime fingerprint sha256:08f87546f51734c15ea5bce2243937350a6bc3f49a617a38e9f8b44a369ee4b9. Automated software checks passed; all real assistive-technology tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded. Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.11.13.2 is bound to exact retained learner-runtime candidate 21fac3dc056af2989fda93dcafd4b6235f6313ea; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -307,10 +307,10 @@
   },
   "previousCandidate": {
     "release": "2026.11.13.1",
-    "sourceSha": "5857e23d6bbd0fd46ea5ef9171a43924f16de0c4",
-    "runtimeFingerprint": "sha256:a7cf452cf0b8dcf7fd8a01542d2d1902d95d2988a05a4076c44613b4d57b6891"
+    "sourceSha": "0e1bb220a7a98638b56b65d8af5aa9aa553c6fbb",
+    "runtimeFingerprint": "sha256:08f87546f51734c15ea5bce2243937350a6bc3f49a617a38e9f8b44a369ee4b9"
   },
-  "technicalCandidateStatus": "PASS — exact-source software-only candidate 5857e23d6bbd0fd46ea5ef9171a43924f16de0c4 passed producer run 43343196018, Mobile Browser QA run 43343196066, and Question Quality 50-Pass run 43343196008; genuine real assistive-technology validation remains pending.",
+  "technicalCandidateStatus": "HOLD — the 2026.11.13.2 artifact is retained for validation, but exact-head software quality has not yet been independently verified; genuine real assistive-technology validation remains pending.",
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",

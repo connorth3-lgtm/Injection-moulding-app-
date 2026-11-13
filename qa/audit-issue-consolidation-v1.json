@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.13.1",
+  "release": "2026.11.13.2",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "0e1bb220a7a98638b56b65d8af5aa9aa553c6fbb",
+  "candidateSourceSha": "21fac3dc056af2989fda93dcafd4b6235f6313ea",
   "scope": "Remove duplicate and unnecessary Practice entry points, keep Material Behaviour Labs and their return path under Materials, preserve the distinct fault, process-data and simulator activities, and retain all six material cases, completion records and non-production boundaries.",
-  "approvalBoundary": "HOLD: release 2026.11.13.1 is a software-only educational technical-preview candidate. All seven independent review streams remain HOLD and production authority remains advisory-only. Automated checks do not establish human, device, accessibility, Windows-signing, SME, learner-outcome, provider/NZQA or production approval.",
+  "approvalBoundary": "HOLD: release 2026.11.13.2 is an educational technical-preview candidate; automated exact-head quality has not yet been independently verified. All seven independent review streams remain HOLD and production authority remains advisory-only. Automated checks do not establish human, device, accessibility, Windows-signing, SME, learner-outcome, provider/NZQA or production approval.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,

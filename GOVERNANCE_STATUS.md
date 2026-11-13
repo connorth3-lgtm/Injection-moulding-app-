@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Software-only exact-source contract and retained candidate identity passed for release 2026.11.13.1, source 0e1bb220a7a98638b56b65d8af5aa9aa553c6fbb, fingerprint sha256:08f87546f51734c15ea5bce2243937350a6bc3f49a617a38e9f8b44a369ee4b9, producer run 43350352284, artifact 14003308074. No human, device, provider, Windows distribution or production authorization is implied. |
-| Behavioral / browser | **pass** | Mobile Browser QA run 43350352261 and Question Quality 50-Pass run 43350352255 passed on exact source 0e1bb220a7a98638b56b65d8af5aa9aa553c6fbb for release 2026.11.13.1. Chromium and WebKit substantive suites, visual and cross-browser QA, reachability, and all five reliability shards passed. Automated browser and question checks do not establish physical-device, real assistive-technology, learner-outcome, provider, accreditation or production approval. |
+| Static / contract | **fail** | HOLD: release 2026.11.13.2 source 21fac3dc056af2989fda93dcafd4b6235f6313ea artifact 14010198744 and producer 43367217924 are staged as technical metadata only; producer success and quality are NOT independently verified. No source, human, device or production approval is implied. |
+| Behavioral / browser | **fail** | HOLD: browser and question gates for release 2026.11.13.2 source 21fac3dc056af2989fda93dcafd4b6235f6313ea must be independently verified on the staged candidate; prior green workflows do not transfer to a different exact source. |
 | External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.13.1. |
