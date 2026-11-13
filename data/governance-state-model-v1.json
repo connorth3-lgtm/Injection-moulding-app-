@@ -346,15 +346,15 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "PASS — exact-source release 2026.11.13.3 artifact 14028262546 from producer run 43408836154, source 31be14643ba17c2bfc8a6126f4623f810060b22a, runtime fingerprint sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b verified as a retained software candidate. No human, device or production approval is implied."
+      "meaning": "PASS — release 2026.11.14.1 source 6b7f0cccd90e96fd36316cea9e963af1b411c3e1, fingerprint sha256:199f1401f1a3077628d50284922ee127e9bfa4e02fb146ae080056ba51818922, artifact 14038142104, from successful Pre-merge Public Candidate run 43427070078. This is technical release evidence only and does not imply source review, human, device or production approval."
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "PASS — release 2026.11.13.3 exact-head Mobile Browser QA run 43408836296 and Question Quality 50-Pass run 43408836387 passed for source 31be14643ba17c2bfc8a6126f4623f810060b22a. Browser software QA does not establish physical-device or human validation."
+      "meaning": "PASS — release 2026.11.14.1 Mobile Browser QA run 43427069808 and Question Quality 50-Pass run 43427070447 succeeded on exact source 6b7f0cccd90e96fd36316cea9e963af1b411c3e1. Browser software QA does not establish physical-device or human validation."
     },
     "externalHumanDevice": {
       "status": "hold",
-      "meaning": "All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.13.3."
+      "meaning": "All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.14.1."
     }
   }
 }
