@@ -4,13 +4,13 @@
 
 ## Reference and scope
 
-- Reference source: `53c9b1bac4d2af076f37968d9cf03113140b8e0c`
+- Reference source: `15e4ca566172a3ff5c5f9dc0d20fbf9228c784fe`
 - Reference branch: `visual-baseline/2026.11.13.1`
 - Capture set: 4 viewports × 13 surfaces = 52 viewport/surface captures.
 - Pixel threshold: 12 pixels.
-- Scope: remove the duplicate Material Behaviour Labs choice from Practice; retain access to the labs in Materials with the material catalogue and polymer-science lessons.
+- Scope: remove the generic unpersonalized quick-practice card, keep learner-specific recommendations, clarify that the shop-floor route opens the full scenario bank, and distinguish unscored guided walkthroughs from scored diagnostic labs.
 
-This packet records a technical comparison reference for the Practice/Materials grouping change. It does not record visual-owner approval. The new code must pass all 52 current-versus-reference comparisons with no masking or skipped surfaces.
+This packet records a technical comparison reference for the Practice entry-point and label cleanup. It does not record visual-owner approval. It does not record visual-owner approval. The new code must pass all 52 current-versus-reference comparisons with no masking or skipped surfaces.
 
 ## Review boundary
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "release": "2026.11.13.1",
-  "commit": "53c9b1bac4d2af076f37968d9cf03113140b8e0c",
+  "commit": "15e4ca566172a3ff5c5f9dc0d20fbf9228c784fe",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Technical preview reference for removing the duplicate Material Behaviour Labs choice from Practice and keeping those labs grouped under Materials. Compare all 52 viewport/surface captures at the unchanged 12-pixel threshold. This baseline is not visual-owner approval; the human visual-owner decision and all independent real-device, accessibility, SME, learner-outcome, provider and production reviews remain HOLD.",
+  "policy": "Technical preview reference for removing the generic unpersonalized quick-practice card, keeping learner-specific recommendations, clarifying the full shop-floor scenario bank, and distinguishing unscored guided practice from scored diagnostic labs. Compare all 52 viewport/surface captures at the unchanged 12-pixel threshold. This baseline is not visual-owner approval; the human visual-owner decision and all independent real-device, accessibility, SME, learner-outcome, provider and production reviews remain HOLD.",
   "ref": "visual-baseline/2026.11.13.1",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "53c9b1bac4d2af076f37968d9cf03113140b8e0c"
+    "referenceSourceSha": "15e4ca566172a3ff5c5f9dc0d20fbf9228c784fe"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",

@@ -617,11 +617,11 @@ elif visual.get('release')=='2026.11.11.4':
          and 'remain HOLD' in visual.get('policy',''),
          '2026.11.11.4 PR #707 visual baseline must retain its exact owner-approved Practice source, full strict matrix and separate external-review HOLDs')
 elif visual.get('release')=='2026.11.13.1':
-    # The Practice correction keeps Material Behaviour Labs grouped under Materials.
+    # Practice cleanup removes the unpersonalized duplicate and clarifies the scenario and diagnosis routes.
     # Pin the same complete technical comparison matrix and keep visual approval on HOLD.
     review_current=text('qa/VISUAL_REVIEW_2026.11.13.1.md')
     need(visual.get('ref')=='visual-baseline/2026.11.13.1'
-         and visual.get('commit')=='53c9b1bac4d2af076f37968d9cf03113140b8e0c'
+         and visual.get('commit')=='15e4ca566172a3ff5c5f9dc0d20fbf9228c784fe'
          and visual.get('maxDiffPixels')==12
          and [v.get('name') for v in visual.get('viewports',[])]==[
              'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
