@@ -4,7 +4,7 @@
 
 ## Reference and scope
 
-- Reference source: `15e4ca566172a3ff5c5f9dc0d20fbf9228c784fe`
+- Reference source: `f9474499ee88cca534575bd56e30fd092767de2f`
 - Reference branch: `visual-baseline/2026.11.13.1`
 - Capture set: 4 viewports × 13 surfaces = 52 viewport/surface captures.
 - Pixel threshold: 12 pixels.

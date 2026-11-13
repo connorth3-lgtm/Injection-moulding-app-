@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "release": "2026.11.13.1",
-  "commit": "15e4ca566172a3ff5c5f9dc0d20fbf9228c784fe",
+  "commit": "f9474499ee88cca534575bd56e30fd092767de2f",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -47,7 +47,7 @@
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "15e4ca566172a3ff5c5f9dc0d20fbf9228c784fe"
+    "referenceSourceSha": "f9474499ee88cca534575bd56e30fd092767de2f"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",

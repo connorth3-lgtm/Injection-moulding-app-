@@ -621,7 +621,7 @@ elif visual.get('release')=='2026.11.13.1':
     # Pin the same complete technical comparison matrix and keep visual approval on HOLD.
     review_current=text('qa/VISUAL_REVIEW_2026.11.13.1.md')
     need(visual.get('ref')=='visual-baseline/2026.11.13.1'
-         and visual.get('commit')=='15e4ca566172a3ff5c5f9dc0d20fbf9228c784fe'
+         and visual.get('commit')=='f9474499ee88cca534575bd56e30fd092767de2f'
          and visual.get('maxDiffPixels')==12
          and [v.get('name') for v in visual.get('viewports',[])]==[
              'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
