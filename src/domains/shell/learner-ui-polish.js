@@ -614,9 +614,12 @@ function learn(){
 // decorative: action routing, learner evidence and scoring remain source-owned.
 const practiceArtwork={
   'problem-practice':['quality',20],
+  'assessments':['training',24],
   'diagnose-cause':['diagnosing',21],
   'shop-floor-case':['cases',22],
   'scenario-detail':['cases',22],
+  'material-labs':['materials',3],
+  'measured-decisions':['process',5],
   'process-data':['challenges',23],
   labs:['setup',19],
   'diagnostic-labs':['defects',6],
