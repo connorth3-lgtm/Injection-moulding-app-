@@ -330,7 +330,7 @@ test('primary IA keeps Materials singular and every major destination reachable'
   await openApp(page);
   const nav=page.locator('#nav');
   const visibleLabels=await nav.locator(':scope > button').evaluateAll(nodes=>nodes.filter(n=>getComputedStyle(n).display!=='none'&&!n.hidden).map(n=>(n.textContent||'').replace(/\s+/g,' ').trim()));
-  expect(visibleLabels).toEqual(['⌂ Home','▦ Learn','⬡ Materials','⚠ Practice','More']);
+  expect(visibleLabels).toEqual(['⌂ Home','▦ Learn','⬡ Materials','⚠ Practice','∑ Maths','More']);
   await expect(page.locator('#dashboard [data-mm-home-book]')).toBeVisible();
 
   await nav.getByRole('button',{name:'Home'}).click();
