@@ -1396,8 +1396,8 @@ const PRACTICE_CASE_REVIEWS=Object.freeze([
     "reason": "Moisture, shear, trapped gas and contamination can create similar visible symptoms, so appearance cannot establish one mechanism.",
     "verify": "Choose approved material tests and a controlled comparison using current grade-specific documentation; assess repeatability before concluding.",
     "avoid": "Do not diagnose moisture by appearance or copy a drying schedule from a different resin.",
-    "action": "material-labs",
-    "button": "Open material-behaviour labs"
+    "action": "materials",
+    "button": "Open Materials"
   },
   {
     "id": "PC-04",

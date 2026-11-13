@@ -57,6 +57,13 @@ if 'data-mm-hub-action="material-labs"' in hub[picker_start:picker_end]:
 problem_start = hub.index("function openProblemPractice()")
 problem_end = hub.index("function openGuidedPractice()", problem_start)
 problem_markup = hub[problem_start:problem_end]
+case_review_start = hub.index("const PRACTICE_CASE_REVIEWS=")
+case_review_end = hub.index("const PRACTICE_GUIDED_CASES=", case_review_start)
+case_review_markup = hub[case_review_start:case_review_end]
+if '"action": "material-labs"' in case_review_markup or '"button": "Open material-behaviour labs"' in case_review_markup:
+    failures.append("Guided Practice must route material follow-up to Materials, not open Material Behaviour Labs directly")
+if '"action": "materials"' not in case_review_markup or '"button": "Open Materials"' not in case_review_markup:
+    failures.append("Guided material follow-up must open the Materials area")
 for route in ['data-mm-hub-action="diagnose-cause"', 'data-mm-hub-action="shop-floor-case"']:
     if route not in problem_markup:
         failures.append(f"Combined problem practice must keep both routes available: {route}")
