@@ -1,8 +1,8 @@
 # MouldMaster 2026.11.13.3 — external validation status
 
-**STATUS: HOLD — the exact-source software candidate is pending; all seven independent review streams remain HOLD.**
+**STATUS: HOLD — the exact-source software-only candidate is verified; all seven independent review streams remain HOLD.**
 
-> **PENDING 2026.11.13.3 TECHNICAL ARTIFACT — STOP; independent reviews HOLD.** Build and verify a retained exact-source Pre-merge Public Candidate before this release is reviewable. No human, real-device, Windows signing, provider, accreditation or production authorization is implied.
+> **RETAINED 2026.11.13.3 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 43408836154](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43408836154) created artifact **14028262546**, source 31be14643ba17c2bfc8a6126f4623f810060b22a, digest sha256:ac6fc4d0178ab185c8ec80bde69880639ffb84ef2d96f87f1d02979c058c69fc, expiry 2027-02-11T10:24:33Z, and public-runtime fingerprint sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b. The exact-source software-only producer and quality gates passed. The retained artifact does not establish any human, real-device, Windows signing, provider, accreditation or production authorization.
 
 ## Release scope
 
@@ -10,7 +10,11 @@ Maths and shop-floor skills now opens directly from its own **Maths** tab on des
 
 ## Exact-source technical candidate
 
-**Technical candidate:** **PENDING** — the release-specific Pre-merge Public Candidate artifact and exact-head browser/question gates have not yet been recorded. Automated browser evidence will not establish physical-device or human validation.
+**Technical candidate:** **PASS — software-only**. Pre-merge Public Candidate run `43408836154` retained artifact `14028262546`, source `31be14643ba17c2bfc8a6126f4623f810060b22a`, runtime fingerprint `sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b`, digest `sha256:ac6fc4d0178ab185c8ec80bde69880639ffb84ef2d96f87f1d02979c058c69fc`, expiring `2027-02-11T10:24:33Z`.
+
+- [Mobile Browser QA run 43408836296](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43408836296) — success on exact PR head `31be14643ba17c2bfc8a6126f4623f810060b22a`.
+- [Question Quality 50-Pass run 43408836387](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43408836387) — success on the same exact PR head.
+- The candidate producer run and retained artifact were verified against GitHub's run and artifact metadata. Automated evidence does not establish physical-device or human validation.
 
 ## Independent review streams
 
@@ -22,4 +26,4 @@ Maths and shop-floor skills now opens directly from its own **Maths** tab on des
 - `qa/LEARNER_PILOT_2026.11.13.3.md` — real-learner outcome evidence remains **HOLD**.
 - `qa/NZQA_EXTERNAL_VALIDATION_2026.11.13.3.md` — provider/NZQA G1–G8 evidence remains **HOLD**.
 
-Automated checks do not create human, device, accreditation or production authority.
+All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain **HOLD**. Automated checks do not create human, device, accreditation or production authority.

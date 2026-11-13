@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "fail",
+    "technicalAutomation": "pass",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "fail",
-      "meaning": "PENDING — release 2026.11.13.3 exact-source candidate has not yet been retained and verified. No human, device or production approval is implied."
+      "status": "pass",
+      "meaning": "PASS — exact-source release 2026.11.13.3 artifact 14028262546 from producer run 43408836154, source 31be14643ba17c2bfc8a6126f4623f810060b22a, runtime fingerprint sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b verified as a retained software candidate. No human, device or production approval is implied."
     },
     "behavioralBrowser": {
-      "status": "fail",
-      "meaning": "PENDING — release 2026.11.13.3 exact-head browser and question-quality gates have not yet been verified. Browser software QA does not establish physical-device or human validation."
+      "status": "pass",
+      "meaning": "PASS — exact-head Mobile Browser QA run 43408836296 and Question Quality 50-Pass run 43408836387 passed for source 31be14643ba17c2bfc8a6126f4623f810060b22a. Browser software QA does not establish physical-device or human validation."
     },
     "externalHumanDevice": {
       "status": "hold",
