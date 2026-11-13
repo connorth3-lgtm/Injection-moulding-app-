@@ -751,10 +751,6 @@ function practiceSubpageNavigation(){
       window.switchView?.(returnView);
       window.MM_PRIMARY_HUBS?.clearLearnToolOrigin?.();
       window.requestAnimationFrame(()=>{
-        if(returnView==='materials'){
-          document.querySelector('#materials #mmMaterialLearningAnchor [data-mm-material-labs-entry]')?.focus({preventScroll:true});
-          return;
-        }
         const action=learnOrigin||origin;
         const hubSelector=returnView==='path'?'#path .mm-learn-hub':'#scenarios .mm-practice-hub';
         const card=document.querySelector(hubSelector+' [data-mm-hub-action="'+action+'"]');
@@ -853,7 +849,6 @@ function materials(){
       tabs.querySelector(`button.active[data-mm-onclick="switchMaterialTab('explorer')"]`)?.remove();
       const labs=document.createElement('button');
       labs.type='button';labs.textContent='Material behaviour labs';
-      labs.dataset.mmMaterialLabsEntry='1';
       labs.addEventListener('click',()=>window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.());
       tabs.append(labs);
       guide.before(tabs);

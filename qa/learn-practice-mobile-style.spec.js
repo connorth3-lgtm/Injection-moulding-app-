@@ -300,7 +300,8 @@ test('Practice hub keeps compact left-aligned mobile cards under strict CSP',asy
   const backToMaterials=page.locator('#materialLabs .mm-practice-tool-back');
   await expect(backToMaterials).toHaveText('← Back to Materials');
   await backToMaterials.click();
-  await expect(page.locator('#materials #mmMaterialLearningAnchor [data-mm-material-labs-entry]')).toBeFocused();
+  await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
+  await expect(page.locator('#materialLabs')).not.toBeVisible();
   await expect(materialsTab).toHaveClass(/active/);
   await expect(practiceTab).not.toHaveClass(/active/);
 });
