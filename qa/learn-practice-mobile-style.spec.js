@@ -327,6 +327,10 @@ test.describe('360px narrow-phone hubs',()=>{
   test('Materials catalogue keeps readable results, search tap targets and stable view-entry position',async({page})=>{
     await openApp(page);
     await openHub(page,'Practice','#scenarios .mm-practice-hub');
+    await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="problem-practice"]').click();
+    await page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="shop-floor-case"]').click();
+    const arenaCards=page.locator('#scenarios .scenario, #scenarios .mm-scenario-card, #scenarios [data-scenario-id]');
+    await expect.poll(()=>arenaCards.count()).toBeGreaterThan(20);
     await page.evaluate(()=>window.scrollTo(0,document.scrollingElement?.scrollHeight||document.body.scrollHeight));
     await expect.poll(()=>page.evaluate(()=>window.scrollY||document.scrollingElement?.scrollTop||0)).toBeGreaterThan(20);
     await openMaterials(page);
