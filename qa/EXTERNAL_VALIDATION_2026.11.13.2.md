@@ -1,8 +1,8 @@
 # MouldMaster 2026.11.13.2 — external validation status
 
-**STATUS: HOLD — exact-source software checks remain pending; all seven independent review streams remain HOLD.**
+**STATUS: PASS — software-only exact-source candidate; all seven independent review streams remain HOLD.**
 
-> **RETAINED 2026.11.13.2 TECHNICAL ARTIFACT — QUALITY CHECKS PENDING; INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 43367217924](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43367217924) created artifact **14010198744**, source 21fac3dc056af2989fda93dcafd4b6235f6313ea, digest sha256:971b465e39c9e7be2b171cc4e9d114096d48ec4416b58454e406977460d8f6b9, expiry `2027-02-11T04:42:11Z`, and public-runtime fingerprint sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb. The retained artifact is a validation candidate; exact-head software gates must pass before any software-only PASS is recorded. It does not establish human, physical-device, real assistive-technology, Windows signing, provider, accreditation or production authorization.
+> **RETAINED 2026.11.13.2 TECHNICAL ARTIFACT — SOFTWARE QA PASS; INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 43370758966](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43370758966) created artifact **14011868739**, source 3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99, digest sha256:9de179d5d4e0d7beb88e62de53fefc8c9070b0828d24b6df70e6f1936b5c56da, expiry `2027-02-11T05:14:51Z`, and public-runtime fingerprint sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb. The retained artifact supports software QA only; it does not establish human, physical-device, real assistive-technology, Windows signing, provider, accreditation or production authorization.
 
 ## Release scope
 
@@ -10,9 +10,7 @@ The Practice hub keeps its three focused choices. The new Maths and shop-floor s
 
 ## Exact-source technical candidate
 
-**Technical candidate:** **HOLD — exact-head software checks are pending**. The Pre-merge Public Candidate run `43367217924` retained artifact `14010198744` from source `21fac3dc056af2989fda93dcafd4b6235f6313ea`, runtime fingerprint `sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb`, digest `sha256:971b465e39c9e7be2b171cc4e9d114096d48ec4416b58454e406977460d8f6b9`, expiry `2027-02-11T04:42:11Z`. No software-only PASS is claimed until exact-head quality gates succeed.
-
-Prior software-only results belong to release 2026.11.13.1 and do not transfer to this candidate. Exact-head Mobile Browser QA, Question Quality and release-integrity checks must pass before recording a software-only PASS. These checks do not establish physical-device or human validation.
+**Technical candidate:** **PASS — software-only**. Pre-merge Public Candidate run `43370758966` retained artifact `14011868739` from exact source `3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99`, with runtime fingerprint `sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb`. Mobile Browser QA run `43370758700` and Question Quality 50-Pass run `43370758771` succeeded on the same exact source. This establishes automated software quality for the candidate only; browser emulation does not establish physical-device or human validation.
 
 All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain **HOLD**. No tester distribution, provider approval, accreditation or production authority is implied.
 

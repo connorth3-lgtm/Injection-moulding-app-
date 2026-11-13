@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "release": "2026.11.13.2",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.13.2.md",
-  "sourceSha": "21fac3dc056af2989fda93dcafd4b6235f6313ea",
+  "sourceSha": "3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99",
   "runtimeFingerprint": "sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.11.13.2 is bound to exact retained learner-runtime candidate 21fac3dc056af2989fda93dcafd4b6235f6313ea; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.11.13.2 is bound to exact retained learner-runtime candidate 3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -306,11 +306,11 @@
     "textZoom200Percent": true
   },
   "previousCandidate": {
-    "release": "2026.11.13.1",
-    "sourceSha": "0e1bb220a7a98638b56b65d8af5aa9aa553c6fbb",
-    "runtimeFingerprint": "sha256:08f87546f51734c15ea5bce2243937350a6bc3f49a617a38e9f8b44a369ee4b9"
+    "release": "2026.11.13.2",
+    "sourceSha": "21fac3dc056af2989fda93dcafd4b6235f6313ea",
+    "runtimeFingerprint": "sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb"
   },
-  "technicalCandidateStatus": "HOLD — the 2026.11.13.2 artifact is retained for validation, but exact-head software quality has not yet been independently verified; genuine real assistive-technology validation remains pending.",
+  "technicalCandidateStatus": "PASS \u2014 software-only exact-source checks succeeded for release 2026.11.13.2 source 3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99 (Pre-merge Public Candidate run 43370758966, Mobile Browser QA run 43370758700, Question Quality 50-Pass run 43370758771); genuine real assistive-technology validation remains pending.",
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
