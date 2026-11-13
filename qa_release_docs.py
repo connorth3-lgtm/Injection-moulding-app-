@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
-'web_release':'2026.11.12.2',
+'web_release':'2026.11.13.1',
  'android_release':'2026.11.08.1',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -19,7 +19,7 @@ expected={
  'assessment_quality_version':'2026.08.24.3',
  'assessment_storage_scope_version':'2026.08.24.4',
  'assessment_evidence_version':'2026.10.05.1',
-  'read_aloud_version':'2026.11.12.2',
+  'read_aloud_version':'2026.11.13.1',
  'windows_recovery_release':'2026.08.21.1',
 }
 for k,v in expected.items(): need(V.get(k)==v,f'version.json {k} drift: {V.get(k)!r} != {v!r}')
@@ -616,12 +616,12 @@ elif visual.get('release')=='2026.11.11.4':
          and 'Owner-authorized technical visual baseline' in visual.get('policy','')
          and 'remain HOLD' in visual.get('policy',''),
          '2026.11.11.4 PR #707 visual baseline must retain its exact owner-approved Practice source, full strict matrix and separate external-review HOLDs')
-elif visual.get('release')=='2026.11.12.2':
-    # The Practice correction keeps Material Behaviour Labs grouped under Materials.
+elif visual.get('release')=='2026.11.13.1':
+    # Practice cleanup removes the unpersonalized duplicate and clarifies the scenario and diagnosis routes.
     # Pin the same complete technical comparison matrix and keep visual approval on HOLD.
-    review_current=text('qa/VISUAL_REVIEW_2026.11.12.2.md')
-    need(visual.get('ref')=='visual-baseline/2026.11.12.2'
-         and visual.get('commit')=='53c9b1bac4d2af076f37968d9cf03113140b8e0c'
+    review_current=text('qa/VISUAL_REVIEW_2026.11.13.1.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.13.1'
+         and visual.get('commit')=='f9474499ee88cca534575bd56e30fd092767de2f'
          and visual.get('maxDiffPixels')==12
          and [v.get('name') for v in visual.get('viewports',[])]==[
              'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
@@ -634,7 +634,7 @@ elif visual.get('release')=='2026.11.12.2':
          and '52 viewport/surface captures' in review_current
          and 'no masking or skipped surfaces' in review_current.lower()
          and 'remain HOLD' in visual.get('policy',''),
-         '2026.11.12.2 Practice/Materials grouping baseline must keep all 52 captures and explicit visual-owner HOLD')
+         '2026.11.13.1 Practice/Materials grouping baseline must keep all 52 captures and explicit visual-owner HOLD')
 elif visual.get('release')=='2026.11.12.1':
     # The requested Material Behaviour Labs route is a technical preview baseline.
     # Keep the exact 52-surface matrix and 12px limit; do not imply visual-owner approval.

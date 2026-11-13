@@ -281,7 +281,7 @@ test('Practice hub keeps compact left-aligned mobile cards under strict CSP',asy
   await openApp(page);
   await openHub(page,'Practice','#scenarios .mm-practice-hub');
   await expectReadableTiles(page,'#scenarios .mm-practice-hub',3);
-  await expectFullWidthPrimaryAction(page,'#scenarios .mm-practice-hub');
+  await expect(page.locator('#scenarios .mm-practice-hub .mm-hub-continue')).toHaveCount(0);
   await expect(page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="material-labs"]')).toHaveCount(0);
   await page.screenshot({path:'qa-artifacts/mobile-practice-hub-412x915.png',fullPage:true});
   await openMaterials(page);
@@ -293,6 +293,17 @@ test('Practice hub keeps compact left-aligned mobile cards under strict CSP',asy
   await materialLabs.click();
   await expect(page.locator('#materialLabs')).toBeVisible();
   await expect(page.locator('#materialLabs')).toContainText('Choose a material case');
+  const materialsTab=page.locator('.mobile-nav > button[data-view="materials"]');
+  const practiceTab=page.locator('.mobile-nav > button[data-view="scenarios"]');
+  await expect(materialsTab).toHaveClass(/active/);
+  await expect(practiceTab).not.toHaveClass(/active/);
+  const backToMaterials=page.locator('#materialLabs .mm-practice-tool-back');
+  await expect(backToMaterials).toHaveText('← Back to Materials');
+  await backToMaterials.click();
+  await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
+  await expect(page.locator('#materialLabs')).not.toBeVisible();
+  await expect(materialsTab).toHaveClass(/active/);
+  await expect(practiceTab).not.toHaveClass(/active/);
 });
 
 test('Materials catalogue remains readable and enters at the top on 412px phones',async({page})=>{
@@ -327,6 +338,10 @@ test.describe('360px narrow-phone hubs',()=>{
   test('Materials catalogue keeps readable results, search tap targets and stable view-entry position',async({page})=>{
     await openApp(page);
     await openHub(page,'Practice','#scenarios .mm-practice-hub');
+    await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="problem-practice"]').click();
+    await page.locator('#scenarios .mm-problem-practice [data-mm-hub-action="shop-floor-case"]').click();
+    const arenaCards=page.locator('#scenarios .scenario, #scenarios .mm-scenario-card, #scenarios [data-scenario-id]');
+    await expect.poll(()=>arenaCards.count()).toBeGreaterThan(20);
     await page.evaluate(()=>window.scrollTo(0,document.scrollingElement?.scrollHeight||document.body.scrollHeight));
     await expect.poll(()=>page.evaluate(()=>window.scrollY||document.scrollingElement?.scrollTop||0)).toBeGreaterThan(20);
     await openMaterials(page);

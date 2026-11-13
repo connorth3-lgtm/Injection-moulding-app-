@@ -7,7 +7,7 @@ if(typeof renderPath!=='function'||typeof renderScenarios!=='function'||typeof s
   return;
 }
 
-const VERSION='2026.11.12.3';
+const VERSION='2026.11.13.1';
 const PRACTICE_ROTATION_KEY='mm_practice_scenario_rotation_v1';
 const originalRenderScenarios=renderScenarios;
 
@@ -171,17 +171,6 @@ function safeOpen(apiName,fallback,options){
   if(api&&typeof api.open==='function')return options===undefined?api.open():api.open(options);
   if(fallback)return fallback();
   if(typeof toast==='function')toast('This activity is still loading. Try again in a moment.');
-}
-function sanitizeDailyChallenge(){
-  const modal=document.getElementById('modal');if(!modal)return;
-  modal.querySelectorAll('button').forEach(button=>{button.textContent=(button.textContent||'').replace(/\s*\+\s*\d+\s*XP\b/ig,'')});
-  modal.querySelectorAll('.exam-integrity').forEach(box=>{box.textContent=(box.textContent||'').replace(/\s*XP[^.]*\.?/ig,'').trim()});
-}
-function openDaily(){
-  let done=false;try{done=typeof dailyDone==='function'&&dailyDone()}catch(_){}
-  if(done)return openScenarioDetail(nextScenarioIndex());
-  if(typeof openDailyChallenge==='function'){openDailyChallenge();requestAnimationFrame(sanitizeDailyChallenge);return}
-  return openScenarioDetail(nextScenarioIndex());
 }
 function openPicker(kind){
   if(typeof openModal!=='function')return;
@@ -481,7 +470,6 @@ function runAction(action,source='practice'){
     case 'visuals': closePicker(); return switchView('visuals');
     case 'glossary': closePicker(); return switchView('glossary');
     case 'saved': closePicker(); return lessonCatalog.open({filter:'saved'});
-    case 'daily': return openDaily();
     case 'troubleshooting': return source==='learn'?dxOpen():openProblemPractice();
     case 'problem-practice': return openProblemPractice();
     case 'diagnose-cause':
@@ -1251,7 +1239,6 @@ function practiceRecommendationLabel(rec){
 }
 function practiceRecommendationCta(action,rec){
   if(action==='materials')return 'Open Materials →';
-  if(action==='material-labs')return 'Start material practice →';
   if(action==='diagnostic-labs')return 'Start diagnostic practice →';
   if(action==='labs')return 'Choose a practice lab →';
   const suggested=String(rec?.suggestedActivity||'').toLowerCase();
@@ -1280,11 +1267,9 @@ function practiceStatusLine(plan){
   if(Number(s.topics)>0)return 'No urgent weak area detected — use varied practice to strengthen transfer.';
   return 'Complete a lesson, scenario or lab and this page will start recommending what to practise next.';
 }
-function recommendedPracticeMarkup(plan,done){
+function recommendedPracticeMarkup(plan){
   const rec=plan?.recommendations?.[0];
-  if(!rec){
-    return `<section class="mm-hub-continue mm-primary-hub-card" aria-label="Recommended practice"><div class="mm-hub-continue-copy"><span class="eyebrow">${done?'Keep going · about 5 min':'Recommended start · about 5 min'}</span><h2>${done?'Try a different shop-floor decision':'One moulding decision'}</h2><p>${done?'Your daily drill is complete. Use another scenario to keep the evidence-to-decision habit active.':'Start with one short evidence-first decision. Personal recommendations will appear as the app gathers local learning evidence.'}</p></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="daily">${done?'Practise another scenario →':'Start quick practice →'}</button></section>`;
-  }
+  if(!rec)return '';
   const action=practiceActionFor(rec),topic=practiceTopicLabel(rec.topic),label=practiceRecommendationLabel(rec);
   const signal=rec.actionType==='targeted-remediation'&&Number.isFinite(Number(rec.stuckness))?`Repeated misses · ${Math.round(Number(rec.stuckness))}% stuckness signal`:rec.actionType==='spaced-retrieval'&&Number.isFinite(Number(rec.ageDays))?`Last evidence ${Math.round(Number(rec.ageDays))} day${Math.round(Number(rec.ageDays))===1?'':'s'} ago`:'Based on your local learning evidence';
   return `<section class="mm-hub-continue mm-primary-hub-card" aria-label="Recommended practice"><div class="mm-hub-continue-copy"><span class="eyebrow">${esc(label)} · 5–10 min</span><h2>${esc(topic)}</h2><p>${esc(rec.reason||'Use a different practice format to strengthen this skill.')}</p><div class="mm-hub-progress"><strong>${esc(signal)}</strong></div></div><button class="primary mm-hub-continue-action" type="button" data-mm-hub-action="${esc(action)}">${esc(practiceRecommendationCta(action,rec))}</button></section>`;
@@ -1410,8 +1395,8 @@ const PRACTICE_CASE_REVIEWS=Object.freeze([
     "reason": "Moisture, shear, trapped gas and contamination can create similar visible symptoms, so appearance cannot establish one mechanism.",
     "verify": "Choose approved material tests and a controlled comparison using current grade-specific documentation; assess repeatability before concluding.",
     "avoid": "Do not diagnose moisture by appearance or copy a drying schedule from a different resin.",
-    "action": "material-labs",
-    "button": "Open material-behaviour labs"
+    "action": "materials",
+    "button": "Open Materials"
   },
   {
     "id": "PC-04",
@@ -1659,12 +1644,11 @@ function bindPracticeGuided(root){
   });
 }
 function practiceHubMarkup(){
-  let done=false;try{done=typeof dailyDone==='function'&&dailyDone()}catch(_){}
   const scenarioCount=D?.scenarios?.length||0;
   const plan=learnerPracticePlan();
   return `<div class="mm-primary-hub mm-practice-hub">
     <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1>What should I practise next?</h1><p>${esc(practiceStatusLine(plan))}</p></header>
-    ${recommendedPracticeMarkup(plan,done)}
+    ${recommendedPracticeMarkup(plan)}
     ${practicePlanRows(plan)}
     <section class="mm-hub-section"><div class="mm-hub-section-head"><span class="eyebrow">Choose by the job you want to practise</span><h2>Three clear practice areas</h2><p>Pick a task below. Practice is for learning; assessments stay separate. ${scenarioCount} shop-floor scenarios are available.</p></div><div class="mm-hub-grid">
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="problem-practice"><span class="eyebrow">Investigate a fault · 5–15 min</span><b>Moulding problem practice</b><small>Investigate an observed defect or make a decision in a training scenario.</small><span class="mm-hub-tile-action">Choose a problem activity →</span></button>
@@ -1690,16 +1674,16 @@ function openProblemPractice(){
   root.dataset.mmHubMode='problem-practice';
   const count=D?.scenarios?.length||0;
   root.innerHTML=`<div class="mm-primary-hub mm-practice-hub mm-problem-practice">
-    <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1 tabindex="-1">Moulding problem practice</h1><p>Start with one of the two common tasks. More tools are available below if you need them.</p></header>
+    <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1 tabindex="-1">Moulding problem practice</h1><p>Choose an evidence investigation or browse the full scenario bank. Optional specialist tools are below.</p></header>
     <section class="mm-hub-section" aria-label="Moulding problem practice">
-      <div class="mm-hub-section-head"><span class="eyebrow">Start here</span><h2>What do you need to do?</h2><p>${count} authored shop-floor scenarios are available. Examples are for learning and do not authorize production-machine changes.</p></div>
+      <div class="mm-hub-section-head"><span class="eyebrow">Start here</span><h2>What do you need to do?</h2><p>${count} authored shop-floor scenarios are available. Start at a rotating case or browse the full bank. Examples are for learning and do not authorize production-machine changes.</p></div>
       <div class="mm-hub-grid">
         <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="diagnose-cause"><span class="eyebrow">Investigate evidence · 5–15 min</span><b>Diagnose an observed defect</b><small>Choose a symptom, record available evidence, compare possible mechanisms and plan the next useful check.</small><span class="mm-hub-tile-action">Open Defect Finder →</span></button>
-        <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="shop-floor-case"><span class="eyebrow">Make a decision · about 5 min</span><b>Choose the next safe action</b><small>Read one rotating scenario, weigh the evidence and select the strongest next step.</small><span class="mm-hub-tile-action">Start a shop-floor scenario →</span></button>
+        <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="shop-floor-case"><span class="eyebrow">Scenario bank · ${count} authored cases</span><b>Choose the next safe action</b><small>Open the full scenario bank. It starts at a rotating case, and the complete list remains available.</small><span class="mm-hub-tile-action">Browse all scenarios →</span></button>
       </div>
       <details class="mm-practice-more-tools"><summary>More diagnosis and case tools</summary><div class="mm-hub-grid">
-        <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="guided-practice"><span class="eyebrow">Worked example · five decisions</span><b>Guided fault practice</b><small>Follow an authored fault from observation through verification, with feedback at each step.</small><span class="mm-hub-tile-action">Start a guided case →</span></button>
-        <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="diagnostic-labs"><span class="eyebrow">Several fault types · scored steps</span><b>Diagnostic labs</b><small>Choose from nine evidence-first cases and review your reasoning after each decision.</small><span class="mm-hub-tile-action">Browse diagnostic cases →</span></button>
+        <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="guided-practice"><span class="eyebrow">Worked example · five steps · unscored</span><b>Guided fault practice</b><small>Follow an authored fault from observation through verification. Compare your reasoning with feedback at each step; no score is recorded.</small><span class="mm-hub-tile-action">Start a guided case →</span></button>
+        <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="diagnostic-labs"><span class="eyebrow">Scored practice · nine evidence-first cases</span><b>Diagnostic labs</b><small>Make evidence-based decisions and review feedback after each scored step.</small><span class="mm-hub-tile-action">Browse diagnostic cases →</span></button>
         <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="mould-master"><span class="eyebrow">Keep a case record</span><b>Mould Master casebook</b><small>Save and revisit a troubleshooting case with its evidence and follow-up.</small><span class="mm-hub-tile-action">Open the casebook →</span></button>
       </div></details>
       <p class="tiny muted">Training only. Follow site procedures, isolation rules and qualified supervision for real machinery.</p>
@@ -1904,8 +1888,8 @@ document.addEventListener('input',event=>{
 
 function configureMore(){
   const items=window.MM_APP_SHELL?.navigation?.items;
-  const practiceOwned=new Set(['mould-master','diagnostic-labs','process-data','material-labs']);
-  if(items?.forEach)items.forEach((item,id)=>{item.mobileMore=id!=='materials-page'&&!practiceOwned.has(id)});
+  const primaryOwned=new Set(['mould-master','diagnostic-labs','process-data','material-labs']);
+  if(items?.forEach)items.forEach((item,id)=>{item.mobileMore=id!=='materials-page'&&!primaryOwned.has(id)});
 }
 function pruneMore(){
   const modal=document.getElementById('modal');if(!modal)return;

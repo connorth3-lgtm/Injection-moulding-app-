@@ -221,8 +221,8 @@ for(const width of [360,810]){
     await expect(activities).toHaveCount(3);
     await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(3);
     await expect(hub.locator('[data-mm-hub-action="material-labs"]')).toHaveCount(0);
-    const recommended=hub.locator('.mm-reference-practice-feature');
-    await expect(recommended.locator(':scope > .mm-reference-practice-feature-art')).toHaveCount(1);
+    // The QA learner has no local learning evidence, so no generic substitute card should appear.
+    await expect(hub.locator('.mm-reference-practice-feature')).toHaveCount(0);
     await page.evaluate(()=>{window.MM_REFERENCE_LAYOUT.refresh();window.MM_REFERENCE_LAYOUT.refresh()});
     await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(3);
     const sizing=await activities.evaluateAll(nodes=>({
