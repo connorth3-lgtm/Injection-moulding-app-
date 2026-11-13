@@ -258,11 +258,11 @@ if(typeof currentView==='string'){
 /* <<< learning-experience.js */
 
 /* >>> process-data-diagnostics.js */
-/* MouldMaster guided process-data diagnostics — 2026.11.14.1 */
+/* MouldMaster guided process-data diagnostics — 2026.11.14.2 */
 (function(){
 'use strict';
 
-const VERSION='2026.11.14.1';
+const VERSION='2026.11.14.2';
 const PACK=window.MM_PROCESS_EVIDENCE_DATASETS;
 const SOURCES=window.MM_EVIDENCE_SOURCES?.sources||{};
 if(!PACK||!Array.isArray(PACK.datasets))throw new Error('process-data-diagnostics.js requires MM_PROCESS_EVIDENCE_DATASETS');

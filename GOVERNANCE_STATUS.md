@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS — release 2026.11.14.1 source 6b7f0cccd90e96fd36316cea9e963af1b411c3e1, fingerprint sha256:199f1401f1a3077628d50284922ee127e9bfa4e02fb146ae080056ba51818922, artifact 14038142104, from successful Pre-merge Public Candidate run 43427070078. This is technical release evidence only and does not imply source review, human, device or production approval. |
-| Behavioral / browser | **pass** | PASS — release 2026.11.14.1 Mobile Browser QA run 43427069808 and Question Quality 50-Pass run 43427070447 succeeded on exact source 6b7f0cccd90e96fd36316cea9e963af1b411c3e1. Browser software QA does not establish physical-device or human validation. |
-| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.14.1. |
+| Static / contract | **fail** | HOLD — release 2026.11.14.2 exact-source candidate has not yet been retained and verified. This is a technical release gate only; no source review, human, device or production approval is implied. |
+| Behavioral / browser | **fail** | HOLD — release 2026.11.14.2 exact-head Mobile Browser QA and Question Quality 50-Pass gates are pending. Browser software QA does not establish physical-device or human validation. |
+| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.14.2. |
