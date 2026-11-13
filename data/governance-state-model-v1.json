@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "fail",
+    "technicalAutomation": "pass",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,12 +345,12 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "fail",
-      "meaning": "HOLD — release 2026.11.14.2 exact-source candidate has not yet been retained and verified. This is a technical release gate only; no source review, human, device or production approval is implied."
+      "status": "pass",
+      "meaning": "PASS \u2014 release 2026.11.14.2 software candidate source 8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b, fingerprint sha256:ce2e7ec6a6c72f2768146a22aa4675c112198e51bea4de731d878f23efc4ea9b, artifact 14045422044, from successful Pre-merge Public Candidate run 43439690118. Software-only evidence; no human, device, provider, accreditation or production authorization is implied."
     },
     "behavioralBrowser": {
-      "status": "fail",
-      "meaning": "HOLD — release 2026.11.14.2 exact-head Mobile Browser QA and Question Quality 50-Pass gates are pending. Browser software QA does not establish physical-device or human validation."
+      "status": "pass",
+      "meaning": "PASS \u2014 release 2026.11.14.2 Mobile Browser QA run 43439690302 and Question Quality 50-Pass run 43439689931 succeeded on exact source 8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b. These software checks do not establish physical-device or human validation."
     },
     "externalHumanDevice": {
       "status": "hold",
