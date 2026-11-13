@@ -240,7 +240,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     test('Primary mobile navigation and the reduced More tools are keyboard reachable',async({page})=>{
       await openApp(page);
       const nav=page.locator('.mobile-nav > button');
-      const expected=['Home','Learn','Materials','Practice','More'];
+      const expected=['Home','Learn','Materials','Practice','Maths','More'];
       await nav.nth(0).focus();
       for(let i=0;i<expected.length;i++){
         const focused=await page.evaluate(()=>document.activeElement?.textContent||'');
