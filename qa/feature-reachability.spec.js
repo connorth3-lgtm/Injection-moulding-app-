@@ -211,16 +211,21 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
    else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();const book=page.locator('[data-mm-registry-menu="book"]');await revealMoreAction(page,book);await book.click()}
    await expectVisible(page,'#mmBookView');
   });
-  test('Measured Data catalog is reachable through visible Practice and Process Data controls',async({page})=>{
+  test('Measured evidence references stay inside the Process Data practice flow',async({page})=>{
    await openApp(page,viewport.width);
    if(viewport.width<=900){await mobileHub(page,'Practice');await expectVisible(page,'#scenarios .mm-practice-hub')}
    else {const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click();await expectVisible(page,'#scenarios .mm-practice-hub')}
    const process=page.locator('#scenarios [data-mm-hub-action="process-data"]');await expect(process).toBeVisible();await process.click();
    await expectVisible(page,'#processDataLabs');
-   const measured=page.locator('#processDataLabs [data-mme-catalog-launcher] [data-mme-open-catalog]');await expect(measured).toBeVisible();await measured.click();
-   await expectVisible(page,'#processDataLabs [data-mm-measured-evidence="catalog"]');
-   await expect(page.locator('#processDataLabs')).toContainText('Browse all 17 measured families');
-   await expect(page.locator('#pageTitle')).toHaveText('Measured Data');
+   const labs=page.locator('#processDataLabs');
+   await expect(labs.locator('.pd-hero')).toContainText('Start with a guided case');
+   await expect(page.locator('#processDataLabs > .pd-toolbar [data-pd-practice]')).toHaveCount(0);
+   await expect(labs.locator('[data-mme-catalog-launcher]')).toHaveCount(0);
+   const register=labs.locator('[data-mme-catalog-inline]');await expect(register).toBeVisible();
+   await register.locator('summary').click();
+   await expect(register.locator('.mme-card')).toHaveCount(17);
+   await expect(register.locator('.mme-card a[href]')).toHaveCount(17);
+   await expect(page.locator('#pageTitle')).not.toHaveText('Measured Data');
   });
   test('core learning and practice destinations are reachable by clicks',async({page})=>{
    await openApp(page,viewport.width);
