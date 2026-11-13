@@ -297,6 +297,12 @@ test('Practice hub keeps compact left-aligned mobile cards under strict CSP',asy
   const practiceTab=page.locator('.mobile-nav > button[data-view="scenarios"]');
   await expect(materialsTab).toHaveClass(/active/);
   await expect(practiceTab).not.toHaveClass(/active/);
+  const backToMaterials=page.locator('#materialLabs .mm-practice-tool-back');
+  await expect(backToMaterials).toHaveText('← Back to Materials');
+  await backToMaterials.click();
+  await expect(page.locator('#materials #mmMaterialLearningAnchor [data-mm-material-labs-entry]')).toBeFocused();
+  await expect(materialsTab).toHaveClass(/active/);
+  await expect(practiceTab).not.toHaveClass(/active/);
 });
 
 test('Materials catalogue remains readable and enters at the top on 412px phones',async({page})=>{
