@@ -1012,7 +1012,7 @@ function more(){
   grid.prepend(...direct);
   illustrateMore(grid);
 }
-/* Interior parity with the approved five-tab reference boards. Each target
+/* Interior parity with the approved learner navigation reference boards. Each target
    already owns its content, commands and validation rules. Decorations are
    local, noninteractive and idempotent across renderer replacements. */
 function deepViewPolish(){

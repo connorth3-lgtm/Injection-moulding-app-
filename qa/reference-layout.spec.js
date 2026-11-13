@@ -703,7 +703,7 @@ for(const width of [390,810]){
 
 // Exercise every primary mobile tab independently of the visual golden files.
 // The same pointer/focus/overflow checks apply to Home, Learn, Materials,
-// Practice and More at all four approved narrow viewport widths.
+// Practice, Maths and More at all four approved narrow viewport widths.
 for(const width of [320,360,390,412]){
   test('all six mobile tabs keep consistent navigation and no stale hover at '+width+'px',async({page})=>{
     test.setTimeout(90000);

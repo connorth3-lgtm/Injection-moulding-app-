@@ -15,6 +15,7 @@ async function openApp(page){
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
   await expect(page.locator('.mobile-nav > button')).toHaveCount(6);
+  await expect(page.locator('.mobile-nav > button').filter({hasText:'Maths'})).toHaveCount(1);
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 async function openPracticeHub(page){
