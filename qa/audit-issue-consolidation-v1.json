@@ -1,11 +1,12 @@
+8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b
 {
   "schemaVersion": 1,
   "masterIssue": 632,
   "release": "2026.11.14.2",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
+  "candidateSourceSha": "8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b",
   "scope": "Simplify the measured-data entry by folding the full 17-family source register into Process Data while preserving every source profile and reference.",
-  "approvalBoundary": "HOLD — release 2026.11.14.2 candidate producer, runtime artifact and exact-head software gates are pending verification. The seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider streams remain HOLD. Production authority remains advisory-only.",
+  "approvalBoundary": "PASS — release 2026.11.14.2 exact-source software candidate, runtime artifact and automated browser/question checks are verified. The seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider streams remain HOLD. Production authority remains advisory-only.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
