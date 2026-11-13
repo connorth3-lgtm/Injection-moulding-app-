@@ -616,18 +616,14 @@ const practiceArtwork={
   'problem-practice':['quality',20],
   'diagnose-cause':['diagnosing',21],
   'shop-floor-case':['cases',22],
-  troubleshooting:['quality',20],
   'scenario-detail':['cases',22],
   'process-data':['challenges',23],
   labs:['setup',19],
-  'question-centre':['evidence',27],
   'diagnostic-labs':['defects',6],
   'diagnostic-workbench':['diagnosing',21],
   'mould-master':['cases',8],
   'spatial-twin':['machine',0],
   simulator:['setup',19],
-  assessments:['training',24],
-  'measured-decisions':['process',5]
 };
 function practiceChoiceArt(button){
   if(button.querySelector(':scope > .mm-reference-practice-art'))return;
