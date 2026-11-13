@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "release": "2026.11.13.1",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.13.1.md",
-  "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
-  "runtimeFingerprint": "sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7",
+  "sourceSha": "5857e23d6bbd0fd46ea5ef9171a43924f16de0c4",
+  "runtimeFingerprint": "sha256:a7cf452cf0b8dcf7fd8a01542d2d1902d95d2988a05a4076c44613b4d57b6891",
   "status": "pending-real-at-validation",
-  "boundary": "Release 2026.11.13.1 is bound to retained exact-source software candidate b68fd00eb9cc929556a22923ee3c354eefd25158 with public-runtime fingerprint sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7. Automated software checks passed; all real assistive-technology tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded. Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer.",
+  "boundary": "Release 2026.11.13.1 is bound to retained exact-source software candidate 5857e23d6bbd0fd46ea5ef9171a43924f16de0c4 with public-runtime fingerprint sha256:a7cf452cf0b8dcf7fd8a01542d2d1902d95d2988a05a4076c44613b4d57b6891. Automated software checks passed; all real assistive-technology tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded. Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -306,20 +306,20 @@
     "textZoom200Percent": true
   },
   "previousCandidate": {
-    "release": "2026.11.11.4",
-    "sourceSha": "3ed5fe6f02496f5a15be0629f7d467dd152e05bf",
-    "runtimeFingerprint": "sha256:28412c1891c7c7b93045892515aaab2a6a361b861f79714140f560e1340f245d"
+    "release": "2026.11.13.1",
+    "sourceSha": "d68ff4fb2bf4bc8f57a1c715a9faa586a90a0600",
+    "runtimeFingerprint": "sha256:4d843c5c1694d91f1de4c7adaf9eee1743a829f7062159f1de686c00ee938a92"
   },
-  "technicalCandidateStatus": "PASS — exact-source software-only candidate b68fd00eb9cc929556a22923ee3c354eefd25158 passed automated producer, mobile-browser and question-quality gates; genuine real assistive-technology validation remains pending.",
+  "technicalCandidateStatus": "PASS — exact-source software-only candidate 5857e23d6bbd0fd46ea5ef9171a43924f16de0c4 passed producer run 43343196018, Mobile Browser QA run 43343196066, and Question Quality 50-Pass run 43343196008; genuine real assistive-technology validation remains pending.",
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
     "runtimeFingerprint": "sha256:4767c50814cfe576891a3eb6f4de34a1d451378709c43a8988e2e57c540cf4c9"
   },
   "previousPreviousCandidate": {
-    "release": "2026.11.11.4",
-    "sourceSha": "e407281018e898aab4034f73885468ec019489c0",
-    "runtimeFingerprint": "sha256:582a5e621d4e7d07dcdc60d4c223a27727c54d8f6376e43e9e76e1156a444661"
+    "release": "2026.11.12.2",
+    "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
+    "runtimeFingerprint": "sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7"
   },
   "previousPreviousPreviousCandidate": {
     "release": "2026.11.11.2",

@@ -2,7 +2,7 @@
 
 **STATUS: HOLD — independent human SME approval is not recorded for this release.**
 
-> **RETAINED 2026.11.13.1 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 43317536795](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43317536795) created artifact **13988512830**, source b68fd00eb9cc929556a22923ee3c354eefd25158, digest sha256:c3a0c49520e6d0052c1ba08c8a1f8b089ce6a82d2585f12492a0040e4fa157b6, expiry `2027-02-10T22:11:13Z`, and public-runtime fingerprint sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7. Mobile Browser QA and Question Quality 50-Pass passed on this exact source; this does not establish human, real-device, Windows signing, provider, accreditation or production authorization.
+> **RETAINED 2026.11.13.1 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 43343196018](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43343196018) created artifact **13999539622**, source 5857e23d6bbd0fd46ea5ef9171a43924f16de0c4, digest sha256:5ffebf35650623bbcb625e6ef6b72b5fc1738f5dfd45e401d9a2aa4ce5f79e1b, expiry `2027-02-11T01:12:59Z`, and public-runtime fingerprint sha256:a7cf452cf0b8dcf7fd8a01542d2d1902d95d2988a05a4076c44613b4d57b6891. Mobile Browser QA run 43343196066 and Question Quality 50-Pass run 43343196008 passed on this exact source; this does not establish human, physical-device, real assistive-technology, Windows signing, provider, accreditation or production authorization.
 
 
 ## Scope
