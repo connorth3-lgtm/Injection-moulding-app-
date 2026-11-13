@@ -29,7 +29,7 @@ need(p.returncode==0,'process-statistics.js syntax error: '+(p.stderr or p.stdou
 p=subprocess.run(['node',str(ROOT/'qa_process_statistics_current.cjs')],cwd=ROOT,capture_output=True,text=True)
 need(p.returncode==0,'current process statistics runtime QA failed: '+(p.stderr or p.stdout))
 
-need("const VERSION='2026.11.13.2'" in js,'guided data diagnostic version marker missing')
+need("const VERSION='2026.11.13.3'" in js,'guided data diagnostic version marker missing')
 need("const PACK=window.MM_PROCESS_EVIDENCE_DATASETS" in js,'guided UI must consume the canonical evidence dataset pack')
 need("DATASETS.length!==PACK.datasets.length" in js,'guided UI must fail closed if a canonical dataset has no guide')
 need("24 baseline, 24 fault and 24 recovery" in js,'learner UI must explain the canonical phase structure')
@@ -38,7 +38,7 @@ for marker in ['Read the pattern','Diagnose','Choose the next evidence','Interpr
 need("PACK.toCsv(ds.id)" in js,'CSV export must use the canonical dataset generator rather than a duplicate dataset')
 need("MM_PROCESS_DATA_DIAGNOSTICS" in js,'guided data diagnostic runtime API missing')
 need("function evaluateChoice(caseId,stepIndex,choiceIndex)" in js,'guided diagnostics must expose deterministic structured answer evaluation')
-need("open:openHome,openGuidedCases:renderGuidedHome,evaluateChoice" in js,'structured answer evaluator must be exported on the guided diagnostic runtime API')
+need("open:openHome,openMaths,openGuidedCases:renderGuidedHome,evaluateChoice" in js,'Maths and structured answer evaluators must be exported on the guided diagnostic runtime API')
 for marker in ['Process data lab','function renderHome()','function renderGuidedHome()','data-pdlab-guided','data-pdlab-50','data-pdlab-atlas','data-pdlab-csv','data-pdlab-saved','data-pd-practice']:
     need(marker in js,f'process-data lab route missing: {marker}')
 need('ensureNav' not in js and 'patchMobileMore' not in js,'process-data lab must not create duplicate navigation entries')

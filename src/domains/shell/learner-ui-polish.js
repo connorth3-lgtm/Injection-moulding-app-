@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.11.13.2
+/* MouldMaster learner UI polish — 2026.11.13.3
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.11.13.2';
+const VERSION='2026.11.13.3';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
 const STYLE_REV='2026.10.20.2-pr640-materials-parity';
 const DESKTOP_QUERY='(min-width:1101px)';
@@ -208,7 +208,7 @@ function syncDesktopNavigation(){
   [...nav.querySelectorAll(':scope > button')].forEach(button=>{
     if(button.dataset.mmDesktopMoreTools)return;
     const view=button.dataset.view||'',registryId=button.dataset.mmRegistryNav||'';
-    const keep=PRIMARY_DESKTOP_VIEWS.has(view)||registryId==='book';
+    const keep=PRIMARY_DESKTOP_VIEWS.has(view)||registryId==='book'||registryId==='maths';
     hideNavButton(button,isDesktop&&!keep);
     if(keep&&labels[view]&&button.querySelector('span'))button.querySelector('span').textContent=labels[view];
   });
@@ -1012,7 +1012,7 @@ function more(){
   grid.prepend(...direct);
   illustrateMore(grid);
 }
-/* Interior parity with the approved five-tab reference boards. Each target
+/* Interior parity with the approved learner navigation reference boards. Each target
    already owns its content, commands and validation rules. Decorations are
    local, noninteractive and idempotent across renderer replacements. */
 function deepViewPolish(){

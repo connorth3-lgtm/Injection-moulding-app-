@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
-'web_release':'2026.11.13.2',
+'web_release':'2026.11.13.3',
  'android_release':'2026.11.08.1',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -19,7 +19,7 @@ expected={
  'assessment_quality_version':'2026.08.24.3',
  'assessment_storage_scope_version':'2026.08.24.4',
  'assessment_evidence_version':'2026.10.05.1',
-  'read_aloud_version':'2026.11.13.2',
+  'read_aloud_version':'2026.11.13.3',
  'windows_recovery_release':'2026.08.21.1',
 }
 for k,v in expected.items(): need(V.get(k)==v,f'version.json {k} drift: {V.get(k)!r} != {v!r}')
@@ -616,6 +616,35 @@ elif visual.get('release')=='2026.11.11.4':
          and 'Owner-authorized technical visual baseline' in visual.get('policy','')
          and 'remain HOLD' in visual.get('policy',''),
          '2026.11.11.4 PR #707 visual baseline must retain its exact owner-approved Practice source, full strict matrix and separate external-review HOLDs')
+elif visual.get('release')=='2026.11.13.3':
+    # PR #715 owner-approved the dedicated Maths primary tab on the exact screenshots shown.
+    # Pin a distinct runtime-equivalent source and preserve the strict 52-screen comparison.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.13.3_PR715.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.13.3'
+         and visual.get('commit')=='2154c7b6b7c3dd63f7752f84bca8a6e73c750883'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and visual.get('referenceCaptureToolchain')=={
+             'framework':'@playwright/test','version':'1.64.1','browser':'chromium',
+             'referenceSourceSha':visual['commit']}
+         and 'STATUS: OWNER VISUAL APPROVAL' in review_current
+         and '0e20e1f0aa7c6976af23c9a6c65d8665a2a611a9' in review_current
+         and '2154c7b6b7c3dd63f7752f84bca8a6e73c750883' in review_current
+         and '43403783240' in review_current
+         and '14026049001' in review_current
+         and 'sha256:5e4185a53e9a9724c6191c1017659adccedfc2113c28bc985e59996cb485fae1' in review_current
+         and '52 expected and 52 captured viewport/surface captures' in review_current
+         and '45 of 52 comparisons differed from the previous reference' in review_current
+         and 'No masks or skipped surfaces were added.' in review_current
+         and 'All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain **HOLD**.' in review_current
+         and 'owner-approved visual design baseline' in visual.get('policy','').lower()
+         and 'remain HOLD' in visual.get('policy',''),
+         '2026.11.13.3 PR #715 visual baseline must remain pinned to the reviewed Maths-tab runtime with the strict full-screen matrix and independent HOLDs')
 elif visual.get('release')=='2026.11.13.1':
     # Practice cleanup removes the unpersonalized duplicate and clarifies the scenario and diagnosis routes.
     # Pin the same complete technical comparison matrix and keep visual approval on HOLD.

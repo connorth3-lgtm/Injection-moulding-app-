@@ -42,7 +42,7 @@ test('Materials deep link is intentional but does not become the Home relaunch r
   expect(new URL(page.url()).searchParams.has('view')).toBe(false);
 });
 
-test('five mobile tabs start with actionable content instead of oversized introductions',async({page})=>{
+test('six mobile tabs start with actionable content instead of oversized introductions',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   const nav=page.locator('.mobile-nav');
@@ -303,7 +303,7 @@ test('canonical shell stays stable through intermediate responsive widths',async
     expect(state.view).toBe('dashboard');
     expect(state.navGroup).toBe('home');
     if(width<=700){
-      expect(state.mobileButtons).toHaveLength(5);
+      expect(state.mobileButtons).toHaveLength(6);
       expect(state.current).toBe(1);
     }
   }
@@ -330,7 +330,7 @@ test('primary IA keeps Materials singular and every major destination reachable'
   await openApp(page);
   const nav=page.locator('#nav');
   const visibleLabels=await nav.locator(':scope > button').evaluateAll(nodes=>nodes.filter(n=>getComputedStyle(n).display!=='none'&&!n.hidden).map(n=>(n.textContent||'').replace(/\s+/g,' ').trim()));
-  expect(visibleLabels).toEqual(['⌂ Home','▦ Learn','⬡ Materials','⚠ Practice','More']);
+  expect(visibleLabels).toEqual(['⌂ Home','▦ Learn','⬡ Materials','⚠ Practice','∑ Maths','More']);
   await expect(page.locator('#dashboard [data-mm-home-book]')).toBeVisible();
 
   await nav.getByRole('button',{name:'Home'}).click();
@@ -385,7 +385,7 @@ test('primary IA keeps Materials singular and every major destination reachable'
   await page.setViewportSize({width:390,height:844});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   const mobile=page.locator('.mobile-nav');
-  await expect(mobile.locator(':scope > button')).toHaveCount(5);
+  await expect(mobile.locator(':scope > button')).toHaveCount(6);
   await expect(mobile.getByRole('button',{name:'Materials'})).toBeVisible();
   await mobile.getByRole('button',{name:'Materials'}).click();
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();
@@ -572,7 +572,7 @@ test('Defect Finder and Troubleshooting Coach share an evidence-gated offline ca
 });
 
 
-test('tablet bottom navigation keeps five touch targets on one row and clears the page content',async({page})=>{
+test('tablet bottom navigation keeps six touch targets on one row and clears the page content',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
   for(const width of [701,768,810,900]){
@@ -597,9 +597,9 @@ test('tablet bottom navigation keeps five touch targets on one row and clears th
         overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
       };
     });
-    expect(data.count,'primary button count at '+width).toBe(5);
+    expect(data.count,'primary button count at '+width).toBe(6);
     expect(data.rows,'one visual row at '+width).toBe(1);
-    expect(data.tracks,'five CSS tracks at '+width).toBe(5);
+    expect(data.tracks,'six CSS tracks at '+width).toBe(6);
     expect(data.minimumHeight,'minimum touch height at '+width).toBeGreaterThanOrEqual(44);
     expect(data.minimumWidth,'minimum touch width at '+width).toBeGreaterThanOrEqual(44);
     expect(data.contained,'all buttons inside bottom nav at '+width).toBeTruthy();

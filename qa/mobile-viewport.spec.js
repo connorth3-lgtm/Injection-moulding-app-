@@ -14,7 +14,8 @@ async function openApp(page){
   await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_PRIMARY_HUBS);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
-  await expect(page.locator('.mobile-nav > button')).toHaveCount(5);
+  await expect(page.locator('.mobile-nav > button')).toHaveCount(6);
+  await expect(page.locator('.mobile-nav > button').filter({hasText:'Maths'})).toHaveCount(1);
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 async function openPracticeHub(page){
@@ -239,7 +240,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
     test('Primary mobile navigation and the reduced More tools are keyboard reachable',async({page})=>{
       await openApp(page);
       const nav=page.locator('.mobile-nav > button');
-      const expected=['Home','Learn','Materials','Practice','More'];
+      const expected=['Home','Learn','Materials','Practice','Maths','More'];
       await nav.nth(0).focus();
       for(let i=0;i<expected.length;i++){
         const focused=await page.evaluate(()=>document.activeElement?.textContent||'');

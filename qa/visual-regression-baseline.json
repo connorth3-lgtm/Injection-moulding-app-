@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.13.1",
-  "commit": "f9474499ee88cca534575bd56e30fd092767de2f",
+  "release": "2026.11.13.3",
+  "commit": "2154c7b6b7c3dd63f7752f84bca8a6e73c750883",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Technical preview reference for removing the generic unpersonalized quick-practice card, keeping learner-specific recommendations, clarifying the full shop-floor scenario bank, and distinguishing unscored guided practice from scored diagnostic labs. Compare all 52 viewport/surface captures at the unchanged 12-pixel threshold. This baseline is not visual-owner approval; the human visual-owner decision and all independent real-device, accessibility, SME, learner-outcome, provider and production reviews remain HOLD.",
-  "ref": "visual-baseline/2026.11.13.1",
+  "policy": "Owner-approved visual design baseline for the dedicated Maths primary tab in desktop and phone navigation. The owner reviewed the exact 360×800 phone Home and 1440×900 desktop Home captures from the Maths-tab candidate. Compare all 52 viewport/surface captures at the unchanged 12-pixel threshold. This visual approval covers the Maths navigation change only; independent assistive-technology, physical-device, Windows distribution, SME, learner-outcome, provider/NZQA and production reviews remain HOLD.",
+  "ref": "visual-baseline/2026.11.13.3",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "f9474499ee88cca534575bd56e30fd092767de2f"
+    "referenceSourceSha": "2154c7b6b7c3dd63f7752f84bca8a6e73c750883"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",
