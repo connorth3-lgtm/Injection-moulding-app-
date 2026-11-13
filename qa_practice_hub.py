@@ -9,6 +9,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 hub = (ROOT / "primary-learning-practice-hubs.js").read_text(encoding="utf-8")
 css = (ROOT / "mobile-lesson-fix.css").read_text(encoding="utf-8")
+shell = (ROOT / "src/domains/shell/app-shell-registry.js").read_text(encoding="utf-8")
 
 required_hub = {
     "learner model recommendations": "MM_LEARNER_MODEL",
@@ -34,6 +35,12 @@ required_hub = {
     "retrieval practice CTA": "Start retrieval practice →",
 }
 failures = []
+
+material_nav = next((line for line in shell.splitlines() if "id:'material-labs'" in line), "")
+if "group:'materials'" not in material_nav or "mobileGroup:'materials'" not in material_nav:
+    failures.append("Material Behaviour Labs must keep Materials as its parent navigation area")
+if "practiceOwned" in hub:
+    failures.append("Primary navigation ownership must not misclassify Material Behaviour Labs as Practice")
 
 learn_launcher = 'data-mm-hub-action="question-centre"'
 if learn_launcher not in hub:

@@ -171,6 +171,7 @@ function desktopAnchor(item){
   const nav=document.getElementById('nav');if(!nav)return null;
   if(item.anchorSelector)return nav.querySelector(item.anchorSelector);
   if(item.group==='progress')return nav.querySelector('button[data-view="profile"]')||nav.querySelector('.more-nav');
+  if(item.group==='materials')return nav.querySelector('button[data-view="materials"]');
   return nav.querySelector('button[data-view="scenarios"]')
 }
 function makeDesktopButton(item){
@@ -185,11 +186,13 @@ function syncDesktopNavigation(){
   removeLegacyDynamicNav();
   nav.querySelectorAll('[data-mm-registry-nav]').forEach(x=>x.remove());
   const items=[...navigationItems.values()].filter(x=>x.desktop!==false).sort((a,b)=>(a.order||50)-(b.order||50));
-  let lastPractice=null,lastProgress=null;
+  let lastPractice=null,lastProgress=null,lastMaterials=null;
   for(const item of items){
     const b=makeDesktopButton(item);const anchor=desktopAnchor(item);
     if(item.group==='progress'){
       if(lastProgress)lastProgress.insertAdjacentElement('afterend',b);else if(anchor)anchor.insertAdjacentElement('beforebegin',b);else nav.appendChild(b);lastProgress=b
+    }else if(item.group==='materials'){
+      if(lastMaterials)lastMaterials.insertAdjacentElement('afterend',b);else if(anchor)anchor.insertAdjacentElement('afterend',b);else nav.appendChild(b);lastMaterials=b
     }else{
       if(lastPractice)lastPractice.insertAdjacentElement('afterend',b);else if(anchor)anchor.insertAdjacentElement('afterend',b);else nav.appendChild(b);lastPractice=b
     }
@@ -384,7 +387,7 @@ function installDefaultNavigation(){
   registerNavigation({id:'mould-master',desktop:false,mobileMore:false,label:'Mould Master',icon:'◆',description:'Build an evidence-led troubleshooting case.',order:10,group:'practice',legacyDataset:'mmMouldMaster',mobileGroup:'practice',action:()=>window.MM_MOULD_MASTER_WORKSPACE?.open?.()});
   registerNavigation({id:'diagnostic-labs',desktop:false,mobileMore:false,label:'Diagnostic labs',icon:'⌁',description:'Practise evidence-first troubleshooting.',order:20,group:'practice',legacyDataset:'mmDiagnosticLabs',mobileGroup:'practice',action:()=>window.MM_DIAGNOSTIC_LABS?.open?.()});
   registerNavigation({id:'process-data',desktop:false,mobileMore:false,label:'Process data lab',icon:'⌁',description:'Practise synthetic process evidence or analyse prepared local shot data.',order:30,group:'practice',legacyDataset:'mmProcessData',mobileGroup:'practice',action:()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.()});
-  registerNavigation({id:'material-labs',desktop:false,mobileMore:false,label:'Material labs',icon:'◈',description:'Compare resin-specific behaviour and evidence.',order:40,group:'practice',legacyDataset:'mmMaterialLabs',mobileGroup:'practice',action:()=>window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.()});
+  registerNavigation({id:'material-labs',desktop:false,mobileMore:false,label:'Material labs',icon:'◈',description:'Compare resin-specific behaviour and evidence.',order:40,group:'materials',legacyDataset:'mmMaterialLabs',mobileGroup:'materials',action:()=>window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.()});
   registerNavigation({id:'reference-data',label:'Reference data',icon:'▤',description:'Materials, defects, signals and troubleshooting data.',order:50,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.assign('./reference-data.html')});
   registerNavigation({id:'learning-insights',label:'Learning insights',icon:'◫',description:'See local learning progress and retry trends.',order:60,group:'progress',legacyDataset:'mmLearningInsights',mobileGroup:'more',action:()=>window.MM_LEARNING_ANALYTICS?.open?.()});
   registerNavigation({id:'repair-app-files',label:'Support & app maintenance',icon:'?',description:'Help, offline/update guidance and repair options.',order:70,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.assign('./support.html')})

@@ -1889,8 +1889,8 @@ document.addEventListener('input',event=>{
 
 function configureMore(){
   const items=window.MM_APP_SHELL?.navigation?.items;
-  const practiceOwned=new Set(['mould-master','diagnostic-labs','process-data','material-labs']);
-  if(items?.forEach)items.forEach((item,id)=>{item.mobileMore=id!=='materials-page'&&!practiceOwned.has(id)});
+  const primaryOwned=new Set(['mould-master','diagnostic-labs','process-data','material-labs']);
+  if(items?.forEach)items.forEach((item,id)=>{item.mobileMore=id!=='materials-page'&&!primaryOwned.has(id)});
 }
 function pruneMore(){
   const modal=document.getElementById('modal');if(!modal)return;

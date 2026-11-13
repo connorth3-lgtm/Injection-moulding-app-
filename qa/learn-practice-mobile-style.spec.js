@@ -293,6 +293,10 @@ test('Practice hub keeps compact left-aligned mobile cards under strict CSP',asy
   await materialLabs.click();
   await expect(page.locator('#materialLabs')).toBeVisible();
   await expect(page.locator('#materialLabs')).toContainText('Choose a material case');
+  const materialsTab=page.locator('.mobile-nav > button[data-view="materials"]');
+  const practiceTab=page.locator('.mobile-nav > button[data-view="scenarios"]');
+  await expect(materialsTab).toHaveClass(/active/);
+  await expect(practiceTab).not.toHaveClass(/active/);
 });
 
 test('Materials catalogue remains readable and enters at the top on 412px phones',async({page})=>{
