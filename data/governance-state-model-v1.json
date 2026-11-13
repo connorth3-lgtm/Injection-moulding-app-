@@ -350,7 +350,7 @@
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "PASS — exact-head Mobile Browser QA run 43408836296 and Question Quality 50-Pass run 43408836387 passed for source 31be14643ba17c2bfc8a6126f4623f810060b22a. Browser software QA does not establish physical-device or human validation."
+      "meaning": "PASS — release 2026.11.13.3 exact-head Mobile Browser QA run 43408836296 and Question Quality 50-Pass run 43408836387 passed for source 31be14643ba17c2bfc8a6126f4623f810060b22a. Browser software QA does not establish physical-device or human validation."
     },
     "externalHumanDevice": {
       "status": "hold",
