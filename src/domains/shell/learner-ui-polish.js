@@ -621,13 +621,11 @@ const practiceArtwork={
   'process-data':['challenges',23],
   labs:['setup',19],
   'question-centre':['evidence',27],
-  daily:['cases',22],
   'diagnostic-labs':['defects',6],
   'diagnostic-workbench':['diagnosing',21],
   'mould-master':['cases',8],
   'spatial-twin':['machine',0],
   simulator:['setup',19],
-  'material-labs':['materials',3],
   assessments:['training',24],
   'measured-decisions':['process',5]
 };
@@ -657,8 +655,8 @@ function practice(){
   hub.querySelectorAll('.mm-hub-section[aria-label="More recommended practice"] .mm-hub-grid > button[data-mm-hub-action]').forEach(practiceChoiceArt);
   const featured=hub.querySelector('.mm-hub-continue');
   if(featured&&!featured.querySelector(':scope > .mm-reference-practice-feature-art')){
-    const action=featured.querySelector('[data-mm-hub-action]')?.dataset.mmHubAction||'daily';
-    const [subject,tile]=practiceArtwork[action]||practiceArtwork.daily;
+    const action=featured.querySelector('[data-mm-hub-action]')?.dataset.mmHubAction;
+    const [subject,tile]=practiceArtwork[action]||practiceArtwork['problem-practice'];
     const art=picture(subject,'',tile);
     art.classList.add('mm-reference-practice-feature-art');
     art.setAttribute('aria-hidden','true');
