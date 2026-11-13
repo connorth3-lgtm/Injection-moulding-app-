@@ -716,42 +716,48 @@ function practiceToolHeaders(){
 // Practice hub. Source-owned evidence/scoring views retain their native Back buttons.
 function practiceSubpageNavigation(){
   const tools=[
-    ['#defects','problem-practice','Moulding problem practice'],
-    ['#processDataLabs','process-data','Process data'],
-    ['#diagnosticLabs','labs','Diagnostic labs'],
-    ['#materialLabs','labs','Material labs'],
-    ['#exams','question-centre','Knowledge checks'],
-    ['#mmVirtualApprenticeship','labs','Virtual apprenticeship'],
-    ['#mmSpatialTwin','labs','Spatial twin']
+    ['#defects','problem-practice','Moulding problem practice','scenarios'],
+    ['#processDataLabs','process-data','Process data','scenarios'],
+    ['#diagnosticLabs','labs','Diagnostic labs','scenarios'],
+    ['#materialLabs','material-labs','Material labs','materials'],
+    ['#exams','question-centre','Knowledge checks','scenarios'],
+    ['#mmVirtualApprenticeship','labs','Virtual apprenticeship','scenarios'],
+    ['#mmSpatialTwin','labs','Spatial twin','scenarios']
   ];
-  for(const [selector,origin,label] of tools){
+  for(const [selector,origin,label,defaultView='scenarios'] of tools){
     const root=document.querySelector(selector);
     if(!root)continue;
     const existing=root.querySelector(':scope > .mm-practice-tool-return');
     const originAction=window.MM_PRIMARY_HUBS?.learnToolOrigin?.();
+    const destination=originAction?'Learn':defaultView==='materials'?'Materials':'Practice';
     if(existing){
       const text=existing.querySelector('.mm-practice-tool-back');
-      if(text)text.textContent=originAction?'← Back to Learn':'← Back to Practice';
+      if(text)text.textContent='← Back to '+destination;
       continue;
     }
     // No duplicate controls after tool-owned re-renders or app navigation.
     const nav=document.createElement('nav');
     nav.className='mm-practice-tool-return';
-    nav.setAttribute('aria-label','Learning and practice navigation');
+    nav.setAttribute('aria-label','Learning, materials and practice navigation');
     const back=document.createElement('button');
     back.type='button';back.className='mm-practice-tool-back';
-    back.textContent=originAction?'← Back to Learn':'← Back to Practice';
+    back.textContent='← Back to '+destination;
     const current=document.createElement('span');
     current.className='mm-practice-tool-current';
     current.textContent=label;
     back.addEventListener('click',()=>{
       const learnOrigin=window.MM_PRIMARY_HUBS?.learnToolOrigin?.();
-      window.switchView?.(learnOrigin?'path':'scenarios');
+      const returnView=learnOrigin?'path':defaultView;
+      window.switchView?.(returnView);
       window.MM_PRIMARY_HUBS?.clearLearnToolOrigin?.();
       window.requestAnimationFrame(()=>{
+        if(returnView==='materials'){
+          document.querySelector('#materials #mmMaterialLearningAnchor [data-mm-material-labs-entry]')?.focus({preventScroll:true});
+          return;
+        }
         const action=learnOrigin||origin;
-        const selector=learnOrigin?'#path .mm-learn-hub':'#scenarios .mm-practice-hub';
-        const card=document.querySelector(selector+' [data-mm-hub-action="'+action+'"]');
+        const hubSelector=returnView==='path'?'#path .mm-learn-hub':'#scenarios .mm-practice-hub';
+        const card=document.querySelector(hubSelector+' [data-mm-hub-action="'+action+'"]');
         card?.focus({preventScroll:true});
       });
     });
@@ -847,6 +853,7 @@ function materials(){
       tabs.querySelector(`button.active[data-mm-onclick="switchMaterialTab('explorer')"]`)?.remove();
       const labs=document.createElement('button');
       labs.type='button';labs.textContent='Material behaviour labs';
+      labs.dataset.mmMaterialLabsEntry='1';
       labs.addEventListener('click',()=>window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.());
       tabs.append(labs);
       guide.before(tabs);
