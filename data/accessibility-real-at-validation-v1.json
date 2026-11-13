@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "release": "2026.11.14.1",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.14.1.md",
-  "sourceSha": null,
-  "runtimeFingerprint": null,
+  "sourceSha": "6b7f0cccd90e96fd36316cea9e963af1b411c3e1",
+  "runtimeFingerprint": "sha256:199f1401f1a3077628d50284922ee127e9bfa4e02fb146ae080056ba51818922",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.11.14.1 candidate provenance is not yet verified; all real-AT tasks remain pending until an exact retained candidate is bound and genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.11.14.1 is bound to exact retained learner-runtime candidate 6b7f0cccd90e96fd36316cea9e963af1b411c3e1; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -308,15 +308,9 @@
   "previousCandidate": {
     "release": "2026.11.13.3",
     "sourceSha": "31be14643ba17c2bfc8a6126f4623f810060b22a",
-    "runtimeFingerprint": "sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b",
-    "candidateRunId": 43408836154,
-    "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 14028262546,
-    "artifactName": "physical-pwa-candidate-31be14643ba17c2bfc8a6126f4623f810060b22a",
-    "artifactDigest": "sha256:ac6fc4d0178ab185c8ec80bde69880639ffb84ef2d96f87f1d02979c058c69fc",
-    "artifactExpiresAt": "2027-02-11T10:24:33Z"
+    "runtimeFingerprint": "sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b"
   },
-  "technicalCandidateStatus": "PENDING — release 2026.11.14.1 exact-source candidate and browser checks have not yet been verified.",
+  "technicalCandidateStatus": "PASS — exact-source release 2026.11.14.1 software candidate 6b7f0cccd90e96fd36316cea9e963af1b411c3e1 and browser/question gates passed. Genuine human NVDA and VoiceOver validation remains pending.",
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",

@@ -3,7 +3,7 @@
   "masterIssue": 632,
   "release": "2026.11.14.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
+  "candidateSourceSha": "6b7f0cccd90e96fd36316cea9e963af1b411c3e1",
   "scope": "Make injection moulding Maths a standalone top-level desktop and mobile destination while preserving the existing ungraded practice content and non-production boundaries.",
   "approvalBoundary": "HOLD — release 2026.11.14.1 candidate producer, runtime artifact and exact-head software gates are pending verification. The seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider streams remain HOLD. Production authority remains advisory-only.",
   "issueGroups": {
