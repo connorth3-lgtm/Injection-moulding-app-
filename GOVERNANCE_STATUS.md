@@ -1,12 +1,12 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.11.13.3`**.
+Current governed web candidate: **`2026.11.14.1`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **pass** |
+| Technical automation | **fail** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | PASS — exact-source release 2026.11.13.3 artifact 14028262546 from producer run 43408836154, source 31be14643ba17c2bfc8a6126f4623f810060b22a, runtime fingerprint sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b verified as a retained software candidate. No human, device or production approval is implied. |
-| Behavioral / browser | **pass** | PASS — release 2026.11.13.3 exact-head Mobile Browser QA run 43408836296 and Question Quality 50-Pass run 43408836387 passed for source 31be14643ba17c2bfc8a6126f4623f810060b22a. Browser software QA does not establish physical-device or human validation. |
+| Static / contract | **fail** | HOLD: release 2026.11.14.1 exact-source candidate metadata and producer artifact are pending verification. No human, device or production approval is implied. |
+| Behavioral / browser | **fail** | HOLD: browser and question gates for release 2026.11.14.1 exact-source candidate are pending verification; prior green workflows do not transfer to a different release. |
 | External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.13.3. |

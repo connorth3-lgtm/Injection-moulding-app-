@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Retained release 2026.11.13.3 candidate 31be14643ba17c2bfc8a6126f4623f810060b22a and artifact 14028262546 are NOT evidence of testing on physical iOS/iPadOS and Android devices. Real device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
+  "boundary": "Release 2026.11.14.1 has no current retained candidate yet. Real-device install, offline restart, reboot, update, storage-pressure and zoom remain pending. Real assistive-technology validation is separately governed by data/accessibility-real-at-validation-v1.json. Production root, signing, provider and machine-control authority remain HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
@@ -41,7 +41,7 @@
     }
   },
   "privacyBoundary": "Public contract metadata must not include learner names, customer/site identifiers, email addresses, private screenshots, raw process data, backup content, filesystem/user paths or other personal/proprietary evidence. Keep detailed device evidence outside the public repository and reference it only with a non-sensitive review identifier.",
-  "release": "2026.11.13.3",
+  "release": "2026.11.14.1",
   "previousCandidate": {
     "release": "2026.11.13.2",
     "sourceSha": "3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99",
@@ -53,7 +53,7 @@
     "artifactDigest": "sha256:9de179d5d4e0d7beb88e62de53fefc8c9070b0828d24b6df70e6f1936b5c56da",
     "artifactExpiresAt": "2027-02-11T05:14:51Z"
   },
-  "packet": "qa/PWA_PHYSICAL_DEVICE_2026.11.13.3.md",
+  "packet": "qa/PWA_PHYSICAL_DEVICE_2026.11.14.1.md",
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",

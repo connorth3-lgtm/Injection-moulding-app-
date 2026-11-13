@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.13.3",
-  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.11.13.3.md",
+  "release": "2026.11.14.1",
+  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.11.14.1.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "pass",
-    "claim": "PASS — exact-source software-only candidate for release 2026.11.13.3, source 31be14643ba17c2bfc8a6126f4623f810060b22a, producer run 43408836154, artifact 14028262546, runtime fingerprint sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b. The retained producer artifact and exact-head browser/question gates passed; all seven independent review streams remain HOLD."
+    "status": "fail",
+    "claim": "HOLD — release 2026.11.14.1 exact-source candidate, producer artifact and exact-head browser/question gates are pending verification. All seven independent review streams remain HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -21,7 +21,7 @@
   "accessibility": {
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
-    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.11.13.3.md",
+    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.11.14.1.md",
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
     "previousCandidate": {
       "release": "2026.11.13.2",
@@ -47,7 +47,7 @@
   "pwaPhysicalDevices": {
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
-    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.11.13.3.md",
+    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.11.14.1.md",
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
     "previousCandidate": {
       "release": "2026.11.13.2",
@@ -98,7 +98,7 @@
     "status": "hold",
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
-    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.11.13.3.md",
+    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.11.14.1.md",
     "sourceSha": "0e1bb220a7a98638b56b65d8af5aa9aa553c6fbb",
     "desktopRelease": "2026.09.29.1",
     "evidence": null,
@@ -112,20 +112,20 @@
   "bookSme": {
     "status": "hold",
     "evidenceContract": "data/book-sme-review-v1.json",
-    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.11.13.3.md",
+    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.11.14.1.md",
     "required": "Independent human SME approval of all 46 governed Book modules across the six required review dimensions; the 21 reader chapters are structural groupings only. Review the separate draft Book workbooks for the regional education routes. Review the 15 optional further-reading resources in each of the 21 reader chapters for fit, credibility, openness, currency and applicability; these links remain supplemental and are not claim evidence.",
     "contentRelease": "2026.11.09.1"
   },
   "curriculumSme": {
     "status": "hold",
     "evidenceContract": "qa/curriculum-semantic-review.json",
-    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.11.13.3.md",
+    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.11.14.1.md",
     "required": "Traceable human SME semantic approval of all 120 canonical lessons. Review the seven draft regional curriculum and assessment packs, including the Hindi study notes."
   },
   "learnerOutcomes": {
     "status": "hold",
     "pilotContract": "data/learner-pilot-v1.json",
-    "pilotPacket": "qa/LEARNER_PILOT_2026.11.13.3.md",
+    "pilotPacket": "qa/LEARNER_PILOT_2026.11.14.1.md",
     "evidence": null,
     "required": "Longitudinal real-learner outcome evidence before efficacy or genuine psychometric-validity claims."
   },
@@ -148,7 +148,7 @@
   "nzqaProvider": {
     "status": "hold",
     "evidenceContract": "data/nzqa-external-validation-v1.json",
-    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.13.3.md",
+    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.14.1.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "previousCandidate": {
       "release": "2026.11.13.2",
@@ -193,7 +193,7 @@
     "artifactDigest": "sha256:9de179d5d4e0d7beb88e62de53fefc8c9070b0828d24b6df70e6f1936b5c56da",
     "artifactExpiresAt": "2027-02-11T05:14:51Z"
   },
-  "candidateStatus": "PASS — release 2026.11.13.3 software-only technical candidate verified against exact-source producer, browser and question-quality gates; all seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain HOLD.",
+  "candidateStatus": "HOLD — release 2026.11.14.1 technical candidate not yet verified; all seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.11.13.1",
     "sourceSha": "d68ff4fb2bf4bc8f57a1c715a9faa586a90a0600",
