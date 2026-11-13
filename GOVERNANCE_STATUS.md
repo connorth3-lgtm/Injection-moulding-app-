@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.11.13.1`**.
+Current governed web candidate: **`2026.11.13.2`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **pass** | Software-only exact-source contract and retained candidate identity passed for release 2026.11.13.1, source 0e1bb220a7a98638b56b65d8af5aa9aa553c6fbb, fingerprint sha256:08f87546f51734c15ea5bce2243937350a6bc3f49a617a38e9f8b44a369ee4b9, producer run 43350352284, artifact 14003308074. No human, device, provider, Windows distribution or production authorization is implied. |
-| Behavioral / browser | **pass** | Mobile Browser QA run 43350352261 and Question Quality 50-Pass run 43350352255 passed on exact source 0e1bb220a7a98638b56b65d8af5aa9aa553c6fbb for release 2026.11.13.1. Chromium and WebKit substantive suites, visual and cross-browser QA, reachability, and all five reliability shards passed. Automated browser and question checks do not establish physical-device, real assistive-technology, learner-outcome, provider, accreditation or production approval. |
-| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.13.1. |
+| Static / contract | **pass** | PASS — release 2026.11.13.2 software candidate source 3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99, fingerprint sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb, artifact 14011868739, from successful Pre-merge Public Candidate run 43370758966. This is technical release evidence only and does not imply source review, human, device or production approval. |
+| Behavioral / browser | **pass** | PASS — release 2026.11.13.2 Mobile Browser QA run 43370758700 and Question Quality 50-Pass run 43370758771 succeeded on exact source 3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99. Browser software QA does not establish physical-device or human validation. |
+| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.13.2. |

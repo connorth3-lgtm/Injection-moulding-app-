@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 
-const VERSION='2026.11.12.1';
+const VERSION='2026.11.13.2';
 const PACK=window.MM_PROCESS_EVIDENCE_DATASETS;
 const SOURCES=window.MM_EVIDENCE_SOURCES?.sources||{};
 if(!PACK||!Array.isArray(PACK.datasets))throw new Error('process-data-diagnostics.js requires MM_PROCESS_EVIDENCE_DATASETS');
@@ -83,6 +83,69 @@ const GUIDES={
 
 const DATASETS=PACK.datasets.map(ds=>({...ds,guide:GUIDES[ds.id]})).filter(ds=>ds.guide);
 if(DATASETS.length!==PACK.datasets.length)throw new Error('Every process evidence dataset must have a guided diagnostic case');
+
+
+const MATH_DRILLS=Object.freeze([
+  {category:'Units',level:'Starter',question:'A resin batch weighs 3.2 kg. How many grams is that?',choices:['320 g','3,200 g','32,000 g'],answer:1,hint:'There are 1,000 grams in 1 kilogram.',working:'3.2 kg × 1,000 = 3,200 g.'},
+  {category:'Units and time',level:'Starter',question:'A cycle takes 1.25 minutes. How many seconds is that?',choices:['65 seconds','75 seconds','125 seconds'],answer:1,hint:'There are 60 seconds in 1 minute.',working:'1.25 min × 60 s/min = 75 s.'},
+  {category:'Shot mass',level:'Core',question:'A cold-runner mould has 4 cavities. Each part weighs 13.2 g and the runner weighs 6.8 g. What is the total shot mass?',choices:['52.8 g','59.6 g','60.4 g'],answer:1,hint:'Add the mass of all parts to the runner mass.',working:'4 × 13.2 g + 6.8 g = 59.6 g per shot. A hot-runner system needs its own accounting because the runner is not normally ejected with each shot.'},
+  {category:'Material percentages',level:'Core',question:'An 8 kg final blend contains 2.5% additive by total blend mass. How much additive is in the blend?',choices:['20 g','200 g','250 g'],answer:1,hint:'Convert 2.5% to 0.025, then multiply by the total blend mass.',working:'8 kg × 0.025 = 0.2 kg = 200 g additive. The remaining base resin is 7.8 kg. This question defines percentage of the final blend; parts-per-hundred-resin calculations use a different denominator.'},
+  {category:'Cycle time and output',level:'Core',question:'A 4-cavity mould runs at a 30 second cycle. What is the theoretical output per hour if every cycle fills all cavities and the machine never stops?',choices:['120 parts/hour','480 parts/hour','720 parts/hour'],answer:1,hint:'First calculate 3,600 seconds per hour ÷ cycle seconds, then multiply by active cavities.',working:'3,600 ÷ 30 = 120 cycles/hour. 120 × 4 cavities = 480 theoretical parts/hour. Real good output is lower when there are stops, short shots or rejects.'},
+  {category:'Actual production rate',level:'Core',question:'The shift record shows 360 accepted good parts during a 90 minute scheduled window, including stoppages. What was the average good output per scheduled hour?',choices:['240 parts/hour','360 parts/hour','540 parts/hour'],answer:0,hint:'90 minutes is 1.5 hours. Divide accepted parts by the full scheduled time in hours.',working:'360 ÷ 1.5 h = 240 accepted good parts per scheduled hour. State whether your time window includes downtime; do not compare unlike windows.'},
+  {category:'Scrap and yield',level:'Core',question:'There were 15 rejects among 600 total parts produced. What are the reject rate and first-pass yield?',choices:['2.5% reject; 97.5% yield','2.5% reject; 2.5% yield','40% reject; 60% yield'],answer:0,hint:'Reject rate = rejects ÷ total × 100. Yield = accepted good parts ÷ total × 100.',working:'15 ÷ 600 × 100 = 2.5% rejects. If the other 585 parts were accepted as good, 585 ÷ 600 × 100 = 97.5% yield. Keep rework separate until the parts pass the agreed acceptance checks.'},
+  {category:'Measurement statistics',level:'Core',question:'Four part-mass readings are 10.1, 10.3, 10.2 and 10.2 g. What are the mean and range?',choices:['Mean 10.2 g; range 0.2 g','Mean 10.2 g; range 0.1 g','Mean 10.1 g; range 0.3 g'],answer:0,hint:'Mean = sum ÷ number of readings. Range = largest − smallest.',working:'(10.1 + 10.3 + 10.2 + 10.2) ÷ 4 = 10.2 g mean. 10.3 − 10.1 = 0.2 g range. Keep cavity identity and measurement method with the readings.'},
+  {category:'Percentage change',level:'Core',question:'A stable baseline mean is 64 g. A later mean is 67.2 g. What is the percentage increase from baseline?',choices:['3.2%','5%','105%'],answer:1,hint:'Percentage change = (new − old) ÷ old × 100.',working:'(67.2 − 64) ÷ 64 × 100 = 5%. A change in mean is a signal to investigate; it does not by itself prove the parts are acceptable or identify the cause.'},
+  {category:'Shrinkage',level:'Advanced',question:'For one measured direction, a mould dimension is 100.0 mm and the conditioned part dimension is 98.5 mm. What is the simple linear shrinkage estimate?',choices:['1.5%','0.15%','1.5 mm'],answer:0,hint:'Subtract part size from mould size, divide by mould size, then multiply by 100.',working:'(100.0 − 98.5) ÷ 100.0 × 100 = 1.5%. This is a simple direction-specific estimate; material, process, conditioning time and measurement method affect the result.'},
+  {category:'Clamp-force estimate',level:'Advanced',question:'A simplified example uses 3,200 mm² projected area and 35 MPa cavity pressure. What separating-force estimate does the calculation give?',choices:['About 11.4 tonne-force','About 112 tonne-force','About 11.4 kN'],answer:0,hint:'1 MPa = 1 N/mm². Calculate pressure × area for newtons, convert to kN, then divide by 9.80665 for tonne-force.',working:'35 × 3,200 = 112,000 N = 112 kN. 112 ÷ 9.80665 ≈ 11.4 tonne-force. This is a simplified training estimate only, not a clamp setting or machine-selection approval. Use total projected area and relevant cavity-pressure evidence; actual clamp requirements need qualified engineering and approved machine, mould and site limits.'},
+  {category:'Measurement skill',level:'Shop-floor check',question:'Two operators get different readings from the same part, while the apparent difference is small. What should be checked before changing the moulding process?',choices:['Increase pressure to see which reading is right','Standardise the instrument, fixture, method and part-conditioning time, then check repeatability','Average the readings and discard the originals'],answer:1,hint:'First find out whether the measured difference is real and repeatable.',working:'Check instrument resolution and condition, fixture, method, operator repeatability, part location and conditioning time. Keep the original readings and method with the record before interpreting a process shift.'},
+  {category:'Reading data',level:'Shop-floor check',question:'Four cavities have stable measurements near 10.0 mm, but one cavity is repeatedly near 10.4 mm. What is the best first analysis?',choices:['Average all cavities and treat the mould as one population','Separate results by cavity and confirm the measurement method before diagnosing the local difference','Change a global setting until all readings match'],answer:1,hint:'A combined average can hide a repeatable cavity-to-cavity difference.',working:'Keep cavity identity, compare like-for-like measurements and confirm the measurement system. Then investigate the local tool/process evidence. Do not erase a real cavity difference by averaging it away or jump straight to a global setting change.'}
+]);
+const MATH_FORMULAS=Object.freeze([
+  {title:'Units and conversions',body:'Mass: 1 kg = 1,000 g. Time: 1 min = 60 s. Area: 1 cm² = 100 mm². Keep units written beside every number.'},
+  {title:'Shot mass',body:'Cold runner: total shot mass = (part mass per cavity × cavities filled) + ejected runner mass. Example: 4 × 13.2 g + 6.8 g = 59.6 g. Account for hot-runner systems separately.'},
+  {title:'Blend percentages',body:'For a percentage of the final blend: additive mass = total blend mass × percentage ÷ 100. Example: 8 kg × 2.5% = 0.2 kg additive. Parts per hundred resin (phr) uses resin mass as its base instead.'},
+  {title:'Cycle and theoretical output',body:'Cycles/hour = 3,600 ÷ cycle seconds. Theoretical parts/hour = cycles/hour × active cavities. Example: 30 s and 4 cavities = 480 parts/hour before stops, rejects or incomplete fills.'},
+  {title:'Actual good output',body:'Average good output = accepted good parts ÷ elapsed time. State whether elapsed time includes stops. Use the same time basis when comparing runs.'},
+  {title:'Reject rate and yield',body:'Reject rate (%) = rejects ÷ total produced × 100. First-pass yield (%) = accepted good parts ÷ total produced × 100. Keep rework separate until accepted.'},
+  {title:'Mean, range and percentage change',body:'Mean = sum of readings ÷ count. Range = highest − lowest. Percentage change = (new − baseline) ÷ baseline × 100. Separate cavity data and keep the measurement method consistent.'},
+  {title:'Linear shrinkage estimate',body:'For one measured direction: shrinkage (%) = (mould dimension − conditioned part dimension) ÷ mould dimension × 100. Use matching units, axis and a defined conditioning/measurement method.'},
+  {title:'Clamp-force estimate',body:'Simplified force (kN) = projected area (mm²) × cavity pressure (MPa) ÷ 1,000, because 1 MPa = 1 N/mm². Tonne-force ≈ kN ÷ 9.80665. This teaches the relationship only; it is not a production setting or machine-sizing approval.'},
+  {title:'Measurement before adjustment',body:'Check instrument resolution, fixture, method, part location, operator repeatability and conditioning time. Preserve raw values and cavity identity; verify the signal before changing a stable process.'}
+]);
+let mathIndex=0,mathSelected=null;
+function renderMathGuide(){
+  mathIndex=0;mathSelected=null;activeId=null;answers=[];hadError=false;
+  const host=ensureSection();if(!host)return;
+  const cards=MATH_FORMULAS.map(item=>'<article class="pdlab-card card"><h3>'+esc(item.title)+'</h3><p>'+esc(item.body)+'</p></article>').join('');
+  host.innerHTML='<div class="pd-toolbar"><button class="ghost" data-pdlab-home>← Process Data Lab</button></div>'+
+    '<div class="pd-hero card"><div class="eyebrow">Learn, then practise · injection moulding numeracy</div><h2>Maths and shop-floor skills</h2><p>Work through the formulas, then answer short questions and see the worked method. Start with units and production basics, then move to quality and process-engineering estimates.</p><div class="pd-boundary"><b>Training boundary:</b> examples use simple training values. They do not prescribe process settings. Machine, mould, resin, site and quality requirements must come from approved, grade-specific documents and qualified procedures.</div></div>'+
+    '<div class="pd-toolbar"><div><h2>Key formulas</h2><p class="muted">Check the units and assumptions before using a formula.</p></div></div>'+
+    '<div class="pdlab-grid">'+cards+'</div>'+
+    '<div class="pd-panel card"><h3>Try 13 short problems</h3><p class="muted">Ungraded practice with hints and worked answers. Your answers are not added to formal assessments or learner scores.</p><button class="primary" data-pd-math-start>Start the practice set →</button></div>';
+  window.scrollTo?.({top:0,behavior:'smooth'});
+}
+function startMathPractice(){mathIndex=0;mathSelected=null;renderMathDrill()}
+function renderMathDrill(){
+  const q=MATH_DRILLS[mathIndex];if(!q)return renderMathSummary();
+  const host=ensureSection();if(!host)return;
+  const choices=q.choices.map((choice,i)=>{
+    const selected=mathSelected===i,style=selected?(i===q.answer?' correct':' wrong'):'';
+    return '<button class="pd-choice'+style+'" data-pd-math-choice="'+i+'" '+(mathSelected===null?'':'disabled')+'>'+esc(choice)+'</button>';
+  }).join('');
+  let feedback='';
+  if(mathSelected!==null&&mathSelected===q.answer)feedback='<div class="pd-feedback"><b>Correct. Here is the method:</b><br>'+esc(q.working)+'<div class="pd-actions"><button class="primary" data-pd-math-next>'+(mathIndex+1===MATH_DRILLS.length?'Finish practice':'Next problem →')+'</button></div></div>';
+  else if(mathSelected!==null)feedback='<div class="pd-feedback bad"><b>Not quite. Try the hint and calculate it again.</b><br>'+esc(q.hint)+'</div><button class="secondary" data-pd-math-retry>Try again</button>';
+  host.innerHTML='<div class="pd-toolbar"><button class="ghost" data-pd-math-guide>← Formula guide</button><button class="ghost" data-pdlab-home>← Process Data Lab</button></div>'+
+    '<div class="pd-panel card"><div class="pd-meta"><span class="pd-chip">'+esc(q.category)+'</span><span class="pd-chip">'+esc(q.level)+'</span></div><div class="pd-progress">'+MATH_DRILLS.map((_,i)=>'<span class="'+(i<mathIndex?'done':i===mathIndex?'current':'')+'"></span>').join('')+'</div><div class="pd-stage">Problem '+(mathIndex+1)+' of '+MATH_DRILLS.length+'</div><div class="pd-question">'+esc(q.question)+'</div><p class="tiny muted">Work it out before choosing. All values are for training.</p><div class="pd-choices">'+choices+'</div>'+feedback+'</div>';
+  host.dataset.step=String(mathIndex);
+  window.scrollTo?.({top:0,behavior:'smooth'});
+}
+function renderMathSummary(){
+  const host=ensureSection();if(!host)return;
+  host.innerHTML='<div class="pd-toolbar"><button class="ghost" data-pd-math-guide>← Formula guide</button><button class="ghost" data-pdlab-home>← Process Data Lab</button></div>'+
+    '<div class="pd-summary card"><div class="eyebrow">Practice set complete · ungraded</div><strong>'+MATH_DRILLS.length+' problems completed</strong><h2>Injection moulding maths</h2><p class="muted">Review any formula, retry the practice set, or return to the process-data cases. The clamp-force exercise is a simplified calculation, not a machine setting.</p><div class="pd-actions"><button class="primary" data-pd-math-start>Practise again</button><button class="ghost" data-pdlab-home>← Process Data Lab</button></div></div>';
+  window.scrollTo?.({top:0,behavior:'smooth'});
+}
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function learnerId(){try{const id=window.db?.activeUser||window.user?.id||'';return id?String(id):null}catch(_){return null}}
@@ -184,6 +247,7 @@ function renderHome(){
   <div class="pd-hero card"><div class="eyebrow">Practice · process evidence</div><h2>Start with a guided case</h2><p>Work through a synthetic example first. Use the advanced libraries when you want more cases, or choose local CSV analysis to work with prepared site data.</p><div class="pd-boundary"><b>Training boundary:</b> examples teach evidence reading. They do not set production limits or authorise machine changes. Local CSV preparation and analysis stay on this device.</div></div>
   <div class="pdlab-sections">
     <section class="card pdlab-section"><div class="eyebrow">Start here · synthetic training</div><h3>Guided diagnosis</h3><p>Choose from 14 cases. Each walks through baseline, fault and recovery evidence in four decisions.</p><button class="primary" data-pdlab-guided>Choose a guided case →</button><p class="tiny muted">The values are synthetic and are not machine units or universal limits.</p></section>
+    <section class="card pdlab-section"><div class="eyebrow">Learn then practise · 13 short drills</div><h3>Injection moulding maths and shop-floor skills</h3><p>Learn the key formulas, then practise units, shot mass, material percentages, production output, quality data, shrinkage and a simplified clamp-force estimate.</p><button class="secondary" data-pdlab-math-open>Learn the formulas and practise →</button><p class="tiny muted">Training values only. Exercises are ungraded and never set production machine values.</p></section>
     <details class="pd-more-libraries"><summary>Explore more synthetic case libraries · 50 and 200 cases</summary><div class="pdlab-grid"><article class="pdlab-card card"><span class="pd-chip">50 additional cases</span><h3>Evidence deep dive</h3><p>Browse machine, tooling, material, scientific-moulding and quality/sensor datasets.</p><button class="secondary" data-pdlab-50>Browse 50 cases →</button></article><article class="pdlab-card card"><span class="pd-chip">20 passes · 200 cases</span><h3>Advanced evidence atlas</h3><p>Search a broad library of normalized, unitless signal patterns for advanced practice.</p><button class="secondary" data-pdlab-atlas>Browse the 200-case atlas →</button></article></div><p class="tiny muted">The atlas uses each case’s own normalized baseline. Its values are not machine units or universal limits.</p></details>
     <section class="card pdlab-section"><div class="eyebrow">Optional · local analysis</div><h3>Work with prepared site data</h3><p>The intake checks privacy preparation, signal meaning, role, units, sampling and shot sequence before data can be analysed.</p><div class="pdlab-grid pdlab-real-grid"><article class="pdlab-card card"><h3>Prepare a new CSV</h3><p>Review local privacy rules, define the channels and save the prepared dataset on this device.</p><button class="primary" data-pdlab-csv>Prepare a CSV →</button></article><article class="pdlab-card card"><h3>Analyse saved data</h3><p>Compare baseline drift, before/after windows, cavities, quality associations and energy per good part when the data support each view.</p><button class="secondary" data-pdlab-saved>Open saved datasets →</button></article></div><p class="tiny muted">Raw CSV is prepared in-session and is not uploaded. Prepared evidence is stored locally on this device.</p></section>
   </div>`
@@ -212,7 +276,13 @@ function finishCase(){const ds=DATASETS.find(x=>x.id===activeId);if(!ds)return;c
 function openLocalIntake(){const api=window.MM_PROCESS_DATA_LOCAL_INTAKE;if(typeof api?.open==='function')return api.open();window.toast?.('Local CSV analysis is still loading. Try again in a moment.')}
 function openSavedData(){const api=window.MM_PROCESS_DATA_LOCAL_INTAKE;if(typeof api?.openLibrary==='function')return api.openLibrary();window.toast?.('Saved process datasets are still loading. Try again in a moment.')}
 function handleClick(e){
-  const t=e.target.closest('[data-pdlab-guided],[data-pdlab-50],[data-pdlab-atlas],[data-pdlab-csv],[data-pdlab-saved],[data-pd-start],[data-pd-home],[data-pd-practice],[data-pd-choice],[data-pd-next],[data-pd-finish],[data-pd-retry],[data-pd-restart],[data-pd-csv]');if(!t)return;
+  const t=e.target.closest('[data-pdlab-math-open],[data-pdlab-home],[data-pd-math-guide],[data-pd-math-start],[data-pd-math-choice],[data-pd-math-retry],[data-pd-math-next],[data-pdlab-guided],[data-pdlab-50],[data-pdlab-atlas],[data-pdlab-csv],[data-pdlab-saved],[data-pd-start],[data-pd-home],[data-pd-practice],[data-pd-choice],[data-pd-next],[data-pd-finish],[data-pd-retry],[data-pd-restart],[data-pd-csv]');if(!t)return;
+  if(t.hasAttribute('data-pdlab-math-open')||t.hasAttribute('data-pd-math-guide'))return renderMathGuide();
+  if(t.hasAttribute('data-pdlab-home'))return renderHome();
+  if(t.hasAttribute('data-pd-math-start'))return startMathPractice();
+  if(t.dataset.pdMathChoice!==undefined){const i=Number(t.dataset.pdMathChoice);if(mathSelected===null&&Number.isInteger(i)&&i>=0&&i<MATH_DRILLS[mathIndex].choices.length){mathSelected=i;return renderMathDrill()}return}
+  if(t.hasAttribute('data-pd-math-retry')){mathSelected=null;return renderMathDrill()}
+  if(t.hasAttribute('data-pd-math-next')){if(mathSelected!==MATH_DRILLS[mathIndex].answer)return;mathIndex++;mathSelected=null;return mathIndex<MATH_DRILLS.length?renderMathDrill():renderMathSummary()}
   if(t.hasAttribute('data-pdlab-guided'))return renderGuidedHome();
   if(t.hasAttribute('data-pdlab-50')){const api=window.MM_PROCESS_DATA_DEEP_DIVE_50;if(typeof api?.open==='function')return api.open();return window.toast?.('The 50-case library is still loading.')}
   if(t.hasAttribute('data-pdlab-atlas')){const api=window.MM_PROCESS_DATA_20_PASS_ATLAS;if(typeof api?.open==='function')return api.open();return window.toast?.('The evidence atlas is still loading.')}

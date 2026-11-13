@@ -125,6 +125,12 @@ def desired_files() -> dict[Path, str]:
         rf"\g<1>'{web_release}'",
         "qa_release_docs web_release",
     )
+    release_docs_qa = replace_once(
+        release_docs_qa,
+        r"('read_aloud_version'\s*:\s*)'[^']+'",
+        rf"\g<1>'{web_release}'",
+        "qa_release_docs read_aloud_version",
+    )
 
     readme_path = ROOT / "README.md"
     readme = replace_once(
