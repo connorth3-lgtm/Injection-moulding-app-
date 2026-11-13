@@ -400,39 +400,41 @@ function select(text,limit=4){return FAMILIES.map(f=>({f,s:score(f,text)})).filt
 function badge(f){return `<span class="mme-chip">${esc(f.kind)}</span><span class="mme-chip">${esc(f.rights)}</span>`}
 function card(f){return `<article class="mme-card"><div class="mme-card-head"><div><b>${esc(f.title)}</b><small>${esc(f.id)}</small></div><a href="${esc(f.source)}" target="_blank" rel="noopener">Source ↗</a></div><div class="mme-chips">${badge(f)}</div><strong>${esc(f.scale)}</strong><p>${esc(f.boundary)}</p></article>`}
 function style(){if(document.getElementById('mm-measured-evidence-style'))return;const s=document.createElement('style');s.id='mm-measured-evidence-style';s.textContent=`
-.mme-panel{margin-top:14px;padding:16px;border:1px solid #355272;border-radius:12px;background:#0d1d31}.mme-panel h3{margin:2px 0 6px}.mme-panel>p{margin:0 0 12px;color:#b9cbe0;font-size:12px;line-height:1.55}.mme-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.mme-card{padding:12px;border:1px solid #2e4968;border-radius:10px;background:#102238}.mme-card-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.mme-card-head b{display:block}.mme-card-head small{display:block;color:#8098b3;font-size:9px;margin-top:3px;overflow-wrap:anywhere}.mme-card-head a{font-size:10px;white-space:nowrap}.mme-card strong{display:block;margin:8px 0 4px;font-size:12px}.mme-card p{margin:0;color:#aebfd2;font-size:11px;line-height:1.45}.mme-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.mme-chip{font-size:9px;border:1px solid #426381;border-radius:999px;padding:3px 6px;color:#c9d9e9}.mme-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:10px 0}.mme-kpi{padding:9px;border:1px solid #2d4866;border-radius:9px;background:#0d1b2e;text-align:center}.mme-kpi b{display:block;font-size:18px}.mme-kpi span{font-size:9px;color:#9db2c8}.mme-all summary{cursor:pointer;font-weight:700;margin:10px 0}.mme-boundary{border-left:3px solid #d8b95c;padding-left:9px!important;color:#dfd2a4!important}.mme-workspace{margin:14px 0}.mme-restricted{color:#f1d699;font-size:10px;margin-top:8px}
+.mme-panel{margin-top:14px;padding:16px;border:1px solid #355272;border-radius:12px;background:#0d1d31}.mme-panel h3{margin:2px 0 6px}.mme-panel>p{margin:0 0 12px;color:#b9cbe0;font-size:12px;line-height:1.55}.mme-inline-catalog{padding:0}.mme-inline-catalog>summary{cursor:pointer;list-style:none;padding:15px 16px;color:#c9e8f0;font-weight:800}.mme-inline-catalog>summary::-webkit-details-marker{display:none}.mme-inline-catalog[open]>summary{border-bottom:1px solid #355272}.mme-inline-content{padding:14px 16px 16px}.mme-inline-content h3{margin:0 0 7px}.mme-inline-content .mme-boundary{margin:0 0 10px}.mme-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.mme-card{padding:12px;border:1px solid #2e4968;border-radius:10px;background:#102238}.mme-card-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.mme-card-head b{display:block}.mme-card-head small{display:block;color:#8098b3;font-size:9px;margin-top:3px;overflow-wrap:anywhere}.mme-card-head a{font-size:10px;white-space:nowrap}.mme-card strong{display:block;margin:8px 0 4px;font-size:12px}.mme-card p{margin:0;color:#aebfd2;font-size:11px;line-height:1.45}.mme-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.mme-chip{font-size:9px;border:1px solid #426381;border-radius:999px;padding:3px 6px;color:#c9d9e9}.mme-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:10px 0}.mme-kpi{padding:9px;border:1px solid #2d4866;border-radius:9px;background:#0d1b2e;text-align:center}.mme-kpi b{display:block;font-size:18px}.mme-kpi span{font-size:9px;color:#9db2c8}.mme-all summary{cursor:pointer;font-weight:700;margin:10px 0}.mme-boundary{border-left:3px solid #d8b95c;padding-left:9px!important;color:#dfd2a4!important}.mme-workspace{margin:14px 0}.mme-restricted{color:#f1d699;font-size:10px;margin-top:8px}
 @media(max-width:720px){.mme-grid{grid-template-columns:1fr}.mme-kpis{grid-template-columns:repeat(2,1fr)}}
 `;document.head.appendChild(s)}
 function contextText(host){const fields=[...host.querySelectorAll('input,textarea,select')].map(x=>x.value||'').join(' ');return `${host.textContent||''} ${fields}`}
 function relevantPanel(text){const rows=select(text);if(!rows.length)return '';return `<section class="mme-panel" data-mm-measured-evidence="relevant"><div class="eyebrow">Canonical measured evidence</div><h3>Measured data behind this topic</h3><p>These source-profiled datasets show real measured behaviour in bounded experiments or production records. They support comparison and learning; they do not supply universal settings, prove root cause by themselves, or override the validated machine/mould/material/site process.</p><div class="mme-grid">${rows.map(card).join('')}</div></section>`}
 function catalogPanel(){return `<section class="mme-panel mme-workspace" data-mm-measured-evidence="catalog"><div class="eyebrow">Measured evidence baseline</div><h3>17 fully profiled dataset families are available as evidence context</h3><div class="mme-kpis"><div class="mme-kpi"><b>${CANONICAL.fullyProfiled}</b><span>profiled families</span></div><div class="mme-kpi"><b>${CANONICAL.rightsExecutable}</b><span>rights-executable sources</span></div><div class="mme-kpi"><b>${(CANONICAL.timeSeriesValues/1e6).toFixed(1)}M</b><span>process time-series values</span></div><div class="mme-kpi"><b>${CANONICAL.inventoried}</b><span>inventoried sources</span></div></div><p class="mme-boundary">Evidence is context-specific. Record-level, material-characterisation, specimen-test and waveform evidence remain distinct; restricted educational/noncommercial rights are preserved; unresolved channels and blocked sources are not silently counted.</p><details class="mme-all"><summary>Browse all 17 measured families</summary><div class="mme-grid">${FAMILIES.map(card).join('')}</div><div class="mme-restricted">Restricted-use families are labelled explicitly; opening a source does not change its reuse terms.</div></details></section>`}
 function addRelevant(host){if(!host||host.classList?.contains('hidden')||host.querySelector('[data-mm-measured-evidence="catalog"]')||host.querySelector('[data-mm-measured-evidence="relevant"]'))return;const html=relevantPanel(contextText(host));if(html)host.insertAdjacentHTML('beforeend',html)}
+function processDataCatalog(){return `<details class="mme-panel mme-inline-catalog" data-mme-catalog-inline><summary>Evidence and data references · 17 measured families</summary><div class="mme-inline-content"><h3>Measured sources that support learning</h3><p class="mme-boundary">This register keeps source profiles, accepted measurement counts, citations and use limitations together. Source records are not universal process settings; raw third-party rows are not embedded here.</p><div class="mme-kpis"><div class="mme-kpi"><b>${CANONICAL.fullyProfiled}</b><span>profiled families</span></div><div class="mme-kpi"><b>${CANONICAL.rightsExecutable}</b><span>rights-executable sources</span></div><div class="mme-kpi"><b>${(CANONICAL.timeSeriesValues/1e6).toFixed(1)}M</b><span>process time-series values</span></div><div class="mme-kpi"><b>${CANONICAL.inventoried}</b><span>inventoried sources</span></div></div><div class="mme-grid">${FAMILIES.map(card).join('')}</div><div class="mme-restricted">Restricted-use families are labelled explicitly; opening a source does not change its reuse terms.</div></div></details>`}
+function focusCatalog(){
+ const inline=document.querySelector('#processDataLabs [data-mme-catalog-inline]');
+ if(inline){inline.open=true;inline.scrollIntoView?.({behavior:'smooth',block:'start'});return true}
+ const workspace=document.getElementById('mmMouldMasterWorkspace');
+ const all=workspace?.querySelector('details.mme-all');
+ if(all){all.open=true;all.scrollIntoView?.({behavior:'smooth',block:'start'});return true}
+ return false
+}
 function openCatalog(){
- style();
- document.querySelectorAll('.view').forEach(view=>view.classList.add('hidden'));
- const host=document.getElementById('processDataLabs');if(!host)return false;
- host.classList.remove('hidden');
- const title=document.getElementById('pageTitle'),subtitle=document.getElementById('pageSubtitle');
- if(title)title.textContent='Measured Data';
- if(subtitle)subtitle.textContent='Browse the 17 governed measured-evidence families and their source boundaries.';
- host.innerHTML=`<div class="pd-toolbar mme-catalog-toolbar"><button class="ghost" type="button" data-mme-back>← Data diagnosis</button></div>${catalogPanel()}`;
- host.querySelector('[data-mme-back]')?.addEventListener('click',()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
- window.scrollTo?.({top:0,behavior:'smooth'});
+ if(focusCatalog())return true;
+ const open=window.MM_PROCESS_DATA_DIAGNOSTICS?.open;
+ if(typeof open!=='function')return false;
+ open();
+ requestAnimationFrame(()=>requestAnimationFrame(focusCatalog));
  return true
 }
-function ensureProcessDataLauncher(){
+function ensureProcessDataCatalog(){
  const host=document.getElementById('processDataLabs');
- if(!host||host.classList.contains('hidden')||host.querySelector('[data-mme-catalog-launcher]')||host.querySelector('[data-mm-measured-evidence="catalog"]'))return;
- const wrap=document.createElement('div');wrap.className='pd-toolbar mme-catalog-launcher';wrap.dataset.mmeCatalogLauncher='1';
- wrap.innerHTML='<div><b>Measured Data</b><div class="muted tiny">Browse the 17 governed measured-evidence families and source boundaries.</div></div><button class="ghost" type="button" data-mme-open-catalog>Browse measured data</button>';
- wrap.querySelector('[data-mme-open-catalog]')?.addEventListener('click',openCatalog);
- host.insertAdjacentElement('afterbegin',wrap)
+ if(!host||host.classList.contains('hidden')||host.querySelector('[data-mme-catalog-inline]'))return;
+ const sections=host.querySelector('.pdlab-sections');if(!sections)return;
+ sections.insertAdjacentHTML('afterend',processDataCatalog())
 }
 function run(){
  style();
  const lesson=document.querySelector('#lesson article.lesson-body');if(lesson&&!lesson.querySelector('[data-mm-measured-evidence]')){const html=relevantPanel(contextText(lesson));if(html)lesson.insertAdjacentHTML('beforeend',html)}
  ['diagnosticLabs','processDataLabs'].forEach(id=>addRelevant(document.getElementById(id)));
- ensureProcessDataLauncher();
+ ensureProcessDataCatalog();
  const material=[...document.querySelectorAll('.view[id]')].find(x=>/material.*lab/i.test(x.id));if(material)addRelevant(material);
  const ws=document.getElementById('mmMouldMasterWorkspace');if(ws&&!ws.classList.contains('hidden')){
    if(!ws.querySelector('[data-mm-measured-evidence="relevant"]')){const html=relevantPanel(contextText(ws));if(html)ws.insertAdjacentHTML('beforeend',html)}

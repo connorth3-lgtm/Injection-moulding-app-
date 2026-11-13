@@ -67,10 +67,10 @@ for token in [
     "Canonical measured evidence",
     "Measured data behind this topic",
     "Browse all 17 measured families",
-    "data-mme-catalog-launcher",
-    "Browse measured data",
+    "data-mme-catalog-inline",
+    "Evidence and data references · 17 measured families",
     "open:openCatalog",
-    "ensureProcessDataLauncher",
+    "ensureProcessDataCatalog",
     "record-level",
     "material characterisation",
     "process waveform",
@@ -78,6 +78,9 @@ for token in [
     "or override the validated machine/mould/material/site process",
 ]:
     need(token in js, f"missing measured-evidence runtime boundary/integration marker: {token}")
+need("data-mme-catalog-launcher" not in js, "measured-data catalog must not add a standalone practice-page launcher")
+need("Browse measured data</button>" not in js, "measured-data catalog must be kept inside its related practice context")
+need("title.textContent='Measured Data'" not in js, "opening source references must not replace the Process Data page")
 
 for surface in ["#lesson article.lesson-body", "diagnosticLabs", "processDataLabs", "mmMouldMasterWorkspace"]:
     need(surface in js, f"measured-evidence runtime is not integrated with required surface: {surface}")

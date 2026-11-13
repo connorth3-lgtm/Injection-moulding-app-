@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.14.1",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.14.1.md",
-  "sourceSha": "6b7f0cccd90e96fd36316cea9e963af1b411c3e1",
-  "runtimeFingerprint": "sha256:199f1401f1a3077628d50284922ee127e9bfa4e02fb146ae080056ba51818922",
+  "release": "2026.11.14.2",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.14.2.md",
+  "sourceSha": "8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b",
+  "runtimeFingerprint": "sha256:ce2e7ec6a6c72f2768146a22aa4675c112198e51bea4de731d878f23efc4ea9b",
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.11.14.1 is bound to exact retained learner-runtime candidate 6b7f0cccd90e96fd36316cea9e963af1b411c3e1; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.11.14.2 is bound to exact retained learner-runtime candidate 8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -306,27 +306,32 @@
     "textZoom200Percent": true
   },
   "previousCandidate": {
-    "release": "2026.11.13.3",
-    "sourceSha": "31be14643ba17c2bfc8a6126f4623f810060b22a",
-    "runtimeFingerprint": "sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b"
+    "release": "2026.11.14.1",
+    "sourceSha": "6b7f0cccd90e96fd36316cea9e963af1b411c3e1",
+    "runtimeFingerprint": "sha256:199f1401f1a3077628d50284922ee127e9bfa4e02fb146ae080056ba51818922"
   },
-  "technicalCandidateStatus": "PASS — exact-source release 2026.11.14.1 software candidate 6b7f0cccd90e96fd36316cea9e963af1b411c3e1 and browser/question gates passed. Genuine human NVDA and VoiceOver validation remains pending.",
+  "technicalCandidateStatus": "PASS \u2014 software-only candidate 8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b for release 2026.11.14.2, producer run 43439690118, artifact 14045422044; Mobile Browser QA run 43439690302 and Question Quality 50-Pass run 43439689931 succeeded. Genuine human NVDA and VoiceOver validation remains pending.",
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
     "runtimeFingerprint": "sha256:4767c50814cfe576891a3eb6f4de34a1d451378709c43a8988e2e57c540cf4c9"
   },
   "previousPreviousCandidate": {
+    "release": "2026.11.13.3",
+    "sourceSha": "31be14643ba17c2bfc8a6126f4623f810060b22a",
+    "runtimeFingerprint": "sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b"
+  },
+  "previousPreviousPreviousCandidate": {
     "release": "2026.11.13.2",
     "sourceSha": "3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99",
     "runtimeFingerprint": "sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb"
   },
-  "previousPreviousPreviousCandidate": {
+  "previousPreviousPreviousPreviousCandidate": {
     "release": "2026.11.13.1",
     "sourceSha": "d68ff4fb2bf4bc8f57a1c715a9faa586a90a0600",
     "runtimeFingerprint": "sha256:4d843c5c1694d91f1de4c7adaf9eee1743a829f7062159f1de686c00ee938a92"
   },
-  "previousPreviousPreviousPreviousCandidate": {
+  "previousPreviousPreviousPreviousPreviousCandidate": {
     "release": "2026.11.12.2",
     "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
     "runtimeFingerprint": "sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7"
