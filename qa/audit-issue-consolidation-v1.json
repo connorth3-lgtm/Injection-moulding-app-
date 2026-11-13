@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.11.13.3",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": null,
+  "candidateSourceSha": "31be14643ba17c2bfc8a6126f4623f810060b22a",
   "scope": "Make injection moulding Maths a standalone top-level desktop and mobile destination while preserving the existing ungraded practice content and non-production boundaries.",
-  "approvalBoundary": "PENDING — exact-source software candidate and exact-head browser/question gates are not yet verified for release 2026.11.13.3. All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA review streams remain HOLD; production authority remains advisory-only.",
+  "approvalBoundary": "PASS — release 2026.11.13.3 exact-source software candidate, producer run 43408836154, artifact 14028262546, and exact-head browser/question gates are verified; all seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider streams remain HOLD. The Maths-tab visual baseline was approved by the owner for the exact reviewed screenshots. Production authority remains advisory-only.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
