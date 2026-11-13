@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "status": "pending-physical-device-validation",
-  "boundary": "Release 2026.11.13.3 has no retained exact-source candidate yet. A software artifact does not establish physical device testing; install, offline restart, reboot, update and storage checks remain pending.",
+  "boundary": "Release 2026.11.13.3 has no retained exact-source candidate yet. A software artifact does not establish testing on physical iOS/iPadOS and Android devices. Install, offline restart, reboot, update and storage checks remain pending. Real assistive-technology evidence is separately governed by data/accessibility-real-at-validation-v1.json. Production authority remains HOLD.",
   "runtimeFingerprint": null,
   "testedAt": null,
   "testerReference": null,
