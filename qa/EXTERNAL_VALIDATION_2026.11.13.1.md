@@ -2,7 +2,7 @@
 
 **STATUS: SOFTWARE-ONLY EXACT-SOURCE PASS — all seven independent review streams remain HOLD.**
 
-> **RETAINED 2026.11.13.1 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 43343196018](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43343196018) created artifact **13999539622**, source 5857e23d6bbd0fd46ea5ef9171a43924f16de0c4, digest sha256:5ffebf35650623bbcb625e6ef6b72b5fc1738f5dfd45e401d9a2aa4ce5f79e1b, expiry `2027-02-11T01:12:59Z`, and public-runtime fingerprint sha256:a7cf452cf0b8dcf7fd8a01542d2d1902d95d2988a05a4076c44613b4d57b6891. Mobile Browser QA run 43343196066 and Question Quality 50-Pass run 43343196008 passed on this exact source; this does not establish human, physical-device, real assistive-technology, Windows signing, provider, accreditation or production authorization.
+> **RETAINED 2026.11.13.1 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD.** [Exact-source producer run 43350352284](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43350352284) created artifact **14003308074**, source 0e1bb220a7a98638b56b65d8af5aa9aa553c6fbb, digest sha256:f625c228737c251414ef4d209888ad0f0f636015fd2af4f84ce79e71b63813b8, expiry `2027-02-11T02:11:20Z`, and public-runtime fingerprint sha256:08f87546f51734c15ea5bce2243937350a6bc3f49a617a38e9f8b44a369ee4b9. Mobile Browser QA run 43350352261 and Question Quality 50-Pass run 43350352255 passed on this exact source; this does not establish human, physical-device, real assistive-technology, Windows signing, provider, accreditation or production authorization.
 
 ## Release scope
 
@@ -10,9 +10,9 @@ The Practice hub has three focused choices. Material Behaviour Labs stay grouped
 
 ## Exact-source technical candidate
 
-**Technical candidate:** **PASS — software-only**. The Pre-merge Public Candidate run `43343196018` ([workflow](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43343196018)) retained artifact `13999539622`, source `5857e23d6bbd0fd46ea5ef9171a43924f16de0c4`, runtime fingerprint `sha256:a7cf452cf0b8dcf7fd8a01542d2d1902d95d2988a05a4076c44613b4d57b6891`, digest `sha256:5ffebf35650623bbcb625e6ef6b72b5fc1738f5dfd45e401d9a2aa4ce5f79e1b`, expiry `2027-02-11T01:12:59Z`.
+**Technical candidate:** **PASS — software-only**. The Pre-merge Public Candidate run `43350352284` ([workflow](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43350352284)) retained artifact `14003308074`, source `0e1bb220a7a98638b56b65d8af5aa9aa553c6fbb`, runtime fingerprint `sha256:08f87546f51734c15ea5bce2243937350a6bc3f49a617a38e9f8b44a369ee4b9`, digest `sha256:f625c228737c251414ef4d209888ad0f0f636015fd2af4f84ce79e71b63813b8`, expiry `2027-02-11T02:11:20Z`.
 
-Mobile Browser QA run `43343196066` ([workflow](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43343196066)) and Question Quality 50-Pass run `43343196008` ([workflow](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43343196008)) passed on the exact candidate source. Automated checks are software QA only and do not establish physical-device or human validation.
+Mobile Browser QA run `43350352261` ([workflow](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43350352261)) and Question Quality 50-Pass run `43350352255` ([workflow](https://github.com/connorth3-lgtm/Injection-moulding-app-/actions/runs/43350352255)) passed on the exact candidate source. Automated checks are software QA only and do not establish physical-device or human validation.
 
 All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain **HOLD**. No tester distribution, provider approval, accreditation or production authority is implied.
 

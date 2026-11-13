@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.11.13.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
-  "scope": "Remove the duplicate Material Behaviour Labs choice from Practice, keep the labs grouped under Materials, and preserve all six material cases, completion records and non-production boundaries.",
-  "approvalBoundary": "HOLD: release 2026.11.13.1 is a software-only educational technical-preview candidate; independent human, physical-device, accessibility, Windows-signing, SME, learner-outcome, provider/NZQA and production reviews remain HOLD and production authority remains advisory-only. It does not establish human, physical-device, accessibility, Windows-signing, SME, learner-outcome, provider/NZQA or production approval; all seven external review streams remain HOLD and production authority remains advisory-only.",
+  "candidateSourceSha": "0e1bb220a7a98638b56b65d8af5aa9aa553c6fbb",
+  "scope": "Remove duplicate and unnecessary Practice entry points, keep Material Behaviour Labs and their return path under Materials, preserve the distinct fault, process-data and simulator activities, and retain all six material cases, completion records and non-production boundaries.",
+  "approvalBoundary": "HOLD: release 2026.11.13.1 is a software-only educational technical-preview candidate. All seven independent review streams remain HOLD and production authority remains advisory-only. Automated checks do not establish human, device, accessibility, Windows-signing, SME, learner-outcome, provider/NZQA or production approval.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -43,7 +43,7 @@
   "productionAuthority": "advisory-only",
   "humanEvidenceStatus": "hold",
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
-  "lastReviewedDate": "2026-11-12",
+  "lastReviewedDate": "2026-11-13",
   "previousVerifiedCandidate": {
     "release": "2026.11.11.4",
     "sourceSha": "3ed5fe6f02496f5a15be0629f7d467dd152e05bf",
