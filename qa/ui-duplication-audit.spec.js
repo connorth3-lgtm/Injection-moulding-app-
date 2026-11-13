@@ -118,7 +118,7 @@ test('canonical nav has one active item and no repeated primary destinations',as
   for(const width of [1440,1024,810,412,390,360]){
     await page.setViewportSize({width,height:900});
     await home(page);
-    // Layout switches to the fixed five-tab bar at <=900px. 901–1100px
+    // Layout switches to the fixed six-tab bar at <=900px. 901–1100px
     // retains the sidebar, even though compact UI polish starts at 1101px.
     // Query the actually visible navigation surface instead of inferring it
     // from an unrelated visual-polish media breakpoint.
@@ -136,15 +136,15 @@ test('canonical nav has one active item and no repeated primary destinations',as
     // (#520). This duplicate-audit test must still reject *multiple* actives.
     expect(choices.filter(v=>v.active).length,'duplicate active navigation at '+width).toBeLessThanOrEqual(1);
     expect(new Set(choices.map(v=>v.label)).size,'repeated nav names at '+width).toBe(choices.length);
-    for(const label of ['Home','Learn','Materials','Practice']){
+    for(const label of ['Home','Learn','Materials','Practice','Maths']){
       expect(choices.filter(v=>v.label===label).length,'primary nav '+label+' at '+width).toBe(1);
     }
     if(mobile||width>1100){
       // The compact fixed bar and polished wide desktop sidebar are both
-      // intentionally five primary actions. Intermediate sidebar widths
+      // intentionally six primary actions. Intermediate sidebar widths
       // retain additional legacy destination controls in named groups.
       expect(choices.filter(v=>v.label==='More').length).toBe(1);
-      expect(choices).toHaveLength(5);
+      expect(choices).toHaveLength(6);
     }else{
       // 901–1100px: More is a disclosure/details group, not another
       // primary button. Uniqueness still applies across all visible buttons.
