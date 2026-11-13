@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-u2026.11.13.3r
+Current governed web candidate: **`2026.11.13.3`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 

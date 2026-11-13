@@ -1,4 +1,4 @@
-*2026.11.13.3
+/* MouldMaster Book Read Aloud — 2026.11.13.3
  * Learner-controlled text-to-speech using the browser/device speech-synthesis service.
  * No microphone access, recording, speech recognition, network upload, or learner-content storage.
  */

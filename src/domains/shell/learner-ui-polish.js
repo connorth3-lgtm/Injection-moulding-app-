@@ -1,4 +1,4 @@
-*2026.11.13.3
+/* MouldMaster learner UI polish — 2026.11.13.3
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
