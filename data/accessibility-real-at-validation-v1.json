@@ -5,7 +5,7 @@
   "sourceSha": null,
   "runtimeFingerprint": null,
   "status": "pending-real-at-validation",
-  "boundary": "Release 2026.11.13.3 has no retained exact-source candidate yet. Real NVDA and VoiceOver tasks remain pending until candidate production and genuine human execution.",
+  "boundary": "Release 2026.11.13.3 has no retained exact-source candidate yet. Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Real NVDA and VoiceOver tasks remain pending until candidate production and genuine human execution.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
