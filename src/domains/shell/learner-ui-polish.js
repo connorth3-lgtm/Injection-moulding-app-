@@ -208,7 +208,7 @@ function syncDesktopNavigation(){
   [...nav.querySelectorAll(':scope > button')].forEach(button=>{
     if(button.dataset.mmDesktopMoreTools)return;
     const view=button.dataset.view||'',registryId=button.dataset.mmRegistryNav||'';
-    const keep=PRIMARY_DESKTOP_VIEWS.has(view)||registryId==='book';
+    const keep=PRIMARY_DESKTOP_VIEWS.has(view)||registryId==='book'||registryId==='maths';
     hideNavButton(button,isDesktop&&!keep);
     if(keep&&labels[view]&&button.querySelector('span'))button.querySelector('span').textContent=labels[view];
   });
