@@ -38,7 +38,7 @@ for marker in ['Read the pattern','Diagnose','Choose the next evidence','Interpr
 need("PACK.toCsv(ds.id)" in js,'CSV export must use the canonical dataset generator rather than a duplicate dataset')
 need("MM_PROCESS_DATA_DIAGNOSTICS" in js,'guided data diagnostic runtime API missing')
 need("function evaluateChoice(caseId,stepIndex,choiceIndex)" in js,'guided diagnostics must expose deterministic structured answer evaluation')
-need("open:openHome,openGuidedCases:renderGuidedHome,evaluateChoice" in js,'structured answer evaluator must be exported on the guided diagnostic runtime API')
+need("open:openHome,openMaths,openGuidedCases:renderGuidedHome,evaluateChoice" in js,'Maths and structured answer evaluators must be exported on the guided diagnostic runtime API')
 for marker in ['Process data lab','function renderHome()','function renderGuidedHome()','data-pdlab-guided','data-pdlab-50','data-pdlab-atlas','data-pdlab-csv','data-pdlab-saved','data-pd-practice']:
     need(marker in js,f'process-data lab route missing: {marker}')
 need('ensureNav' not in js and 'patchMobileMore' not in js,'process-data lab must not create duplicate navigation entries')
