@@ -3,7 +3,7 @@
   "masterIssue": 632,
   "release": "2026.11.14.1",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "31be14643ba17c2bfc8a6126f4623f810060b22a",
+  "candidateSourceSha": null,
   "scope": "Make injection moulding Maths a standalone top-level desktop and mobile destination while preserving the existing ungraded practice content and non-production boundaries.",
   "approvalBoundary": "HOLD — release 2026.11.14.1 candidate producer, runtime artifact and exact-head software gates are pending verification. The seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider streams remain HOLD. Production authority remains advisory-only.",
   "issueGroups": {
@@ -45,14 +45,14 @@
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
   "lastReviewedDate": "2026-11-13",
   "previousVerifiedCandidate": {
-    "release": "2026.11.11.4",
-    "sourceSha": "3ed5fe6f02496f5a15be0629f7d467dd152e05bf",
-    "runtimeFingerprint": "sha256:28412c1891c7c7b93045892515aaab2a6a361b861f79714140f560e1340f245d",
-    "candidateRunId": 43156072826,
+    "release": "2026.11.13.3",
+    "sourceSha": "31be14643ba17c2bfc8a6126f4623f810060b22a",
+    "runtimeFingerprint": "sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b",
+    "candidateRunId": 43408836154,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13916345882,
-    "artifactName": "physical-pwa-candidate-3ed5fe6f02496f5a15be0629f7d467dd152e05bf",
-    "artifactDigest": "sha256:aaf1c9ae1c9f0a6e4331cf7da6b20d693932a4135fed4868c07bc33b1de28dd2",
-    "artifactExpiresAt": "2027-02-10T04:37:58Z"
+    "artifactId": 14028262546,
+    "artifactName": "physical-pwa-candidate-31be14643ba17c2bfc8a6126f4623f810060b22a",
+    "artifactDigest": "sha256:ac6fc4d0178ab185c8ec80bde69880639ffb84ef2d96f87f1d02979c058c69fc",
+    "artifactExpiresAt": "2027-02-11T10:24:33Z"
   }
 }

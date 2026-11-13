@@ -38,11 +38,7 @@
       "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
       "runtimeFingerprint": "sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7"
     },
-    "candidate": {
-      "release": "2026.11.13.3",
-      "sourceSha": "31be14643ba17c2bfc8a6126f4623f810060b22a",
-      "runtimeFingerprint": "sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b"
-    }
+    "candidate": null
   },
   "pwaPhysicalDevices": {
     "status": "hold",
@@ -82,17 +78,7 @@
       "artifactDigest": "sha256:c3a0c49520e6d0052c1ba08c8a1f8b089ce6a82d2585f12492a0040e4fa157b6",
       "artifactExpiresAt": "2027-02-10T22:11:13Z"
     },
-    "currentCandidate": {
-      "release": "2026.11.13.3",
-      "sourceSha": "31be14643ba17c2bfc8a6126f4623f810060b22a",
-      "runtimeFingerprint": "sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b",
-      "candidateRunId": 43408836154,
-      "candidateWorkflow": "Pre-merge Public Candidate",
-      "artifactId": 14028262546,
-      "artifactName": "physical-pwa-candidate-31be14643ba17c2bfc8a6126f4623f810060b22a",
-      "artifactDigest": "sha256:ac6fc4d0178ab185c8ec80bde69880639ffb84ef2d96f87f1d02979c058c69fc",
-      "artifactExpiresAt": "2027-02-11T10:24:33Z"
-    }
+    "currentCandidate": null
   },
   "windowsDistribution": {
     "status": "hold",
@@ -171,11 +157,7 @@
       "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
       "runtimeFingerprint": "sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7"
     },
-    "candidate": {
-      "release": "2026.11.13.3",
-      "sourceSha": "31be14643ba17c2bfc8a6126f4623f810060b22a",
-      "runtimeFingerprint": "sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b"
-    }
+    "candidate": null
   },
   "candidatePolicy": {
     "previewBranchAuthoritative": false,
@@ -183,6 +165,18 @@
     "rule": "External human/device/provider evidence must bind to the retained exact-head candidate artifact and runtime fingerprint, never to the mutable preview branch tip."
   },
   "previousCandidate": {
+    "release": "2026.11.13.3",
+    "sourceSha": "31be14643ba17c2bfc8a6126f4623f810060b22a",
+    "runtimeFingerprint": "sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b",
+    "candidateRunId": 43408836154,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 14028262546,
+    "artifactName": "physical-pwa-candidate-31be14643ba17c2bfc8a6126f4623f810060b22a",
+    "artifactDigest": "sha256:ac6fc4d0178ab185c8ec80bde69880639ffb84ef2d96f87f1d02979c058c69fc",
+    "artifactExpiresAt": "2027-02-11T10:24:33Z"
+  },
+  "candidateStatus": "HOLD — release 2026.11.14.1 technical candidate not yet verified; all seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain HOLD.",
+  "previousPreviousCandidate": {
     "release": "2026.11.13.2",
     "sourceSha": "3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99",
     "runtimeFingerprint": "sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb",
@@ -192,18 +186,6 @@
     "artifactName": "physical-pwa-candidate-3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99",
     "artifactDigest": "sha256:9de179d5d4e0d7beb88e62de53fefc8c9070b0828d24b6df70e6f1936b5c56da",
     "artifactExpiresAt": "2027-02-11T05:14:51Z"
-  },
-  "candidateStatus": "HOLD — release 2026.11.14.1 technical candidate not yet verified; all seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain HOLD.",
-  "previousPreviousCandidate": {
-    "release": "2026.11.13.1",
-    "sourceSha": "d68ff4fb2bf4bc8f57a1c715a9faa586a90a0600",
-    "runtimeFingerprint": "sha256:4d843c5c1694d91f1de4c7adaf9eee1743a829f7062159f1de686c00ee938a92",
-    "candidateRunId": 43338322409,
-    "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13997089975,
-    "artifactName": "physical-pwa-candidate-d68ff4fb2bf4bc8f57a1c715a9faa586a90a0600",
-    "artifactDigest": "sha256:f3678d1f4a6f63bc1ee4b46a0e371efdb925676c4edd1fca186ac05959e90db1",
-    "artifactExpiresAt": "2027-02-11T00:35:55Z"
   },
   "priorTechnicalCandidate": {
     "release": "2026.10.11.1",
@@ -229,6 +211,17 @@
   },
   "supersededCandidateReason": "This earlier 2026.10.22.2 artifact was produced from an ancestor Book runtime. It does not match the current candidate source or computed public-runtime fingerprint and is not current release evidence.",
   "previousPreviousPreviousCandidate": {
+    "release": "2026.11.13.1",
+    "sourceSha": "d68ff4fb2bf4bc8f57a1c715a9faa586a90a0600",
+    "runtimeFingerprint": "sha256:4d843c5c1694d91f1de4c7adaf9eee1743a829f7062159f1de686c00ee938a92",
+    "candidateRunId": 43338322409,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 13997089975,
+    "artifactName": "physical-pwa-candidate-d68ff4fb2bf4bc8f57a1c715a9faa586a90a0600",
+    "artifactDigest": "sha256:f3678d1f4a6f63bc1ee4b46a0e371efdb925676c4edd1fca186ac05959e90db1",
+    "artifactExpiresAt": "2027-02-11T00:35:55Z"
+  },
+  "previousPreviousPreviousPreviousCandidate": {
     "release": "2026.11.12.2",
     "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
     "runtimeFingerprint": "sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7",
@@ -239,26 +232,5 @@
     "artifactDigest": "sha256:c3a0c49520e6d0052c1ba08c8a1f8b089ce6a82d2585f12492a0040e4fa157b6",
     "artifactExpiresAt": "2027-02-10T22:11:13Z"
   },
-  "previousPreviousPreviousPreviousCandidate": {
-    "release": "2026.11.08.3",
-    "sourceSha": "84250f572de4e685dcfdebcf80f02749fd59b2ef",
-    "runtimeFingerprint": "sha256:e3da3eb5b804639f95fd5f8e225213996cde0ff37229626b02944700c1a45715",
-    "candidateRunId": 42436315695,
-    "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 13599865940,
-    "artifactName": "physical-pwa-candidate-84250f572de4e685dcfdebcf80f02749fd59b2ef",
-    "artifactDigest": "sha256:75f1edcc1ce0c48450f8db30e665142ce6ed3757ebfcbe3658c6ce444cd747e5",
-    "artifactExpiresAt": "2027-02-06T01:55:29Z"
-  },
-  "webCandidate": {
-    "release": "2026.11.13.3",
-    "sourceSha": "31be14643ba17c2bfc8a6126f4623f810060b22a",
-    "runtimeFingerprint": "sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b",
-    "candidateRunId": 43408836154,
-    "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 14028262546,
-    "artifactName": "physical-pwa-candidate-31be14643ba17c2bfc8a6126f4623f810060b22a",
-    "artifactDigest": "sha256:ac6fc4d0178ab185c8ec80bde69880639ffb84ef2d96f87f1d02979c058c69fc",
-    "artifactExpiresAt": "2027-02-11T10:24:33Z"
-  }
+  "webCandidate": null
 }

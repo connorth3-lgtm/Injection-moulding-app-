@@ -14,12 +14,12 @@ Producer provenance, runtime fingerprint, Mobile Browser QA and Question Quality
 
 ## Independent review streams
 
-- Real assistive-technology validation remains **HOLD**.
-- Physical iOS/iPadOS and Android validation remains **HOLD**.
-- Windows signing and physical execution remain **HOLD**.
-- Independent Book SME review remains **HOLD**.
-- Independent curriculum SME review remains **HOLD**.
-- Real-learner outcome evidence remains **HOLD**.
-- Provider/NZQA G1–G8 evidence remains **HOLD**.
+- `qa/ACCESSIBILITY_REAL_AT_2026.11.14.1.md` — real assistive-technology validation remains **HOLD**.
+- `qa/PWA_PHYSICAL_DEVICE_2026.11.14.1.md` — physical iOS/iPadOS and Android validation remains **HOLD**.
+- `certification/WINDOWS_SIGNING_READINESS_2026.11.14.1.md` — Windows signing and physical execution remain **HOLD**.
+- `qa/BOOK_SME_REVIEW_2026.11.14.1.md` — independent Book SME review remains **HOLD**.
+- `qa/CURRICULUM_SME_REVIEW_2026.11.14.1.md` — independent curriculum SME review remains **HOLD**.
+- `qa/LEARNER_PILOT_2026.11.14.1.md` — real-learner outcome evidence remains **HOLD**.
+- `qa/NZQA_EXTERNAL_VALIDATION_2026.11.14.1.md` — provider/NZQA G1–G8 evidence remains **HOLD**.
 
 Automated software checks do not establish human, device, accreditation or production authority.

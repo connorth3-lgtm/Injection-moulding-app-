@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "release": "2026.11.14.1",
   "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.14.1.md",
-  "sourceSha": "31be14643ba17c2bfc8a6126f4623f810060b22a",
-  "runtimeFingerprint": "sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b",
+  "sourceSha": null,
+  "runtimeFingerprint": null,
   "status": "pending-real-at-validation",
-  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.11.14.1 exact-source candidate is pending; all real-AT tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded.",
+  "boundary": "Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer. Release 2026.11.14.1 candidate provenance is not yet verified; all real-AT tasks remain pending until an exact retained candidate is bound and genuine human NVDA and VoiceOver evidence is recorded.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
@@ -306,9 +306,15 @@
     "textZoom200Percent": true
   },
   "previousCandidate": {
-    "release": "2026.11.13.2",
-    "sourceSha": "3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99",
-    "runtimeFingerprint": "sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb"
+    "release": "2026.11.13.3",
+    "sourceSha": "31be14643ba17c2bfc8a6126f4623f810060b22a",
+    "runtimeFingerprint": "sha256:587814eee274fdf98323e28354e29c2d7258bc1f2e0b6160877aa0623222867b",
+    "candidateRunId": 43408836154,
+    "candidateWorkflow": "Pre-merge Public Candidate",
+    "artifactId": 14028262546,
+    "artifactName": "physical-pwa-candidate-31be14643ba17c2bfc8a6126f4623f810060b22a",
+    "artifactDigest": "sha256:ac6fc4d0178ab185c8ec80bde69880639ffb84ef2d96f87f1d02979c058c69fc",
+    "artifactExpiresAt": "2027-02-11T10:24:33Z"
   },
   "technicalCandidateStatus": "PENDING — release 2026.11.14.1 exact-source candidate and browser checks have not yet been verified.",
   "supersededCandidate": {
@@ -317,18 +323,18 @@
     "runtimeFingerprint": "sha256:4767c50814cfe576891a3eb6f4de34a1d451378709c43a8988e2e57c540cf4c9"
   },
   "previousPreviousCandidate": {
+    "release": "2026.11.13.2",
+    "sourceSha": "3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99",
+    "runtimeFingerprint": "sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb"
+  },
+  "previousPreviousPreviousCandidate": {
     "release": "2026.11.13.1",
     "sourceSha": "d68ff4fb2bf4bc8f57a1c715a9faa586a90a0600",
     "runtimeFingerprint": "sha256:4d843c5c1694d91f1de4c7adaf9eee1743a829f7062159f1de686c00ee938a92"
   },
-  "previousPreviousPreviousCandidate": {
+  "previousPreviousPreviousPreviousCandidate": {
     "release": "2026.11.12.2",
     "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
     "runtimeFingerprint": "sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7"
-  },
-  "previousPreviousPreviousPreviousCandidate": {
-    "release": "2026.11.11.2",
-    "sourceSha": "7c6587c5488bd764a6ae0a7afb2cbdfb252857d5",
-    "runtimeFingerprint": "sha256:1f3ee0bed1077c91562f83050e6642d80a01b39f9077f54a6b06c84be1f17c09"
   }
 }
