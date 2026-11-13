@@ -58,7 +58,7 @@ function syncMobileGeometry(){
 function observeMobileNavSize(){
   const nav=document.querySelector('.mobile-nav');
   if(!nav)return;
-  // Android's system font setting can increase the actual five-tab height
+  // Android's system font setting can increase the actual six-tab height
   // without firing a window resize. Keep content clearance source-measured.
   if(!mobileNavSizeObserver&&typeof ResizeObserver==='function'){
     mobileNavSizeObserver=new ResizeObserver(syncMobileGeometry);
@@ -79,14 +79,35 @@ function ensureMaterialsMobileTab(){
     if(practice)practice.insertAdjacentElement('beforebegin',button);else nav.appendChild(button)
   }
 }
+function ensureRegisteredMobilePrimaryTabs(){
+  const nav=document.querySelector('.mobile-nav');if(!nav)return;
+  const items=[...navigationItems.values()].filter(item=>item.mobilePrimary===true).sort((a,b)=>(a.order||50)-(b.order||50));
+  for(const item of items){
+    let button=[...nav.querySelectorAll(':scope > button')].find(candidate=>candidate.dataset.mmRegistryPrimaryNav===item.id);
+    if(!button){
+      button=document.createElement('button');button.type='button';button.dataset.mmRegistryPrimaryNav=item.id;
+      button.innerHTML=`${esc(item.icon||'•')}<span>${esc(item.label||item.id)}</span>`;
+      button.addEventListener('click',()=>{
+        const registered=navigationItems.get(item.id);activeCustomId=item.id;
+        safeCall(registered?.action);syncActiveState();requestAnimationFrame(syncActiveState)
+      });
+    }
+    button.setAttribute('aria-label',item.label||item.id);
+    const more=[...nav.querySelectorAll(':scope > button')].find(candidate=>canonicalMoreButton(candidate));
+    if(more){if(button.nextElementSibling!==more)nav.insertBefore(button,more)}
+    else if(button!==nav.lastElementChild)nav.appendChild(button)
+  }
+}
 function normalizeMobilePrimaryNav(){
   const nav=document.querySelector('.mobile-nav');if(!nav||mobileNavNormalizing)return;
   ensureMaterialsMobileTab();
+  ensureRegisteredMobilePrimaryTabs();
   mobileNavNormalizing=true;
   try{
     [...nav.querySelectorAll(':scope > button')].forEach(button=>{
       const view=button.dataset.view||'';
-      const keep=view==='dashboard'||view==='path'||view==='materials'||view==='scenarios'||canonicalMoreButton(button);
+      const registeredPrimary=navigationItems.get(button.dataset.mmRegistryPrimaryNav||'');
+      const keep=view==='dashboard'||view==='path'||view==='materials'||view==='scenarios'||registeredPrimary?.mobilePrimary===true||canonicalMoreButton(button);
       if(!keep)button.remove()
     });
     if(!mobileNavObserver){
@@ -292,8 +313,9 @@ function syncActiveState(){
   const group=canonicalMobileGroup(view,customId);
   const primary=[...document.querySelectorAll('.mobile-nav > button')];
   primary.forEach(b=>{
-    const v=b.dataset.view;let match=false;
-    if(group==='home')match=v==='dashboard';
+    const v=b.dataset.view,registryPrimary=b.dataset.mmRegistryPrimaryNav;let match=false;
+    if(registryPrimary)match=registryPrimary===customId;
+    else if(group==='home')match=v==='dashboard';
     else if(group==='learn')match=v==='path';
     else if(group==='materials')match=v==='materials';
     else if(group==='practice')match=v==='scenarios';

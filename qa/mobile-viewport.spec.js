@@ -14,7 +14,7 @@ async function openApp(page){
   await page.waitForFunction(()=>(typeof window.MM_APP_SHELL_FINALIZED==='string'&&window.MM_APP_SHELL_FINALIZED.length>0)&&window.MM_PRIMARY_HUBS);
   await page.waitForFunction(()=>!document.getElementById('mmBootstrap'));
   await expect(page.locator('#mmStartupFailure')).toHaveCount(0);
-  await expect(page.locator('.mobile-nav > button')).toHaveCount(5);
+  await expect(page.locator('.mobile-nav > button')).toHaveCount(6);
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
 }
 async function openPracticeHub(page){

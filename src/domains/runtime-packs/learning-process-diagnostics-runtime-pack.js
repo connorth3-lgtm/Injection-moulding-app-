@@ -262,7 +262,7 @@ if(typeof currentView==='string'){
 (function(){
 'use strict';
 
-const VERSION='2026.11.13.2';
+const VERSION='2026.11.13.3';
 const PACK=window.MM_PROCESS_EVIDENCE_DATASETS;
 const SOURCES=window.MM_EVIDENCE_SOURCES?.sources||{};
 if(!PACK||!Array.isArray(PACK.datasets))throw new Error('process-data-diagnostics.js requires MM_PROCESS_EVIDENCE_DATASETS');
@@ -501,13 +501,18 @@ function stats(){const state=readState();let done=0,attempted=0,total=0;for(cons
 function openHome(){
   ensureStyle();hideOtherViews();const host=ensureSection();host.classList.remove('hidden');window.MM_APP_SHELL?.navigation?.setCustomActive?.('','practice');setHeader('Process data lab','Practise reading process evidence or analyse prepared site data.');renderHome();window.scrollTo?.({top:0,behavior:'smooth'})
 }
+function openMaths(){
+  ensureStyle();hideOtherViews();const host=ensureSection();host.classList.remove('hidden');
+  window.MM_APP_SHELL?.navigation?.setCustomActive?.('maths','maths');
+  setHeader('Maths and shop-floor skills','Learn injection moulding calculations and practise shop-floor numeracy.');
+  renderMathGuide();window.scrollTo?.({top:0,behavior:'smooth'})
+}
 function renderHome(){
   activeId=null;answers=[];hadError=false;const host=ensureSection();
   host.innerHTML=`<div class="pd-toolbar"><button class="ghost" data-pd-practice>← Practice</button></div>
   <div class="pd-hero card"><div class="eyebrow">Practice · process evidence</div><h2>Start with a guided case</h2><p>Work through a synthetic example first. Use the advanced libraries when you want more cases, or choose local CSV analysis to work with prepared site data.</p><div class="pd-boundary"><b>Training boundary:</b> examples teach evidence reading. They do not set production limits or authorise machine changes. Local CSV preparation and analysis stay on this device.</div></div>
   <div class="pdlab-sections">
     <section class="card pdlab-section"><div class="eyebrow">Start here · synthetic training</div><h3>Guided diagnosis</h3><p>Choose from 14 cases. Each walks through baseline, fault and recovery evidence in four decisions.</p><button class="primary" data-pdlab-guided>Choose a guided case →</button><p class="tiny muted">The values are synthetic and are not machine units or universal limits.</p></section>
-    <section class="card pdlab-section"><div class="eyebrow">Learn then practise · 13 short drills</div><h3>Injection moulding maths and shop-floor skills</h3><p>Learn the key formulas, then practise units, shot mass, material percentages, production output, quality data, shrinkage and a simplified clamp-force estimate.</p><button class="secondary" data-pdlab-math-open>Learn the formulas and practise →</button><p class="tiny muted">Training values only. Exercises are ungraded and never set production machine values.</p></section>
     <details class="pd-more-libraries"><summary>Explore more synthetic case libraries · 50 and 200 cases</summary><div class="pdlab-grid"><article class="pdlab-card card"><span class="pd-chip">50 additional cases</span><h3>Evidence deep dive</h3><p>Browse machine, tooling, material, scientific-moulding and quality/sensor datasets.</p><button class="secondary" data-pdlab-50>Browse 50 cases →</button></article><article class="pdlab-card card"><span class="pd-chip">20 passes · 200 cases</span><h3>Advanced evidence atlas</h3><p>Search a broad library of normalized, unitless signal patterns for advanced practice.</p><button class="secondary" data-pdlab-atlas>Browse the 200-case atlas →</button></article></div><p class="tiny muted">The atlas uses each case’s own normalized baseline. Its values are not machine units or universal limits.</p></details>
     <section class="card pdlab-section"><div class="eyebrow">Optional · local analysis</div><h3>Work with prepared site data</h3><p>The intake checks privacy preparation, signal meaning, role, units, sampling and shot sequence before data can be analysed.</p><div class="pdlab-grid pdlab-real-grid"><article class="pdlab-card card"><h3>Prepare a new CSV</h3><p>Review local privacy rules, define the channels and save the prepared dataset on this device.</p><button class="primary" data-pdlab-csv>Prepare a CSV →</button></article><article class="pdlab-card card"><h3>Analyse saved data</h3><p>Compare baseline drift, before/after windows, cavities, quality associations and energy per good part when the data support each view.</p><button class="secondary" data-pdlab-saved>Open saved datasets →</button></article></div><p class="tiny muted">Raw CSV is prepared in-session and is not uploaded. Prepared evidence is stored locally on this device.</p></section>
   </div>`
@@ -538,7 +543,7 @@ function openSavedData(){const api=window.MM_PROCESS_DATA_LOCAL_INTAKE;if(typeof
 function handleClick(e){
   const t=e.target.closest('[data-pdlab-math-open],[data-pdlab-home],[data-pd-math-guide],[data-pd-math-start],[data-pd-math-choice],[data-pd-math-retry],[data-pd-math-next],[data-pdlab-guided],[data-pdlab-50],[data-pdlab-atlas],[data-pdlab-csv],[data-pdlab-saved],[data-pd-start],[data-pd-home],[data-pd-practice],[data-pd-choice],[data-pd-next],[data-pd-finish],[data-pd-retry],[data-pd-restart],[data-pd-csv]');if(!t)return;
   if(t.hasAttribute('data-pdlab-math-open')||t.hasAttribute('data-pd-math-guide'))return renderMathGuide();
-  if(t.hasAttribute('data-pdlab-home'))return renderHome();
+  if(t.hasAttribute('data-pdlab-home'))return openHome();
   if(t.hasAttribute('data-pd-math-start'))return startMathPractice();
   if(t.dataset.pdMathChoice!==undefined){const i=Number(t.dataset.pdMathChoice);if(mathSelected===null&&Number.isInteger(i)&&i>=0&&i<MATH_DRILLS[mathIndex].choices.length){mathSelected=i;return renderMathDrill()}return}
   if(t.hasAttribute('data-pd-math-retry')){mathSelected=null;return renderMathDrill()}
@@ -561,7 +566,12 @@ function handleClick(e){
 function install(){ensureStyle();const host=ensureSection();if(host&&!host.__mmPdClick){host.addEventListener('click',handleClick);host.__mmPdClick=true}}
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}
 const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});install();window.addEventListener('load',schedule);
-window.MM_PROCESS_DATA_DIAGNOSTICS={version:VERSION,cases:DATASETS.map(d=>({id:d.id,title:d.title,kind:d.kind,signals:Object.keys(d.signals),sourceIds:d.sourceIds})),open:openHome,openGuidedCases:renderGuidedHome,evaluateChoice,storage:'MM_LEARNER_SCOPE 128-bit collision-safe learner progress',storagePrefix:`${STORAGE_BASE}::`,scope:'Guided use of deterministic synthetic training data; outside the formal assessment bank and not a production recipe. evaluateChoice exposes structured practice correctness for local analytics without scraping rendered CSS or score text.'};
+window.MM_PROCESS_DATA_DIAGNOSTICS={version:VERSION,cases:DATASETS.map(d=>({id:d.id,title:d.title,kind:d.kind,signals:Object.keys(d.signals),sourceIds:d.sourceIds})),open:openHome,openMaths,openGuidedCases:renderGuidedHome,evaluateChoice,storage:'MM_LEARNER_SCOPE 128-bit collision-safe learner progress',storagePrefix:`${STORAGE_BASE}::`,scope:'Guided use of deterministic synthetic training data; outside the formal assessment bank and not a production recipe. evaluateChoice exposes structured practice correctness for local analytics without scraping rendered CSS or score text.'};
+window.MM_APP_SHELL?.navigation?.register?.({
+  id:'maths',label:'Maths',icon:'∑',description:'Learn and practise injection moulding calculations.',
+  order:35,group:'practice',mobileGroup:'maths',mobilePrimary:true,mobileMore:false,
+  action:openMaths
+});
 })();
 /* <<< process-data-diagnostics.js */
 

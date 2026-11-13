@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.13.2",
+  "release": "2026.11.13.3",
   "status": "pending-provider-validation",
-  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.13.2.md",
+  "packet": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.13.3.md",
   "readinessContract": "data/nzqa-education-readiness-v1.json",
   "providerTemplatesContract": "data/nzqa-provider-evidence-templates-v1.json",
   "issueNumber": 619,
-  "boundary": "Release 2026.11.13.2 technical candidate 3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99 does not establish any of NZQA/provider G1\u2013G8 external gates or assessment/accreditation authority.",
+  "boundary": "Release 2026.11.13.3 has no retained exact-source candidate yet and does not establish any NZQA/provider G1–G8 external gates or assessment/accreditation authority.",
   "requiredGates": [
     {
       "id": "G1-provider",
@@ -53,25 +53,20 @@
   "validationRule": "Validated requires genuine provider-owned evidence for all eight gates, public-safe evidence references, exact release/candidate binding, and separate reviewed promotion of the canonical external-validation status. Automation must not manufacture completion.",
   "previousCandidate": {
     "release": "2026.11.13.2",
-    "sourceSha": "21fac3dc056af2989fda93dcafd4b6235f6313ea",
+    "sourceSha": "3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99",
     "runtimeFingerprint": "sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb",
-    "candidateRunId": 43367217924,
+    "candidateRunId": 43370758966,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 14010198744,
-    "artifactName": "physical-pwa-candidate-21fac3dc056af2989fda93dcafd4b6235f6313ea",
-    "artifactDigest": "sha256:971b465e39c9e7be2b171cc4e9d114096d48ec4416b58454e406977460d8f6b9",
-    "artifactExpiresAt": "2027-02-11T04:42:11Z"
+    "artifactId": 14011868739,
+    "artifactName": "physical-pwa-candidate-3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99",
+    "artifactDigest": "sha256:9de179d5d4e0d7beb88e62de53fefc8c9070b0828d24b6df70e6f1936b5c56da",
+    "artifactExpiresAt": "2027-02-11T05:14:51Z"
   },
   "previousIssueNumber": 379,
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",
     "runtimeFingerprint": "sha256:4767c50814cfe576891a3eb6f4de34a1d451378709c43a8988e2e57c540cf4c9"
-  },
-  "candidate": {
-    "release": "2026.11.13.2",
-    "sourceSha": "3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99",
-    "runtimeFingerprint": "sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb"
   },
   "previousPreviousCandidate": {
     "release": "2026.11.13.1",

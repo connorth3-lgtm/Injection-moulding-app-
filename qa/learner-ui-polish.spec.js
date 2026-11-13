@@ -42,7 +42,7 @@ test('Materials deep link is intentional but does not become the Home relaunch r
   expect(new URL(page.url()).searchParams.has('view')).toBe(false);
 });
 
-test('five mobile tabs start with actionable content instead of oversized introductions',async({page})=>{
+test('six mobile tabs start with actionable content instead of oversized introductions',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   const nav=page.locator('.mobile-nav');
@@ -303,7 +303,7 @@ test('canonical shell stays stable through intermediate responsive widths',async
     expect(state.view).toBe('dashboard');
     expect(state.navGroup).toBe('home');
     if(width<=700){
-      expect(state.mobileButtons).toHaveLength(5);
+      expect(state.mobileButtons).toHaveLength(6);
       expect(state.current).toBe(1);
     }
   }
@@ -385,7 +385,7 @@ test('primary IA keeps Materials singular and every major destination reachable'
   await page.setViewportSize({width:390,height:844});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   const mobile=page.locator('.mobile-nav');
-  await expect(mobile.locator(':scope > button')).toHaveCount(5);
+  await expect(mobile.locator(':scope > button')).toHaveCount(6);
   await expect(mobile.getByRole('button',{name:'Materials'})).toBeVisible();
   await mobile.getByRole('button',{name:'Materials'}).click();
   await expect(page.locator('#mmExactMaterialCatalog')).toBeVisible();

@@ -310,7 +310,7 @@
     "technicalAutomation"
   ],
   "currentPublicBoundary": {
-    "technicalAutomation": "pass",
+    "technicalAutomation": "fail",
     "bookPublicationAuthorization": "authorized",
     "bookIndependentSme": "hold",
     "curriculumIndependentSme": "hold",
@@ -345,16 +345,16 @@
   "userFacingTerminologyBoundary": "Internal evidenceMaturity=verified must be displayed as 'Source evidence reviewed'. The word verified must not be used by itself in learner-facing Book assurance because independent human SME/device/learner validation is a separate namespace.",
   "currentAssuranceEvidence": {
     "staticContract": {
-      "status": "pass",
-      "meaning": "PASS \u2014 release 2026.11.13.2 software candidate source 3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99, fingerprint sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb, artifact 14011868739, from successful Pre-merge Public Candidate run 43370758966. This is technical release evidence only and does not imply source review, human, device or production approval."
+      "status": "fail",
+      "meaning": "PENDING — release 2026.11.13.3 exact-source candidate has not yet been retained and verified. No human, device or production approval is implied."
     },
     "behavioralBrowser": {
-      "status": "pass",
-      "meaning": "PASS \u2014 release 2026.11.13.2 Mobile Browser QA run 43370758700 and Question Quality 50-Pass run 43370758771 succeeded on exact source 3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99. Browser software QA does not establish physical-device or human validation."
+      "status": "fail",
+      "meaning": "PENDING — release 2026.11.13.3 exact-head browser and question-quality gates have not yet been verified. Browser software QA does not establish physical-device or human validation."
     },
     "externalHumanDevice": {
       "status": "hold",
-      "meaning": "All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.13.2."
+      "meaning": "All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.13.3."
     }
   }
 }

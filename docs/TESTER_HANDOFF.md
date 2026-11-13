@@ -1,9 +1,9 @@
 # MouldMaster — controlled tester handoff
 
-> **Tester publication HOLD:** This is a draft handoff for release candidate 2026.11.13.2; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
+> **Tester publication HOLD:** This is a draft handoff for release candidate 2026.11.13.3; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
 
 
-**Release candidate:** `2026.11.13.2`
+**Release candidate:** `2026.11.13.3`
 **Status:** HOLD, **not cleared to circulate** until the protected-main hosted preview and human checks below are verified.
 
 This is an owner-facing rollout playbook for a **small, voluntary, non-production usability cohort**. It is **not** production-root launch approval, physical-device authorization, formal real-AT testing, a learner-outcomes study, NZQA/provider approval or machine-control authorisation.
@@ -54,7 +54,7 @@ Before sending invitations, reproduce an active **fictional** mission on Home at
 
 - [ ] The numbered mission timeline occupies **normal document flow immediately above** Today’s focus; it is not a floating strip over Book, lesson or the bottom tabs.
 - [ ] All five context fields can be reached and read without sideways page scrolling; labels wrap rather than being cut off.
-- [ ] Book’s **Open Book** action, the five mobile tabs, all stage buttons and **Next** remain touch reachable. Confirm when scrolled to Book, not only on initial load.
+- [ ] Book’s **Open Book** action, the six mobile tabs, all stage buttons and **Next** remain touch reachable. Confirm when scrolled to Book, not only on initial load.
 - [ ] Record the **App version** shown on the in-app update card (where available), exact `/preview/` URL or installed-PWA mode, phone/browser, zoom/text scale, steps and **non-sensitive** before/after screenshots. Do not send learner exports or industrial identifiers.
 - [ ] If a PWA seems stale, first close its open windows/tabs completely, reconnect and reopen. If still stale, the in-app **Repair app files** option is a scoped service-worker/cache repair; it is *not* permission to clear site storage or erase profiles. Recheck the app version, screenshot geometry and learner A→B→A isolation after repair.
 

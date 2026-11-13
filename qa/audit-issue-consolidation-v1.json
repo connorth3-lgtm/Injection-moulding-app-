@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.13.2",
+  "release": "2026.11.13.3",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99",
-  "scope": "Remove duplicate and unnecessary Practice entry points, keep Material Behaviour Labs and their return path under Materials, preserve the distinct fault, process-data and simulator activities, and retain all six material cases, completion records and non-production boundaries.",
-  "approvalBoundary": "PASS \u2014 release 2026.11.13.2 has software-only exact-source QA: retained candidate run 43370758966, Mobile Browser QA run 43370758700, and Question Quality 50-Pass run 43370758771 on source 3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99. All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA review streams remain HOLD; production authority remains advisory-only. Automated checks do not establish human, device, accessibility, Windows-signing, SME, learner-outcome, provider/NZQA or production approval.",
+  "candidateSourceSha": null,
+  "scope": "Make injection moulding Maths a standalone top-level desktop and mobile destination while preserving the existing ungraded practice content and non-production boundaries.",
+  "approvalBoundary": "PENDING — exact-source software candidate and exact-head browser/question gates are not yet verified for release 2026.11.13.3. All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA review streams remain HOLD; production authority remains advisory-only.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
