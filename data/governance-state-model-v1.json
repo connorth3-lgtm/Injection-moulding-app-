@@ -346,11 +346,11 @@
   "currentAssuranceEvidence": {
     "staticContract": {
       "status": "pass",
-      "meaning": "PASS \u2014 release 2026.11.13.2 software candidate source 3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99 is bound to retained artifact 14011868739 from successful Pre-merge Public Candidate run 43370758966. This is technical release evidence only and does not imply source review, human, device or production approval."
+      "meaning": "PASS \u2014 release 2026.11.13.2 software candidate source 3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99, fingerprint sha256:776e11db65c06f2274c63890940a73bdade627971ccffa02032755d825926cfb, artifact 14011868739, from successful Pre-merge Public Candidate run 43370758966. This is technical release evidence only and does not imply source review, human, device or production approval."
     },
     "behavioralBrowser": {
       "status": "pass",
-      "meaning": "PASS \u2014 Mobile Browser QA run 43370758700 and Question Quality 50-Pass run 43370758771 succeeded on exact source 3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99. Browser software QA does not establish physical-device or human validation."
+      "meaning": "PASS \u2014 release 2026.11.13.2 Mobile Browser QA run 43370758700 and Question Quality 50-Pass run 43370758771 succeeded on exact source 3b3bd0044e9ca51b5238cac65cf0591f2ffa5b99. Browser software QA does not establish physical-device or human validation."
     },
     "externalHumanDevice": {
       "status": "hold",
