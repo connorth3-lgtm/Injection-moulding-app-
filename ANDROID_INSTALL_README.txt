@@ -7,7 +7,7 @@ PUBLISHING
 The protected-main GitHub Pages Actions workflow stages the governed learner build under `/preview/`. The production root remains release-held until its separate physical-device authorization gate passes. Do not enable direct branch publishing or treat `/preview/` as production.
 
 NATIVE ANDROID APP
-The dedicated Android shell is version 2026.11.08.1. It loads the hosted `/preview/` content and uses Android native TextToSpeech for Book narration. Download the `mouldmaster-android-debug` artifact from a successful **MouldMaster Android dedicated app** workflow, or build it using the instructions in `android/README.md`. The debug APK is for private technical-preview testing; it is not published to Google Play. Physical-device, offline and lock-screen audio checks remain HOLD.
+The dedicated Android shell is version 2026.11.13.1. It loads the hosted `/preview/` content and uses Android native TextToSpeech for Book narration. Download the `mouldmaster-android-debug` artifact from a successful **MouldMaster Android dedicated app** workflow, or build it using the instructions in `android/README.md`. The debug APK is for private technical-preview testing; it is not published to Google Play. Physical-device, offline and lock-screen audio checks remain HOLD.
 
 PWA / OFFLINE APPLICATION FILES
   index.html
@@ -95,7 +95,7 @@ DATA / ASSESSMENT HARDENING
 - Current answer keys, the >=80% overall threshold and the zero-wrong safety-critical regional gate remain unchanged.
 
 VERSIONING
-Android/PWA shell: 2026.11.08.1 (hosted WebView content: 2026.11.08.4 preview)
+Android/PWA shell: 2026.11.08.1 (hosted WebView content: 2026.11.13.2 preview)
 Training content: 2026.08.26.1
 Audited question bank: 2026.08.30.1
 Assessment quality / analytics hardening: 2026.08.24.3

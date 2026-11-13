@@ -30,8 +30,8 @@ The debug APK is for device testing. It is not the Play upload.
 
 ## Private Google Play internal test
 
-The app uses package name `org.mouldmaster.academy`, version name `2026.11.08.1`,
-and version code `20261108`. See [PLAY_INTERNAL_TESTING.md](PLAY_INTERNAL_TESTING.md)
+The app uses package name `org.mouldmaster.academy`, version name `2026.11.13.1`,
+and version code `20261113`. See [PLAY_INTERNAL_TESTING.md](PLAY_INTERNAL_TESTING.md)
 for the private internal-testing workflow. It builds a signed Android App Bundle
 only when the owner-provided upload-key secrets are configured; it does not publish
 to Google Play automatically.
