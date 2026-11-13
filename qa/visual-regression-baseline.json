@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.12.2",
+  "release": "2026.11.13.1",
   "commit": "53c9b1bac4d2af076f37968d9cf03113140b8e0c",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
@@ -42,7 +42,7 @@
     "book-trace"
   ],
   "policy": "Technical preview reference for removing the duplicate Material Behaviour Labs choice from Practice and keeping those labs grouped under Materials. Compare all 52 viewport/surface captures at the unchanged 12-pixel threshold. This baseline is not visual-owner approval; the human visual-owner decision and all independent real-device, accessibility, SME, learner-outcome, provider and production reviews remain HOLD.",
-  "ref": "visual-baseline/2026.11.12.2",
+  "ref": "visual-baseline/2026.11.13.1",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",

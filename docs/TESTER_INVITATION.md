@@ -1,6 +1,6 @@
 # MouldMaster preview — invitation template
 
-> **Tester publication HOLD:** This is a draft handoff for release candidate 2026.11.12.2; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
+> **Tester publication HOLD:** This is a draft handoff for release candidate 2026.11.13.1; it must not be sent to testers until protected-main release promotion, exact live Pages verification, all required software checks and the invitation-specific operator steps have passed. No physical device/AT/SME/NZQA evidence is implied.
 
 
 **Internal use. Send only after completing [TESTER_HANDOFF.md](TESTER_HANDOFF.md) and passing its live deployment preflight.** Replace the date and reply route as appropriate. Do not send the template before the current hosted preview has been verified against the approved protected-main source.
@@ -13,7 +13,7 @@ We're inviting a small group of people to try **MouldMaster Academy**, an inject
 
 This is an **early, non-production learning preview**, not accredited training, a validated manufacturing tool or a source of production settings.
 
-**Web release candidate prepared for this invitation: `2026.11.12.2`**. This remains a non-publishing technical preview. Do not share this invitation until exact preview deployment checks and the operator preflight have passed, and the separate human/device/provider review holds have been resolved. It does not authorise changes to equipment or site procedures.
+**Web release candidate prepared for this invitation: `2026.11.13.1`**. This remains a non-publishing technical preview. Do not share this invitation until exact preview deployment checks and the operator preflight have passed, and the separate human/device/provider review holds have been resolved. It does not authorise changes to equipment or site procedures.
 
 **Preview link (only after it has been verified by the inviter):**  
 https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/

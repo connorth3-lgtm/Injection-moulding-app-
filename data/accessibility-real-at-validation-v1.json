@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.12.2",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.12.2.md",
+  "release": "2026.11.13.1",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.13.1.md",
   "sourceSha": "b68fd00eb9cc929556a22923ee3c354eefd25158",
   "runtimeFingerprint": "sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7",
   "status": "pending-real-at-validation",
-  "boundary": "Release 2026.11.12.2 is bound to retained exact-source software candidate b68fd00eb9cc929556a22923ee3c354eefd25158 with public-runtime fingerprint sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7. Automated software checks passed; all real assistive-technology tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded. Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer.",
+  "boundary": "Release 2026.11.13.1 is bound to retained exact-source software candidate b68fd00eb9cc929556a22923ee3c354eefd25158 with public-runtime fingerprint sha256:99a848761fcc6ed9107044bf3cdb953533c27a963e0c48d0346c520f04e191c7. Automated software checks passed; all real assistive-technology tasks remain pending until genuine human NVDA and VoiceOver evidence is recorded. Automated browser and accessibility regressions do not substitute for real assistive-technology interaction by a human reviewer.",
   "requiredMatrix": [
     {
       "id": "nvda-firefox-windows",
