@@ -35,7 +35,7 @@ need("row[rule.key]=v===''?'':Number(v)" not in body,'predominantly numeric colu
 
 node=f"""
 const fs=require('fs'),vm=require('vm');
-global.window={};
+global.window={{}};
 vm.runInThisContext(fs.readFileSync({json.dumps(str(ROOT/MODULE))},'utf8'),{{filename:{json.dumps(MODULE)}}});
 const api=window.MM_PROCESS_DATA_LOCAL_INTAKE;
 const csv='timestamp,machine,mould,material_grade,material_lot,operator_id,customer_name,fill_time_s,cycle_time_s,cushion_mm,peak_cavity_pressure_mpa,mould_temp_c,machine_pressure_mpa,resin_moisture_ppm,quality_result,defect_code,comment\\n2026-08-26T10:00:00Z,IMM-A,Tool-X,PA66-GF30,LOT-SECRET,Alice-17,Customer One,1.20,28.4,4.5,83.2,45,72,320,PASS,WELD-LINE-SECRET,first shot\\n2026-08-26T10:00:30Z,IMM-A,Tool-X,PA66-GF30,LOT-SECRET,Bob-22,Customer One,1.24,28.7,4.4,84.1,46,74,330,FAIL,BURN-SECRET,second shot\\n';

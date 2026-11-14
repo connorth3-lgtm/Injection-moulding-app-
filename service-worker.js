@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.11.14.3';
+const CACHE_VERSION='2026.11.14.2';
 const CACHE_REVISION='learner-tools-r10';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 

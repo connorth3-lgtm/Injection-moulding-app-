@@ -17,10 +17,10 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.11.14.3`
+- PWA / browser shell: `2026.11.14.2`
 - Learn Question Centre: 214 total prompts, including 45 formative material-science questions
 - Open Windows desktop: `2026.09.29.1`
-- Android shell: `2026.11.08.1` (WebView content: hosted `/preview/`, currently web release `2026.11.14.3`)
+- Android shell: `2026.11.08.1` (WebView content: hosted `/preview/`, currently web release `2026.11.14.2`)
 - Training content: `2026.08.26.1`
 - Audited assessment bank: `2026.08.30.1`
 - Assessment quality / analytics hardening: `2026.08.24.3`

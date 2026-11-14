@@ -130,7 +130,7 @@ const MATH_COURSE=Object.freeze([
   {id:'capability',unit:'6 · Advanced quality maths',title:'Process capability: Cp and Cpk',level:'Advanced',goal:'Learn what capability ratios calculate and what evidence they require.',teach:'Cp compares specification width with six standard deviations of process spread. Cpk also accounts for how close the process mean is to the nearer specification limit. These calculations are meaningful only with a valid measurement system, stable representative data, correctly defined specifications and suitable statistical assumptions. A capability number is not proof that every part will conform and does not replace the customer’s acceptance rule.',formula:'Cp = (USL − LSL) ÷ (6s). Cpk = min[(USL − mean) ÷ (3s), (mean − LSL) ÷ (3s)].',example:['Specification limits: LSL = 9.4 mm and USL = 10.6 mm; s = 0.1 mm.','Cp = (10.6 − 9.4) ÷ (6 × 0.1) = 1.2 ÷ 0.6 = 2.0.','If the mean is 10.4 mm, the upper-side index is (10.6 − 10.4) ÷ (3 × 0.1) = 0.67; the lower side is 3.33.','Cpk = the smaller side = 0.67. A qualified person must interpret capability against site and customer rules.'],watch:'Do not calculate capability on unstable, cherry-picked or mixed-cavity data. Site and customer criteria govern interpretation.',check:{question:'LSL = 9.4 mm, USL = 10.6 mm, mean = 10.4 mm and s = 0.1 mm. What is Cpk?',choices:['0.67','2.0','3.33'],answer:0,hint:'Find each spec-limit distance divided by 3s, then use the smaller value.',working:'Upper side = (10.6 − 10.4) ÷ 0.3 ≈ 0.67. Lower side = (10.4 − 9.4) ÷ 0.3 ≈ 3.33. Cpk is the smaller value: about 0.67.'}}
 ]);
 const MATH_FORMULAS=Object.freeze(MATH_COURSE.map(item=>({title:item.title,body:item.formula})));
-let mathIndex=0,mathSelected=null;
+let mathIndex=0,mathSelected=null,mathsNavigationRegistered=false;
 let mathCourseSelections=Object.create(null),mathCourseProgressOwner=null,mathCourseCompleted=new Set();
 const MATH_ILLUSTRATIONS=Object.freeze({
   'projected-area':'<figure class="pd-math-figure"><svg viewBox="0 0 680 190" role="img" aria-labelledby="pd-area-title pd-area-desc"><title id="pd-area-title">Projected area through the mould</title><desc id="pd-area-desc">Four cavity rectangles connected by a runner are viewed along the clamp direction. The dashed outline encloses the projected area.</desc><defs><marker id="pd-area-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#f2c14e"/></marker></defs><rect x="155" y="32" width="360" height="126" rx="12" fill="none" stroke="#f2c14e" stroke-width="3" stroke-dasharray="10 7"/><path d="M85 95 H137" stroke="#f2c14e" stroke-width="4" marker-end="url(#pd-area-arrow)"/><text x="24" y="78" fill="#f4e7b5" font-size="14">Clamp</text><text x="20" y="112" fill="#f4e7b5" font-size="14">direction</text><path d="M335 55 V135 M235 95 H435" stroke="#83b7ff" stroke-width="13" stroke-linecap="round"/><rect x="180" y="47" width="92" height="40" rx="7" fill="#235a76" stroke="#8bd5f5" stroke-width="2"/><rect x="398" y="47" width="92" height="40" rx="7" fill="#235a76" stroke="#8bd5f5" stroke-width="2"/><rect x="180" y="103" width="92" height="40" rx="7" fill="#235a76" stroke="#8bd5f5" stroke-width="2"/><rect x="398" y="103" width="92" height="40" rx="7" fill="#235a76" stroke="#8bd5f5" stroke-width="2"/><text x="335" y="178" fill="#d9e7f7" font-size="14" text-anchor="middle">Cavities + runner silhouette seen along the clamp direction</text></svg><figcaption>Projected area is the silhouette at the parting plane. Use the approved mould layout to identify which part and runner areas belong in a real calculation.</figcaption></figure>',
@@ -295,6 +295,16 @@ function ensureMathStyles(){
 }
 function hideOtherViews(){document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'))}
 function setHeader(t,s){const h=document.getElementById('pageTitle'),p=document.getElementById('pageSubtitle');if(h)h.textContent=t;if(p)p.textContent=s}
+function registerMathsNavigation(){
+  const navigation=window.MM_APP_SHELL?.navigation;
+  if(mathsNavigationRegistered||typeof navigation?.register!=='function')return;
+  navigation.register({
+    id:'maths',label:'Maths',icon:'∑',description:'Learn and practise injection moulding calculations.',
+    order:35,group:'practice',mobileGroup:'maths',mobilePrimary:true,mobileMore:false,
+    action:openMaths
+  });
+  mathsNavigationRegistered=true
+}
 function openMaths(){
   ensureMathStyles();hideOtherViews();const host=ensureMathSection();host.classList.remove('hidden');
   window.MM_APP_SHELL?.navigation?.setCustomActive?.('maths','maths');
@@ -318,14 +328,9 @@ function handleMathClick(e){
   if(t.hasAttribute('data-pd-math-retry')){mathSelected=null;return renderMathDrill()}
   if(t.hasAttribute('data-pd-math-next')){if(mathSelected!==MATH_DRILLS[mathIndex].answer)return;mathIndex++;mathSelected=null;return mathIndex<MATH_DRILLS.length?renderMathDrill():renderMathSummary()}
 }
-function install(){ensureMathStyles();const host=ensureMathSection();if(host&&!host.__mmMathClick){host.addEventListener('click',handleMathClick);host.__mmMathClick=true}}
+function install(){ensureMathStyles();const host=ensureMathSection();if(host&&!host.__mmMathClick){host.addEventListener('click',handleMathClick);host.__mmMathClick=true}registerMathsNavigation()}
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}
-const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});install();window.addEventListener('load',schedule);
+const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});install();window.addEventListener('load',schedule);window.addEventListener('mm:domains-ready',schedule);
 window.MM_PROCESS_DATA_DIAGNOSTICS={version:VERSION,cases:DATASETS.map(d=>({id:d.id,title:d.title,kind:d.kind,signals:Object.keys(d.signals),sourceIds:d.sourceIds})),datasets:DATASETS,byId:id=>DATASETS.find(d=>d.id===String(id))||null,toCsv:id=>PACK.toCsv(String(id)),evaluateChoice,storage:'MM_LEARNER_SCOPE 128-bit collision-safe learner progress',storagePrefix:`${STORAGE_BASE}::`,scope:'Retained synthetic process-evidence records and deterministic evaluator outside the formal assessment bank; user-facing Process Data screens are retired.'};
 window.MM_INJECTION_MOULDING_MATHS=Object.freeze({version:VERSION,open:openMaths,lessons:MATH_COURSE,formulas:MATH_FORMULAS,practiceCount:MATH_DRILLS.length,scope:'Independent injection moulding maths course and ungraded practice.'});
-window.MM_APP_SHELL?.navigation?.register?.({
-  id:'maths',label:'Maths',icon:'∑',description:'Learn and practise injection moulding calculations.',
-  order:35,group:'practice',mobileGroup:'maths',mobilePrimary:true,mobileMore:false,
-  action:openMaths
-});
 })();

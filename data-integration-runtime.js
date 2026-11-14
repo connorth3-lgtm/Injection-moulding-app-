@@ -6,7 +6,6 @@ const VERSION='2026.11.08.1';
 const DB_NAME='mouldmaster-process-data-v1';
 const DB_VERSION=1;
 const MAX_ROWS=50000;
-const MAX_CSV_BYTES=10*1024*1024;
 const ROLE_OPTIONS=['unresolved','actual','setpoint','command','state','quality','derived','structural'];
 const SAMPLING_OPTIONS=['unknown','per-cycle','trace-sample','event','batch'];
 const BLOCKING_SEMANTIC_KINDS=new Set(['unresolved']);

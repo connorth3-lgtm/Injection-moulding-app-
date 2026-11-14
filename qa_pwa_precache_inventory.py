@@ -51,7 +51,7 @@ def main() -> None:
     all_files = core + optional
     # Book course packs are an intentional CORE asset. The complete course
     # map and worksheets install atomically with the reader and app shell.
-    if args.check and (len(core), len(optional)) != (138, 23):
+    if args.check and (len(core), len(optional)) != (137, 23):
         raise AssertionError("PWA first-install asset count changed; re-evaluate physical-device intake")
     print(f"Atomic PWA: {len(core)} CORE + {len(optional)} OPTIONAL = {len(all_files)} assets; "
           f"{sum(size for _, size in all_files):,} repository bytes, NOT network transfer/storage quota.")
