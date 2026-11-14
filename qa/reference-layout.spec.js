@@ -177,8 +177,8 @@ for(const width of [320,360,390,412]){
     await expect(page.locator('#scenarios .mm-reference-title')).toHaveText('Practice');
     await expect(page.locator('#scenarios .mm-reference-practice-list')).toHaveCount(0);
     const activities=page.locator('#scenarios .mm-unified-practice-card');
-    await expect(activities).toHaveCount(3);
-    await expect(activities.locator('.mm-reference-photo')).toHaveCount(3);
+    await expect(activities).toHaveCount(2);
+    await expect(activities.locator('.mm-reference-photo')).toHaveCount(2);
     await expect(activities.filter({hasText:'Question Centre'})).toHaveCount(0);
     await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
 
@@ -200,13 +200,13 @@ test('unified practice illustrations load locally without external dependencies'
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  await expect(page.locator('#scenarios .mm-reference-practice-art')).toHaveCount(3);
+  await expect(page.locator('#scenarios .mm-reference-practice-art')).toHaveCount(2);
   await page.waitForFunction(()=>document.documentElement.classList.contains('mm-reference-photo-ready'));
   const tiles=await page.locator('#scenarios .mm-reference-practice-art.mm-reference-photo').evaluateAll(nodes=>nodes.map(el=>({
     tile:Number(el.dataset.mmPhotoIndex),
     background:getComputedStyle(el).backgroundImage
   })));
-  expect(tiles.map(row=>row.tile)).toEqual([20,23,19]);
+  expect(tiles.map(row=>row.tile)).toEqual([20,19]);
   expect(tiles.every(row=>row.background.includes('mockup-reference-tiles.webp'))).toBe(true);
 });
 
@@ -218,13 +218,13 @@ for(const width of [360,810]){
     const hub=page.locator('#scenarios .mm-practice-hub');
     await expect(hub).toBeVisible();
     const activities=hub.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-reference-practice-choice');
-    await expect(activities).toHaveCount(3);
-    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(3);
+    await expect(activities).toHaveCount(2);
+    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(2);
     await expect(hub.locator('[data-mm-hub-action="material-labs"]')).toHaveCount(0);
     // The QA learner has no local learning evidence, so no generic substitute card should appear.
     await expect(hub.locator('.mm-reference-practice-feature')).toHaveCount(0);
     await page.evaluate(()=>{window.MM_REFERENCE_LAYOUT.refresh();window.MM_REFERENCE_LAYOUT.refresh()});
-    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(3);
+    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(2);
     const sizing=await activities.evaluateAll(nodes=>({
       overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth),
       touch:nodes.every(el=>el.getBoundingClientRect().height>=44),
@@ -300,449 +300,505 @@ for(const width of [360,810]){
   });
 }
 
-test('Diagnostic learning notes never leak across two local learner profiles',async({page})=>{
-  await page.setViewportSize({width:390,height:844});
-  await page.addInitScript(()=>{
-    const learner=(id)=>({id,name:id,role:'learner',completed:[],bookmarks:[],notes:{},
-      examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-10-13T00:00:00Z',
-      onboardingDone:true,experience:'Beginner',goal:'Learn injection moulding',dailyMinutes:15,region:'ALL'});
-    localStorage.clear();
-    localStorage.setItem('mouldmasterProDB',JSON.stringify({
-      activeUser:'diagnostic-a',
-      users:{'diagnostic-a':learner('diagnostic-a'),'diagnostic-b':learner('diagnostic-b')}
-    }));
-  });
-  await page.goto(BASE,{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_DIAGNOSTIC_WORKBENCH)&&!document.getElementById('mmBootstrap'));
-  await page.evaluate(()=>switchView('defects'));
-  const root=page.locator('#defects .mm-dx-workbench');
-  await root.locator('[data-mm-dx-action="choose"]').first().click();
-  await root.locator('textarea[name="baseline"]').fill('Learner A controlled baseline');
-  await root.locator('[data-mm-dx-evidence="material"]').check();
-  expect((await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report())).context.baseline)
-    .toBe('Learner A controlled baseline');
+test('Diagnostic learning notes never leak across two local learner profiles',async({page})=>ЧЭ6¶‰ћЛkєwµзJ	Э^\™XVЫ[YOH›ШњЩ\ќ][ЫњИ—IКJKќТ]™U[YJ	ЙКNВ€]ШZ]^XЭ
+›ЫЭ›ШШ]ЬЉ	ЦЩ]K[[KYY]љY[ЩOHњ\ќ—IКJK››ЭќР™PЪXЪЩY
 
-  await page.evaluate(()=>switchUser('diagnostic-b'));
-  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('mouldmasterProDB')||'{}').activeUser==='diagnostic-b');
-  await page.evaluate(()=>switchView('defects'));
-  await expect(root.locator('.mm-dx-empty')).toBeVisible();
-  const bReport=await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report());
-  expect(bReport.selectedDefect).toBeNull();
-  expect(bReport.context.baseline).toBe('');
-  expect(bReport.evidenceReportedAvailable).toEqual([]);
-  await root.locator('[data-mm-dx-action="choose"]').first().click();
-  await expect(root.locator('textarea[name="baseline"]')).toHaveValue('');
-  await expect(root.locator('[data-mm-dx-evidence="material"]')).not.toBeChecked();
+NВ€ЫЫњЭ™^™\ЬќX]ШZ]YЩK™][X]J
 
-  await page.evaluate(()=>switchUser('diagnostic-a'));
-  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('mouldmasterProDB')||'{}').activeUser==='diagnostic-a');
-  await page.evaluate(()=>switchView('defects'));
-  await expect(root.locator('.mm-dx-empty')).toBeVisible();
-});
+OOќЪ[™ЭЛ“SWСPQУ“ФХPЧХУФ’Р‘SђТњ™\Ьќ
 
-test('Diagnostic controls discard stale events immediately after a learner change',async({page})=>{
-  await page.setViewportSize({width:390,height:844});
-  await page.addInitScript(()=>{
-    const learner=id=>({id,name:id,role:'learner',completed:[],bookmarks:[],notes:{},
-      examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-10-13T00:00:00Z',
-      onboardingDone:true,experience:'Beginner',goal:'Learn injection moulding',
-      dailyMinutes:15,region:'ALL'});
-    localStorage.clear();
-    localStorage.setItem('mouldmasterProDB',JSON.stringify({
-      activeUser:'diagnostic-a',users:{
-        'diagnostic-a':learner('diagnostic-a'),'diagnostic-b':learner('diagnostic-b')
-      }
-    }));
-  });
-  await page.goto(BASE,{waitUntil:'domcontentloaded'});
-  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_DIAGNOSTIC_WORKBENCH)&&!document.getElementById('mmBootstrap'));
-  await page.evaluate(()=>switchView('defects'));
-  const root=page.locator('#defects .mm-dx-workbench');
-  await root.locator('[data-mm-dx-action="choose"]').first().click();
-  await root.locator('textarea[name="observations"]').fill('Learner A should not be transferred');
-  await root.locator('[data-mm-dx-evidence="part"]').check();
-  // Trigger the old connected element's input synchronously after switching
-  // users, before a navigation/render pass has refreshed the diagnostic pane.
-  // A delayed observer alone cannot protect this same-task event.
-  await page.evaluate(()=>{
-    const stale=document.querySelector('#defects textarea[name="observations"]');
-    switchUser('diagnostic-b');
-    stale.value='stale cross-profile event';
-    stale.dispatchEvent(new Event('input',{bubbles:true}));
-  });
-  const report=await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report());
-  expect(report.selectedDefect).toBeNull();
-  expect(report.context.observations).toBe('');
-  expect(report.evidenceReportedAvailable).toEqual([]);
-  await page.evaluate(()=>switchView('defects'));
-  await expect(root.locator('.mm-dx-empty')).toBeVisible();
-  await expect(root.locator('textarea[name="observations"]')).toHaveCount(0);
-});
+JNВ€^XЭ
+™^™\ЬќњЩ[XЭYY™XЭ
+K››ЭќР™JЫ™\ЬќњЩ[XЭYY™XЭ
+NВ€^XЭ
+™^™\ЬќЫЫќ^›ШњЩ\ќ][ЫњКKќР™J	ЙКNВ€^XЭ
+™^™\ЬќЫЫќ^\Щ[[™JKќР™J	ЙКNВ€^XЭ
+™^™\Ьќ™]љY[ЩT™\ЬќY]Z[X›JKќС\]X[
+ЧJNВ€^XЭ
+™^™\Ьќљ\Э\Щ\Л™]™\ћJ›ЭПOњ›ЭЛ›X\›™\ђ\ЬЩ\ЬЫY[ќOOIЭ[\ЬЩ\ЬЩY	КJKќР™JќYJNВ€^XЭ
+™^™\Ьќњ›ЫЭШ]\ЩU™\љYљYY
+KќР™J[ЩJNВ€^XЭ
+™^™\Ьќњ›ЩXЭ[Ы”Щ]Ъ[ќР]]Ьљ^™Y
+KќР™J[ЩJNВџJNВ‚ќ\Э
+	СXYЫ›ЬЭXИЫЬљШ™[ЪЩY\ИЩ^X›Ш\™\њљ][XЬ›ЬЬИЮ[\ЫK]љY[ЩK™]љ\Ъ[Ы€[™™\Щ]	Л\Ю[КЬYЩ_JOOћВ€]ШZ]YЩKњЩ]љY]ЬЬќЪ^™JЭЪYЊОLZYЪЋJNВ€]ШZ]Ь[ђ\
+YЩJNВ€]ШZ]YЩK™][X]J
 
-test('Choosing another defect clears unrelated measurements, evidence and judgement',async({page})=>{
-  await page.setViewportSize({width:390,height:844});
-  await openApp(page);
-  await page.evaluate(()=>switchView('defects'));
-  const root=page.locator('#defects .mm-dx-workbench');
-  const choices=root.locator('[data-mm-dx-action="choose"]');
-  expect(await choices.count()).toBeGreaterThan(1);
-  await choices.first().click();
-  await root.locator('textarea[name="baseline"]').fill('First-defect known-good baseline');
-  await root.locator('textarea[name="observations"]').fill('First-defect measured sample');
-  await root.locator('[data-mm-dx-evidence="part"]').check();
-  await root.locator('[data-mm-dx-action="analyse"]').click();
-  const hypothesis=root.locator('[data-mm-dx-hypothesis]').first();
-  if(await hypothesis.count())await hypothesis.selectOption('support');
-  const oldReport=await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report());
-  expect(oldReport.context.observations).toBe('First-defect measured sample');
-  expect(oldReport.evidenceReportedAvailable).toContain('part');
-  await choices.nth(1).click();
-  await expect(root.locator('textarea[name="baseline"]')).toHaveValue('');
-  await expect(root.locator('textarea[name="observations"]')).toHaveValue('');
-  await expect(root.locator('[data-mm-dx-evidence="part"]')).not.toBeChecked();
-  const nextReport=await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report());
-  expect(nextReport.selectedDefect).not.toBe(oldReport.selectedDefect);
-  expect(nextReport.context.observations).toBe('');
-  expect(nextReport.context.baseline).toBe('');
-  expect(nextReport.evidenceReportedAvailable).toEqual([]);
-  expect(nextReport.hypotheses.every(row=>row.learnerAssessment==='unassessed')).toBe(true);
-  expect(nextReport.rootCauseVerified).toBe(false);
-  expect(nextReport.productionSetpointsAuthorized).toBe(false);
-});
+OOњЭЪ]ЪљY]К	ЩY™XЭЙКJNВ€ЫЫњЭЫЬљШ™[Ъ\YЩK›ШШ]ЬЉ	ИЩY™XЭИ›[KY]ЫЬљШ™[Ъ	КNВ€]ШZ]^XЭ
+ЫЬљШ™[Ъ
+KќР™Uљ\ЪX›J
+NВ€ЫЫњЭЮ[\ЫO]ЫЬљШ™[Ъ›ШШ]ЬЉ	ЦЩ]K[[KYXXЭ[ЫЏHЪЫЬЩH—IКK™љ\њЭ
 
-test('Diagnostic workbench keeps keyboard arrival across symptom, evidence, revision and reset',async({page})=>{
-  await page.setViewportSize({width:390,height:844});
-  await openApp(page);
-  await page.evaluate(()=>switchView('defects'));
-  const workbench=page.locator('#defects .mm-dx-workbench');
-  await expect(workbench).toBeVisible();
-  const symptom=workbench.locator('[data-mm-dx-action="choose"]').first();
-  await symptom.focus();
-  await symptom.press('Enter');
-  const firstField=workbench.locator('.mm-dx-fields select').first();
-  await expect(firstField).toBeFocused();
-  await workbench.locator('textarea[name="observations"]').fill('Compare measured results with validated baseline.');
-  await workbench.locator('[data-mm-dx-action="analyse"]').focus();
-  await page.keyboard.press('Enter');
-  const analysisHeading=workbench.locator('.mm-dx-results .mm-dx-section-head h2');
-  await expect(analysisHeading).toBeFocused();
-  await expect(analysisHeading).toHaveCSS('outline-style','solid');
-  await workbench.locator('[data-mm-dx-action="back"]').focus();
-  await page.keyboard.press('Enter');
-  await expect(workbench.locator('.mm-dx-fields select').first()).toBeFocused();
-  await expect(workbench.locator('textarea[name="observations"]')).toHaveValue('Compare measured results with validated baseline.');
-  await workbench.locator('[data-mm-dx-action="analyse"]').click();
-  await workbench.locator('[data-mm-dx-action="reset"]').focus();
-  await page.keyboard.press('Enter');
-  await expect(workbench.locator('#mmDxSearch')).toBeFocused();
-  await expect(workbench.locator('.mm-dx-empty')).toBeVisible();
-});
+NВ€]ШZ]Ю[\ЫK™›ШЭ\К
+NВ€]ШZ]Ю[\ЫKњ™\ЬК	С[ќ\‰КNВ€ЫЫњЭљ\њЭљY[]ЫЬљШ™[Ъ›ШШ]ЬЉ	Л›[KYYљY[ИЩ[XЭ	КK™љ\њЭ
 
-test('Practice nested labs and assessments keep working illustrated landing headers',async({page})=>{
-  test.setTimeout(90000);
-  await page.setViewportSize({width:390,height:844});
-  await openApp(page);
+NВ€]ШZ]^XЭ
+љ\њЭљY[
+KќР™Q›ШЭ\ЩY
 
-  for(const [action,root,hero,start,back] of [
-    ['diagnostic-labs','#diagnosticLabs','.dl-hero','[data-dl-start]','[data-dl-home]'],
-    ['material-labs','#materialLabs','.ml-hero','[data-ml-start]','[data-ml-home]']
-  ]){
-    await page.evaluate(()=>switchView('path'));
-    await page.locator('#path .mm-learn-hub [data-mm-hub-action="question-centre"]').click();
-    await page.locator('#path .mm-question-centre [data-mm-hub-action="'+action+'"]').click();
-    await expect(page.locator(root+' '+hero+' > .mm-reference-practice-tool-art')).toBeVisible();
-    await expect(page.locator(root+' > .mm-practice-tool-return')).toHaveCount(1);
-    await expect(page.locator(root+' '+start).first()).toBeVisible();
-    await page.locator(root+' '+start).first().click();
-    const questionChoice=page.locator(root+' button'+(action==='diagnostic-labs'?'.dl-choice':'.ml-choice')).first();
-    await expect(questionChoice).toBeVisible();
-    expect((await questionChoice.boundingBox()).height).toBeGreaterThanOrEqual(44);
-    const panel=action==='diagnostic-labs'?'.dl-lab > .dl-panel':'.ml-lab > .ml-panel';
-    await expect(page.locator(root+' '+panel).first()).toHaveCSS('background-color','rgb(239, 247, 250)');
-    await questionChoice.click();
-    await expect(page.locator(root+' '+(action==='diagnostic-labs'?'.dl-feedback':'.ml-feedback'))).toBeVisible();
-    await expect(page.locator(root+' '+back)).toBeVisible();
-    await page.locator(root+' '+back).click();
-    await expect(page.locator(root+' '+hero+' > .mm-reference-practice-tool-art')).toHaveCount(1);
-  }
+NВ€]ШZ]ЫЬљШ™[Ъ›ШШ]ЬЉ	Э^\™XVЫ[YOH›ШњЩ\ќ][ЫњИ—IКK™љ[
+	РЫЫ\\™HYX\Э\™Y™\Э[ИЪ][Y]Y\Щ[[™K‰КNВ€]ШZ]ЫЬљШ™[Ъ›ШШ]ЬЉ	ЦЩ]K[[KYXXЭ[ЫЏH[[\ЩH—IКK™›ШЭ\К
+NВ€]ШZ]YЩKљЩ^X›Ш\™њ™\ЬК	С[ќ\‰КNВ€ЫЫњЭ[[\Ъ\ТXY[™П]ЫЬљШ™[Ъ›ШШ]ЬЉ	Л›[KY\™\Э[И›[KY\ЩXЭ[Ы‹ZXY‰КNВ€]ШZ]^XЭ
+[[\Ъ\ТXY[™КKќР™Q›ШЭ\ЩY
 
-  await page.evaluate(()=>switchView('path'));
-  await page.locator('#path .mm-learn-hub [data-mm-hub-action="question-centre"]').click();
-  await page.locator('#path .mm-question-centre [data-mm-hub-action="assessments"]').click();
-  await expect(page.locator('#exams .section-head > .mm-reference-practice-tool-art')).toBeVisible();
-  await expect(page.locator('#exams > .mm-practice-tool-return')).toHaveCount(1);
-  const startExam=page.locator('#exams .exam-card button').first();
-  await expect(startExam).toBeVisible();
-  await startExam.click();
-  await expect(page.locator('#modal:not(.hidden) #examQuestions .question').first()).toBeVisible();
-});
+NВ€]ШZ]^XЭ
+[[\Ъ\ТXY[™КKќТ]™PФФК	ЫЭ][™K\Э[IЛ	ЬЫЫY	КNВ€]ШZ]ЫЬљШ™[Ъ›ШШ]ЬЉ	ЦЩ]K[[KYXXЭ[ЫЏHXЪИ—IКK™›ШЭ\К
+NВ€]ШZ]YЩKљЩ^X›Ш\™њ™\ЬК	С[ќ\‰КNВ€]ШZ]^XЭ
+ЫЬљШ™[Ъ›ШШ]ЬЉ	Л›[KYYљY[ИЩ[XЭ	КK™љ\њЭ
 
-test('More keeps six illustrated native disclosures, original actions and keyboard access',async({page})=>{
-  await page.setViewportSize({width:390,height:844});
-  await openApp(page);
-  await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
-  const groups=page.locator('#modal .mm-reference-more-card');
-  await expect(groups).toHaveCount(6);
-  await expect(groups.locator(':scope > summary > .mm-reference-more-art')).toHaveCount(6);
-  const registryActions=await page.locator('#modal [data-mm-registry-menu]').count();
-  await page.evaluate(()=>{window.MM_REFERENCE_LAYOUT.refresh();window.MM_REFERENCE_LAYOUT.refresh()});
-  await expect(groups.locator(':scope > summary > .mm-reference-more-art')).toHaveCount(6);
-  expect(await page.locator('#modal [data-mm-registry-menu]').count()).toBe(registryActions);
-  const about=page.locator('#modal .mm-reference-more-extra').filter({hasText:'About MouldMaster'});
-  await expect(about).not.toHaveAttribute('open','');
-  const header=about.locator(':scope > summary');
-  await header.focus();
-  await header.press('Enter');
-  await expect(about).toHaveAttribute('open','');
-  await expect(about.locator('a[href="./support.html#mmPwa"]')).toBeVisible();
-  await header.press('Enter');
-  await expect(about).not.toHaveAttribute('open','');
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
-  await page.evaluate(()=>window.closeModal?.());
-  await expect(page.locator('#modal .modal-card')).toBeHidden();
-  await page.locator('.mobile-nav > button').filter({hasText:'Practice'}).click();
-  await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
-});
+JKќР™Q›ШЭ\ЩY
 
-for(const width of [360,810]){
-  test('approved deep-screen design keeps actual lesson, simulator and resource actions at '+width+'px',async({page})=>{
-    await page.setViewportSize({width,height:900});
-    await openApp(page);
-    await page.evaluate(()=>switchView('lesson'));
-    const lesson=page.locator('#lesson');
-    await expect(lesson.locator('.mm-simple-lesson-hero > .mm-reference-deep-art')).toBeVisible();
-    await expect(lesson.locator('.lesson-body.mm-reference-deep-panel')).toBeVisible();
-    // The simple-reader intentionally hides/removes legacy lesson sidebar on small screens.
-    await expect(lesson.locator('.mm-simple-lesson-hero')).toBeVisible();
-    await expect(lesson.locator('.lesson-body > .content-block:not(.mm-simple-note-section), .lesson-body > .mm-simple-section:not(.mm-simple-note-section)').first()).toHaveCSS('background-color','rgb(240, 247, 250)');
-    await lesson.locator('.mm-simple-note-disclosure > summary').click();
-    await lesson.locator('#lessonNotes').fill('Test setup notes вЂ” do not use as process settings.');
-    await lesson.getByRole('button',{name:'Save notes'}).click();
-    await expect(lesson.locator('.mm-simple-lesson-hero > .mm-reference-deep-art')).toHaveCount(1);
+NВ€]ШZ]^XЭ
+ЫЬљШ™[Ъ›ШШ]ЬЉ	Э^\™XVЫ[YOH›ШњЩ\ќ][ЫњИ—IКJKќТ]™U[YJ	РЫЫ\\™HYX\Э\™Y™\Э[ИЪ][Y]Y\Щ[[™K‰КNВ€]ШZ]ЫЬљШ™[Ъ›ШШ]ЬЉ	ЦЩ]K[[KYXXЭ[ЫЏH[[\ЩH—IКKЫXЪК
+NВ€]ШZ]ЫЬљШ™[Ъ›ШШ]ЬЉ	ЦЩ]K[[KYXXЭ[ЫЏHњ™\Щ]—IКK™›ШЭ\К
+NВ€]ШZ]YЩKљЩ^X›Ш\™њ™\ЬК	С[ќ\‰КNВ€]ШZ]^XЭ
+ЫЬљШ™[Ъ›ШШ]ЬЉ	ИЫ[QЩX\Ъ	КJKќР™Q›ШЭ\ЩY
 
-    await page.evaluate(()=>switchView('simulator'));
-    const simulator=page.locator('#simulator');
-    await expect(simulator.locator('.form-card > .mm-reference-deep-art')).toBeVisible();
-    await expect(simulator.locator('.output-panel > .mm-reference-deep-art')).toBeVisible();
-    // The Virtual Apprenticeship and other embedded training widgets own
-    // additional controls. Scope the count to the governed core simulator.
-    const advanced=simulator.locator(':scope > .grid2 > .form-card > .mm-engineer-sim-groups');
-    await expect(advanced.locator(':scope > summary')).toBeVisible();
-    await advanced.locator(':scope > summary').click();
-    const modelSliders=advanced.locator('.form-grid > label > .range-row > input[type="range"]');
-    await expect(modelSliders).toHaveCount(10);
-    await expect(simulator.locator('#mmSimMetricInputs')).toBeVisible();
-    await expect(simulator.locator('#mmSimPrimaryFinding')).toContainText('training baseline');
-    await expect(simulator.locator('#simAdvice')).toContainText('What to verify next');
-    const fillSlider=modelSliders.first();
-    await expect(fillSlider).toHaveValue('50');
-    await fillSlider.focus();
-    await fillSlider.press('ArrowRight');
-    await expect(fillSlider).toHaveValue('51');
-    await simulator.getByRole('button',{name:'Reset to baseline',exact:true}).click();
-    await expect(simulator.locator('.mm-engineer-sim-groups input[type="range"]').first()).toHaveValue('50');
-    await expect(simulator.locator('.form-card > .mm-reference-deep-art')).toHaveCount(1);
+NВ€]ШZ]^XЭ
+ЫЬљШ™[Ъ›ШШ]ЬЉ	Л›[KYY[\IКJKќР™Uљ\ЪX›J
+NВџJNВ‚ќ\Э
+	ФXЭXЩH™\ЭYXњИ[™\ЬЩ\ЬЫY[ќИЩY\ЫЬљЪ[™И[\Э]Y[™[™ИXY\њЙЛ\Ю[КЬYЩ_JOOћВ€\ЭњЩ][Y[Э]
+L
+NВ€]ШZ]YЩKњЩ]љY]ЬЬќЪ^™JЭЪYЊОLZYЪЋJNВ€]ШZ]Ь[ђ\
+YЩJNВ‚€›ЬЉЫЫњЭШXЭ[Ы‹›ЫЭ\›ЛЭ\ќXЪЧHЩ€В€ЙЩXYЫ›ЬЭXЛ[XњЙЛ	ИЩXYЫ›ЬЭXУXњЙЛ	Л™Z\›ЙЛ	ЦЩ]KY\Э\ќIЛ	ЦЩ]KYZЫYWIЧK€ЙЫX]\љX[[XњЙЛ	ИЫX]\љX[XњЙЛ	Л›[Z\›ЙЛ	ЦЩ]K[[\Э\ќIЛ	ЦЩ]K[[ZЫYWIЧB€J^В€]ШZ]YЩK™][X]J
 
-    await page.evaluate(()=>switchView('visuals'));
-    const visuals=page.locator('#visuals');
-    await expect(visuals.locator('.visual-wrap:first-child > .mm-reference-deep-art')).toBeVisible();
-    await visuals.getByRole('button',{name:'Filling',exact:true}).click();
-    await expect(visuals.locator('#phaseText')).toContainText('velocity control');
+OOњЭЪ]ЪљY]К	Ь]	КJNВ€]ШZ]YЩK›ШШ]ЬЉ	ИЬ]›[K[X\›‹ZX€Щ]K[[KZX‹XXЭ[ЫЏHњ]Y\Э[Ы‹XЩ[ќ™H—IКKЫXЪК
+NВ€]ШZ]YЩK›ШШ]ЬЉ	ИЬ]›[K\]Y\Э[Ы‹XЩ[ќ™HЩ]K[[KZX‹XXЭ[ЫЏH‰КШXЭ[ЫЉЙИ—IКKЫXЪК
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ›ЫЭ
+ЙИ	КЪ\›КЙИ€›[K\™Y™\™[ЩK\XЭXЩK]ЫЫX\ќ	КJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ›ЫЭ
+ЙИ€›[K\XЭXЩK]ЫЫ\™]\›‰КJKќТ]™PЫЭ[ќ
+JNВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ›ЫЭ
+ЙИ	КЬЭ\ќ
+K™љ\њЭ
 
-    await page.evaluate(()=>switchView('glossary'));
-    const glossary=page.locator('#glossary');
-    await expect(glossary.locator('.section-head > .mm-reference-deep-art')).toBeVisible();
-    await glossary.locator('#glossarySearch').fill('pressure');
-    await expect(glossary.locator('.term:visible').first()).toBeVisible();
+JKќР™Uљ\ЪX›J
+NВ€]ШZ]YЩK›ШШ]ЬЉ›ЫЭ
+ЙИ	КЬЭ\ќ
+K™љ\њЭ
 
-    await page.evaluate(()=>switchView('defects'));
-    const defects=page.locator('#defects');
-    await expect(defects.locator('.mm-dx-hero > .mm-reference-deep-art')).toBeVisible();
-    await expect(defects.locator('.mm-dx-pane.mm-reference-deep-panel').first()).toBeVisible();
+KЫXЪК
+NВ€ЫЫњЭ]Y\Э[ЫђЪЪXЩO\YЩK›ШШ]ЬЉ›ЫЭ
+ЙИќ]Ы‰ККXЭ[ЫЏOOIЩXYЫ›ЬЭXЛ[XњЙПЙЛ™XЪЪXЩIО‰Л›[XЪЪXЩIКJK™љ\њЭ
 
-    await page.evaluate(()=>switchView('coach'));
-    await expect(page.locator('#coach .mm-dx-hero > .mm-reference-deep-art')).toBeVisible();
-    await expect(page.locator('#coach .mm-dx-library .mm-dx-symptom').first()).toBeVisible();
+NВ€]ШZ]^XЭ
+]Y\Э[ЫђЪЪXЩJKќР™Uљ\ЪX›J
+NВ€^XЭ
 
-    await page.evaluate(()=>switchView('standards'));
-    await expect(page.locator('#standards .section-head > .mm-reference-deep-art')).toBeVisible();
-    await page.evaluate(()=>switchView('certificates'));
-    await expect(page.locator('#certificates .section-head > .mm-reference-deep-art')).toBeVisible();
-    await page.evaluate(()=>switchView('profile'));
-    await expect(page.locator('#profile .form-card:first-child > .mm-reference-deep-art')).toBeVisible();
-    await expect(page.locator('#profile #profileName')).toBeVisible();
+]ШZ]]Y\Э[ЫђЪЪXЩK›Э[™[™Р›Ю
 
-    await page.evaluate(()=>switchView('lesson'));
-    await expect(lesson.locator('#lessonNotes')).toHaveValue('Test setup notes вЂ” do not use as process settings.');
-    await expect(lesson.locator('.mm-simple-lesson-hero > .mm-reference-deep-art')).toHaveCount(1);
-    const documentOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
-    expect(documentOverflow).toBeLessThanOrEqual(2);
-  });
-}
+JKљZYЪ
+KќР™QЬ™X]\•[“Ь‘\]X[
+
+NВ€ЫЫњЭ[™[XXЭ[ЫЏOOIЩXYЫ›ЬЭXЛ[XњЙПЙЛ™[X€€™\[™[	О‰Л›[[X€€›[\[™[	ОВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ›ЫЭ
+ЙИ	КЬ[™[
+K™љ\њЭ
 
-test('Materials routes quiz, reference evidence, explorer and labs without stale guide state',async({page})=>{
-  await page.setViewportSize({width:390,height:844});
-  await openApp(page);
-  await page.evaluate(()=>switchView('materials'));
-  const material=page.locator('#materials');
-  const study=material.locator('.mm-material-study-tools');
-  const guide=study.locator('[data-mm-family-science]');
-  await expect(guide).toHaveCount(1);
-  await expect(guide).not.toHaveAttribute('open','');
-  await study.locator(':scope > summary').click();
+JKќТ]™PФФК	ШXЪЩЬ›Э[™XЫЫЬ‰Л	Ь™ШЉЊОKЌЛЌL
+IКNВ€]ШZ]]Y\Э[ЫђЪЪXЩKЫXЪК
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ›ЫЭ
+ЙИ	ККXЭ[ЫЏOOIЩXYЫ›ЬЭXЛ[XњЙПЙЛ™Y™YYXЪЙО‰Л›[Y™YYXЪЙКJJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ›ЫЭ
+ЙИ	КШXЪКJKќР™Uљ\ЪX›J
+NВ€]ШZ]YЩK›ШШ]ЬЉ›ЫЭ
+ЙИ	КШXЪКKЫXЪК
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ›ЫЭ
+ЙИ	КЪ\›КЙИ€›[K\™Y™\™[ЩK\XЭXЩK]ЫЫX\ќ	КJKќТ]™PЫЭ[ќ
+JNВ€B‚€]ШZ]YЩK™][X]J
 
-  await study.locator(':scope > .mat-tabs > button').filter({hasText:'Knowledge check'}).click();
-  const quiz=material.locator('.mat-quiz-card');
-  await expect(quiz).toBeVisible();
-  await expect(quiz.locator('.mat-q')).toHaveCount(18);
-  await expect(material.locator('[data-mm-family-science]')).toHaveCount(0);
-  await quiz.locator('.mat-q').first().locator('input[type="radio"]').first().check();
-  await quiz.getByRole('button',{name:'Grade & review'}).click();
-  await expect(quiz.locator('#materialQuizResult')).toBeVisible();
-  await expect(quiz.locator('#materialQuizReview .mat-review')).toHaveCount(18);
+OOњЭЪ]ЪљY]К	Ь]	КJNВ€]ШZ]YЩK›ШШ]ЬЉ	ИЬ]›[K[X\›‹ZX€Щ]K[[KZX‹XXЭ[ЫЏHњ]Y\Э[Ы‹XЩ[ќ™H—IКKЫXЪК
+NВ€]ШZ]YЩK›ШШ]ЬЉ	ИЬ]›[K\]Y\Э[Ы‹XЩ[ќ™HЩ]K[[KZX‹XXЭ[ЫЏH\ЬЩ\ЬЫY[ќИ—IКKЫXЪК
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЩ^[\ИњЩXЭ[Ы‹ZXY€›[K\™Y™\™[ЩK\XЭXЩK]ЫЫX\ќ	КJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЩ^[\И€›[K\XЭXЩK]ЫЫ\™]\›‰КJKќТ]™PЫЭ[ќ
+JNВ€ЫЫњЭЭ\ќ^[O\YЩK›ШШ]ЬЉ	ИЩ^[\И™^[KXШ\™ќ]Ы‰КK™љ\њЭ
 
-  await material.locator('.mat-tabs > button').filter({hasText:'Evidence & references'}).click();
-  await expect(material.locator('.standard-card')).toHaveCount(6);
-  const paperLink=material.locator('.standard-card a.standard-link').first();
-  await expect(paperLink).toBeVisible();
-  await expect(paperLink).toHaveAttribute('href',/^https:\/\//);
-  const paperTarget=await paperLink.getAttribute('target');
-  if(paperTarget==='_blank')expect((await paperLink.getAttribute('rel')||'').split(/\s+/)).toContain('noopener');
-  await expect(material.locator('[data-mm-family-science]')).toHaveCount(0);
+NВ€]ШZ]^XЭ
+Э\ќ^[JKќР™Uљ\ЪX›J
+NВ€]ШZ]Э\ќ^[KЫXЪК
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЫ[Щ[››Э
+љY[ЉHЩ^[T]Y\Э[ЫњИњ]Y\Э[Ы‰КK™љ\њЭ
 
-  await material.locator('.mat-tabs > button').filter({hasText:'Material explorer'}).click();
-  await expect(material.locator('.mat-explorer-controls')).toBeVisible();
-  await material.locator('.mat-tabs > button').filter({hasText:'Interactive labs'}).click();
-  await expect(material.locator('.mat-labs')).toBeVisible();
-  await expect(material.locator('#rheoCurve svg')).toBeVisible();
-  await expect(material.locator('[data-mm-family-science]')).toHaveCount(0);
+JKќР™Uљ\ЪX›J
+NВџJNВ‚ќ\Э
+	У[Ь™HЩY\ИЪ^[\Э]Y]]™H\ШЫЬЭ\™\ЛЬљYЪ[[XЭ[ЫњИ[™Щ^X›Ш\™XШЩ\ЬЙЛ\Ю[КЬYЩ_JOOћВ€]ШZ]YЩKњЩ]љY]ЬЬќЪ^™JЭЪYЊОLZYЪЋJNВ€]ШZ]Ь[ђ\
+YЩJNВ€]ШZ]YЩK›ШШ]ЬЉ	Л›[Шљ[K[]€€ќ]Ы‰КK™љ[\ЉЪ\Х^‰У[Ь™IЯJKЫXЪК
+NВ€ЫЫњЭЬ›Э\П\YЩK›ШШ]ЬЉ	ИЫ[Щ[›[K\™Y™\™[ЩK[[Ь™KXШ\™	КNВ€]ШZ]^XЭ
+Ь›Э\КKќТ]™PЫЭ[ќ
+ЉNВ€]ШZ]^XЭ
+Ь›Э\Л›ШШ]ЬЉ	ОњШЫЬH€Э[[X\ћH€›[K\™Y™\™[ЩK[[Ь™KX\ќ	КJKќТ]™PЫЭ[ќ
+ЉNВ€ЫЫњЭ™YЪ\ЭћPXЭ[ЫњПX]ШZ]YЩK›ШШ]ЬЉ	ИЫ[Щ[Щ]K[[K\™YЪ\ЭћK[Y[ќWIКKЫЭ[ќ
 
-  await material.locator('.mat-tabs > button').filter({hasText:'All lessons'}).click();
-  await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
-  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
-  expect(overflow).toBeLessThanOrEqual(2);
-});
+NВ€]ШZ]YЩK™][X]J
 
-for(const width of [390,810]){
-  test('real Materials labs, quiz and references share readable deep-screen controls at '+width+'px',async({page})=>{
-    await page.setViewportSize({width,height:900});
-    await openApp(page);
-    await page.evaluate(()=>switchView('materials'));
+OOћЭЪ[™ЭЛ“SWФ‘Q‘T‘SђСWУVSХUњ™Yњ™\Ъ
 
-    await page.locator('#mmMaterialLearningAnchor > summary').click();
-    await page.locator('#materials .mat-tabs button').filter({hasText:'Interactive labs'}).click();
-    const labs=page.locator('#materials .mat-shell .mat-labs');
-    await expect(labs.locator(':scope > .mat-lab')).toHaveCount(4);
-    await expect(labs.locator('.mat-lab').first()).toHaveCSS('background-color','rgb(240, 247, 250)');
-    await expect(labs.locator('.mat-lab-output').first()).toHaveCSS('background-color','rgb(224, 239, 245)');
-    const rheology=labs.locator('#rheoShear');
-    await expect(rheology).toBeVisible();
-    await rheology.focus();
-    await rheology.press('ArrowRight');
-    await expect(rheology).toHaveValue('46');
-    await expect(labs.locator('#rheoOut')).toContainText('Illustrative');
-    expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
+NЭЪ[™ЭЛ“SWФ‘Q‘T‘SђСWУVSХUњ™Yњ™\Ъ
 
-    await page.locator('#materials .mat-tabs button').filter({hasText:'Knowledge check'}).click();
-    const quiz=page.locator('#materials .mat-quiz-card');
-    await expect(quiz).toBeVisible();
-    await expect(quiz.locator('.mat-q')).toHaveCount(18);
-    await expect(quiz.locator('.mat-q').first()).toHaveCSS('background-color','rgb(224, 239, 245)');
-    await quiz.locator('.mat-q label').first().click();
-    await expect(quiz.locator('.mat-q input[type=radio]:checked')).toHaveCount(1);
-    await quiz.getByRole('button',{name:/Grade & review/i}).click();
-    await expect(quiz.locator('#materialQuizResult')).toBeVisible();
-    await expect(quiz.locator('#materialQuizResult')).toHaveCSS('background-color','rgb(213, 238, 233)');
-    expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
+_JNВ€]ШZ]^XЭ
+Ь›Э\Л›ШШ]ЬЉ	ОњШЫЬH€Э[[X\ћH€›[K\™Y™\™[ЩK[[Ь™KX\ќ	КJKќТ]™PЫЭ[ќ
+ЉNВ€^XЭ
+]ШZ]YЩK›ШШ]ЬЉ	ИЫ[Щ[Щ]K[[K\™YЪ\ЭћK[Y[ќWIКKЫЭ[ќ
 
-    await page.locator('#materials .mat-tabs button').filter({hasText:'Evidence & references'}).click();
-    const refs=page.locator('#materials .mat-shell .standard-card');
-    await expect(refs.first()).toHaveCSS('background-color','rgb(240, 247, 250)');
-    const sourceLink=refs.first().locator('a.standard-link');
-    await expect(sourceLink).toBeVisible();
-    await expect(sourceLink).toHaveAttribute('href',/^https:\/\//);
-    if(await sourceLink.getAttribute('target')==='_blank'){
-      expect((await sourceLink.getAttribute('rel')||'').split(/\s+/)).toContain('noopener');
-    }
-    await page.locator('#materials .mat-tabs button').filter({hasText:'Material explorer'}).click();
-    // Native Material Explorer owns its curated grade filtering controls.
-    // The separate indexed exact-grade catalogue is not cloned into this
-    // nested mode, which must remain functional on phones and tablets.
-    await expect(page.locator('#materials .mat-explorer-controls')).toBeVisible();
-    await expect(page.locator('#materials .mat-material-grid .mat-material').first()).toBeVisible();
-    expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
-  });
-}
+JKќР™J™YЪ\ЭћPXЭ[ЫњКNВ€ЫЫњЭX›Э]\YЩK›ШШ]ЬЉ	ИЫ[Щ[›[K\™Y™\™[ЩK[[Ь™KY^IКK™љ[\ЉЪ\Х^‰РX›Э][Э[X\Э\‰ЯJNВ€]ШZ]^XЭ
+X›Э]
+K››ЭќТ]™P]љXќ]J	ЫЬ[‰Л	ЙКNВ€ЫЫњЭXY\ЏXX›Э]›ШШ]ЬЉ	ОњШЫЬH€Э[[X\ћIКNВ€]ШZ]XY\‹™›ШЭ\К
+NВ€]ШZ]XY\‹њ™\ЬК	С[ќ\‰КNВ€]ШZ]^XЭ
+X›Э]
+KќТ]™P]љXќ]J	ЫЬ[‰Л	ЙКNВ€]ШZ]^XЭ
+X›Э]›ШШ]ЬЉ	ШVЪ™YЏH‹‹ЬЭ\Ьќљ[Ы[TШH—IКJKќР™Uљ\ЪX›J
+NВ€]ШZ]XY\‹њ™\ЬК	С[ќ\‰КNВ€]ШZ]^XЭ
+X›Э]
+K››ЭќТ]™P]љXќ]J	ЫЬ[‰Л	ЙКNВ€^XЭ
+]ШZ]YЩK™][X]J
 
-// Exercise every primary mobile tab independently of the visual golden files.
-// The same pointer/focus/overflow checks apply to Home, Learn, Materials,
-// Practice, Maths and More at all four approved narrow viewport widths.
-for(const width of [320,360,390,412]){
-  test('all six mobile tabs keep consistent navigation and no stale hover at '+width+'px',async({page})=>{
-    test.setTimeout(90000);
-    await page.setViewportSize({width,height:844});
-    await openApp(page);
-    const tabs=[
-      ['Home','#dashboard','#dashboard .mm-reference-home-hero'],
-      ['Learn','#path','#path .mm-reference-title'],
-      ['Materials','#materials','#materials .mm-reference-materials-title'],
-      ['Practice','#scenarios','#scenarios .mm-reference-title'],
-    ];
-    for(const [name,root,landmark] of tabs){
-      const button=page.locator('.mobile-nav > button').filter({hasText:name});
-      await expect(button).toHaveCount(1);
-      await button.click();
-      await expect(page.locator(root)).toBeVisible();
-      await expect(page.locator(landmark)).toBeVisible();
-      await expect(button).toHaveAttribute('aria-current','page');
-      const hitbox=await button.boundingBox();
-      expect(hitbox,name+' navigation tap target').not.toBeNull();
-      expect(hitbox.width).toBeGreaterThanOrEqual(44);
-      expect(hitbox.height).toBeGreaterThanOrEqual(44);
-      // A stale pointer over tab items must not carry into another capture.
-      await page.mouse.move(1,1);
-      await expect(page.locator(root+' :is(button, a[href], summary, [role="button"]):hover')).toHaveCount(0);
-      const overflow=await page.evaluate(()=>
-        document.documentElement.scrollWidth-document.documentElement.clientWidth
-      );
-      expect(overflow,name+' must not overflow horizontally').toBeLessThanOrEqual(2);
-    }
-    const more=page.locator('.mobile-nav > button').filter({hasText:'More'});
-    await expect(more).toHaveCount(1);
-    await more.click();
-    await expect(page.locator('#modal .mm-more-disclosure')).toHaveCount(6);
-    await expect(page.locator('#modal').getByRole('heading',{name:'More'})).toBeVisible();
-    const hitbox=await more.boundingBox();
-    expect(hitbox).not.toBeNull();
-    expect(hitbox.width).toBeGreaterThanOrEqual(44);
-    expect(hitbox.height).toBeGreaterThanOrEqual(44);
-    await page.mouse.move(1,1);
-    await expect(page.locator('#modal :is(button, a[href], summary, [role="button"]):hover')).toHaveCount(0);
-    const overflow=await page.evaluate(()=>
-      document.documentElement.scrollWidth-document.documentElement.clientWidth
-    );
-    expect(overflow,'More must not overflow horizontally').toBeLessThanOrEqual(2);
-    await page.evaluate(()=>window.closeModal?.());
-    await expect(page.locator('#modal .modal-card')).toBeHidden();
-  });
-}
+OO™ШЭ[Y[ќ™ШЭ[Y[ќ[[Y[ќњШЬ›ЫЪYZ[›™\•ЪY
+JKќР™S\ЬХ[“Ь‘\]X[
+ЉNВ€]ШZ]YЩK™][X]J
 
-// Practice includes Spatial Twin in its Labs chooser. Its nested simulator
-// must keep the same keyboard-accessible return path as the other tools.
-test('Practice Spatial Twin restores Labs-card focus from its own subpage',async({page})=>{
-  await page.setViewportSize({width:390,height:844});
-  await openApp(page);
-  await page.evaluate(()=>switchView('scenarios'));
-  const hub=page.locator('#scenarios .mm-practice-hub');
-  const labs=hub.locator('[data-mm-hub-action="labs"]');
-  await labs.click();
-  const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
-  await picker.locator('[data-mm-hub-action="spatial-twin"]').click();
-  const twin=page.locator('#mmSpatialTwin');
-  await expect(twin).toBeVisible();
-  const nav=twin.locator(':scope > .mm-practice-tool-return');
-  await expect(nav).toHaveCount(1);
-  await nav.getByRole('button',{name:/Back to Practice/}).click();
-  await expect(hub).toBeVisible();
-  await expect(labs).toBeFocused();
-});
+OOќЪ[™ЭЛЫЬЩS[Щ[ЛЉ
+JNВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЫ[Щ[›[Щ[XШ\™	КJKќР™RY[Љ
+NВ€]ШZ]YЩK›ШШ]ЬЉ	Л›[Шљ[K[]€€ќ]Ы‰КK™љ[\ЉЪ\Х^‰ФXЭXЩIЯJKЫXЪК
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЬШЩ[\љ[ЬИ›[K\XЭXЩKZX‰КJKќР™Uљ\ЪX›J
+NВџJNВ‚™›ЬЉЫЫњЭЪYЩ€МНЊLJ^В€\Э
+	Ш\›Э™YY\\ШЬ™Y[€\ЪYЫ€ЩY\ИXЭX[\ЬЫЫ‹Ъ[][]Ь€[™™\ЫЭ\ЩHXЭ[ЫњИ]	КЭЪY
+ЙЬ	Л\Ю[КЬYЩ_JOOћВ€]ШZ]YЩKњЩ]љY]ЬЬќЪ^™JЭЪYZYЪЋLJNВ€]ШZ]Ь[ђ\
+YЩJNВ€]ШZ]YЩK™][X]J
+
+OOњЭЪ]ЪљY]К	Ы\ЬЫЫ‰КJNВ€ЫЫњЭ\ЬЫЫЏ\YЩK›ШШ]ЬЉ	ИЫ\ЬЫЫ‰КNВ€]ШZ]^XЭ
+\ЬЫЫ‹›ШШ]ЬЉ	Л›[K\Ъ[\K[\ЬЫЫ‹Z\›И€›[K\™Y™\™[ЩKYY\X\ќ	КJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+\ЬЫЫ‹›ШШ]ЬЉ	Л›\ЬЫЫ‹X›ЩK›[K\™Y™\™[ЩKYY\\[™[	КJKќР™Uљ\ЪX›J
+NВ€ЛИHЪ[\K\™XY\€[ќ[ќ[Ы[HY\ЛЬ™[[Э™\ИYШXЮH\ЬЫЫ€ЪYX\€Ы€ЫX[ШЬ™Y[њЛ‚€]ШZ]^XЭ
+\ЬЫЫ‹›ШШ]ЬЉ	Л›[K\Ъ[\K[\ЬЫЫ‹Z\›ЙКJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+\ЬЫЫ‹›ШШ]ЬЉ	Л›\ЬЫЫ‹X›ЩH€ЫЫќ[ќX›ШЪО››Э
+›[K\Ъ[\K[›ЭK\ЩXЭ[ЫЉK›\ЬЫЫ‹X›ЩH€›[K\Ъ[\K\ЩXЭ[ЫЋ››Э
+›[K\Ъ[\K[›ЭK\ЩXЭ[ЫЉIКK™љ\њЭ
+
+JKќТ]™PФФК	ШXЪЩЬ›Э[™XЫЫЬ‰Л	Ь™ШЉЌЌЛЌL
+IКNВ€]ШZ]\ЬЫЫ‹›ШШ]ЬЉ	Л›[K\Ъ[\K[›ЭKY\ШЫЬЭ\™H€Э[[X\ћIКKЫXЪК
+NВ€]ШZ]\ЬЫЫ‹›ШШ]ЬЉ	ИЫ\ЬЫЫ“›Э\ЙКK™љ[
+	Х\ЭЩ]\›Э\И8 %И›Э\ЩH\И›ШЩ\ЬИЩ][™ЬЛ‰КNВ€]ШZ]\ЬЫЫ‹™Щ]ћT›ЫJ	Шќ]Ы‰ЛЫ[YN‰ФШ]™H›Э\ЙЯJKЫXЪК
+NВ€]ШZ]^XЭ
+\ЬЫЫ‹›ШШ]ЬЉ	Л›[K\Ъ[\K[\ЬЫЫ‹Z\›И€›[K\™Y™\™[ЩKYY\X\ќ	КJKќТ]™PЫЭ[ќ
+JNВ‚€]ШZ]YЩK™][X]J
+
+OOњЭЪ]ЪљY]К	ЬЪ[][]Ь‰КJNВ€ЫЫњЭЪ[][]ЬЏ\YЩK›ШШ]ЬЉ	ИЬЪ[][]Ь‰КNВ€]ШZ]^XЭ
+Ъ[][]Ь‹›ШШ]ЬЉ	Л™›Ь›KXШ\™€›[K\™Y™\™[ЩKYY\X\ќ	КJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+Ъ[][]Ь‹›ШШ]ЬЉ	Л›Э]]\[™[€›[K\™Y™\™[ЩKYY\X\ќ	КJKќР™Uљ\ЪX›J
+NВ€ЛИHљ\ќX[\™[ќXЩ\Ъ\[™Э\€[X™YYZ[љ[™ИЪYЩ]ИЭЫ‚€ЛИY][Ы[ЫЫќ›ЫЛ€ШЫЬHHЫЭ[ќИHЫЭ™\›™YЫЬ™HЪ[][]Ь‹‚€ЫЫњЭY[ЩY\Ъ[][]Ь‹›ШШ]ЬЉ	ОњШЫЬH€™ЬљY€€™›Ь›KXШ\™€›[KY[™Ъ[™Y\‹\Ъ[KYЬ›Э\ЙКNВ€]ШZ]^XЭ
+Y[ЩY›ШШ]ЬЉ	ОњШЫЬH€Э[[X\ћIКJKќР™Uљ\ЪX›J
+NВ€]ШZ]Y[ЩY›ШШ]ЬЉ	ОњШЫЬH€Э[[X\ћIКKЫXЪК
+NВ€ЫЫњЭ[Щ[ЫY\њПXY[ЩY›ШШ]ЬЉ	Л™›Ь›KYЬљY€X™[€њ[™ЩK\›ЭИ€[њ]Э\OHњ[™ЩH—IКNВ€]ШZ]^XЭ
+[Щ[ЫY\њКKќТ]™PЫЭ[ќ
+L
+NВ€]ШZ]^XЭ
+Ъ[][]Ь‹›ШШ]ЬЉ	ИЫ[TЪ[SY]љXТ[њ]ЙКJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+Ъ[][]Ь‹›ШШ]ЬЉ	ИЫ[TЪ[Tљ[X\ћQљ[™[™ЙКJKќРЫЫќZ[•^
+	ЭZ[љ[™И\Щ[[™IКNВ€]ШZ]^XЭ
+Ъ[][]Ь‹›ШШ]ЬЉ	ИЬЪ[PYљXЩIКJKќРЫЫќZ[•^
+	ХЪ]И™\љYћH™^	КNВ€ЫЫњЭљ[ЫY\Џ[[Щ[ЫY\њЛ™љ\њЭ
+
+NВ€]ШZ]^XЭ
+љ[ЫY\ЉKќТ]™U[YJ	НL	КNВ€]ШZ]љ[ЫY\‹™›ШЭ\К
+NВ€]ШZ]љ[ЫY\‹њ™\ЬК	Р\њ›ЭФљYЪ	КNВ€]ШZ]^XЭ
+љ[ЫY\ЉKќТ]™U[YJ	НLIКNВ€]ШZ]Ъ[][]Ь‹™Щ]ћT›ЫJ	Шќ]Ы‰ЛЫ[YN‰Ф™\Щ]И\Щ[[™IЛ^XЭќќY_JKЫXЪК
+NВ€]ШZ]^XЭ
+Ъ[][]Ь‹›ШШ]ЬЉ	Л›[KY[™Ъ[™Y\‹\Ъ[KYЬ›Э\И[њ]Э\OHњ[™ЩH—IКK™љ\њЭ
+
+JKќТ]™U[YJ	НL	КNВ€]ШZ]^XЭ
+Ъ[][]Ь‹›ШШ]ЬЉ	Л™›Ь›KXШ\™€›[K\™Y™\™[ЩKYY\X\ќ	КJKќТ]™PЫЭ[ќ
+JNВ‚€]ШZ]YЩK™][X]J
+
+OOњЭЪ]ЪљY]К	Эљ\ЭX[ЙКJNВ€ЫЫњЭљ\ЭX[П\YЩK›ШШ]ЬЉ	ИЭљ\ЭX[ЙКNВ€]ШZ]^XЭ
+љ\ЭX[Л›ШШ]ЬЉ	Лќљ\ЭX[]Ь\™љ\њЭXЪ[€›[K\™Y™\™[ЩKYY\X\ќ	КJKќР™Uљ\ЪX›J
+NВ€]ШZ]љ\ЭX[Л™Щ]ћT›ЫJ	Шќ]Ы‰ЛЫ[YN‰Сљ[[™ЙЛ^XЭќќY_JKЫXЪК
+NВ€]ШZ]^XЭ
+љ\ЭX[Л›ШШ]ЬЉ	ИЬ\ЩU^	КJKќРЫЫќZ[•^
+	Э™[ШЪ]HЫЫќ›Ы	КNВ‚€]ШZ]YЩK™][X]J
+
+OOњЭЪ]ЪљY]К	ЩЫЬЬШ\ћIКJNВ€ЫЫњЭЫЬЬШ\ћO\YЩK›ШШ]ЬЉ	ИЩЫЬЬШ\ћIКNВ€]ШZ]^XЭ
+ЫЬЬШ\ћK›ШШ]ЬЉ	ЛњЩXЭ[Ы‹ZXY€›[K\™Y™\™[ЩKYY\X\ќ	КJKќР™Uљ\ЪX›J
+NВ€]ШZ]ЫЬЬШ\ћK›ШШ]ЬЉ	ИЩЫЬЬШ\ћTЩX\Ъ	КK™љ[
+	Ь™\ЬЭ\™IКNВ€]ШZ]^XЭ
+ЫЬЬШ\ћK›ШШ]ЬЉ	Лќ\›Nќљ\ЪX›IКK™љ\њЭ
+
+JKќР™Uљ\ЪX›J
+NВ‚€]ШZ]YЩK™][X]J
+
+OOњЭЪ]ЪљY]К	ЩY™XЭЙКJNВ€ЫЫњЭY™XЭП\YЩK›ШШ]ЬЉ	ИЩY™XЭЙКNВ€]ШZ]^XЭ
+Y™XЭЛ›ШШ]ЬЉ	Л›[KYZ\›И€›[K\™Y™\™[ЩKYY\X\ќ	КJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+Y™XЭЛ›ШШ]ЬЉ	Л›[KY\[™K›[K\™Y™\™[ЩKYY\\[™[	КK™љ\њЭ
+
+JKќР™Uљ\ЪX›J
+NВ‚€]ШZ]YЩK™][X]J
+
+OOњЭЪ]ЪљY]К	ШЫШXЪ	КJNВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИШЫШXЪ›[KYZ\›И€›[K\™Y™\™[ЩKYY\X\ќ	КJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИШЫШXЪ›[KY[Xњ\ћH›[KY\Ю[\ЫIКK™љ\њЭ
+
+JKќР™Uљ\ЪX›J
+NВ‚€]ШZ]YЩK™][X]J
+
+OOњЭЪ]ЪљY]К	ЬЭ[™\™ЙКJNВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЬЭ[™\™ИњЩXЭ[Ы‹ZXY€›[K\™Y™\™[ЩKYY\X\ќ	КJKќР™Uљ\ЪX›J
+NВ€]ШZ]YЩK™][X]J
+
+OOњЭЪ]ЪљY]К	ШЩ\ќYљXШ]\ЙКJNВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИШЩ\ќYљXШ]\ИњЩXЭ[Ы‹ZXY€›[K\™Y™\™[ЩKYY\X\ќ	КJKќР™Uљ\ЪX›J
+NВ€]ШZ]YЩK™][X]J
+
+OOњЭЪ]ЪљY]К	Ь›Щљ[IКJNВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЬ›Щљ[H™›Ь›KXШ\™™љ\њЭXЪ[€›[K\™Y™\™[ЩKYY\X\ќ	КJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЬ›Щљ[HЬ›Щљ[S[YIКJKќР™Uљ\ЪX›J
+NВ‚€]ШZ]YЩK™][X]J
+
+OOњЭЪ]ЪљY]К	Ы\ЬЫЫ‰КJNВ€]ШZ]^XЭ
+\ЬЫЫ‹›ШШ]ЬЉ	ИЫ\ЬЫЫ“›Э\ЙКJKќТ]™U[YJ	Х\ЭЩ]\›Э\И8 %И›Э\ЩH\И›ШЩ\ЬИЩ][™ЬЛ‰КNВ€]ШZ]^XЭ
+\ЬЫЫ‹›ШШ]ЬЉ	Л›[K\Ъ[\K[\ЬЫЫ‹Z\›И€›[K\™Y™\™[ЩKYY\X\ќ	КJKќТ]™PЫЭ[ќ
+JNВ€ЫЫњЭШЭ[Y[ќЭ™\™›ЭПX]ШZ]YЩK™][X]J
+
+OO™ШЭ[Y[ќ™ШЭ[Y[ќ[[Y[ќњШЬ›ЫЪYYШЭ[Y[ќ™ШЭ[Y[ќ[[Y[ќЫY[ќЪY
+NВ€^XЭ
+ШЭ[Y[ќЭ™\™›ЭКKќР™S\ЬХ[“Ь‘\]X[
+ЉNВ€JNВџB‚ќ\Э
+	УX]\љX[И›Э]\И]Z^‹™Y™\™[ЩH]љY[ЩK^Ь™\€[™XњИЪ]Э]Э[HЭZYHЭ]IЛ\Ю[КЬYЩ_JOOћВ€]ШZ]YЩKњЩ]љY]ЬЬќЪ^™JЭЪYЊОLZYЪЋJNВ€]ШZ]Ь[ђ\
+YЩJNВ€]ШZ]YЩK™][X]J
+
+OOњЭЪ]ЪљY]К	ЫX]\љX[ЙКJNВ€ЫЫњЭX]\љX[\YЩK›ШШ]ЬЉ	ИЫX]\љX[ЙКNВ€ЫЫњЭЭYO[X]\љX[›ШШ]ЬЉ	Л›[K[X]\љX[\ЭYK]ЫЫЙКNВ€ЫЫњЭЭZYO\ЭYK›ШШ]ЬЉ	ЦЩ]K[[KY[Z[K\ШЪY[ЩWIКNВ€]ШZ]^XЭ
+ЭZYJKќТ]™PЫЭ[ќ
+JNВ€]ШZ]^XЭ
+ЭZYJK››ЭќТ]™P]љXќ]J	ЫЬ[‰Л	ЙКNВ€]ШZ]ЭYK›ШШ]ЬЉ	ОњШЫЬH€Э[[X\ћIКKЫXЪК
+NВ‚€]ШZ]ЭYK›ШШ]ЬЉ	ОњШЫЬH€›X]]XњИ€ќ]Ы‰КK™љ[\ЉЪ\Х^‰ТЫ›ЭЫYЩHЪXЪЙЯJKЫXЪК
+NВ€ЫЫњЭ]Z^Џ[X]\љX[›ШШ]ЬЉ	Л›X]\]Z^‹XШ\™	КNВ€]ШZ]^XЭ
+]Z^ЉKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+]Z^‹›ШШ]ЬЉ	Л›X]\IКJKќТ]™PЫЭ[ќ
+N
+NВ€]ШZ]^XЭ
+X]\љX[›ШШ]ЬЉ	ЦЩ]K[[KY[Z[K\ШЪY[ЩWIКJKќТ]™PЫЭ[ќ
+
+NВ€]ШZ]]Z^‹›ШШ]ЬЉ	Л›X]\IКK™љ\њЭ
+
+K›ШШ]ЬЉ	Ъ[њ]Э\OHњY[И—IКK™љ\њЭ
+
+KЪXЪК
+NВ€]ШZ]]Z^‹™Щ]ћT›ЫJ	Шќ]Ы‰ЛЫ[YN‰СЬYH	€™]љY]ЙЯJKЫXЪК
+NВ€]ШZ]^XЭ
+]Z^‹›ШШ]ЬЉ	ИЫX]\љX[]Z^”™\Э[	КJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+]Z^‹›ШШ]ЬЉ	ИЫX]\љX[]Z^”™]љY]И›X]\™]љY]ЙКJKќТ]™PЫЭ[ќ
+N
+NВ‚€]ШZ]X]\љX[›ШШ]ЬЉ	Л›X]]XњИ€ќ]Ы‰КK™љ[\ЉЪ\Х^‰С]љY[ЩH	€™Y™\™[Щ\ЙЯJKЫXЪК
+NВ€]ШZ]^XЭ
+X]\љX[›ШШ]ЬЉ	ЛњЭ[™\™XШ\™	КJKќТ]™PЫЭ[ќ
+ЉNВ€ЫЫњЭ\\“[љП[X]\љX[›ШШ]ЬЉ	ЛњЭ[™\™XШ\™KњЭ[™\™[[љЙКK™љ\њЭ
+
+NВ€]ШZ]^XЭ
+\\“[љКKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+\\“[љКKќТ]™P]љXќ]J	Ъ™Y‰ЛЧљО—ЧЛКNВ€ЫЫњЭ\\•\™Щ]X]ШZ]\\“[љЛ™Щ]]љXќ]J	Э\™Щ]	КNВ€YЉ\\•\™Щ]OOIЧШ›[љЙКY^XЭ
+
+]ШZ]\\“[љЛ™Щ]]љXќ]J	Ь™[	К_	ЙКKњЬ]
+ЧКЛКJKќРЫЫќZ[Љ	Ы›ЫЬ[™\‰КNВ€]ШZ]^XЭ
+X]\љX[›ШШ]ЬЉ	ЦЩ]K[[KY[Z[K\ШЪY[ЩWIКJKќТ]™PЫЭ[ќ
+
+NВ‚€]ШZ]X]\љX[›ШШ]ЬЉ	Л›X]]XњИ€ќ]Ы‰КK™љ[\ЉЪ\Х^‰УX]\љX[^Ь™\‰ЯJKЫXЪК
+NВ€]ШZ]^XЭ
+X]\љX[›ШШ]ЬЉ	Л›X]Y^Ь™\‹XЫЫќ›ЫЙКJKќР™Uљ\ЪX›J
+NВ€]ШZ]X]\љX[›ШШ]ЬЉ	Л›X]]XњИ€ќ]Ы‰КK™љ[\ЉЪ\Х^‰Т[ќ\XЭ]™HXњЙЯJKЫXЪК
+NВ€]ШZ]^XЭ
+X]\љX[›ШШ]ЬЉ	Л›X][XњЙКJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+X]\љX[›ШШ]ЬЉ	ИЬљ[РЭ\ќ™HЭ™ЙКJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+X]\љX[›ШШ]ЬЉ	ЦЩ]K[[KY[Z[K\ШЪY[ЩWIКJKќТ]™PЫЭ[ќ
+
+NВ‚€]ШZ]X]\љX[›ШШ]ЬЉ	Л›X]]XњИ€ќ]Ы‰КK™љ[\ЉЪ\Х^‰Р[\ЬЫЫњЙЯJKЫXЪК
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЬ]›[KX[[\ЬЫЫњЙКJKќР™Uљ\ЪX›J
+NВ€ЫЫњЭЭ™\™›ЭПX]ШZ]YЩK™][X]J
+
+OO™ШЭ[Y[ќ™ШЭ[Y[ќ[[Y[ќњШЬ›ЫЪYYШЭ[Y[ќ™ШЭ[Y[ќ[[Y[ќЫY[ќЪY
+NВ€^XЭ
+Э™\™›ЭКKќР™S\ЬХ[“Ь‘\]X[
+ЉNВџJNВ‚™›ЬЉЫЫњЭЪYЩ€МОLLJ^В€\Э
+	Ь™X[X]\љX[ИXњЛ]Z^€[™™Y™\™[Щ\ИЪ\™H™XYX›HY\\ШЬ™Y[€ЫЫќ›ЫИ]	КЭЪY
+ЙЬ	Л\Ю[КЬYЩ_JOOћВ€]ШZ]YЩKњЩ]љY]ЬЬќЪ^™JЭЪYZYЪЋLJNВ€]ШZ]Ь[ђ\
+YЩJNВ€]ШZ]YЩK™][X]J
+
+OOњЭЪ]ЪљY]К	ЫX]\љX[ЙКJNВ‚€]ШZ]YЩK›ШШ]ЬЉ	ИЫ[SX]\љX[X\›љ[™Р[ЪЬ€€Э[[X\ћIКKЫXЪК
+NВ€]ШZ]YЩK›ШШ]ЬЉ	ИЫX]\љX[И›X]]XњИќ]Ы‰КK™љ[\ЉЪ\Х^‰Т[ќ\XЭ]™HXњЙЯJKЫXЪК
+NВ€ЫЫњЭXњП\YЩK›ШШ]ЬЉ	ИЫX]\љX[И›X]\Ъ[›X][XњЙКNВ€]ШZ]^XЭ
+XњЛ›ШШ]ЬЉ	ОњШЫЬH€›X][X‰КJKќТ]™PЫЭ[ќ
+
+NВ€]ШZ]^XЭ
+XњЛ›ШШ]ЬЉ	Л›X][X‰КK™љ\њЭ
+
+JKќТ]™PФФК	ШXЪЩЬ›Э[™XЫЫЬ‰Л	Ь™ШЉЌЌЛЌL
+IКNВ€]ШZ]^XЭ
+XњЛ›ШШ]ЬЉ	Л›X][X‹[Э]]	КK™љ\њЭ
+
+JKќТ]™PФФК	ШXЪЩЬ›Э[™XЫЫЬ‰Л	Ь™ШЉЊЌЊОKЌJIКNВ€ЫЫњЭљ[ЫЩЮO[XњЛ›ШШ]ЬЉ	ИЬљ[ФЪX\‰КNВ€]ШZ]^XЭ
+љ[ЫЩЮJKќР™Uљ\ЪX›J
+NВ€]ШZ]љ[ЫЩЮK™›ШЭ\К
+NВ€]ШZ]љ[ЫЩЮKњ™\ЬК	Р\њ›ЭФљYЪ	КNВ€]ШZ]^XЭ
+љ[ЫЩЮJKќТ]™U[YJ	Н‰КNВ€]ШZ]^XЭ
+XњЛ›ШШ]ЬЉ	ИЬљ[УЭ]	КJKќРЫЫќZ[•^
+	Т[\Э]]™IКNВ€^XЭ
+]ШZ]YЩK™][X]J
+
+OO™ШЭ[Y[ќ™ШЭ[Y[ќ[[Y[ќњШЬ›ЫЪYZ[›™\•ЪY
+JKќР™S\ЬХ[“Ь‘\]X[
+ЉNВ‚€]ШZ]YЩK›ШШ]ЬЉ	ИЫX]\љX[И›X]]XњИќ]Ы‰КK™љ[\ЉЪ\Х^‰ТЫ›ЭЫYЩHЪXЪЙЯJKЫXЪК
+NВ€ЫЫњЭ]Z^Џ\YЩK›ШШ]ЬЉ	ИЫX]\љX[И›X]\]Z^‹XШ\™	КNВ€]ШZ]^XЭ
+]Z^ЉKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+]Z^‹›ШШ]ЬЉ	Л›X]\IКJKќТ]™PЫЭ[ќ
+N
+NВ€]ШZ]^XЭ
+]Z^‹›ШШ]ЬЉ	Л›X]\IКK™љ\њЭ
+
+JKќТ]™PФФК	ШXЪЩЬ›Э[™XЫЫЬ‰Л	Ь™ШЉЊЌЊОKЌJIКNВ€]ШZ]]Z^‹›ШШ]ЬЉ	Л›X]\HX™[	КK™љ\њЭ
+
+KЫXЪК
+NВ€]ШZ]^XЭ
+]Z^‹›ШШ]ЬЉ	Л›X]\H[њ]Э\O\Y[ЧNЪXЪЩY	КJKќТ]™PЫЭ[ќ
+JNВ€]ШZ]]Z^‹™Щ]ћT›ЫJ	Шќ]Ы‰ЛЫ[YN‹СЬYH	€™]љY]ЛЪ_JKЫXЪК
+NВ€]ШZ]^XЭ
+]Z^‹›ШШ]ЬЉ	ИЫX]\љX[]Z^”™\Э[	КJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+]Z^‹›ШШ]ЬЉ	ИЫX]\љX[]Z^”™\Э[	КJKќТ]™PФФК	ШXЪЩЬ›Э[™XЫЫЬ‰Л	Ь™ШЉЊLЛЊОЊМКIКNВ€^XЭ
+]ШZ]YЩK™][X]J
+
+OO™ШЭ[Y[ќ™ШЭ[Y[ќ[[Y[ќњШЬ›ЫЪYZ[›™\•ЪY
+JKќР™S\ЬХ[“Ь‘\]X[
+ЉNВ‚€]ШZ]YЩK›ШШ]ЬЉ	ИЫX]\љX[И›X]]XњИќ]Ы‰КK™љ[\ЉЪ\Х^‰С]љY[ЩH	€™Y™\™[Щ\ЙЯJKЫXЪК
+NВ€ЫЫњЭ™YњП\YЩK›ШШ]ЬЉ	ИЫX]\љX[И›X]\Ъ[њЭ[™\™XШ\™	КNВ€]ШZ]^XЭ
+™YњЛ™љ\њЭ
+
+JKќТ]™PФФК	ШXЪЩЬ›Э[™XЫЫЬ‰Л	Ь™ШЉЌЌЛЌL
+IКNВ€ЫЫњЭЫЭ\ЩS[љП\™YњЛ™љ\њЭ
+
+K›ШШ]ЬЉ	ШKњЭ[™\™[[љЙКNВ€]ШZ]^XЭ
+ЫЭ\ЩS[љКKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+ЫЭ\ЩS[љКKќТ]™P]љXќ]J	Ъ™Y‰ЛЧљО—ЧЛКNВ€YЉ]ШZ]ЫЭ\ЩS[љЛ™Щ]]љXќ]J	Э\™Щ]	КOOOIЧШ›[љЙК^В€^XЭ
+
+]ШZ]ЫЭ\ЩS[љЛ™Щ]]љXќ]J	Ь™[	К_	ЙКKњЬ]
+ЧКЛКJKќРЫЫќZ[Љ	Ы›ЫЬ[™\‰КNВ€B€]ШZ]YЩK›ШШ]ЬЉ	ИЫX]\љX[И›X]]XњИќ]Ы‰КK™љ[\ЉЪ\Х^‰УX]\љX[^Ь™\‰ЯJKЫXЪК
+NВ€ЛИ]]™HX]\љX[^Ь™\€ЭЫњИ]ИЭ\]YЬYHљ[\љ[™ИЫЫќ›ЫЛ‚€ЛИHЩ\\]H[™^Y^XЭYЬYHШ][ЩЭYH\И›ЭЫЫ™Y[ќИ\В€ЛИ™\ЭY[ЩKЪXЪ]\Э™[XZ[€ќ[Э[Ы[Ы€Ы™\И[™X›]Л‚€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЫX]\љX[И›X]Y^Ь™\‹XЫЫќ›ЫЙКJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЫX]\љX[И›X][X]\љX[YЬљY›X][X]\љX[	КK™љ\њЭ
+
+JKќР™Uљ\ЪX›J
+NВ€^XЭ
+]ШZ]YЩK™][X]J
+
+OO™ШЭ[Y[ќ™ШЭ[Y[ќ[[Y[ќњШЬ›ЫЪYZ[›™\•ЪY
+JKќР™S\ЬХ[“Ь‘\]X[
+ЉNВ€JNВџB‚‹ЛИ^\Ъ\ЩH]™\ћHљ[X\ћH[Шљ[HX€[™\[™[ќHЩ€Hљ\ЭX[ЫЫ[€љ[\Л‚‹ЛИHШ[YHЪ[ќ\‹Щ›ШЭ\ЛЫЭ™\™›ЭИЪXЪЬИ\HИЫYKX\›‹X]\љX[Л‹ЛИXЭXЩKX]И[™[Ь™H][›Э\€\›Э™Y\њ›ЭИљY]ЬЬќЪYЛ‚™›ЬЉЫЫњЭЪYЩ€ММЊНЊОLL—J^В€\Э
+	Ш[Ъ^[Шљ[HXњИЩY\ЫЫњЪ\Э[ќ]љYШ][Ы€[™›ИЭ[HЭ™\€]	КЭЪY
+ЙЬ	Л\Ю[КЬYЩ_JOOћВ€\ЭњЩ][Y[Э]
+L
+NВ€]ШZ]YЩKњЩ]љY]ЬЬќЪ^™JЭЪYZYЪЋJNВ€]ШZ]Ь[ђ\
+YЩJNВ€ЫЫњЭXњПVВ€ЙТЫYIЛ	ИЩ\Ъ›Ш\™	Л	ИЩ\Ъ›Ш\™›[K\™Y™\™[ЩKZЫYKZ\›ЙЧK€ЙУX\›‰Л	ИЬ]	Л	ИЬ]›[K\™Y™\™[ЩK]]IЧK€ЙУX]\љX[ЙЛ	ИЫX]\љX[ЙЛ	ИЫX]\љX[И›[K\™Y™\™[ЩK[X]\љX[Л]]IЧK€ЙФXЭXЩIЛ	ИЬШЩ[\љ[ЬЙЛ	ИЬШЩ[\љ[ЬИ›[K\™Y™\™[ЩK]]IЧK€NВ€›ЬЉЫЫњЭЫ[YK›ЫЭ[™X\љЧHЩ€XњК^В€ЫЫњЭќ]ЫЏ\YЩK›ШШ]ЬЉ	Л›[Шљ[K[]€€ќ]Ы‰КK™љ[\ЉЪ\Х^›[Y_JNВ€]ШZ]^XЭ
+ќ]ЫЉKќТ]™PЫЭ[ќ
+JNВ€]ШZ]ќ]Ы‹ЫXЪК
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ›ЫЭ
+JKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ[™X\љКJKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+ќ]ЫЉKќТ]™P]љXќ]J	Ш\љXKXЭ\њ™[ќ	Л	ЬYЩIКNВ€ЫЫњЭ]›ЮX]ШZ]ќ]Ы‹›Э[™[™Р›Ю
+
+NВ€^XЭ
+]›Ю[YJЙИ]љYШ][Ы€\\™Щ]	КK››ЭќР™Sќ[
+
+NВ€^XЭ
+]›ЮќЪY
+KќР™QЬ™X]\•[“Ь‘\]X[
+
+NВ€^XЭ
+]›ЮљZYЪ
+KќР™QЬ™X]\•[“Ь‘\]X[
+
+NВ€ЛИHЭ[HЪ[ќ\€Э™\€X€][\И]\Э›ЭШ\њћH[ќИ[›Э\€Ш\\™K‚€]ШZ]YЩK›[Э\ЩK›[Э™JKJNВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ›ЫЭ
+ЙИљ\Кќ]Ы‹VЪ™Y—KЭ[[X\ћKЬ›ЫOHќ]Ы€—JNљЭ™\‰КJKќТ]™PЫЭ[ќ
+
+NВ€ЫЫњЭЭ™\™›ЭПX]ШZ]YЩK™][X]J
+
+OO‚€ШЭ[Y[ќ™ШЭ[Y[ќ[[Y[ќњШЬ›ЫЪYYШЭ[Y[ќ™ШЭ[Y[ќ[[Y[ќЫY[ќЪY€
+NВ€^XЭ
+Э™\™›ЭЛ[YJЙИ]\Э›ЭЭ™\™›ЭИЬљ^›Ыќ[IКKќР™S\ЬХ[“Ь‘\]X[
+ЉNВ€B€ЫЫњЭ[Ь™O\YЩK›ШШ]ЬЉ	Л›[Шљ[K[]€€ќ]Ы‰КK™љ[\ЉЪ\Х^‰У[Ь™IЯJNВ€]ШZ]^XЭ
+[Ь™JKќТ]™PЫЭ[ќ
+JNВ€]ШZ][Ь™KЫXЪК
+NВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЫ[Щ[›[K[[Ь™KY\ШЫЬЭ\™IКJKќТ]™PЫЭ[ќ
+ЉNВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЫ[Щ[	КK™Щ]ћT›ЫJ	ЪXY[™ЙЛЫ[YN‰У[Ь™IЯJJKќР™Uљ\ЪX›J
+NВ€ЫЫњЭ]›ЮX]ШZ][Ь™K›Э[™[™Р›Ю
+
+NВ€^XЭ
+]›Ю
+K››ЭќР™Sќ[
+
+NВ€^XЭ
+]›ЮќЪY
+KќР™QЬ™X]\•[“Ь‘\]X[
+
+NВ€^XЭ
+]›ЮљZYЪ
+KќР™QЬ™X]\•[“Ь‘\]X[
+
+NВ€]ШZ]YЩK›[Э\ЩK›[Э™JKJNВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЫ[Щ[љ\Кќ]Ы‹VЪ™Y—KЭ[[X\ћKЬ›ЫOHќ]Ы€—JNљЭ™\‰КJKќТ]™PЫЭ[ќ
+
+NВ€ЫЫњЭЭ™\™›ЭПX]ШZ]YЩK™][X]J
+
+OO‚€ШЭ[Y[ќ™ШЭ[Y[ќ[[Y[ќњШЬ›ЫЪYYШЭ[Y[ќ™ШЭ[Y[ќ[[Y[ќЫY[ќЪY€
+NВ€^XЭ
+Э™\™›ЭЛ	У[Ь™H]\Э›ЭЭ™\™›ЭИЬљ^›Ыќ[IКKќР™S\ЬХ[“Ь‘\]X[
+ЉNВ€]ШZ]YЩK™][X]J
+
+OOќЪ[™ЭЛЫЬЩS[Щ[ЛЉ
+JNВ€]ШZ]^XЭ
+YЩK›ШШ]ЬЉ	ИЫ[Щ[›[Щ[XШ\™	КJKќР™RY[Љ
+NВ€JNВџB‚‹ЛИXЭXЩH[ЫY\ИЬ]X[Ъ[€[€]ИXњИЪЫЬЩ\‹€]И™\ЭYЪ[][]Ь‚‹ЛИ]\ЭЩY\HШ[YHЩ^X›Ш\™XXШЩ\ЬЪX›H™]\›€]\ИHЭ\€ЫЫЛ‚ќ\Э
+	ФXЭXЩHЬ]X[Ъ[€™\ЭЬ™\ИXњЛXШ\™›ШЭ\Ињ›ЫH]ИЭЫ€ЭXњYЩIЛ\Ю[КЬYЩ_JOOћВ€]ШZ]YЩKњЩ]љY]ЬЬќЪ^™JЭЪYЊОLZYЪЋJNВ€]ШZ]Ь[ђ\
+YЩJNВ€]ШZ]YЩK™][X]J
+
+OOњЭЪ]ЪљY]К	ЬШЩ[\љ[ЬЙКJNВ€ЫЫњЭXЏ\YЩK›ШШ]ЬЉ	ИЬШЩ[\љ[ЬИ›[K\XЭXЩKZX‰КNВ€ЫЫњЭXњПZX‹›ШШ]ЬЉ	ЦЩ]K[[KZX‹XXЭ[ЫЏH›XњИ—IКNВ€]ШZ]XњЛЫXЪК
+NВ€ЫЫњЭXЪЩ\Џ\YЩK›ШШ]ЬЉ	ИЫ[Щ[››Э
+љY[ЉH›[KZX‹\XЪЩ\‹YЬљY	КNВ€]ШZ]XЪЩ\‹›ШШ]ЬЉ	ЦЩ]K[[KZX‹XXЭ[ЫЏHњЬ]X[]Ъ[€—IКKЫXЪК
+NВ€ЫЫњЭЪ[Џ\YЩK›ШШ]ЬЉ	ИЫ[TЬ]X[Ъ[‰КNВ€]ШZ]^XЭ
+Ъ[ЉKќР™Uљ\ЪX›J
+NВ€ЫЫњЭ]Џ]Ъ[‹›ШШ]ЬЉ	ОњШЫЬH€›[K\XЭXЩK]ЫЫ\™]\›‰КNВ€]ШZ]^XЭ
+]ЉKќТ]™PЫЭ[ќ
+JNВ€]ШZ]]‹™Щ]ћT›ЫJ	Шќ]Ы‰ЛЫ[YN‹РXЪИИXЭXЩKЯJKЫXЪК
+NВ€]ШZ]^XЭ
+XЉKќР™Uљ\ЪX›J
+NВ€]ШZ]^XЭ
+XњКKќР™Q›ШЭ\ЩY
+
+NВџJNВ
