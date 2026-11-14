@@ -158,7 +158,7 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
         open:typeof window.MM_PROCESS_DATA_DIAGNOSTICS?.open
       }));
       expect(retained).toEqual({guided:14,deepDive:50,atlas:200,sources:17,open:'undefined'});
-      await page.locator('.mobile-nav > button[data-view="maths"]').click();
+      await page.locator('.mobile-nav > button[data-mm-registry-primary-nav="maths"]').click();
       await expect(page.locator('#mmInjectionMouldingMaths')).toBeVisible();
       await expect(page.locator('#processDataLabs')).toHaveCount(0);
       await expectOnlyCurrent(page,'Maths');
