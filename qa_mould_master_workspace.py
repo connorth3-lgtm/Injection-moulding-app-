@@ -28,9 +28,7 @@ for marker in [
     'selectedDefect',
     'relatedLessons',
     'relatedSpecialist',
-    'relatedData',
     'relatedMaterial',
-    'MM_PROCESS_DATA_DIAGNOSTICS',
     'MM_MATERIAL_BEHAVIOUR_LABS',
     'MM_DIAGNOSTIC_LABS',
     'MM_SPECIALIST_CURRICULUM',
@@ -69,6 +67,7 @@ for marker in [
 for forbidden in [
     'localStorage.getItem(', 'localStorage.setItem(', 'localStorage.removeItem(', 'localStorage.clear(',
     'STORAGE_BASE', 'mm:mould-master-cases-changed', 'publishCasesChanged',
+    'relatedData', 'MM_PROCESS_DATA_DIAGNOSTICS',
     'MM_DATA.exams=', 'correctIndex=', 'regionalQuestions=', 'question_bank_version=',
     'certificates.push(', 'examScores=', 'assessmentScores=',
     'fetch(', 'XMLHttpRequest', 'WebSocket', 'sendBeacon',

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.14.2",
-  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.14.2.md",
+  "release": "2026.11.14.3",
+  "packet": "qa/ACCESSIBILITY_REAL_AT_2026.11.14.3.md",
   "sourceSha": "8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b",
   "runtimeFingerprint": "sha256:ce2e7ec6a6c72f2768146a22aa4675c112198e51bea4de731d878f23efc4ea9b",
   "status": "pending-real-at-validation",
@@ -310,7 +310,7 @@
     "sourceSha": "6b7f0cccd90e96fd36316cea9e963af1b411c3e1",
     "runtimeFingerprint": "sha256:199f1401f1a3077628d50284922ee127e9bfa4e02fb146ae080056ba51818922"
   },
-  "technicalCandidateStatus": "PASS \u2014 software-only candidate 8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b for release 2026.11.14.2, producer run 43439690118, artifact 14045422044; Mobile Browser QA run 43439690302 and Question Quality 50-Pass run 43439689931 succeeded. Genuine human NVDA and VoiceOver validation remains pending.",
+  "technicalCandidateStatus": "PENDING — exact-source candidate producer and browser/question quality gates are not yet verified; genuine human NVDA and VoiceOver validation remains pending.",
   "supersededCandidate": {
     "release": "2026.10.22.2",
     "sourceSha": "7476c0e068ae3f3d2de210748fea0e0a7d82d728",

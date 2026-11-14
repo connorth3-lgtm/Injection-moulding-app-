@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.13.3",
-  "commit": "2154c7b6b7c3dd63f7752f84bca8a6e73c750883",
+  "release": "2026.11.14.3",
+  "commit": "adf87268a9e65ea242dea6233e295ef5a2e90cb2",
   "browser": "chromium via @playwright/test 1.64.1",
   "maxDiffPixels": 12,
   "viewports": [
@@ -41,13 +41,13 @@
     "book-late",
     "book-trace"
   ],
-  "policy": "Owner-approved visual design baseline for the dedicated Maths primary tab in desktop and phone navigation. The owner reviewed the exact 360×800 phone Home and 1440×900 desktop Home captures from the Maths-tab candidate. Compare all 52 viewport/surface captures at the unchanged 12-pixel threshold. This visual approval covers the Maths navigation change only; independent assistive-technology, physical-device, Windows distribution, SME, learner-outcome, provider/NZQA and production reviews remain HOLD.",
-  "ref": "visual-baseline/2026.11.13.3",
+  "policy": "Owner-approved visual design baseline for the user-directed retirement of the learner-facing Process Data screens and duplicate entry points. The owner asked to remove the Process Data interface while preserving the data behind it and requested merge. The exact-source comparison captured all 52 viewport/surface screens; five expected Practice/Home changes reflect that requested UI removal and 47 matched the previous approved reference. The new reference retains the 12-pixel threshold, all four viewports and all thirteen surfaces. This approval is limited to this UI retirement; independent assistive-technology, physical-device, Windows distribution, SME, learner-outcome, provider/NZQA and production reviews remain HOLD.",
+  "ref": "visual-baseline/2026.11.14.3",
   "referenceCaptureToolchain": {
     "framework": "@playwright/test",
     "version": "1.64.1",
     "browser": "chromium",
-    "referenceSourceSha": "2154c7b6b7c3dd63f7752f84bca8a6e73c750883"
+    "referenceSourceSha": "adf87268a9e65ea242dea6233e295ef5a2e90cb2"
   },
   "currentComparisonToolchain": {
     "framework": "@playwright/test",

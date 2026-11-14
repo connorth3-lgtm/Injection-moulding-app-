@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "release": "2026.11.14.2",
-  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.11.14.2.md",
+  "release": "2026.11.14.3",
+  "validationIndex": "qa/EXTERNAL_VALIDATION_2026.11.14.3.md",
   "policy": "External validation is release-specific. Automated QA may verify that HOLD boundaries are represented truthfully but must never manufacture human, device, learner, accreditation, signing, or production-site evidence.",
   "technicalAutomation": {
-    "status": "pass",
-    "claim": "PASS \u2014 release 2026.11.14.2 exact-source candidate 8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b, public-runtime fingerprint sha256:ce2e7ec6a6c72f2768146a22aa4675c112198e51bea4de731d878f23efc4ea9b, producer run 43439690118, artifact 14045422044. The producer built the candidate successfully; exact-head Mobile Browser QA run 43439690302 and Question Quality 50-Pass run 43439689931 succeeded. This is software-only evidence; all independent human, device, SME, learner-outcome, Windows distribution and NZQA/provider reviews remain HOLD."
+    "status": "fail",
+    "claim": "HOLD — release 2026.11.14.3 exact-source candidate producer and exact-head browser/question quality have not yet been verified. Independent review streams remain HOLD."
   },
   "governance": {
     "status": "enforced",
@@ -21,7 +21,7 @@
   "accessibility": {
     "status": "hold",
     "evidenceContract": "data/accessibility-real-at-validation-v1.json",
-    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.11.14.2.md",
+    "reviewPacket": "qa/ACCESSIBILITY_REAL_AT_2026.11.14.3.md",
     "required": "Release-specific human NVDA and VoiceOver validation across the governed matrix.",
     "previousCandidate": {
       "release": "2026.11.13.2",
@@ -47,7 +47,7 @@
   "pwaPhysicalDevices": {
     "status": "hold",
     "evidenceContract": "data/pwa-physical-device-validation-v1.json",
-    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.11.14.2.md",
+    "reviewPacket": "qa/PWA_PHYSICAL_DEVICE_2026.11.14.3.md",
     "required": "Current-release physical iOS/iPadOS and Android install/update/offline validation. Prior release waivers do not authorize this release.",
     "previousCandidate": {
       "release": "2026.11.13.2",
@@ -98,7 +98,7 @@
     "status": "hold",
     "workflow": ".github/workflows/microsoft-store-msix.yml",
     "handoff": "certification/STORE_SUBMISSION_STATUS.md",
-    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.11.14.2.md",
+    "readinessPacket": "certification/WINDOWS_SIGNING_READINESS_2026.11.14.3.md",
     "sourceSha": "0e1bb220a7a98638b56b65d8af5aa9aa553c6fbb",
     "desktopRelease": "2026.09.29.1",
     "evidence": null,
@@ -112,20 +112,20 @@
   "bookSme": {
     "status": "hold",
     "evidenceContract": "data/book-sme-review-v1.json",
-    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.11.14.2.md",
+    "reviewPacket": "qa/BOOK_SME_REVIEW_2026.11.14.3.md",
     "required": "Independent human SME approval of all 46 governed Book modules across the six required review dimensions; the 21 reader chapters are structural groupings only. Review the separate draft Book workbooks for the regional education routes. Review the 15 optional further-reading resources in each of the 21 reader chapters for fit, credibility, openness, currency and applicability; these links remain supplemental and are not claim evidence.",
     "contentRelease": "2026.11.09.1"
   },
   "curriculumSme": {
     "status": "hold",
     "evidenceContract": "qa/curriculum-semantic-review.json",
-    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.11.14.2.md",
+    "reviewPacket": "qa/CURRICULUM_SME_REVIEW_2026.11.14.3.md",
     "required": "Traceable human SME semantic approval of all 120 canonical lessons. Review the seven draft regional curriculum and assessment packs, including the Hindi study notes."
   },
   "learnerOutcomes": {
     "status": "hold",
     "pilotContract": "data/learner-pilot-v1.json",
-    "pilotPacket": "qa/LEARNER_PILOT_2026.11.14.2.md",
+    "pilotPacket": "qa/LEARNER_PILOT_2026.11.14.3.md",
     "evidence": null,
     "required": "Longitudinal real-learner outcome evidence before efficacy or genuine psychometric-validity claims."
   },
@@ -148,7 +148,7 @@
   "nzqaProvider": {
     "status": "hold",
     "evidenceContract": "data/nzqa-external-validation-v1.json",
-    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.14.2.md",
+    "reviewPacket": "qa/NZQA_EXTERNAL_VALIDATION_2026.11.14.3.md",
     "required": "Genuine provider ownership, stakeholder need, provider-approved design, authorised assessment/internal moderation, consent-to-assess/CMR confirmation, applicable national moderation, workplace evidence and provider-controlled review/change evidence for the exact governed release.",
     "previousCandidate": {
       "release": "2026.11.13.2",
@@ -193,7 +193,7 @@
     "artifactDigest": "sha256:d1d344a026f4e7c3707ce6b2b893954d14fa6eac7a86cbf531072538abcc1cd5",
     "artifactExpiresAt": "2027-02-11T12:39:45Z"
   },
-  "candidateStatus": "PASS \u2014 release 2026.11.14.2 exact-source candidate 8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b, public-runtime fingerprint sha256:ce2e7ec6a6c72f2768146a22aa4675c112198e51bea4de731d878f23efc4ea9b, producer run 43439690118, artifact 14045422044. The producer built the candidate successfully; exact-head Mobile Browser QA run 43439690302 and Question Quality 50-Pass run 43439689931 succeeded. This is software-only evidence; all independent human, device, SME, learner-outcome, Windows distribution and NZQA/provider reviews remain HOLD.",
+  "candidateStatus": "HOLD — exact-source release 2026.11.14.3 candidate verification is pending; seven external streams remain HOLD.",
   "previousPreviousCandidate": {
     "release": "2026.11.13.3",
     "sourceSha": "31be14643ba17c2bfc8a6126f4623f810060b22a",
