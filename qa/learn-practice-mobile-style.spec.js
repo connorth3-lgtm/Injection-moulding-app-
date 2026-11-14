@@ -250,14 +250,16 @@ for(const width of [360,412]){
   await expect(practice.locator('.mm-hub-section-head')).not.toContainText('169 governed prompts');
   await expect(practice.locator('[data-mm-hub-action="question-centre"]')).toHaveCount(0);
   await expect(practice.locator('.mm-practice-guided, .mm-practice-case, .mm-practice-diagnose-journey')).toHaveCount(0);
-  await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(3);
+  await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(2);
   await expect(practice.locator('[data-mm-hub-action="problem-practice"]')).toBeVisible();
-  await expect(practice.locator('[data-mm-hub-action="process-data"]')).toBeVisible();
+  await expect(practice.locator('[data-mm-hub-action="process-data"]')).toHaveCount(0);
   await expect(practice.locator('[data-mm-practice-query], #mmPracticeToolResults, [data-mm-practice-count]')).toHaveCount(0);
   if(width===412)await page.screenshot({path:'qa-artifacts/pr640-tidy-practice-412x915.png',animations:'disabled'});
-  await practice.locator('[data-mm-hub-action="process-data"]').click();
-  await expect(page.locator('#processDataLabs')).toBeVisible();
-  await expect(page.locator('#processDataLabs').getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
+  const mathsTab=page.locator('.mobile-nav > button[data-view="maths"]');
+  await expect(mathsTab).toBeVisible();
+  await mathsTab.click();
+  await expect(page.locator('#mmInjectionMouldingMaths')).toBeVisible();
+  await expect(page.locator('#mmInjectionMouldingMaths')).toContainText('Injection moulding maths');
 
   await page.evaluate(()=>switchView('materials'));
   await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
@@ -751,7 +753,7 @@ test('all canonical interior routes receive the shared responsive visual skin wi
   // Wait for its real root marker instead of accepting an unfinished render.
   await page.waitForFunction(()=>document.getElementById('lesson')?.classList.contains('mm-reference-subtab'));
   const result=await page.evaluate(()=>({
-    states:['lesson','glossary','visuals','simulator','defects','coach','standards','certificates','profile','instructor','exams','diagnosticLabs','materialLabs','processDataLabs','mmVirtualApprenticeship','mmSpatialTwin','mmMaterialCompare','mmMaterialChange','mmBookView']
+    states:['lesson','glossary','visuals','simulator','defects','coach','standards','certificates','profile','instructor','exams','diagnosticLabs','materialLabs','mmVirtualApprenticeship','mmSpatialTwin','mmMaterialCompare','mmMaterialChange','mmBookView']
       .map(id=>({id,exists:!!document.getElementById(id),skinned:document.getElementById(id)?.classList.contains('mm-reference-subtab')||false})),
     overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
   }));

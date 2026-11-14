@@ -13,8 +13,6 @@ const BLOCKING_SEMANTIC_KINDS=new Set(['unresolved']);
 const CONTEXT_KEYS=['machine','mould','materialGrade','job'];
 let semanticRegistry=null;
 let currentManifest=null;
-let preparedSession=null;
-let activeWorkspaceCaseId='';
 let installQueued=false;
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
@@ -344,133 +342,23 @@ async function similarCases(caseId){
   return out.sort((a,b)=>b.score-a.score).slice(0,6);
 }
 
-function download(name,text,type='application/json;charset=utf-8'){
-  const blob=new Blob([text],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)
-}
-function semanticRowsHtml(p){
-  const numeric=p.rules.filter(x=>x.action==='keep').map(x=>x.key);
-  if(!numeric.length)return '<div class="di-empty">No predominantly numeric evidence columns were retained.</div>';
-  return `<div class="di-semantic-table">${numeric.map(key=>{const s=p.semantics[key];return `<div class="di-sem-row" data-di-channel="${esc(key)}"><div><b>${esc(key)}</b><small>${esc(s.profile?.present||0)}/${esc(s.profile?.rows||0)} values · ${esc(s.source)}</small></div><label>Meaning<input data-di-meaning value="${esc(s.meaning||'')}" placeholder="engineering meaning"></label><label>Role<select data-di-role>${ROLE_OPTIONS.map(x=>`<option value="${x}" ${s.role===x?'selected':''}>${x}</option>`).join('')}</select></label><label>Unit<input data-di-unit value="${esc(s.unit||'')}" placeholder="e.g. MPa"></label><label>Sampling<select data-di-sampling>${SAMPLING_OPTIONS.map(x=>`<option value="${x}" ${s.sampling_basis===x?'selected':''}>${x}</option>`).join('')}</select></label><label>Sensor ref<input data-di-sensor value="${esc(s.sensor_ref||'')}" placeholder="optional local ref"></label><label>Calibration ref<input data-di-calibration value="${esc(s.calibration_ref||'')}" placeholder="optional local ref"></label><div class="di-sem-state ${s.blockers.length?'blocked':'ready'}">${s.blockers.length?`Needs ${esc(s.blockers.join(', '))}`:'Semantically ready'}</div></div>`}).join('')}</div>`;
-}
-function issuesHtml(p){
-  const xs=p.quality?.issues||[];if(!xs.length)return '<div class="di-ok">No semantic, sequence or intake-review blockers detected.</div>';
-  return `<div class="di-issues">${xs.slice(0,30).map(x=>`<div class="di-issue ${esc(x.level)}"><b>${esc(x.level.toUpperCase())}</b> ${esc(x.channel)} · ${esc(x.detail)}</div>`).join('')}${xs.length>30?`<div class="di-issue note">${xs.length-30} more issues not shown</div>`:''}</div>`;
-}
-function ensureStyle(){
-  if(document.getElementById('mm-data-integration-style'))return;
-  const s=document.createElement('style');s.id='mm-data-integration-style';s.textContent=`
-  .di-hero,.di-panel{padding:18px}.di-actions{display:flex;gap:8px;flex-wrap:wrap}.di-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.di-note{padding:11px 13px;border:1px solid #66582c;border-radius:10px;background:#282313;color:#f2e6b4;font-size:12px;line-height:1.5}.di-ok{padding:11px 13px;border:1px solid #355a55;border-radius:10px;background:#102824;color:#d6eee7}.di-empty{padding:13px;border:1px dashed #3a5675;border-radius:9px;color:var(--muted)}.di-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}.di-kpi{padding:10px;border:1px solid #304b69;border-radius:9px;background:#0e1d31}.di-kpi b{display:block;font-size:18px}.di-kpi small{color:var(--muted)}.di-semantic-table{display:grid;gap:8px;max-height:520px;overflow:auto}.di-sem-row{display:grid;grid-template-columns:minmax(150px,1.2fr) 1.5fr 120px 100px 130px 130px 130px minmax(120px,1fr);gap:7px;align-items:end;padding:9px;border:1px solid #304b69;border-radius:9px;background:#0e1d31}.di-sem-row small{display:block;color:var(--muted)}.di-sem-row label{font-size:10px;color:var(--muted)}.di-sem-row input,.di-sem-row select{width:100%;margin-top:3px}.di-sem-state{font-size:10px;padding:7px;border-radius:7px}.di-sem-state.ready{background:#102824;color:#8ce4c6}.di-sem-state.blocked{background:#32251b;color:#ffd49a}.di-issues{display:grid;gap:5px}.di-issue{padding:8px 9px;border-radius:7px;background:#0e1d31;font-size:11px}.di-issue.block{border-left:4px solid #ff8c9b}.di-issue.warn{border-left:4px solid #ffd166}.di-issue.note{border-left:4px solid #69a8ff}.di-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px}.di-meta .wide{grid-column:1/-1}.di-dataset-list{display:grid;gap:7px}.di-dataset{padding:10px;border:1px solid #304b69;border-radius:9px;background:#0e1d31}.di-workspace-panel{margin-top:10px}.di-workspace-panel select{width:100%}.di-similar{display:grid;gap:6px;margin-top:8px}
-  @media(max-width:1100px){.di-sem-row{grid-template-columns:1fr 1fr 1fr}.di-grid{grid-template-columns:1fr}}@media(max-width:650px){.di-kpis,.di-meta,.di-sem-row{grid-template-columns:1fr}.di-actions button,.di-actions label{width:100%}}
-  `;document.head.appendChild(s)
-}
-function advancedHost(){return document.getElementById('processDataLabs')}
-function renderAdvancedIntake(prepared=null,error=''){
-  ensureStyle();const h=advancedHost();if(!h)return;
-  const ready=prepared?.quality?.analysisReady;
-  h.innerHTML=`<div data-di-root><div class="di-actions" style="margin-bottom:12px"><button class="ghost" data-di-back>← Process data lab</button><button class="ghost" data-di-template>Download standard CSV template</button><button class="ghost" data-di-library>Local dataset library</button></div>
-  <div class="card di-hero"><div class="eyebrow">Connected local process data</div><h2>Prepare, define and validate real shot data</h2><p>Raw CSV stays in this browser/desktop session. Privacy preparation happens first; semantic readiness is checked separately so a clean file cannot be mistaken for an interpretable engineering dataset.</p><div class="di-note"><b>Fail-closed rule:</b> malformed numeric intake review, unresolved meaning, actual/setpoint/command role, engineering unit, sampling basis or sequence integrity blocks baseline and drift intelligence. Saved data can remain locally preserved while blocked.</div></div>
-  ${error?`<div class="di-note" style="margin-top:12px"><b>Could not prepare file:</b> ${esc(error)}</div>`:''}
-  <div class="di-grid"><section class="card di-panel"><h3>1 · Local CSV and context</h3><div class="di-meta"><label class="wide">CSV<input type="file" accept=".csv,text/csv" data-di-file></label><label>Source label<input data-di-meta="source_label" placeholder="e.g. machine export"></label><label>Confidentiality<select data-di-meta="confidentiality"><option value="local-confidential">local-confidential</option><option value="internal-approved">internal-approved</option><option value="public-cleared">public-cleared</option></select></label><label>Machine context<input data-di-meta="machine_context" placeholder="non-person local alias"></label><label>Mould context<input data-di-meta="mould_context" placeholder="non-person local alias"></label><label>Material context<input data-di-meta="material_context" placeholder="grade/code"></label><label>Job context<input data-di-meta="job_context" placeholder="non-person work-order alias"></label></div><p class="muted">Do not enter operator, employee, customer or contact identifiers.</p></section>
-  <section class="card di-panel"><h3>Readiness</h3>${prepared?`<div class="di-kpis"><div class="di-kpi"><b>${prepared.summary.outputRows}</b><small>rows</small></div><div class="di-kpi"><b>${prepared.summary.keptNumeric}</b><small>numeric channels</small></div><div class="di-kpi"><b>${prepared.quality.blockingCount}</b><small>blockers</small></div><div class="di-kpi"><b>${ready?'READY':'BLOCKED'}</b><small>analysis state</small></div></div>${issuesHtml(prepared)}`:'<div class="di-empty">Choose a CSV. MouldMaster will strip/alias sensitive fields, profile numeric channels and require semantic declarations before process intelligence.</div>'}</section></div>
-  ${prepared?`<section class="card di-panel" style="margin-top:12px"><h3>2 · Channel semantic dictionary</h3><p class="muted">Confirm each numeric channel. Heuristic matches are suggestions, never authority.</p>${semanticRowsHtml(prepared)}<div class="di-actions" style="margin-top:10px"><button class="secondary" data-di-apply>Apply semantic declarations</button></div></section>
-  <section class="card di-panel" style="margin-top:12px"><h3>3 · Use the prepared dataset</h3><div class="di-actions"><button class="ghost" data-di-csv>Download prepared CSV</button><button class="ghost" data-di-dictionary>Download semantic dictionary</button><button class="primary" data-di-save>${ready?'Save analysis-ready dataset locally':'Save blocked dataset locally'}</button></div><p class="muted">Saving uses IndexedDB on this device. No network upload is performed by this module.</p></section>`:''}</div>`;
-  wireAdvancedIntake(prepared)
-}
-function readDatasetMeta(root){
-  const out={};root.querySelectorAll('[data-di-meta]').forEach(el=>out[el.dataset.diMeta]=el.value);return out
-}
-function readOverrides(root){
-  const out={};root.querySelectorAll('[data-di-channel]').forEach(row=>{out[row.dataset.diChannel]={meaning:row.querySelector('[data-di-meaning]')?.value||'',role:row.querySelector('[data-di-role]')?.value||'unresolved',unit:row.querySelector('[data-di-unit]')?.value||'',sampling_basis:row.querySelector('[data-di-sampling]')?.value||'unknown',sensor_ref:row.querySelector('[data-di-sensor]')?.value||'',calibration_ref:row.querySelector('[data-di-calibration]')?.value||''}});return out
-}
-function wireAdvancedIntake(prepared){
-  const root=document.querySelector('[data-di-root]');if(!root)return;
-  root.querySelector('[data-di-back]')?.addEventListener('click',()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
-  root.querySelector('[data-di-template]')?.addEventListener('click',()=>{const api=window.MM_PROCESS_DATA_LOCAL_INTAKE;download('mouldmaster-process-data-template.csv',api?.templateCsv?.()||'', 'text/csv;charset=utf-8')});
-  root.querySelector('[data-di-library]')?.addEventListener('click',renderDatasetLibrary);
-  root.querySelector('[data-di-file]')?.addEventListener('change',async e=>{
-    const file=e.target.files?.[0];if(!file)return;
-    try{
-      if(!Number.isFinite(file.size)||file.size<0||file.size>MAX_CSV_BYTES)throw new Error('CSV exceeds the 10 MiB local intake safety limit. Choose a smaller source file.');
-      const text=await file.text(),base=window.MM_PROCESS_DATA_LOCAL_INTAKE;if(!base)throw new Error('Local intake module unavailable');
-      const parsed=base.parseCsv(text),privacyPrepared=base.__rawPrepare?base.__rawPrepare(parsed):base.prepare(parsed);
-      preparedSession=enrichPrepared(privacyPrepared,{},readDatasetMeta(root));renderAdvancedIntake(preparedSession)
-    }catch(err){preparedSession=null;renderAdvancedIntake(null,err?.message||String(err))}
-  });
-  root.querySelector('[data-di-apply]')?.addEventListener('click',()=>{if(!prepared)return;preparedSession=enrichPrepared(prepared,readOverrides(root),readDatasetMeta(root));renderAdvancedIntake(preparedSession)});
-  root.querySelector('[data-di-csv]')?.addEventListener('click',()=>{const api=window.MM_PROCESS_DATA_LOCAL_INTAKE;if(prepared&&api)download('mouldmaster-prepared-process-data.csv',api.toCsv(prepared),'text/csv;charset=utf-8')});
-  root.querySelector('[data-di-dictionary]')?.addEventListener('click',()=>{if(!prepared)return;download('mouldmaster-semantic-dictionary.json',JSON.stringify({schema:1,version:VERSION,datasetMeta:prepared.datasetMeta,semantics:prepared.semantics,quality:prepared.quality,boundary:prepared.boundary},null,2))});
-  root.querySelector('[data-di-save]')?.addEventListener('click',async()=>{try{const rec=await savePrepared(prepared);window.toast?.(`Dataset saved locally · ${rec.rowCount} rows`);renderDatasetLibrary()}catch(err){window.toast?.(`Dataset save failed: ${err?.message||err}`)}})
-}
-async function renderDatasetLibrary(){
-  ensureStyle();const h=advancedHost();if(!h)return;
-  const datasets=await listDatasets().catch(()=>[]);
-  h.innerHTML=`<div data-di-library-root><div class="di-actions" style="margin-bottom:12px"><button class="ghost" data-di-intake>← Process-data intake</button><button class="ghost" data-di-back>Process data lab</button><button class="danger" data-di-delete-all>Delete all local process-data evidence</button></div><div class="card di-hero"><div class="eyebrow">Local process-data store</div><h2>Dataset library</h2><p>Prepared datasets are stored in IndexedDB on this device until you delete them here or clear this app/site data. Learner-profile reset does not silently delete engineering evidence. Analysis-blocked datasets remain preserved but cannot be used for baseline or drift calculations until semantics are resolved and re-saved.</p></div><section class="card di-panel" style="margin-top:12px"><div class="di-dataset-list">${datasets.length?datasets.map(d=>`<div class="di-dataset"><b>${esc(d.datasetMeta?.source_label||d.id)}</b><div class="muted">${d.rowCount} rows · ${d.quality?.analysisReady?'analysis-ready':'blocked'} · ${esc(d.entities?.machine||'machine not linked')} · ${esc(d.entities?.mould||'mould not linked')}</div><div class="di-actions" style="margin-top:7px">${d.quality?.analysisReady?`<button class="secondary" data-di-baseline="${esc(d.id)}">Create baseline</button>`:''}<button class="ghost" data-di-delete="${esc(d.id)}">Delete local dataset</button></div></div>`).join(''):'<div class="di-empty">No locally stored datasets yet.</div>'}</div></section></div>`;
-  const root=h.querySelector('[data-di-library-root]');root.querySelector('[data-di-intake]')?.addEventListener('click',()=>renderAdvancedIntake(preparedSession));root.querySelector('[data-di-back]')?.addEventListener('click',()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
-  root.querySelectorAll('[data-di-baseline]').forEach(b=>b.addEventListener('click',async()=>{try{await createBaseline(b.dataset.diBaseline);window.toast?.('Local baseline created')}catch(err){window.toast?.(err?.message||String(err))}}));
-  root.querySelectorAll('[data-di-delete]').forEach(b=>b.addEventListener('click',async()=>{if(!confirm('Delete this local dataset, its shots, baselines, interventions, and linked troubleshooting references?'))return;await deleteDataset(b.dataset.diDelete);renderDatasetLibrary()}));
-  root.querySelector('[data-di-delete-all]')?.addEventListener('click',async()=>{if(!confirm('Delete ALL locally saved prepared process-data evidence on this device? This clears datasets, shots, baselines, interventions and case links, but does not reset learner progress.'))return;try{await deleteAllProcessData();window.toast?.('All local process-data evidence deleted and verified');renderDatasetLibrary()}catch(err){window.toast?.(`Process-data delete failed: ${err?.message||err}`)}})
-}
-function openAdvancedIntake(){window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.();requestAnimationFrame(()=>renderAdvancedIntake(preparedSession))}
-
 function patchIntakeApi(){
   const api=window.MM_PROCESS_DATA_LOCAL_INTAKE;if(!api||api.__mmConnectedData)return;
   api.__rawPrepare=api.prepare;
   api.prepare=function(parsed,overrides={},meta={}){return enrichPrepared(api.__rawPrepare(parsed),overrides,meta)};
-  api.open=openAdvancedIntake;
-  api.enrich=enrichPrepared;api.savePrepared=savePrepared;api.listDatasets=listDatasets;api.openLibrary=renderDatasetLibrary;api.__mmConnectedData=true;
-}
-function identifyWorkspaceCase(){
-  if(activeWorkspaceCaseId&&window.MM_MOULD_MASTER_WORKSPACE?.getCase?.(activeWorkspaceCaseId))return activeWorkspaceCaseId;
-  const title=document.querySelector('#mmMouldMasterWorkspace [data-mw-field="title"]')?.value||'',defect=document.querySelector('#mmMouldMasterWorkspace [data-mw-field="defect"]')?.value||'';
-  const candidates=window.MM_MOULD_MASTER_WORKSPACE?.cases?.()||[],match=candidates.find(c=>(title&&c.title===title)||(defect&&c.defect===defect));if(match)activeWorkspaceCaseId=match.id;return activeWorkspaceCaseId
-}
-async function workspacePanel(){
-  const host=document.getElementById('mmMouldMasterWorkspace');if(!host||!host.querySelector('[data-mw-save]')||host.querySelector('[data-di-workspace-panel]'))return;
-  const caseId=identifyWorkspaceCase();if(!caseId)return;
-  const datasets=await listDatasets().catch(()=>[]),link=await caseLink(caseId).catch(()=>null),similar=await similarCases(caseId).catch(()=>[]);
-  const aside=host.querySelector('.mw-summary');if(!aside)return;
-  const panel=document.createElement('div');panel.className='mw-panel card di-workspace-panel';panel.dataset.diWorkspacePanel='1';
-  panel.innerHTML=`<h3>Connected process data</h3><p class="mw-help">Link this troubleshooting case to a locally stored measured dataset and structured context. Links stay on this device.</p><label>Dataset<select data-di-case-dataset><option value="">No dataset linked</option>${datasets.map(d=>`<option value="${esc(d.id)}" ${link?.datasetId===d.id?'selected':''}>${esc(d.datasetMeta?.source_label||d.id)} · ${d.rowCount} rows</option>`).join('')}</select></label><div class="di-meta" style="margin-top:8px"><label>Machine<input data-di-case-machine value="${esc(link?.machine||'')}"></label><label>Mould<input data-di-case-mould value="${esc(link?.mould||'')}"></label><label>Material grade<input data-di-case-material value="${esc(link?.materialGrade||'')}"></label><label>Cavity<input data-di-case-cavity value="${esc(link?.cavity||'')}"></label><label>Intervention<input data-di-case-intervention value="${esc(link?.intervention||'')}"></label><label>Run<input data-di-case-run value="${esc(link?.runId||'')}"></label></div><div class="di-actions" style="margin-top:8px"><button class="secondary" data-di-case-save>Save data link</button></div><div class="di-similar"><b>Similar local cases</b>${similar.length?similar.map(x=>`<button class="ghost" data-di-similar-case="${esc(x.caseId)}">${esc(x.title)} · score ${x.score}</button>`).join(''):'<div class="mw-help">No related structured/local cases found yet.</div>'}</div>`;
-  aside.appendChild(panel);
-  panel.querySelector('[data-di-case-save]')?.addEventListener('click',async()=>{
-    const datasetId=panel.querySelector('[data-di-case-dataset]')?.value||'',dataset=datasetId?await get('datasets',datasetId):null;
-    await linkCase(caseId,{datasetId:datasetId||null,machine:safeToken(panel.querySelector('[data-di-case-machine]')?.value||dataset?.entities?.machine||'',72),mould:safeToken(panel.querySelector('[data-di-case-mould]')?.value||dataset?.entities?.mould||'',72),materialGrade:safeToken(panel.querySelector('[data-di-case-material]')?.value||dataset?.entities?.materialGrade||'',72),cavity:safeToken(panel.querySelector('[data-di-case-cavity]')?.value||'',48),intervention:safeToken(panel.querySelector('[data-di-case-intervention]')?.value||'',72),runId:safeToken(panel.querySelector('[data-di-case-run]')?.value||'',72)});
-    window.MM_LEARNING_ANALYTICS?.record?.('process_case_linked',{module:'process-data',id:caseId});window.toast?.('Process-data link saved locally');panel.remove();workspacePanel()
-  });
-  panel.querySelectorAll('[data-di-similar-case]').forEach(b=>b.addEventListener('click',()=>{activeWorkspaceCaseId=b.dataset.diSimilarCase;window.MM_MOULD_MASTER_WORKSPACE?.open?.(activeWorkspaceCaseId)}))
+  api.enrich=enrichPrepared;api.savePrepared=savePrepared;api.listDatasets=listDatasets;api.__mmConnectedData=true;
 }
 function patchWorkspaceApi(){
   const api=window.MM_MOULD_MASTER_WORKSPACE;if(!api||api.__mmConnectedData)return;
-  const oldOpen=api.open,oldNew=api.newCase;
-  api.open=function(id){if(id)activeWorkspaceCaseId=id;const r=oldOpen.apply(this,arguments);requestAnimationFrame(workspacePanel);return r};
-  api.newCase=function(seed={}){const id=oldNew.call(this,seed);activeWorkspaceCaseId=id;requestAnimationFrame(workspacePanel);return id};
   api.linkData=linkCase;api.getDataLink=caseLink;api.similarCases=similarCases;api.__mmConnectedData=true
 }
-function workspaceCapture(e){
-  const open=e.target.closest?.('[data-mw-open]');if(open?.dataset.mwOpen)activeWorkspaceCaseId=open.dataset.mwOpen;
-  if(e.target.closest?.('[data-mw-new]'))setTimeout(()=>{const first=window.MM_MOULD_MASTER_WORKSPACE?.cases?.()?.[0];if(first){activeWorkspaceCaseId=first.id;workspacePanel()}},0);
-  if(e.target.closest?.('[data-mw-save]'))setTimeout(workspacePanel,0)
-}
-
-async function learningRecommendationPanel(){
-  const host=document.getElementById('learningInsights');if(!host||host.classList.contains('hidden')||host.querySelector('[data-di-learning-panel]'))return;
-  const cases=window.MM_MOULD_MASTER_WORKSPACE?.cases?.()||[];if(!cases.length)return;
-  const linked=[];for(const c of cases.slice(0,12)){const l=await caseLink(c.id).catch(()=>null);if(l?.datasetId||l?.machine||l?.mould||l?.materialGrade)linked.push({c,l})}
-  const recent=linked.slice(0,5);if(!recent.length)return;
-  const panel=document.createElement('section');panel.className='la-panel card';panel.dataset.diLearningPanel='1';panel.innerHTML=`<h3>From your process work</h3><p class="la-note">Use recent structured troubleshooting context to revisit relevant evidence and data-reading skills. This stays learner-scoped and local.</p><div class="la-list">${recent.map(x=>`<div class="la-row"><div><b>${esc(x.c.title||x.c.defect||'Troubleshooting case')}</b><small>${esc([x.l.machine,x.l.mould,x.l.materialGrade].filter(Boolean).join(' · '))}</small></div><button class="ghost" data-di-learn-case="${esc(x.c.id)}">Open case</button></div>`).join('')}</div>`;
-  (host.querySelector('.la-grid')||host).appendChild(panel);
-  panel.querySelectorAll('[data-di-learn-case]').forEach(b=>b.addEventListener('click',()=>window.MM_MOULD_MASTER_WORKSPACE?.open?.(b.dataset.diLearnCase)))
-}
-
 function scheduleInstall(){
-  if(installQueued)return;installQueued=true;requestAnimationFrame(()=>{installQueued=false;patchIntakeApi();patchWorkspaceApi();workspacePanel();learningRecommendationPanel()})
+  if(installQueued)return;installQueued=true;requestAnimationFrame(()=>{installQueued=false;patchIntakeApi();patchWorkspaceApi()})
 }
 async function install(){
-  ensureStyle();await loadPublicMetadata();patchIntakeApi();patchWorkspaceApi();
-  document.addEventListener('click',workspaceCapture,true);
+  await loadPublicMetadata();patchIntakeApi();patchWorkspaceApi();
   window.addEventListener?.('mm:domains-ready',scheduleInstall);
   window.MM_APP_SHELL?.events?.onViewChange?.(scheduleInstall);
-  window.MM_APP_SHELL?.events?.onRender?.('profile',scheduleInstall);
   scheduleInstall()
 }
 

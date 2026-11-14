@@ -47,7 +47,7 @@ Record pass/fail and any unexpected prompts/errors in the local evidence record.
 1. Complete at least one successful online/normal launch first.
 2. Disconnect the test machine from the network.
 3. Launch the open desktop package again.
-4. Confirm Home, a lesson, Mould Master and Process Data open from bundled assets.
+4. Confirm Home, a lesson, Mould Master and the independent Maths page open from bundled assets. Confirm the retired Process Data screens and launchers are absent; retained source/case records remain bundled and saved local evidence remains in app storage.
 5. Confirm the app does not require an external network request to render its core learning UI.
 6. Reconnect the network only after the check is complete.
 

@@ -1,4 +1,4 @@
-const CACHE_VERSION='2026.11.14.2';
+const CACHE_VERSION='2026.11.14.3';
 const CACHE_REVISION='learner-tools-r10';
 const STATIC_CACHE=`mouldmaster-static-${CACHE_VERSION}-${CACHE_REVISION}`;
 
@@ -138,7 +138,6 @@ const CORE=[
   './src/domains/runtime-packs/shell-finalization-runtime-pack.js',
   './src/domains/governance/production-health.js',
   './data-integration-runtime.js',
-  './process-data-intelligence-ui.js',
   './process-data-semantic-registry.json',
   './current-data-manifest.json',
   './repair.html',

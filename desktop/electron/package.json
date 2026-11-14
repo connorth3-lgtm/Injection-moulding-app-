@@ -215,6 +215,10 @@
         "to": "mouldmaster/process-data-local-intake.js"
       },
       {
+        "from": "../../process-data-statistics.js",
+        "to": "mouldmaster/process-data-statistics.js"
+      },
+      {
         "from": "../../curriculum-integration.js",
         "to": "mouldmaster/curriculum-integration.js"
       },
@@ -257,10 +261,6 @@
       {
         "from": "../../data-integration-runtime.js",
         "to": "mouldmaster/data-integration-runtime.js"
-      },
-      {
-        "from": "../../process-data-intelligence-ui.js",
-        "to": "mouldmaster/process-data-intelligence-ui.js"
       },
       {
         "from": "../../process-data-semantic-registry.json",

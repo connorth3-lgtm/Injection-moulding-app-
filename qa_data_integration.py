@@ -22,8 +22,9 @@ def main() -> None:
     version = json.loads((ROOT / "version.json").read_text(encoding="utf-8"))
     runtime_manifest = json.loads((ROOT / "runtime-domain-manifest.json").read_text(encoding="utf-8"))
     runtime = (ROOT / "data-integration-runtime.js").read_text(encoding="utf-8")
+    runtime_pack = (ROOT / "src/domains/runtime-packs/process-data-runtime-pack.js").read_text(encoding="utf-8")
+    statistics = (ROOT / "process-data-statistics.js").read_text(encoding="utf-8")
     integrity = (ROOT / "src/domains/process/process-data-integrity.js").read_text(encoding="utf-8")
-    intelligence_ui = (ROOT / "process-data-intelligence-ui.js").read_text(encoding="utf-8")
     shell = (ROOT / "src/domains/shell/app-shell-finalize.js").read_text(encoding="utf-8")
     index = (ROOT / "index.html").read_text(encoding="utf-8")
     worker = (ROOT / "service-worker.js").read_text(encoding="utf-8")
@@ -55,8 +56,6 @@ def main() -> None:
         "similarCases",
         "process_dataset_saved",
         "process_case_linked",
-        "openAdvancedIntake",
-        "Process data lab",
         "deleteAllProcessData",
         "referenceScale",
         "insufficient-reference-observations",
@@ -69,6 +68,10 @@ def main() -> None:
         require(token in runtime, f"connected runtime missing required behavior: {token}")
 
     require("data-pdi-launch" not in runtime and "interceptLegacyLauncher" not in runtime, "connected runtime must not intercept a duplicate legacy launcher")
+    require(not (ROOT / "process-data-intelligence-ui.js").exists(), "retired duplicate Process Data screen source must be removed")
+    require("MM_PROCESS_DATA_STATISTICS" in runtime_pack and "process-data-statistics.js" in runtime_pack, "data-only process statistics helpers must remain in the app runtime")
+    require("document." not in statistics and "addEventListener" not in statistics, "retained process statistics helpers must not expose a learner screen")
+    require("api.open=openAdvancedIntake" not in runtime and "api.openLibrary=renderDatasetLibrary" not in runtime, "connected runtime must not expose retired intake/library screens")
 
     require('id:`${id}:row:${rowOrdinal}`' in runtime, 'stored process rows must use immutable row-ordinal identity')
     require('sourceShotIndex' in runtime and 'rowOrdinal' in runtime, 'stored process rows must preserve source shot index separately from row identity')
@@ -85,17 +88,17 @@ def main() -> None:
         "api.intelligence.compareToBaseline=function",
         "['datasets','shots','baselines','caseLinks','interventions']",
         "row=>row?.datasetId===datasetId",
-        "event.stopImmediatePropagation()",
-        "data-di-delete",
+        "deleteDatasetCascade",
     ]:
         require(token in integrity, f"process-data integrity hardening missing invariant: {token}")
+    require("captureUi" not in integrity and "openLibrary" not in integrity, "process-data integrity layer must not attach retired UI controls")
     require((ROOT / "qa_process_data_integrity.cjs").exists(), "behavioral process-data integrity regression test missing")
 
     require("script.src=runtimeScriptUrl('./data-integration-runtime.js')" in shell, "app shell must load connected data runtime through the explicit release-version helper")
-    require("ui.src=runtimeScriptUrl('./process-data-intelligence-ui.js')" in shell, "app shell must load process intelligence UI through the explicit release-version helper")
+    require("process-data-intelligence-ui.js" not in shell, "retired process intelligence UI must not be loaded by the app shell")
     require('window.MM_APP_SHELL_FINALIZED=VERSION' in shell, "connected data must preserve canonical app-shell finalization through VERSION")
     require("'./data-integration-runtime.js'" in worker, "connected runtime must be a published worker asset")
-    require("'./process-data-intelligence-ui.js'" in worker, "process intelligence UI must be a published worker asset")
+    require("'./process-data-intelligence-ui.js'" not in worker, "retired process intelligence UI must not be precached")
     require("'./process-data-semantic-registry.json'" in worker, "semantic registry must be a published worker asset")
     require("'./current-data-manifest.json'" in worker, "current-data manifest must be a published worker asset")
     require("'./src/domains/process/process-data-integrity.js'" in worker, "process-data integrity hardening must be an offline governed worker asset")
@@ -119,26 +122,9 @@ def main() -> None:
     require(not (core_assets & optional_assets), "service-worker core and optional assets must not overlap")
     require("src/domains/research/reference-20x-extension.js" in optional_assets, "large specialist/reference packs should not be part of the atomic offline install")
     require("data-integration-runtime.js" in core_assets, "connected process-data layer should be available in offline core")
-    require("process-data-intelligence-ui.js" in core_assets, "process intelligence UI should be available in offline core")
+    require("process-data-intelligence-ui.js" not in core_assets, "retired process intelligence UI must not be available as an offline screen")
     require("src/domains/process/process-data-integrity.js" in core_assets, "process-data integrity module should be available in offline core")
     require(len(optional_assets) >= 20, "offline split did not materially reduce atomic pre-cache scope")
-
-    for token in [
-        "Golden baseline / drift",
-        "Before / after intervention",
-        "Cavity intelligence",
-        "Quality associations",
-        "Energy per good part",
-        "compareToBaseline",
-        "compareWindows",
-        "if(!dataset.quality?.analysisReady)",
-        "includes('blocked')",
-        "finiteNumber",
-        "unscored-zero-spread",
-        "sampling_basis==='per-cycle'",
-        "unscored-incomplete-coverage",
-    ]:
-        require(token in intelligence_ui, f"process intelligence UI missing required behavior: {token}")
 
     require((ROOT / "qa_process_statistics_integrity.cjs").exists(), "behavioral process-statistics regression test missing")
     require((ROOT / "qa_import_identity_integrity.cjs").exists(), "behavioral import-identity regression test missing")
@@ -152,7 +138,7 @@ def main() -> None:
     desktop_from = {x.get("from") for x in desktop_pkg["build"]["extraResources"] if isinstance(x, dict)}
     connected_assets = [
         "data-integration-runtime.js",
-        "process-data-intelligence-ui.js",
+        "process-data-statistics.js",
         "process-data-semantic-registry.json",
         "current-data-manifest.json",
     ]

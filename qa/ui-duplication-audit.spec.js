@@ -52,7 +52,7 @@ test('Home canonical choices stay single after navigation, repeat renders and re
         book:'[data-mm-home-book]',
         specialistTools:'[data-mm-home-balance]',
         troubleshoot:'[data-mm-home-action="mould-master"]',
-        analyse:'[data-mm-home-action="process-data"]',
+        processData:'[data-mm-home-action="process-data"]',
         retiredTaskHub:'.mm-home-task-hub',
         retiredUtility:'.mm-home-utility'
       };
@@ -66,7 +66,7 @@ test('Home canonical choices stay single after navigation, repeat renders and re
       };
     });
     expect(diagnostics.counts, 'duplicate Home cards at width '+width).toEqual({
-      focus:1,book:1,specialistTools:1,troubleshoot:1,analyse:1,retiredTaskHub:0,retiredUtility:0
+      focus:1,book:1,specialistTools:1,troubleshoot:1,processData:0,retiredTaskHub:0,retiredUtility:0
     });
     expect(diagnostics.extraOverflow, 'horizontal overflow at '+width).toBeLessThanOrEqual(2);
     expect(new Set(diagnostics.visibleTitles).size).toBe(diagnostics.visibleTitles.length);

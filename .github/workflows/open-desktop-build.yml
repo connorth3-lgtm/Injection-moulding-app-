@@ -48,6 +48,7 @@ on:
       - 'process-data-20-pass-16-20.js'
       - 'process-data-20-pass-atlas.js'
       - 'process-data-local-intake.js'
+      - 'process-data-statistics.js'
       - 'curriculum-integration.js'
       - 'specialist-curriculum.js'
       - 'src/domains/learning/specialist-evidence-gap-extension.js'

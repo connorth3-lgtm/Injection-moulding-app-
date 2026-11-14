@@ -7,7 +7,6 @@ const AREAS=Object.freeze([
   {id:'learn',label:'Learn',description:'Lessons, specialist learning, practice and assessment.',icon:'◫'},
   {id:'materials',label:'Materials',description:'Material families now; exact commercial-grade evidence as the catalogue is published.',icon:'⬡'},
   {id:'diagnose',label:'Diagnose',description:'Build an evidence-led Mould Master troubleshooting case.',icon:'⌕'},
-  {id:'analyse',label:'Analyse',description:'Prepare and interpret local machine, cavity and quality process data.',icon:'⌁'},
   {id:'evidence',label:'Evidence',description:'Inspect references, source provenance and evidence maturity.',icon:'≡'}
 ]);
 
@@ -17,7 +16,6 @@ function open(id){
   if(id==='learn'){coreView('path');return}
   if(id==='materials'){coreView('materials');return}
   if(id==='diagnose'){window.MM_MOULD_MASTER_WORKSPACE?.open?.();return}
-  if(id==='analyse'){window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.();return}
   if(id==='evidence'){
     if(window.MM_REFERENCE_BROWSER?.open)window.MM_REFERENCE_BROWSER.open();
     else if(window.MM_REFERENCE_DATA?.open)window.MM_REFERENCE_DATA.open();

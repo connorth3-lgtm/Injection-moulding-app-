@@ -79,7 +79,7 @@ def main() -> int:
                 commands.append([sys.executable, qa])
 
     process_integrity_changed = impact["process_data"] or bool(files & {
-        "data-integration-runtime.js","process-data-intelligence-ui.js","current-data-manifest.json",
+        "data-integration-runtime.js","process-data-statistics.js","current-data-manifest.json",
         "qa_data_integration.py","qa_process_statistics_integrity.cjs","qa_process_data_integrity.cjs",
     })
     if process_integrity_changed:

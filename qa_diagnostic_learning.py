@@ -149,7 +149,7 @@ lab_action = HUBS.find('data-mm-hub-action="diagnostic-labs"', tools_start)
 need(tools_start > problem_start and tools_end > tools_start and tools_start < lab_action < tools_end, 'diagnostic labs must be inside the optional Practice tools disclosure')
 need('>Diagnostic labs</b>' in HUBS[lab_action:tools_end], 'optional Practice launcher label missing')
 action_start = HUBS.find("case 'diagnostic-labs':")
-action_end = HUBS.find("case 'case-process-data':", action_start)
+action_end = HUBS.find("case 'scenario-detail':", action_start)
 need(action_start >= 0 and action_end > action_start, 'Practice action route for diagnostic labs missing')
 action = HUBS[action_start:action_end]
 need("safeOpen('MM_DIAGNOSTIC_LABS'" in action and "returnTo:source==='practice'" in action and "?'problem-practice':'hub'" in action, 'Practice launcher must preserve a return path into the correct Practice level')

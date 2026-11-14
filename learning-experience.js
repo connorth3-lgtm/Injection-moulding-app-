@@ -123,11 +123,6 @@ window.mmNextLesson=function(){
 window.mmOpenMouldMaster=function(){
   if(typeof switchView==='function')switchView('defects');
 };
-window.mmOpenDataDiagnosis=function(){
-  if(window.MM_PROCESS_DATA_DIAGNOSTICS?.open)return window.MM_PROCESS_DATA_DIAGNOSTICS.open();
-  if(typeof toast==='function')toast('Data diagnosis is still loading. Try again in a moment.');
-};
-
 function decorateLesson(){
   const root=document.getElementById('lesson');
   const article=root?.querySelector('.lesson-body');

@@ -24,7 +24,7 @@ const LESSONS=[
     objectives:['Explain how cavity pressure acting over projected area creates mould-opening force.','Separate local flash/tooling evidence from a genuine global clamp-capability question.','Recognise why machine-, mould- and process-specific methods are required instead of a universal tonnage rule.'],
     keypoints:['Projected area is the cavity and runner area projected onto the parting plane, not part surface area in three dimensions.','Cavity pressure is not perfectly uniform, so simple multiplication is a reasoning model rather than a universal sizing recipe.','Local flash after a tooling event can occur while global clamp force remains stable.','More clamp force is not a substitute for inspecting parting lines, inserts, support, mould condition and the actual pressure history.'],
     evidenceTask:'Sketch the projected footprint of an example multi-cavity tool, identify what pressure evidence would be needed to reason about opening force, and separately list evidence that would favour a local shutoff/tooling cause.',
-    practices:[{type:'data',id:'local-flash-tooling',label:'Data diagnosis — Local flash vs global clamp'},{type:'core',id:'14',label:'Revisit core lesson 14 — Clamp unit anatomy'}]
+    practices:[{type:'core',id:'14',label:'Revisit core lesson 14 — Clamp unit anatomy'}]
   },
   {
     id:'S03',title:'Plasticising controls: back pressure, screw speed, decompression & recovery',level:'Specialist machine/process',
@@ -33,7 +33,7 @@ const LESSONS=[
     objectives:['Relate screw rotation, back pressure, recovery time and melt condition as coupled plasticising responses.','Explain why decompression is a pressure-management function rather than a material-quality cure.','Use recovery and shot-delivery trends to decide whether a machine/plasticising investigation is warranted.'],
     keypoints:['Screw speed and back pressure can change shear work, mixing, recovery time and material thermal history.','A barrel-zone setpoint does not by itself prove actual melt condition.','Decompression can influence nozzle pressure and feed behaviour but should not be used to hide an unstable shot-delivery mechanism.','Trend recovery time, cushion, transfer, shot mass and melt evidence together before making a mechanism claim.'],
     evidenceTask:'Compare a stable and drifting plasticising sequence. Decide which measured actuals would distinguish feed inconsistency, check-ring behaviour, excessive recovery demand and a developing screw/barrel condition.',
-    practices:[{type:'data',id:'screw-barrel-wear',label:'Data diagnosis — Screw/barrel wear'},{type:'data',id:'check-ring-leakage',label:'Data diagnosis — Check-ring leakage'}]
+    practices:[{type:'core',id:'13',label:'Revisit core lesson 13 — Plasticising and shot delivery'}]
   },
   {
     id:'S04',title:'Reinforced polymers: fibre orientation, anisotropy & conditioning',level:'Specialist materials',
@@ -60,7 +60,7 @@ const LESSONS=[
     objectives:['Distinguish internal shrinkage voids from surface sink and other internal discontinuities.','Recognise contamination/incompatibility and interlayer bonding as possible delamination mechanisms.','Choose destructive inspection, material identity and packing evidence when surface appearance is insufficient.'],
     keypoints:['A visually acceptable surface does not prove the interior is sound.','Voids in thick sections can reflect center shrinkage, gate effectiveness and cooling gradients.','Delamination can point toward incompatibility, contamination, excessive shear or weak interlayer bonding.','Sectioning, microscopy or other approved inspection methods can be more diagnostic than repeated machine adjustments.'],
     evidenceTask:'Take one hypothetical hidden defect and define the minimum evidence needed to distinguish geometry/packing/cooling from material incompatibility or degradation before changing the validated process.',
-    practices:[{type:'defects',label:'Defect Finder — Voids and delamination'},{type:'data',id:'gate-seal-study',label:'Data diagnosis — Gate-seal/packing plateau'}]
+    practices:[{type:'defects',label:'Defect Finder — Voids and delamination'}]
   },
   {
     id:'S07',title:'SPC, control charts & reaction plans',level:'Specialist quality engineering',
@@ -69,7 +69,7 @@ const LESSONS=[
     objectives:['Explain why time-ordered stability evidence comes before capability interpretation.','Distinguish common-cause variation from signals that warrant investigation under an approved reaction plan.','Avoid tampering with a stable process in response to measurement noise or isolated points.'],
     keypoints:['A process can be within specification and still be unstable; specification limits and control limits answer different questions.','Control charts are decision aids whose chart type, subgrouping and rules must match the process and quality system.','Reaction plans should identify what evidence to check before changing the process.','Measurement-system problems can create apparent process signals that should not be tuned away.'],
     evidenceTask:'Design a simple time-ordered monitoring plan for one critical dimension or process actual: define the subgroup logic, known-good baseline evidence, investigation trigger and first checks in the reaction plan without inventing universal numeric limits.',
-    practices:[{type:'data',id:'measurement-noise',label:'Data diagnosis — Measurement noise masquerading as drift'},{type:'core',id:'72',label:'Revisit core lesson 72 — Stability before capability'}]
+    practices:[{type:'core',id:'72',label:'Revisit core lesson 72 — Stability before capability'}]
   },
   {
     id:'S08',title:'Gage R&R, MSA & measurement uncertainty',level:'Specialist measurement',
@@ -78,7 +78,7 @@ const LESSONS=[
     objectives:['Separate process variation from variation introduced by the measurement system.','Explain repeatability and reproducibility in practical moulded-part measurement.','Recognise when fixture, conditioning time, operator method or resolution can dominate the conclusion.'],
     keypoints:['A larger measured spread does not prove the moulding process became less stable.','Measurement studies must reflect the real characteristic, method, operators/conditions and expected part range.','Resolution alone does not establish measurement adequacy.','Capability, DOE and validation conclusions inherit the limitations of the measurement system used to generate them.'],
     evidenceTask:'Build a measurement-system investigation for a dimension that suddenly appears noisier: define repeated measurements, operator/method comparisons, fixture and conditioning controls, and an independent process signal to compare against.',
-    practices:[{type:'data',id:'measurement-noise',label:'Data diagnosis — Measurement-system variation'},{type:'core',id:'75',label:'Revisit core lesson 75 — Measurement system awareness'}]
+    practices:[{type:'core',id:'75',label:'Revisit core lesson 75 — Measurement system awareness'}]
   },
   {
     id:'S09',title:'Sequential and valve-gate timing',level:'Specialist tooling/process',
@@ -87,7 +87,7 @@ const LESSONS=[
     objectives:['Explain why valve timing changes local flow-front interaction and cavity balance.','Compare commanded valve timing with actual actuation and cavity-specific response.','Avoid global recipe changes when the evidence isolates one sequential branch or gate.'],
     keypoints:['One cavity or branch separating while others remain stable is strong localisation evidence.','Commanded timing is not proof that the valve physically actuated at that time.','Cavity pressure, fill signature, actuator/sensor evidence and part pattern should be interpreted together.','Sequential-gating optimisation must remain within approved tool, hot-runner and process limits.'],
     evidenceTask:'For a two-branch sequential-gate example, identify the signals that would distinguish an actual valve-delay fault from a global viscosity or machine-velocity change.',
-    practices:[{type:'data',id:'valve-gate-timing',label:'Data diagnosis — Valve-gate timing'},{type:'core',id:'108',label:'Revisit core lesson 108 — Hot-runner balancing'}]
+    practices:[{type:'core',id:'108',label:'Revisit core lesson 108 — Hot-runner balancing'}]
   },
   {
     id:'S10',title:'Screw/barrel wear & plasticising-system health',level:'Specialist maintenance/process',
@@ -96,7 +96,7 @@ const LESSONS=[
     objectives:['Recognise coupled process signatures that justify a plasticising-system investigation.','Separate gradual machine wear from material-lot, feed and cavity-side causes.','Use trend and maintenance evidence rather than compensating indefinitely with recipe changes.'],
     keypoints:['Wear can alter conveying, melting, recovery and repeatability before it becomes visually obvious.','Recovery time alone is not enough; combine it with melt, shot, back-pressure and material evidence.','A changed process response after maintenance should be compared with the known-good baseline.','Confirmed mechanical deterioration should be corrected under the approved maintenance process before redefining the validated moulding window.'],
     evidenceTask:'Create a trend review that uses recovery time, melt/shot evidence, back-pressure response, material history and maintenance findings to decide whether a machine inspection is warranted.',
-    practices:[{type:'data',id:'screw-barrel-wear',label:'Data diagnosis — Screw/barrel wear'},{type:'core',id:'118',label:'Revisit core lesson 118 — Maintenance-process interaction'}]
+    practices:[{type:'core',id:'118',label:'Revisit core lesson 118 — Maintenance-process interaction'}]
   },
   {
     id:'S11',title:'Ejector/tool condition, drag & release evidence',level:'Specialist tooling',
@@ -105,7 +105,7 @@ const LESSONS=[
     objectives:['Relate ejection load to local temperature, shrinkage, draft, texture and tool condition.','Use eject-force and thermal trends as evidence rather than treating release as a purely mechanical setting.','Separate a local release problem from a global cycle or packing problem.'],
     keypoints:['Higher eject force is a symptom measurement as well as a machine setting concern.','Local cooling imbalance can change dimensions and release load together.','Draft, texture, surface/tool condition and deformation can all affect drag.','Increasing ejection force without identifying the mechanism can damage parts or tooling and conceal the real condition.'],
     evidenceTask:'Compare baseline and high-drag cycles using eject force, part/eject temperature, dimension, surface evidence and cooling-flow data. State which evidence would send the investigation toward cooling versus tooling/release geometry.',
-    practices:[{type:'data',id:'ejector-drag',label:'Data diagnosis — Ejector drag'},{type:'core',id:'37',label:'Revisit core lesson 37 — Ejection'}]
+    practices:[{type:'core',id:'37',label:'Revisit core lesson 37 — Ejection'}]
   },
   {
     id:'S12',title:'Sustainable processing: energy base load & recycled-feedstock variability',level:'Specialist sustainability/process',
@@ -114,7 +114,7 @@ const LESSONS=[
     objectives:['Separate energy consumed by productive moulding work from machine/auxiliary base load.','Treat recycled-feedstock lot variation as a material/process input that may require verification or revalidation.','Evaluate sustainability changes against quality, robustness, traceability and approved material requirements rather than one metric alone.'],
     keypoints:['Energy per cycle can rise while cycle time and accepted quality remain stable, pointing toward machine or auxiliary demand.','Nominally similar recycled feedstock can show meaningful rheology and lot variation.','Lower energy or higher recycled content is not a valid improvement if quality, material compliance or process robustness is lost.','Track material identity, lot/property evidence, process actuals, reject/scrap response and energy together.'],
     evidenceTask:'Build a before/after sustainability review that includes energy per accepted part, cycle/quality stability, material lot/property evidence and the change-control decision needed before adopting a new normal condition.',
-    practices:[{type:'data',id:'energy-base-load',label:'Data diagnosis — Energy base load'},{type:'data',id:'recycled-pp-lot',label:'Data diagnosis — Recycled PP lot variability'},{type:'material',id:'recycled-pp-lot-rheology',label:'Material lab — Recycled PP rheology'}]
+    practices:[{type:'material',id:'recycled-pp-lot-rheology',label:'Material lab — Recycled PP rheology'}]
   }
 ];
 
@@ -184,7 +184,6 @@ function practice(type,id){
   }
   if(type==='defects'){if(typeof switchView==='function')switchView('defects');return}
   if(type==='standards'){if(typeof switchView==='function')switchView('standards');return}
-  if(type==='data'&&window.MM_PROCESS_DATA_DIAGNOSTICS){window.MM_PROCESS_DATA_DIAGNOSTICS.open();setTimeout(()=>document.querySelector(`[data-pd-start="${id}"]`)?.click(),0);return}
   if(type==='material'&&window.MM_MATERIAL_BEHAVIOUR_LABS){window.MM_MATERIAL_BEHAVIOUR_LABS.open();setTimeout(()=>document.querySelector(`[data-ml-start="${id}"]`)?.click(),0);return}
 }
 function toggle(id){setDone(id,!isDone(id));renderLesson(id)}

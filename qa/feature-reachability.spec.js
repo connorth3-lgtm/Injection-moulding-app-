@@ -55,11 +55,13 @@ test.describe('canonical startup deep links',()=>{
    await expectVisible(page,selector);
   }
  });
- test('custom governed routes open Book, process data and readiness surfaces',async({page})=>{
-  for(const [view,selector] of [['book','#mmBookView'],['processDataLabs','#processDataLabs'],['standards-readiness','#mmStandardsReadinessView']]){
+test('custom governed routes open Book and readiness surfaces',async({page})=>{
+  for(const [view,selector] of [['book','#mmBookView'],['standards-readiness','#mmStandardsReadinessView']]){
    await openDeepLink(page,view);
    await expectVisible(page,selector);
   }
+  await openDeepLink(page,'processDataLabs');
+  await expect(page.locator('#processDataLabs')).toHaveCount(0);
  });
 });
 
@@ -211,21 +213,20 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
    else {const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();const book=page.locator('[data-mm-registry-menu="book"]');await revealMoreAction(page,book);await book.click()}
    await expectVisible(page,'#mmBookView');
   });
-  test('Measured evidence references stay inside the Process Data practice flow',async({page})=>{
+  test('Process Data screens are retired while governed evidence records remain',async({page})=>{
    await openApp(page,viewport.width);
    if(viewport.width<=900){await mobileHub(page,'Practice');await expectVisible(page,'#scenarios .mm-practice-hub')}
    else {const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click();await expectVisible(page,'#scenarios .mm-practice-hub')}
-   const process=page.locator('#scenarios [data-mm-hub-action="process-data"]');await expect(process).toBeVisible();await process.click();
-   await expectVisible(page,'#processDataLabs');
-   const labs=page.locator('#processDataLabs');
-   await expect(labs.locator('.pd-hero')).toContainText('Start with a guided case');
-   await expect(page.locator('#processDataLabs > .pd-toolbar [data-pd-practice]')).toHaveCount(0);
-   await expect(labs.locator('[data-mme-catalog-launcher]')).toHaveCount(0);
-   const register=labs.locator('[data-mme-catalog-inline]');await expect(register).toBeVisible();
-   await register.locator('summary').click();
-   await expect(register.locator('.mme-card')).toHaveCount(17);
-   await expect(register.locator('.mme-card a[href]')).toHaveCount(17);
-   await expect(page.locator('#pageTitle')).not.toHaveText('Measured Data');
+   await expect(page.locator('#scenarios [data-mm-hub-action="process-data"]')).toHaveCount(0);
+   await expect(page.locator('#processDataLabs')).toHaveCount(0);
+   const retained=await page.evaluate(()=>({
+    guidedCases:window.MM_PROCESS_DATA_DIAGNOSTICS?.cases?.length||0,
+    deepDiveCases:window.MM_PROCESS_DATA_DEEP_DIVE_50?.cases?.length||0,
+    atlasCases:window.MM_PROCESS_DATA_20_PASS_ATLAS?.cases?.length||0,
+    measuredFamilies:window.MM_MEASURED_EVIDENCE?.families?.length||0,
+    publicOpen:typeof window.MM_PROCESS_DATA_DIAGNOSTICS?.open
+   }));
+   expect(retained).toEqual({guidedCases:14,deepDiveCases:50,atlasCases:200,measuredFamilies:17,publicOpen:'undefined'});
   });
   test('core learning and practice destinations are reachable by clicks',async({page})=>{
    await openApp(page,viewport.width);
@@ -274,14 +275,14 @@ for(const viewport of [{name:'mobile',width:412},{name:'tablet',width:768},{name
     await mobileMore(page);
     for(const id of ['book','learning-insights','repair-app-files'])await revealMoreAction(page,page.locator('[data-mm-registry-menu="'+id+'"]'));
     await closeModal(page);await mobileHub(page,'Practice');
-    for(const action of ['problem-practice','process-data','labs'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
+    for(const action of ['problem-practice','labs'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
    }else{
     const more=page.locator('#nav [data-mm-desktop-more-tools]');await expect(more).toBeVisible();await more.click();await expect(page.locator('#modal .modal-card')).toBeVisible();
     for(const name of ['Standards & safety','Profile & data'])await revealMoreAction(page,page.locator('#modal .quick-action').filter({hasText:name}));
     for(const name of ['Process simulator','Defect finder','Troubleshooting coach','Knowledge checks'])await expect(page.locator('#modal .quick-action').filter({hasText:name})).toHaveCount(0);
     await closeModal(page);
     const practice=page.locator('#nav button[data-view="scenarios"]');await expect(practice).toBeVisible();await practice.click();await expectVisible(page,'#scenarios .mm-practice-hub');
-    for(const action of ['problem-practice','process-data','labs'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
+    for(const action of ['problem-practice','labs'])await expect(page.locator('#scenarios [data-mm-hub-action="'+action+'"]')).toBeVisible();
     await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
    }
   });

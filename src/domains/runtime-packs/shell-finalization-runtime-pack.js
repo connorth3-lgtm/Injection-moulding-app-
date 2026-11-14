@@ -72,10 +72,6 @@ function loadConnectedDataRuntime(){
   script.src=runtimeScriptUrl('./data-integration-runtime.js');
   script.async=true;
   script.dataset.mmConnectedData='1';
-  script.addEventListener('load',()=>{
-    if(window.MM_PROCESS_INTELLIGENCE_UI||document.querySelector('script[data-mm-process-intelligence]'))return;
-    const ui=document.createElement('script');ui.src=runtimeScriptUrl('./process-data-intelligence-ui.js');ui.async=true;ui.dataset.mmProcessIntelligence='1';document.head.appendChild(ui);
-  });
   script.addEventListener('error',()=>console.error('MouldMaster connected process-data runtime could not be loaded'));
   document.head.appendChild(script);
 }
@@ -124,13 +120,7 @@ function removeHomeSecondaryBlocks(root){
   root.querySelectorAll('.region-banner').forEach(el=>el.remove());
   for(const slot of Array.from(root.querySelectorAll('.mm-dashboard-slot'))){
     const text=(slot.textContent||'').replace(/\s+/g,' ').trim();
-    if(/^Standards mode:/i.test(text)||/^Process data labs\b/i.test(text))slot.remove();
-  }
-  for(const heading of Array.from(root.querySelectorAll('h2,h3'))){
-    const text=(heading.textContent||'').replace(/\s+/g,' ').trim();
-    if(!/^Process data labs$/i.test(text))continue;
-    const block=heading.closest('.mm-dashboard-slot')||heading.closest('section,.card')||heading.parentElement;
-    if(block&&block!==root)block.remove();
+    if(/^Standards mode:/i.test(text))slot.remove();
   }
 }
 function simplifyHomeScreen(){
@@ -223,7 +213,6 @@ function applyStartupRoute(){
   if(STARTUP_CORE_VIEWS.has(requested)&&typeof window.switchView==='function'){window.switchView(requested);startupRouteApplied=true;return true}
   if(requested==='assessment'&&typeof window.switchView==='function'){window.switchView('exams');startupRouteApplied=true;return true}
   if(requested==='book'&&typeof window.MMBook?.open==='function'){window.MMBook.open();startupRouteApplied=true;return true}
-  if((requested==='processDataLabs'||requested==='process-data')&&typeof window.MM_PROCESS_DATA_DIAGNOSTICS?.open==='function'){window.MM_PROCESS_DATA_DIAGNOSTICS.open();startupRouteApplied=true;return true}
   if(requested==='standards-readiness'&&typeof window.MM_STANDARDS_READINESS?.open==='function'){window.MM_STANDARDS_READINESS.open();startupRouteApplied=true;return true}
   if(requested==='reference'||requested==='reference-data'){startupRouteApplied=true;location.replace('./reference-data.html');return true}
   return false

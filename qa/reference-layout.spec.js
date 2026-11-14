@@ -438,37 +438,10 @@ test('Diagnostic workbench keeps keyboard arrival across symptom, evidence, revi
   await expect(workbench.locator('.mm-dx-empty')).toBeVisible();
 });
 
-test('Practice nested labs, data diagnosis and assessments keep working illustrated landing headers',async({page})=>{
+test('Practice nested labs and assessments keep working illustrated landing headers',async({page})=>{
   test.setTimeout(90000);
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
-
-  await page.evaluate(()=>switchView('scenarios'));
-  await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="process-data"]').click();
-  const data=page.locator('#processDataLabs');
-  await expect(data.getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
-  await expect(data.locator('.pd-hero > .mm-reference-practice-tool-art')).toBeVisible();
-  await expect(data.locator(':scope > .mm-practice-tool-return')).toHaveCount(1);
-  await expect(data.locator('[data-pdlab-guided]')).toBeVisible();
-  await expect(data.locator('[data-pdlab-csv]')).toBeVisible();
-  await expect(data.locator('[data-pdlab-saved]')).toBeVisible();
-  await data.locator('[data-pdlab-guided]').click();
-  await expect(data.locator('[data-pd-start]').first()).toBeVisible();
-  await data.locator('[data-pd-start]').first().click();
-  const dataChoice=data.locator('button.pd-choice').first();
-  await expect(dataChoice).toBeVisible();
-  expect((await dataChoice.boundingBox()).height).toBeGreaterThanOrEqual(44);
-  await expect(data.locator('.pd-case > .pd-panel').first()).toHaveCSS('background-color','rgb(239, 247, 250)');
-  await dataChoice.click();
-  await expect(data.locator('.pd-feedback')).toBeVisible();
-  await expect(data.locator('[data-pd-home]')).toBeVisible();
-  await data.locator('[data-pd-home]').click();
-  await expect(data.locator('[data-pd-start]').first()).toBeVisible();
-  await expect(data.getByRole('heading',{name:'Guided Data Diagnosis'})).toBeVisible();
-  await data.locator('[data-pd-practice]').first().click();
-  await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
-  await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="process-data"]').click();
-  await expect(data.getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
 
   for(const [action,root,hero,start,back] of [
     ['diagnostic-labs','#diagnosticLabs','.dl-hero','[data-dl-start]','[data-dl-home]'],

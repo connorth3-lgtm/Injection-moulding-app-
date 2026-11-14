@@ -18,7 +18,7 @@ async function seed(page,run){
   },{run});
 }
 
-const FAMILIES=['home','learn','practice','book','materials','responsive','more','lesson','process-data','shell'];
+const FAMILIES=['home','learn','practice','book','materials','responsive','more','lesson','maths','shell'];
 
 for(let run=1;run<=500;run++){
   const family=FAMILIES[Math.floor((run-1)/50)];
@@ -93,9 +93,10 @@ for(let run=1;run<=500;run++){
     }else if(family==='lesson'){
       await page.evaluate(()=>switchView('path'));const b=page.getByRole('button',{name:/Continue lesson/i}).first();await expect(b).toBeVisible();await b.click();
       await expect(page.locator('#lesson')).toBeVisible();await expect(page.locator('#lesson .mm-simple-lesson-hero')).toBeVisible();
-    }else if(family==='process-data'){
-      await page.evaluate(()=>switchView('scenarios'));const b=page.locator('#scenarios [data-mm-hub-action="process-data"]');await expect(b).toBeVisible();await b.click();
-      await expect(page.locator('#processDataLabs')).toBeVisible();await expect(page.locator('#processDataLabs').getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
+    }else if(family==='maths'){
+      await page.evaluate(()=>window.MM_INJECTION_MOULDING_MATHS.open());
+      await expect(page.locator('#mmInjectionMouldingMaths')).toBeVisible();
+      await expect(page.locator('#processDataLabs')).toHaveCount(0);
     }else if(family==='shell'){
       await page.evaluate(()=>{window.MM_APP_SHELL.dashboard.compose();window.MM_APP_SHELL.dashboard.compose()});
       await expect(page.locator('#dashboard .mm-today-focus')).toHaveCount(1);

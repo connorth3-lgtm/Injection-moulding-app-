@@ -145,82 +145,23 @@ for(const viewport of [{name:'android-412x915',width:412,height:915},{name:'smal
       await expect(page.getByRole('heading',{name:'Troubleshooting casebook'})).toBeVisible();
     });
 
-    test('Process data lab routes guided practice and the 50-case deep dive from Practice',async({page})=>{
+    test('Process Data screens are retired while its evidence records and Maths remain available',async({page})=>{
       await openApp(page);
       await openPracticeHub(page);
-      await openPracticeAction(page,'process-data');
-      await expect(page.locator('#processDataLabs')).toBeVisible();
-      await expect(page.locator('#processDataLabs').getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
-      const root=page.locator('#processDataLabs');
-      const more=root.locator('.pd-more-libraries');
-      await expect(root.locator('[data-pdlab-guided]')).toBeVisible();
-      await expect(more.locator('summary')).toBeVisible();
-      await expect(more.getByRole('button',{name:/Browse 50 cases/})).toBeHidden();
-      await expectOnlyCurrent(page,'Practice');
-
-      await more.locator('summary').click();
-      await expect(more.getByRole('button',{name:/Browse 50 cases/})).toBeVisible();
-      await more.getByRole('button',{name:/Browse 50 cases/}).click();
-      await expect(page.getByRole('heading',{name:'50-case data deep dive'})).toBeVisible();
-      await expect(page.locator('.dd50-card')).toHaveCount(50);
-      await page.locator('[data-dd50-kind]').selectOption('quality-sensor');
-      await expect(page.locator('.dd50-card')).toHaveCount(10);
-      await page.locator('.dd50-card [data-dd50-open]').first().click();
-      await expect(page.getByText('Baseline → fault → recovery')).toBeVisible();
-      await expect(page.locator('.dd50-table tbody tr')).toHaveCount(4);
-      await expect(page.getByText('Ranked mechanism:')).toBeVisible();
-      await expect(page.getByText('Best next evidence:')).toBeVisible();
-      await expect(page.getByRole('button',{name:'Export 72-cycle CSV'})).toBeVisible();
-      await expectOnlyCurrent(page,'Practice');
-    });
-    test('Open 20-pass · 200-case atlas from Practice, filter a pass, and inspect the full evidence chain',async({page})=>{
-      await openApp(page);
-      await openPracticeHub(page);
-      await openPracticeAction(page,'process-data');
-      const root=page.locator('#processDataLabs');
-      const more=root.locator('.pd-more-libraries');
-      await expect(root.getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
-      await expect(more.locator('summary')).toBeVisible();
-      await expect(more.getByRole('button',{name:/Browse the 200-case atlas/})).toBeHidden();
-      await more.locator('summary').click();
-      await expect(more.getByRole('button',{name:/Browse the 200-case atlas/})).toBeVisible();
-      await more.getByRole('button',{name:/Browse the 200-case atlas/}).click();
-      await expect(page.getByRole('heading',{name:'200 advanced process-data cases'})).toBeVisible();
-      await expect(page.locator('.at20-card')).toHaveCount(200);
-      await page.locator('[data-at20-pass]').selectOption('16');
-      await expect(page.locator('.at20-card')).toHaveCount(10);
-      await page.getByRole('button',{name:'Inspect evidence case'}).first().click();
-      await expect(page.locator('.at20-table tbody tr')).toHaveCount(4);
-      await expect(page.getByText('Ranked root-cause mechanism')).toBeVisible();
-      await expect(page.getByText('Best next evidence',{exact:true})).toBeVisible();
-      await expect(page.getByText('Verification',{exact:true})).toBeVisible();
-      await expect(page.getByText(/Compensation trap/i)).toBeVisible();
-      await expect(page.getByText(/Baseline index 100/i)).toBeVisible();
-      await expect(page.getByRole('button',{name:'Export 72-cycle CSV'})).toBeVisible();
-      await expectOnlyCurrent(page,'Practice');
-    });
-
-    test('Local shot CSV intake strips raw identifiers in the real UI',async({page})=>{
-      await openApp(page);
-      await openPracticeHub(page);
-      await openPracticeAction(page,'process-data');
-      const prepareCsv=page.locator('#processDataLabs [data-pdlab-csv]');
-      await expect(prepareCsv).toBeVisible();
-      await prepareCsv.click();
-      await expect(page.getByRole('heading',{name:'Prepare shot data without uploading it'})).toBeVisible();
-      const csv='timestamp,machine,mould,material_grade,material_lot,customer_name,fill_time_s,cushion_mm,quality_result,comment\n2026-08-26T10:00:00Z,IMM-SECRET,TOOL-SECRET,PA66-GF30,LOT-SECRET,Customer Secret,1.20,4.5,PASS,private note\n2026-08-26T10:00:30Z,IMM-SECRET,TOOL-SECRET,PA66-GF30,LOT-SECRET,Customer Secret,1.24,4.4,FAIL,private note two\n';
-      await page.locator('[data-pdi-file]').setInputFiles({name:'shot-export.csv',mimeType:'text/csv',buffer:Buffer.from(csv)});
-      await expect(page.locator('.pdi-kpi').first()).toContainText('2');
-      await expect(page.locator('.pdi-rule').filter({hasText:'timestamp'}).locator('b.drop')).toHaveText('drop');
-      await expect(page.locator('.pdi-rule').filter({hasText:'machine'}).locator('b.alias')).toHaveText('alias');
-      await expect(page.locator('.pdi-rule').filter({hasText:'fill_time_s'}).locator('b.keep')).toHaveText('keep');
-      await expect(page.locator('.pdi-rule').filter({hasText:'quality_result'}).locator('b.quality')).toHaveText('quality');
-      await expect(page.getByRole('button',{name:'Export prepared CSV'})).toBeEnabled();
-      await expect(page.getByRole('button',{name:'Export data dictionary'})).toBeEnabled();
-      await expect(page.locator('body')).not.toContainText('IMM-SECRET');
-      await expect(page.locator('body')).not.toContainText('TOOL-SECRET');
-      await expect(page.locator('body')).not.toContainText('Customer Secret');
-      await expectOnlyCurrent(page,'Practice');
+      await expect(page.locator('#scenarios [data-mm-hub-action="process-data"]')).toHaveCount(0);
+      await expect(page.locator('#processDataLabs')).toHaveCount(0);
+      const retained=await page.evaluate(()=>({
+        guided:window.MM_PROCESS_DATA_DIAGNOSTICS?.cases?.length||0,
+        deepDive:window.MM_PROCESS_DATA_DEEP_DIVE_50?.cases?.length||0,
+        atlas:window.MM_PROCESS_DATA_20_PASS_ATLAS?.cases?.length||0,
+        sources:window.MM_MEASURED_EVIDENCE?.families?.length||0,
+        open:typeof window.MM_PROCESS_DATA_DIAGNOSTICS?.open
+      }));
+      expect(retained).toEqual({guided:14,deepDive:50,atlas:200,sources:17,open:'undefined'});
+      await page.locator('.mobile-nav > button[data-view="maths"]').click();
+      await expect(page.locator('#mmInjectionMouldingMaths')).toBeVisible();
+      await expect(page.locator('#processDataLabs')).toHaveCount(0);
+      await expectOnlyCurrent(page,'Maths');
     });
 
     test('Lesson opens at the top without the duplicate fixed completion bar',async({page})=>{

@@ -66,7 +66,7 @@
         "process-data-*.js",
         "src/domains/process/**",
         "data-integration-runtime.js",
-        "process-data-intelligence-ui.js"
+        "process-data-statistics.js"
       ],
       "generatedOutputs": [
         "src/domains/runtime-packs/process-data-runtime-pack.js"

@@ -67,10 +67,7 @@ for token in [
     "Canonical measured evidence",
     "Measured data behind this topic",
     "Browse all 17 measured families",
-    "data-mme-catalog-inline",
-    "Evidence and data references · 17 measured families",
     "open:openCatalog",
-    "ensureProcessDataCatalog",
     "record-level",
     "material characterisation",
     "process waveform",
@@ -79,10 +76,11 @@ for token in [
 ]:
     need(token in js, f"missing measured-evidence runtime boundary/integration marker: {token}")
 need("data-mme-catalog-launcher" not in js, "measured-data catalog must not add a standalone practice-page launcher")
+need("data-mme-catalog-inline" not in js and "processDataCatalog" not in js, "retired Process Data screen must not recreate the inline evidence catalog")
 need("Browse measured data</button>" not in js, "measured-data catalog must be kept inside its related practice context")
-need("title.textContent='Measured Data'" not in js, "opening source references must not replace the Process Data page")
+need("location.assign('./reference-data.html')" in js, "measured evidence source browsing must remain on the governed reference page")
 
-for surface in ["#lesson article.lesson-body", "diagnosticLabs", "processDataLabs", "mmMouldMasterWorkspace"]:
+for surface in ["#lesson article.lesson-body", "diagnosticLabs", "mmMouldMasterWorkspace"]:
     need(surface in js, f"measured-evidence runtime is not integrated with required surface: {surface}")
 need("/material.*lab/i" in js, "material-lab runtime hook missing")
 need("function hasTopic" in js and "hasTopic(t,k)" in js, "token-safe short-topic matcher missing")
@@ -113,7 +111,7 @@ report = {
     "waveformContributingFamilies": sum(1 for x in wave_counts if x > 0),
     "acceptedInjectionProcessTimeSeriesValues": sum(wave_counts),
     "restrictedUseFamilies": len(restricted_ids),
-    "surfaces": ["lesson", "diagnostic labs", "process-data diagnostics", "material labs", "Mould Master workspace"],
+    "surfaces": ["lesson", "diagnostic labs", "material labs", "Mould Master workspace"],
     "rawThirdPartyPayloadEmbedded": False,
 }
 (ROOT / "measured-evidence-integration-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

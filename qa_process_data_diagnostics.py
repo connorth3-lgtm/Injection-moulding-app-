@@ -30,22 +30,25 @@ p=subprocess.run(['node',str(ROOT/'qa_process_statistics_current.cjs')],cwd=ROOT
 need(p.returncode==0,'current process statistics runtime QA failed: '+(p.stderr or p.stdout))
 
 need("const VERSION='2026.11.14.2'" in js,'guided data diagnostic version marker missing')
-need("const PACK=window.MM_PROCESS_EVIDENCE_DATASETS" in js,'guided UI must consume the canonical evidence dataset pack')
-need("DATASETS.length!==PACK.datasets.length" in js,'guided UI must fail closed if a canonical dataset has no guide')
-need("24 baseline, 24 fault and 24 recovery" in js,'learner UI must explain the canonical phase structure')
-for marker in ['Read the pattern','Diagnose','Choose the next evidence','Interpret recovery','Export 72-cycle CSV','synthetic training data','not universal production setpoints']:
-    need(marker in js,f'guided data diagnostic marker missing: {marker}')
-need("PACK.toCsv(ds.id)" in js,'CSV export must use the canonical dataset generator rather than a duplicate dataset')
+need("const PACK=window.MM_PROCESS_EVIDENCE_DATASETS" in js,'retained evidence runtime must consume the canonical dataset pack')
+need("DATASETS.length!==PACK.datasets.length" in js,'retained evidence runtime must fail closed if a canonical dataset is missing')
+need("const PACK=window.MM_PROCESS_EVIDENCE_DATASETS" in js and "DATASETS.length!==PACK.datasets.length" in js,'canonical dataset records and full guided coverage must remain wired')
+for marker in ['Read the pattern','Diagnose','Choose the next evidence','Interpret recovery','universal production limits']:
+    need(marker in js,f'retained guided-case data marker missing: {marker}')
+need("toCsv:id=>PACK.toCsv(String(id))" in js,'CSV generation must continue to use canonical dataset records')
 need("MM_PROCESS_DATA_DIAGNOSTICS" in js,'guided data diagnostic runtime API missing')
 need("function evaluateChoice(caseId,stepIndex,choiceIndex)" in js,'guided diagnostics must expose deterministic structured answer evaluation')
-need("open:openHome,openMaths,openGuidedCases:renderGuidedHome,evaluateChoice" in js,'Maths and structured answer evaluators must be exported on the guided diagnostic runtime API')
-for marker in ['Process data lab','function renderHome()','function renderGuidedHome()','data-pdlab-guided','data-pdlab-50','data-pdlab-atlas','data-pdlab-csv','data-pdlab-saved','data-pd-practice']:
-    need(marker in js,f'process-data lab route missing: {marker}')
-need('ensureNav' not in js and 'patchMobileMore' not in js,'process-data lab must not create duplicate navigation entries')
-need("without scraping rendered CSS or score text" in js,'structured answer API privacy/analytics boundary missing')
-need("outside the formal assessment bank" in js,'guided cases must remain explicitly outside formal assessment')
+diagnostics_api=js[js.index('window.MM_PROCESS_DATA_DIAGNOSTICS='):js.index('window.MM_INJECTION_MOULDING_MATHS=')]
+need('cases:DATASETS.map' in diagnostics_api and 'evaluateChoice' in diagnostics_api,'retained process evidence records and evaluator must remain in the app')
+need('open:' not in diagnostics_api and 'openMaths' not in diagnostics_api and 'datasets:DATASETS' in diagnostics_api,'retained Process Data API must expose records without a screen route')
+need('function ensureMathSection()' in js and 'window.MM_INJECTION_MOULDING_MATHS' in js,'injection moulding maths must remain in its independent view')
+need('function install(){ensureMathStyles();const host=ensureMathSection();' in js,'module installation must register Maths only, not Process Data')
+need('function handleClick(' not in js and 'function ensureSection(' not in js and "getElementById('processDataLabs')" not in js,'Process Data view and click handlers must be absent')
+need('function evaluateChoice(caseId,stepIndex,choiceIndex)' in js,'retained evaluator must stay structured and independent from any screen')
+need('function renderHome(' not in js and 'function renderGuidedHome(' not in js and 'data-pdlab-' not in js,'guided Process Data screen renderers and launchers must be removed')
+need("outside the formal assessment bank" in js,'retained evidence records must remain outside formal assessment')
 need('fetch(' not in js,'guided process-data module must remain local-only')
-need("localStorage.getItem(k)===payload" in js and "Progress could not be saved on this device." in js and "progress not saved" in js,'guided process-data persistence must verify writes and surface unsaved progress')
+need("localStorage.getItem(k)===payload" in js and "Progress could not be saved on this device." in js,'retained learner-scoped maths progress must verify writes and surface storage failure')
 need("return id?String(id):null" in js and "requires an active learner before persistence" in js,'guided process-data progress must not create a shared anonymous learner bucket')
 for forbidden in ['MM_DATA.exams=', 'regionalQuestions=', 'MM_EVIDENCE_APPROVAL.records=', 'question_bank_version=', 'correctIndex=']:
     need(forbidden not in js,f'guided data diagnostics must not mutate formal assessment truth: {forbidden}')
@@ -98,4 +101,4 @@ need('../../process-data-diagnostics.js' in froms,'guided data diagnostics missi
 need('../../src/domains' in froms,'desktop package must bundle the current domain runtime tree')
 need("'process-data-diagnostics.js'" in text('desktop/electron/scripts/generate-integrity.cjs'),'guided data diagnostics missing from desktop integrity manifest')
 
-print(f'MouldMaster guided process-data diagnostics QA passed (14/14 canonical datasets; structured deterministic answer evaluation for local analytics; descriptive statistics service with missingness-safe sequence logic and fail-closed signal semantics; local-only; coherent runtime={runtime_asset})')
+print(f'MouldMaster retained evidence data QA passed (14/14 canonical datasets retained; no Process Data screen route; independent injection maths; descriptive statistics remain local-only; coherent runtime={runtime_asset})')

@@ -15,17 +15,18 @@ need(p.returncode==0,'local process-data intake syntax error: '+(p.stderr or p.s
 body=text(MODULE)
 need('attachLauncher' not in body and 'data-pdi-launch' not in body and 'originalOpen=BASE.open.bind(BASE)' not in body,'local intake must not inject a duplicate process-data launcher')
 for marker in [
-    "VERSION='2026.11.08.1'",'Prepare shot data without uploading it','pseudonymisation','not guaranteed anonymisation',
-    'Raw file contents stay in memory only','Export prepared CSV','Export data dictionary','Download CSV template',
-    'shot_index','direct/person identifier','operational identifier replaced with stable per-file alias','numeric process/quality signal',
-    'unknown labels aliased per file','MM_PROCESS_DATA_LOCAL_INTAKE','MAX_ROWS=50000','operator_id','employee_id',
-    'Sequence review required','Sequence check','sourceShotIndex','timestampChecks','strictly increasing','structured measurement unit',
-    'explicitOperationalIdentifier','ALIAS_ID_TOKEN_RE','ALIAS_EXACT_RE','enforceRowLimit','rejected rather than silently truncated',
-    'invalidNumericValues','invalidNumericByColumn','omitted rather than converted to NaN','unterminated quoted field','Structurally malformed CSV',
-    'Object.create(null)','MAX_FILE_BYTES=50*1024*1024','MAX_TEXT_CHARS=50*1024*1024','MAX_COLUMNS=512',
-    'Number(file.size)>MAX_FILE_BYTES','raw.length>MAX_TEXT_CHARS','headerWidth>MAX_COLUMNS'
+    "VERSION='2026.11.08.1'",'function parseCsv(text)','function prepare(parsed)','function sequenceAudit(headers,rows)',
+    'shot_index','direct/person identifier','stable per-file alias','numeric process/quality signal','unknown labels aliased per file',
+    'MM_PROCESS_DATA_LOCAL_INTAKE','MAX_ROWS=50000','operator_id','employee_id','sourceShotIndex','timestampChecks',
+    'strictlyIncreasing','structured measurement unit','explicitOperationalIdentifier','ALIAS_ID_TOKEN_RE','ALIAS_EXACT_RE',
+    'enforceRowLimit','rejected rather than silently truncated','invalidNumericValues','invalidNumericByColumn',
+    'omitted rather than converted to NaN','unterminated quoted field','Structurally malformed CSV','Object.create(null)',
+    'MAX_FILE_BYTES=50*1024*1024','MAX_TEXT_CHARS=50*1024*1024','MAX_COLUMNS=512',
+    'pseudonymised/prepared data','no upload/storage/machine control'
 ]:
-    need(marker in body,f'local intake marker missing: {marker}')
+    need(marker in body,f'retained CSV data API marker missing: {marker}')
+need('function render(' not in body and 'function host(' not in body and 'document.' not in body and 'addEventListener' not in body,'local CSV screen and DOM handlers must be removed')
+need('open:' not in body and 'openLibrary' not in body,'local CSV data API must not expose retired screens')
 for forbidden in ['fetch(', 'XMLHttpRequest', 'WebSocket', 'localStorage', 'sessionStorage', 'indexedDB', 'MM_DATA.exams=', 'correctIndex=', 'regionalQuestions=']:
     need(forbidden not in body,f'local intake must not upload/persist raw data or mutate formal assessment: {forbidden}')
 need('no upload/storage/machine control' in body.lower(),'local intake must preserve explicit no-upload/no-storage/no-control scope')
@@ -34,9 +35,7 @@ need("row[rule.key]=v===''?'':Number(v)" not in body,'predominantly numeric colu
 
 node=f"""
 const fs=require('fs'),vm=require('vm');
-global.window={{MM_PROCESS_DATA_DIAGNOSTICS:{{open(){{}}}}}};
-global.document={{getElementById(){{return null;}},createElement(){{return {{}};}},body:{{appendChild(){{}}}},head:{{appendChild(){{}}}}}};
-global.requestAnimationFrame=f=>f();
+global.window={};
 vm.runInThisContext(fs.readFileSync({json.dumps(str(ROOT/MODULE))},'utf8'),{{filename:{json.dumps(MODULE)}}});
 const api=window.MM_PROCESS_DATA_LOCAL_INTAKE;
 const csv='timestamp,machine,mould,material_grade,material_lot,operator_id,customer_name,fill_time_s,cycle_time_s,cushion_mm,peak_cavity_pressure_mpa,mould_temp_c,machine_pressure_mpa,resin_moisture_ppm,quality_result,defect_code,comment\\n2026-08-26T10:00:00Z,IMM-A,Tool-X,PA66-GF30,LOT-SECRET,Alice-17,Customer One,1.20,28.4,4.5,83.2,45,72,320,PASS,WELD-LINE-SECRET,first shot\\n2026-08-26T10:00:30Z,IMM-A,Tool-X,PA66-GF30,LOT-SECRET,Bob-22,Customer One,1.24,28.7,4.4,84.1,46,74,330,FAIL,BURN-SECRET,second shot\\n';
@@ -163,10 +162,11 @@ need('no upload/storage/machine control' in r['scope'].lower(),'runtime scope mu
 
 privacy=text('privacy.html').lower()
 for marker in [
-    'local process-data files','does not intentionally upload the raw file','operator/person fields',
-    'pseudonymisation, not guaranteed anonymisation','review prepared files before sharing','raw process-data files'
+    'retained local process evidence','process data intake, analysis and practice screens have been removed',
+    'mouldmaster-process-data-v1','does not migrate, upload or delete these records',
+    'clear the mouldmaster app/site storage','raw process-data files'
 ]:
-    need(marker in privacy,f'privacy notice must disclose local process-data intake behavior: {marker}')
+    need(marker in privacy,f'privacy notice must disclose retained process-data behavior: {marker}')
 
 capture=text('sources/REAL_PROCESS_DATA_INTAKE.md')
 for marker in ['Preferred capture hierarchy','Intervention record','Data-quality checks before analysis','Privacy and confidentiality','Engineering boundary']:

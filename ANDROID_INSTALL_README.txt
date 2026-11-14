@@ -72,7 +72,7 @@ Chrome's installed PWA uses browser speech for Book narration. Use the dedicated
 UPDATE / OFFLINE DESIGN
 - index.html is a direct bootstrap; it does not rely on service-worker text rewriting to pretend the source is current.
 - The service worker caches the exact unversioned application URLs requested by the bootstrap and uses ignoreSearch only as a compatibility fallback.
-- The audited core app, assessment/training layers, canonical app shell, Mould Master evidence casebook, Diagnostic Learning Labs, Material Behaviour Labs, guided process-data practice, lesson-to-practice curriculum integration, all 20 optional specialist lessons, local learner analytics, evidence-approval/maturity layers, reference browser/data, privacy/support pages, manifest, icons and version metadata are cached for offline use after a successful install/update.
+- The audited core app, assessment/training layers, canonical app shell, Mould Master evidence casebook, Diagnostic Learning Labs, Material Behaviour Labs, lesson-to-practice curriculum integration, all 20 optional specialist lessons, local learner analytics, evidence-approval/maturity layers, retained process-data/source records, reference browser/data, privacy/support pages, manifest, icons and version metadata are cached for offline use after a successful install/update. The Process Data intake, analysis and practice screens are retired.
 - Navigation is network-first while online and only a root/index response can refresh the cached bootstrap, preventing another HTML page from replacing the offline shell.
 - Learner progress remains in the browser/app profile during application updates.
 
