@@ -171,7 +171,7 @@ test('Home keeps one primary lesson decision, Book resume and one specialist too
       focusBottom:focus.bottom,bookTop:book.top,bookBottom:book.bottom,toolsTop:tools.top,navTop:nav.top
     };
   });
-  // Compact phone Toolbox intentionally uses one column for two retained actions.
+  // Compact phone Toolbox keeps the single optional route in one column.
   expect(phone.actions).toBe(1);
   await expect(tools.locator('[data-mm-home-action]')).toHaveCount(1);
   expect(phone.focused).toBe('mould-master');
@@ -197,7 +197,7 @@ test('Home keeps one primary lesson decision, Book resume and one specialist too
 
   await page.setViewportSize({width:1440,height:900});
   await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
-  expect(await page.locator('#dashboard .mm-home-balance-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(/\s+/).filter(Boolean).length)).toBe(2);
+  expect(await page.locator('#dashboard .mm-home-balance-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(/\s+/).filter(Boolean).length)).toBe(1);
 });
 
 test('Home Book card switches from start to learner-scoped Keep Reading state',async({page})=>{
