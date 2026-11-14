@@ -3,9 +3,9 @@
   "masterIssue": 632,
   "release": "2026.11.14.3",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "2e4e85b20578d63d9703f7676a1868a9bd119932",
+  "candidateSourceSha": "242f490ef2b9fc97dbd3641e98a760b53a7d5e65",
   "scope": "Retire the Process Data learner screens and duplicate entry points while preserving all 17 measured-evidence source families, data helpers and locally stored process evidence; keep injection-moulding Maths as its own page.",
-  "approvalBoundary": "PASS \u2014 release 2026.11.14.3 exact-source software candidate, runtime artifact and automated browser/question checks are verified. This is a software-only result. The seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider streams remain HOLD. Production authority remains advisory-only.",
+  "approvalBoundary": "PASS \u2014 release 2026.11.14.3 exact-source software candidate, runtime artifact and automated browser/question checks are verified for source 242f490ef2b9fc97dbd3641e98a760b53a7d5e65. This is a software-only result. The seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider streams remain HOLD. Production authority remains advisory-only.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,

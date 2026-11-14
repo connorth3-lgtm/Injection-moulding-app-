@@ -12,9 +12,9 @@ The Process Data intake, analysis and practice screens are retired. All 17 gover
 
 **Technical candidate:** **PASS — software-only**
 
-- Candidate producer: Pre-merge Public Candidate run `43547591274`; retained artifact `14094364461` (`sha256:77051af054b38224d2afec0be30629ef129dbd7a2cd001280407fd1ef99b621b`), expires `2027-02-12T02:40:21Z`.
-- source `2e4e85b20578d63d9703f7676a1868a9bd119932`; runtime fingerprint `sha256:5f8e198fb25d908e00f46456d73029bd822612f4b3513a7083d5c2123199f2ad`.
-- Mobile Browser QA run `43547591088` and Question Quality 50-Pass run `43547591070` passed on the exact source.
+- Candidate producer: Pre-merge Public Candidate run `43550875834`; retained artifact `14096005944` (`sha256:a3482b93e12d73e9134b8ac63150bf2f7a3588d9970b83307ab076e5436ee863`), expires `2027-02-12T03:17:41Z`.
+- source `242f490ef2b9fc97dbd3641e98a760b53a7d5e65`; runtime fingerprint `sha256:99e603a595f642cef824cf8b22e6eef2e74f636930e86821e05a1cac7c1c1336`.
+- Mobile Browser QA run `43550875958` and Question Quality 50-Pass run `43550875895` passed on the exact source.
 - This software-only pass does not satisfy any independent review stream.
 
 All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain **HOLD**.
