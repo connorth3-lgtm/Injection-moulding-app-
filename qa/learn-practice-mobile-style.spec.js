@@ -255,7 +255,7 @@ for(const width of [360,412]){
   await expect(practice.locator('[data-mm-hub-action="process-data"]')).toHaveCount(0);
   await expect(practice.locator('[data-mm-practice-query], #mmPracticeToolResults, [data-mm-practice-count]')).toHaveCount(0);
   if(width===412)await page.screenshot({path:'qa-artifacts/pr640-tidy-practice-412x915.png',animations:'disabled'});
-  const mathsTab=page.locator('.mobile-nav > button[data-view="maths"]');
+  const mathsTab=page.locator('.mobile-nav > button[data-mm-registry-primary-nav="maths"]');
   await expect(mathsTab).toBeVisible();
   await mathsTab.click();
   await expect(page.locator('#mmInjectionMouldingMaths')).toBeVisible();

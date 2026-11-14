@@ -267,16 +267,11 @@ for marker in ("MouldMaster Release QA","MouldMaster Domain Foundation QA","Deep
 need("pull_request:\n    branches: [main]\n  workflow_dispatch:" in domain_workflow, "Domain Foundation QA must run on every pull request to main")
 
 process_data_runtime = text("data-integration-runtime.js")
-need("function esc(v)" in process_data_runtime, "connected process-data runtime lost its explicit HTML escaping boundary")
-for marker in (
-    "esc(d.datasetMeta?.source_label||d.id)",
-    "esc(d.entities?.machine||'machine not linked')",
-    "esc(d.entities?.mould||'mould not linked')",
-    "esc(link?.materialGrade||'')",
-    "esc(link?.intervention||'')",
-    "esc(x.title)",
-):
-    need(marker in process_data_runtime, f"connected process-data HTML sink lost escaping: {marker}")
+need("function linkCase" in process_data_runtime, "connected process-data runtime lost local case-link persistence")
+need("const DB_NAME='mouldmaster-process-data-v1'" in process_data_runtime, "connected process-data runtime changed the retained IndexedDB identity")
+need("db.createObjectStore('interventions'" in process_data_runtime, "connected process-data runtime lost the retained interventions store")
+need("innerHTML" not in process_data_runtime and "insertAdjacentHTML" not in process_data_runtime,
+     "data-only connected process-data runtime must not contain retired UI HTML rendering sinks")
 
 book_runtime = text("src/domains/learning/book-runtime.js")
 activity_events = text("src/domains/learning/activity-events-v2.js")
