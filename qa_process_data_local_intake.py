@@ -20,7 +20,7 @@ for marker in [
     'MM_PROCESS_DATA_LOCAL_INTAKE','MAX_ROWS=50000','operator_id','employee_id','sourceShotIndex','timestampChecks',
     'strictlyIncreasing','structured measurement unit','explicitOperationalIdentifier','ALIAS_ID_TOKEN_RE','ALIAS_EXACT_RE',
     'enforceRowLimit','rejected rather than silently truncated','invalidNumericValues','invalidNumericByColumn',
-    'omitted rather than converted to NaN','unterminated quoted field','Structurally malformed CSV','Object.create(null)',
+    'omitted and reported by column rather than converted to NaN','unterminated quoted field','Structurally malformed CSV','Object.create(null)',
     'MAX_FILE_BYTES=50*1024*1024','MAX_TEXT_CHARS=50*1024*1024','MAX_COLUMNS=512',
     'pseudonymised/prepared data','no upload/storage/machine control'
 ]:
