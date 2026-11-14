@@ -79,4 +79,217 @@ const CORE=[
   './src/domains/learning/book-data/book-claim-resolution-all-v1.json',
   './src/domains/learning/book-data/book-authored-foundations-v1.json',
   './src/domains/learning/book-data/book-evidence-registry-v1.json',
-  './src/domains/learning/book-data/book-chapters
+  './src/domains/learning/book-data/book-chapters-materials-machine-v1.json',
+  './src/domains/learning/book-data/book-authored-remaining-v1.json',
+  './src/domains/learning/book-data/book-worked-engineering-cases-v1.json',
+  './src/domains/learning/book-data/book-engineering-diagrams-v1.json',
+  './assets/book-diagrams/cavity-pressure-cycle.svg',
+  './assets/book-diagrams/fountain-flow.svg',
+  './assets/book-diagrams/gate-seal.svg',
+  './assets/book-diagrams/ejection-draft.svg',
+  './assets/book-diagrams/weld-line-formation.svg',
+  './assets/book-diagrams/fibre-orientation-layers.svg',
+  './assets/book-diagrams/capability-limits.svg',
+  './assets/book-diagrams/dimensional-conditioning.svg',
+  './assets/book-diagrams/complex-diagnostics-evidence-ledger.svg',
+  './src/domains/learning/book-data/book-evidence-enrichment-v2.json',
+  './src/domains/learning/book-data/book-claim-evidence-reference-v1.json',
+  './src/domains/learning/book-data/book-reader-architecture-v2.json',
+  './src/domains/learning/book-data/book-editorial-expansion-review-v1.json',
+  './src/domains/learning/book-data/book-material-grade-atlas-v1.json',
+  './src/domains/learning/book-data/book-material-regional-evidence-v1.json',
+  './src/domains/learning/book-data/book-material-search-index-v1.json',
+  './src/domains/learning/book-data/nzqa-education-readiness-v1.json',
+  './src/domains/learning/book-data/nzqa-provider-evidence-templates-v1.json',
+  './src/domains/learning/book-data/education-course-packs-v1.json',
+  './src/domains/quality/data/quality-management-iso9001-v1.json',
+  './src/domains/materials/material-registry.js',
+  './src/domains/materials/material-search-index.js',
+  './src/domains/materials/material-search-pagination.js',
+  './src/domains/materials/material-observation-v2.js',
+  './src/domains/process/evidence-granularity.js',
+  './src/domains/learning/content-intelligence.js',
+  './src/domains/process/process-statistics.js',
+  './src/domains/process/process-data-integrity.js',
+  './src/domains/shell/accessibility-loader.js',
+  './src/domains/shell/mission-control.js',
+  './src/domains/shell/product-areas.js',
+  './src/domains/shell/learner-ui-polish.js',
+  './src/domains/shell/learner-ui-polish.css',
+  './assets/book-diagrams/machine-mould-system-overview.svg',
+  './assets/book-diagrams/cycle-timeline.svg',
+  './assets/book-diagrams/vp-transfer.svg',
+  './assets/book-diagrams/polymer-family-evidence-map.svg',
+  './assets/book-diagrams/runner-gate-flow-path.svg',
+  './assets/book-diagrams/rheology-shear-temperature.svg',
+  './assets/book-diagrams/surface-defect-source-map.svg',
+  './assets/book-diagrams/cooling-circuit-balance.svg',
+  './assets/book-diagrams/diagnostic-hypothesis-tree.svg',
+  './assets/book-diagrams/plasticising-sequence.svg',
+  './assets/book-diagrams/shrinkage-warpage.svg',
+  './assets/book-diagrams/filling-boundary-pattern-map.svg',
+  './assets/book-diagrams/doe-interaction.svg',
+  './assets/book-diagrams/multicavity-balance.svg',
+  './assets/book-diagrams/thermal-gradient-wall.svg',
+  './assets/book-diagrams/process-baseline-evidence-package.svg',
+  './material-catalog-v1.json',
+  './learning-analytics.js',
+  './src/domains/shell/accessibility-hardening.js',
+  './src/domains/runtime-packs/shell-finalization-runtime-pack.js',
+  './src/domains/governance/production-health.js',
+  './data-integration-runtime.js',
+  './process-data-semantic-registry.json',
+  './current-data-manifest.json',
+  './repair.html',
+  './privacy.html',
+  './support.html'
+];
+
+const OPTIONAL=[
+  './src/domains/runtime-packs/bootstrap-assessment-source-runtime-pack.js',
+  './src/domains/runtime-packs/evidence-runtime-pack.js',
+  './source-library.js',
+  './reference-data.js',
+  './reference-deep-dive.js',
+  './src/domains/research/reference-research-extension.js',
+  './src/domains/research/reference-20x-extension.js',
+  './reference-2026-expansion.js',
+  './src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js',
+  './src/domains/runtime-packs/assessment-multimodal-runtime-pack.js',
+  './src/domains/runtime-packs/learning-process-diagnostics-runtime-pack.js',
+  './src/domains/runtime-packs/curriculum-workspace-runtime-pack.js',
+  './src/domains/runtime-packs/process-data-runtime-pack.js',
+  './assessment-ux.css',
+  './measured-learning-library.js',
+  './measured-learning-library.css',
+  './data/measured-learning/promoted-v1.json',
+  './data/measured-learning/manifest-v1.json',
+  './data/measured-learning/expansion-manifest-v2.json',
+  './data/measured-learning/v2-policy.json',
+  './data/measured-learning/source-readiness-v2.json',
+  './reference-data.html',
+  './materials.html',
+];
+const RELEASE_ASSETS=[...new Set([...CORE,...OPTIONAL])];
+const RELEASE_PATHS=new Set(RELEASE_ASSETS.map(asset=>new URL(asset,self.registration.scope).pathname));
+const LEGACY_CORE_PATH=new URL('./MouldMaster_Core_App.html',self.registration.scope).pathname;
+// Public provenance files are network-only so health checks cannot read stale learner-runtime cache bytes.
+const PUBLIC_METADATA_PATHS=new Set([
+  new URL('./deployment.json',self.registration.scope).pathname,
+  new URL('./pages-manifest.json',self.registration.scope).pathname,
+  new URL('./service-worker.js',self.registration.scope).pathname
+]);
+
+async function cacheAsset(cache,url){
+  const request=new Request(url,{cache:'reload'});
+  const response=await fetch(request);
+  if(!response||!response.ok)throw new Error(`${url} returned ${response?.status||'no-response'}`);
+  await cache.put(url,response.clone());
+  return url;
+}
+
+async function releaseCacheMatch(request){
+  const cache=await caches.open(STATIC_CACHE);
+  return await cache.match(request,{ignoreSearch:true});
+}
+
+self.addEventListener('install',event=>{
+  event.waitUntil((async()=>{
+    const cache=await caches.open(STATIC_CACHE);
+    const results=await Promise.allSettled(RELEASE_ASSETS.map(url=>cacheAsset(cache,url)));
+    const failed=results.map((x,i)=>x.status==='rejected'?RELEASE_ASSETS[i]:null).filter(Boolean);
+    if(failed.length){
+      await caches.delete(STATIC_CACHE);
+      throw new Error(`MouldMaster offline release update is incomplete; keeping the previous worker. Missing: ${failed.join(', ')}`);
+    }
+    // Deliberately do not call skipWaiting(). The complete new release waits until
+    // existing clients using the previous worker have left its scope, preventing an
+    // in-place controller swap over a document that is still executing old bytes.
+  })());
+});
+
+self.addEventListener('activate',event=>{
+  event.waitUntil((async()=>{
+    // Normal service-worker waiting semantics mean the previous active worker no
+    // longer has controlled clients when this runs, so its release cache can now be
+    // retired without breaking an older document that still depends on it.
+    const keys=await caches.keys();
+    await Promise.all(keys.filter(k=>k.startsWith('mouldmaster-static-')&&k!==STATIC_CACHE).map(k=>caches.delete(k)));
+    // Do not claim already-open uncontrolled documents. The new worker controls the
+    // next navigation, keeping controller changes aligned with a full document load.
+  })());
+});
+
+// Governed release bytes are immutable for the lifetime of the active worker. A
+// waiting worker may cache a newer generation in parallel, but the active worker
+// always reads from its own named cache rather than from the network or a global
+// caches.match() that could select another generation.
+async function fetchNetwork(event){
+  try{return await fetch(event.request,{cache:'no-store'})}catch(_){return null}
+}
+function criticalOfflineResponse(url){
+  const path=url.pathname.toLowerCase();
+  let type='text/plain; charset=utf-8',body='MouldMaster governed asset is unavailable offline. Reconnect and reopen the app to restore the validated release.\n';
+  if(path.endsWith('.json')){type='application/json; charset=utf-8';body=JSON.stringify({error:'mouldmaster-offline-asset-unavailable'})}
+  else if(path.endsWith('.js')){type='text/javascript; charset=utf-8';body='/* MouldMaster governed runtime asset is unavailable offline. Reconnect and reopen the app to restore the validated release. */\n'}
+  else if(path.endsWith('.css')){type='text/css; charset=utf-8';body='/* MouldMaster governed stylesheet is unavailable offline. Reconnect and reopen the app to restore the validated release. */\n'}
+  else if(path.endsWith('.html')){type='text/html; charset=utf-8';body='<!doctype html><meta charset="utf-8"><title>MouldMaster asset unavailable</title><p>MouldMaster governed content is unavailable offline. Reconnect and reopen the app to restore the validated release.</p>'}
+  else if(path.endsWith('.webmanifest')){type='application/manifest+json; charset=utf-8';body=JSON.stringify({error:'mouldmaster-offline-asset-unavailable'})}
+  else if(path.endsWith('.svg')){type='image/svg+xml; charset=utf-8';body='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1 1"><title>MouldMaster governed asset unavailable</title></svg>'}
+  else if(path.endsWith('.png')){type='image/png';body=''}
+  return new Response(body,{status:503,headers:{'Content-Type':type,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
+}
+function unlistedRuntimeResponse(url){
+  if(url.pathname.endsWith('.json'))return new Response(JSON.stringify({error:'mouldmaster-unlisted-runtime-asset'}),{status:503,headers:{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'}});
+  return new Response('/* MouldMaster blocked an unlisted same-origin runtime asset to prevent mixed-version execution. */\n',{status:503,headers:{'Content-Type':'text/javascript; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})
+}
+function offlineDocumentResponse(){
+  return new Response('<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>MouldMaster offline</title><main style="font:16px system-ui;padding:24px;max-width:680px"><h1>MouldMaster is not fully installed offline yet</h1><p>Reconnect once and reopen the app. The complete offline release installs atomically before a new worker can replace the previous validated cache.</p></main>',{status:503,headers:{'Content-Type':'text/html; charset=utf-8','Cache-Control':'no-store'}});
+}
+
+self.addEventListener('fetch',event=>{
+  if(event.request.method!=='GET')return;
+  const url=new URL(event.request.url);
+  if(url.origin!==self.location.origin)return;
+
+  if(event.request.mode==='navigate'){
+    event.respondWith((async()=>{
+      const indexRequest=new Request(new URL('./index.html',self.registration.scope));
+      const index=await releaseCacheMatch(indexRequest);
+      // MouldMaster_Core_App.html remains a governed assembly/recovery dependency,
+      // not a supported learner-facing web entry point. Once the current PWA owns
+      // navigation, direct requests are contained by the hardened index shell.
+      if(url.pathname===LEGACY_CORE_PATH)return index||offlineDocumentResponse();
+      const exact=await releaseCacheMatch(event.request);
+      if(exact)return exact;
+      return index||offlineDocumentResponse();
+    })());
+    return;
+  }
+
+  if(RELEASE_PATHS.has(url.pathname)){
+    event.respondWith((async()=>{
+      const cached=await releaseCacheMatch(event.request);
+      if(cached)return cached;
+      return criticalOfflineResponse(url);
+    })());
+    return;
+  }
+
+  if(PUBLIC_METADATA_PATHS.has(url.pathname)){
+    event.respondWith((async()=>{
+      const response=await fetchNetwork(event);
+      if(response&&response.ok)return response;
+      return criticalOfflineResponse(url);
+    })());
+    return;
+  }
+
+  const runtimeCritical=url.pathname.endsWith('.js')||url.pathname.endsWith('.json');
+  if(runtimeCritical){
+    event.respondWith(unlistedRuntimeResponse(url));
+    return;
+  }
+
+  event.respondWith((async()=>await fetchNetwork(event)||new Response('MouldMaster asset unavailable offline',{status:503,headers:{'Content-Type':'text/plain; charset=utf-8','Cache-Control':'no-store'}}))());
+});

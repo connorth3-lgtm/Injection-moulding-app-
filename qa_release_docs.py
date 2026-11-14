@@ -61,4 +61,775 @@ need('qa_evidence_coverage.py' in readme,'README must list mechanism evidence co
 need('qa_mechanism_promotion.py' in readme,'README must list mechanism promotion QA')
 need('qa_specialist_evidence_gaps.py' in readme,'README must list specialist evidence-status QA')
 need('qa_app_shell_registry.py' in readme,'README must list canonical app-shell QA')
-need('qa_mould_master_workspace.py' in readme,'README must list Mould Ma
+need('qa_mould_master_workspace.py' in readme,'README must list Mould Master workspace QA')
+need('qa_process_data_integrity.cjs' in readme,'README must list process-data integrity regression QA')
+need('120 core lessons' in readme and '20 lessons total' in readme and 'S13–S20' in readme,'README must describe current 120-core / 20-optional specialist curriculum boundary')
+need('learner completion never promotes evidence maturity' in readme,'README must preserve learner-completion/evidence-maturity separation')
+need(V.get('desktop_release_tag')==f"desktop-v{V['desktop_release']}",'desktop release tag/version mismatch')
+need(V.get('desktop_release_url')==f"https://github.com/{V['repository']}/releases/tag/{V['desktop_release_tag']}",'desktop release URL/tag mismatch')
+
+pkg=json.loads(text('desktop/electron/package.json'))
+lock=json.loads(text('desktop/electron/package-lock.json'))
+release_parts=[str(int(x)) for x in V['desktop_release'].split('.')]
+need(pkg.get('version')=='.'.join(release_parts[:3]),'desktop package version must match desktop_release')
+need(str(pkg.get('build',{}).get('buildNumber'))==release_parts[3],'desktop buildNumber must match desktop_release fourth component')
+need(pkg.get('build',{}).get('buildVersion')=='.'.join(release_parts),'desktop buildVersion must match desktop_release')
+
+# Electron 45 is an explicit supported-platform decision, not just a package bump.
+need(pkg.get('devDependencies',{}).get('electron')=='45.2.1','desktop runtime must remain pinned to reviewed Electron 45.2.1')
+need(lock.get('packages',{}).get('',{}).get('devDependencies',{}).get('electron')=='45.2.1','desktop lock must resolve reviewed Electron 45.2.1')
+electron_support=text('desktop/electron/ELECTRON_45_SUPPORT.md')
+for marker in [
+ 'Electron `45.2.1`',
+ 'Windows 10/11, 64-bit only',
+ 'GitHub portable/NSIS validation lane is x64',
+ 'Microsoft Store MSIX lane packages x64 and arm64',
+ 'Windows ia32 is not a supported MouldMaster target',
+ 'sandboxed preload scripts',
+ 'display-capture',
+ 'setPermissionRequestHandler',
+ 'setWindowOpenHandler',
+ 'https://www.electronjs.org/blog/electron-45-0',
+ 'https://releases.electronjs.org/release/v45.2.1',
+ 'https://releases.electronjs.org/schedule',
+]:
+    need(marker in electron_support,f'Electron 45 support policy missing marker: {marker}')
+
+desktop_readme=text('desktop/electron/README.md')
+for marker in ['Electron 45.2.1','Windows 10/11 64-bit','ELECTRON_45_SUPPORT.md','127.0.0.1:43139']:
+    need(marker in desktop_readme,f'desktop README Electron 45/stable-origin marker missing: {marker}')
+
+# The manual retirement guide is release evidence too. Keep its human test target
+# tied to version.json so a desktop release bump cannot leave operators testing stale bytes.
+real_windows_validation=text('desktop/electron/REAL_WINDOWS_VALIDATION.md')
+desktop_build_version='.'.join(release_parts)
+for marker in [
+    f"Target release family: open desktop `{V['desktop_release']}`",
+    f"`MouldMaster-Academy-{desktop_build_version}-x64.exe`",
+    f"displayed desktop release is `{V['desktop_release']}`",
+]:
+    need(marker in real_windows_validation,f'real Windows validation guide stale/missing: {marker}')
+need('2026.08.26.5' not in real_windows_validation and '2026.8.26.5' not in real_windows_validation,'real Windows validation guide still targets superseded desktop .5 bytes')
+
+privileged_parts=[]
+for folder in [ROOT/'desktop/electron/src', ROOT/'desktop/electron/scripts']:
+    for path in sorted(folder.rglob('*')):
+        if path.is_file() and path.suffix in {'.cjs','.js'}:
+            privileged_parts.append(path.read_text(encoding='utf-8'))
+privileged_code='\n'.join(privileged_parts)
+for token in ['clipboard', 'net.request', 'select-client-certificate', 'setLoginItemSettings',
+              'setImmediate', 'clearImmediate', "require('events')", 'require("events")',
+              "require('timers')", 'require("timers")', "require('url')", 'require("url")']:
+    need(token not in privileged_code,f'Electron 45 affected API introduced without compatibility review: {token}')
+need(re.search(r'\bBuffer\b',privileged_code) is None,'Electron 45 removed sandboxed-preload Buffer global introduced without compatibility review')
+store_workflow=text('.github/workflows/microsoft-store-msix.yml')
+need('node scripts/run-msix-builder.cjs --win msix --x64 --arm64' in store_workflow,'Store MSIX lane must preserve x64+arm64 Electron 45 targets')
+need('--ia32' not in store_workflow,'Store MSIX lane must not reintroduce removed Electron 45 ia32 targeting')
+
+android=text('ANDROID_INSTALL_README.txt')
+need('https://connorth3-lgtm.github.io/Injection-moulding-app-/preview/' in android,
+     'Android install guide must point learners to the hosted non-production preview')
+need('mouldmaster-android-debug' in android and 'android/README.md' in android,
+     'Android install guide must distinguish the native debug app from the browser PWA')
+need('production root remains release-held' in android and 'GitHub Pages Actions workflow' in android,
+     'Android install guide must preserve the production-root release boundary')
+need('Chrome\'s installed PWA uses browser speech' in android and 'native Android app' in android,
+     'Android install guide must distinguish browser speech from native app narration')
+for marker in [
+ 'assessment-storage-scope.js','src/domains/assessment/assessment-final-hardening.js','assessment-evidence-sources.js','assessment-evidence-approval.js',
+ 'src/domains/research/reference-20x-extension.js','diagnostic-learning-labs.js','material-behaviour-labs.js','process-data-diagnostics.js',
+ 'learning-experience.js','curriculum-integration.js','specialist-curriculum.js','src/domains/learning/specialist-evidence-gap-extension.js','learning-analytics.js',
+ 'src/domains/shell/app-shell-registry.js','mould-master-workspace.js','src/domains/shell/app-shell-finalize.js',
+ 'evidence-maturity-deep-dive.js','evidence-maturity-formal-bridge.js','lesson-evidence-depth.js','privacy.html','support.html']:
+    need(marker in android,f'Android install inventory missing: {marker}')
+for label,k in [('Android/PWA shell','android_release'),('Training content','content_version'),('Audited question bank','question_bank_version'),('Assessment quality / analytics hardening','assessment_quality_version'),('Learner-scoped assessment storage','assessment_storage_scope_version'),('Question evidence approval','assessment_evidence_version')]:
+    need(f'{label}: {V[k]}' in android,f'Android install version stale/missing: {label}')
+need('stable question IDs independent of content-release wording' in android,'Android assessment-ID description is stale')
+need('All 157 keyed learner questions' in android,'Android evidence-approval question count is stale')
+need('120 core lessons' in android and '20 optional specialist lessons total' in android,'Android curriculum boundary is stale')
+need('S13-S20 evidence maturity is registry-controlled' in android,'Android specialist evidence-status boundary missing')
+need('Mould Master troubleshooting cases are learner-scoped' in android,'Android Mould Master local evidence boundary missing')
+
+upload=text('UPLOAD_README.txt')
+need('LEGACY WINDOWS RECOVERY FEED' in upload,'Windows upload instructions must identify the recovery-only lane')
+for label,k in [('CURRENT LEGACY RECOVERY CONTENT','windows_recovery_release'),('CURRENT PWA TRAINING CONTENT','content_version'),('CURRENT AUDITED QUESTION BANK','question_bank_version'),('CURRENT ASSESSMENT QUALITY / ANALYTICS HARDENING','assessment_quality_version'),('LEARNER-SCOPED ASSESSMENT STORAGE','assessment_storage_scope_version')]:
+    need(re.search(re.escape(label)+r'\s*\n'+re.escape(V[k]),upload),f'Windows recovery doc version stale/missing: {label}')
+need('must NOT be silently inserted into this legacy feed' in upload,'recovery/PWA lane separation warning missing')
+
+support=text('support.html')
+learner_ui=text('src/domains/shell/learner-ui-polish.js')
+for k,id_ in {'web_release':'mmPwa','desktop_release':'mmDesktop','content_version':'mmContent','question_bank_version':'mmBank','assessment_quality_version':'mmQuality','assessment_storage_scope_version':'mmScope','assessment_evidence_version':'mmEvidence','windows_recovery_release':'mmRecovery'}.items():
+    need(f'id="{id_}">{V[k]}' in support,f'support fallback version stale: {k}')
+    need(f"{k}:'{id_}'" in support,f'support dynamic version mapping missing: {k}')
+need("fetch('./version.json',{cache:'no-store'})" in support,'support page must synchronise from version.json')
+need('MouldMaster GitHub Issues' in support and 'Do not post learner names' in support,'support contact/privacy warning missing')
+need('Learning insights events' in support and 'resets both analytics histories' in support,'support import analytics lifecycle disclosure is stale')
+for marker in ('Data &amp; Reset','mouldmaster-process-data-v1','mouldmaster-engineering-v2','Delete all local process-data evidence','Full erasure is reserved','browser/OS site-data controls'):
+    need(marker in support,f'support Data & Reset ownership map missing marker: {marker}')
+for marker in ['measured-assessment','process-diagnostics','Diagnostic Learning Lab','Material Behaviour Lab']:
+    need(marker in support,f'support backup/reset scope disclosure missing: {marker}')
+
+privacy=text('privacy.html')
+for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','Reset learner data','other local learner profiles','all local learner profiles','replaces the local learner registry','measured-assessment','process-diagnostics','Diagnostic Learning Lab','Material Behaviour Lab','10 MiB','Delete all local process-data evidence','mouldmaster-process-data-v1']:
+    need(marker in privacy,f'privacy disclosure missing: {marker}')
+need('scoped cleanup or clean learner write cannot be verified' in privacy,'privacy notice must disclose fail-closed learner-reset cleanup/write behavior')
+need('replaces the local learner registry after confirmation' in support,'support must disclose destructive backup registry replacement before import')
+need("support.html#data-reset" in learner_ui and "Data & Reset" in learner_ui,'Profile must link to the canonical Data & Reset guide')
+
+sw=text('service-worker.js')
+for marker in ["'./privacy.html'","'./support.html'","'./src/domains/runtime-packs/assessment-foundation-runtime-pack.js'","'./src/domains/runtime-packs/evidence-runtime-pack.js'","'./src/domains/runtime-packs/assessment-evidence-depth-runtime-pack.js'","'./src/domains/runtime-packs/curriculum-workspace-runtime-pack.js'","'./src/domains/shell/app-shell-registry.js'","'./src/domains/runtime-packs/shell-finalization-runtime-pack.js'"]:
+    need(marker in sw,f'offline compliance/runtime asset missing: {marker}')
+
+for name in ['README.md','ANDROID_INSTALL_README.txt','support.html','UPLOAD_README.txt']:
+    t=text(name);need('2026.08.23.10' not in t and '2026.08.23.5' not in t,f'stale August 23 release identifier remains in {name}')
+
+
+pwa_shell=text('src/domains/shell/pwa-shell.js')
+need('Android release ${RELEASE}' not in pwa_shell,'PWA shell must not relabel the independent Android lane with the web release')
+need('data-mm-android-pwa' not in pwa_shell,'retired Android/web label coupling must not return')
+
+visual=json.loads(text('qa/visual-regression-baseline.json'))
+need(re.fullmatch(r'[0-9a-f]{40}',str(visual.get('commit') or '')) is not None,'visual baseline commit must be an exact SHA')
+# The historical .4 ref was advanced by PR #526 after the owner-approved
+# baseline was locked. Fail closed on the *specific* immutable replacement:
+# all other releases still require their standard release-named ref.
+if visual.get('release')=='2026.10.09.4':
+    need(visual.get('ref')=='visual-baseline/2026.10.09.4-restored-immutable'
+         and visual.get('commit')=='fa27bd16525f8cb216654ea524649a3a37a3195c'
+         and visual.get('maxDiffPixels')==12,
+         '2026.10.09.4 visual baseline must remain bound to approved fa27bd16 at 12px')
+elif visual.get('release')=='2026.11.08.4':
+    # PR #697's owner-directed baseline preserves the previous .4 reference
+    # and pins the requested Learn/Practice consolidation to its exact source.
+    # Keep all 52 captures, four viewports, thirteen surfaces and the 12px limit.
+    review=text('qa/VISUAL_REVIEW_2026.11.08.4_PR697.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.08.4-pr697'
+         and visual.get('commit')=='ba7a48b1cee1fdf88accac1d91eb904ffa22f120'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'STATUS: OWNER VISUAL APPROVAL' in review
+         and '13607855703' in review
+         and '47 unchanged captures' in review,
+         '2026.11.08.4 PR #697 visual reference must remain immutable at its exact owner-authorized source, with 52 captures at 12px')
+elif visual.get('release')=='2026.11.11.4':
+    # PR #707 owner-directed Practice redesign: pin the exact requested layout source.
+    # Keep every viewport/surface and the strict 12px comparison boundary.
+    review=text('qa/VISUAL_REVIEW_2026.11.11.4_PR707.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.11.4'
+         and visual.get('commit')=='f4169ae6227d1e827cdf6ef9ebe0cb23db754b29'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'STATUS: OWNER VISUAL APPROVAL' in review
+         and '43139395342' in review
+         and '13908843044' in review
+         and '48 unchanged captures' in review,
+         '2026.11.11.4 PR #707 visual reference must stay pinned to its exact owner-authorized source with 52 captures at 12px')
+elif visual.get('release')=='2026.10.11.10':
+    # The owner approved Book-only speech chrome AFTER the earlier .10
+    # baseline became immutable. Fail closed on this uniquely pinned
+    # successor, not a mutable or arbitrary suffix.
+    need(visual.get('ref')=='visual-baseline/2026.10.11.10-book-only'
+         and visual.get('commit')=='7b22514e45bb17068736f8e76d4c63862d726f8d'
+         and visual.get('maxDiffPixels')==12
+         and len(visual.get('viewports',[]))==4
+         and len(visual.get('surfaces',[]))==13,
+         '2026.10.11.10 Book-only visual successor must remain bound to approved 7b22514e with all 52 checks at 12px')
+elif visual.get('release')=='2026.10.13.3':
+    # Owner explicitly approved only the six Book Listen layout and four preview
+    # notice screenshots from PR #627 exact SHA 352bf204ae77779d548bc77dcf8b0a63db2a84e1.
+    # Preserve the 52 locked viewports/surfaces and the 12px pixel limit.
+    need(visual.get('ref')=='visual-baseline/2026.10.13.3'
+         and visual.get('commit')=='352bf204ae77779d548bc77dcf8b0a63db2a84e1'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and '11857112997' in text('qa/VISUAL_REVIEW_2026.10.13.3_PR627.md')
+         and 'STATUS: OWNER VISUAL APPROVAL' in text('qa/VISUAL_REVIEW_2026.10.13.3_PR627.md'),
+         '2026.10.13.3 owner approved visual baseline must be immutable at exact 352bf204ae77779d548bc77dcf8b0a63db2a84e1 with all 52 captures and 12px')
+elif visual.get('release')=='2026.10.13.2':
+    # Owner explicitly approved ONLY the six visible Book Listen progress-counter
+    # differences (28/28/38/34/38/34px) shown in the exact-source 52-capture
+    # PR #626 review. The previous immutable .1 branch and all strict visual
+    # limits are retained. A new design would need a new visual decision.
+    need(visual.get('ref')=='visual-baseline/2026.10.13.2'
+         and visual.get('commit')=='602d597fa4575c9302e3ad9799fb3c58faa67965'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and '11792713708' in text('qa/VISUAL_REVIEW_2026.10.13.2_PR626.md')
+         and 'STATUS: OWNER VISUAL APPROVAL' in text('qa/VISUAL_REVIEW_2026.10.13.2_PR626.md'),
+         '2026.10.13.2 owner visual baseline must remain on the exact approved 602d597 source with all 52 captures at 12px')
+elif visual.get('release')=='2026.10.13.1':
+    # Owner inspected the 52-source-screenshot approval pack: 16 changed
+    # captures across the four viewports and 36 unchanged. Pin the exact
+    # source commit BEFORE the approval metadata and manifest were edited.
+    # A future runtime redesign requires a fresh owner visual decision and
+    # separately named immutable ref, not a moved pin or raised tolerance.
+    need(visual.get('ref')=='visual-baseline/2026.10.13.1'
+         and visual.get('commit')=='9a4b4776b171cf7cc413f6d67d351cd5207b9ee2'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and '52' in text('qa/VISUAL_REVIEW_2026.10.13.1_PR623.md'),
+         '2026.10.13.1 owner visual baseline must remain on exact approved 9a4b477 with 52 checks at 12px')
+else:
+    need(visual.get('ref')==f"visual-baseline/{visual.get('release')}",
+         'visual baseline must use the release-named retained ref')
+mobile_workflow=text('.github/workflows/mobile-browser-qa.yml')
+for marker in ['BASELINE_REF','refs/heads/$BASELINE_REF','FETCHED_BASELINE_SHA','Visual baseline ref drifted']:
+    need(marker in mobile_workflow,f'mobile visual baseline retention guard missing: {marker}')
+prune_workflow=text('.github/workflows/prune-merged-branches.yml')
+need('visual-baseline/*' in prune_workflow,'merged-branch pruning must explicitly preserve visual baseline refs')
+
+# The exact .4 candidate is retained and the protected PRs have merged.
+# This guard tests historical/governance truth, not external acceptance status.
+for packet in (
+    'qa/ACCESSIBILITY_REAL_AT_2026.10.09.4.md',
+    'qa/BOOK_SME_REVIEW_2026.10.09.4.md',
+    'qa/CURRICULUM_SME_REVIEW_2026.10.09.4.md',
+    'qa/LEARNER_PILOT_2026.10.09.4.md',
+    'qa/NZQA_EXTERNAL_VALIDATION_2026.10.09.4.md',
+    'qa/PWA_PHYSICAL_DEVICE_2026.10.09.4.md',
+    'qa/EXTERNAL_VALIDATION_2026.10.09.4.md',
+    'certification/WINDOWS_SIGNING_READINESS_2026.10.09.4.md',
+):
+    review_packet=text(packet)
+    need('PR #524' not in review_packet or 'is DRAFT' not in review_packet,
+         f'stale PR #524 draft claim in {packet}')
+    need('2026.10.09.3\u0060 until a real successor' not in review_packet,
+         f'stale prior release pending-candidate claim in {packet}')
+    need('**STATUS: HOLD' in review_packet,
+         f'external-human HOLD lost in {packet}')
+
+accessibility_contract=json.loads(text('data/accessibility-real-at-validation-v1.json'))
+need(accessibility_contract.get('status')=='pending-real-at-validation',
+     'real assistive-technology validation must remain pending without human evidence')
+need('pending a newly reviewed visual reference' not in accessibility_contract.get('boundary',''),
+     'real AT contract must not contradict retained successful .4 candidate provenance')
+need('human' in accessibility_contract.get('boundary','').lower(),
+     'real AT boundary must continue to explicitly require genuine human review')
+
+# Sharing the hosted preview is a separate fail-closed release operation.
+# The local check is fast and offline; the live URL check is operator-only.
+# Exercise the missing/malformed/stale candidate distinctions before the live
+# handoff contract (which now verifies the retained exact-source webCandidate).
+subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'tests',
+                '-p', 'test_tester_handoff_candidate_boundaries.py', '-v'],
+               cwd=ROOT, check=True)
+subprocess.run([sys.executable, str(ROOT / 'qa_tester_handoff.py')], cwd=ROOT, check=True)
+subprocess.run([sys.executable, str(ROOT / 'qa_tester_handoff_publication.py')], cwd=ROOT, check=True)
+
+# Current release-specific review packets must identify the same retained
+# candidate as the canonical ledger; historical mentions cannot satisfy them.
+from tools.hold_candidate_packet_integrity import (
+    PACKETS as CURRENT_HOLD_PACKETS,
+    candidate_identity as verify_hold_candidate_identity,
+    validate_packet as verify_hold_packet,
+    validate_packets as verify_all_hold_packets,
+)
+current_ledger=json.loads(text('data/release-external-validation-v1.json'))
+need(current_ledger.get('release')==V['web_release'],
+     'current external HOLD ledger release must agree with version.json')
+current_candidate=verify_hold_candidate_identity(current_ledger.get('webCandidate'),V['web_release'])
+external_index=text(current_ledger['validationIndex'])
+technical_claim=(current_ledger.get('technicalAutomation') or {}).get('claim','')
+candidate_record=current_ledger['webCandidate']
+need((current_ledger.get('technicalAutomation') or {}).get('status')=='pass',
+     'external-validation summary must match the exact-source technical PASS')
+for marker in (
+    '**Technical candidate:** **PASS — software-only**',
+    f"run `{candidate_record['candidateRunId']}`",
+    f"artifact `{candidate_record['artifactId']}`",
+    f"source `{candidate_record['sourceSha']}`",
+    f"runtime fingerprint `{candidate_record['runtimeFingerprint']}`",
+    'Mobile Browser QA',
+    'Question Quality 50-Pass',
+    'All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain **HOLD**',
+):
+    need(marker in external_index,
+         f'current external-validation summary is stale or incomplete: {marker}')
+need('exact-source release candidate and current release-bound packet checks are pending' not in external_index
+     and 'No candidate, external validation' not in external_index,
+     'external-validation summary must not contradict the retained candidate producer')
+need(bool(technical_claim) and 'PASS' in current_ledger.get('candidateStatus',''),
+     'canonical technical candidate claim is missing')
+if all((current_ledger.get(area) or {}).get('status')=='hold' for area in CURRENT_HOLD_PACKETS):
+    need(verify_all_hold_packets(ROOT,current_ledger)==len(CURRENT_HOLD_PACKETS),
+         'all seven current HOLD packets must have exact retained candidate provenance')
+else:
+    for area,(field,_) in CURRENT_HOLD_PACKETS.items():
+        if (current_ledger.get(area) or {}).get('status')=='hold':
+            packet_path=current_ledger[area][field]
+            verify_hold_packet(text(packet_path),packet_path,current_candidate,V['web_release'])
+# A previous candidate in the active banner must fail even if genuine.
+windows_packet=current_ledger['windowsDistribution']['readinessPacket']
+original_packet=text(windows_packet)
+corrupted=original_packet.replace(current_candidate['sourceSha'],'0'*40,1)
+need(corrupted!=original_packet,'current candidate SHA absent from Windows HOLD packet')
+try:
+    verify_hold_packet(corrupted,windows_packet,current_candidate,V['web_release'])
+except ValueError:
+    pass
+else:
+    raise AssertionError('stale source in current Windows HOLD banner was accepted')
+
+# Protected-main PRs must run real Chromium/WebKit/cross-browser/reliability
+# evidence even when only docs or QA scripts change. Skip-only cannot satisfy
+# strict branch protection; do not weaken the aggregate fail-closed gate.
+# Historical baseline source and comparison environment use the pinned
+# @playwright/test dependency, not the stale 1.55.0 label from older captures.
+visual_package = json.loads(text('package.json'))
+visual_version = visual_package.get('devDependencies',{}).get('@playwright/test')
+need(bool(visual_version), 'pinned Playwright QA dependency is missing')
+# The immutable screenshot reference was captured using Playwright 1.64.1.
+# Current PR tooling can advance without rewriting the historical approval.
+approved_capture = visual.get('referenceCaptureToolchain') or {}
+need(approved_capture == {
+         'framework':'@playwright/test', 'version':'1.64.1',
+         'browser':'chromium', 'referenceSourceSha':visual.get('commit')},
+     'owner-approved current screenshot capture provenance missing/stale')
+need(visual.get('browser') == "chromium via @playwright/test 1.64.1",
+     'owner-approved current screenshot toolchain label was rewritten')
+if visual.get('release')=='2026.11.02.1':
+    # The material-catalog expansion intentionally changes the Materials
+    # screenshots. Keep the strict comparison active against a separate
+    # immutable technical ref, while recording the visual-owner decision as
+    # an explicit HOLD rather than manufacturing approval.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.02.1_PR676.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.02.1'
+         and visual.get('commit')=='171dce34a94ebfcd88ed40c03f8e1c17485f57fc'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'visual-owner approval' in visual.get('policy','').lower()
+         and 'STATUS: VISUAL BASELINE HOLD' in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and 'no masking or skipped surfaces' in review_current.lower(),
+         'technical preview visual baseline must retain strict coverage and an explicit owner HOLD')
+elif visual.get('release')=='2026.11.02.2':
+    # Release 2026.11.02.2 inherits the exact screenshot bytes from the prior
+    # baseline because the read-aloud change restores the approved visible copy.
+    # Keep the comparison strict while recording owner review as pending.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.02.2.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.02.2'
+         and visual.get('commit')=='171dce34a94ebfcd88ed40c03f8e1c17485f57fc'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'visual-owner approval' in visual.get('policy','').lower()
+         and 'STATUS: VISUAL BASELINE HOLD' in review_current
+         and f"- Candidate source: `{current_candidate['sourceSha']}`" in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and 'no masking or skipped surfaces' in review_current.lower(),
+         '2026.11.02.2 technical preview baseline must retain strict coverage and an explicit owner HOLD')
+elif visual.get('release')=='2026.11.03.1':
+    # Release 2026.11.03.1 has a technical comparison reference for the larger
+    # Book edit. Keep the pixel comparison strict and do not infer owner visual
+    # approval from a CI-pinned baseline or from the requested code merge.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.03.1.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.03.1'
+         and visual.get('commit')=='71895bee35082cb1dfefb6189b5dd03f223ae701'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'visual-owner approval' in visual.get('policy','').lower()
+         and 'STATUS: VISUAL BASELINE HOLD' in review_current
+         and f"- Candidate source: `{current_candidate['sourceSha']}`" in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and 'no masking or skipped surfaces' in review_current.lower(),
+         '2026.11.03.1 technical visual baseline must retain strict coverage and explicit owner HOLD')
+elif visual.get('release')=='2026.11.03.2':
+    # The current release may reuse the unchanged technical baseline. Its
+    # own review packet must still identify the current retained candidate.
+    review_current=text(f"qa/VISUAL_REVIEW_{V['web_release']}.md")
+    need(visual.get('ref')=='visual-baseline/2026.11.03.2'
+         and visual.get('commit')=='9798f77db2d6a5b4b0a078faeb152bd23c847449'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'not visual-owner approval' in visual.get('policy','').lower()
+         and 'STATUS: VISUAL BASELINE HOLD' in review_current
+         and f"- Candidate source: `{current_candidate['sourceSha']}`" in review_current
+         and f"- Reference source: `{visual['commit']}`" in review_current
+         and f"- Baseline reference: `{visual['ref']}`" in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and 'no masking or skipped surfaces' in review_current.lower(),
+         '2026.11.03.2 technical visual baseline must retain strict coverage and explicit owner HOLD')
+elif visual.get('release')=='2026.11.08.4':
+    # PR #697's exact owner review authorizes only this unchanged 52-screen
+    # matrix and the five intended Learn/Practice copy differences. Preserve
+    # independent human/device/provider review boundaries and the strict threshold.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.08.4_PR697.md')
+    reviewed_differences=(
+        '| desktop-1440x900-practice | 4,714 |',
+        '| phone-360x800-practice | 32,066 |',
+        '| phone-412x915-practice | 3,343 |',
+        '| tablet-810x1080-home | 812 |',
+        '| tablet-810x1080-practice | 3,349 |',
+    )
+    need(visual.get('ref')=='visual-baseline/2026.11.08.4-pr697'
+         and visual.get('commit')=='ba7a48b1cee1fdf88accac1d91eb904ffa22f120'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and visual.get('referenceCaptureToolchain')=={
+             'framework':'@playwright/test','version':'1.64.1','browser':'chromium',
+             'referenceSourceSha':visual['commit']}
+         and 'STATUS: OWNER VISUAL APPROVAL' in review_current
+         and '42455576429' in review_current
+         and '13607855703' in review_current
+         and 'sha256:f6eb69e1e85d11275349e3310e37ae84942d3316e29d1b4f4056d3bdd8b2d490' in review_current
+         and '52 expected and 52 captured surfaces' in review_current
+         and '47 unchanged captures' in review_current
+         and all(row in review_current for row in reviewed_differences)
+         and 'No masks or skipped surfaces were added.' in review_current
+         and 'for PR #697 only' in review_current
+         and 'remain **HOLD**' in review_current
+         and 'owner-directed immutable baseline' in visual.get('policy','').lower()
+         and 'owner-approved visual design baseline' in visual.get('policy','').lower()
+         and 'independent human' in visual.get('policy','').lower()
+         and 'provider' in visual.get('policy','').lower()
+         and 'remain separate and hold' in visual.get('policy','').lower()
+         and 'no such authorization is created' in visual.get('policy','').lower(),
+         '2026.11.08.4 PR #697 baseline must retain its exact owner-reviewed source, artifact, scope, strict matrix and independent review boundary')
+elif visual.get('release')=='2026.11.08.5':
+    # The requested APAC catalogue is the new technical reference. Keep all 52
+    # surfaces and the strict threshold; the baseline is not human visual approval.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.08.5_APAC.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.08.5'
+         and visual.get('commit')=='5f4992d9898d7676e44229b219b0d8dbd07c9488'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and visual.get('referenceCaptureToolchain')=={
+             'framework':'@playwright/test','version':'1.64.1','browser':'chromium',
+             'referenceSourceSha':visual['commit']}
+         and 'STATUS: VISUAL BASELINE HOLD' in review_current
+         and f"- Candidate source: `{current_candidate['sourceSha']}`" in review_current
+         and f"- Reference source: `{visual['commit']}`" in review_current
+         and f"- Baseline reference: `{visual['ref']}`" in review_current
+         and 'requested apac materials catalogue content' in review_current.lower()
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and 'no masking or skipped surfaces' in review_current.lower()
+         and 'not human visual-owner approval' in visual.get('policy','').lower()
+         and 'remain separate and hold' in visual.get('policy','').lower(),
+         '2026.11.08.5 APAC baseline must retain exact source, requested scope, strict matrix and independent visual-review HOLD')
+elif visual.get('release')=='2026.11.09.1':
+    # This is a technical baseline for the rewritten Book, not owner visual approval.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.09.1_PR700.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.09.1'
+         and visual.get('commit')=='58180fe3a6a92c88c33ea3a375feb163a925b168'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and visual.get('referenceCaptureToolchain')=={
+             'framework':'@playwright/test','version':'1.64.1','browser':'chromium',
+             'referenceSourceSha':visual['commit']}
+         and 'STATUS: TECHNICAL BASELINE UPDATED — HUMAN VISUAL-OWNER DECISION PENDING' in review_current
+         and f"- Candidate source: `{visual['commit']}`" in review_current
+         and f"- Reference source: `{visual['commit']}`" in review_current
+         and f"- Baseline reference: `{visual['ref']}`" in review_current
+         and '52 candidate captures and 52 baseline captures' in review_current
+         and '32 of 52 comparisons matched' in review_current
+         and '20 of 52 differed' in review_current
+         and 'No masking or skipped surfaces' in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and 'not human visual-owner approval' in visual.get('policy','').lower()
+         and 'remain separate and hold' in visual.get('policy','').lower(),
+         '2026.11.09.1 Book baseline must retain exact source, scope, strict matrix and independent visual-review HOLD')
+elif visual.get('release')=='2026.11.11.4':
+    # PR #707 has a distinct owner-approved Practice visual reference.
+    # Bind it to the exact source and strict full-screen matrix while keeping
+    # every independent accessibility/device/SME/provider/production gate separate.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.11.4_PR707.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.11.4'
+         and visual.get('commit')=='f4169ae6227d1e827cdf6ef9ebe0cb23db754b29'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and visual.get('referenceCaptureToolchain')=={
+             'framework':'@playwright/test','version':'1.64.1','browser':'chromium',
+             'referenceSourceSha':visual['commit']}
+         and 'STATUS: OWNER VISUAL APPROVAL' in review_current
+         and visual['commit'] in review_current
+         and '43139395342' in review_current
+         and '13908843044' in review_current
+         and 'sha256:9d4fdd44b0507e3c099110480f0946727ec71524a045c5a1c011dd8183a28580' in review_current
+         and '48 unchanged captures match the existing reference' in review_current
+         and 'All four viewports, thirteen surfaces, and the strict 12-pixel limit are retained' in review_current
+         and 'visualOwnerApproved=false' in review_current
+         and 'Real assistive-technology, physical-device, Windows signing, SME, learner-outcome, provider/NZQA, and production reviews remain **HOLD**.' in review_current
+         and 'Owner-authorized technical visual baseline' in visual.get('policy','')
+         and 'remain HOLD' in visual.get('policy',''),
+         '2026.11.11.4 PR #707 visual baseline must retain its exact owner-approved Practice source, full strict matrix and separate external-review HOLDs')
+elif visual.get('release')=='2026.11.13.3':
+    # PR #715 owner-approved the dedicated Maths primary tab on the exact screenshots shown.
+    # Pin a distinct runtime-equivalent source and preserve the strict 52-screen comparison.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.13.3_PR715.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.13.3'
+         and visual.get('commit')=='2154c7b6b7c3dd63f7752f84bca8a6e73c750883'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and visual.get('referenceCaptureToolchain')=={
+             'framework':'@playwright/test','version':'1.64.1','browser':'chromium',
+             'referenceSourceSha':visual['commit']}
+         and 'STATUS: OWNER VISUAL APPROVAL' in review_current
+         and '0e20e1f0aa7c6976af23c9a6c65d8665a2a611a9' in review_current
+         and '2154c7b6b7c3dd63f7752f84bca8a6e73c750883' in review_current
+         and '43403783240' in review_current
+         and '14026049001' in review_current
+         and 'sha256:5e4185a53e9a9724c6191c1017659adccedfc2113c28bc985e59996cb485fae1' in review_current
+         and '52 expected and 52 captured viewport/surface captures' in review_current
+         and '45 of 52 comparisons differed from the previous reference' in review_current
+         and 'No masks or skipped surfaces were added.' in review_current
+         and 'All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain **HOLD**.' in review_current
+         and 'owner-approved visual design baseline' in visual.get('policy','').lower()
+         and 'remain HOLD' in visual.get('policy',''),
+         '2026.11.13.3 PR #715 visual baseline must remain pinned to the reviewed Maths-tab runtime with the strict full-screen matrix and independent HOLDs')
+elif visual.get('release')=='2026.11.13.1':
+    # Practice cleanup removes the unpersonalized duplicate and clarifies the scenario and diagnosis routes.
+    # Pin the same complete technical comparison matrix and keep visual approval on HOLD.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.13.1.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.13.1'
+         and visual.get('commit')=='f9474499ee88cca534575bd56e30fd092767de2f'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'STATUS: VISUAL BASELINE HOLD' in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and '52 viewport/surface captures' in review_current
+         and 'no masking or skipped surfaces' in review_current.lower()
+         and 'remain HOLD' in visual.get('policy',''),
+         '2026.11.13.1 Practice/Materials grouping baseline must keep all 52 captures and explicit visual-owner HOLD')
+elif visual.get('release')=='2026.11.12.1':
+    # The requested Material Behaviour Labs route is a technical preview baseline.
+    # Keep the exact 52-surface matrix and 12px limit; do not imply visual-owner approval.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.12.1.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.12.1'
+         and visual.get('commit')=='3e7b0832557fe5e38db1d63aa74c59b3fcef6a31'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'STATUS: VISUAL BASELINE HOLD' in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and '52 viewport/surface captures' in review_current
+         and 'no masking or skipped surfaces' in review_current.lower()
+         and 'remain HOLD' in visual.get('policy',''),
+         '2026.11.12.1 technical Practice baseline must retain all 52 captures and explicit visual-owner HOLD')
+elif visual.get('release')=='2026.11.11.3':
+    review_current=text('qa/VISUAL_REVIEW_2026.11.11.3.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.11.3'
+         and visual.get('commit')=='d7119ea4a325aa731cb805e8f9a6e277c5c33d3a'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and visual.get('referenceCaptureToolchain')=={
+             'framework':'@playwright/test','version':'1.64.1','browser':'chromium',
+             'referenceSourceSha':visual['commit']}
+         and 'STATUS: TECHNICAL VISUAL BASELINE' in review_current
+         and f"- Candidate source: `{current_candidate['sourceSha']}`" in review_current
+         and f"- Reference source: `{visual['commit']}`" in review_current
+         and f"- Baseline reference: `{visual['ref']}`" in review_current
+         and '52 expected and 52 captured surfaces' in review_current
+         and 'No masks or skipped surfaces were added.' in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and 'not visual-owner approval' in visual.get('policy','').lower()
+         and 'remain separate and hold' in visual.get('policy','').lower(),
+         '2026.11.11.3 Learn Materials baseline must retain its exact technical reference, strict 52-surface matrix and separate human visual HOLD')
+elif visual.get('release')=='2026.11.11.2':
+    # The unified 176-lesson library has a release-specific technical baseline.
+    # Keep all 52 captures and the 12-pixel threshold; this is not owner approval.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.11.2.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.11.2'
+         and visual.get('commit')=='bfe8394e3b7b80d6c22992674ff91e5500cadc06'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and visual.get('referenceCaptureToolchain')=={
+             'framework':'@playwright/test','version':'1.64.1','browser':'chromium',
+             'referenceSourceSha':visual['commit']}
+         and 'STATUS: VISUAL BASELINE HOLD' in review_current
+         and f"- Candidate source: `{current_candidate['sourceSha']}`" in review_current
+         and f"- Reference source: `{visual['commit']}`" in review_current
+         and f"- Baseline reference: `{visual['ref']}`" in review_current
+         and 'other 48 captures matched' in review_current.lower()
+         and 'No masks or skipped surfaces were added.' in review_current
+         and 'Human visual-owner decision: **PENDING**' in review_current
+         and 'not visual-owner approval' in visual.get('policy','').lower()
+         and 'remain separate and hold' in visual.get('policy','').lower(),
+         '2026.11.11.2 unified lesson baseline must retain the exact candidate, strict 52-surface matrix and visual-owner HOLD')
+elif visual.get('release')=='2026.11.08.2':
+    # The owner approved the exact Learn / Practice / Materials screenshot changes
+    # after reviewing the comparison artifact. Lock only this source, artifact,
+    # unchanged 52-capture matrix and 12-pixel threshold; approval cannot spread
+    # to later redesigns or replace any independent validation stream.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.08.2.md')
+    approved_captures=(
+        'desktop-1440x900-learn | 163,754',
+        'desktop-1440x900-materials | 160,657',
+        'desktop-1440x900-practice | 81,347',
+        'phone-360x800-learn | 43,944',
+        'phone-360x800-materials | 64,310',
+        'phone-412x915-learn | 50,626',
+        'phone-412x915-materials | 82,276',
+        'tablet-810x1080-learn | 135,286',
+        'tablet-810x1080-materials | 169,886',
+        'tablet-810x1080-practice | 76,473',
+    )
+    need(visual.get('ref')=='visual-baseline/2026.11.08.2'
+         and visual.get('commit')=='e062c685bac1be2b32ab8564d625e3168042821f'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'OWNER APPROVED VISUAL BASELINE FOR EXACT SOURCE e062c685bac1be2b32ab8564d625e3168042821f' in review_current
+         and f"- Exact screenshot source: `{visual['commit']}`" in review_current
+         and '42420636034' in review_current
+         and '13593550727' in review_current
+         and 'sha256:0db417bd2b4bcdb326180c1c60ebab84f3719a38152620bccbcb7447e2ea8c3f' in review_current
+         and '52 expected and 52 captured surfaces' in review_current
+         and '42 of 52 comparisons' in review_current
+         and all(capture in review_current for capture in approved_captures)
+         and 'No mask' in review_current
+         and 'remain **HOLD**' in review_current
+         and 'owner-approved visual design baseline' in visual.get('policy','').lower()
+         and 'independent accessibility' in visual.get('policy','').lower(),
+         '2026.11.08.2 approved baseline must remain bound to its exact source, artifact, scope and strict 52-screen matrix')
+elif visual.get('release')=='2026.10.22.2':
+    # The 2026.10.22.2 Book comparison was separately reviewed by the owner
+    # from source-linked screenshots. Lock this exact reviewed ref/source/artifact
+    # and preserve its approved historical predecessors: no blanket automatic
+    # approval, hidden pixels or pixel tolerance increase.
+    review_current=text('qa/VISUAL_REVIEW_2026.10.22.2_PR667.md')
+    review_previous=text('qa/VISUAL_REVIEW_2026.10.20.2_PR642.md')
+    review_older=text('qa/VISUAL_REVIEW_2026.10.16.1_PR639.md')
+    review_predecessor=text('qa/VISUAL_REVIEW_2026.10.15.3_PR638.md')
+    need(visual.get('ref')=='visual-baseline/2026.10.22.2'
+         and visual.get('commit')=='7bac45d0b1426b9f13a4fdf8e8c893b2cb498795'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and 'visual-baseline/2026.10.20.2' in visual.get('policy','')
+         and '83401a4bb217baa5c1a4acfa9181e7725e8098ac' in visual.get('policy','')
+         and 'visual-baseline/2026.10.16.1' in visual.get('policy','')
+         and '04628e13a6c9a9517bef22bae6c12a456896f299' in visual.get('policy','')
+         and 'visual-baseline/2026.10.15.3' in visual.get('policy','')
+         and 'STATUS: OWNER APPROVED VISUAL BASELINE FOR EXACT SOURCE 7bac45d0b1426b9f13a4fdf8e8c893b2cb498795' in review_current
+         and '40284054987' in review_current
+         and '12633960353' in review_current
+         and '349970f20c4b7eb99e67ce226564b4fdcab68e503493b63d149027bdac8f4ec4' in review_current
+         and '52 candidate captures and 52 baseline captures' in review_current
+         and 'visual-baseline/2026.10.22.2' in review_current
+         and 'STATUS: OWNER VISUAL APPROVAL' in review_previous
+         and '83401a4bb217baa5c1a4acfa9181e7725e8098ac' in review_previous
+         and '12243349813' in review_previous
+         and '33dd404528cd6b506426daba9e7688882332b82e88281e7ce79c0f2f825d5ce2' in review_previous
+         and 'STATUS: OWNER VISUAL APPROVAL' in review_older
+         and '04628e13a6c9a9517bef22bae6c12a456896f299' in review_older
+         and '12023269036' in review_older
+         and 'bf52e4488c878e4d1a0357eaa67b61aebb65455500f66d2e5d2e5286cfbd3ed6' in review_older
+         and 'visual-baseline/2026.10.13.3' in review_predecessor
+         and '82b1677caecb50c95c5395166317132447851e5b' in review_predecessor
+         and '352bf204ae77779d548bc77dcf8b0a63db2a84e1' in review_predecessor,
+         'new baseline must retain exact approved source and independently approved predecessor provenance')
+else:
+    raise AssertionError('unsupported visual baseline release; add an explicit reviewed or technical-HOLD branch')
+need(visual.get('currentComparisonToolchain') == {
+         'framework':'@playwright/test', 'version':visual_version,
+         'browser':'chromium'},
+     'current visual comparison tooling provenance missing/stale')
+
+mobile_qa_workflow = text('.github/workflows/mobile-browser-qa.yml')
+full_browser_pr_rule = "if: needs.impact.outputs.browser == 'true' || (github.event_name == 'pull_request' && github.base_ref == 'main')"
+need(mobile_qa_workflow.count(full_browser_pr_rule) == 4,
+     'all four protected-main browser job groups must execute for docs/QA-only PRs')
+need('skip-only browser workflow cannot pass' in mobile_qa_workflow,
+     'strict protected-main browser skip-only rejection has been removed')
+
+# Consolidated audit tracking stays source-bound without inferring that the
+# seven external human/device/provider reviews have passed.
+subprocess.run([sys.executable, str(ROOT / 'tools/qa_consolidated_audit.py')],
+               cwd=ROOT, check=True)
+print('MouldMaster release/documentation coherence QA passed')
