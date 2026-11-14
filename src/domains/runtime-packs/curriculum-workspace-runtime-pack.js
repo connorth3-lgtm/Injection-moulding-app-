@@ -743,6 +743,19 @@ function scoreText(text,terms){const s=String(text||'').toLowerCase();return ter
 function relatedLessons(c){const terms=caseTerms(c);return lessons().map(l=>({l,score:scoreText([l.title,l.summary,l.intro,(l.keypoints||[]).join(' ')].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5).map(x=>x.l)}
 function relatedSpecialist(c){const terms=caseTerms(c);return specialist().map(l=>({l,score:scoreText([l.title,l.level].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,4).map(x=>x.l)}
 function relatedMaterial(c){const terms=caseTerms(c);return materialLabs().map(x=>({x,score:scoreText([x.title,x.focus,(x.materials||[]).join(' ')].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,4).map(x=>x.x)}
+function relatedProcessEvidence(c){
+  const terms=caseTerms(c);
+  const libraries=[
+    ['Guided synthetic case',window.MM_PROCESS_DATA_DIAGNOSTICS?.datasets||[]],
+    ['50-case training library',window.MM_PROCESS_DATA_DEEP_DIVE_50?.datasets||[]],
+    ['20-pass training atlas',window.MM_PROCESS_DATA_20_PASS_ATLAS?.datasets||[]]
+  ];
+  return libraries.flatMap(([library,rows])=>rows.map(item=>{
+    const searchable=[item.id,item.title,item.kind,item.domain,item.purpose,item.fault,item.diagnosis,item.next,item.verification,item.compensationTrap,
+      item.guide?.signal,item.guide?.diagnosis,item.guide?.next,Object.keys(item.signals||{}).join(' '),(item.sourceIds||[]).join(' ')].join(' ');
+    return{library,item,score:scoreText(searchable,terms)}
+  })).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.item.title.localeCompare(b.item.title)).slice(0,4)
+}
 
 function status(c){
   if(c.conclusion.trim()&&c.verification.trim()&&c.afterChange.trim())return 'Verified / documented';
@@ -797,11 +810,12 @@ function area(label,key,c,help='',tall=false){return `<label class="wide">${esc(
 
 function evidenceBoard(c){const d=selectedDefect(c);if(!d)return '<div class="mw-empty">Choose a defect to load its known symptom, mechanism candidates and evidence checks. These are prompts to investigate, not an automatic diagnosis.</div>';return `<div class="mw-evidence-board"><div class="mw-evidence-row"><b>Observed symptom pattern</b><br>${esc(d.symptom||'')}</div>${(d.mechanisms||[]).slice(0,5).map(x=>`<div class="mw-evidence-row mw-mechanism"><b>Mechanism candidate</b><br>${esc(x)}</div>`).join('')}${(d.checks||[]).slice(0,6).map(x=>`<div class="mw-evidence-row mw-check"><b>Evidence to collect</b><br>${esc(x)}</div>`).join('')}</div>`}
 function relatedHtml(c){
-  const ls=relatedLessons(c),ss=relatedSpecialist(c),ms=relatedMaterial(c);
+  const ls=relatedLessons(c),ss=relatedSpecialist(c),ms=relatedMaterial(c),evidence=relatedProcessEvidence(c);
   const lessonButtons=ls.length?ls.map(l=>`<button class="ghost" type="button" data-mw-lesson="${l.id}">${esc(l.id+'. '+l.title)}</button>`).join(''):'<div class="mw-empty">Add a defect, material or evidence terms to surface related lessons.</div>';
   const spec=ss.length?`<div class="mw-chip-row">${ss.map(x=>`<span class="mw-chip">${esc(x.id+' · '+x.title)}</span>`).join('')}</div>`:'';
   const mat=ms.length?ms.map(x=>`<button class="ghost" type="button" data-mw-material="${esc(x.id)}">Material lab · ${esc(x.title)}</button>`).join(''):'';
-  return `<div class="mw-related"><details><summary>Related lessons, evidence cases and tools</summary><div class="mw-related-body"><p class="mw-help">Open these only when you want a second source or practice route. Your case notes remain local to this learner.</p>${lessonButtons}${spec}${mat}<button class="ghost" type="button" data-mw-defects>Open Defect Finder</button><button class="ghost" type="button" data-mw-diagnostic>Open Diagnostic Labs</button></div></details></div>`
+  const evidenceCases=evidence.length?`<div class="mw-list">${evidence.map(x=>`<div class="mw-item"><b>${esc(x.item.title)}</b><p>${esc(x.library)} · ${esc(x.item.id)} · read-only synthetic training evidence</p></div>`).join('')}</div>`:'<div class="mw-empty">Add a defect, material or evidence term to search the retained guided, 50-case and 20-pass libraries.</div>';
+  return `<div class="mw-related"><details><summary>Related lessons, evidence cases and tools</summary><div class="mw-related-body"><p class="mw-help">Open these only when you want a second source or practice route. Your case notes remain local to this learner.</p><h4>Related synthetic evidence cases</h4><p class="mw-help">These references search retained training data and do not reopen the retired Process Data screens.</p>${evidenceCases}${lessonButtons}${spec}${mat}<button class="ghost" type="button" data-mw-defects>Open Defect Finder</button><button class="ghost" type="button" data-mw-diagnostic>Open Diagnostic Labs</button></div></details></div>`
 }
 
 async function hydrateEngineeringContext(host,c){
