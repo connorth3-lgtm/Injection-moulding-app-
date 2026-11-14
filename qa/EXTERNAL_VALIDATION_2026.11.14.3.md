@@ -1,8 +1,8 @@
 # MouldMaster 2026.11.14.3 — external validation status
 
-**STATUS: HOLD — waiting for verified exact-source software candidate evidence; all seven independent review streams remain HOLD.**
+**STATUS: HOLD — exact-source software candidate passed; all seven independent review streams remain HOLD.**
 
-> **PENDING 2026.11.14.3 TECHNICAL ARTIFACT — INDEPENDENT REVIEWS HOLD. STOP: wait for verified candidate artifact provenance before beginning release-bound review.**
+> **RETAINED 2026.11.14.3 candidate — SOFTWARE-ONLY PASS. INDEPENDENT REVIEWS HOLD. This record does not establish human, device, provider, accreditation or production authorization.**
 
 ## Release scope
 
@@ -10,7 +10,12 @@ The Process Data intake, analysis and practice screens are retired. All 17 gover
 
 ## Candidate status
 
-**Technical candidate:** **PENDING — exact-source candidate producer and quality-gate evidence must be verified for this release.**
+**Technical candidate:** **PASS — software-only**
+
+- Candidate producer: Pre-merge Public Candidate run `43547591274`; retained artifact `14094364461` (`sha256:77051af054b38224d2afec0be30629ef129dbd7a2cd001280407fd1ef99b621b`), expires `2027-02-12T02:40:21Z`.
+- source `2e4e85b20578d63d9703f7676a1868a9bd119932`; runtime fingerprint `sha256:5f8e198fb25d908e00f46456d73029bd822612f4b3513a7083d5c2123199f2ad`.
+- Mobile Browser QA run `43547591088` and Question Quality 50-Pass run `43547591070` passed on the exact source.
+- This software-only pass does not satisfy any independent review stream.
 
 All seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider review streams remain **HOLD**.
 

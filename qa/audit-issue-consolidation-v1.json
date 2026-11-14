@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
   "masterIssue": 632,
-  "release": "2026.11.14.2",
+  "release": "2026.11.14.3",
   "publishedMergeSha": "89fe3e24c11c3eb660953870fce7e819280c55df",
-  "candidateSourceSha": "8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b",
-  "scope": "Simplify the measured-data entry by folding the full 17-family source register into Process Data while preserving every source profile and reference.",
-  "approvalBoundary": "PASS — release 2026.11.14.2 exact-source software candidate, runtime artifact and automated browser/question checks are verified. The seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider streams remain HOLD. Production authority remains advisory-only.",
+  "candidateSourceSha": "2e4e85b20578d63d9703f7676a1868a9bd119932",
+  "scope": "Retire the Process Data learner screens and duplicate entry points while preserving all 17 measured-evidence source families, data helpers and locally stored process evidence; keep injection-moulding Maths as its own page.",
+  "approvalBoundary": "PASS \u2014 release 2026.11.14.3 exact-source software candidate, runtime artifact and automated browser/question checks are verified. This is a software-only result. The seven independent human, device, Windows distribution, SME, learner-outcome and NZQA/provider streams remain HOLD. Production authority remains advisory-only.",
   "issueGroups": {
     "externalHolds": {
       "pwaPhysicalDevices": 325,
@@ -45,14 +45,14 @@
   "protectedMainPolicy": "six strict exact-head checks, squash-only, no bypass",
   "lastReviewedDate": "2026-11-13",
   "previousVerifiedCandidate": {
-    "release": "2026.11.14.1",
-    "sourceSha": "6b7f0cccd90e96fd36316cea9e963af1b411c3e1",
-    "runtimeFingerprint": "sha256:199f1401f1a3077628d50284922ee127e9bfa4e02fb146ae080056ba51818922",
-    "candidateRunId": 43427070078,
+    "release": "2026.11.14.2",
+    "sourceSha": "8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b",
+    "runtimeFingerprint": "sha256:ce2e7ec6a6c72f2768146a22aa4675c112198e51bea4de731d878f23efc4ea9b",
+    "candidateRunId": 43439690118,
     "candidateWorkflow": "Pre-merge Public Candidate",
-    "artifactId": 14038142104,
-    "artifactName": "physical-pwa-candidate-6b7f0cccd90e96fd36316cea9e963af1b411c3e1",
-    "artifactDigest": "sha256:d1d344a026f4e7c3707ce6b2b893954d14fa6eac7a86cbf531072538abcc1cd5",
-    "artifactExpiresAt": "2027-02-11T12:39:45Z"
+    "artifactId": 14045422044,
+    "artifactName": "physical-pwa-candidate-8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b",
+    "artifactDigest": "sha256:b2179052587cab3cbd55070c20e5fe9b306d52073b389c1fa509e7914a4829a0",
+    "artifactExpiresAt": "2027-02-11T14:07:04Z"
   }
 }

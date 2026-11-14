@@ -6,7 +6,7 @@ This page is generated from `data/governance-state-model-v1.json`. Do not hand-e
 
 | Boundary | Current state |
 | --- | --- |
-| Technical automation | **fail** |
+| Technical automation | **pass** |
 | Native main governance | **enforced** |
 | Book publication authorization | **authorized** |
 | Independent Book SME review | **hold** |
@@ -46,6 +46,6 @@ These layers are reported separately. Passing static/contract or automated brows
 
 | Layer | State | Meaning |
 | --- | --- | --- |
-| Static / contract | **fail** | HOLD: release 2026.11.14.3 is intentionally unbound pending its exact-source candidate artifact. No candidate or external approval is being claimed. |
-| Behavioral / browser | **fail** | HOLD: exact-head browser and question quality checks for release 2026.11.14.3 are pending. No prior release checks are carried forward. |
+| Static / contract | **pass** | PASS — software-only: release 2026.11.14.3 source 2e4e85b20578d63d9703f7676a1868a9bd119932 run 43547591274 artifact 14094364461 fingerprint sha256:5f8e198fb25d908e00f46456d73029bd822612f4b3513a7083d5c2123199f2ad; artifact digest sha256:77051af054b38224d2afec0be30629ef129dbd7a2cd001280407fd1ef99b621b, expiry 2027-02-12T02:40:21Z. No human, device, provider or production approval is implied. |
+| Behavioral / browser | **pass** | PASS — software-only: release 2026.11.14.3 source 2e4e85b20578d63d9703f7676a1868a9bd119932; Mobile Browser QA run 43547591088 and Question Quality 50-Pass run 43547591070 passed on this exact source. External human/device validation remains HOLD. |
 | External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.14.3. |
