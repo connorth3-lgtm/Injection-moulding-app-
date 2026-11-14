@@ -250,14 +250,16 @@ for(const width of [360,412]){
   await expect(practice.locator('.mm-hub-section-head')).not.toContainText('169 governed prompts');
   await expect(practice.locator('[data-mm-hub-action="question-centre"]')).toHaveCount(0);
   await expect(practice.locator('.mm-practice-guided, .mm-practice-case, .mm-practice-diagnose-journey')).toHaveCount(0);
-  await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(3);
+  await expect(practice.locator('.mm-hub-grid>.mm-hub-tile')).toHaveCount(2);
   await expect(practice.locator('[data-mm-hub-action="problem-practice"]')).toBeVisible();
-  await expect(practice.locator('[data-mm-hub-action="process-data"]')).toBeVisible();
+  await expect(practice.locator('[data-mm-hub-action="process-data"]')).toHaveCount(0);
   await expect(practice.locator('[data-mm-practice-query], #mmPracticeToolResults, [data-mm-practice-count]')).toHaveCount(0);
   if(width===412)await page.screenshot({path:'qa-artifacts/pr640-tidy-practice-412x915.png',animations:'disabled'});
-  await practice.locator('[data-mm-hub-action="process-data"]').click();
-  await expect(page.locator('#processDataLabs')).toBeVisible();
-  await expect(page.locator('#processDataLabs').getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
+  const mathsTab=page.locator('.mobile-nav > button[data-mm-registry-primary-nav="maths"]');
+  await expect(mathsTab).toBeVisible();
+  await mathsTab.click();
+  await expect(page.locator('#mmInjectionMouldingMaths')).toBeVisible();
+  await expect(page.locator('#mmInjectionMouldingMaths')).toContainText('Injection moulding maths');
 
   await page.evaluate(()=>switchView('materials'));
   await expect(page.locator('#materials [data-mm-all-material-query]')).toBeVisible();
@@ -277,10 +279,10 @@ test('Learn hub shows the unified compact lesson catalogue under strict CSP',asy
   await page.screenshot({path:'qa-artifacts/mobile-learn-hub-412x915.png',fullPage:true});
 });
 
-test('Practice hub keeps compact left-aligned mobile cards under strict CSP',async({page})=>{
+test('Practice hub keeps its two compact left-aligned choices under strict CSP',async({page})=>{
   await openApp(page);
   await openHub(page,'Practice','#scenarios .mm-practice-hub');
-  await expectReadableTiles(page,'#scenarios .mm-practice-hub',3);
+  await expectReadableTiles(page,'#scenarios .mm-practice-hub',2);
   await expect(page.locator('#scenarios .mm-practice-hub .mm-hub-continue')).toHaveCount(0);
   await expect(page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="material-labs"]')).toHaveCount(0);
   await page.screenshot({path:'qa-artifacts/mobile-practice-hub-412x915.png',fullPage:true});
@@ -322,7 +324,7 @@ test.describe('360px narrow-phone hubs',()=>{
     await expectUnifiedLessonCatalog(page);
 
     await openHub(page,'Practice','#scenarios .mm-practice-hub');
-    await expectNarrowReadableTiles(page,'#scenarios .mm-practice-hub',3);
+    await expectNarrowReadableTiles(page,'#scenarios .mm-practice-hub',2);
     await page.screenshot({path:'qa-artifacts/mobile-practice-hub-360x800.png',fullPage:true});
   });
 
@@ -648,13 +650,13 @@ test('Learn Question Centre retains five governed launchers plus balanced materi
  await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
 });
 
-test('Practice keeps three core choices and specialist tools optional',async({page})=>{
+test('Practice keeps two core choices and specialist tools optional',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
   const root=page.locator('#scenarios .mm-practice-hub');
   await expect(root.locator('.mm-practice-diagnose-stages')).toHaveCount(0);
-  await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(3);
+  await expect(root.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-hub-grid > button')).toHaveCount(2);
   await root.locator('[data-mm-hub-action="problem-practice"]').click();
   const routes=page.locator('#scenarios .mm-problem-practice');
   const commonTasks=routes.locator('.mm-hub-section[aria-label="Moulding problem practice"] > .mm-hub-grid > button');
@@ -751,7 +753,7 @@ test('all canonical interior routes receive the shared responsive visual skin wi
   // Wait for its real root marker instead of accepting an unfinished render.
   await page.waitForFunction(()=>document.getElementById('lesson')?.classList.contains('mm-reference-subtab'));
   const result=await page.evaluate(()=>({
-    states:['lesson','glossary','visuals','simulator','defects','coach','standards','certificates','profile','instructor','exams','diagnosticLabs','materialLabs','processDataLabs','mmVirtualApprenticeship','mmSpatialTwin','mmMaterialCompare','mmMaterialChange','mmBookView']
+    states:['lesson','glossary','visuals','simulator','defects','coach','standards','certificates','profile','instructor','exams','diagnosticLabs','materialLabs','mmVirtualApprenticeship','mmSpatialTwin','mmMaterialCompare','mmMaterialChange','mmBookView']
       .map(id=>({id,exists:!!document.getElementById(id),skinned:document.getElementById(id)?.classList.contains('mm-reference-subtab')||false})),
     overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth
   }));
@@ -801,7 +803,7 @@ test('mobile Practice source-owned choices occupy one readable column at 360 and
         cards:tiles.length,
         overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth};
     });
-    expect(metrics.cards).toBe(3);
+    expect(metrics.cards).toBe(2);
     expect(metrics.columns).toBe(1);
     expect(metrics.overflow).toBeLessThanOrEqual(2);
   }

@@ -6,7 +6,7 @@
 
 ## Release scope
 
-The standalone Measured Data entry is folded into Process Data. The collapsed evidence register retains all 17 governed measured-evidence families, their source links, counts, rights notes, source boundaries and training-use limits. Topic-matched references remain available in their relevant learning and process-data contexts. No evidence family or reference was removed.
+The Process Data intake, analysis and practice screens are retired. All 17 governed measured-evidence families remain in the source registry with their links, counts, rights notes, boundaries and training-use limits. Contextual references remain available with relevant learning and engineering tools; locally saved process datasets and associated records are preserved on-device.
 
 ## Candidate status
 

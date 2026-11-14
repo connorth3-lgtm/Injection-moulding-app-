@@ -19,7 +19,6 @@ required_hub = {
     "task-led chooser": "Choose by the job you want to practise",
     "assessment separation": "Practice is for learning; assessments stay separate.",
     "scenario rotation": "nextScenarioIndex",
-    "process-data practice": 'data-mm-hub-action="process-data"',
     "combined moulding problem practice": 'data-mm-hub-action="problem-practice"',
     "material recommendations return to Materials": "return 'materials'",
     "virtual labs practice": 'data-mm-hub-action="labs"',
@@ -55,8 +54,10 @@ if 'data-mm-hub-action="question-centre"' in practice_markup or "169 governed pr
     failures.append("Practice must not expose a duplicate Question Centre or question-bank count")
 if "3 tools shown" in practice_markup:
     failures.append("Practice hub must not show a stale tool count")
-if "Three clear practice areas" not in practice_markup:
-    failures.append("Practice hub must explain its three focused practice areas")
+if "Two focused practice areas" not in practice_markup:
+    failures.append("Practice hub must explain its two remaining focused practice areas")
+if 'data-mm-hub-action="process-data"' in practice_markup:
+    failures.append("Retired Process Data must not remain as a Practice launcher")
 if 'data-mm-hub-action="material-labs"' in practice_markup or "Material Behaviour Labs" in practice_markup or "Choose a material case" in practice_markup:
     failures.append("Practice hub must keep Material Behaviour Labs out of Practice and grouped under Materials")
 picker_start = hub.index("}else if(kind==='labs'){")

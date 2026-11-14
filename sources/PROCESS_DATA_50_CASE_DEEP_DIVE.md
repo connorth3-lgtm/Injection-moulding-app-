@@ -16,7 +16,7 @@ This pass adds **50 additional deterministic synthetic process-data cases** to t
 - 4 linked signals per new case
 - 24 baseline + 24 fault + 24 recovery cycles per case
 - **3,600 new synthetic cycles**
-- the existing 14-case guided reasoning flow remains unchanged and is now reached from the single Practice Process data lab
+- the existing 14-case guided reasoning records remain in the app's data layer; the learner-facing Process Data screens have since been retired
 
 The numerical magnitudes are deliberately synthetic. Literature and existing MouldMaster sources support the *types of signals, mechanisms and evidence relationships* represented here; they do not make these synthetic values universal process specifications, alarm limits, acceptance criteria or maintenance thresholds.
 
@@ -31,7 +31,7 @@ A setting-only troubleshooting model is weak because the screen recipe does not 
 5. part-quality and measurement-system evidence;
 6. recovery evidence after the suspected mechanism is removed.
 
-This makes the learning sequence evidence-first: **pattern → mechanism → next measurement → recovery verification**.
+These retained records describe an evidence-first learning sequence: **pattern → mechanism → next measurement → recovery verification**. The data are not currently exposed through learner-facing Process Data screens.
 
 ## Machine — 10 cases
 

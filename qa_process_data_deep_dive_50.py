@@ -77,7 +77,7 @@ global.MutationObserver=class{observe(){}};global.requestAnimationFrame=f=>f();
 for(const f of %s)vm.runInThisContext(fs.readFileSync(f,'utf8'),{filename:f});
 vm.runInThisContext(fs.readFileSync(%s,'utf8'),{filename:%s});
 const x=window.MM_PROCESS_DATA_DEEP_DIVE_50;
-process.stdout.write(JSON.stringify({cases:x.cases,datasets:x.datasets,scope:x.scope,sources:window.MM_EVIDENCE_SOURCES.sources}));
+process.stdout.write(JSON.stringify({cases:x.cases,datasets:x.datasets,scope:x.scope,sources:window.MM_EVIDENCE_SOURCES.sources,open:typeof x.open}));
 """ % (
     json.dumps([str(ROOT / x) for x in PACKS]),
     json.dumps(str(ROOT / ENGINE)),
@@ -97,12 +97,12 @@ need('outside formal assessment' in runtime['scope'] and 'not a production recip
 
 engine = text(ENGINE)
 for marker in [
-    '50-case data deep dive', 'Process data lab', 'Export 72-cycle CSV',
-    '24 baseline, 24 fault and 24 recovery', 'not universal production setpoints', 'maintenance thresholds',
-    'Ranked mechanism:', 'Best next evidence:', 'Filter deep-dive cases', 'MM_PROCESS_DATA_DEEP_DIVE_50'
+    'expected 50 cases', 'function csv(ds)', 'educationBoundary:',
+    'MM_PROCESS_DATA_DEEP_DIVE_50', '50 retained deterministic synthetic process-data cases'
 ]:
-    need(marker in engine, f'50-case learner UI/safety marker missing: {marker}')
-need('attachLauncher' not in engine and 'data-dd50-launch' not in engine, '50-case library must not inject a second launcher into the Process data lab')
+    need(marker in engine, f'50-case retained data marker missing: {marker}')
+need('document.' not in engine and 'renderHome' not in engine and 'renderCase' not in engine and 'addEventListener' not in engine,'50-case library must contain no learner screen or DOM listeners')
+need(runtime['open']=='undefined','50-case data API must not expose a screen launcher')
 
 # Pin source identities to stable publication identifiers rather than a particular resolver endpoint.
 source_identities = {

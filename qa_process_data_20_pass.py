@@ -101,7 +101,7 @@ global.requestAnimationFrame=f=>f();global.clearTimeout=()=>{};global.setTimeout
 for(const f of %s)vm.runInThisContext(fs.readFileSync(f,'utf8'),{filename:f});
 vm.runInThisContext(fs.readFileSync(%s,'utf8'),{filename:%s});
 const x=window.MM_PROCESS_DATA_20_PASS_ATLAS;
-process.stdout.write(JSON.stringify({passes:x.passes,cases:x.cases,datasets:x.datasets,scope:x.scope,sources:window.MM_EVIDENCE_SOURCES.sources}));
+process.stdout.write(JSON.stringify({passes:x.passes,cases:x.cases,datasets:x.datasets,scope:x.scope,sources:window.MM_EVIDENCE_SOURCES.sources,open:typeof x.open}));
 """ % (json.dumps([str(ROOT/x) for x in PACKS]),json.dumps(str(ROOT/ENGINE)),json.dumps(str(ROOT/ENGINE)))
 p=subprocess.run(['node','-e',node_runtime],capture_output=True,text=True)
 need(p.returncode==0,'20-pass atlas runtime failed: '+p.stderr)
@@ -122,12 +122,13 @@ need('outside formal assessment' in runtime['scope'] and 'not a production recip
 
 engine=text(ENGINE)
 for marker in [
-    '200 advanced process-data cases','20','200','14,400','baseline index 100','normalized known-good signature',
-    'not a production recipe','Ranked root-cause mechanism','Best next evidence','Verification','Compensation trap',
-    'do not mistake masking for root-cause correction','Search 200 process-data cases','Filter atlas by pass','MM_PROCESS_DATA_20_PASS_ATLAS'
+    'expected 20 passes', 'expected 200 cases', 'normalisation:{baselineIndex:100',
+    'educationBoundary:', 'compensationTrap', 'MM_PROCESS_DATA_20_PASS_ATLAS',
+    'outside formal assessment', 'not a production recipe',
 ]:
-    need(marker in engine,f'atlas learner/safety marker missing: {marker}')
-need('MutationObserver' not in engine,'20-pass atlas must use explicit lifecycle integration, not a document-wide MutationObserver')
+    need(marker in engine,f'retained atlas data/safety marker missing: {marker}')
+need('document.' not in engine and 'renderHome' not in engine and 'renderCase' not in engine and 'addEventListener' not in engine,'20-pass atlas must retain data without a learner screen or DOM listeners')
+need(runtime['open']=='undefined','20-pass atlas data API must not expose a screen launcher')
 for forbidden in ['fetch(', 'XMLHttpRequest', 'WebSocket', 'MM_DATA.exams=', 'regionalQuestions=', 'correctIndex=', 'MM_EVIDENCE_APPROVAL.records=', 'question_bank_version=']:
     need(forbidden not in engine,f'atlas must remain local-only and outside formal assessment: {forbidden}')
 
@@ -166,8 +167,7 @@ for alias in ['PP','PC','ABS','POM','PET','PBT','TPU','PMMA','PEEK','PPS','LCP',
     need(alias in workspace,f'Mould Master token matching must preserve material alias {alias}')
 
 mobile=text('qa/mobile-viewport.spec.js')
-for marker in ['Browse the 200-case atlas','200 advanced process-data cases','data-at20-pass','Inspect evidence case','Compensation trap']:
-    need(marker in mobile,f'real mobile browser QA must exercise atlas marker: {marker}')
-need('attachLauncher' not in engine and 'data-at20-launch' not in engine, '200-case atlas must not inject a second launcher into the Process data lab')
+need('Process Data screens are retired while its evidence records and Maths remain available' in mobile,'mobile QA must confirm no Process Data screen while retained data and Maths remain')
+need('open:' not in engine and 'processDataLabs' not in engine, '200-case atlas must have no learner screen launcher or host')
 
 print('MouldMaster 20-pass process-data atlas QA passed (20 passes; 200 unique cases; 4 normalized signals each; 14,400 cycles; root-cause/evidence/verification/compensation separation; local-only; browser/PWA/desktop packaged)')

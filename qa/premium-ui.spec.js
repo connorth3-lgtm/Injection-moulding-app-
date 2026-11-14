@@ -372,7 +372,7 @@ test('390px Home keeps lesson, Book and specialist tools in canonical order',asy
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   const actions=page.locator('#dashboard .mm-home-balance-grid button');
-  await expect(actions).toHaveCount(2);
+  await expect(actions).toHaveCount(1);
   await expect(page.locator('#dashboard .mm-today-focus')).toBeVisible();
   const book=page.locator('#dashboard [data-mm-home-book]');
   await expect(book).toBeVisible();

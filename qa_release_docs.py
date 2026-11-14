@@ -11,7 +11,7 @@ def need(ok,msg):
 
 V=json.loads(text('version.json'))
 expected={
-'web_release':'2026.11.14.2',
+'web_release':'2026.11.14.3',
  'android_release':'2026.11.08.1',
  'desktop_release':'2026.09.29.1',
  'content_version':'2026.08.26.1',
@@ -19,7 +19,7 @@ expected={
  'assessment_quality_version':'2026.08.24.3',
  'assessment_storage_scope_version':'2026.08.24.4',
  'assessment_evidence_version':'2026.10.05.1',
-  'read_aloud_version':'2026.11.14.2',
+  'read_aloud_version':'2026.11.14.3',
  'windows_recovery_release':'2026.08.21.1',
 }
 for k,v in expected.items(): need(V.get(k)==v,f'version.json {k} drift: {V.get(k)!r} != {v!r}')
@@ -164,13 +164,13 @@ for k,id_ in {'web_release':'mmPwa','desktop_release':'mmDesktop','content_versi
 need("fetch('./version.json',{cache:'no-store'})" in support,'support page must synchronise from version.json')
 need('MouldMaster GitHub Issues' in support and 'Do not post learner names' in support,'support contact/privacy warning missing')
 need('Learning insights events' in support and 'resets both analytics histories' in support,'support import analytics lifecycle disclosure is stale')
-for marker in ('Data &amp; Reset','mouldmaster-process-data-v1','mouldmaster-engineering-v2','Delete all local process-data evidence','Full erasure is reserved','browser/OS site-data controls'):
+for marker in ('Data &amp; Reset','mouldmaster-process-data-v1','mouldmaster-engineering-v2','delete all local process-data evidence','Full erasure is reserved','browser/OS site-data controls'):
     need(marker in support,f'support Data & Reset ownership map missing marker: {marker}')
 for marker in ['measured-assessment','process-diagnostics','Diagnostic Learning Lab','Material Behaviour Lab']:
     need(marker in support,f'support backup/reset scope disclosure missing: {marker}')
 
 privacy=text('privacy.html')
-for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','Reset learner data','other local learner profiles','all local learner profiles','replaces the local learner registry','measured-assessment','process-diagnostics','Diagnostic Learning Lab','Material Behaviour Lab','10 MiB','Delete all local process-data evidence','mouldmaster-process-data-v1']:
+for marker in ['assessment analytics','scoped to the active learner profile','first meaningful question exposure','does not currently upload','deliberately not included in the progress backup','successful progress-backup import resets local assessment analytics and Learning insights analytics','orphaned buckets','Reset local analytics','Reset learner data','other local learner profiles','all local learner profiles','replaces the local learner registry','measured-assessment','process-diagnostics','Diagnostic Learning Lab','Material Behaviour Lab','clear the app/site storage to remove it together with other local app data','mouldmaster-process-data-v1']:
     need(marker in privacy,f'privacy disclosure missing: {marker}')
 need('scoped cleanup or clean learner write cannot be verified' in privacy,'privacy notice must disclose fail-closed learner-reset cleanup/write behavior')
 need('replaces the local learner registry after confirmation' in support,'support must disclose destructive backup registry replacement before import')
@@ -645,6 +645,36 @@ elif visual.get('release')=='2026.11.13.3':
          and 'owner-approved visual design baseline' in visual.get('policy','').lower()
          and 'remain HOLD' in visual.get('policy',''),
          '2026.11.13.3 PR #715 visual baseline must remain pinned to the reviewed Maths-tab runtime with the strict full-screen matrix and independent HOLDs')
+elif visual.get('release')=='2026.11.14.3':
+    # The owner directed retirement of the Process Data interface while retaining
+    # its underlying evidence. Record only that visual scope and pin the full
+    # strict matrix to the exact screenshot source; independent review streams
+    # remain separate and on HOLD.
+    review_current=text('qa/VISUAL_REVIEW_2026.11.14.3.md')
+    need(visual.get('ref')=='visual-baseline/2026.11.14.3'
+         and visual.get('commit')=='adf87268a9e65ea242dea6233e295ef5a2e90cb2'
+         and visual.get('maxDiffPixels')==12
+         and [v.get('name') for v in visual.get('viewports',[])]==[
+             'phone-360x800','phone-412x915','tablet-810x1080','desktop-1440x900']
+         and visual.get('surfaces')==[
+             'home','learn','materials','practice','lesson','more','assessment',
+             'listen-expanded','listening','book-contents','book-materials',
+             'book-late','book-trace']
+         and visual.get('referenceCaptureToolchain')=={
+             'framework':'@playwright/test','version':'1.64.1','browser':'chromium',
+             'referenceSourceSha':visual['commit']}
+         and 'STATUS: OWNER VISUAL APPROVAL' in review_current
+         and 'Remove the process data all together but the data behind it in the app still' in review_current
+         and '43541828069' in review_current
+         and '14091978952' in review_current
+         and 'sha256:08d32ec85cc96e0d38d3a7e70eb47617f1815b00d3b9747ec30d1a5ab6fdd42f' in review_current
+         and 'All 52 expected viewport/surface captures were produced' in review_current
+         and 'Forty-seven matched the prior reference; five expected captures changed' in review_current
+         and 'No masks or skipped surfaces are added.' in review_current
+         and 'Those streams remain **HOLD**.' in review_current
+         and 'owner-approved visual design baseline' in visual.get('policy','').lower()
+         and 'remain HOLD' in visual.get('policy',''),
+         '2026.11.14.3 visual retirement baseline must retain owner-directed scope, exact screenshot source and strict 52-surface matrix')
 elif visual.get('release')=='2026.11.13.1':
     # Practice cleanup removes the unpersonalized duplicate and clarifies the scenario and diagnosis routes.
     # Pin the same complete technical comparison matrix and keep visual approval on HOLD.

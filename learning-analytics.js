@@ -7,10 +7,7 @@ const STORAGE_PREFIX='mm_learning_analytics_v1::';
 const MAX_EVENTS=1500;
 const IDLE_MS=5*60*1000;
 const MIN_EXPORT_PROFILES=5;
-const PRACTICE_LABELS={
-  diagnostic:['Observe','Best next test','Controlled response','Explain'],
-  'process-data':['Read pattern','Diagnose','Next evidence','Recovery']
-};
+const PRACTICE_LABELS={diagnostic:['Observe','Best next test','Controlled response','Explain']};
 const learnerScope=window.MM_LEARNER_SCOPE;
 const R=window.MM_RUNTIME_V2;
 if(!learnerScope)throw new Error('MM_LEARNER_SCOPE must load before Learning Analytics');
@@ -137,9 +134,9 @@ function closeLessonSession(reason='leave'){
   accrueLesson();const sec=Math.round(lessonSession.activeMs/1000);if(sec>0)record('lesson_time',{module:'lesson',id:lessonSession.id,durationSec:sec,reason});lessonSession=null;clearTimeout(idleTimer);idleTimer=null;
 }
 
-const attemptTimers={diagnostic:null,'process-data':null};
-const practiceStepResults={diagnostic:new Map(),'process-data':new Map()};
-let currentDiagnostic=null,currentProcessData=null;
+const attemptTimers={diagnostic:null};
+const practiceStepResults={diagnostic:new Map()};
+let currentDiagnostic=null;
 function startPractice(module,id){
   const safeId=safeString(id,96);if(!safeId)return;attemptTimers[module]={id:safeId,startedAt:Date.now()};practiceStepResults[module]=new Map();
   const prior=eventsFor().filter(x=>x.type==='practice_start'&&x.module===module&&x.id===safeId).length;
@@ -165,10 +162,6 @@ function abandonPractice(module,id){
 function diagnosticChoiceCorrect(id,step,choiceIndex){
   const lab=(window.MM_DIAGNOSTIC_LABS?.labs||[]).find(x=>x.id===id),choice=lab?.steps?.[Number(step)]?.choices?.[Number(choiceIndex)];
   return choice&&typeof choice.correct==='boolean'?choice.correct:null
-}
-function processChoiceCorrect(id,step,choiceIndex){
-  const result=window.MM_PROCESS_DATA_DIAGNOSTICS?.evaluateChoice?.(id,Number(step),Number(choiceIndex));
-  return result?.valid?!!result.correct:null
 }
 
 function installCoreHooks(){
@@ -199,18 +192,13 @@ function installCoreHooks(){
 }
 
 function handlePracticeClick(e){
-  const t=e.target.closest?.('[data-dl-start],[data-dl-choice],[data-dl-finish],[data-dl-restart],[data-dl-home],[data-dl-back],[data-pd-start],[data-pd-choice],[data-pd-finish],[data-pd-restart],[data-pd-home],[data-pd-back]');if(!t)return;
+  const t=e.target.closest?.('[data-dl-start],[data-dl-choice],[data-dl-finish],[data-dl-restart],[data-dl-home],[data-dl-back]');if(!t)return;
   if(t.dataset.dlStart){currentDiagnostic=t.dataset.dlStart;startPractice('diagnostic',currentDiagnostic);return}
   if(t.hasAttribute('data-dl-restart')){if(currentDiagnostic)startPractice('diagnostic',currentDiagnostic);return}
   if(t.dataset.dlChoice!==undefined&&currentDiagnostic){const host=document.getElementById('diagnosticLabs'),step=Number(host?.dataset.step||0),correct=diagnosticChoiceCorrect(currentDiagnostic,step,Number(t.dataset.dlChoice));markPracticeChoice('diagnostic',currentDiagnostic,step,correct);return}
   if(t.hasAttribute('data-dl-finish')&&currentDiagnostic){const lab=(window.MM_DIAGNOSTIC_LABS?.labs||[]).find(x=>x.id===currentDiagnostic),total=lab?.steps?.length||4;finishPractice('diagnostic',currentDiagnostic,trackedPracticeScore('diagnostic',currentDiagnostic,total));return}
   if((t.hasAttribute('data-dl-home')||t.hasAttribute('data-dl-back'))&&currentDiagnostic){abandonPractice('diagnostic',currentDiagnostic);currentDiagnostic=null;return}
 
-  if(t.dataset.pdStart){currentProcessData=t.dataset.pdStart;startPractice('process-data',currentProcessData);return}
-  if(t.hasAttribute('data-pd-restart')){if(currentProcessData)startPractice('process-data',currentProcessData);return}
-  if(t.dataset.pdChoice!==undefined&&currentProcessData){const host=document.getElementById('processDataLabs'),step=Number(host?.dataset.step||0),correct=processChoiceCorrect(currentProcessData,step,Number(t.dataset.pdChoice));markPracticeChoice('process-data',currentProcessData,step,correct);return}
-  if(t.hasAttribute('data-pd-finish')&&currentProcessData){finishPractice('process-data',currentProcessData,trackedPracticeScore('process-data',currentProcessData,4));return}
-  if((t.hasAttribute('data-pd-home')||t.hasAttribute('data-pd-back'))&&currentProcessData){abandonPractice('process-data',currentProcessData);currentProcessData=null}
 }
 function ensureStyle(){
   if(document.getElementById('mm-learning-analytics-style'))return;
@@ -281,7 +269,7 @@ function install(){ensureStyle();ensureSection();ensureNav();installCoreHooks()}
 
 document.addEventListener('click',e=>{handlePracticeClick(e);const t=e.target.closest?.('[data-la-export],[data-la-clear]');if(t?.hasAttribute('data-la-export')){try{exportAnonymousSummary()}catch(err){window.toast?.(err?.message||String(err))}}if(t?.hasAttribute('data-la-clear'))clearCurrentAnalytics()});
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')pauseLesson();else touchActivity()});
-window.addEventListener('beforeunload',()=>{closeLessonSession('unload');abandonPractice('diagnostic',currentDiagnostic);abandonPractice('process-data',currentProcessData)});
+window.addEventListener('beforeunload',()=>{closeLessonSession('unload');abandonPractice('diagnostic',currentDiagnostic);});
 document.addEventListener('pointerdown',touchActivity,{passive:true});document.addEventListener('keydown',touchActivity);document.addEventListener('scroll',touchActivity,{passive:true});
 
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}

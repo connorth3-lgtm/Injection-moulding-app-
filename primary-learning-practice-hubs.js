@@ -151,7 +151,7 @@ function nextScenarioIndex(){
   return next;
 }
 let learnToolOrigin=null;
-const LEARN_TOOL_ACTIONS=new Set(['assessments','diagnostic-labs','material-labs','material-science-checks','measured-decisions','process-data','question-centre','specialist','troubleshooting','scenario-detail','learn-scenarios']);
+const LEARN_TOOL_ACTIONS=new Set(['assessments','diagnostic-labs','material-labs','material-science-checks','measured-decisions','question-centre','specialist','troubleshooting','scenario-detail','learn-scenarios']);
 function bind(root){
   if(root?.id==='scenarios')bindPracticeGuided(root);
   if(!root||root.dataset.mmHubActionsBound==='1')return;
@@ -486,8 +486,6 @@ function runAction(action,source='practice'){
       return safeOpen('MM_DIAGNOSTIC_LABS',()=>switchView('scenarios'),{
         returnTo:source==='practice'&&!learnToolOrigin&&document.getElementById('scenarios')?.dataset.mmHubMode==='problem-practice'?'problem-practice':'hub'
       });
-    case 'case-process-data':
-    case 'process-data': return safeOpen('MM_PROCESS_DATA_DIAGNOSTICS');
     case 'scenario-detail': closePicker();if(source==='learn')switchView('scenarios');return openScenarioDetail(nextScenarioIndex(),source==='learn'?'Learn':'Practice');
     case 'labs': return openPicker('labs');
     case 'spatial-twin': closePicker(); return safeOpen('MM_SPATIAL_TWIN',()=>switchView('simulator'));
@@ -1406,8 +1404,8 @@ const PRACTICE_CASE_REVIEWS=Object.freeze([
     "reason": "Thermal gradients, differential shrinkage, ejection and measurement conditions can interact. Stable nominal settings do not demonstrate stable part response.",
     "verify": "Use comparable cavity-labelled and time-tagged measurements under an agreed quality plan; review cooling and process actuals together.",
     "avoid": "Do not claim a process improvement from unmatched measurements or a single acceptable part.",
-    "action": "case-process-data",
-    "button": "Inspect process-data evidence"
+    "action": "diagnostic-labs",
+    "button": "Practise diagnostic reasoning"
   },
   {
     "id": "PC-05",
@@ -1650,9 +1648,8 @@ function practiceHubMarkup(){
     <header class="mm-primary-hub-head"><span class="eyebrow">Practice</span><h1>What should I practise next?</h1><p>${esc(practiceStatusLine(plan))}</p></header>
     ${recommendedPracticeMarkup(plan)}
     ${practicePlanRows(plan)}
-    <section class="mm-hub-section"><div class="mm-hub-section-head"><span class="eyebrow">Choose by the job you want to practise</span><h2>Three clear practice areas</h2><p>Pick a task below. Practice is for learning; assessments stay separate. ${scenarioCount} shop-floor scenarios are available.</p></div><div class="mm-hub-grid">
+    <section class="mm-hub-section"><div class="mm-hub-section-head"><span class="eyebrow">Choose by the job you want to practise</span><h2>Two focused practice areas</h2><p>Pick a task below. Practice is for learning; assessments stay separate. ${scenarioCount} shop-floor scenarios are available.</p></div><div class="mm-hub-grid">
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="problem-practice"><span class="eyebrow">Investigate a fault · 5–15 min</span><b>Moulding problem practice</b><small>Investigate an observed defect or make a decision in a training scenario.</small><span class="mm-hub-tile-action">Choose a problem activity →</span></button>
-      <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="process-data"><span class="eyebrow">Read process evidence · 10–20 min</span><b>Process data lab</b><small>Start with synthetic examples, or prepare and analyse a local shot-data file.</small><span class="mm-hub-tile-action">Work with process data →</span></button>
       <button class="mm-hub-tile mm-primary-hub-card-secondary" type="button" data-mm-hub-action="labs"><span class="eyebrow">Visual and simulator practice · 5–15 min</span><b>Virtual moulding cell and simulator</b><small>Inspect a training cell or investigate a guided case using the visual model and simulator.</small><span class="mm-hub-tile-action">Choose a virtual tool →</span></button>
     </div></section>
   </div>`;
@@ -1888,7 +1885,7 @@ document.addEventListener('input',event=>{
 
 function configureMore(){
   const items=window.MM_APP_SHELL?.navigation?.items;
-  const primaryOwned=new Set(['mould-master','diagnostic-labs','process-data','material-labs']);
+  const primaryOwned=new Set(['mould-master','diagnostic-labs','material-labs']);
   if(items?.forEach)items.forEach((item,id)=>{item.mobileMore=id!=='materials-page'&&!primaryOwned.has(id)});
 }
 function pruneMore(){

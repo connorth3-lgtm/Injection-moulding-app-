@@ -96,7 +96,7 @@ test('Home and More use collapsible, mobile-safe panels without losing actions',
   await expect(toolbox).not.toHaveAttribute('open','');
   await expect(toolbox.getByRole('button',{name:/Troubleshoot/})).toBeHidden();
   await toolbox.locator('summary').click();
-  await expect(toolbox.getByRole('button',{name:/Analyse data/})).toBeVisible();
+  await expect(toolbox.locator('[data-mm-home-action="process-data"]')).toHaveCount(0);
 
   await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
   const menu=page.locator('#modal .modal-card');
@@ -123,7 +123,7 @@ test('Home and More use collapsible, mobile-safe panels without losing actions',
   await expect(home.locator('[data-mm-home-toolbox]')).toBeVisible();
 });
 
-test('Home is one primary lesson decision plus Book resume and two non-duplicate specialist tools',async({page})=>{
+test('Home keeps one primary lesson decision, Book resume and one specialist tool',async({page})=>{
   await page.setViewportSize({width:810,height:1080});
   await openApp(page);
   const focus=page.locator('#dashboard .mm-today-focus');
@@ -134,9 +134,9 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   await expect(book.getByRole('button',{name:/Open Book|Keep Reading/})).toBeVisible();
   await expect(tools).toBeVisible();
   await expect(page.locator('#dashboard .mm-home-task-hub,#dashboard .mm-home-utility')).toHaveCount(0);
-  await expect(tools.locator('[data-mm-home-action]')).toHaveCount(2);
+  await expect(tools.locator('[data-mm-home-action]')).toHaveCount(1);
   await expect(tools.getByRole('button',{name:/Troubleshoot/i})).toBeVisible();
-  await expect(tools.getByRole('button',{name:/Analyse data/i})).toBeVisible();
+  await expect(tools.locator('[data-mm-home-action="process-data"]')).toHaveCount(0);
   await expect(tools.getByRole('button',{name:/Materials|Practice|Saved lessons|Browse learning|Reference book/i})).toHaveCount(0);
   await expect(focus.getByRole('button',{name:/Continue lesson/i})).toBeVisible();
 
@@ -173,7 +173,7 @@ test('Home is one primary lesson decision plus Book resume and two non-duplicate
   });
   // Compact phone Toolbox intentionally uses one column for two retained actions.
   expect(phone.actions).toBe(1);
-  await expect(tools.locator('[data-mm-home-action]')).toHaveCount(2);
+  await expect(tools.locator('[data-mm-home-action]')).toHaveCount(1);
   expect(phone.focused).toBe('mould-master');
   expect(phone.stable).toBe('1');
   expect(phone.bookTop).toBeGreaterThanOrEqual(phone.focusBottom-1);
@@ -274,7 +274,7 @@ test('desktop navigation stays focused while specialist capabilities remain reac
   await expect(nav.getByRole('button',{name:/Mould Master/i})).toBeHidden();
 
   await page.evaluate(()=>switchView('scenarios'));
-  await expect(page.locator('#scenarios [data-mm-hub-action="process-data"]')).toBeVisible();
+  await expect(page.locator('#scenarios [data-mm-hub-action="process-data"]')).toHaveCount(0);
   await expect(page.locator('#scenarios [data-mm-hub-action="problem-practice"]')).toBeVisible();
 
   await nav.getByRole('button',{name:'More'}).click();
@@ -417,9 +417,10 @@ test('all major app surfaces remain reachable without shell clutter',async({page
   await expect(page.locator('#searchBtn')).toBeHidden();
   await expect(page.locator('#continueBtn')).toBeHidden();
 
-  await page.waitForFunction(()=>Boolean(window.MM_PROCESS_DATA_DIAGNOSTICS?.open));
-  await page.evaluate(()=>window.MM_PROCESS_DATA_DIAGNOSTICS.open());
-  await expect(page.locator('#processDataLabs')).toBeVisible();
+  await expect(page.locator('#processDataLabs')).toHaveCount(0);
+  await expect.poll(()=>page.evaluate(()=>typeof window.MM_PROCESS_DATA_DIAGNOSTICS?.open)).toBe('undefined');
+  await page.evaluate(()=>window.MM_INJECTION_MOULDING_MATHS.open());
+  await expect(page.locator('#mmInjectionMouldingMaths')).toBeVisible();
 
   await page.waitForFunction(()=>Boolean(window.MM_MATERIAL_REGISTRY?.openPage));
   await page.evaluate(()=>window.MM_MATERIAL_REGISTRY.openPage({replaceUrl:false}));
@@ -513,7 +514,7 @@ test('Home with a real recent troubleshooting case remains clear of the fixed na
       if(delta>0)window.scrollBy(0,delta);
     }
   });
-  await expect(page.locator('#dashboard .mm-home-balance-grid [data-mm-home-action]')).toHaveCount(2);
+  await expect(page.locator('#dashboard .mm-home-balance-grid [data-mm-home-action]')).toHaveCount(1);
   const geometry=await page.evaluate(()=>({
     focusBottom:document.querySelector('#dashboard .mm-today-focus').getBoundingClientRect().bottom,
     toolsBottom:document.querySelector('#dashboard .mm-home-balance-grid').getBoundingClientRect().bottom,

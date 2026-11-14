@@ -36,10 +36,7 @@ function contextText(host){const fields=[...host.querySelectorAll('input,textare
 function relevantPanel(text){const rows=select(text);if(!rows.length)return '';return `<section class="mme-panel" data-mm-measured-evidence="relevant"><div class="eyebrow">Canonical measured evidence</div><h3>Measured data behind this topic</h3><p>These source-profiled datasets show real measured behaviour in bounded experiments or production records. They support comparison and learning; they do not supply universal settings, prove root cause by themselves, or override the validated machine/mould/material/site process.</p><div class="mme-grid">${rows.map(card).join('')}</div></section>`}
 function catalogPanel(){return `<section class="mme-panel mme-workspace" data-mm-measured-evidence="catalog"><div class="eyebrow">Measured evidence baseline</div><h3>17 fully profiled dataset families are available as evidence context</h3><div class="mme-kpis"><div class="mme-kpi"><b>${CANONICAL.fullyProfiled}</b><span>profiled families</span></div><div class="mme-kpi"><b>${CANONICAL.rightsExecutable}</b><span>rights-executable sources</span></div><div class="mme-kpi"><b>${(CANONICAL.timeSeriesValues/1e6).toFixed(1)}M</b><span>process time-series values</span></div><div class="mme-kpi"><b>${CANONICAL.inventoried}</b><span>inventoried sources</span></div></div><p class="mme-boundary">Evidence is context-specific. Record-level, material-characterisation, specimen-test and waveform evidence remain distinct; restricted educational/noncommercial rights are preserved; unresolved channels and blocked sources are not silently counted.</p><details class="mme-all"><summary>Browse all 17 measured families</summary><div class="mme-grid">${FAMILIES.map(card).join('')}</div><div class="mme-restricted">Restricted-use families are labelled explicitly; opening a source does not change its reuse terms.</div></details></section>`}
 function addRelevant(host){if(!host||host.classList?.contains('hidden')||host.querySelector('[data-mm-measured-evidence="catalog"]')||host.querySelector('[data-mm-measured-evidence="relevant"]'))return;const html=relevantPanel(contextText(host));if(html)host.insertAdjacentHTML('beforeend',html)}
-function processDataCatalog(){return `<details class="mme-panel mme-inline-catalog" data-mme-catalog-inline><summary>Evidence and data references · 17 measured families</summary><div class="mme-inline-content"><h3>Measured sources that support learning</h3><p class="mme-boundary">This register keeps source profiles, accepted measurement counts, citations and use limitations together. Source records are not universal process settings; raw third-party rows are not embedded here.</p><div class="mme-kpis"><div class="mme-kpi"><b>${CANONICAL.fullyProfiled}</b><span>profiled families</span></div><div class="mme-kpi"><b>${CANONICAL.rightsExecutable}</b><span>rights-executable sources</span></div><div class="mme-kpi"><b>${(CANONICAL.timeSeriesValues/1e6).toFixed(1)}M</b><span>process time-series values</span></div><div class="mme-kpi"><b>${CANONICAL.inventoried}</b><span>inventoried sources</span></div></div><div class="mme-grid">${FAMILIES.map(card).join('')}</div><div class="mme-restricted">Restricted-use families are labelled explicitly; opening a source does not change its reuse terms.</div></div></details>`}
 function focusCatalog(){
- const inline=document.querySelector('#processDataLabs [data-mme-catalog-inline]');
- if(inline){inline.open=true;inline.scrollIntoView?.({behavior:'smooth',block:'start'});return true}
  const workspace=document.getElementById('mmMouldMasterWorkspace');
  const all=workspace?.querySelector('details.mme-all');
  if(all){all.open=true;all.scrollIntoView?.({behavior:'smooth',block:'start'});return true}
@@ -47,23 +44,12 @@ function focusCatalog(){
 }
 function openCatalog(){
  if(focusCatalog())return true;
- const open=window.MM_PROCESS_DATA_DIAGNOSTICS?.open;
- if(typeof open!=='function')return false;
- open();
- requestAnimationFrame(()=>requestAnimationFrame(focusCatalog));
- return true
-}
-function ensureProcessDataCatalog(){
- const host=document.getElementById('processDataLabs');
- if(!host||host.classList.contains('hidden')||host.querySelector('[data-mme-catalog-inline]'))return;
- const sections=host.querySelector('.pdlab-sections');if(!sections)return;
- sections.insertAdjacentHTML('afterend',processDataCatalog())
+ location.assign('./reference-data.html');return true
 }
 function run(){
  style();
  const lesson=document.querySelector('#lesson article.lesson-body');if(lesson&&!lesson.querySelector('[data-mm-measured-evidence]')){const html=relevantPanel(contextText(lesson));if(html)lesson.insertAdjacentHTML('beforeend',html)}
- ['diagnosticLabs','processDataLabs'].forEach(id=>addRelevant(document.getElementById(id)));
- ensureProcessDataCatalog();
+ ['diagnosticLabs'].forEach(id=>addRelevant(document.getElementById(id)));
  const material=[...document.querySelectorAll('.view[id]')].find(x=>/material.*lab/i.test(x.id));if(material)addRelevant(material);
  const ws=document.getElementById('mmMouldMasterWorkspace');if(ws&&!ws.classList.contains('hidden')){
    if(!ws.querySelector('[data-mm-measured-evidence="relevant"]')){const html=relevantPanel(contextText(ws));if(html)ws.insertAdjacentHTML('beforeend',html)}

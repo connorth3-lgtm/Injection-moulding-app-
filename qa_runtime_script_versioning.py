@@ -64,7 +64,6 @@ for marker in (
 for asset in (
     "./src/domains/governance/production-health.js",
     "./data-integration-runtime.js",
-    "./process-data-intelligence-ui.js",
     "./measured-learning-library.js",
     "./lesson-simple-experience.js",
 ):
@@ -78,5 +77,6 @@ need("MM_RUNTIME_SCRIPT_URL==='function'" in analytics, "learning analytics load
 need("MM_RUNTIME_SCRIPT_URL?.('./book-runtime.js')" in learning_pack, "generated learning pack is stale")
 need("runtimeScriptUrl('./data-integration-runtime.js')" in shell_pack, "generated shell finalization pack is stale")
 need("versionedHelper" in style_csp and "MM_RUNTIME_SCRIPT_URL" in style_csp, "style CSP dependency discovery must follow explicit release-version helper calls")
+need("process-data-intelligence-ui.js" not in shell, "retired process-data intelligence UI must not be dynamically loaded")
 
 print("PASS: dynamic same-origin scripts use explicit release-version URLs without global HTMLScriptElement interception.")

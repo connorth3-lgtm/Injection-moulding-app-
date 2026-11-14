@@ -160,7 +160,7 @@ expected_cycles = 264 * 72
 need(expected_cycles == 19008, 'process-data corpus cycle arithmetic drifted')
 
 readme = text('README.md')
-need('264 guided/synthetic diagnostic cases' in readme, 'README process-data case total drifted')
+need('264 governed synthetic evidence cases' in readme, 'README process-data case total drifted')
 need('19,008 generated training cycles' in readme, 'README process-data cycle total drifted')
 for qa_name in ['qa_process_data_diagnostics.py','qa_process_data_deep_dive_50.py','qa_process_data_20_pass.py','qa_process_data_local_intake.py','qa_process_data_sweep.py','qa_real_process_data_pilot.py']:
     need(qa_name in readme, f'README release-QA list missing {qa_name}')

@@ -13,14 +13,15 @@ async function openApp(page,width,height){
 }
 
 async function injectDecisionContext(page,text){
+  await page.evaluate(()=>window.MM_DIAGNOSTIC_LABS.open());
   await page.evaluate(context=>{
-    const host=document.getElementById('processDataLabs');
+    const host=document.getElementById('diagnosticLabs');
     host.classList.remove('hidden');
     host.querySelectorAll('[data-mm-measured-evidence="relevant"],[data-qa-evidence-context]').forEach(x=>x.remove());
     const p=document.createElement('p');p.dataset.qaEvidenceContext='1';p.textContent=context;host.appendChild(p);
   },text);
-  await expect(page.locator('#processDataLabs [data-mm-measured-evidence="relevant"]')).toBeVisible();
-  await expect(page.locator('#processDataLabs [data-mme-decision-legend]')).toBeVisible();
+  await expect(page.locator('#diagnosticLabs [data-mm-measured-evidence="relevant"]')).toBeVisible();
+  await expect(page.locator('#diagnosticLabs [data-mme-decision-legend]')).toBeVisible();
 }
 
 test('mobile decision evidence explains a direct cavity-sensor match without horizontal overflow',async({page})=>{
@@ -30,7 +31,7 @@ test('mobile decision evidence explains a direct cavity-sensor match without hor
   expect(explained[0].role).toBe('direct');
   expect(explained[0].matches).toContain('cavity pressure');
   await injectDecisionContext(page,'cavity pressure cavity temperature pascoe medical process trace');
-  const panel=page.locator('#processDataLabs [data-mm-measured-evidence="relevant"]');
+  const panel=page.locator('#diagnosticLabs [data-mm-measured-evidence="relevant"]');
   await expect(panel.locator('[data-mme-decision-role="direct"]').first()).toBeVisible();
   await expect(panel.locator('[data-mme-why]').first()).toContainText('Why relevant:');
   await expect(panel.locator('[data-mme-why]').first()).toContainText(/Matched topic/);
@@ -46,7 +47,7 @@ test('desktop decision evidence labels XRD as supporting material evidence and p
   expect(explained[0].role).toBe('supporting');
   expect(explained[0].roleLabel).toBe('Supporting material evidence');
   await injectDecisionContext(page,'nylon 12 pa12 xrd crystallinity crystal structure');
-  const panel=page.locator('#processDataLabs [data-mm-measured-evidence="relevant"]');
+  const panel=page.locator('#diagnosticLabs [data-mm-measured-evidence="relevant"]');
   await expect(panel.locator('[data-mme-decision-role="supporting"]').first()).toContainText('Supporting material evidence');
   await expect(panel.locator('[data-mme-why]').first()).toContainText('xrd');
   await expect(panel).toContainText('root-cause verdict');

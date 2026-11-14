@@ -130,11 +130,6 @@ window.mmNextLesson=function(){
 window.mmOpenMouldMaster=function(){
   if(typeof switchView==='function')switchView('defects');
 };
-window.mmOpenDataDiagnosis=function(){
-  if(window.MM_PROCESS_DATA_DIAGNOSTICS?.open)return window.MM_PROCESS_DATA_DIAGNOSTICS.open();
-  if(typeof toast==='function')toast('Data diagnosis is still loading. Try again in a moment.');
-};
-
 function decorateLesson(){
   const root=document.getElementById('lesson');
   const article=root?.querySelector('.lesson-body');
@@ -267,7 +262,7 @@ const PACK=window.MM_PROCESS_EVIDENCE_DATASETS;
 const SOURCES=window.MM_EVIDENCE_SOURCES?.sources||{};
 if(!PACK||!Array.isArray(PACK.datasets))throw new Error('process-data-diagnostics.js requires MM_PROCESS_EVIDENCE_DATASETS');
 
-const STORAGE_BASE='mm_process_data_diagnostics_v1';
+const STORAGE_BASE='mm_process_data_diagnostics_v1'; // Shared legacy prefix keeps existing learner maths progress readable.
 const GUIDES={
   'check-ring-leakage':{
     signal:'Part mass and cushion move together while peak injection pressure rises and fill time changes only slightly.',
@@ -390,7 +385,7 @@ const MATH_COURSE=Object.freeze([
   {id:'capability',unit:'6 · Advanced quality maths',title:'Process capability: Cp and Cpk',level:'Advanced',goal:'Learn what capability ratios calculate and what evidence they require.',teach:'Cp compares specification width with six standard deviations of process spread. Cpk also accounts for how close the process mean is to the nearer specification limit. These calculations are meaningful only with a valid measurement system, stable representative data, correctly defined specifications and suitable statistical assumptions. A capability number is not proof that every part will conform and does not replace the customer’s acceptance rule.',formula:'Cp = (USL − LSL) ÷ (6s). Cpk = min[(USL − mean) ÷ (3s), (mean − LSL) ÷ (3s)].',example:['Specification limits: LSL = 9.4 mm and USL = 10.6 mm; s = 0.1 mm.','Cp = (10.6 − 9.4) ÷ (6 × 0.1) = 1.2 ÷ 0.6 = 2.0.','If the mean is 10.4 mm, the upper-side index is (10.6 − 10.4) ÷ (3 × 0.1) = 0.67; the lower side is 3.33.','Cpk = the smaller side = 0.67. A qualified person must interpret capability against site and customer rules.'],watch:'Do not calculate capability on unstable, cherry-picked or mixed-cavity data. Site and customer criteria govern interpretation.',check:{question:'LSL = 9.4 mm, USL = 10.6 mm, mean = 10.4 mm and s = 0.1 mm. What is Cpk?',choices:['0.67','2.0','3.33'],answer:0,hint:'Find each spec-limit distance divided by 3s, then use the smaller value.',working:'Upper side = (10.6 − 10.4) ÷ 0.3 ≈ 0.67. Lower side = (10.4 − 9.4) ÷ 0.3 ≈ 3.33. Cpk is the smaller value: about 0.67.'}}
 ]);
 const MATH_FORMULAS=Object.freeze(MATH_COURSE.map(item=>({title:item.title,body:item.formula})));
-let mathIndex=0,mathSelected=null;
+let mathIndex=0,mathSelected=null,mathsNavigationRegistered=false;
 let mathCourseSelections=Object.create(null),mathCourseProgressOwner=null,mathCourseCompleted=new Set();
 const MATH_ILLUSTRATIONS=Object.freeze({
   'projected-area':'<figure class="pd-math-figure"><svg viewBox="0 0 680 190" role="img" aria-labelledby="pd-area-title pd-area-desc"><title id="pd-area-title">Projected area through the mould</title><desc id="pd-area-desc">Four cavity rectangles connected by a runner are viewed along the clamp direction. The dashed outline encloses the projected area.</desc><defs><marker id="pd-area-arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#f2c14e"/></marker></defs><rect x="155" y="32" width="360" height="126" rx="12" fill="none" stroke="#f2c14e" stroke-width="3" stroke-dasharray="10 7"/><path d="M85 95 H137" stroke="#f2c14e" stroke-width="4" marker-end="url(#pd-area-arrow)"/><text x="24" y="78" fill="#f4e7b5" font-size="14">Clamp</text><text x="20" y="112" fill="#f4e7b5" font-size="14">direction</text><path d="M335 55 V135 M235 95 H435" stroke="#83b7ff" stroke-width="13" stroke-linecap="round"/><rect x="180" y="47" width="92" height="40" rx="7" fill="#235a76" stroke="#8bd5f5" stroke-width="2"/><rect x="398" y="47" width="92" height="40" rx="7" fill="#235a76" stroke="#8bd5f5" stroke-width="2"/><rect x="180" y="103" width="92" height="40" rx="7" fill="#235a76" stroke="#8bd5f5" stroke-width="2"/><rect x="398" y="103" width="92" height="40" rx="7" fill="#235a76" stroke="#8bd5f5" stroke-width="2"/><text x="335" y="178" fill="#d9e7f7" font-size="14" text-anchor="middle">Cavities + runner silhouette seen along the clamp direction</text></svg><figcaption>Projected area is the silhouette at the parting plane. Use the approved mould layout to identify which part and runner areas belong in a real calculation.</figcaption></figure>',
@@ -415,9 +410,14 @@ function completeMathLesson(id){
   const progress=getMathCourseProgress();progress.add(id);
   if(learnerId())saveCase('math-course-progress',{completedLessonIds:Array.from(progress),updatedAt:new Date().toISOString()});
 }
+function ensureMathSection(){
+  let section=document.getElementById('mmInjectionMouldingMaths');if(section)return section;
+  section=document.createElement('section');section.id='mmInjectionMouldingMaths';section.className='view hidden';
+  (document.getElementById('mainContent')||document.querySelector('main.main'))?.appendChild(section);return section
+}
 function renderMathGuide(){
-  mathIndex=0;mathSelected=null;activeId=null;answers=[];hadError=false;
-  const host=ensureSection();if(!host)return;
+  mathIndex=0;mathSelected=null;
+  const host=ensureMathSection();if(!host)return;
   const progress=getMathCourseProgress();
   const groups=[...new Set(MATH_COURSE.map(lesson=>lesson.unit))];
   const sections=groups.map(group=>{
@@ -428,8 +428,7 @@ function renderMathGuide(){
     return '<section class="card pdlab-section"><h3>'+esc(group)+'</h3><div class="pdlab-grid">'+cards+'</div></section>';
   }).join('');
   const formulas=MATH_FORMULAS.map(item=>'<article class="pdlab-card card"><h3>'+esc(item.title)+'</h3><p>'+esc(item.body)+'</p></article>').join('');
-  host.innerHTML='<div class="pd-toolbar"><button class="ghost" data-pd-practice>← Practice</button></div>'+
-    '<div class="pd-hero card"><div class="eyebrow">A step-by-step course · beginner to advanced</div><h2>Injection moulding maths</h2><p>Learn the calculation skills used on the shop floor, starting with units and percentages. Each lesson explains the idea, shows every step in a worked example, and ends with a check question and explanation.</p><div class="pd-boundary"><b>Training boundary:</b> examples teach maths, not machine recipes. Real settings, mould sizing and acceptance decisions must follow approved machine, material, drawing, site and quality requirements.</div></div>'+
+  host.innerHTML='<div class="pd-hero card"><div class="eyebrow">A step-by-step course · beginner to advanced</div><h2>Injection moulding maths</h2><p>Learn the calculation skills used on the shop floor, starting with units and percentages. Each lesson explains the idea, shows every step in a worked example, and ends with a check question and explanation.</p><div class="pd-boundary"><b>Training boundary:</b> examples teach maths, not machine recipes. Real settings, mould sizing and acceptance decisions must follow approved machine, material, drawing, site and quality requirements.</div></div>'+
     '<div class="pd-stats"><div class="pd-stat card"><span>Lessons passed</span><b>'+progress.size+'/'+MATH_COURSE.length+'</b></div><div class="pd-stat card"><span>Course sections</span><b>'+groups.length+'</b></div><div class="pd-stat card"><span>Mixed review questions</span><b>'+MATH_DRILLS.length+'</b></div></div>'+
     '<div class="pd-toolbar"><div><h2 style="margin:0">Course path</h2><p class="muted" style="margin:4px 0 0">Go in order or choose any lesson. Passing a check records progress on this device when learner storage is available.</p></div></div>'+
     '<div class="pdlab-sections">'+sections+'</div>'+
@@ -450,7 +449,7 @@ function renderMathLesson(id){
   else if(selected!==null)feedback='<div class="pd-feedback bad"><b>Not quite. Use the hint and try again.</b><br>'+esc(check.hint)+'</div><button class="secondary" data-pd-math-check-retry="'+esc(id)+'">Try again</button>';
   const worked=lesson.example.map(step=>'<li>'+esc(step)+'</li>').join('');
   const previous=index>0?MATH_COURSE[index-1]:null,next=index+1<MATH_COURSE.length?MATH_COURSE[index+1]:null;
-  const host=ensureSection();if(!host)return;
+  const host=ensureMathSection();if(!host)return;
   host.innerHTML='<div class="pd-toolbar"><button class="ghost" data-pd-math-course>← Course path</button><span class="pd-chip">Lesson '+(index+1)+' of '+MATH_COURSE.length+'</span></div>'+
     '<div class="pd-hero card"><div class="eyebrow">'+esc(lesson.unit)+' · '+esc(lesson.level)+(progress.has(id)?' · ✓ check passed':'')+'</div><h2>'+esc(lesson.title)+'</h2><p>'+esc(lesson.goal)+'</p></div>'+
     '<div class="pd-panel card"><h3>Learn the idea</h3><p>'+esc(lesson.teach)+'</p><div class="pd-boundary"><b>Formula:</b> '+esc(lesson.formula)+'</div>'+(lesson.illustration&&MATH_ILLUSTRATIONS[lesson.illustration]?MATH_ILLUSTRATIONS[lesson.illustration]:'')+'</div>'+
@@ -464,7 +463,7 @@ function renderMathLesson(id){
 function startMathPractice(){mathIndex=0;mathSelected=null;renderMathDrill()}
 function renderMathDrill(){
   const q=MATH_DRILLS[mathIndex];if(!q)return renderMathSummary();
-  const host=ensureSection();if(!host)return;
+  const host=ensureMathSection();if(!host)return;
   const choices=q.choices.map((choice,i)=>{
     const selected=mathSelected===i,style=selected?(i===q.answer?' correct':' wrong'):'';
     return '<button class="pd-choice'+style+'" data-pd-math-choice="'+i+'" '+(mathSelected===null?'':'disabled')+'>'+esc(choice)+'</button>';
@@ -472,15 +471,15 @@ function renderMathDrill(){
   let feedback='';
   if(mathSelected!==null&&mathSelected===q.answer)feedback='<div class="pd-feedback"><b>Correct. Here is the method:</b><br>'+esc(q.working)+'<div class="pd-actions"><button class="primary" data-pd-math-next>'+(mathIndex+1===MATH_DRILLS.length?'Finish practice':'Next problem →')+'</button></div></div>';
   else if(mathSelected!==null)feedback='<div class="pd-feedback bad"><b>Not quite. Try the hint and calculate it again.</b><br>'+esc(q.hint)+'</div><button class="secondary" data-pd-math-retry>Try again</button>';
-  host.innerHTML='<div class="pd-toolbar"><button class="ghost" data-pd-math-guide>← Maths course</button><button class="ghost" data-pdlab-home>← Process Data Lab</button></div>'+
+  host.innerHTML='<div class="pd-toolbar"><button class="ghost" data-pd-math-guide>← Maths course</button></div>'+
     '<div class="pd-panel card"><div class="pd-meta"><span class="pd-chip">'+esc(q.category)+'</span><span class="pd-chip">'+esc(q.level)+'</span></div><div class="pd-progress">'+MATH_DRILLS.map((_,i)=>'<span class="'+(i<mathIndex?'done':i===mathIndex?'current':'')+'"></span>').join('')+'</div><div class="pd-stage">Problem '+(mathIndex+1)+' of '+MATH_DRILLS.length+'</div><div class="pd-question">'+esc(q.question)+'</div><p class="tiny muted">Work it out before choosing. All values are for training.</p><div class="pd-choices">'+choices+'</div>'+feedback+'</div>';
   host.dataset.step=String(mathIndex);
   window.scrollTo?.({top:0,behavior:'smooth'});
 }
 function renderMathSummary(){
-  const host=ensureSection();if(!host)return;
-  host.innerHTML='<div class="pd-toolbar"><button class="ghost" data-pd-math-guide>← Maths course</button><button class="ghost" data-pdlab-home>← Process Data Lab</button></div>'+
-    '<div class="pd-summary card"><div class="eyebrow">Practice set complete · ungraded</div><strong>'+MATH_DRILLS.length+' problems completed</strong><h2>Injection moulding maths</h2><p class="muted">Review the course, retry the practice set, or return to the process-data cases. The clamp-force exercise is a simplified calculation, not a machine setting.</p><div class="pd-actions"><button class="primary" data-pd-math-start>Practise again</button><button class="secondary" data-pd-math-course>← Maths course</button><button class="ghost" data-pdlab-home>← Process Data Lab</button></div></div>';
+  const host=ensureMathSection();if(!host)return;
+  host.innerHTML='<div class="pd-toolbar"><button class="ghost" data-pd-math-guide>← Maths course</button></div>'+
+    '<div class="pd-summary card"><div class="eyebrow">Practice set complete · ungraded</div><strong>'+MATH_DRILLS.length+' problems completed</strong><h2>Injection moulding maths</h2><p class="muted">Review the course or retry the practice set. The clamp-force exercise is a simplified calculation, not a machine setting.</p><div class="pd-actions"><button class="primary" data-pd-math-start>Practise again</button><button class="secondary" data-pd-math-course>← Maths course</button></div></div>';
   window.scrollTo?.({top:0,behavior:'smooth'});
 }
 
@@ -501,21 +500,6 @@ function readState(){try{const s=JSON.parse(localStorage.getItem(storageKey())||
 function writeState(s){try{const k=storageKey(),payload=JSON.stringify(s);localStorage.setItem(k,payload);return localStorage.getItem(k)===payload}catch(_){return false}}
 function caseState(id){return readState()[id]||{attempts:0,completed:false,bestScore:0}}
 function saveCase(id,patch){const all=readState();all[id]={...(all[id]||{}),...patch};const saved=writeState(all);if(!saved)window.toast?.('Progress could not be saved on this device.');return saved}
-
-function mean(rows,key){const vals=rows.map(r=>Number(r[key])).filter(Number.isFinite);return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0}
-function decimals(key){return /(_pct|Score|_g|_mm|_s|_MPa|_C|_Lmin|_kWh|_kN|_ms|_mm_s|_MPas)/.test(key)?2:2}
-function summary(ds){
-  const keys=Object.keys(ds.signals||{});const phases=['baseline','fault','recovery'];
-  return keys.map(key=>{
-    const values=Object.fromEntries(phases.map(p=>[p,mean(ds.rows.filter(r=>r.phase===p),key)]));
-    const delta=values.fault-values.baseline;
-    const relative=Math.abs(values.baseline)>1e-9?delta/Math.abs(values.baseline):delta;
-    return {key,values,delta,relative}
-  })
-}
-function labelSignal(key){return key.replace(/_/g,' ').replace(/([a-z])([A-Z])/g,'$1 $2')}
-function format(v,key){return Number(v).toFixed(decimals(key))}
-function sourceNames(ds){return (ds.sourceIds||[]).map(id=>SOURCES[id]?.name||id)}
 
 function buildSteps(ds){
   const g=ds.guide;
@@ -555,70 +539,36 @@ function evaluateChoice(caseId,stepIndex,choiceIndex){
   return {valid:!!choice,correct:!!choice?.correct,total:steps.length};
 }
 
-let activeId=null,answers=[],hadError=false;
-function ensureStyle(){
-  if(document.getElementById('mm-process-data-style'))return;
-  const s=document.createElement('style');s.id='mm-process-data-style';s.textContent=`
-#processDataLabs{--pd-line:#304b69;--pd-soft:#0f1f34}.pd-hero{padding:24px;background:radial-gradient(circle at 90% 0%,rgba(104,167,255,.18),transparent 34%),linear-gradient(135deg,#13263d,#0e1d31)}.pd-hero h2{font-size:30px;margin:7px 0 9px}.pd-hero p{max-width:900px;color:#bfd0e2;line-height:1.6}.pd-boundary{padding:12px 14px;border:1px solid #66582c;background:#282313;border-radius:10px;color:#f3e5ae;line-height:1.5;font-size:12px;margin-top:12px}.pd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.pd-stat{padding:14px}.pd-stat b{display:block;font-size:24px;margin-top:4px}.pd-stat span{font-size:11px;color:var(--muted)}.pd-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.pd-card{padding:18px;display:flex;flex-direction:column;min-height:240px}.pd-card h3{margin:7px 0}.pd-card p{font-size:13px;color:var(--muted);line-height:1.5;flex:1}.pdlab-sections{display:grid;gap:14px;margin-top:14px}.pdlab-section{padding:18px}.pdlab-section>h3{margin:6px 0}.pdlab-section>p{line-height:1.55}.pdlab-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}.pdlab-real-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pdlab-card{padding:15px;display:flex;flex-direction:column;gap:8px;min-height:185px}.pdlab-card h3{margin:0}.pdlab-card p{color:var(--muted);font-size:12px;line-height:1.5;flex:1}.pdlab-card button{align-self:flex-start}.pd-meta{display:flex;gap:6px;flex-wrap:wrap}.pd-chip{font-size:10px;border:1px solid #3b5574;border-radius:999px;padding:4px 7px;color:#bcd1e8;background:#102137}.pd-foot,.pd-toolbar,.pd-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.pd-done{color:var(--good);font-size:12px;font-weight:800}.pd-case{display:grid;gap:14px}.pd-panel{padding:20px}.pd-panel h2,.pd-panel h3{margin-top:0}.pd-math-figure{margin:8px 0 0;padding:12px;border:1px solid #2d4563;background:#0c1b2d;border-radius:12px}.pd-math-figure svg{display:block;width:100%;height:auto;max-height:230px}.pd-math-figure figcaption{margin-top:8px;color:#b8cbe0;font-size:12px;line-height:1.5}.pd-table-wrap{overflow:auto;border:1px solid #2d4563;border-radius:11px}.pd-table{width:100%;border-collapse:collapse;min-width:640px}.pd-table th,.pd-table td{padding:10px 11px;border-bottom:1px solid #253b55;text-align:right;font-size:12px}.pd-table th:first-child,.pd-table td:first-child{text-align:left}.pd-table th{color:#9db5cf;background:#0d1b2e;position:sticky;top:0}.pd-up{color:#ffd166}.pd-down{color:#7ce6a3}.pd-progress{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.pd-progress span{height:7px;border-radius:99px;background:#253951}.pd-progress .done{background:var(--accent)}.pd-progress .current{outline:2px solid #68a7ff;outline-offset:2px}.pd-stage{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:800}.pd-question{font-size:19px;font-weight:800;margin:8px 0 12px}.pd-choices{display:grid;gap:8px}.pd-choice{width:100%;text-align:left;border:1px solid #35506f;background:#112239;color:#e7f0fb;border-radius:10px;padding:11px 12px}.pd-choice:hover{background:#17304b}.pd-choice[disabled]{cursor:default;opacity:.9}.pd-choice.correct{border-color:#4a8a75;background:#123229}.pd-choice.wrong{border-color:#7c4651;background:#321a22}.pd-feedback{margin-top:12px;padding:13px;border-radius:10px;background:#0e2831;border:1px solid #2d5f5c;line-height:1.55;color:#d9f1ea}.pd-feedback.bad{background:#2b1d20;border-color:#653f48;color:#f3d1d6}.pd-source-list{display:grid;gap:6px;margin-top:9px}.pd-source-list div{font-size:12px;color:#b8cbe0;padding:8px 10px;background:#0e1d31;border-radius:8px}.pd-summary{padding:20px;border:1px solid #3b5a79;background:#10243a;border-radius:13px}.pd-summary strong{font-size:22px}.pd-loop{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:14px}.pd-loop span{padding:8px 5px;text-align:center;border-radius:8px;background:#11243a;border:1px solid #304a68;font-size:10px;color:#bed1e7}
-@media(max-width:900px){.pd-grid,.pdlab-grid{grid-template-columns:1fr}.pd-loop{grid-template-columns:1fr 1fr}}
+function ensureMathStyles(){
+  if(document.getElementById('mm-injection-maths-style'))return;
+  const s=document.createElement('style');s.id='mm-injection-maths-style';s.textContent=`
+.pd-hero{padding:24px;background:radial-gradient(circle at 90% 0%,rgba(104,167,255,.18),transparent 34%),linear-gradient(135deg,#13263d,#0e1d31)}.pd-hero h2{font-size:30px;margin:7px 0 9px}.pd-hero p{max-width:900px;color:#bfd0e2;line-height:1.6}.pd-boundary{padding:12px 14px;border:1px solid #66582c;background:#282313;border-radius:10px;color:#f3e5ae;line-height:1.5;font-size:12px;margin-top:12px}.pd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}.pd-stat{padding:14px}.pd-stat b{display:block;font-size:24px;margin-top:4px}.pd-stat span{font-size:11px;color:var(--muted)}.pdlab-sections{display:grid;gap:14px;margin-top:14px}.pdlab-section{padding:18px}.pdlab-section>h3{margin:6px 0}.pdlab-section>p{line-height:1.55}.pdlab-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}.pdlab-card{padding:15px;display:flex;flex-direction:column;gap:8px;min-height:185px}.pdlab-card h3{margin:0}.pdlab-card p{color:var(--muted);font-size:12px;line-height:1.5;flex:1}.pdlab-card button{align-self:flex-start}.pd-meta{display:flex;gap:6px;flex-wrap:wrap}.pd-chip{font-size:10px;border:1px solid #3b5574;border-radius:999px;padding:4px 7px;color:#bcd1e8;background:#102137}.pd-toolbar,.pd-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.pd-panel{padding:20px}.pd-panel h2,.pd-panel h3{margin-top:0}.pd-math-figure{margin:8px 0 0;padding:12px;border:1px solid #2d4563;background:#0c1b2d;border-radius:12px}.pd-math-figure svg{display:block;width:100%;height:auto;max-height:230px}.pd-math-figure figcaption{margin-top:8px;color:#b8cbe0;font-size:12px;line-height:1.5}.pd-progress{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.pd-progress span{height:7px;border-radius:99px;background:#253951}.pd-progress .done{background:var(--accent)}.pd-progress .current{outline:2px solid #68a7ff;outline-offset:2px}.pd-stage{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--accent);font-weight:800}.pd-question{font-size:19px;font-weight:800;margin:8px 0 12px}.pd-choices{display:grid;gap:8px}.pd-choice{width:100%;text-align:left;border:1px solid #35506f;background:#112239;color:#e7f0fb;border-radius:10px;padding:11px 12px}.pd-choice:hover{background:#17304b}.pd-choice[disabled]{cursor:default;opacity:.9}.pd-choice.correct{border-color:#4a8a75;background:#123229}.pd-choice.wrong{border-color:#7c4651;background:#321a22}.pd-feedback{margin-top:12px;padding:13px;border-radius:10px;background:#0e2831;border:1px solid #2d5f5c;line-height:1.55;color:#d9f1ea}.pd-feedback.bad{background:#2b1d20;border-color:#653f48;color:#f3d1d6}.pd-summary{padding:20px;border:1px solid #3b5a79;background:#10243a;border-radius:13px}.pd-summary strong{font-size:22px}
+@media(max-width:900px){.pdlab-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.pd-stats{grid-template-columns:1fr}.pd-toolbar{align-items:stretch}.pd-toolbar button{width:100%}.pd-panel,.pdlab-section{padding:16px}.pdlab-card button{width:100%}}
 `;
   document.head.appendChild(s)
 }
-function ensureSection(){
-  let section=document.getElementById('processDataLabs');if(section)return section;
-  section=document.createElement('section');section.id='processDataLabs';section.className='view hidden';
-  (document.getElementById('mainContent')||document.querySelector('main.main'))?.appendChild(section);return section
-}
 function hideOtherViews(){document.querySelectorAll('.view').forEach(v=>v.classList.add('hidden'))}
 function setHeader(t,s){const h=document.getElementById('pageTitle'),p=document.getElementById('pageSubtitle');if(h)h.textContent=t;if(p)p.textContent=s}
-function returnToPractice(){if(typeof switchView==='function')switchView('scenarios');if(typeof window.MM_PRIMARY_HUBS?.renderPracticeHub==='function')return window.MM_PRIMARY_HUBS.renderPracticeHub();if(typeof switchView==='function')return switchView('scenarios')}
-function stats(){const state=readState();let done=0,attempted=0,total=0;for(const ds of DATASETS){const s=state[ds.id];if(s?.completed)done++;if(s?.attempts){attempted++;total+=Number(s.bestScore||0)}}return {done,attempted,avg:attempted?Math.round(total/attempted):0}}
-
-function openHome(){
-  ensureStyle();hideOtherViews();const host=ensureSection();host.classList.remove('hidden');window.MM_APP_SHELL?.navigation?.setCustomActive?.('','practice');setHeader('Process data lab','Practise reading process evidence or analyse prepared site data.');renderHome();window.scrollTo?.({top:0,behavior:'smooth'})
+function registerMathsNavigation(){
+  const navigation=window.MM_APP_SHELL?.navigation;
+  if(mathsNavigationRegistered||typeof navigation?.register!=='function')return;
+  navigation.register({
+    id:'maths',label:'Maths',icon:'∑',description:'Learn and practise injection moulding calculations.',
+    order:35,group:'practice',mobileGroup:'maths',mobilePrimary:true,mobileMore:false,
+    action:openMaths
+  });
+  mathsNavigationRegistered=true
 }
 function openMaths(){
-  ensureStyle();hideOtherViews();const host=ensureSection();host.classList.remove('hidden');
+  ensureMathStyles();hideOtherViews();const host=ensureMathSection();host.classList.remove('hidden');
   window.MM_APP_SHELL?.navigation?.setCustomActive?.('maths','maths');
   setHeader('Injection moulding maths','Learn step by step from basic units to process and quality calculations.');
   renderMathGuide();window.scrollTo?.({top:0,behavior:'smooth'})
 }
-function renderHome(){
-  activeId=null;answers=[];hadError=false;const host=ensureSection();
-  host.innerHTML=`<div class="pd-hero card"><div class="eyebrow">Practice · process evidence</div><h2>Start with a guided case</h2><p>Work through a synthetic example first. Use the advanced libraries when you want more cases, or choose local CSV analysis to work with prepared site data.</p><div class="pd-boundary"><b>Training boundary:</b> examples teach evidence reading. They do not set production limits or authorise machine changes. Local CSV preparation and analysis stay on this device.</div></div>
-  <div class="pdlab-sections">
-    <section class="card pdlab-section"><div class="eyebrow">Start here · synthetic training</div><h3>Guided diagnosis</h3><p>Choose from 14 cases. Each walks through baseline, fault and recovery evidence in four decisions.</p><button class="primary" data-pdlab-guided>Choose a guided case →</button><p class="tiny muted">The values are synthetic and are not machine units or universal limits.</p></section>
-    <details class="pd-more-libraries"><summary>Explore more synthetic case libraries · 50 and 200 cases</summary><div class="pdlab-grid"><article class="pdlab-card card"><span class="pd-chip">50 additional cases</span><h3>Evidence deep dive</h3><p>Browse machine, tooling, material, scientific-moulding and quality/sensor datasets.</p><button class="secondary" data-pdlab-50>Browse 50 cases →</button></article><article class="pdlab-card card"><span class="pd-chip">20 passes · 200 cases</span><h3>Advanced evidence atlas</h3><p>Search a broad library of normalized, unitless signal patterns for advanced practice.</p><button class="secondary" data-pdlab-atlas>Browse the 200-case atlas →</button></article></div><p class="tiny muted">The atlas uses each case’s own normalized baseline. Its values are not machine units or universal limits.</p></details>
-    <section class="card pdlab-section"><div class="eyebrow">Optional · local analysis</div><h3>Work with prepared site data</h3><p>The intake checks privacy preparation, signal meaning, role, units, sampling and shot sequence before data can be analysed.</p><div class="pdlab-grid pdlab-real-grid"><article class="pdlab-card card"><h3>Prepare a new CSV</h3><p>Review local privacy rules, define the channels and save the prepared dataset on this device.</p><button class="primary" data-pdlab-csv>Prepare a CSV →</button></article><article class="pdlab-card card"><h3>Analyse saved data</h3><p>Compare baseline drift, before/after windows, cavities, quality associations and energy per good part when the data support each view.</p><button class="secondary" data-pdlab-saved>Open saved datasets →</button></article></div><p class="tiny muted">Raw CSV is prepared in-session and is not uploaded. Prepared evidence is stored locally on this device.</p></section>
-  </div>`
-}
-function renderGuidedHome(){
-  activeId=null;answers=[];hadError=false;const host=ensureSection(),st=stats();
-  host.innerHTML=`<div class="pd-toolbar"><button class="ghost" data-pd-practice>← Practice</button></div><div class="pd-hero card"><div class="eyebrow">Process-data practice</div><h2>Guided Data Diagnosis</h2><p>Work through the same evidence pattern experienced process engineers use: establish a baseline, identify what changed, connect signals to a plausible mechanism, choose the next discriminating check, then use recovery evidence to challenge your conclusion.</p><div class="pd-loop"><span>1 Read pattern</span><span>2 Diagnose</span><span>3 Choose evidence</span><span>4 Interpret recovery</span></div><div class="pd-boundary"><b>Training boundary:</b> all values are deterministic synthetic training data. They illustrate signal relationships only and are not universal production setpoints, acceptance limits or substitutes for machine, mould, resin, site or legal requirements.</div></div>
-  <div class="pd-stats"><div class="pd-stat card"><span>Cases completed</span><b>${st.done}/${DATASETS.length}</b></div><div class="pd-stat card"><span>Cases attempted</span><b>${st.attempted}</b></div><div class="pd-stat card"><span>Average best score</span><b>${st.avg}%</b></div></div>
-  <div class="pd-toolbar"><button class="ghost" data-pd-practice>← Practice</button><div><h2 style="margin:0">Choose a guided case</h2><p class="muted" style="margin:4px 0 0">Each case contains 72 cycles: 24 baseline, 24 fault and 24 recovery.</p></div></div>
-  <div class="pd-grid" style="margin-top:12px">${DATASETS.map(cardHtml).join('')}</div>`
-}
-function cardHtml(ds){const s=caseState(ds.id);return `<article class="pd-card card"><div class="pd-meta"><span class="pd-chip">${esc(ds.kind)}</span><span class="pd-chip">${ds.rows.length} cycles</span><span class="pd-chip">${Object.keys(ds.signals).length} signals</span></div><h3>${esc(ds.title)}</h3><p>${esc(ds.fault)}</p><div class="pd-foot"><span class="${s.completed?'pd-done':'muted tiny'}">${s.completed?`✓ Completed · best ${Number(s.bestScore||0)}%`:(s.attempts?`${s.attempts} attempt${s.attempts===1?'':'s'}`:'Not attempted')}</span><button class="secondary" data-pd-start="${esc(ds.id)}">${s.completed?'Practise again':'Start case'}</button></div></article>`}
-function tableHtml(ds){return `<div class="pd-table-wrap"><table class="pd-table"><thead><tr><th>Signal</th><th>Baseline mean</th><th>Fault mean</th><th>Recovery mean</th><th>Fault Δ</th></tr></thead><tbody>${summary(ds).map(r=>`<tr><td>${esc(labelSignal(r.key))}</td><td>${format(r.values.baseline,r.key)}</td><td>${format(r.values.fault,r.key)}</td><td>${format(r.values.recovery,r.key)}</td><td class="${r.delta>=0?'pd-up':'pd-down'}">${r.delta>=0?'+':''}${format(r.delta,r.key)}</td></tr>`).join('')}</tbody></table></div>`}
-function openCase(id){const ds=DATASETS.find(x=>x.id===id);if(!ds)return;activeId=id;answers=new Array(4).fill(null);hadError=false;const prior=caseState(id);saveCase(id,{...prior,attempts:Number(prior.attempts||0)+1});renderCase(0)}
-function renderCase(stepIndex){
-  const ds=DATASETS.find(x=>x.id===activeId);if(!ds)return renderGuidedHome();const steps=buildSteps(ds),step=steps[stepIndex],choices=deterministicChoices(step,ds.id,stepIndex),selected=answers[stepIndex],host=ensureSection();
-  host.innerHTML=`<div class="pd-case"><div class="pd-toolbar"><button class="ghost" data-pd-home>← Case list</button><button class="ghost" data-pd-practice>← Practice</button></div><div class="pd-panel card"><div class="pd-meta"><span class="pd-chip">${esc(ds.kind)}</span><span class="pd-chip">synthetic training data</span></div><h2 style="margin:8px 0">${esc(ds.title)}</h2><p class="muted">${esc(ds.fault)}</p><div class="pd-progress">${steps.map((_,i)=>`<span class="${i<stepIndex?'done':i===stepIndex?'current':''}"></span>`).join('')}</div></div>
-  <div class="pd-panel card"><h3>Evidence board</h3><p class="muted">Compare phase means first. Use the CSV only if you want to inspect the individual 72 cycles.</p>${tableHtml(ds)}<div class="pd-actions" style="margin-top:12px"><button class="ghost" data-pd-csv>Export 72-cycle CSV</button></div></div>
-  <div class="pd-panel card"><div class="pd-stage">${esc(step.stage)} · ${stepIndex+1}/4</div><div class="pd-question">${esc(step.question)}</div><div class="pd-choices">${choices.map((c,i)=>choiceHtml(c,i,selected)).join('')}</div>${selected===null?'':feedbackHtml(choices[selected],step)}${selected===null?'':`<div class="pd-actions" style="margin-top:12px">${stepIndex<3?'<button class="primary" data-pd-next>Next step</button>':'<button class="primary" data-pd-finish>Finish case</button>'}<button class="ghost" data-pd-retry>Try this question again</button></div>`}</div>
-  <div class="pd-panel card"><h3>Evidence sources</h3><div class="pd-source-list">${sourceNames(ds).map(x=>`<div>${esc(x)}</div>`).join('')}</div><p class="tiny muted" style="margin-bottom:0">These sources support the mechanism and study method. They do not make the synthetic values production specifications.</p></div></div>`;host.dataset.step=String(stepIndex)
-}
-function choiceHtml(c,i,selected){const chosen=selected===i,cls=chosen?(c.correct?' correct':' wrong'):'';return `<button class="pd-choice${cls}" data-pd-choice="${i}" ${selected===null?'':'disabled'}>${esc(c.text)}</button>`}
-function feedbackHtml(choice,step){return `<div class="pd-feedback ${choice.correct?'':'bad'}"><b>${choice.correct?'Good evidence use':'Re-check the pattern'}</b><br>${esc(choice.correct?step.feedback:'Choose the answer that is most directly supported by the linked signals and preserves a controlled diagnostic sequence.')}</div>`}
-function exportCsv(){const ds=DATASETS.find(x=>x.id===activeId);if(!ds)return;const blob=new Blob([PACK.toCsv(ds.id)],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`mouldmaster-${ds.id}-synthetic-training.csv`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
-function finishCase(){const ds=DATASETS.find(x=>x.id===activeId);if(!ds)return;const steps=buildSteps(ds);let correct=0;for(let i=0;i<steps.length;i++){const choices=deterministicChoices(steps[i],ds.id,i);if(choices[answers[i]]?.correct)correct++}const score=Math.round(correct/steps.length*100),prior=caseState(ds.id),saved=saveCase(ds.id,{...prior,completed:true,bestScore:Math.max(Number(prior.bestScore||0),score)});const host=ensureSection();host.innerHTML=`<div class="pd-summary card"><div class="eyebrow">Data case complete${saved?'':' · progress not saved'}</div><strong>${score}% · ${correct}/4 decisions</strong><h2>${esc(ds.title)}</h2><p class="muted">${score===100?'You used the baseline, fault and recovery evidence as one reasoning chain.':'Review the missed step and try again. The goal is to explain why a signal pattern supports one mechanism more strongly than another.'}</p><div class="pd-actions"><button class="primary" data-pd-home>Choose another dataset</button><button class="secondary" data-pd-restart>Practise this case again</button><button class="ghost" data-pd-practice>← Practice</button></div></div>`}
-function openLocalIntake(){const api=window.MM_PROCESS_DATA_LOCAL_INTAKE;if(typeof api?.open==='function')return api.open();window.toast?.('Local CSV analysis is still loading. Try again in a moment.')}
-function openSavedData(){const api=window.MM_PROCESS_DATA_LOCAL_INTAKE;if(typeof api?.openLibrary==='function')return api.openLibrary();window.toast?.('Saved process datasets are still loading. Try again in a moment.')}
-function handleClick(e){
-  const t=e.target.closest('[data-pdlab-math-open],[data-pdlab-home],[data-pd-math-course],[data-pd-math-guide],[data-pd-math-lesson],[data-pd-math-check],[data-pd-math-check-retry],[data-pd-math-start],[data-pd-math-choice],[data-pd-math-retry],[data-pd-math-next],[data-pdlab-guided],[data-pdlab-50],[data-pdlab-atlas],[data-pdlab-csv],[data-pdlab-saved],[data-pd-start],[data-pd-home],[data-pd-practice],[data-pd-choice],[data-pd-next],[data-pd-finish],[data-pd-retry],[data-pd-restart],[data-pd-csv]');if(!t)return;
-  if(t.hasAttribute('data-pdlab-math-open')||t.hasAttribute('data-pd-math-guide')||t.hasAttribute('data-pd-math-course'))return renderMathGuide();
+function handleMathClick(e){
+  const t=e.target.closest('[data-pd-math-course],[data-pd-math-guide],[data-pd-math-lesson],[data-pd-math-check],[data-pd-math-check-retry],[data-pd-math-start],[data-pd-math-choice],[data-pd-math-retry],[data-pd-math-next]');if(!t)return;
+  if(t.hasAttribute('data-pd-math-guide')||t.hasAttribute('data-pd-math-course'))return renderMathGuide();
   if(t.dataset.pdMathLesson)return renderMathLesson(t.dataset.pdMathLesson);
   if(t.dataset.pdMathCheck!==undefined){
     const id=t.dataset.pdMathId,lesson=MATH_COURSE.find(item=>item.id===id),choice=Number(t.dataset.pdMathCheck);
@@ -628,35 +578,16 @@ function handleClick(e){
     return renderMathLesson(id);
   }
   if(t.dataset.pdMathCheckRetry!==undefined){delete mathCourseSelections[t.dataset.pdMathCheckRetry];return renderMathLesson(t.dataset.pdMathCheckRetry)}
-  if(t.hasAttribute('data-pdlab-home'))return openHome();
   if(t.hasAttribute('data-pd-math-start'))return startMathPractice();
   if(t.dataset.pdMathChoice!==undefined){const i=Number(t.dataset.pdMathChoice);if(mathSelected===null&&Number.isInteger(i)&&i>=0&&i<MATH_DRILLS[mathIndex].choices.length){mathSelected=i;return renderMathDrill()}return}
   if(t.hasAttribute('data-pd-math-retry')){mathSelected=null;return renderMathDrill()}
   if(t.hasAttribute('data-pd-math-next')){if(mathSelected!==MATH_DRILLS[mathIndex].answer)return;mathIndex++;mathSelected=null;return mathIndex<MATH_DRILLS.length?renderMathDrill():renderMathSummary()}
-  if(t.hasAttribute('data-pdlab-guided'))return renderGuidedHome();
-  if(t.hasAttribute('data-pdlab-50')){const api=window.MM_PROCESS_DATA_DEEP_DIVE_50;if(typeof api?.open==='function')return api.open();return window.toast?.('The 50-case library is still loading.')}
-  if(t.hasAttribute('data-pdlab-atlas')){const api=window.MM_PROCESS_DATA_20_PASS_ATLAS;if(typeof api?.open==='function')return api.open();return window.toast?.('The evidence atlas is still loading.')}
-  if(t.hasAttribute('data-pdlab-csv'))return openLocalIntake();
-  if(t.hasAttribute('data-pdlab-saved'))return openSavedData();
-  if(t.dataset.pdStart)return openCase(t.dataset.pdStart);
-  if(t.hasAttribute('data-pd-home'))return renderGuidedHome();
-  if(t.hasAttribute('data-pd-practice'))return returnToPractice();
-  if(t.hasAttribute('data-pd-restart'))return openCase(activeId);
-  if(t.hasAttribute('data-pd-csv'))return exportCsv();
-  const ds=DATASETS.find(x=>x.id===activeId);if(!ds)return;const stepIndex=Number(ensureSection().dataset.step||0),step=buildSteps(ds)[stepIndex],choices=deterministicChoices(step,ds.id,stepIndex);
-  if(t.dataset.pdChoice!==undefined){const i=Number(t.dataset.pdChoice);answers[stepIndex]=i;if(!choices[i]?.correct)hadError=true;return renderCase(stepIndex)}
-  if(t.hasAttribute('data-pd-retry')){answers[stepIndex]=null;return renderCase(stepIndex)}
-  if(t.hasAttribute('data-pd-next'))return renderCase(Math.min(stepIndex+1,3));if(t.hasAttribute('data-pd-finish'))return finishCase()
 }
-function install(){ensureStyle();const host=ensureSection();if(host&&!host.__mmPdClick){host.addEventListener('click',handleClick);host.__mmPdClick=true}}
+function install(){ensureMathStyles();const host=ensureMathSection();if(host&&!host.__mmMathClick){host.addEventListener('click',handleMathClick);host.__mmMathClick=true}registerMathsNavigation()}
 let queued=false;function schedule(){if(queued)return;queued=true;(window.requestAnimationFrame||setTimeout)(()=>{queued=false;install()},0)}
-const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});install();window.addEventListener('load',schedule);
-window.MM_PROCESS_DATA_DIAGNOSTICS={version:VERSION,cases:DATASETS.map(d=>({id:d.id,title:d.title,kind:d.kind,signals:Object.keys(d.signals),sourceIds:d.sourceIds})),open:openHome,openMaths,openGuidedCases:renderGuidedHome,evaluateChoice,storage:'MM_LEARNER_SCOPE 128-bit collision-safe learner progress',storagePrefix:`${STORAGE_BASE}::`,scope:'Guided use of deterministic synthetic training data; outside the formal assessment bank and not a production recipe. evaluateChoice exposes structured practice correctness for local analytics without scraping rendered CSS or score text.'};
-window.MM_APP_SHELL?.navigation?.register?.({
-  id:'maths',label:'Maths',icon:'∑',description:'Learn and practise injection moulding calculations.',
-  order:35,group:'practice',mobileGroup:'maths',mobilePrimary:true,mobileMore:false,
-  action:openMaths
-});
+const observer=new MutationObserver(schedule);if(document.documentElement)observer.observe(document.documentElement,{childList:true,subtree:true});install();window.addEventListener('load',schedule);window.addEventListener('mm:domains-ready',schedule);
+window.MM_PROCESS_DATA_DIAGNOSTICS={version:VERSION,cases:DATASETS.map(d=>({id:d.id,title:d.title,kind:d.kind,signals:Object.keys(d.signals),sourceIds:d.sourceIds})),datasets:DATASETS,byId:id=>DATASETS.find(d=>d.id===String(id))||null,toCsv:id=>PACK.toCsv(String(id)),evaluateChoice,storage:'MM_LEARNER_SCOPE 128-bit collision-safe learner progress',storagePrefix:`${STORAGE_BASE}::`,scope:'Retained synthetic process-evidence records and deterministic evaluator outside the formal assessment bank; user-facing Process Data screens are retired.'};
+window.MM_INJECTION_MOULDING_MATHS=Object.freeze({version:VERSION,open:openMaths,lessons:MATH_COURSE,formulas:MATH_FORMULAS,practiceCount:MATH_DRILLS.length,scope:'Independent injection moulding maths course and ungraded practice.'});
 })();
 /* <<< process-data-diagnostics.js */
 

@@ -1,11 +1,11 @@
-/* MouldMaster learner UI polish — 2026.11.14.2
+/* MouldMaster learner UI polish — 2026.11.14.3
  * Presentation/navigation refinement only. Evidence, assessment, safety and
  * production-authority semantics remain owned by their governed runtimes.
  */
 (function(){
 'use strict';
 if(window.MM_LEARNER_UI_POLISH)return;
-const VERSION='2026.11.14.2';
+const VERSION='2026.11.14.3';
 // Cache-bust stylesheet revisions without claiming a new governed app release.
 const STYLE_REV='2026.10.20.2-pr640-materials-parity';
 const DESKTOP_QUERY='(min-width:1101px)';
@@ -31,7 +31,6 @@ function runQuickAction(action){
       window.MM_PRIMARY_HUBS?.renderPracticeHub?.();
       window.requestAnimationFrame(()=>document.querySelector('#scenarios [data-mm-hub-action="problem-practice"]')?.click());
     });
-    case 'process-data': return safe(()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
     case 'recent-case': {
       const row=window.MM_MOULD_MASTER_WORKSPACE?.cases?.()?.[0];
       return safe(()=>row?window.MM_MOULD_MASTER_WORKSPACE?.open?.(row.id):window.MM_MOULD_MASTER_WORKSPACE?.open?.());
@@ -46,11 +45,10 @@ function homeBalanceMarkup(){
   // The current lesson and Book already own the primary Home decisions.
   // Keep advanced tools useful but visually quiet and user-collapsible.
   return `<details class="mm-home-toolbox" data-mm-home-toolbox open>
-    <summary><span class="mm-home-toolbox-label"><b>Toolbox</b><small>Optional diagnostic and data tools</small></span><span class="mm-home-toolbox-hint">Show / hide <span aria-hidden="true">⌄</span></span></summary>
+    <summary><span class="mm-home-toolbox-label"><b>Toolbox</b><small>Optional diagnosis tools</small></span><span class="mm-home-toolbox-hint">Show / hide <span aria-hidden="true">⌄</span></span></summary>
     <div class="mm-home-toolbox-body">
       <div class="mm-home-balance-grid">
         <button type="button" data-mm-home-action="mould-master"><span class="mm-home-balance-icon" aria-hidden="true">◆</span><span><b>Troubleshoot</b><small>Choose a guided diagnosis route for a moulding problem.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button>
-        <button type="button" data-mm-home-action="process-data"><span class="mm-home-balance-icon" aria-hidden="true">⌁</span><span><b>Analyse data</b><small>Review measured trends and recovery evidence.</small></span><span class="mm-home-action-arrow" aria-hidden="true">→</span></button>
       </div>
       <div data-mm-home-recent-slot hidden></div>
     </div>
@@ -620,7 +618,6 @@ const practiceArtwork={
   'scenario-detail':['cases',22],
   'material-labs':['materials',3],
   'measured-decisions':['process',5],
-  'process-data':['challenges',23],
   labs:['setup',19],
   'diagnostic-labs':['defects',6],
   'diagnostic-workbench':['diagnosing',21],
@@ -679,10 +676,10 @@ function practiceScenarioDetail(){
 }
 const observedPracticeToolRoots=new WeakSet();
 function observePracticeToolRoots(){
-  // Lab, process-data and assessment renderers replace their root children
+  // Lab and assessment renderers replace their root children
   // while learners move between questions. Reapply artwork without tracking
   // every option/control mutation or risking a refresh loop.
-  for(const id of ['diagnosticLabs','materialLabs','processDataLabs','exams','mmVirtualApprenticeship','mmSpatialTwin']){
+  for(const id of ['diagnosticLabs','materialLabs','exams','mmVirtualApprenticeship','mmSpatialTwin']){
     const node=document.getElementById(id);
     if(!node||observedPracticeToolRoots.has(node))continue;
     observedPracticeToolRoots.add(node);
@@ -693,7 +690,6 @@ function practiceToolHeaders(){
   // Tool-owned renderers keep their evidence, answer, scoring and next-step
   // controls. Add only a decorative local photo to each real landing header.
   for(const [selector,subject,tile] of [
-    ['#processDataLabs .pd-hero','process',23],
     ['#diagnosticLabs .dl-hero','defects',20],
     ['#materialLabs .ml-hero','materials',3],
     ['#exams .section-head','training',24],
@@ -714,7 +710,6 @@ function practiceToolHeaders(){
 function practiceSubpageNavigation(){
   const tools=[
     ['#defects','problem-practice','Moulding problem practice','scenarios'],
-    ['#processDataLabs','process-data','Process data','scenarios'],
     ['#diagnosticLabs','labs','Diagnostic labs','scenarios'],
     ['#materialLabs','material-labs','Material labs','materials'],
     ['#exams','question-centre','Knowledge checks','scenarios'],
@@ -1033,7 +1028,6 @@ function deepViewPolish(){
     ['exams','Learn · knowledge checks'],
     ['diagnosticLabs','Practice · diagnostic labs'],
     ['materialLabs','Materials · learning labs'],
-    ['processDataLabs','Practice · data diagnosis'],
     ['mmVirtualApprenticeship','Practice · apprenticeship'],
     ['mmSpatialTwin','Practice · spatial twin'],
     ['mmMaterialCompare','Materials · comparison'],
@@ -1078,7 +1072,7 @@ function deepViewPolish(){
     '#profile .form-card','#simulator .form-card',
     '#simulator .output-panel','#coach .chat',
     '#coach .form-card','#instructor .table-wrap',
-    '#exams .exam-card','#processDataLabs .pd-card',
+    '#exams .exam-card',
     '#diagnosticLabs .dl-card','#materialLabs .ml-card',
     '#mmMaterialCompare .card','#mmMaterialChange .card',
     '#standards .card','#certificates .card',
@@ -1106,7 +1100,7 @@ function boot(){
   refresh();
   window.MM_APP_SHELL?.events?.onViewChange?.(refresh);
   for(const name of ['dashboard','path','materials','scenarios'])window.MM_APP_SHELL?.events?.onRender?.(name,refresh);
-  const targets=['dashboard','path','materials','scenarios','simulator','lesson','glossary','defects','coach','standards','visuals','certificates','profile','instructor','exams','diagnosticLabs','materialLabs','processDataLabs','mmVirtualApprenticeship','mmSpatialTwin','mmMaterialCompare','mmMaterialChange','mmBookView','modal'];
+  const targets=['dashboard','path','materials','scenarios','simulator','lesson','glossary','defects','coach','standards','visuals','certificates','profile','instructor','exams','diagnosticLabs','materialLabs','mmVirtualApprenticeship','mmSpatialTwin','mmMaterialCompare','mmMaterialChange','mmBookView','modal'];
   for(const id of targets){
     const node=document.getElementById(id);if(!node)continue;
     new window.MutationObserver(refresh).observe(node,{childList:true,subtree:id==='modal'});

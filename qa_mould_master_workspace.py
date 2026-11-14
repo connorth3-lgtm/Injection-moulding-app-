@@ -28,9 +28,7 @@ for marker in [
     'selectedDefect',
     'relatedLessons',
     'relatedSpecialist',
-    'relatedData',
     'relatedMaterial',
-    'MM_PROCESS_DATA_DIAGNOSTICS',
     'MM_MATERIAL_BEHAVIOUR_LABS',
     'MM_DIAGNOSTIC_LABS',
     'MM_SPECIALIST_CURRICULUM',
@@ -66,9 +64,22 @@ for marker in [
     "schema:4"
 ]: need(marker in js,f'Mould Master workspace marker missing: {marker}')
 
+for marker in [
+    'function relatedProcessEvidence(c)',
+    'window.MM_PROCESS_DATA_DIAGNOSTICS?.datasets',
+    'window.MM_PROCESS_DATA_DEEP_DIVE_50?.datasets',
+    'window.MM_PROCESS_DATA_20_PASS_ATLAS?.datasets',
+    'Related synthetic evidence cases',
+    'read-only synthetic training evidence',
+]: need(marker in js,f'Mould Master read-only evidence search marker missing: {marker}')
+process_search=js.split('function relatedProcessEvidence(c)',1)[1].split('\nfunction status(',1)[0]
+for forbidden in ['localStorage', 'indexedDB', '.push(', '.splice(', 'fetch(', 'XMLHttpRequest', 'WebSocket', '.open(']:
+    need(forbidden not in process_search,f'Mould Master evidence search must remain read-only: {forbidden}')
+
 for forbidden in [
     'localStorage.getItem(', 'localStorage.setItem(', 'localStorage.removeItem(', 'localStorage.clear(',
     'STORAGE_BASE', 'mm:mould-master-cases-changed', 'publishCasesChanged',
+    'relatedData',
     'MM_DATA.exams=', 'correctIndex=', 'regionalQuestions=', 'question_bank_version=',
     'certificates.push(', 'examScores=', 'assessmentScores=',
     'fetch(', 'XMLHttpRequest', 'WebSocket', 'sendBeacon',

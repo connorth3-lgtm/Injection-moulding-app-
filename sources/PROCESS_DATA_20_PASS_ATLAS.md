@@ -95,7 +95,7 @@ The process-data learning inventory becomes:
 | 20-pass atlas | 200 | 72 | 14,400 |
 | **Total** | **264** | — | **19,008** |
 
-The original 14 guided cases remain the structured question flow: **Read pattern → Diagnose → Choose next evidence → Interpret recovery**. The 50-case layer is a broader engineering-data explorer. The 20-pass atlas is the most extensive normalized mechanism/evidence/verification library.
+The original 14 guided cases, 50-case layer and 20-pass atlas remain as data-only evidence libraries in the app. Their learner-facing Process Data screens and CSV-analysis interface have been retired. The measured-evidence source registry and saved local engineering records remain available to the app; the retained case records are not currently exposed through a learner screen.
 
 ## Evidence base
 
@@ -129,12 +129,12 @@ Sources support the **mechanism and study method**. They do not turn synthetic i
 - runtime generation yields exactly 14,400 rows with 24/24/24 phase counts;
 - no network transport, XHR, WebSocket or formal assessment-key mutation is introduced;
 - browser, offline PWA and Electron desktop packaging include every atlas asset;
-- the atlas is launched from the single Practice **Process data lab** and does not inject a duplicate launcher or add another document-wide MutationObserver;
-- real mobile-browser QA opens, filters and inspects the atlas.
+- the atlas data remains included in browser, offline PWA and Electron desktop runtime packs;
+- Process Data learner screens and launchers are absent, while the independent injection-moulding Maths page remains available.
 
 ## Best next data step
 
-More synthetic case count is no longer the highest-value next move. The Practice **Process data lab** now brings the 14 guided cases, the 50-case deep dive and the 200-case atlas together with a local CSV path. That path separates privacy preparation from semantic and sequence readiness, stores prepared data on-device, and exposes baseline/drift, before/after, cavity, quality-association and energy-per-good-part views when the data support them. The next evidence-quality improvement is a controlled pilot comparing these local analyses with independently human-reviewed real-shot findings.
+More synthetic case count is no longer the highest-value next move. The libraries and measured-evidence references remain in the app as retained data, but no learner-facing Process Data screens or local CSV analysis flow are available. Any future use of the evidence should be designed and reviewed as a separate feature before it is exposed to learners.
 
 Highest-value real-data targets are:
 

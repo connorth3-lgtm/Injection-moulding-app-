@@ -4,7 +4,7 @@
 #mmPreviewStatus.mm-preview-status-book-hidden{display:none!important}
 .topbar .mm-preview-status a{color:#93f0df!important;text-decoration:underline!important;text-underline-offset:2px!important}
 .topbar .mm-preview-status a:focus-visible{outline:2px solid #55d6be!important;outline-offset:3px!important;border-radius:3px}
-/* MouldMaster learner UI polish — 2026.11.14.2 */
+/* MouldMaster learner UI polish — 2026.11.14.3 */
 
 /* Book: the evidence contract stays visible and accessible, but it no longer
    competes with the learner's chapter choice above the fold. */
@@ -291,7 +291,7 @@
   #dashboard .mm-home-book-actions button{width:100%!important;min-width:0!important;min-height:44px!important;padding:8px 9px!important;font-size:11.5px!important;white-space:nowrap!important}
 }
 
-/* Canonical Home hierarchy — 2026.11.14.2 */
+/* Canonical Home hierarchy — 2026.11.14.3 */
 /* Home keeps one dominant lesson decision, one persistent Book/Keep Reading surface,
    and two specialist shortcuts without duplicating Learn, Materials, Practice or Saved lessons. */
 #dashboard{
@@ -378,7 +378,7 @@
 }
 #dashboard .mm-home-balance-grid{
   display:grid!important;
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-template-columns:minmax(0,1fr)!important;
   gap:9px!important;
 }
 #dashboard .mm-home-balance-grid button{
@@ -1071,7 +1071,7 @@ html.mm-reference-layout{
 }
 .mm-reference-layout #dashboard .mm-home-toolbox-label b:before{content:"🔧";margin-right:9px}
 .mm-reference-layout #dashboard .mm-home-toolbox-body .mm-home-balance-grid{
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;
+  grid-template-columns:minmax(0,1fr)!important;gap:7px!important;
 }
 @media(max-width:900px){
   .mm-reference-layout #dashboard .mm-home-toolbox-body .mm-home-balance-grid{
@@ -2198,21 +2198,21 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
 }
 
 /* Practice tool landing pages: inherited scoring/renderers stay authoritative. */
-.mm-reference-layout :is(#processDataLabs .pd-hero,#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head{
+.mm-reference-layout :is(#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head{
   box-sizing:border-box!important;min-width:0!important;
   border:1px solid #2a6983!important;border-radius:16px!important;
   background:linear-gradient(130deg,#0b354c,#071e31)!important;
   color:#eaf7ff!important;overflow:hidden;
 }
-.mm-reference-layout :is(#processDataLabs .pd-hero,#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head>.mm-reference-practice-tool-art{
+.mm-reference-layout :is(#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head>.mm-reference-practice-tool-art{
   display:block!important;float:left!important;width:76px!important;
   height:76px!important;margin:0 13px 9px 0!important;
   border-radius:11px!important;overflow:hidden!important;flex-shrink:0!important;
 }
-.mm-reference-layout :is(#processDataLabs .pd-hero,#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head :is(h2,h3){
+.mm-reference-layout :is(#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head :is(h2,h3){
   color:#f0f8ff!important;overflow-wrap:anywhere!important;
 }
-.mm-reference-layout :is(#processDataLabs .pd-hero,#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head p{
+.mm-reference-layout :is(#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head p{
   color:#c4dbe9!important;line-height:1.5!important;
 }
 .mm-reference-layout #exams .section-head.mm-reference-practice-tool-head{
@@ -2222,27 +2222,27 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
 .mm-reference-layout #exams .section-head.mm-reference-practice-tool-head>.mm-reference-practice-tool-art{
   float:none!important;margin:0!important;
 }
-.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card){
+.mm-reference-layout :is(#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card){
   min-width:0!important;border-radius:15px!important;border-color:#2b5671!important;
 }
-.mm-reference-layout :is(#processDataLabs button[data-pd-start],#diagnosticLabs button[data-dl-start],#materialLabs button[data-ml-start],#exams .exam-card button){
+.mm-reference-layout :is(#diagnosticLabs button[data-dl-start],#materialLabs button[data-ml-start],#exams .exam-card button){
   box-sizing:border-box!important;min-height:44px!important;white-space:normal!important;
   overflow-wrap:anywhere!important;border-radius:10px!important;
 }
 @media(max-width:400px){
-  .mm-reference-layout :is(#processDataLabs .pd-hero,#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head>.mm-reference-practice-tool-art{
+  .mm-reference-layout :is(#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head>.mm-reference-practice-tool-art{
     width:58px!important;height:58px!important;margin-right:10px!important;
   }
 }
 @media(forced-colors:active){
-  .mm-reference-layout :is(#processDataLabs .pd-hero,#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head{
+  .mm-reference-layout :is(#diagnosticLabs .dl-hero,#materialLabs .ml-hero,#exams .section-head).mm-reference-practice-tool-head{
     border-color:CanvasText!important;forced-color-adjust:auto;
   }
 }
 
 /* Native lab question choices and back/next controls must be finger-sized too. */
 .mm-reference-layout :is(
-  #processDataLabs .pd-choice,#processDataLabs .pd-toolbar button,#processDataLabs .pd-actions button,
+
   #diagnosticLabs .dl-choice,#diagnosticLabs .dl-toolbar button,#diagnosticLabs .dl-actions button,
   #materialLabs .ml-choice,#materialLabs .ml-toolbar button,#materialLabs .ml-actions button
 ){
@@ -2251,15 +2251,15 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   border-radius:10px!important;
 }
 .mm-reference-layout :is(
-  #processDataLabs .pd-choice,#diagnosticLabs .dl-choice,#materialLabs .ml-choice
+  #diagnosticLabs .dl-choice,#materialLabs .ml-choice
 ):focus-visible{
   outline:2px solid #71e7dc!important;outline-offset:2px!important;
 }
 @media(max-width:700px){
-  .mm-reference-layout :is(#processDataLabs .pd-toolbar,#diagnosticLabs .dl-toolbar,#materialLabs .ml-toolbar){
+  .mm-reference-layout :is(#diagnosticLabs .dl-toolbar,#materialLabs .ml-toolbar){
     gap:8px!important;
   }
-  .mm-reference-layout :is(#processDataLabs .pd-toolbar button,#diagnosticLabs .dl-toolbar button,#materialLabs .ml-toolbar button){
+  .mm-reference-layout :is(#diagnosticLabs .dl-toolbar button,#materialLabs .ml-toolbar button){
     flex:1 1 125px!important;
   }
 }
@@ -2380,20 +2380,20 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
 .mm-reference-layout #scenarios[data-mm-hub-mode="detail"] .scenario>.feedback:not(.hidden){
   color:#e9fefa!important;
 }
-.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card){
+.mm-reference-layout :is(#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card){
   background:#eff6fa!important;border:1px solid #b2d6e5!important;
   color:#0e3148!important;
 }
-.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) :is(h2,h3,b){
+.mm-reference-layout :is(#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) :is(h2,h3,b){
   color:#092d43!important;
 }
-.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) :is(p,small,.muted){
+.mm-reference-layout :is(#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) :is(p,small,.muted){
   color:#35576e!important;
 }
-.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) :is(.pd-chip,.dl-chip,.ml-chip,.pill){
+.mm-reference-layout :is(#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) :is(.pd-chip,.dl-chip,.ml-chip,.pill){
   color:#123f54!important;background:#d8e9f1!important;border-color:#aacedd!important;
 }
-.mm-reference-layout :is(#processDataLabs .pd-card,#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) button{
+.mm-reference-layout :is(#diagnosticLabs .dl-card,#materialLabs .ml-card,#exams .exam-card) button{
   min-height:44px!important;white-space:normal!important;overflow-wrap:anywhere!important;
 }
 .mm-reference-layout #modal .mm-reference-more-card>summary{
@@ -2784,7 +2784,7 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
 /* Actual data/diagnostic/material lab step pages: the previously upgraded
    landing cards now have the same readable paper-panel inner hierarchy. */
 .mm-reference-layout :is(
-  #processDataLabs .pd-case>.pd-panel,
+
   #diagnosticLabs .dl-lab>.dl-panel,
   #materialLabs .ml-lab>.ml-panel
 ){
@@ -2794,35 +2794,35 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   background:#eff7fa!important;color:#0c3045!important;
 }
 .mm-reference-layout :is(
-  #processDataLabs .pd-case>.pd-panel,
+
   #diagnosticLabs .dl-lab>.dl-panel,
   #materialLabs .ml-lab>.ml-panel
 ) :is(h2,h3,.pd-question,.dl-question,.ml-q){
   color:#0a3147!important;overflow-wrap:anywhere!important;
 }
 .mm-reference-layout :is(
-  #processDataLabs .pd-case>.pd-panel,
+
   #diagnosticLabs .dl-lab>.dl-panel,
   #materialLabs .ml-lab>.ml-panel
 ) :is(p,.muted){
   color:#37596a!important;line-height:1.53!important;
 }
-.mm-reference-layout :is(#processDataLabs .pd-choice,#diagnosticLabs .dl-choice,#materialLabs .ml-choice){
+.mm-reference-layout :is(#diagnosticLabs .dl-choice,#materialLabs .ml-choice){
   text-align:left!important;min-height:48px!important;
   white-space:normal!important;overflow-wrap:anywhere!important;
 }
-.mm-reference-layout :is(#processDataLabs .pd-table-wrap,#diagnosticLabs .dl-evidence,#materialLabs .ml-evidence){
+.mm-reference-layout :is(#diagnosticLabs .dl-evidence,#materialLabs .ml-evidence){
   max-width:100%!important;min-width:0!important;
   overflow-x:auto!important;
 }
-.mm-reference-layout :is(#processDataLabs .pd-stage,#diagnosticLabs .dl-stage,#materialLabs .ml-stage){
+.mm-reference-layout :is(#diagnosticLabs .dl-stage,#materialLabs .ml-stage){
   color:#176376!important;
 }
-.mm-reference-layout :is(#processDataLabs .pd-summary,#diagnosticLabs .dl-summary,#materialLabs .ml-summary){
+.mm-reference-layout :is(#diagnosticLabs .dl-summary,#materialLabs .ml-summary){
   border:1px solid #b4d6e2!important;border-radius:15px!important;
   background:#eff7fa!important;color:#0a3147!important;
 }
-.mm-reference-layout :is(#processDataLabs .pd-summary,#diagnosticLabs .dl-summary,#materialLabs .ml-summary) :is(h2,p,.muted,strong){
+.mm-reference-layout :is(#diagnosticLabs .dl-summary,#materialLabs .ml-summary) :is(h2,p,.muted,strong){
   color:#154357!important;
 }
 .mm-reference-layout #mmSpatialTwin .mm-st-modebar button,
@@ -2836,13 +2836,13 @@ body:has(#mmBookView) [data-mm-listening-tab]{display:none!important}
   outline:2px solid #6ae6d7!important;outline-offset:2px!important;
 }
 @media(max-width:700px){
-  .mm-reference-layout :is(#processDataLabs .pd-case,#diagnosticLabs .dl-lab,#materialLabs .ml-lab){
+  .mm-reference-layout :is(#diagnosticLabs .dl-lab,#materialLabs .ml-lab){
     min-width:0!important;max-width:100%!important;
   }
 }
 @media(forced-colors:active){
   .mm-reference-layout :is(
-    #processDataLabs .pd-case>.pd-panel,
+
     #diagnosticLabs .dl-lab>.dl-panel,
     #materialLabs .ml-lab>.ml-panel
   ){

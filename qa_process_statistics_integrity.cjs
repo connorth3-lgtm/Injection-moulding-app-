@@ -27,8 +27,8 @@ function baseContext(){
   assert.strictEqual(out.changes[0].normalizedChange,null);assert.strictEqual(out.changes[0].scoreReason,'insufficient-window-observations');
 }
 {
-  const c=baseContext();c.MM_CONNECTED_PROCESS_DATA={};vm.runInContext(fs.readFileSync('process-data-intelligence-ui.js','utf8'),c);
-  const d=c.MM_PROCESS_INTELLIGENCE_UI.diagnostics;
+  const c=baseContext();vm.runInContext(fs.readFileSync('process-data-statistics.js','utf8'),c);
+  const d=c.MM_PROCESS_DATA_STATISTICS;
   assert.strictEqual(d.finiteNumber(''),null);assert.strictEqual(d.finiteNumber('   '),null);assert.strictEqual(d.finiteNumber(null),null);assert.strictEqual(d.finiteNumber(0),0);assert.strictEqual(d.finiteNumber('0'),0);
   const dataset={semantics:{p:{column:'p',role:'actual',blockers:[],meaning:'Pressure',unit:'MPa',sampling_basis:'per-cycle'},e:{column:'energy_kwh',role:'actual',blockers:[],meaning:'Cycle energy',unit:'kWh',sampling_basis:'per-cycle'},batch:{column:'batch_energy_kwh',role:'actual',blockers:[],meaning:'Batch energy',unit:'kWh',sampling_basis:'batch'}}};
   const cavities=d.cavitySummary([{cavity:'1',p:''},{cavity:'1',p:0},{cavity:'2',p:'2'},{cavity:'2',p:null}],dataset);assert.strictEqual(cavities[0].values.p,0);assert.strictEqual(cavities[1].values.p,2);

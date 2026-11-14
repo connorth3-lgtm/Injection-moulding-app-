@@ -54,12 +54,6 @@ function persistenceError(err){storageFailure=String(err?.message||err);console.
 function defects(){try{return Array.isArray(D?.defects)?D.defects:[]}catch(_){return[]}}
 function lessons(){try{return Array.isArray(D?.lessons)?D.lessons:[]}catch(_){return[]}}
 function specialist(){return window.MM_SPECIALIST_CURRICULUM?.lessons||[]}
-function dataCases(){
-  const guided=(window.MM_PROCESS_DATA_DIAGNOSTICS?.cases||[]).map(x=>({...x,origin:'Guided 14'}));
-  const deep=(window.MM_PROCESS_DATA_DEEP_DIVE_50?.cases||[]).map(x=>({...x,origin:'50-case deep dive'}));
-  const atlas=(window.MM_PROCESS_DATA_20_PASS_ATLAS?.cases||[]).map(x=>({...x,kind:x.kind||x.domain||'20-pass atlas',origin:'20-pass atlas'}));
-  return [...guided,...deep,...atlas]
-}
 function materialLabs(){return window.MM_MATERIAL_BEHAVIOUR_LABS?.labs||[]}
 function selectedDefect(c){return defects().find(d=>d.name===c.defect)||null}
 const SHORT_TERMS=new Set(['PP','PC','ABS','POM','PET','PBT','TPU','PMMA','PEEK','PPS','LCP','HDPE','PA66','PA6','PPA','PEI','TPE'].map(x=>x.toLowerCase()));
@@ -68,8 +62,20 @@ function caseTerms(c){return [...new Set(words([c.defect,c.material,c.title,c.ev
 function scoreText(text,terms){const s=String(text||'').toLowerCase();return terms.reduce((n,t)=>n+(s.includes(t)?1:0),0)}
 function relatedLessons(c){const terms=caseTerms(c);return lessons().map(l=>({l,score:scoreText([l.title,l.summary,l.intro,(l.keypoints||[]).join(' ')].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5).map(x=>x.l)}
 function relatedSpecialist(c){const terms=caseTerms(c);return specialist().map(l=>({l,score:scoreText([l.title,l.level].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,4).map(x=>x.l)}
-function relatedData(c){const terms=caseTerms(c);return dataCases().map(x=>({x,score:scoreText([x.title,x.kind,x.domain,x.passTitle,x.fault,x.diagnosis,x.next,(x.signals||[]).join(' ')].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,6).map(x=>x.x)}
 function relatedMaterial(c){const terms=caseTerms(c);return materialLabs().map(x=>({x,score:scoreText([x.title,x.focus,(x.materials||[]).join(' ')].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,4).map(x=>x.x)}
+function relatedProcessEvidence(c){
+  const terms=caseTerms(c);
+  const libraries=[
+    ['Guided synthetic case',window.MM_PROCESS_DATA_DIAGNOSTICS?.datasets||[]],
+    ['50-case training library',window.MM_PROCESS_DATA_DEEP_DIVE_50?.datasets||[]],
+    ['20-pass training atlas',window.MM_PROCESS_DATA_20_PASS_ATLAS?.datasets||[]]
+  ];
+  return libraries.flatMap(([library,rows])=>rows.map(item=>{
+    const searchable=[item.id,item.title,item.kind,item.domain,item.purpose,item.fault,item.diagnosis,item.next,item.verification,item.compensationTrap,
+      item.guide?.signal,item.guide?.diagnosis,item.guide?.next,Object.keys(item.signals||{}).join(' '),(item.sourceIds||[]).join(' ')].join(' ');
+    return{library,item,score:scoreText(searchable,terms)}
+  })).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.item.title.localeCompare(b.item.title)).slice(0,4)
+}
 
 function status(c){
   if(c.conclusion.trim()&&c.verification.trim()&&c.afterChange.trim())return 'Verified / documented';
@@ -124,12 +130,12 @@ function area(label,key,c,help='',tall=false){return `<label class="wide">${esc(
 
 function evidenceBoard(c){const d=selectedDefect(c);if(!d)return '<div class="mw-empty">Choose a defect to load its known symptom, mechanism candidates and evidence checks. These are prompts to investigate, not an automatic diagnosis.</div>';return `<div class="mw-evidence-board"><div class="mw-evidence-row"><b>Observed symptom pattern</b><br>${esc(d.symptom||'')}</div>${(d.mechanisms||[]).slice(0,5).map(x=>`<div class="mw-evidence-row mw-mechanism"><b>Mechanism candidate</b><br>${esc(x)}</div>`).join('')}${(d.checks||[]).slice(0,6).map(x=>`<div class="mw-evidence-row mw-check"><b>Evidence to collect</b><br>${esc(x)}</div>`).join('')}</div>`}
 function relatedHtml(c){
-  const ls=relatedLessons(c),ss=relatedSpecialist(c),ds=relatedData(c),ms=relatedMaterial(c);
+  const ls=relatedLessons(c),ss=relatedSpecialist(c),ms=relatedMaterial(c),evidence=relatedProcessEvidence(c);
   const lessonButtons=ls.length?ls.map(l=>`<button class="ghost" type="button" data-mw-lesson="${l.id}">${esc(l.id+'. '+l.title)}</button>`).join(''):'<div class="mw-empty">Add a defect, material or evidence terms to surface related lessons.</div>';
   const spec=ss.length?`<div class="mw-chip-row">${ss.map(x=>`<span class="mw-chip">${esc(x.id+' · '+x.title)}</span>`).join('')}</div>`:'';
-  const data=ds.length?ds.map(x=>`<button class="ghost" type="button" data-mw-data="${esc(x.id)}" data-mw-data-origin="${esc(x.origin||'Guided 14')}">${esc(x.origin||'Data case')} · ${esc(x.title)}</button>`).join(''):'';
   const mat=ms.length?ms.map(x=>`<button class="ghost" type="button" data-mw-material="${esc(x.id)}">Material lab · ${esc(x.title)}</button>`).join(''):'';
-  return `<div class="mw-related"><details><summary>Related lessons, evidence cases and tools</summary><div class="mw-related-body"><p class="mw-help">Open these only when you want a second source or practice route. Your case notes remain local to this learner.</p>${lessonButtons}${spec}${data}${mat}<button class="ghost" type="button" data-mw-defects>Open Defect Finder</button><button class="ghost" type="button" data-mw-diagnostic>Open Diagnostic Labs</button><button class="ghost" type="button" data-mw-data-home>Open Data Diagnosis</button></div></details></div>`
+  const evidenceCases=evidence.length?`<div class="mw-list">${evidence.map(x=>`<div class="mw-item"><b>${esc(x.item.title)}</b><p>${esc(x.library)} · ${esc(x.item.id)} · read-only synthetic training evidence</p></div>`).join('')}</div>`:'<div class="mw-empty">Add a defect, material or evidence term to search the retained guided, 50-case and 20-pass libraries.</div>';
+  return `<div class="mw-related"><details><summary>Related lessons, evidence cases and tools</summary><div class="mw-related-body"><p class="mw-help">Open these only when you want a second source or practice route. Your case notes remain local to this learner.</p><h4>Related synthetic evidence cases</h4><p class="mw-help">These references search retained training data and do not reopen the retired Process Data screens.</p>${evidenceCases}${lessonButtons}${spec}${mat}<button class="ghost" type="button" data-mw-defects>Open Defect Finder</button><button class="ghost" type="button" data-mw-diagnostic>Open Diagnostic Labs</button></div></details></div>`
 }
 
 async function hydrateEngineeringContext(host,c){
@@ -270,20 +276,6 @@ function wire(host,c){
   host.querySelectorAll('[data-mw-lesson]').forEach(b=>b.addEventListener('click',()=>{try{user.currentLesson=Number(b.dataset.mwLesson);persist();switchView('lesson')}catch(_){}}));
   host.querySelector('[data-mw-defects]')?.addEventListener('click',()=>switchView('defects'));
   host.querySelector('[data-mw-diagnostic]')?.addEventListener('click',()=>window.MM_DIAGNOSTIC_LABS?.open?.());
-  host.querySelector('[data-mw-data-home]')?.addEventListener('click',()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
-  host.querySelectorAll('[data-mw-data]').forEach(b=>b.addEventListener('click',()=>{
-    const origin=b.dataset.mwDataOrigin||'Guided 14',id=b.dataset.mwData;
-    if(origin==='20-pass atlas'){
-      window.MM_PROCESS_DATA_20_PASS_ATLAS?.open?.();
-      return setTimeout(()=>document.querySelector(`[data-at20-open="${CSS.escape(id)}"]`)?.click(),0)
-    }
-    if(origin==='50-case deep dive'){
-      window.MM_PROCESS_DATA_DEEP_DIVE_50?.open?.();
-      return setTimeout(()=>document.querySelector(`[data-dd50-open="${CSS.escape(id)}"]`)?.click(),0)
-    }
-    window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.();
-    setTimeout(()=>document.querySelector(`[data-pd-start="${CSS.escape(id)}"]`)?.click(),0)
-  }));
   host.querySelectorAll('[data-mw-material]').forEach(b=>b.addEventListener('click',()=>{window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.();setTimeout(()=>document.querySelector(`[data-ml-start="${CSS.escape(b.dataset.mwMaterial)}"]`)?.click(),0)}));
   host.querySelector('[data-mw-field="defect"]')?.addEventListener('change',async()=>{try{const saved=await saveCase(collect(c));renderCase(saved)}catch(err){persistenceError(err)}})
 }

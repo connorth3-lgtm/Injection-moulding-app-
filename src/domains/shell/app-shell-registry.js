@@ -340,7 +340,6 @@ function bindExternalTool(id,apiName){
 function bindExternalTools(){
   bindExternalTool('mould-master','MM_MOULD_MASTER_WORKSPACE');
   bindExternalTool('diagnostic-labs','MM_DIAGNOSTIC_LABS');
-  bindExternalTool('process-data','MM_PROCESS_DATA_DIAGNOSTICS');
   bindExternalTool('material-labs','MM_MATERIAL_BEHAVIOUR_LABS')
 }
 
@@ -408,7 +407,6 @@ function installDefaultNavigation(){
   registerNavigation({id:'book',label:'Book',icon:'▣',description:'Open the governed injection moulding reference.',order:5,group:'progress',mobileGroup:'more',action:()=>openBookFromShell('contents')});
   registerNavigation({id:'mould-master',desktop:false,mobileMore:false,label:'Mould Master',icon:'◆',description:'Build an evidence-led troubleshooting case.',order:10,group:'practice',legacyDataset:'mmMouldMaster',mobileGroup:'practice',action:()=>window.MM_MOULD_MASTER_WORKSPACE?.open?.()});
   registerNavigation({id:'diagnostic-labs',desktop:false,mobileMore:false,label:'Diagnostic labs',icon:'⌁',description:'Practise evidence-first troubleshooting.',order:20,group:'practice',legacyDataset:'mmDiagnosticLabs',mobileGroup:'practice',action:()=>window.MM_DIAGNOSTIC_LABS?.open?.()});
-  registerNavigation({id:'process-data',desktop:false,mobileMore:false,label:'Process data lab',icon:'⌁',description:'Practise synthetic process evidence or analyse prepared local shot data.',order:30,group:'practice',legacyDataset:'mmProcessData',mobileGroup:'practice',action:()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.()});
   registerNavigation({id:'material-labs',desktop:false,mobileMore:false,label:'Material labs',icon:'◈',description:'Compare resin-specific behaviour and evidence.',order:40,group:'materials',legacyDataset:'mmMaterialLabs',mobileGroup:'materials',action:()=>window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.()});
   registerNavigation({id:'reference-data',label:'Reference data',icon:'▤',description:'Materials, defects, signals and troubleshooting data.',order:50,group:'progress',desktop:false,mobileGroup:'more',action:()=>location.assign('./reference-data.html')});
   registerNavigation({id:'learning-insights',label:'Learning insights',icon:'◫',description:'See local learning progress and retry trends.',order:60,group:'progress',legacyDataset:'mmLearningInsights',mobileGroup:'more',action:()=>window.MM_LEARNING_ANALYTICS?.open?.()});

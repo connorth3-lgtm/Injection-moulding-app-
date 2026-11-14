@@ -141,6 +141,7 @@ jobs:
           node --check process-data-20-pass-16-20.js
           node --check process-data-20-pass-atlas.js
           node --check process-data-local-intake.js
+          node --check process-data-statistics.js
           node --check curriculum-integration.js
           node --check specialist-curriculum.js
           node --check src/domains/learning/specialist-evidence-gap-extension.js

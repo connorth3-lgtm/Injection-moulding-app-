@@ -740,10 +740,11 @@ pages_builder = (ROOT / "tools/build_pages_artifact.py").read_text(encoding="utf
 need('"data/",' in pages_builder, "Pages private-data boundary unexpectedly removed")
 need("./data/" not in registry, "runtime material registry must not fetch private data/ assets")
 
-# 10) Five canonical product areas.
+# 10) Four canonical product areas after retiring Process Data.
 areas = (ROOT / "src/domains/shell/product-areas.js").read_text(encoding="utf-8")
-for name in ["Learn", "Materials", "Diagnose", "Analyse", "Evidence"]:
+for name in ["Learn", "Materials", "Diagnose", "Evidence"]:
     need(re.search(rf"['\"]{name}['\"]", areas) is not None, f"canonical product area missing: {name}")
+need(re.search(r"['\"](?:Analyse|Process Data)['\"]", areas) is None, "retired Process Data product area must not be registered")
 need("canonical Home registry owns learner-facing composition" in areas, "product-area routing must defer learner-facing Home composition to the canonical registry")
 need("MM_PRODUCT_AREAS=Object.freeze({version:VERSION,areas:AREAS,open,install})" in areas, "canonical product-area routing API missing")
 

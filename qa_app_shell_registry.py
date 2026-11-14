@@ -39,7 +39,6 @@ for marker in [
     "id:'specialist'",
     "id:'mould-master'",
     "id:'diagnostic-labs'",
-    "id:'process-data'",
     "id:'material-labs'",
     "id:'learning-insights'", "id:'repair-app-files'", "Support & app maintenance", "./support.html",
     'aria-current',
@@ -58,6 +57,7 @@ for marker in [
     'window.__MM_MATERIAL_MORE_PATCH__=true',
     'window.__MM_LEARNING_INSIGHTS_MORE__=true'
 ]: need(marker in shell,f'app shell marker missing: {marker}')
+need("id:'process-data'" not in shell,'retired Process Data must not register a shell navigation item')
 
 # Late registration must trigger deterministic composition without clearing/adopting the same nodes repeatedly.
 need('if(!finalized||dashboardComposeQueued)return' in shell,'late dashboard registration is not safely queued after finalization')

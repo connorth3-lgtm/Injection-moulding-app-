@@ -6,6 +6,7 @@ on:
     paths:
       - 'data-integration-runtime.js'
       - 'process-data-intelligence-ui.js'
+      - 'process-data-statistics.js'
       - 'process-data-semantic-registry.json'
       - 'current-data-manifest.json'
       - 'data/measured-data-collection-closeout-2026-08-30.json'
@@ -45,7 +46,7 @@ jobs:
       - name: JavaScript syntax
         run: |
           node --check data-integration-runtime.js
-          node --check process-data-intelligence-ui.js
+          node --check process-data-statistics.js
           node --check src/domains/process/process-data-integrity.js
           node --check qa_process_data_integrity.cjs
           node --check src/domains/shell/app-shell-finalize.js
@@ -64,7 +65,8 @@ jobs:
       - name: Confirm governed raw data is absent from public artifact
         run: |
           test -f .pages-dist/data-integration-runtime.js
-          test -f .pages-dist/process-data-intelligence-ui.js
+          test ! -e .pages-dist/process-data-intelligence-ui.js
+          grep -q "MM_PROCESS_DATA_STATISTICS" .pages-dist/src/domains/runtime-packs/process-data-runtime-pack.js
           test -f .pages-dist/process-data-semantic-registry.json
           test -f .pages-dist/current-data-manifest.json
           python - <<'PY'

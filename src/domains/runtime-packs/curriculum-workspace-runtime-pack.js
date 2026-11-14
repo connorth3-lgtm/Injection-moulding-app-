@@ -17,8 +17,8 @@ const resolvedCurriculumLesson=()=>typeof mmCoreSafeLesson==='function'
 if(typeof renderLesson!=='function'||typeof renderDashboard!=='function'||typeof D==='undefined'||!Array.isArray(D.lessons)){
   throw new Error('curriculum-integration.js requires the core lesson runtime');
 }
-if(!window.MM_LEARNING_EXPERIENCE||!window.MM_DIAGNOSTIC_LABS||!window.MM_PROCESS_DATA_DIAGNOSTICS||!window.MM_MATERIAL_BEHAVIOUR_LABS){
-  throw new Error('curriculum-integration.js requires learning experience, diagnostic, process-data and material practice modules');
+if(!window.MM_LEARNING_EXPERIENCE||!window.MM_DIAGNOSTIC_LABS||!window.MM_MATERIAL_BEHAVIOUR_LABS){
+  throw new Error('curriculum-integration.js requires learning experience, diagnostic and material practice modules');
 }
 
 const ROUTES=Object.freeze([
@@ -32,21 +32,6 @@ const ROUTES=Object.freeze([
   {type:'diagnostic',id:'hot-runner-imbalance',courses:[4,10,11,12],keywords:['hot runner','heater','thermocouple','manifold','branch','cavity balance'],why:'Combine local cavity behaviour with heater/control evidence instead of trusting one displayed temperature.'},
   {type:'diagnostic',id:'local-flash',courses:[4,6,11,12],keywords:['flash','shutoff','parting line','tool damage','mould support','clamp force'],why:'Use defect location and tooling history to test a local mechanism before applying global force or pressure.'},
 
-  {type:'data',id:'check-ring-leakage',courses:[1,2,5,7,8,12],keywords:['check ring','non-return','cushion','shot mass','shot delivery','repeatability'],why:'Read correlated cushion, mass and pressure signals across baseline, fault and recovery cycles.'},
-  {type:'data',id:'cooling-restriction',courses:[4,6,11,12],keywords:['cooling','coolant','flow','warpage','mould temperature','thermal'],why:'Use a 72-cycle pattern to connect reduced circuit flow with thermal and dimensional response.'},
-  {type:'data',id:'gate-seal-study',courses:[5,7,8,9],keywords:['gate seal','hold time','packing','part mass','pressure area'],why:'Use synthetic study data to recognise the response plateau that supports a gate-seal conclusion.'},
-  {type:'data',id:'material-moisture-pc',courses:[3,6,12],keywords:['moisture','drying','polycarbonate','pc','splay','material condition'],why:'Compare material-condition signals with cosmetic and mechanical responses instead of relying on a dryer screen.'},
-  {type:'data',id:'hot-runner-zone-drift',courses:[4,10,11,12],keywords:['hot runner','heater duty','zone','temperature drift','thermocouple','controller'],why:'See how control effort and local response can expose a thermal fault even when displayed temperature looks stable.'},
-  {type:'data',id:'valve-gate-timing',courses:[4,10,11,12],keywords:['valve gate','sequential','timing','cavity trace','cavity pressure'],why:'Use cavity-specific timing evidence to distinguish a local sequence problem from a global machine change.'},
-  {type:'data',id:'local-flash-tooling',courses:[4,6,11,12],keywords:['flash','shutoff','parting line','tooling','local defect'],why:'Compare local flash evidence with stable global signals to test a tooling mechanism.'},
-  {type:'data',id:'energy-base-load',courses:[1,8,10,12],keywords:['energy','efficiency','economics','cycle time','utility','base load'],why:'Connect stable quality and cycle performance with changing energy demand so efficiency decisions stay evidence based.'},
-  {type:'data',id:'measurement-noise',courses:[8,9,10,12],keywords:['measurement','noise','msa','gauge','gage','dimension','repeatability','reproducibility'],why:'Compare true process stability with rising measurement spread before drawing a process conclusion.'},
-  {type:'data',id:'recycled-pp-lot',courses:[3,8,9,12],keywords:['recycled','regrind','polypropylene','pp','mfr','mvr','lot','rheology'],why:'Connect incoming-material lot evidence to pressure, fill and dimensional response instead of copying old settings.'},
-  {type:'data',id:'machine-transfer',courses:[1,2,5,7,8,12],keywords:['machine transfer','transfer process','setpoint','actual','machine capability','copy recipe','process transfer'],why:'See why identical screen values on two machines do not guarantee the same physical process response.'},
-  {type:'data',id:'cavity-pack-area',courses:[4,5,7,8,11,12],keywords:['cavity pressure','pack area','pressure curve','pressure history','packing','peak pressure'],why:'Use the full pressure-history area to see changes that a single peak value can hide.'},
-  {type:'data',id:'screw-barrel-wear',courses:[2,5,8,12],keywords:['screw','barrel','wear','recovery','plasticising','back pressure','melt temperature'],why:'Trend plasticising and recovery signals together before compensating for a changing mechanical system.'},
-  {type:'data',id:'ejector-drag',courses:[4,6,10,11,12],keywords:['ejection','ejector','drag','release','draft','eject force'],why:'Connect ejection force, local temperature and part response to a cooling/release mechanism.'},
-
   {type:'material',id:'pp-vs-pc-drying',courses:[1,3,5],keywords:['polymer family','polypropylene','pp','polycarbonate','pc','drying','grade','material handling'],why:'Compare two resin families to practise using exact grade requirements instead of one generic drying rule.'},
   {type:'material',id:'pc-wet-vs-dry',courses:[3,6,8,12],keywords:['polycarbonate','pc','moisture','drying','splay','hydrolysis','impact'],why:'Connect verified pellet moisture to appearance and property risk after a handling interruption.'},
   {type:'material',id:'pa66-gf30-dry-conditioned',courses:[3,4,8,11,12],keywords:['nylon','pa66','glass fibre','glass fiber','fibre orientation','fiber orientation','conditioning','anisotropy','warpage','shrinkage'],why:'Separate pre-mould drying from post-mould conditioning and connect reinforcement orientation to dimensional behaviour.'},
@@ -56,23 +41,22 @@ const ROUTES=Object.freeze([
 ]);
 
 const COURSE_FALLBACKS=Object.freeze({
-  1:[{type:'diagnostic',id:'pressure-limited-fill'},{type:'data',id:'check-ring-leakage'}],
-  2:[{type:'diagnostic',id:'check-ring-repeatability'},{type:'data',id:'machine-transfer'}],
-  3:[{type:'material',id:'pp-vs-pc-drying'},{type:'data',id:'material-moisture-pc'}],
-  4:[{type:'diagnostic',id:'cooling-warpage'},{type:'data',id:'cooling-restriction'}],
-  5:[{type:'diagnostic',id:'gate-seal-study'},{type:'data',id:'gate-seal-study'}],
-  6:[{type:'diagnostic',id:'cavity-short-shot'},{type:'data',id:'local-flash-tooling'}],
-  7:[{type:'diagnostic',id:'gate-seal-study'},{type:'data',id:'cavity-pack-area'}],
-  8:[{type:'diagnostic',id:'measurement-noise'},{type:'data',id:'machine-transfer'}],
-  9:[{type:'diagnostic',id:'measurement-noise'},{type:'data',id:'measurement-noise'}],
-  10:[{type:'diagnostic',id:'hot-runner-imbalance'},{type:'data',id:'valve-gate-timing'}],
-  11:[{type:'diagnostic',id:'hot-runner-imbalance'},{type:'data',id:'hot-runner-zone-drift'}],
-  12:[{type:'diagnostic',id:'check-ring-repeatability'},{type:'data',id:'machine-transfer'}]
+  1:[{type:'diagnostic',id:'pressure-limited-fill'},{type:'material',id:'pp-vs-pc-drying'}],
+  2:[{type:'diagnostic',id:'check-ring-repeatability'},{type:'material',id:'pp-vs-pc-drying'}],
+  3:[{type:'material',id:'pp-vs-pc-drying'},{type:'material',id:'pc-wet-vs-dry'}],
+  4:[{type:'diagnostic',id:'cooling-warpage'},{type:'material',id:'pa66-gf30-dry-conditioned'}],
+  5:[{type:'diagnostic',id:'gate-seal-study'},{type:'material',id:'pp-vs-pc-drying'}],
+  6:[{type:'diagnostic',id:'cavity-short-shot'},{type:'material',id:'pc-wet-vs-dry'}],
+  7:[{type:'diagnostic',id:'gate-seal-study'},{type:'diagnostic',id:'check-ring-repeatability'}],
+  8:[{type:'diagnostic',id:'measurement-noise'},{type:'material',id:'pa66-gf30-dry-conditioned'}],
+  9:[{type:'diagnostic',id:'measurement-noise'},{type:'material',id:'recycled-pp-lot-rheology'}],
+  10:[{type:'diagnostic',id:'hot-runner-imbalance'},{type:'diagnostic',id:'measurement-noise'}],
+  11:[{type:'diagnostic',id:'hot-runner-imbalance'},{type:'material',id:'pa66-gf30-dry-conditioned'}],
+  12:[{type:'diagnostic',id:'check-ring-repeatability'},{type:'material',id:'pc-wet-vs-dry'}]
 });
 
 const TYPE_META=Object.freeze({
   diagnostic:{label:'Diagnostic lab',detail:'Reason through a realistic evidence-first fault case.',selector:'data-dl-start'},
-  data:{label:'Process data practice',detail:'Apply this lesson in a guided case using linked baseline → fault → recovery evidence from 72 cycles.',selector:'data-pd-start'},
   material:{label:'Material lab',detail:'Apply grade-aware material evidence and safe handling logic.',selector:'data-ml-start'}
 });
 
@@ -94,7 +78,6 @@ function key(route){return `${route.type}:${route.id}`}
 function courseFor(lesson){return D.courses.find(c=>c.id===lesson.course)||null}
 function libraryFor(type){
   if(type==='diagnostic')return window.MM_DIAGNOSTIC_LABS.labs||[];
-  if(type==='data')return window.MM_PROCESS_DATA_DIAGNOSTICS.cases||[];
   if(type==='material')return window.MM_MATERIAL_BEHAVIOUR_LABS.labs||[];
   return [];
 }
@@ -170,7 +153,6 @@ function openPractice(type,id,lessonId){
   setReturn(lessonId);
   window.MM_LEARNING_ANALYTICS?.record?.('curriculum_practice_open',{module:type,id});
   if(type==='diagnostic')window.MM_DIAGNOSTIC_LABS.open();
-  else if(type==='data'){window.MM_PROCESS_DATA_DIAGNOSTICS.open();window.MM_PROCESS_DATA_DIAGNOSTICS.openGuidedCases?.()}
   else if(type==='material')window.MM_MATERIAL_BEHAVIOUR_LABS.open();
   requestAnimationFrame(()=>{
     const button=practiceButton(type,id);
@@ -315,7 +297,7 @@ const LESSONS=[
     objectives:['Explain how cavity pressure acting over projected area creates mould-opening force.','Separate local flash/tooling evidence from a genuine global clamp-capability question.','Recognise why machine-, mould- and process-specific methods are required instead of a universal tonnage rule.'],
     keypoints:['Projected area is the cavity and runner area projected onto the parting plane, not part surface area in three dimensions.','Cavity pressure is not perfectly uniform, so simple multiplication is a reasoning model rather than a universal sizing recipe.','Local flash after a tooling event can occur while global clamp force remains stable.','More clamp force is not a substitute for inspecting parting lines, inserts, support, mould condition and the actual pressure history.'],
     evidenceTask:'Sketch the projected footprint of an example multi-cavity tool, identify what pressure evidence would be needed to reason about opening force, and separately list evidence that would favour a local shutoff/tooling cause.',
-    practices:[{type:'data',id:'local-flash-tooling',label:'Data diagnosis — Local flash vs global clamp'},{type:'core',id:'14',label:'Revisit core lesson 14 — Clamp unit anatomy'}]
+    practices:[{type:'core',id:'14',label:'Revisit core lesson 14 — Clamp unit anatomy'}]
   },
   {
     id:'S03',title:'Plasticising controls: back pressure, screw speed, decompression & recovery',level:'Specialist machine/process',
@@ -324,7 +306,7 @@ const LESSONS=[
     objectives:['Relate screw rotation, back pressure, recovery time and melt condition as coupled plasticising responses.','Explain why decompression is a pressure-management function rather than a material-quality cure.','Use recovery and shot-delivery trends to decide whether a machine/plasticising investigation is warranted.'],
     keypoints:['Screw speed and back pressure can change shear work, mixing, recovery time and material thermal history.','A barrel-zone setpoint does not by itself prove actual melt condition.','Decompression can influence nozzle pressure and feed behaviour but should not be used to hide an unstable shot-delivery mechanism.','Trend recovery time, cushion, transfer, shot mass and melt evidence together before making a mechanism claim.'],
     evidenceTask:'Compare a stable and drifting plasticising sequence. Decide which measured actuals would distinguish feed inconsistency, check-ring behaviour, excessive recovery demand and a developing screw/barrel condition.',
-    practices:[{type:'data',id:'screw-barrel-wear',label:'Data diagnosis — Screw/barrel wear'},{type:'data',id:'check-ring-leakage',label:'Data diagnosis — Check-ring leakage'}]
+    practices:[{type:'core',id:'13',label:'Revisit core lesson 13 — Plasticising and shot delivery'}]
   },
   {
     id:'S04',title:'Reinforced polymers: fibre orientation, anisotropy & conditioning',level:'Specialist materials',
@@ -351,7 +333,7 @@ const LESSONS=[
     objectives:['Distinguish internal shrinkage voids from surface sink and other internal discontinuities.','Recognise contamination/incompatibility and interlayer bonding as possible delamination mechanisms.','Choose destructive inspection, material identity and packing evidence when surface appearance is insufficient.'],
     keypoints:['A visually acceptable surface does not prove the interior is sound.','Voids in thick sections can reflect center shrinkage, gate effectiveness and cooling gradients.','Delamination can point toward incompatibility, contamination, excessive shear or weak interlayer bonding.','Sectioning, microscopy or other approved inspection methods can be more diagnostic than repeated machine adjustments.'],
     evidenceTask:'Take one hypothetical hidden defect and define the minimum evidence needed to distinguish geometry/packing/cooling from material incompatibility or degradation before changing the validated process.',
-    practices:[{type:'defects',label:'Defect Finder — Voids and delamination'},{type:'data',id:'gate-seal-study',label:'Data diagnosis — Gate-seal/packing plateau'}]
+    practices:[{type:'defects',label:'Defect Finder — Voids and delamination'}]
   },
   {
     id:'S07',title:'SPC, control charts & reaction plans',level:'Specialist quality engineering',
@@ -360,7 +342,7 @@ const LESSONS=[
     objectives:['Explain why time-ordered stability evidence comes before capability interpretation.','Distinguish common-cause variation from signals that warrant investigation under an approved reaction plan.','Avoid tampering with a stable process in response to measurement noise or isolated points.'],
     keypoints:['A process can be within specification and still be unstable; specification limits and control limits answer different questions.','Control charts are decision aids whose chart type, subgrouping and rules must match the process and quality system.','Reaction plans should identify what evidence to check before changing the process.','Measurement-system problems can create apparent process signals that should not be tuned away.'],
     evidenceTask:'Design a simple time-ordered monitoring plan for one critical dimension or process actual: define the subgroup logic, known-good baseline evidence, investigation trigger and first checks in the reaction plan without inventing universal numeric limits.',
-    practices:[{type:'data',id:'measurement-noise',label:'Data diagnosis — Measurement noise masquerading as drift'},{type:'core',id:'72',label:'Revisit core lesson 72 — Stability before capability'}]
+    practices:[{type:'core',id:'72',label:'Revisit core lesson 72 — Stability before capability'}]
   },
   {
     id:'S08',title:'Gage R&R, MSA & measurement uncertainty',level:'Specialist measurement',
@@ -369,7 +351,7 @@ const LESSONS=[
     objectives:['Separate process variation from variation introduced by the measurement system.','Explain repeatability and reproducibility in practical moulded-part measurement.','Recognise when fixture, conditioning time, operator method or resolution can dominate the conclusion.'],
     keypoints:['A larger measured spread does not prove the moulding process became less stable.','Measurement studies must reflect the real characteristic, method, operators/conditions and expected part range.','Resolution alone does not establish measurement adequacy.','Capability, DOE and validation conclusions inherit the limitations of the measurement system used to generate them.'],
     evidenceTask:'Build a measurement-system investigation for a dimension that suddenly appears noisier: define repeated measurements, operator/method comparisons, fixture and conditioning controls, and an independent process signal to compare against.',
-    practices:[{type:'data',id:'measurement-noise',label:'Data diagnosis — Measurement-system variation'},{type:'core',id:'75',label:'Revisit core lesson 75 — Measurement system awareness'}]
+    practices:[{type:'core',id:'75',label:'Revisit core lesson 75 — Measurement system awareness'}]
   },
   {
     id:'S09',title:'Sequential and valve-gate timing',level:'Specialist tooling/process',
@@ -378,7 +360,7 @@ const LESSONS=[
     objectives:['Explain why valve timing changes local flow-front interaction and cavity balance.','Compare commanded valve timing with actual actuation and cavity-specific response.','Avoid global recipe changes when the evidence isolates one sequential branch or gate.'],
     keypoints:['One cavity or branch separating while others remain stable is strong localisation evidence.','Commanded timing is not proof that the valve physically actuated at that time.','Cavity pressure, fill signature, actuator/sensor evidence and part pattern should be interpreted together.','Sequential-gating optimisation must remain within approved tool, hot-runner and process limits.'],
     evidenceTask:'For a two-branch sequential-gate example, identify the signals that would distinguish an actual valve-delay fault from a global viscosity or machine-velocity change.',
-    practices:[{type:'data',id:'valve-gate-timing',label:'Data diagnosis — Valve-gate timing'},{type:'core',id:'108',label:'Revisit core lesson 108 — Hot-runner balancing'}]
+    practices:[{type:'core',id:'108',label:'Revisit core lesson 108 — Hot-runner balancing'}]
   },
   {
     id:'S10',title:'Screw/barrel wear & plasticising-system health',level:'Specialist maintenance/process',
@@ -387,7 +369,7 @@ const LESSONS=[
     objectives:['Recognise coupled process signatures that justify a plasticising-system investigation.','Separate gradual machine wear from material-lot, feed and cavity-side causes.','Use trend and maintenance evidence rather than compensating indefinitely with recipe changes.'],
     keypoints:['Wear can alter conveying, melting, recovery and repeatability before it becomes visually obvious.','Recovery time alone is not enough; combine it with melt, shot, back-pressure and material evidence.','A changed process response after maintenance should be compared with the known-good baseline.','Confirmed mechanical deterioration should be corrected under the approved maintenance process before redefining the validated moulding window.'],
     evidenceTask:'Create a trend review that uses recovery time, melt/shot evidence, back-pressure response, material history and maintenance findings to decide whether a machine inspection is warranted.',
-    practices:[{type:'data',id:'screw-barrel-wear',label:'Data diagnosis — Screw/barrel wear'},{type:'core',id:'118',label:'Revisit core lesson 118 — Maintenance-process interaction'}]
+    practices:[{type:'core',id:'118',label:'Revisit core lesson 118 — Maintenance-process interaction'}]
   },
   {
     id:'S11',title:'Ejector/tool condition, drag & release evidence',level:'Specialist tooling',
@@ -396,7 +378,7 @@ const LESSONS=[
     objectives:['Relate ejection load to local temperature, shrinkage, draft, texture and tool condition.','Use eject-force and thermal trends as evidence rather than treating release as a purely mechanical setting.','Separate a local release problem from a global cycle or packing problem.'],
     keypoints:['Higher eject force is a symptom measurement as well as a machine setting concern.','Local cooling imbalance can change dimensions and release load together.','Draft, texture, surface/tool condition and deformation can all affect drag.','Increasing ejection force without identifying the mechanism can damage parts or tooling and conceal the real condition.'],
     evidenceTask:'Compare baseline and high-drag cycles using eject force, part/eject temperature, dimension, surface evidence and cooling-flow data. State which evidence would send the investigation toward cooling versus tooling/release geometry.',
-    practices:[{type:'data',id:'ejector-drag',label:'Data diagnosis — Ejector drag'},{type:'core',id:'37',label:'Revisit core lesson 37 — Ejection'}]
+    practices:[{type:'core',id:'37',label:'Revisit core lesson 37 — Ejection'}]
   },
   {
     id:'S12',title:'Sustainable processing: energy base load & recycled-feedstock variability',level:'Specialist sustainability/process',
@@ -405,7 +387,7 @@ const LESSONS=[
     objectives:['Separate energy consumed by productive moulding work from machine/auxiliary base load.','Treat recycled-feedstock lot variation as a material/process input that may require verification or revalidation.','Evaluate sustainability changes against quality, robustness, traceability and approved material requirements rather than one metric alone.'],
     keypoints:['Energy per cycle can rise while cycle time and accepted quality remain stable, pointing toward machine or auxiliary demand.','Nominally similar recycled feedstock can show meaningful rheology and lot variation.','Lower energy or higher recycled content is not a valid improvement if quality, material compliance or process robustness is lost.','Track material identity, lot/property evidence, process actuals, reject/scrap response and energy together.'],
     evidenceTask:'Build a before/after sustainability review that includes energy per accepted part, cycle/quality stability, material lot/property evidence and the change-control decision needed before adopting a new normal condition.',
-    practices:[{type:'data',id:'energy-base-load',label:'Data diagnosis — Energy base load'},{type:'data',id:'recycled-pp-lot',label:'Data diagnosis — Recycled PP lot variability'},{type:'material',id:'recycled-pp-lot-rheology',label:'Material lab — Recycled PP rheology'}]
+    practices:[{type:'material',id:'recycled-pp-lot-rheology',label:'Material lab — Recycled PP rheology'}]
   }
 ];
 
@@ -475,7 +457,6 @@ function practice(type,id){
   }
   if(type==='defects'){if(typeof switchView==='function')switchView('defects');return}
   if(type==='standards'){if(typeof switchView==='function')switchView('standards');return}
-  if(type==='data'&&window.MM_PROCESS_DATA_DIAGNOSTICS){window.MM_PROCESS_DATA_DIAGNOSTICS.open();setTimeout(()=>document.querySelector(`[data-pd-start="${id}"]`)?.click(),0);return}
   if(type==='material'&&window.MM_MATERIAL_BEHAVIOUR_LABS){window.MM_MATERIAL_BEHAVIOUR_LABS.open();setTimeout(()=>document.querySelector(`[data-ml-start="${id}"]`)?.click(),0);return}
 }
 function toggle(id){setDone(id,!isDone(id));renderLesson(id)}
@@ -753,12 +734,6 @@ function persistenceError(err){storageFailure=String(err?.message||err);console.
 function defects(){try{return Array.isArray(D?.defects)?D.defects:[]}catch(_){return[]}}
 function lessons(){try{return Array.isArray(D?.lessons)?D.lessons:[]}catch(_){return[]}}
 function specialist(){return window.MM_SPECIALIST_CURRICULUM?.lessons||[]}
-function dataCases(){
-  const guided=(window.MM_PROCESS_DATA_DIAGNOSTICS?.cases||[]).map(x=>({...x,origin:'Guided 14'}));
-  const deep=(window.MM_PROCESS_DATA_DEEP_DIVE_50?.cases||[]).map(x=>({...x,origin:'50-case deep dive'}));
-  const atlas=(window.MM_PROCESS_DATA_20_PASS_ATLAS?.cases||[]).map(x=>({...x,kind:x.kind||x.domain||'20-pass atlas',origin:'20-pass atlas'}));
-  return [...guided,...deep,...atlas]
-}
 function materialLabs(){return window.MM_MATERIAL_BEHAVIOUR_LABS?.labs||[]}
 function selectedDefect(c){return defects().find(d=>d.name===c.defect)||null}
 const SHORT_TERMS=new Set(['PP','PC','ABS','POM','PET','PBT','TPU','PMMA','PEEK','PPS','LCP','HDPE','PA66','PA6','PPA','PEI','TPE'].map(x=>x.toLowerCase()));
@@ -767,8 +742,20 @@ function caseTerms(c){return [...new Set(words([c.defect,c.material,c.title,c.ev
 function scoreText(text,terms){const s=String(text||'').toLowerCase();return terms.reduce((n,t)=>n+(s.includes(t)?1:0),0)}
 function relatedLessons(c){const terms=caseTerms(c);return lessons().map(l=>({l,score:scoreText([l.title,l.summary,l.intro,(l.keypoints||[]).join(' ')].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,5).map(x=>x.l)}
 function relatedSpecialist(c){const terms=caseTerms(c);return specialist().map(l=>({l,score:scoreText([l.title,l.level].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,4).map(x=>x.l)}
-function relatedData(c){const terms=caseTerms(c);return dataCases().map(x=>({x,score:scoreText([x.title,x.kind,x.domain,x.passTitle,x.fault,x.diagnosis,x.next,(x.signals||[]).join(' ')].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,6).map(x=>x.x)}
 function relatedMaterial(c){const terms=caseTerms(c);return materialLabs().map(x=>({x,score:scoreText([x.title,x.focus,(x.materials||[]).join(' ')].join(' '),terms)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score).slice(0,4).map(x=>x.x)}
+function relatedProcessEvidence(c){
+  const terms=caseTerms(c);
+  const libraries=[
+    ['Guided synthetic case',window.MM_PROCESS_DATA_DIAGNOSTICS?.datasets||[]],
+    ['50-case training library',window.MM_PROCESS_DATA_DEEP_DIVE_50?.datasets||[]],
+    ['20-pass training atlas',window.MM_PROCESS_DATA_20_PASS_ATLAS?.datasets||[]]
+  ];
+  return libraries.flatMap(([library,rows])=>rows.map(item=>{
+    const searchable=[item.id,item.title,item.kind,item.domain,item.purpose,item.fault,item.diagnosis,item.next,item.verification,item.compensationTrap,
+      item.guide?.signal,item.guide?.diagnosis,item.guide?.next,Object.keys(item.signals||{}).join(' '),(item.sourceIds||[]).join(' ')].join(' ');
+    return{library,item,score:scoreText(searchable,terms)}
+  })).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.item.title.localeCompare(b.item.title)).slice(0,4)
+}
 
 function status(c){
   if(c.conclusion.trim()&&c.verification.trim()&&c.afterChange.trim())return 'Verified / documented';
@@ -823,12 +810,12 @@ function area(label,key,c,help='',tall=false){return `<label class="wide">${esc(
 
 function evidenceBoard(c){const d=selectedDefect(c);if(!d)return '<div class="mw-empty">Choose a defect to load its known symptom, mechanism candidates and evidence checks. These are prompts to investigate, not an automatic diagnosis.</div>';return `<div class="mw-evidence-board"><div class="mw-evidence-row"><b>Observed symptom pattern</b><br>${esc(d.symptom||'')}</div>${(d.mechanisms||[]).slice(0,5).map(x=>`<div class="mw-evidence-row mw-mechanism"><b>Mechanism candidate</b><br>${esc(x)}</div>`).join('')}${(d.checks||[]).slice(0,6).map(x=>`<div class="mw-evidence-row mw-check"><b>Evidence to collect</b><br>${esc(x)}</div>`).join('')}</div>`}
 function relatedHtml(c){
-  const ls=relatedLessons(c),ss=relatedSpecialist(c),ds=relatedData(c),ms=relatedMaterial(c);
+  const ls=relatedLessons(c),ss=relatedSpecialist(c),ms=relatedMaterial(c),evidence=relatedProcessEvidence(c);
   const lessonButtons=ls.length?ls.map(l=>`<button class="ghost" type="button" data-mw-lesson="${l.id}">${esc(l.id+'. '+l.title)}</button>`).join(''):'<div class="mw-empty">Add a defect, material or evidence terms to surface related lessons.</div>';
   const spec=ss.length?`<div class="mw-chip-row">${ss.map(x=>`<span class="mw-chip">${esc(x.id+' · '+x.title)}</span>`).join('')}</div>`:'';
-  const data=ds.length?ds.map(x=>`<button class="ghost" type="button" data-mw-data="${esc(x.id)}" data-mw-data-origin="${esc(x.origin||'Guided 14')}">${esc(x.origin||'Data case')} · ${esc(x.title)}</button>`).join(''):'';
   const mat=ms.length?ms.map(x=>`<button class="ghost" type="button" data-mw-material="${esc(x.id)}">Material lab · ${esc(x.title)}</button>`).join(''):'';
-  return `<div class="mw-related"><details><summary>Related lessons, evidence cases and tools</summary><div class="mw-related-body"><p class="mw-help">Open these only when you want a second source or practice route. Your case notes remain local to this learner.</p>${lessonButtons}${spec}${data}${mat}<button class="ghost" type="button" data-mw-defects>Open Defect Finder</button><button class="ghost" type="button" data-mw-diagnostic>Open Diagnostic Labs</button><button class="ghost" type="button" data-mw-data-home>Open Data Diagnosis</button></div></details></div>`
+  const evidenceCases=evidence.length?`<div class="mw-list">${evidence.map(x=>`<div class="mw-item"><b>${esc(x.item.title)}</b><p>${esc(x.library)} · ${esc(x.item.id)} · read-only synthetic training evidence</p></div>`).join('')}</div>`:'<div class="mw-empty">Add a defect, material or evidence term to search the retained guided, 50-case and 20-pass libraries.</div>';
+  return `<div class="mw-related"><details><summary>Related lessons, evidence cases and tools</summary><div class="mw-related-body"><p class="mw-help">Open these only when you want a second source or practice route. Your case notes remain local to this learner.</p><h4>Related synthetic evidence cases</h4><p class="mw-help">These references search retained training data and do not reopen the retired Process Data screens.</p>${evidenceCases}${lessonButtons}${spec}${mat}<button class="ghost" type="button" data-mw-defects>Open Defect Finder</button><button class="ghost" type="button" data-mw-diagnostic>Open Diagnostic Labs</button></div></details></div>`
 }
 
 async function hydrateEngineeringContext(host,c){
@@ -969,20 +956,6 @@ function wire(host,c){
   host.querySelectorAll('[data-mw-lesson]').forEach(b=>b.addEventListener('click',()=>{try{user.currentLesson=Number(b.dataset.mwLesson);persist();switchView('lesson')}catch(_){}}));
   host.querySelector('[data-mw-defects]')?.addEventListener('click',()=>switchView('defects'));
   host.querySelector('[data-mw-diagnostic]')?.addEventListener('click',()=>window.MM_DIAGNOSTIC_LABS?.open?.());
-  host.querySelector('[data-mw-data-home]')?.addEventListener('click',()=>window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.());
-  host.querySelectorAll('[data-mw-data]').forEach(b=>b.addEventListener('click',()=>{
-    const origin=b.dataset.mwDataOrigin||'Guided 14',id=b.dataset.mwData;
-    if(origin==='20-pass atlas'){
-      window.MM_PROCESS_DATA_20_PASS_ATLAS?.open?.();
-      return setTimeout(()=>document.querySelector(`[data-at20-open="${CSS.escape(id)}"]`)?.click(),0)
-    }
-    if(origin==='50-case deep dive'){
-      window.MM_PROCESS_DATA_DEEP_DIVE_50?.open?.();
-      return setTimeout(()=>document.querySelector(`[data-dd50-open="${CSS.escape(id)}"]`)?.click(),0)
-    }
-    window.MM_PROCESS_DATA_DIAGNOSTICS?.open?.();
-    setTimeout(()=>document.querySelector(`[data-pd-start="${CSS.escape(id)}"]`)?.click(),0)
-  }));
   host.querySelectorAll('[data-mw-material]').forEach(b=>b.addEventListener('click',()=>{window.MM_MATERIAL_BEHAVIOUR_LABS?.open?.();setTimeout(()=>document.querySelector(`[data-ml-start="${CSS.escape(b.dataset.mwMaterial)}"]`)?.click(),0)}));
   host.querySelector('[data-mw-field="defect"]')?.addEventListener('change',async()=>{try{const saved=await saveCase(collect(c));renderCase(saved)}catch(err){persistenceError(err)}})
 }

@@ -42,12 +42,12 @@ for(const marker of [
   'Virtual Apprenticeship',
   'Digital Factory — Case One',
   'Mould Master',
-  'Process Data',
   'MM_APP_SHELL',
   'mm:mission-change',
   'MM_RUNTIME_V2',
   'mm_mission_control_v1'
 ])assert.ok(source.includes(marker),`missing Mission Control marker: ${marker}`);
+assert.ok(!source.includes('Process Data'),'Mission Control must not expose the retired Process Data entry point');
 
 assert.ok(!/style\s*=/.test(source),'Mission Control runtime must not create inline style attributes under the app CSP');
 assert.ok(!/\.style\./.test(source),'Mission Control runtime must not mutate inline styles under the app CSP');

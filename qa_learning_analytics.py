@@ -36,7 +36,6 @@ for marker in [
     "record('practice_miss'",
     "record('practice_complete'",
     "data-dl-choice",
-    "data-pd-choice",
     'avgGain',
     'improvedCases',
     'Instructor view · this device only',
@@ -45,8 +44,6 @@ for marker in [
     'Clear my analytics',
     'practiceStepResults',
     'diagnosticChoiceCorrect',
-    'processChoiceCorrect',
-    'MM_PROCESS_DATA_DIAGNOSTICS?.evaluateChoice?.',
     'MM_LEARNING_ANALYTICS',
     'MM_DELAYED_TRANSFER_REVIEWS?.project?.',
     'Delayed transfer / retention',
@@ -60,6 +57,7 @@ scope=text('src/domains/shared/learner-scope.js')
 for marker in ['MM_LEARNER_SCOPE','activeId','tokenFor','normalizeToken','storageKey','2166136261','16777619']:
     need(marker in scope,f'shared learner scope marker missing: {marker}')
 need('Math.imul' not in js,'learning analytics must not carry a second learner-token hash implementation')
+need('processChoiceCorrect' not in js and 'currentProcessData' not in js and 'data-pd-choice' not in js,'retired Process Data screen must not emit practice telemetry')
 
 # Privacy boundary: analytics records use a strict allow-list and remain local-only.
 need("for(const key of ['module','id','reason'])" in js,'analytics string field allow-list missing')

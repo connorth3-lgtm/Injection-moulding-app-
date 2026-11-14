@@ -117,7 +117,7 @@ def classify(files:set[str])->dict[str,bool]:
     )
     residual_integrity=any(
         p in {
-            "data-integration-runtime.js","process-data-intelligence-ui.js",
+            "data-integration-runtime.js","process-data-statistics.js",
             "src/domains/learning/training-qa-fix.js",
             "src/domains/process/process-data-integrity.js","privacy.html",
             "qa_data_integration.py","qa_process_data_integrity.cjs",

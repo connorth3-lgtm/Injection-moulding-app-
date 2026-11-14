@@ -228,14 +228,12 @@ def verify_runtime_contracts() -> None:
         "['datasets','shots','baselines','caseLinks','interventions']",
         "deleteAllProcessData",
         "Process-data reset verification failed",
-        "const MAX_CSV_BYTES=10*1024*1024",
-        "file.size>MAX_CSV_BYTES",
-        "await file.text()",
+        "async function deleteAllProcessData()",
     ]:
         require(token in process, f"process-data integrity contract missing: {token}")
     require(
-        process.index("file.size>MAX_CSV_BYTES") < process.index("await file.text()"),
-        "process-data CSV byte limit must be checked before reading the file payload",
+        "file.text()" not in process and "input[type=file]" not in process,
+        "retired process-data intake UI must not be reintroduced into the retained storage runtime",
     )
 
 

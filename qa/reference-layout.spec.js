@@ -177,8 +177,8 @@ for(const width of [320,360,390,412]){
     await expect(page.locator('#scenarios .mm-reference-title')).toHaveText('Practice');
     await expect(page.locator('#scenarios .mm-reference-practice-list')).toHaveCount(0);
     const activities=page.locator('#scenarios .mm-unified-practice-card');
-    await expect(activities).toHaveCount(3);
-    await expect(activities.locator('.mm-reference-photo')).toHaveCount(3);
+    await expect(activities).toHaveCount(2);
+    await expect(activities.locator('.mm-reference-photo')).toHaveCount(2);
     await expect(activities.filter({hasText:'Question Centre'})).toHaveCount(0);
     await expect(page.locator('#scenarios [data-mm-hub-action="question-centre"]')).toHaveCount(0);
 
@@ -200,13 +200,13 @@ test('unified practice illustrations load locally without external dependencies'
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
   await page.evaluate(()=>switchView('scenarios'));
-  await expect(page.locator('#scenarios .mm-reference-practice-art')).toHaveCount(3);
+  await expect(page.locator('#scenarios .mm-reference-practice-art')).toHaveCount(2);
   await page.waitForFunction(()=>document.documentElement.classList.contains('mm-reference-photo-ready'));
   const tiles=await page.locator('#scenarios .mm-reference-practice-art.mm-reference-photo').evaluateAll(nodes=>nodes.map(el=>({
     tile:Number(el.dataset.mmPhotoIndex),
     background:getComputedStyle(el).backgroundImage
   })));
-  expect(tiles.map(row=>row.tile)).toEqual([20,23,19]);
+  expect(tiles.map(row=>row.tile)).toEqual([20,19]);
   expect(tiles.every(row=>row.background.includes('mockup-reference-tiles.webp'))).toBe(true);
 });
 
@@ -218,13 +218,13 @@ for(const width of [360,810]){
     const hub=page.locator('#scenarios .mm-practice-hub');
     await expect(hub).toBeVisible();
     const activities=hub.locator('.mm-hub-section:not([aria-label="More recommended practice"]) .mm-reference-practice-choice');
-    await expect(activities).toHaveCount(3);
-    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(3);
+    await expect(activities).toHaveCount(2);
+    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(2);
     await expect(hub.locator('[data-mm-hub-action="material-labs"]')).toHaveCount(0);
     // The QA learner has no local learning evidence, so no generic substitute card should appear.
     await expect(hub.locator('.mm-reference-practice-feature')).toHaveCount(0);
     await page.evaluate(()=>{window.MM_REFERENCE_LAYOUT.refresh();window.MM_REFERENCE_LAYOUT.refresh()});
-    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(3);
+    await expect(activities.locator(':scope > .mm-reference-practice-art')).toHaveCount(2);
     const sizing=await activities.evaluateAll(nodes=>({
       overflow:Math.max(0,document.documentElement.scrollWidth-innerWidth),
       touch:nodes.every(el=>el.getBoundingClientRect().height>=44),
@@ -438,37 +438,10 @@ test('Diagnostic workbench keeps keyboard arrival across symptom, evidence, revi
   await expect(workbench.locator('.mm-dx-empty')).toBeVisible();
 });
 
-test('Practice nested labs, data diagnosis and assessments keep working illustrated landing headers',async({page})=>{
+test('Practice nested labs and assessments keep working illustrated landing headers',async({page})=>{
   test.setTimeout(90000);
   await page.setViewportSize({width:390,height:844});
   await openApp(page);
-
-  await page.evaluate(()=>switchView('scenarios'));
-  await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="process-data"]').click();
-  const data=page.locator('#processDataLabs');
-  await expect(data.getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
-  await expect(data.locator('.pd-hero > .mm-reference-practice-tool-art')).toBeVisible();
-  await expect(data.locator(':scope > .mm-practice-tool-return')).toHaveCount(1);
-  await expect(data.locator('[data-pdlab-guided]')).toBeVisible();
-  await expect(data.locator('[data-pdlab-csv]')).toBeVisible();
-  await expect(data.locator('[data-pdlab-saved]')).toBeVisible();
-  await data.locator('[data-pdlab-guided]').click();
-  await expect(data.locator('[data-pd-start]').first()).toBeVisible();
-  await data.locator('[data-pd-start]').first().click();
-  const dataChoice=data.locator('button.pd-choice').first();
-  await expect(dataChoice).toBeVisible();
-  expect((await dataChoice.boundingBox()).height).toBeGreaterThanOrEqual(44);
-  await expect(data.locator('.pd-case > .pd-panel').first()).toHaveCSS('background-color','rgb(239, 247, 250)');
-  await dataChoice.click();
-  await expect(data.locator('.pd-feedback')).toBeVisible();
-  await expect(data.locator('[data-pd-home]')).toBeVisible();
-  await data.locator('[data-pd-home]').click();
-  await expect(data.locator('[data-pd-start]').first()).toBeVisible();
-  await expect(data.getByRole('heading',{name:'Guided Data Diagnosis'})).toBeVisible();
-  await data.locator('[data-pd-practice]').first().click();
-  await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
-  await page.locator('#scenarios .mm-practice-hub [data-mm-hub-action="process-data"]').click();
-  await expect(data.getByRole('heading',{name:'Start with a guided case'})).toBeVisible();
 
   for(const [action,root,hero,start,back] of [
     ['diagnostic-labs','#diagnosticLabs','.dl-hero','[data-dl-start]','[data-dl-home]'],

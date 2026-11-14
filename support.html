@@ -10,7 +10,7 @@
 <body>
 <h1>MouldMaster Academy — Support</h1>
 <div class="box"><b>Current release family</b><br>
-PWA shell: <span id="mmPwa">2026.11.14.2</span><br>
+PWA shell: <span id="mmPwa">2026.11.14.3</span><br>
 Open desktop: <span id="mmDesktop">2026.09.29.1</span><br>
 Training content: <span id="mmContent">2026.08.26.1</span><br>
 Audited question bank: <span id="mmBank">2026.08.30.1</span><br>
@@ -46,7 +46,7 @@ Legacy Windows recovery content: <span id="mmRecovery">2026.08.21.1</span><br>
 <tr><td><b>Learner progress</b></td><td>Active learner · learner-scoped browser storage</td><td><b>Reset learner data</b> in the learner/profile area. Cleanup is verified before the learner state is replaced.</td><td>Saved process-data evidence and archived engineering evidence.</td></tr>
 <tr><td><b>Assessment analytics</b></td><td>Active learner · local derived analytics</td><td><b>Reset local analytics</b> in Exams.</td><td>Lesson progress, notes, certificates and engineering/process evidence.</td></tr>
 <tr><td><b>Learning insights</b></td><td>Active learner · local event history</td><td><b>Clear my analytics</b> in Learning insights.</td><td>Learner progress and assessment records.</td></tr>
-<tr><td><b>Prepared process-data evidence</b></td><td>Device/site dataset · IndexedDB <code>mouldmaster-process-data-v1</code></td><td>Delete a dataset, or use <b>Delete all local process-data evidence</b> in Process Data.</td><td>Learner progress and separately governed engineering-case evidence.</td></tr>
+<tr><td><b>Retained process-data evidence</b></td><td>Device/site dataset · IndexedDB <code>mouldmaster-process-data-v1</code></td><td>The old intake, analysis and deletion screens are retired. To delete all local process-data evidence, clear MouldMaster app/site storage in the browser or operating system; this also clears other local app data.</td><td>Learner progress and separately governed engineering-case evidence.</td></tr>
 <tr><td><b>Engineering cases and structured evidence</b></td><td>Engineering workspace · IndexedDB <code>mouldmaster-engineering-v2</code></td><td>Normal case removal is an <b>archive</b> that keeps the structured evidence and audit history. Full erasure is reserved for explicit browser/app site-data clearing.</td><td>Archived evidence intentionally remains after normal case removal.</td></tr>
 <tr><td><b>Production-health diagnostics</b></td><td>Local bounded diagnostic log</td><td><b>Clear local diagnostics</b> above.</td><td>Learner, process and engineering evidence.</td></tr>
 <tr><td><b>Offline app/cache and all local app data</b></td><td>Browser/OS site storage</td><td>Use browser or operating-system site-data controls when you need a complete local removal.</td><td>A normal learner reset does not uninstall the PWA or clear separately managed site data.</td></tr>

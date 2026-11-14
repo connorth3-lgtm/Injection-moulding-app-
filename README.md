@@ -17,7 +17,7 @@ The project maintainers do not intend to seek patent protection over implementat
 
 ## Current release lanes
 
-- PWA / browser shell: `2026.11.14.2`
+- PWA / browser shell: `2026.11.14.3`
 - Learn Question Centre: 214 total prompts, including 45 formative material-science questions
 - Open Windows desktop: `2026.09.29.1`
 - Android shell: `2026.11.08.1` (WebView content: hosted `/preview/`, currently web release `2026.11.14.2`)
@@ -83,21 +83,21 @@ The `2026.10.08.2` browser candidate adds an evidence-first **Virtual Apprentice
 
 Six material-specific practice labs turn resin/reference knowledge into evidence-first decisions: PP versus PC handling, wet versus verified-dry PC, PA66-GF30 drying/conditioning and anisotropy, ABS thermal history, POM degradation/contamination safety, and recycled-PP lot/rheology variability. Each lab uses Observe → Best next test → Controlled response → Explain and is explicitly scenario-specific education rather than a universal production recipe.
 
-## Process-data learning and real-data pilot
+## Process-evidence data and source library
 
-The process-data learning library contains 264 guided/synthetic diagnostic cases spanning baseline → fault → recovery reasoning, with 19,008 generated training cycles across machine, tooling, material, scientific-moulding, sensor, SPC, metrology and maintenance themes. Synthetic values are for pattern recognition and mechanism learning; they are not universal production setpoints or acceptance limits.
+The retired Process Data screens no longer appear in Practice or navigation. The app retains 264 governed synthetic evidence cases (19,008 generated training cycles), their source records, local dataset storage and descriptive analysis helpers for existing engineering records. Synthetic values remain training evidence, not universal production setpoints or acceptance limits.
 
 A corpus-wide release gate, `qa_process_data_sweep.py`, audits all 264 cases together rather than trusting the three process-data layers independently. It enforces global case-ID/title uniqueness, four-signal and recovery invariants, corpus totals and evidence-source granularity, while explicitly distinguishing three controlled study/transfer endpoints from ordinary fault-recovery cases. It emits `process-data-sweep-report.json` without adding measured production rows to the synthetic corpus.
 
 A separate **50-pass real measured-evidence deep dive** is defined in `data/measured-evidence-50-pass.json` and `sources/MEASURED_EVIDENCE_50_PASS.md`. It contains 10 themes × 5 independent passes over primary measured injection-moulding evidence, including openly accessible process datasets, cavity/machine time-series experiments, sensor-fusion studies, measured quality/warpage/mechanical outcomes, energy/maintenance evidence and explicitly bounded embargoed datasets. The registry does not copy paper-specific numeric settings into production recipes, does not relabel synthetic rows as measured, and does not claim a raw-data benchmark has been run when publisher files are not actually available. `qa_measured_evidence_50_pass.py` enforces those boundaries and emits `measured-evidence-50-pass-report.json` as release evidence.
 
-`process-data-local-intake.js` provides an explicit local-only path for preparing real process CSV exports. Raw files are selected by the user, processed in-session, available shot/timestamp order is checked before timestamps are removed, direct/person identifiers are removed by default, operational identifiers are replaced with per-file aliases, and prepared exports remain pseudonymised rather than guaranteed anonymous. A usable source `shot_index` is preserved; otherwise a sequence index is generated from file row order and any detected order problem is surfaced for human review.
+The CSV preparation and analysis screens have been retired. The local parser and connected-data APIs remain in the application for existing stored records; no CSV preparation page is exposed, and existing on-device process datasets are not deleted by this UI change.
 
 The controlled move toward real de-identified evidence is defined in `sources/REAL_PROCESS_DATA_PILOT_PROTOCOL.md` and `data/real-process-data-pilot-template.csv`. Pilot data should preserve shot/cavity identity within the prepared file, actual process signals, material/thermal state, quality outcomes and intervention timing while excluding customer/person identifiers and avoiding public upload of raw production data. Public measured-data benchmark work remains separate from an authorised site pilot: source files must be fingerprinted and profiled before any claim that MouldMaster has validated a relationship against real rows.
 
 ## Guided curriculum and specialist extensions
 
-The canonical completion pathway remains **120 core lessons**. `curriculum-integration.js` links every core lesson to two valid formative activities drawn from the existing diagnostic, material-behaviour and process-data practice layers, with a return-to-lesson flow so learners move from theory → practice → evidence → explanation.
+The canonical completion pathway remains **120 core lessons**. `curriculum-integration.js` links every core lesson to two valid formative activities drawn from the diagnostic and material-behaviour practice layers, with a return-to-lesson flow so learners move from theory → practice → evidence → explanation. The Process Data screens have been retired; their governed datasets, source records and existing on-device engineering data remain stored in the app.
 
 The optional specialist layer contains **20 lessons total** and remains separate from the canonical 120-lesson completion/certificate path. `specialist-curriculum.js` provides S01–S12: hazardous-energy intervention, clamp/projected-area reasoning, plasticising controls, reinforced polymers, purging/contamination, internal defects, SPC, Gage R&R/MSA, valve-gate timing, screw/barrel wear, ejector/tool condition, and energy/recycled-feedstock variability.
 

@@ -42,8 +42,6 @@ for marker in [
     "D.lessons.length!==120",
     'Lesson ${lesson.id} does not have two valid curriculum practice connections',
     'curriculum_practice_open',
-    'Process data practice',
-    'openGuidedCases?.()',
     'Known-good baseline',
     'Current measured evidence',
     'Rank competing mechanisms',
@@ -76,14 +74,14 @@ for course in range(1,13):
     need(re.search(rf'^\s*{course}:\[\{{type:',js,re.M) is not None,f'course {course} missing curriculum fallback pair')
 
 # Every route must point to a real existing formative activity.
-routes=re.findall(r"\{type:'(diagnostic|data|material)',id:'([^']+)'",js)
-need(len(routes)>=29,f'expected broad curriculum route library, found {len(routes)} entries')
+routes=re.findall(r"\{type:'(diagnostic|material)',id:'([^']+)'",js)
+need(len(routes)>=15,f'expected broad diagnostic/material curriculum route library, found {len(routes)} entries')
 diag=text('diagnostic-learning-labs.js')
 material=text('material-behaviour-labs.js')
-evidence=text('evidence-maturity-deep-dive.js')
 for kind,item_id in routes:
-    source={'diagnostic':diag,'material':material,'data':evidence}[kind]
+    source={'diagnostic':diag,'material':material}[kind]
     need(f"'{item_id}'" in source,f'curriculum route missing source activity: {kind}:{item_id}')
+need("window.MM_PROCESS_DATA_DIAGNOSTICS.open" not in js,'curriculum routes must not reopen the retired Process Data screen')
 
 # Browser order: all practice modules and learner experience exist before integration;
 # analytics loads after it so curriculum-opening events can be recorded locally.

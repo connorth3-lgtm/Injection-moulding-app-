@@ -7,9 +7,7 @@ const VERSION='2026.09.15.4';
 const DB_NAME='mouldmaster-process-data-v1';
 const DB_VERSION=1;
 const CONTEXT_KEYS=['machine','mould','materialGrade','job'];
-let activeDatasetId='';
 let installAttempts=0;
-let optionFilterQueued=false;
 
 function norm(value){return String(value??'').trim().toLowerCase()}
 function contextCompatibility(left={},right={}){
@@ -89,41 +87,11 @@ function harden(api=window.MM_CONNECTED_PROCESS_DATA){
   api.__mmProcessDataIntegrity=VERSION;
   return true;
 }
-async function filterBaselineOptions(){
-  optionFilterQueued=false;
-  const select=document.querySelector('[data-pi-baseline]');
-  if(!select||!activeDatasetId)return;
-  const dataset=await get('datasets',activeDatasetId).catch(()=>null);if(!dataset)return;
-  for(const option of Array.from(select.options||[])){
-    if(!option.value)continue;
-    const baseline=await get('baselines',option.value).catch(()=>null);
-    if(!baseline||!baselineCompatibility(dataset,baseline).compatible)option.remove();
-  }
-  const button=document.querySelector('[data-pi-drift]');
-  if(button)button.disabled=!Array.from(select.options||[]).some(x=>x.value);
-}
-function queueOptionFilter(){if(optionFilterQueued)return;optionFilterQueued=true;(window.requestAnimationFrame||setTimeout)(()=>filterBaselineOptions().catch(()=>{}),0)}
-function captureUi(event){
-  const analyze=event.target?.closest?.('[data-pi-analyze]');
-  if(analyze?.dataset?.piAnalyze){activeDatasetId=analyze.dataset.piAnalyze;setTimeout(queueOptionFilter,0)}
-  const del=event.target?.closest?.('[data-di-delete]');
-  if(!del?.dataset?.diDelete)return;
-  if(window.MM_CONNECTED_PROCESS_DATA?.__mmCanonicalProcessDataIntegrity)return;
-  event.preventDefault();event.stopImmediatePropagation();
-  if(!window.confirm?.('Delete this local dataset, its shots, baselines, interventions, and linked troubleshooting references?'))return;
-  deleteDatasetCascade(del.dataset.diDelete).then(()=>{
-    window.toast?.('Local dataset and linked evidence deleted');
-    window.MM_PROCESS_DATA_LOCAL_INTAKE?.openLibrary?.();
-  }).catch(err=>window.toast?.(`Dataset delete failed: ${err?.message||err}`));
-}
 function installWhenReady(){
   if(harden())return;
   if(++installAttempts===1)window.addEventListener?.('mm:domains-ready',()=>{if(!harden())console.error('MouldMaster process-data integrity hardening could not find the connected process-data runtime')},{once:true});
 }
 
-document.addEventListener('click',captureUi,true);
-window.addEventListener?.('mm:domains-ready',queueOptionFilter);
-window.MM_APP_SHELL?.events?.onViewChange?.(queueOptionFilter);
 window.MM_PROCESS_DATA_INTEGRITY=Object.freeze({version:VERSION,contextKeys:[...CONTEXT_KEYS],contextCompatibility,baselineCompatibility,assertBaselineCompatible,deleteDatasetCascade,harden});
 installWhenReady();
 })();

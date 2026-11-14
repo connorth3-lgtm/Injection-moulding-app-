@@ -6,6 +6,7 @@ on:
     paths:
       - 'data-integration-runtime.js'
       - 'process-data-intelligence-ui.js'
+      - 'process-data-statistics.js'
       - 'src/domains/learning/training-qa-fix.js'
       - 'src/domains/process/process-data-integrity.js'
       - 'privacy.html'
@@ -19,6 +20,7 @@ on:
     paths:
       - 'data-integration-runtime.js'
       - 'process-data-intelligence-ui.js'
+      - 'process-data-statistics.js'
       - 'src/domains/learning/training-qa-fix.js'
       - 'src/domains/process/process-data-integrity.js'
       - 'privacy.html'
