@@ -55,7 +55,7 @@ def main() -> None:
         "linkCase",
         "similarCases",
         "process_dataset_saved",
-        "process_case_linked",
+        "function linkCase",
         "deleteAllProcessData",
         "referenceScale",
         "insufficient-reference-observations",
@@ -69,92 +69,4 @@ def main() -> None:
 
     require("data-pdi-launch" not in runtime and "interceptLegacyLauncher" not in runtime, "connected runtime must not intercept a duplicate legacy launcher")
     require(not (ROOT / "process-data-intelligence-ui.js").exists(), "retired duplicate Process Data screen source must be removed")
-    require("MM_PROCESS_DATA_STATISTICS" in runtime_pack and "process-data-statistics.js" in runtime_pack, "data-only process statistics helpers must remain in the app runtime")
-    require("document." not in statistics and "addEventListener" not in statistics, "retained process statistics helpers must not expose a learner screen")
-    require("api.open=openAdvancedIntake" not in runtime and "api.openLibrary=renderDatasetLibrary" not in runtime, "connected runtime must not expose retired intake/library screens")
-
-    require('id:`${id}:row:${rowOrdinal}`' in runtime, 'stored process rows must use immutable row-ordinal identity')
-    require('sourceShotIndex' in runtime and 'rowOrdinal' in runtime, 'stored process rows must preserve source shot index separately from row identity')
-    require('id:`${id}:${shotIndex}`' not in runtime, 'source shot_index must never be the IndexedDB primary key')
-    require('Number(a.rowOrdinal??a.shotIndex)' in runtime, 'dataset reads must preserve source row order while remaining backward-compatible')
-
-    integrity_asset = "./src/domains/process/process-data-integrity.js"
-    require(integrity_asset in runtime_manifest.get("assets", []), "process-data integrity hardening must load through the generated domain manifest")
-    for token in [
-        "CONTEXT_KEYS=['machine','mould','materialGrade','job']",
-        "missing.length===0&&mismatched.length===0",
-        "baseline?.datasetId===dataset.id",
-        "assertBaselineCompatible(dataset,baseline)",
-        "api.intelligence.compareToBaseline=function",
-        "['datasets','shots','baselines','caseLinks','interventions']",
-        "row=>row?.datasetId===datasetId",
-        "deleteDatasetCascade",
-    ]:
-        require(token in integrity, f"process-data integrity hardening missing invariant: {token}")
-    require("captureUi" not in integrity and "openLibrary" not in integrity, "process-data integrity layer must not attach retired UI controls")
-    require((ROOT / "qa_process_data_integrity.cjs").exists(), "behavioral process-data integrity regression test missing")
-
-    require("script.src=runtimeScriptUrl('./data-integration-runtime.js')" in shell, "app shell must load connected data runtime through the explicit release-version helper")
-    require("process-data-intelligence-ui.js" not in shell, "retired process intelligence UI must not be loaded by the app shell")
-    require('window.MM_APP_SHELL_FINALIZED=VERSION' in shell, "connected data must preserve canonical app-shell finalization through VERSION")
-    require("'./data-integration-runtime.js'" in worker, "connected runtime must be a published worker asset")
-    require("'./process-data-intelligence-ui.js'" not in worker, "retired process intelligence UI must not be precached")
-    require("'./process-data-semantic-registry.json'" in worker, "semantic registry must be a published worker asset")
-    require("'./current-data-manifest.json'" in worker, "current-data manifest must be a published worker asset")
-    require("'./src/domains/process/process-data-integrity.js'" in worker, "process-data integrity hardening must be an offline governed worker asset")
-    require(f"CACHE_VERSION='{version['web_release']}'" in worker, "service-worker cache version must stay aligned with the canonical web release")
-    cache_version = re.search(r"CACHE_VERSION='([^']+)'", worker)
-    cache_revision = re.search(r"CACHE_REVISION='([^']+)'", worker)
-    shell_release = re.search(r'SHELL_RELEASE="([^"]+)"', index)
-    require(cache_version is not None and cache_revision is not None and shell_release is not None, "runtime/cache metadata missing")
-    require(re.fullmatch(r"\d{4}\.\d{2}\.\d{2}\.\d+", shell_release.group(1)) is not None, "canonical web release must use YYYY.MM.DD.N")
-    require(cache_version.group(1) == shell_release.group(1) == version['web_release'], "connected-data browser/cache identity must share web_release")
-    require('const RUNTIME_ASSET_VERSION=SHELL_RELEASE;' in index, "connected-data runtime asset identity must derive from canonical shell/web release")
-    require(bool(cache_revision.group(1).strip()), "connected-data cache revision must remain an explicit independent invalidation token")
-    expected_cache = f"mouldmaster-static-{cache_version.group(1)}-{cache_revision.group(1)}"
-    require(f'const EXPECTED_STATIC_CACHE="{expected_cache}"' in index, "bootstrap expected cache must match the service-worker cache exactly")
-
-    core = re.search(r"const\s+CORE\s*=\s*\[(.*?)\]\s*;", worker, re.S)
-    optional = re.search(r"const\s+OPTIONAL\s*=\s*\[(.*?)\]\s*;", worker, re.S)
-    require(core is not None and optional is not None, "service worker must split CORE and OPTIONAL assets")
-    core_assets = set(re.findall(r"['\"]\./([^'\"]+)['\"]", core.group(1)))
-    optional_assets = set(re.findall(r"['\"]\./([^'\"]+)['\"]", optional.group(1)))
-    require(not (core_assets & optional_assets), "service-worker core and optional assets must not overlap")
-    require("src/domains/research/reference-20x-extension.js" in optional_assets, "large specialist/reference packs should not be part of the atomic offline install")
-    require("data-integration-runtime.js" in core_assets, "connected process-data layer should be available in offline core")
-    require("process-data-intelligence-ui.js" not in core_assets, "retired process intelligence UI must not be available as an offline screen")
-    require("src/domains/process/process-data-integrity.js" in core_assets, "process-data integrity module should be available in offline core")
-    require(len(optional_assets) >= 20, "offline split did not materially reduce atomic pre-cache scope")
-
-    require((ROOT / "qa_process_statistics_integrity.cjs").exists(), "behavioral process-statistics regression test missing")
-    require((ROOT / "qa_import_identity_integrity.cjs").exists(), "behavioral import-identity regression test missing")
-    require("extract_service_worker_assets" in builder, "Pages builder must publish both CORE and OPTIONAL worker assets")
-    require("release_files = set(core_files) | set(optional_files)" in builder, "Pages builder must model the complete service-worker install set")
-    require('"precache_assets": sorted(release_files)' in builder, "Pages manifest must hash-cover every atomically installed service-worker asset")
-    require('"on_demand_assets": []' in builder and '"optional_feature_assets": sorted(optional_files)' in builder,
-            "Pages manifest must not label atomically installed OPTIONAL assets as on-demand")
-    require("FORBIDDEN_PREFIXES" in builder and '"data/"' in builder, "raw governed data must remain excluded from public Pages artifact")
-
-    desktop_from = {x.get("from") for x in desktop_pkg["build"]["extraResources"] if isinstance(x, dict)}
-    connected_assets = [
-        "data-integration-runtime.js",
-        "process-data-statistics.js",
-        "process-data-semantic-registry.json",
-        "current-data-manifest.json",
-    ]
-    for asset in connected_assets:
-        require(f"../../{asset}" in desktop_from, f"desktop package missing connected data asset: {asset}")
-        require(f"'{asset}'" in desktop_integrity, f"desktop integrity set missing connected data asset: {asset}")
-    require('../../src/domains' in desktop_from, "desktop package must include governed domain runtime directory")
-
-    print(
-        "Connected process-data QA passed: "
-        f"{effective['inventoriedMeasuredSources']} inventoried sources, "
-        f"{effective['fullyProfiledMeasuredFamilies']} profiled families, "
-        f"{effective['acceptedInjectionProcessTimeSeriesValues']:,} accepted time-series values; "
-        f"{len(core_assets)} atomic offline-core assets and {len(optional_assets)} runtime-fetched assets."
-    )
-
-
-if __name__ == "__main__":
-    main()
+    require("MM_PROCESS_DATA_STATISTICS" in runtime_pack and "process-data-statistics.

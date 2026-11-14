@@ -1,6 +1,6 @@
 # MouldMaster governance status
 
-Current governed web candidate: **`2026.11.14.2`**.
+Current governed web candidate: **`2026.11.14.3`**.
 
 This page is generated from `data/governance-state-model-v1.json`. Do not hand-edit status words here; update the governed evidence/state contract and regenerate this file.
 
@@ -48,4 +48,4 @@ These layers are reported separately. Passing static/contract or automated brows
 | --- | --- | --- |
 | Static / contract | **pass** | PASS — release 2026.11.14.2 software candidate source 8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b, fingerprint sha256:ce2e7ec6a6c72f2768146a22aa4675c112198e51bea4de731d878f23efc4ea9b, artifact 14045422044, from successful Pre-merge Public Candidate run 43439690118. Software-only evidence; no human, device, provider, accreditation or production authorization is implied. |
 | Behavioral / browser | **pass** | PASS — release 2026.11.14.2 Mobile Browser QA run 43439690302 and Question Quality 50-Pass run 43439689931 succeeded on exact source 8cbf0cdc633d6b14d588a5f1f09e3ebc3debc10b. These software checks do not establish physical-device or human validation. |
-| External human / device | **hold** | All seven independent human, device, Windows distribution, SME, learner-outcome and provider/NZQA evidence streams remain HOLD for release 2026.11.14.2. |
+| External human / device | **hold** | All seven independent hu
