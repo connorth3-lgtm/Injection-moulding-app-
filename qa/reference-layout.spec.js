@@ -300,505 +300,449 @@ for(const width of [360,810]){
   });
 }
 
-test('Diagnostic learning notes never leak across two local learner profiles',async({page})=>×Ý6¶‰žËkºwµçJ	Ý^\™XVÛ˜[YOH›ØœÙ\˜][ÛœÈ—IÊJKÒ]™U˜[YJ	ÉÊNÂˆ]ØZ]^XÝ
-›ÛÝ›ØØ]ÜŠ	ÖÙ]K[[KYY]šY[˜ÙOHœ\—IÊJK››ÝÐ™PÚXÚÙY
-
-NÂˆÛÛœÝ™^™\ÜX]ØZ]YÙK™]˜[X]J
-
-OOÚ[™ÝË“SWÑPQÓ“ÔÕP×ÕÓÔ’Ð‘SÒœ™\Ü
-
-JNÂˆ^XÝ
-™^™\ÜœÙ[XÝYY™XÝ
-K››ÝÐ™JÛ™\ÜœÙ[XÝYY™XÝ
-NÂˆ^XÝ
-™^™\Ü˜ÛÛ^›ØœÙ\˜][ÛœÊKÐ™J	ÉÊNÂˆ^XÝ
-™^™\Ü˜ÛÛ^˜˜\Ù[[™JKÐ™J	ÉÊNÂˆ^XÝ
-™^™\Ü™]šY[˜ÙT™\ÜY]˜Z[X›JKÑ\]X[
-×JNÂˆ^XÝ
-™^™\Üš\Ý\Ù\Ë™]™\žJ›ÝÏOœ›ÝË›X\›™\\ÜÙ\ÜÛY[OOIÝ[˜\ÜÙ\ÜÙY	ÊJKÐ™JYJNÂˆ^XÝ
-™^™\Üœ›ÛÝØ]\ÙU™\šYšYY
-KÐ™J˜[ÙJNÂˆ^XÝ
-™^™\Üœ›ÙXÝ[Û”Ù]Ú[Ð]]Üš^™Y
-KÐ™J˜[ÙJNÂŸJNÂ‚\Ý
-	ÑXYÛ›ÜÝXÈÛÜšØ™[˜ÚÙY\ÈÙ^X›Ø\™\œš]˜[XÜ›ÜÜÈÞ[\ÛK]šY[˜ÙK™]š\Ú[Ûˆ[™™\Ù]	Ë\Þ[˜ÊÜYÙ_JOOžÂˆ]ØZ]YÙKœÙ]šY]ÜÜÚ^™JÝÚYŒÎLZYÚŽJNÂˆ]ØZ]Ü[\
-YÙJNÂˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	ÙY™XÝÉÊJNÂˆÛÛœÝÛÜšØ™[˜Ú\YÙK›ØØ]ÜŠ	ÈÙY™XÝÈ›[KY]ÛÜšØ™[˜Ú	ÊNÂˆ]ØZ]^XÝ
-ÛÜšØ™[˜Ú
-KÐ™Uš\ÚX›J
-NÂˆÛÛœÝÞ[\ÛO]ÛÜšØ™[˜Ú›ØØ]ÜŠ	ÖÙ]K[[KYXXÝ[ÛH˜ÚÛÜÙH—IÊK™š\œÝ
-
-NÂˆ]ØZ]Þ[\ÛK™›ØÝ\Ê
-NÂˆ]ØZ]Þ[\ÛKœ™\ÜÊ	Ñ[\‰ÊNÂˆÛÛœÝš\œÝšY[]ÛÜšØ™[˜Ú›ØØ]ÜŠ	Ë›[KYYšY[ÈÙ[XÝ	ÊK™š\œÝ
-
-NÂˆ]ØZ]^XÝ
-š\œÝšY[
-KÐ™Q›ØÝ\ÙY
-
-NÂˆ]ØZ]ÛÜšØ™[˜Ú›ØØ]ÜŠ	Ý^\™XVÛ˜[YOH›ØœÙ\˜][ÛœÈ—IÊK™š[
-	ÐÛÛ\\™HYX\Ý\™Y™\Ý[ÈÚ]˜[Y]Y˜\Ù[[™K‰ÊNÂˆ]ØZ]ÛÜšØ™[˜Ú›ØØ]ÜŠ	ÖÙ]K[[KYXXÝ[ÛH˜[˜[\ÙH—IÊK™›ØÝ\Ê
-NÂˆ]ØZ]YÙKšÙ^X›Ø\™œ™\ÜÊ	Ñ[\‰ÊNÂˆÛÛœÝ[˜[\Ú\ÒXY[™Ï]ÛÜšØ™[˜Ú›ØØ]ÜŠ	Ë›[KY\™\Ý[È›[KY\ÙXÝ[Û‹ZXY‰ÊNÂˆ]ØZ]^XÝ
-[˜[\Ú\ÒXY[™ÊKÐ™Q›ØÝ\ÙY
-
-NÂˆ]ØZ]^XÝ
-[˜[\Ú\ÒXY[™ÊKÒ]™PÔÔÊ	ÛÝ][™K\Ý[IË	ÜÛÛY	ÊNÂˆ]ØZ]ÛÜšØ™[˜Ú›ØØ]ÜŠ	ÖÙ]K[[KYXXÝ[ÛH˜˜XÚÈ—IÊK™›ØÝ\Ê
-NÂˆ]ØZ]YÙKšÙ^X›Ø\™œ™\ÜÊ	Ñ[\‰ÊNÂˆ]ØZ]^XÝ
-ÛÜšØ™[˜Ú›ØØ]ÜŠ	Ë›[KYYšY[ÈÙ[XÝ	ÊK™š\œÝ
-
-JKÐ™Q›ØÝ\ÙY
-
-NÂˆ]ØZ]^XÝ
-ÛÜšØ™[˜Ú›ØØ]ÜŠ	Ý^\™XVÛ˜[YOH›ØœÙ\˜][ÛœÈ—IÊJKÒ]™U˜[YJ	ÐÛÛ\\™HYX\Ý\™Y™\Ý[ÈÚ]˜[Y]Y˜\Ù[[™K‰ÊNÂˆ]ØZ]ÛÜšØ™[˜Ú›ØØ]ÜŠ	ÖÙ]K[[KYXXÝ[ÛH˜[˜[\ÙH—IÊK˜ÛXÚÊ
-NÂˆ]ØZ]ÛÜšØ™[˜Ú›ØØ]ÜŠ	ÖÙ]K[[KYXXÝ[ÛHœ™\Ù]—IÊK™›ØÝ\Ê
-NÂˆ]ØZ]YÙKšÙ^X›Ø\™œ™\ÜÊ	Ñ[\‰ÊNÂˆ]ØZ]^XÝ
-ÛÜšØ™[˜Ú›ØØ]ÜŠ	ÈÛ[QÙX\˜Ú	ÊJKÐ™Q›ØÝ\ÙY
-
-NÂˆ]ØZ]^XÝ
-ÛÜšØ™[˜Ú›ØØ]ÜŠ	Ë›[KYY[\IÊJKÐ™Uš\ÚX›J
-NÂŸJNÂ‚\Ý
-	Ô˜XÝXÙH™\ÝYXœÈ[™\ÜÙ\ÜÛY[ÈÙY\ÛÜšÚ[™È[\Ý˜]Y[™[™ÈXY\œÉË\Þ[˜ÊÜYÙ_JOOžÂˆ\ÝœÙ][Y[Ý]
-L
-NÂˆ]ØZ]YÙKœÙ]šY]ÜÜÚ^™JÝÚYŒÎLZYÚŽJNÂˆ]ØZ]Ü[\
-YÙJNÂ‚ˆ›ÜŠÛÛœÝØXÝ[Û‹›ÛÝ\›ËÝ\˜XÚ×HÙˆÂˆÉÙXYÛ›ÜÝXË[XœÉË	ÈÙXYÛ›ÜÝXÓXœÉË	Ë™Z\›ÉË	ÖÙ]KY\Ý\IË	ÖÙ]KYZÛYWI×KˆÉÛX]\šX[[XœÉË	ÈÛX]\šX[XœÉË	Ë›[Z\›ÉË	ÖÙ]K[[\Ý\IË	ÖÙ]K[[ZÛYWI×BˆJ^Âˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	Ü]	ÊJNÂˆ]ØZ]YÙK›ØØ]ÜŠ	ÈÜ]›[K[X\›‹ZXˆÙ]K[[KZX‹XXÝ[ÛHœ]Y\Ý[Û‹XÙ[™H—IÊK˜ÛXÚÊ
-NÂˆ]ØZ]YÙK›ØØ]ÜŠ	ÈÜ]›[K\]Y\Ý[Û‹XÙ[™HÙ]K[[KZX‹XXÝ[ÛH‰ÊØXÝ[ÛŠÉÈ—IÊK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ›ÛÝ
-ÉÈ	ÊÚ\›ÊÉÈˆ›[K\™Y™\™[˜ÙK\˜XÝXÙK]ÛÛX\	ÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ›ÛÝ
-ÉÈˆ›[K\˜XÝXÙK]ÛÛ\™]\›‰ÊJKÒ]™PÛÝ[
-JNÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ›ÛÝ
-ÉÈ	ÊÜÝ\
-K™š\œÝ
-
-JKÐ™Uš\ÚX›J
-NÂˆ]ØZ]YÙK›ØØ]ÜŠ›ÛÝ
-ÉÈ	ÊÜÝ\
-K™š\œÝ
-
-K˜ÛXÚÊ
-NÂˆÛÛœÝ]Y\Ý[ÛÚÚXÙO\YÙK›ØØ]ÜŠ›ÛÝ
-ÉÈ]Û‰ÊÊXÝ[ÛOOIÙXYÛ›ÜÝXË[XœÉÏÉË™XÚÚXÙIÎ‰Ë›[XÚÚXÙIÊJK™š\œÝ
-
-NÂˆ]ØZ]^XÝ
-]Y\Ý[ÛÚÚXÙJKÐ™Uš\ÚX›J
-NÂˆ^XÝ
-
-]ØZ]]Y\Ý[ÛÚÚXÙK˜›Ý[™[™Ð›Þ
-
-JKšZYÚ
-KÐ™QÜ™X]\•[“Ü‘\]X[
-
-NÂˆÛÛœÝ[™[XXÝ[ÛOOIÙXYÛ›ÜÝXË[XœÉÏÉË™[Xˆˆ™\[™[	Î‰Ë›[[Xˆˆ›[\[™[	ÎÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ›ÛÝ
-ÉÈ	ÊÜ[™[
-K™š\œÝ
-
-JKÒ]™PÔÔÊ	Ø˜XÚÙÜ›Ý[™XÛÛÜ‰Ë	Ü™ØŠŒÎKËL
-IÊNÂˆ]ØZ]]Y\Ý[ÛÚÚXÙK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ›ÛÝ
-ÉÈ	ÊÊXÝ[ÛOOIÙXYÛ›ÜÝXË[XœÉÏÉË™Y™YY˜XÚÉÎ‰Ë›[Y™YY˜XÚÉÊJJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ›ÛÝ
-ÉÈ	ÊØ˜XÚÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]YÙK›ØØ]ÜŠ›ÛÝ
-ÉÈ	ÊØ˜XÚÊK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ›ÛÝ
-ÉÈ	ÊÚ\›ÊÉÈˆ›[K\™Y™\™[˜ÙK\˜XÝXÙK]ÛÛX\	ÊJKÒ]™PÛÝ[
-JNÂˆB‚ˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	Ü]	ÊJNÂˆ]ØZ]YÙK›ØØ]ÜŠ	ÈÜ]›[K[X\›‹ZXˆÙ]K[[KZX‹XXÝ[ÛHœ]Y\Ý[Û‹XÙ[™H—IÊK˜ÛXÚÊ
-NÂˆ]ØZ]YÙK›ØØ]ÜŠ	ÈÜ]›[K\]Y\Ý[Û‹XÙ[™HÙ]K[[KZX‹XXÝ[ÛH˜\ÜÙ\ÜÛY[È—IÊK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÙ^[\ÈœÙXÝ[Û‹ZXYˆ›[K\™Y™\™[˜ÙK\˜XÝXÙK]ÛÛX\	ÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÙ^[\Èˆ›[K\˜XÝXÙK]ÛÛ\™]\›‰ÊJKÒ]™PÛÝ[
-JNÂˆÛÛœÝÝ\^[O\YÙK›ØØ]ÜŠ	ÈÙ^[\È™^[KXØ\™]Û‰ÊK™š\œÝ
-
-NÂˆ]ØZ]^XÝ
-Ý\^[JKÐ™Uš\ÚX›J
-NÂˆ]ØZ]Ý\^[K˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÛ[Ù[››Ý
-šY[ŠHÙ^[T]Y\Ý[ÛœÈœ]Y\Ý[Û‰ÊK™š\œÝ
-
-JKÐ™Uš\ÚX›J
-NÂŸJNÂ‚\Ý
-	Ó[Ü™HÙY\ÈÚ^[\Ý˜]Y˜]]™H\ØÛÜÝ\™\ËÜšYÚ[˜[XÝ[ÛœÈ[™Ù^X›Ø\™XØÙ\ÜÉË\Þ[˜ÊÜYÙ_JOOžÂˆ]ØZ]YÙKœÙ]šY]ÜÜÚ^™JÝÚYŒÎLZYÚŽJNÂˆ]ØZ]Ü[\
-YÙJNÂˆ]ØZ]YÙK›ØØ]ÜŠ	Ë›[Øš[K[˜]ˆˆ]Û‰ÊK™š[\ŠÚ\Õ^‰Ó[Ü™IßJK˜ÛXÚÊ
-NÂˆÛÛœÝÜ›Ý\Ï\YÙK›ØØ]ÜŠ	ÈÛ[Ù[›[K\™Y™\™[˜ÙK[[Ü™KXØ\™	ÊNÂˆ]ØZ]^XÝ
-Ü›Ý\ÊKÒ]™PÛÝ[
-ŠNÂˆ]ØZ]^XÝ
-Ü›Ý\Ë›ØØ]ÜŠ	ÎœØÛÜHˆÝ[[X\žHˆ›[K\™Y™\™[˜ÙK[[Ü™KX\	ÊJKÒ]™PÛÝ[
-ŠNÂˆÛÛœÝ™YÚ\ÝžPXÝ[ÛœÏX]ØZ]YÙK›ØØ]ÜŠ	ÈÛ[Ù[Ù]K[[K\™YÚ\ÝžK[Y[WIÊK˜ÛÝ[
-
-NÂˆ]ØZ]YÙK™]˜[X]J
-
-OOžÝÚ[™ÝË“SWÔ‘Q‘T‘SÑWÓVSÕUœ™Yœ™\Ú
-
-NÝÚ[™ÝË“SWÔ‘Q‘T‘SÑWÓVSÕUœ™Yœ™\Ú
-
-_JNÂˆ]ØZ]^XÝ
-Ü›Ý\Ë›ØØ]ÜŠ	ÎœØÛÜHˆÝ[[X\žHˆ›[K\™Y™\™[˜ÙK[[Ü™KX\	ÊJKÒ]™PÛÝ[
-ŠNÂˆ^XÝ
-]ØZ]YÙK›ØØ]ÜŠ	ÈÛ[Ù[Ù]K[[K\™YÚ\ÝžK[Y[WIÊK˜ÛÝ[
-
-JKÐ™J™YÚ\ÝžPXÝ[ÛœÊNÂˆÛÛœÝX›Ý]\YÙK›ØØ]ÜŠ	ÈÛ[Ù[›[K\™Y™\™[˜ÙK[[Ü™KY^˜IÊK™š[\ŠÚ\Õ^‰ÐX›Ý][Ý[X\Ý\‰ßJNÂˆ]ØZ]^XÝ
-X›Ý]
-K››ÝÒ]™P]šX]J	ÛÜ[‰Ë	ÉÊNÂˆÛÛœÝXY\XX›Ý]›ØØ]ÜŠ	ÎœØÛÜHˆÝ[[X\žIÊNÂˆ]ØZ]XY\‹™›ØÝ\Ê
-NÂˆ]ØZ]XY\‹œ™\ÜÊ	Ñ[\‰ÊNÂˆ]ØZ]^XÝ
-X›Ý]
-KÒ]™P]šX]J	ÛÜ[‰Ë	ÉÊNÂˆ]ØZ]^XÝ
-X›Ý]›ØØ]ÜŠ	ØVÚ™YH‹‹ÜÝ\Üš[Û[TØH—IÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]XY\‹œ™\ÜÊ	Ñ[\‰ÊNÂˆ]ØZ]^XÝ
-X›Ý]
-K››ÝÒ]™P]šX]J	ÛÜ[‰Ë	ÉÊNÂˆ^XÝ
-]ØZ]YÙK™]˜[X]J
-
-OO™ØÝ[Y[™ØÝ[Y[[[Y[œØÜ›ÛÚYZ[›™\•ÚY
-JKÐ™S\ÜÕ[“Ü‘\]X[
-ŠNÂˆ]ØZ]YÙK™]˜[X]J
-
-OOÚ[™ÝË˜ÛÜÙS[Ù[ËŠ
-JNÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÛ[Ù[›[Ù[XØ\™	ÊJKÐ™RY[Š
-NÂˆ]ØZ]YÙK›ØØ]ÜŠ	Ë›[Øš[K[˜]ˆˆ]Û‰ÊK™š[\ŠÚ\Õ^‰Ô˜XÝXÙIßJK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÜØÙ[˜\š[ÜÈ›[K\˜XÝXÙKZX‰ÊJKÐ™Uš\ÚX›J
-NÂŸJNÂ‚™›ÜŠÛÛœÝÚYÙˆÌÍŒLJ^Âˆ\Ý
-	Ø\›Ý™YY\\ØÜ™Y[ˆ\ÚYÛˆÙY\ÈXÝX[\ÜÛÛ‹Ú[][]Üˆ[™™\ÛÝ\˜ÙHXÝ[ÛœÈ]	ÊÝÚY
-ÉÜ	Ë\Þ[˜ÊÜYÙ_JOOžÂˆ]ØZ]YÙKœÙ]šY]ÜÜÚ^™JÝÚYZYÚŽLJNÂˆ]ØZ]Ü[\
-YÙJNÂˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	Û\ÜÛÛ‰ÊJNÂˆÛÛœÝ\ÜÛÛ\YÙK›ØØ]ÜŠ	ÈÛ\ÜÛÛ‰ÊNÂˆ]ØZ]^XÝ
-\ÜÛÛ‹›ØØ]ÜŠ	Ë›[K\Ú[\K[\ÜÛÛ‹Z\›Èˆ›[K\™Y™\™[˜ÙKYY\X\	ÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-\ÜÛÛ‹›ØØ]ÜŠ	Ë›\ÜÛÛ‹X›ÙK›[K\™Y™\™[˜ÙKYY\\[™[	ÊJKÐ™Uš\ÚX›J
-NÂˆËÈHÚ[\K\™XY\ˆ[[[Û˜[HY\ËÜ™[[Ý™\ÈYØXÞH\ÜÛÛˆÚYX˜\ˆÛˆÛX[ØÜ™Y[œË‚ˆ]ØZ]^XÝ
-\ÜÛÛ‹›ØØ]ÜŠ	Ë›[K\Ú[\K[\ÜÛÛ‹Z\›ÉÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-\ÜÛÛ‹›ØØ]ÜŠ	Ë›\ÜÛÛ‹X›ÙHˆ˜ÛÛ[X›ØÚÎ››Ý
-›[K\Ú[\K[›ÝK\ÙXÝ[ÛŠK›\ÜÛÛ‹X›ÙHˆ›[K\Ú[\K\ÙXÝ[ÛŽ››Ý
-›[K\Ú[\K[›ÝK\ÙXÝ[ÛŠIÊK™š\œÝ
-
-JKÒ]™PÔÔÊ	Ø˜XÚÙÜ›Ý[™XÛÛÜ‰Ë	Ü™ØŠËL
-IÊNÂˆ]ØZ]\ÜÛÛ‹›ØØ]ÜŠ	Ë›[K\Ú[\K[›ÝKY\ØÛÜÝ\™HˆÝ[[X\žIÊK˜ÛXÚÊ
-NÂˆ]ØZ]\ÜÛÛ‹›ØØ]ÜŠ	ÈÛ\ÜÛÛ“›Ý\ÉÊK™š[
-	Õ\ÝÙ]\›Ý\È8 %È›Ý\ÙH\È›ØÙ\ÜÈÙ][™ÜË‰ÊNÂˆ]ØZ]\ÜÛÛ‹™Ù]žT›ÛJ	Ø]Û‰ËÛ˜[YN‰ÔØ]™H›Ý\ÉßJK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-\ÜÛÛ‹›ØØ]ÜŠ	Ë›[K\Ú[\K[\ÜÛÛ‹Z\›Èˆ›[K\™Y™\™[˜ÙKYY\X\	ÊJKÒ]™PÛÝ[
-JNÂ‚ˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	ÜÚ[][]Ü‰ÊJNÂˆÛÛœÝÚ[][]Ü\YÙK›ØØ]ÜŠ	ÈÜÚ[][]Ü‰ÊNÂˆ]ØZ]^XÝ
-Ú[][]Ü‹›ØØ]ÜŠ	Ë™›Ü›KXØ\™ˆ›[K\™Y™\™[˜ÙKYY\X\	ÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-Ú[][]Ü‹›ØØ]ÜŠ	Ë›Ý]]\[™[ˆ›[K\™Y™\™[˜ÙKYY\X\	ÊJKÐ™Uš\ÚX›J
-NÂˆËÈHš\X[\™[XÙ\Ú\[™Ý\ˆ[X™YY˜Z[š[™ÈÚYÙ]ÈÝÛ‚ˆËÈY][Û˜[ÛÛ›ÛËˆØÛÜHHÛÝ[ÈHÛÝ™\›™YÛÜ™HÚ[][]Ü‹‚ˆÛÛœÝY˜[˜ÙY\Ú[][]Ü‹›ØØ]ÜŠ	ÎœØÛÜHˆ™ÜšYˆˆ™›Ü›KXØ\™ˆ›[KY[™Ú[™Y\‹\Ú[KYÜ›Ý\ÉÊNÂˆ]ØZ]^XÝ
-Y˜[˜ÙY›ØØ]ÜŠ	ÎœØÛÜHˆÝ[[X\žIÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]Y˜[˜ÙY›ØØ]ÜŠ	ÎœØÛÜHˆÝ[[X\žIÊK˜ÛXÚÊ
-NÂˆÛÛœÝ[Ù[ÛY\œÏXY˜[˜ÙY›ØØ]ÜŠ	Ë™›Ü›KYÜšYˆX™[ˆœ˜[™ÙK\›ÝÈˆ[œ]Ý\OHœ˜[™ÙH—IÊNÂˆ]ØZ]^XÝ
-[Ù[ÛY\œÊKÒ]™PÛÝ[
-L
-NÂˆ]ØZ]^XÝ
-Ú[][]Ü‹›ØØ]ÜŠ	ÈÛ[TÚ[SY]šXÒ[œ]ÉÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-Ú[][]Ü‹›ØØ]ÜŠ	ÈÛ[TÚ[Tš[X\žQš[™[™ÉÊJKÐÛÛZ[•^
-	Ý˜Z[š[™È˜\Ù[[™IÊNÂˆ]ØZ]^XÝ
-Ú[][]Ü‹›ØØ]ÜŠ	ÈÜÚ[PYšXÙIÊJKÐÛÛZ[•^
-	ÕÚ]È™\šYžH™^	ÊNÂˆÛÛœÝš[ÛY\[[Ù[ÛY\œË™š\œÝ
-
-NÂˆ]ØZ]^XÝ
-š[ÛY\ŠKÒ]™U˜[YJ	ÍL	ÊNÂˆ]ØZ]š[ÛY\‹™›ØÝ\Ê
-NÂˆ]ØZ]š[ÛY\‹œ™\ÜÊ	Ð\œ›ÝÔšYÚ	ÊNÂˆ]ØZ]^XÝ
-š[ÛY\ŠKÒ]™U˜[YJ	ÍLIÊNÂˆ]ØZ]Ú[][]Ü‹™Ù]žT›ÛJ	Ø]Û‰ËÛ˜[YN‰Ô™\Ù]È˜\Ù[[™IË^XÝY_JK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-Ú[][]Ü‹›ØØ]ÜŠ	Ë›[KY[™Ú[™Y\‹\Ú[KYÜ›Ý\È[œ]Ý\OHœ˜[™ÙH—IÊK™š\œÝ
-
-JKÒ]™U˜[YJ	ÍL	ÊNÂˆ]ØZ]^XÝ
-Ú[][]Ü‹›ØØ]ÜŠ	Ë™›Ü›KXØ\™ˆ›[K\™Y™\™[˜ÙKYY\X\	ÊJKÒ]™PÛÝ[
-JNÂ‚ˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	Ýš\ÝX[ÉÊJNÂˆÛÛœÝš\ÝX[Ï\YÙK›ØØ]ÜŠ	ÈÝš\ÝX[ÉÊNÂˆ]ØZ]^XÝ
-š\ÝX[Ë›ØØ]ÜŠ	Ëš\ÝX[]Ü˜\™š\œÝXÚ[ˆ›[K\™Y™\™[˜ÙKYY\X\	ÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]š\ÝX[Ë™Ù]žT›ÛJ	Ø]Û‰ËÛ˜[YN‰Ñš[[™ÉË^XÝY_JK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-š\ÝX[Ë›ØØ]ÜŠ	ÈÜ\ÙU^	ÊJKÐÛÛZ[•^
-	Ý™[ØÚ]HÛÛ›Û	ÊNÂ‚ˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	ÙÛÜÜØ\žIÊJNÂˆÛÛœÝÛÜÜØ\žO\YÙK›ØØ]ÜŠ	ÈÙÛÜÜØ\žIÊNÂˆ]ØZ]^XÝ
-ÛÜÜØ\žK›ØØ]ÜŠ	ËœÙXÝ[Û‹ZXYˆ›[K\™Y™\™[˜ÙKYY\X\	ÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]ÛÜÜØ\žK›ØØ]ÜŠ	ÈÙÛÜÜØ\žTÙX\˜Ú	ÊK™š[
-	Ü™\ÜÝ\™IÊNÂˆ]ØZ]^XÝ
-ÛÜÜØ\žK›ØØ]ÜŠ	Ë\›Nš\ÚX›IÊK™š\œÝ
-
-JKÐ™Uš\ÚX›J
-NÂ‚ˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	ÙY™XÝÉÊJNÂˆÛÛœÝY™XÝÏ\YÙK›ØØ]ÜŠ	ÈÙY™XÝÉÊNÂˆ]ØZ]^XÝ
-Y™XÝË›ØØ]ÜŠ	Ë›[KYZ\›Èˆ›[K\™Y™\™[˜ÙKYY\X\	ÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-Y™XÝË›ØØ]ÜŠ	Ë›[KY\[™K›[K\™Y™\™[˜ÙKYY\\[™[	ÊK™š\œÝ
-
-JKÐ™Uš\ÚX›J
-NÂ‚ˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	ØÛØXÚ	ÊJNÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈØÛØXÚ›[KYZ\›Èˆ›[K\™Y™\™[˜ÙKYY\X\	ÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈØÛØXÚ›[KY[Xœ˜\žH›[KY\Þ[\ÛIÊK™š\œÝ
-
-JKÐ™Uš\ÚX›J
-NÂ‚ˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	ÜÝ[™\™ÉÊJNÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÜÝ[™\™ÈœÙXÝ[Û‹ZXYˆ›[K\™Y™\™[˜ÙKYY\X\	ÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	ØÙ\YšXØ]\ÉÊJNÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈØÙ\YšXØ]\ÈœÙXÝ[Û‹ZXYˆ›[K\™Y™\™[˜ÙKYY\X\	ÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	Ü›Ùš[IÊJNÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÜ›Ùš[H™›Ü›KXØ\™™š\œÝXÚ[ˆ›[K\™Y™\™[˜ÙKYY\X\	ÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÜ›Ùš[HÜ›Ùš[S˜[YIÊJKÐ™Uš\ÚX›J
-NÂ‚ˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	Û\ÜÛÛ‰ÊJNÂˆ]ØZ]^XÝ
-\ÜÛÛ‹›ØØ]ÜŠ	ÈÛ\ÜÛÛ“›Ý\ÉÊJKÒ]™U˜[YJ	Õ\ÝÙ]\›Ý\È8 %È›Ý\ÙH\È›ØÙ\ÜÈÙ][™ÜË‰ÊNÂˆ]ØZ]^XÝ
-\ÜÛÛ‹›ØØ]ÜŠ	Ë›[K\Ú[\K[\ÜÛÛ‹Z\›Èˆ›[K\™Y™\™[˜ÙKYY\X\	ÊJKÒ]™PÛÝ[
-JNÂˆÛÛœÝØÝ[Y[Ý™\™›ÝÏX]ØZ]YÙK™]˜[X]J
-
-OO™ØÝ[Y[™ØÝ[Y[[[Y[œØÜ›ÛÚYYØÝ[Y[™ØÝ[Y[[[Y[˜ÛY[ÚY
-NÂˆ^XÝ
-ØÝ[Y[Ý™\™›ÝÊKÐ™S\ÜÕ[“Ü‘\]X[
-ŠNÂˆJNÂŸB‚\Ý
-	ÓX]\šX[È›Ý]\È]Z^‹™Y™\™[˜ÙH]šY[˜ÙK^Ü™\ˆ[™XœÈÚ]Ý]Ý[HÝZYHÝ]IË\Þ[˜ÊÜYÙ_JOOžÂˆ]ØZ]YÙKœÙ]šY]ÜÜÚ^™JÝÚYŒÎLZYÚŽJNÂˆ]ØZ]Ü[\
-YÙJNÂˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	ÛX]\šX[ÉÊJNÂˆÛÛœÝX]\šX[\YÙK›ØØ]ÜŠ	ÈÛX]\šX[ÉÊNÂˆÛÛœÝÝYO[X]\šX[›ØØ]ÜŠ	Ë›[K[X]\šX[\ÝYK]ÛÛÉÊNÂˆÛÛœÝÝZYO\ÝYK›ØØ]ÜŠ	ÖÙ]K[[KY˜[Z[K\ØÚY[˜ÙWIÊNÂˆ]ØZ]^XÝ
-ÝZYJKÒ]™PÛÝ[
-JNÂˆ]ØZ]^XÝ
-ÝZYJK››ÝÒ]™P]šX]J	ÛÜ[‰Ë	ÉÊNÂˆ]ØZ]ÝYK›ØØ]ÜŠ	ÎœØÛÜHˆÝ[[X\žIÊK˜ÛXÚÊ
-NÂ‚ˆ]ØZ]ÝYK›ØØ]ÜŠ	ÎœØÛÜHˆ›X]]XœÈˆ]Û‰ÊK™š[\ŠÚ\Õ^‰ÒÛ›ÝÛYÙHÚXÚÉßJK˜ÛXÚÊ
-NÂˆÛÛœÝ]Z^[X]\šX[›ØØ]ÜŠ	Ë›X]\]Z^‹XØ\™	ÊNÂˆ]ØZ]^XÝ
-]Z^ŠKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-]Z^‹›ØØ]ÜŠ	Ë›X]\IÊJKÒ]™PÛÝ[
-N
-NÂˆ]ØZ]^XÝ
-X]\šX[›ØØ]ÜŠ	ÖÙ]K[[KY˜[Z[K\ØÚY[˜ÙWIÊJKÒ]™PÛÝ[
-
-NÂˆ]ØZ]]Z^‹›ØØ]ÜŠ	Ë›X]\IÊK™š\œÝ
-
-K›ØØ]ÜŠ	Ú[œ]Ý\OHœ˜Y[È—IÊK™š\œÝ
-
-K˜ÚXÚÊ
-NÂˆ]ØZ]]Z^‹™Ù]žT›ÛJ	Ø]Û‰ËÛ˜[YN‰ÑÜ˜YH	ˆ™]šY]ÉßJK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-]Z^‹›ØØ]ÜŠ	ÈÛX]\šX[]Z^”™\Ý[	ÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-]Z^‹›ØØ]ÜŠ	ÈÛX]\šX[]Z^”™]šY]È›X]\™]šY]ÉÊJKÒ]™PÛÝ[
-N
-NÂ‚ˆ]ØZ]X]\šX[›ØØ]ÜŠ	Ë›X]]XœÈˆ]Û‰ÊK™š[\ŠÚ\Õ^‰Ñ]šY[˜ÙH	ˆ™Y™\™[˜Ù\ÉßJK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-X]\šX[›ØØ]ÜŠ	ËœÝ[™\™XØ\™	ÊJKÒ]™PÛÝ[
-ŠNÂˆÛÛœÝ\\“[šÏ[X]\šX[›ØØ]ÜŠ	ËœÝ[™\™XØ\™KœÝ[™\™[[šÉÊK™š\œÝ
-
-NÂˆ]ØZ]^XÝ
-\\“[šÊKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-\\“[šÊKÒ]™P]šX]J	Ú™Y‰Ë×šÎ—×ËÊNÂˆÛÛœÝ\\•\™Ù]X]ØZ]\\“[šË™Ù]]šX]J	Ý\™Ù]	ÊNÂˆYŠ\\•\™Ù]OOI×Ø›[šÉÊY^XÝ
-
-]ØZ]\\“[šË™Ù]]šX]J	Ü™[	Ê_	ÉÊKœÜ]
-×ÊËÊJKÐÛÛZ[Š	Û›ÛÜ[™\‰ÊNÂˆ]ØZ]^XÝ
-X]\šX[›ØØ]ÜŠ	ÖÙ]K[[KY˜[Z[K\ØÚY[˜ÙWIÊJKÒ]™PÛÝ[
-
-NÂ‚ˆ]ØZ]X]\šX[›ØØ]ÜŠ	Ë›X]]XœÈˆ]Û‰ÊK™š[\ŠÚ\Õ^‰ÓX]\šX[^Ü™\‰ßJK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-X]\šX[›ØØ]ÜŠ	Ë›X]Y^Ü™\‹XÛÛ›ÛÉÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]X]\šX[›ØØ]ÜŠ	Ë›X]]XœÈˆ]Û‰ÊK™š[\ŠÚ\Õ^‰Ò[\˜XÝ]™HXœÉßJK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-X]\šX[›ØØ]ÜŠ	Ë›X][XœÉÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-X]\šX[›ØØ]ÜŠ	ÈÜš[ÐÝ\™HÝ™ÉÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-X]\šX[›ØØ]ÜŠ	ÖÙ]K[[KY˜[Z[K\ØÚY[˜ÙWIÊJKÒ]™PÛÝ[
-
-NÂ‚ˆ]ØZ]X]\šX[›ØØ]ÜŠ	Ë›X]]XœÈˆ]Û‰ÊK™š[\ŠÚ\Õ^‰Ð[\ÜÛÛœÉßJK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÜ]›[KX[[\ÜÛÛœÉÊJKÐ™Uš\ÚX›J
-NÂˆÛÛœÝÝ™\™›ÝÏX]ØZ]YÙK™]˜[X]J
-
-OO™ØÝ[Y[™ØÝ[Y[[[Y[œØÜ›ÛÚYYØÝ[Y[™ØÝ[Y[[[Y[˜ÛY[ÚY
-NÂˆ^XÝ
-Ý™\™›ÝÊKÐ™S\ÜÕ[“Ü‘\]X[
-ŠNÂŸJNÂ‚™›ÜŠÛÛœÝÚYÙˆÌÎLLJ^Âˆ\Ý
-	Ü™X[X]\šX[ÈXœË]Z^ˆ[™™Y™\™[˜Ù\ÈÚ\™H™XYX›HY\\ØÜ™Y[ˆÛÛ›ÛÈ]	ÊÝÚY
-ÉÜ	Ë\Þ[˜ÊÜYÙ_JOOžÂˆ]ØZ]YÙKœÙ]šY]ÜÜÚ^™JÝÚYZYÚŽLJNÂˆ]ØZ]Ü[\
-YÙJNÂˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	ÛX]\šX[ÉÊJNÂ‚ˆ]ØZ]YÙK›ØØ]ÜŠ	ÈÛ[SX]\šX[X\›š[™Ð[˜ÚÜˆˆÝ[[X\žIÊK˜ÛXÚÊ
-NÂˆ]ØZ]YÙK›ØØ]ÜŠ	ÈÛX]\šX[È›X]]XœÈ]Û‰ÊK™š[\ŠÚ\Õ^‰Ò[\˜XÝ]™HXœÉßJK˜ÛXÚÊ
-NÂˆÛÛœÝXœÏ\YÙK›ØØ]ÜŠ	ÈÛX]\šX[È›X]\Ú[›X][XœÉÊNÂˆ]ØZ]^XÝ
-XœË›ØØ]ÜŠ	ÎœØÛÜHˆ›X][X‰ÊJKÒ]™PÛÝ[
-
-NÂˆ]ØZ]^XÝ
-XœË›ØØ]ÜŠ	Ë›X][X‰ÊK™š\œÝ
-
-JKÒ]™PÔÔÊ	Ø˜XÚÙÜ›Ý[™XÛÛÜ‰Ë	Ü™ØŠËL
-IÊNÂˆ]ØZ]^XÝ
-XœË›ØØ]ÜŠ	Ë›X][X‹[Ý]]	ÊK™š\œÝ
-
-JKÒ]™PÔÔÊ	Ø˜XÚÙÜ›Ý[™XÛÛÜ‰Ë	Ü™ØŠŒŒÎKJIÊNÂˆÛÛœÝš[ÛÙÞO[XœË›ØØ]ÜŠ	ÈÜš[ÔÚX\‰ÊNÂˆ]ØZ]^XÝ
-š[ÛÙÞJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]š[ÛÙÞK™›ØÝ\Ê
-NÂˆ]ØZ]š[ÛÙÞKœ™\ÜÊ	Ð\œ›ÝÔšYÚ	ÊNÂˆ]ØZ]^XÝ
-š[ÛÙÞJKÒ]™U˜[YJ	Í‰ÊNÂˆ]ØZ]^XÝ
-XœË›ØØ]ÜŠ	ÈÜš[ÓÝ]	ÊJKÐÛÛZ[•^
-	Ò[\Ý˜]]™IÊNÂˆ^XÝ
-]ØZ]YÙK™]˜[X]J
-
-OO™ØÝ[Y[™ØÝ[Y[[[Y[œØÜ›ÛÚYZ[›™\•ÚY
-JKÐ™S\ÜÕ[“Ü‘\]X[
-ŠNÂ‚ˆ]ØZ]YÙK›ØØ]ÜŠ	ÈÛX]\šX[È›X]]XœÈ]Û‰ÊK™š[\ŠÚ\Õ^‰ÒÛ›ÝÛYÙHÚXÚÉßJK˜ÛXÚÊ
-NÂˆÛÛœÝ]Z^\YÙK›ØØ]ÜŠ	ÈÛX]\šX[È›X]\]Z^‹XØ\™	ÊNÂˆ]ØZ]^XÝ
-]Z^ŠKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-]Z^‹›ØØ]ÜŠ	Ë›X]\IÊJKÒ]™PÛÝ[
-N
-NÂˆ]ØZ]^XÝ
-]Z^‹›ØØ]ÜŠ	Ë›X]\IÊK™š\œÝ
-
-JKÒ]™PÔÔÊ	Ø˜XÚÙÜ›Ý[™XÛÛÜ‰Ë	Ü™ØŠŒŒÎKJIÊNÂˆ]ØZ]]Z^‹›ØØ]ÜŠ	Ë›X]\HX™[	ÊK™š\œÝ
-
-K˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-]Z^‹›ØØ]ÜŠ	Ë›X]\H[œ]Ý\O\˜Y[×N˜ÚXÚÙY	ÊJKÒ]™PÛÝ[
-JNÂˆ]ØZ]]Z^‹™Ù]žT›ÛJ	Ø]Û‰ËÛ˜[YN‹ÑÜ˜YH	ˆ™]šY]ËÚ_JK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-]Z^‹›ØØ]ÜŠ	ÈÛX]\šX[]Z^”™\Ý[	ÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-]Z^‹›ØØ]ÜŠ	ÈÛX]\šX[]Z^”™\Ý[	ÊJKÒ]™PÔÔÊ	Ø˜XÚÙÜ›Ý[™XÛÛÜ‰Ë	Ü™ØŠŒLËŒÎŒÌÊIÊNÂˆ^XÝ
-]ØZ]YÙK™]˜[X]J
-
-OO™ØÝ[Y[™ØÝ[Y[[[Y[œØÜ›ÛÚYZ[›™\•ÚY
-JKÐ™S\ÜÕ[“Ü‘\]X[
-ŠNÂ‚ˆ]ØZ]YÙK›ØØ]ÜŠ	ÈÛX]\šX[È›X]]XœÈ]Û‰ÊK™š[\ŠÚ\Õ^‰Ñ]šY[˜ÙH	ˆ™Y™\™[˜Ù\ÉßJK˜ÛXÚÊ
-NÂˆÛÛœÝ™YœÏ\YÙK›ØØ]ÜŠ	ÈÛX]\šX[È›X]\Ú[œÝ[™\™XØ\™	ÊNÂˆ]ØZ]^XÝ
-™YœË™š\œÝ
-
-JKÒ]™PÔÔÊ	Ø˜XÚÙÜ›Ý[™XÛÛÜ‰Ë	Ü™ØŠËL
-IÊNÂˆÛÛœÝÛÝ\˜ÙS[šÏ\™YœË™š\œÝ
-
-K›ØØ]ÜŠ	ØKœÝ[™\™[[šÉÊNÂˆ]ØZ]^XÝ
-ÛÝ\˜ÙS[šÊKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-ÛÝ\˜ÙS[šÊKÒ]™P]šX]J	Ú™Y‰Ë×šÎ—×ËÊNÂˆYŠ]ØZ]ÛÝ\˜ÙS[šË™Ù]]šX]J	Ý\™Ù]	ÊOOOI×Ø›[šÉÊ^Âˆ^XÝ
-
-]ØZ]ÛÝ\˜ÙS[šË™Ù]]šX]J	Ü™[	Ê_	ÉÊKœÜ]
-×ÊËÊJKÐÛÛZ[Š	Û›ÛÜ[™\‰ÊNÂˆBˆ]ØZ]YÙK›ØØ]ÜŠ	ÈÛX]\šX[È›X]]XœÈ]Û‰ÊK™š[\ŠÚ\Õ^‰ÓX]\šX[^Ü™\‰ßJK˜ÛXÚÊ
-NÂˆËÈ˜]]™HX]\šX[^Ü™\ˆÝÛœÈ]ÈÝ\˜]YÜ˜YHš[\š[™ÈÛÛ›ÛË‚ˆËÈHÙ\\˜]H[™^Y^XÝYÜ˜YHØ][ÙÝYH\È›ÝÛÛ™Y[È\ÂˆËÈ™\ÝY[ÙKÚXÚ]\Ý™[XZ[ˆ[˜Ý[Û˜[ÛˆÛ™\È[™X›]Ë‚ˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÛX]\šX[È›X]Y^Ü™\‹XÛÛ›ÛÉÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÛX]\šX[È›X][X]\šX[YÜšY›X][X]\šX[	ÊK™š\œÝ
-
-JKÐ™Uš\ÚX›J
-NÂˆ^XÝ
-]ØZ]YÙK™]˜[X]J
-
-OO™ØÝ[Y[™ØÝ[Y[[[Y[œØÜ›ÛÚYZ[›™\•ÚY
-JKÐ™S\ÜÕ[“Ü‘\]X[
-ŠNÂˆJNÂŸB‚‹ËÈ^\˜Ú\ÙH]™\žHš[X\žH[Øš[HXˆ[™\[™[HÙˆHš\ÝX[ÛÛ[ˆš[\Ë‚‹ËÈHØ[YHÚ[\‹Ù›ØÝ\ËÛÝ™\™›ÝÈÚXÚÜÈ\HÈÛYKX\›‹X]\šX[Ë‹ËÈ˜XÝXÙKX]È[™[Ü™H][›Ý\ˆ\›Ý™Y˜\œ›ÝÈšY]ÜÜÚYË‚™›ÜŠÛÛœÝÚYÙˆÌÌŒÍŒÎLL—J^Âˆ\Ý
-	Ø[Ú^[Øš[HXœÈÙY\ÛÛœÚ\Ý[˜]šYØ][Ûˆ[™›ÈÝ[HÝ™\ˆ]	ÊÝÚY
-ÉÜ	Ë\Þ[˜ÊÜYÙ_JOOžÂˆ\ÝœÙ][Y[Ý]
-L
-NÂˆ]ØZ]YÙKœÙ]šY]ÜÜÚ^™JÝÚYZYÚŽJNÂˆ]ØZ]Ü[\
-YÙJNÂˆÛÛœÝXœÏVÂˆÉÒÛYIË	ÈÙ\Ú›Ø\™	Ë	ÈÙ\Ú›Ø\™›[K\™Y™\™[˜ÙKZÛYKZ\›É×KˆÉÓX\›‰Ë	ÈÜ]	Ë	ÈÜ]›[K\™Y™\™[˜ÙK]]I×KˆÉÓX]\šX[ÉË	ÈÛX]\šX[ÉË	ÈÛX]\šX[È›[K\™Y™\™[˜ÙK[X]\šX[Ë]]I×KˆÉÔ˜XÝXÙIË	ÈÜØÙ[˜\š[ÜÉË	ÈÜØÙ[˜\š[ÜÈ›[K\™Y™\™[˜ÙK]]I×KˆNÂˆ›ÜŠÛÛœÝÛ˜[YK›ÛÝ[™X\š×HÙˆXœÊ^ÂˆÛÛœÝ]Û\YÙK›ØØ]ÜŠ	Ë›[Øš[K[˜]ˆˆ]Û‰ÊK™š[\ŠÚ\Õ^›˜[Y_JNÂˆ]ØZ]^XÝ
-]ÛŠKÒ]™PÛÝ[
-JNÂˆ]ØZ]]Û‹˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ›ÛÝ
-JKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ[™X\šÊJKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-]ÛŠKÒ]™P]šX]J	Ø\šXKXÝ\œ™[	Ë	ÜYÙIÊNÂˆÛÛœÝ]›ÞX]ØZ]]Û‹˜›Ý[™[™Ð›Þ
-
-NÂˆ^XÝ
-]›Þ˜[YJÉÈ˜]šYØ][Ûˆ\\™Ù]	ÊK››ÝÐ™S[
-
-NÂˆ^XÝ
-]›ÞÚY
-KÐ™QÜ™X]\•[“Ü‘\]X[
-
-NÂˆ^XÝ
-]›ÞšZYÚ
-KÐ™QÜ™X]\•[“Ü‘\]X[
-
-NÂˆËÈHÝ[HÚ[\ˆÝ™\ˆXˆ][\È]\Ý›ÝØ\œžH[È[›Ý\ˆØ\\™K‚ˆ]ØZ]YÙK›[Ý\ÙK›[Ý™JKJNÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ›ÛÝ
-ÉÈš\Ê]Û‹VÚ™Y—KÝ[[X\žKÜ›ÛOH˜]Ûˆ—JNšÝ™\‰ÊJKÒ]™PÛÝ[
-
-NÂˆÛÛœÝÝ™\™›ÝÏX]ØZ]YÙK™]˜[X]J
-
-OO‚ˆØÝ[Y[™ØÝ[Y[[[Y[œØÜ›ÛÚYYØÝ[Y[™ØÝ[Y[[[Y[˜ÛY[ÚYˆ
-NÂˆ^XÝ
-Ý™\™›ÝË˜[YJÉÈ]\Ý›ÝÝ™\™›ÝÈÜš^›Û[IÊKÐ™S\ÜÕ[“Ü‘\]X[
-ŠNÂˆBˆÛÛœÝ[Ü™O\YÙK›ØØ]ÜŠ	Ë›[Øš[K[˜]ˆˆ]Û‰ÊK™š[\ŠÚ\Õ^‰Ó[Ü™IßJNÂˆ]ØZ]^XÝ
-[Ü™JKÒ]™PÛÝ[
-JNÂˆ]ØZ][Ü™K˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÛ[Ù[›[K[[Ü™KY\ØÛÜÝ\™IÊJKÒ]™PÛÝ[
-ŠNÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÛ[Ù[	ÊK™Ù]žT›ÛJ	ÚXY[™ÉËÛ˜[YN‰Ó[Ü™IßJJKÐ™Uš\ÚX›J
-NÂˆÛÛœÝ]›ÞX]ØZ][Ü™K˜›Ý[™[™Ð›Þ
-
-NÂˆ^XÝ
-]›Þ
-K››ÝÐ™S[
-
-NÂˆ^XÝ
-]›ÞÚY
-KÐ™QÜ™X]\•[“Ü‘\]X[
-
-NÂˆ^XÝ
-]›ÞšZYÚ
-KÐ™QÜ™X]\•[“Ü‘\]X[
-
-NÂˆ]ØZ]YÙK›[Ý\ÙK›[Ý™JKJNÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÛ[Ù[š\Ê]Û‹VÚ™Y—KÝ[[X\žKÜ›ÛOH˜]Ûˆ—JNšÝ™\‰ÊJKÒ]™PÛÝ[
-
-NÂˆÛÛœÝÝ™\™›ÝÏX]ØZ]YÙK™]˜[X]J
-
-OO‚ˆØÝ[Y[™ØÝ[Y[[[Y[œØÜ›ÛÚYYØÝ[Y[™ØÝ[Y[[[Y[˜ÛY[ÚYˆ
-NÂˆ^XÝ
-Ý™\™›ÝË	Ó[Ü™H]\Ý›ÝÝ™\™›ÝÈÜš^›Û[IÊKÐ™S\ÜÕ[“Ü‘\]X[
-ŠNÂˆ]ØZ]YÙK™]˜[X]J
-
-OOÚ[™ÝË˜ÛÜÙS[Ù[ËŠ
-JNÂˆ]ØZ]^XÝ
-YÙK›ØØ]ÜŠ	ÈÛ[Ù[›[Ù[XØ\™	ÊJKÐ™RY[Š
-NÂˆJNÂŸB‚‹ËÈ˜XÝXÙH[˜ÛY\ÈÜ]X[Ú[ˆ[ˆ]ÈXœÈÚÛÜÙ\‹ˆ]È™\ÝYÚ[][]Ü‚‹ËÈ]\ÝÙY\HØ[YHÙ^X›Ø\™XXØÙ\ÜÚX›H™]\›ˆ]\ÈHÝ\ˆÛÛË‚\Ý
-	Ô˜XÝXÙHÜ]X[Ú[ˆ™\ÝÜ™\ÈXœËXØ\™›ØÝ\Èœ›ÛH]ÈÝÛˆÝXœYÙIË\Þ[˜ÊÜYÙ_JOOžÂˆ]ØZ]YÙKœÙ]šY]ÜÜÚ^™JÝÚYŒÎLZYÚŽJNÂˆ]ØZ]Ü[\
-YÙJNÂˆ]ØZ]YÙK™]˜[X]J
-
-OOœÝÚ]ÚšY]Ê	ÜØÙ[˜\š[ÜÉÊJNÂˆÛÛœÝX\YÙK›ØØ]ÜŠ	ÈÜØÙ[˜\š[ÜÈ›[K\˜XÝXÙKZX‰ÊNÂˆÛÛœÝXœÏZX‹›ØØ]ÜŠ	ÖÙ]K[[KZX‹XXÝ[ÛH›XœÈ—IÊNÂˆ]ØZ]XœË˜ÛXÚÊ
-NÂˆÛÛœÝXÚÙ\\YÙK›ØØ]ÜŠ	ÈÛ[Ù[››Ý
-šY[ŠH›[KZX‹\XÚÙ\‹YÜšY	ÊNÂˆ]ØZ]XÚÙ\‹›ØØ]ÜŠ	ÖÙ]K[[KZX‹XXÝ[ÛHœÜ]X[]Ú[ˆ—IÊK˜ÛXÚÊ
-NÂˆÛÛœÝÚ[\YÙK›ØØ]ÜŠ	ÈÛ[TÜ]X[Ú[‰ÊNÂˆ]ØZ]^XÝ
-Ú[ŠKÐ™Uš\ÚX›J
-NÂˆÛÛœÝ˜]]Ú[‹›ØØ]ÜŠ	ÎœØÛÜHˆ›[K\˜XÝXÙK]ÛÛ\™]\›‰ÊNÂˆ]ØZ]^XÝ
-˜]ŠKÒ]™PÛÝ[
-JNÂˆ]ØZ]˜]‹™Ù]žT›ÛJ	Ø]Û‰ËÛ˜[YN‹Ð˜XÚÈÈ˜XÝXÙKßJK˜ÛXÚÊ
-NÂˆ]ØZ]^XÝ
-XŠKÐ™Uš\ÚX›J
-NÂˆ]ØZ]^XÝ
-XœÊKÐ™Q›ØÝ\ÙY
-
-NÂŸJNÂ
+test('Diagnostic learning notes never leak across two local learner profiles',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.addInitScript(()=>{
+    const learner=(id)=>({id,name:id,role:'learner',completed:[],bookmarks:[],notes:{},
+      examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-10-13T00:00:00Z',
+      onboardingDone:true,experience:'Beginner',goal:'Learn injection moulding',dailyMinutes:15,region:'ALL'});
+    localStorage.clear();
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({
+      activeUser:'diagnostic-a',
+      users:{'diagnostic-a':learner('diagnostic-a'),'diagnostic-b':learner('diagnostic-b')}
+    }));
+  });
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_DIAGNOSTIC_WORKBENCH)&&!document.getElementById('mmBootstrap'));
+  await page.evaluate(()=>switchView('defects'));
+  const root=page.locator('#defects .mm-dx-workbench');
+  await root.locator('[data-mm-dx-action="choose"]').first().click();
+  await root.locator('textarea[name="baseline"]').fill('Learner A controlled baseline');
+  await root.locator('[data-mm-dx-evidence="material"]').check();
+  expect((await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report())).context.baseline)
+    .toBe('Learner A controlled baseline');
+
+  await page.evaluate(()=>switchUser('diagnostic-b'));
+  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('mouldmasterProDB')||'{}').activeUser==='diagnostic-b');
+  await page.evaluate(()=>switchView('defects'));
+  await expect(root.locator('.mm-dx-empty')).toBeVisible();
+  const bReport=await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report());
+  expect(bReport.selectedDefect).toBeNull();
+  expect(bReport.context.baseline).toBe('');
+  expect(bReport.evidenceReportedAvailable).toEqual([]);
+  await root.locator('[data-mm-dx-action="choose"]').first().click();
+  await expect(root.locator('textarea[name="baseline"]')).toHaveValue('');
+  await expect(root.locator('[data-mm-dx-evidence="material"]')).not.toBeChecked();
+
+  await page.evaluate(()=>switchUser('diagnostic-a'));
+  await page.waitForFunction(()=>JSON.parse(localStorage.getItem('mouldmasterProDB')||'{}').activeUser==='diagnostic-a');
+  await page.evaluate(()=>switchView('defects'));
+  await expect(root.locator('.mm-dx-empty')).toBeVisible();
+});
+
+test('Diagnostic controls discard stale events immediately after a learner change',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await page.addInitScript(()=>{
+    const learner=id=>({id,name:id,role:'learner',completed:[],bookmarks:[],notes:{},
+      examScores:{},certificates:[],currentLesson:1,lastSeen:'2026-10-13T00:00:00Z',
+      onboardingDone:true,experience:'Beginner',goal:'Learn injection moulding',
+      dailyMinutes:15,region:'ALL'});
+    localStorage.clear();
+    localStorage.setItem('mouldmasterProDB',JSON.stringify({
+      activeUser:'diagnostic-a',users:{
+        'diagnostic-a':learner('diagnostic-a'),'diagnostic-b':learner('diagnostic-b')
+      }
+    }));
+  });
+  await page.goto(BASE,{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>Boolean(window.MM_APP_SHELL_FINALIZED&&window.MM_DIAGNOSTIC_WORKBENCH)&&!document.getElementById('mmBootstrap'));
+  await page.evaluate(()=>switchView('defects'));
+  const root=page.locator('#defects .mm-dx-workbench');
+  await root.locator('[data-mm-dx-action="choose"]').first().click();
+  await root.locator('textarea[name="observations"]').fill('Learner A should not be transferred');
+  await root.locator('[data-mm-dx-evidence="part"]').check();
+  // Trigger the old connected element's input synchronously after switching
+  // users, before a navigation/render pass has refreshed the diagnostic pane.
+  // A delayed observer alone cannot protect this same-task event.
+  await page.evaluate(()=>{
+    const stale=document.querySelector('#defects textarea[name="observations"]');
+    switchUser('diagnostic-b');
+    stale.value='stale cross-profile event';
+    stale.dispatchEvent(new Event('input',{bubbles:true}));
+  });
+  const report=await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report());
+  expect(report.selectedDefect).toBeNull();
+  expect(report.context.observations).toBe('');
+  expect(report.evidenceReportedAvailable).toEqual([]);
+  await page.evaluate(()=>switchView('defects'));
+  await expect(root.locator('.mm-dx-empty')).toBeVisible();
+  await expect(root.locator('textarea[name="observations"]')).toHaveCount(0);
+});
+
+test('Choosing another defect clears unrelated measurements, evidence and judgement',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('defects'));
+  const root=page.locator('#defects .mm-dx-workbench');
+  const choices=root.locator('[data-mm-dx-action="choose"]');
+  expect(await choices.count()).toBeGreaterThan(1);
+  await choices.first().click();
+  await root.locator('textarea[name="baseline"]').fill('First-defect known-good baseline');
+  await root.locator('textarea[name="observations"]').fill('First-defect measured sample');
+  await root.locator('[data-mm-dx-evidence="part"]').check();
+  await root.locator('[data-mm-dx-action="analyse"]').click();
+  const hypothesis=root.locator('[data-mm-dx-hypothesis]').first();
+  if(await hypothesis.count())await hypothesis.selectOption('support');
+  const oldReport=await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report());
+  expect(oldReport.context.observations).toBe('First-defect measured sample');
+  expect(oldReport.evidenceReportedAvailable).toContain('part');
+  await choices.nth(1).click();
+  await expect(root.locator('textarea[name="baseline"]')).toHaveValue('');
+  await expect(root.locator('textarea[name="observations"]')).toHaveValue('');
+  await expect(root.locator('[data-mm-dx-evidence="part"]')).not.toBeChecked();
+  const nextReport=await page.evaluate(()=>window.MM_DIAGNOSTIC_WORKBENCH.report());
+  expect(nextReport.selectedDefect).not.toBe(oldReport.selectedDefect);
+  expect(nextReport.context.observations).toBe('');
+  expect(nextReport.context.baseline).toBe('');
+  expect(nextReport.evidenceReportedAvailable).toEqual([]);
+  expect(nextReport.hypotheses.every(row=>row.learnerAssessment==='unassessed')).toBe(true);
+  expect(nextReport.rootCauseVerified).toBe(false);
+  expect(nextReport.productionSetpointsAuthorized).toBe(false);
+});
+
+test('Diagnostic workbench keeps keyboard arrival across symptom, evidence, revision and reset',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('defects'));
+  const workbench=page.locator('#defects .mm-dx-workbench');
+  await expect(workbench).toBeVisible();
+  const symptom=workbench.locator('[data-mm-dx-action="choose"]').first();
+  await symptom.focus();
+  await symptom.press('Enter');
+  const firstField=workbench.locator('.mm-dx-fields select').first();
+  await expect(firstField).toBeFocused();
+  await workbench.locator('textarea[name="observations"]').fill('Compare measured results with validated baseline.');
+  await workbench.locator('[data-mm-dx-action="analyse"]').focus();
+  await page.keyboard.press('Enter');
+  const analysisHeading=workbench.locator('.mm-dx-results .mm-dx-section-head h2');
+  await expect(analysisHeading).toBeFocused();
+  await expect(analysisHeading).toHaveCSS('outline-style','solid');
+  await workbench.locator('[data-mm-dx-action="back"]').focus();
+  await page.keyboard.press('Enter');
+  await expect(workbench.locator('.mm-dx-fields select').first()).toBeFocused();
+  await expect(workbench.locator('textarea[name="observations"]')).toHaveValue('Compare measured results with validated baseline.');
+  await workbench.locator('[data-mm-dx-action="analyse"]').click();
+  await workbench.locator('[data-mm-dx-action="reset"]').focus();
+  await page.keyboard.press('Enter');
+  await expect(workbench.locator('#mmDxSearch')).toBeFocused();
+  await expect(workbench.locator('.mm-dx-empty')).toBeVisible();
+});
+
+test('Practice nested labs and assessments keep working illustrated landing headers',async({page})=>{
+  test.setTimeout(90000);
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+
+  for(const [action,root,hero,start,back] of [
+    ['diagnostic-labs','#diagnosticLabs','.dl-hero','[data-dl-start]','[data-dl-home]'],
+    ['material-labs','#materialLabs','.ml-hero','[data-ml-start]','[data-ml-home]']
+  ]){
+    await page.evaluate(()=>switchView('path'));
+    await page.locator('#path .mm-learn-hub [data-mm-hub-action="question-centre"]').click();
+    await page.locator('#path .mm-question-centre [data-mm-hub-action="'+action+'"]').click();
+    await expect(page.locator(root+' '+hero+' > .mm-reference-practice-tool-art')).toBeVisible();
+    await expect(page.locator(root+' > .mm-practice-tool-return')).toHaveCount(1);
+    await expect(page.locator(root+' '+start).first()).toBeVisible();
+    await page.locator(root+' '+start).first().click();
+    const questionChoice=page.locator(root+' button'+(action==='diagnostic-labs'?'.dl-choice':'.ml-choice')).first();
+    await expect(questionChoice).toBeVisible();
+    expect((await questionChoice.boundingBox()).height).toBeGreaterThanOrEqual(44);
+    const panel=action==='diagnostic-labs'?'.dl-lab > .dl-panel':'.ml-lab > .ml-panel';
+    await expect(page.locator(root+' '+panel).first()).toHaveCSS('background-color','rgb(239, 247, 250)');
+    await questionChoice.click();
+    await expect(page.locator(root+' '+(action==='diagnostic-labs'?'.dl-feedback':'.ml-feedback'))).toBeVisible();
+    await expect(page.locator(root+' '+back)).toBeVisible();
+    await page.locator(root+' '+back).click();
+    await expect(page.locator(root+' '+hero+' > .mm-reference-practice-tool-art')).toHaveCount(1);
+  }
+
+  await page.evaluate(()=>switchView('path'));
+  await page.locator('#path .mm-learn-hub [data-mm-hub-action="question-centre"]').click();
+  await page.locator('#path .mm-question-centre [data-mm-hub-action="assessments"]').click();
+  await expect(page.locator('#exams .section-head > .mm-reference-practice-tool-art')).toBeVisible();
+  await expect(page.locator('#exams > .mm-practice-tool-return')).toHaveCount(1);
+  const startExam=page.locator('#exams .exam-card button').first();
+  await expect(startExam).toBeVisible();
+  await startExam.click();
+  await expect(page.locator('#modal:not(.hidden) #examQuestions .question').first()).toBeVisible();
+});
+
+test('More keeps six illustrated native disclosures, original actions and keyboard access',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.locator('.mobile-nav > button').filter({hasText:'More'}).click();
+  const groups=page.locator('#modal .mm-reference-more-card');
+  await expect(groups).toHaveCount(6);
+  await expect(groups.locator(':scope > summary > .mm-reference-more-art')).toHaveCount(6);
+  const registryActions=await page.locator('#modal [data-mm-registry-menu]').count();
+  await page.evaluate(()=>{window.MM_REFERENCE_LAYOUT.refresh();window.MM_REFERENCE_LAYOUT.refresh()});
+  await expect(groups.locator(':scope > summary > .mm-reference-more-art')).toHaveCount(6);
+  expect(await page.locator('#modal [data-mm-registry-menu]').count()).toBe(registryActions);
+  const about=page.locator('#modal .mm-reference-more-extra').filter({hasText:'About MouldMaster'});
+  await expect(about).not.toHaveAttribute('open','');
+  const header=about.locator(':scope > summary');
+  await header.focus();
+  await header.press('Enter');
+  await expect(about).toHaveAttribute('open','');
+  await expect(about.locator('a[href="./support.html#mmPwa"]')).toBeVisible();
+  await header.press('Enter');
+  await expect(about).not.toHaveAttribute('open','');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
+  await page.evaluate(()=>window.closeModal?.());
+  await expect(page.locator('#modal .modal-card')).toBeHidden();
+  await page.locator('.mobile-nav > button').filter({hasText:'Practice'}).click();
+  await expect(page.locator('#scenarios .mm-practice-hub')).toBeVisible();
+});
+
+for(const width of [360,810]){
+  test('approved deep-screen design keeps actual lesson, simulator and resource actions at '+width+'px',async({page})=>{
+    await page.setViewportSize({width,height:900});
+    await openApp(page);
+    await page.evaluate(()=>switchView('lesson'));
+    const lesson=page.locator('#lesson');
+    await expect(lesson.locator('.mm-simple-lesson-hero > .mm-reference-deep-art')).toBeVisible();
+    await expect(lesson.locator('.lesson-body.mm-reference-deep-panel')).toBeVisible();
+    // The simple-reader intentionally hides/removes legacy lesson sidebar on small screens.
+    await expect(lesson.locator('.mm-simple-lesson-hero')).toBeVisible();
+    await expect(lesson.locator('.lesson-body > .content-block:not(.mm-simple-note-section), .lesson-body > .mm-simple-section:not(.mm-simple-note-section)').first()).toHaveCSS('background-color','rgb(240, 247, 250)');
+    await lesson.locator('.mm-simple-note-disclosure > summary').click();
+    await lesson.locator('#lessonNotes').fill('Test setup notes â€” do not use as process settings.');
+    await lesson.getByRole('button',{name:'Save notes'}).click();
+    await expect(lesson.locator('.mm-simple-lesson-hero > .mm-reference-deep-art')).toHaveCount(1);
+
+    await page.evaluate(()=>switchView('simulator'));
+    const simulator=page.locator('#simulator');
+    await expect(simulator.locator('.form-card > .mm-reference-deep-art')).toBeVisible();
+    await expect(simulator.locator('.output-panel > .mm-reference-deep-art')).toBeVisible();
+    // The Virtual Apprenticeship and other embedded training widgets own
+    // additional controls. Scope the count to the governed core simulator.
+    const advanced=simulator.locator(':scope > .grid2 > .form-card > .mm-engineer-sim-groups');
+    await expect(advanced.locator(':scope > summary')).toBeVisible();
+    await advanced.locator(':scope > summary').click();
+    const modelSliders=advanced.locator('.form-grid > label > .range-row > input[type="range"]');
+    await expect(modelSliders).toHaveCount(10);
+    await expect(simulator.locator('#mmSimMetricInputs')).toBeVisible();
+    await expect(simulator.locator('#mmSimPrimaryFinding')).toContainText('training baseline');
+    await expect(simulator.locator('#simAdvice')).toContainText('What to verify next');
+    const fillSlider=modelSliders.first();
+    await expect(fillSlider).toHaveValue('50');
+    await fillSlider.focus();
+    await fillSlider.press('ArrowRight');
+    await expect(fillSlider).toHaveValue('51');
+    await simulator.getByRole('button',{name:'Reset to baseline',exact:true}).click();
+    await expect(simulator.locator('.mm-engineer-sim-groups input[type="range"]').first()).toHaveValue('50');
+    await expect(simulator.locator('.form-card > .mm-reference-deep-art')).toHaveCount(1);
+
+    await page.evaluate(()=>switchView('visuals'));
+    const visuals=page.locator('#visuals');
+    await expect(visuals.locator('.visual-wrap:first-child > .mm-reference-deep-art')).toBeVisible();
+    await visuals.getByRole('button',{name:'Filling',exact:true}).click();
+    await expect(visuals.locator('#phaseText')).toContainText('velocity control');
+
+    await page.evaluate(()=>switchView('glossary'));
+    const glossary=page.locator('#glossary');
+    await expect(glossary.locator('.section-head > .mm-reference-deep-art')).toBeVisible();
+    await glossary.locator('#glossarySearch').fill('pressure');
+    await expect(glossary.locator('.term:visible').first()).toBeVisible();
+
+    await page.evaluate(()=>switchView('defects'));
+    const defects=page.locator('#defects');
+    await expect(defects.locator('.mm-dx-hero > .mm-reference-deep-art')).toBeVisible();
+    await expect(defects.locator('.mm-dx-pane.mm-reference-deep-panel').first()).toBeVisible();
+
+    await page.evaluate(()=>switchView('coach'));
+    await expect(page.locator('#coach .mm-dx-hero > .mm-reference-deep-art')).toBeVisible();
+    await expect(page.locator('#coach .mm-dx-library .mm-dx-symptom').first()).toBeVisible();
+
+    await page.evaluate(()=>switchView('standards'));
+    await expect(page.locator('#standards .section-head > .mm-reference-deep-art')).toBeVisible();
+    await page.evaluate(()=>switchView('certificates'));
+    await expect(page.locator('#certificates .section-head > .mm-reference-deep-art')).toBeVisible();
+    await page.evaluate(()=>switchView('profile'));
+    await expect(page.locator('#profile .form-card:first-child > .mm-reference-deep-art')).toBeVisible();
+    await expect(page.locator('#profile #profileName')).toBeVisible();
+
+    await page.evaluate(()=>switchView('lesson'));
+    await expect(lesson.locator('#lessonNotes')).toHaveValue('Test setup notes â€” do not use as process settings.');
+    await expect(lesson.locator('.mm-simple-lesson-hero > .mm-reference-deep-art')).toHaveCount(1);
+    const documentOverflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+    expect(documentOverflow).toBeLessThanOrEqual(2);
+  });
+}
+
+test('Materials routes quiz, reference evidence, explorer and labs without stale guide state',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('materials'));
+  const material=page.locator('#materials');
+  const study=material.locator('.mm-material-study-tools');
+  const guide=study.locator('[data-mm-family-science]');
+  await expect(guide).toHaveCount(1);
+  await expect(guide).not.toHaveAttribute('open','');
+  await study.locator(':scope > summary').click();
+
+  await study.locator(':scope > .mat-tabs > button').filter({hasText:'Knowledge check'}).click();
+  const quiz=material.locator('.mat-quiz-card');
+  await expect(quiz).toBeVisible();
+  await expect(quiz.locator('.mat-q')).toHaveCount(18);
+  await expect(material.locator('[data-mm-family-science]')).toHaveCount(0);
+  await quiz.locator('.mat-q').first().locator('input[type="radio"]').first().check();
+  await quiz.getByRole('button',{name:'Grade & review'}).click();
+  await expect(quiz.locator('#materialQuizResult')).toBeVisible();
+  await expect(quiz.locator('#materialQuizReview .mat-review')).toHaveCount(18);
+
+  await material.locator('.mat-tabs > button').filter({hasText:'Evidence & references'}).click();
+  await expect(material.locator('.standard-card')).toHaveCount(6);
+  const paperLink=material.locator('.standard-card a.standard-link').first();
+  await expect(paperLink).toBeVisible();
+  await expect(paperLink).toHaveAttribute('href',/^https:\/\//);
+  const paperTarget=await paperLink.getAttribute('target');
+  if(paperTarget==='_blank')expect((await paperLink.getAttribute('rel')||'').split(/\s+/)).toContain('noopener');
+  await expect(material.locator('[data-mm-family-science]')).toHaveCount(0);
+
+  await material.locator('.mat-tabs > button').filter({hasText:'Material explorer'}).click();
+  await expect(material.locator('.mat-explorer-controls')).toBeVisible();
+  await material.locator('.mat-tabs > button').filter({hasText:'Interactive labs'}).click();
+  await expect(material.locator('.mat-labs')).toBeVisible();
+  await expect(material.locator('#rheoCurve svg')).toBeVisible();
+  await expect(material.locator('[data-mm-family-science]')).toHaveCount(0);
+
+  await material.locator('.mat-tabs > button').filter({hasText:'All lessons'}).click();
+  await expect(page.locator('#path .mm-all-lessons')).toBeVisible();
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(2);
+});
+
+for(const width of [390,810]){
+  test('real Materials labs, quiz and references share readable deep-screen controls at '+width+'px',async({page})=>{
+    await page.setViewportSize({width,height:900});
+    await openApp(page);
+    await page.evaluate(()=>switchView('materials'));
+
+    await page.locator('#mmMaterialLearningAnchor > summary').click();
+    await page.locator('#materials .mat-tabs button').filter({hasText:'Interactive labs'}).click();
+    const labs=page.locator('#materials .mat-shell .mat-labs');
+    await expect(labs.locator(':scope > .mat-lab')).toHaveCount(4);
+    await expect(labs.locator('.mat-lab').first()).toHaveCSS('background-color','rgb(240, 247, 250)');
+    await expect(labs.locator('.mat-lab-output').first()).toHaveCSS('background-color','rgb(224, 239, 245)');
+    const rheology=labs.locator('#rheoShear');
+    await expect(rheology).toBeVisible();
+    await rheology.focus();
+    await rheology.press('ArrowRight');
+    await expect(rheology).toHaveValue('46');
+    await expect(labs.locator('#rheoOut')).toContainText('Illustrative');
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
+
+    await page.locator('#materials .mat-tabs button').filter({hasText:'Knowledge check'}).click();
+    const quiz=page.locator('#materials .mat-quiz-card');
+    await expect(quiz).toBeVisible();
+    await expect(quiz.locator('.mat-q')).toHaveCount(18);
+    await expect(quiz.locator('.mat-q').first()).toHaveCSS('background-color','rgb(224, 239, 245)');
+    await quiz.locator('.mat-q label').first().click();
+    await expect(quiz.locator('.mat-q input[type=radio]:checked')).toHaveCount(1);
+    await quiz.getByRole('button',{name:/Grade & review/i}).click();
+    await expect(quiz.locator('#materialQuizResult')).toBeVisible();
+    await expect(quiz.locator('#materialQuizResult')).toHaveCSS('background-color','rgb(213, 238, 233)');
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
+
+    await page.locator('#materials .mat-tabs button').filter({hasText:'Evidence & references'}).click();
+    const refs=page.locator('#materials .mat-shell .standard-card');
+    await expect(refs.first()).toHaveCSS('background-color','rgb(240, 247, 250)');
+    const sourceLink=refs.first().locator('a.standard-link');
+    await expect(sourceLink).toBeVisible();
+    await expect(sourceLink).toHaveAttribute('href',/^https:\/\//);
+    if(await sourceLink.getAttribute('target')==='_blank'){
+      expect((await sourceLink.getAttribute('rel')||'').split(/\s+/)).toContain('noopener');
+    }
+    await page.locator('#materials .mat-tabs button').filter({hasText:'Material explorer'}).click();
+    // Native Material Explorer owns its curated grade filtering controls.
+    // The separate indexed exact-grade catalogue is not cloned into this
+    // nested mode, which must remain functional on phones and tablets.
+    await expect(page.locator('#materials .mat-explorer-controls')).toBeVisible();
+    await expect(page.locator('#materials .mat-material-grid .mat-material').first()).toBeVisible();
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
+  });
+}
+
+// Exercise every primary mobile tab independently of the visual golden files.
+// The same pointer/focus/overflow checks apply to Home, Learn, Materials,
+// Practice, Maths and More at all four approved narrow viewport widths.
+for(const width of [320,360,390,412]){
+  test('all six mobile tabs keep consistent navigation and no stale hover at '+width+'px',async({page})=>{
+    test.setTimeout(90000);
+    await page.setViewportSize({width,height:844});
+    await openApp(page);
+    const tabs=[
+      ['Home','#dashboard','#dashboard .mm-reference-home-hero'],
+      ['Learn','#path','#path .mm-reference-title'],
+      ['Materials','#materials','#materials .mm-reference-materials-title'],
+      ['Practice','#scenarios','#scenarios .mm-reference-title'],
+    ];
+    for(const [name,root,landmark] of tabs){
+      const button=page.locator('.mobile-nav > button').filter({hasText:name});
+      await expect(button).toHaveCount(1);
+      await button.click();
+      await expect(page.locator(root)).toBeVisible();
+      await expect(page.locator(landmark)).toBeVisible();
+      await expect(button).toHaveAttribute('aria-current','page');
+      const hitbox=await button.boundingBox();
+      expect(hitbox,name+' navigation tap target').not.toBeNull();
+      expect(hitbox.width).toBeGreaterThanOrEqual(44);
+      expect(hitbox.height).toBeGreaterThanOrEqual(44);
+      // A stale pointer over tab items must not carry into another capture.
+      await page.mouse.move(1,1);
+      await expect(page.locator(root+' :is(button, a[href], summary, [role="button"]):hover')).toHaveCount(0);
+      const overflow=await page.evaluate(()=>
+        document.documentElement.scrollWidth-document.documentElement.clientWidth
+      );
+      expect(overflow,name+' must not overflow horizontally').toBeLessThanOrEqual(2);
+    }
+    const more=page.locator('.mobile-nav > button').filter({hasText:'More'});
+    await expect(more).toHaveCount(1);
+    await more.click();
+    await expect(page.locator('#modal .mm-more-disclosure')).toHaveCount(6);
+    await expect(page.locator('#modal').getByRole('heading',{name:'More'})).toBeVisible();
+    const hitbox=await more.boundingBox();
+    expect(hitbox).not.toBeNull();
+    expect(hitbox.width).toBeGreaterThanOrEqual(44);
+    expect(hitbox.height).toBeGreaterThanOrEqual(44);
+    await page.mouse.move(1,1);
+    await expect(page.locator('#modal :is(button, a[href], summary, [role="button"]):hover')).toHaveCount(0);
+    const overflow=await page.evaluate(()=>
+      document.documentElement.scrollWidth-document.documentElement.clientWidth
+    );
+    expect(overflow,'More must not overflow horizontally').toBeLessThanOrEqual(2);
+    await page.evaluate(()=>window.closeModal?.());
+    await expect(page.locator('#modal .modal-card')).toBeHidden();
+  });
+}
+
+// Practice includes Spatial Twin in its Labs chooser. Its nested simulator
+// must keep the same keyboard-accessible return path as the other tools.
+test('Practice Spatial Twin restores Labs-card focus from its own subpage',async({page})=>{
+  await page.setViewportSize({width:390,height:844});
+  await openApp(page);
+  await page.evaluate(()=>switchView('scenarios'));
+  const hub=page.locator('#scenarios .mm-practice-hub');
+  const labs=hub.locator('[data-mm-hub-action="labs"]');
+  await labs.click();
+  const picker=page.locator('#modal:not(.hidden) .mm-hub-picker-grid');
+  await picker.locator('[data-mm-hub-action="spatial-twin"]').click();
+  const twin=page.locator('#mmSpatialTwin');
+  await expect(twin).toBeVisible();
+  const nav=twin.locator(':scope > .mm-practice-tool-return');
+  await expect(nav).toHaveCount(1);
+  await nav.getByRole('button',{name:/Back to Practice/}).click();
+  await expect(hub).toBeVisible();
+  await expect(labs).toBeFocused();
+});
